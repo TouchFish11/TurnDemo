@@ -1,0 +1,15 @@
+namespace Framework
+{
+    /// <summary>
+    /// 事件类型枚举
+    /// </summary>
+    public enum E_EventType
+    {
+        #region 默认事件
+        /// <summary>
+        /// 场景加载进度(Default)_float
+        /// </summary>
+        E_Scene_LoadingProgress,
+        #endregion
+    }
+}

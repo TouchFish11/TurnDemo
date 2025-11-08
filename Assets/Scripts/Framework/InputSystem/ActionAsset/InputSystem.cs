@@ -1,0 +1,235 @@
+using System;
+using System.Text;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Utilities;
+
+namespace Framework.InputSystem
+{
+    /// <summary>
+    /// 输入系统
+    /// </summary>
+    public class InputSystem : SingletonBase<InputSystem>
+    {
+        //输入动作json数据
+        private string _jsonInputData;
+        //玩家输入组件
+        private PlayerInput _playerInput;
+        //存储交换按键函数的委托
+        private UnityAction ExchangeKeyAction;
+        //记录旧键位映射
+        private E_KeyMap oldKeyMap;
+        //记录旧按键
+        private Key oldKey;
+        //记录新按键
+        private Key newKey;
+        //记录新路径
+        private string newPath;
+
+        private InputSystem()
+        {
+
+        }
+
+        /// <summary>
+        /// 初始化玩家输入
+        /// </summary>
+        /// <param name="callBack"></param>
+        public void InitPlayerInput(UnityAction callBack)
+        {
+#if EDITOR_TEST_AB || !UNITY_EDITOR
+            AssetBundleLoadManager.Instance.LoadAssetAsync<TextAsset>(E_AssetBundleType.InputData, FileUtility.InputActionLocalFileName, (json) =>
+            {
+                _jsonInputData = json.text;
+                callBack?.Invoke();
+            });
+#else
+            TextAsset json = EditorResMgr.Instance.LoadEditorAsset<TextAsset>(FileUtility.InputActionLocalFileName, ".json");
+            _jsonInputData = json.text;
+            callBack?.Invoke();
+#endif
+        }
+
+        /// <summary>
+        /// 编辑输入(改键)
+        /// </summary>
+        /// <param name="keyMap">键位对应的行为映射类型</param>
+        /// <param name="oldKey">行为对应键位</param>
+        /// <param name="callBack">结束回调</param>
+        public void EditInput(E_KeyMap keyMap, Key oldKey, UnityAction<E_KeyConflict> callBack)
+        {
+            UnityEngine.InputSystem.InputSystem.onAnyButtonPress.CallOnce(inputControl =>
+            {
+                //拼接格式
+                string[] originalPaths = inputControl.path.Split('/');
+                string newpath = $"<{originalPaths[1]}>/{originalPaths[2]}";
+
+                //将输入的字符串转枚举
+                //按下的键不是键盘的键，是鼠标就会转换失败
+                if (!Enum.TryParse(typeof(Key), originalPaths[2], true, out object result))
+                {
+                    //非键盘按键冲突
+                    callBack?.Invoke(E_KeyConflict.NotKeyboard);
+                }
+                
+                Key newKey = (Key)result;
+                //判断特殊键位
+                if (IsSpecialKey(newKey))
+                {
+                    //特殊键位冲突
+                    callBack?.Invoke(E_KeyConflict.SpecialKey);
+                    return;
+                }
+                //判断按键冲突
+                if (IsKeyConflict(keyMap, oldKey, newKey, newpath))
+                {
+                    //键位冲突
+                    callBack?.Invoke(E_KeyConflict.ExistKey);
+                    return;
+                }
+
+                //修改对应行为的按键和路径
+                GameDataMgr.Instance.InputActionContainer.InputActinoDic[keyMap] = (newKey, newpath);
+                //更新数据
+                UpdateActions();
+                //执行回调
+                callBack?.Invoke(E_KeyConflict.Over);
+            });
+        }
+
+        /// <summary>
+        /// 执行交换键位
+        /// </summary>
+        public void InvokeExchangeKey()
+        {
+            if (oldKeyMap == E_KeyMap.None && oldKey == Key.None && newKey == Key.None && newPath == null)
+                return;
+
+            ExchangeKeyAction?.Invoke();
+            ExchangeKeyAction = null;
+            oldKeyMap = E_KeyMap.None;
+            oldKey = Key.None;
+            newKey = Key.None;
+            newPath = null;
+        }
+
+        /// <summary>
+        /// 更新动作数据
+        /// </summary>
+        /// <param name="playerInput">玩家输入组件</param>
+        public void UpdateActions(PlayerInput playerInput = null)
+        {
+            if (playerInput != null)
+            {
+                playerInput.actions = GetInputActionAsset();
+                playerInput.actions.Enable();
+                _playerInput = playerInput;
+            }
+            else if (_playerInput != null)
+            {
+                _playerInput.actions = GetInputActionAsset();
+                _playerInput.actions.Enable();
+            }
+            else
+            {
+                LogMgr.LogError("玩家输入组件获取失败");
+                return;
+            }
+
+            //设置监听函数
+        }
+
+        /// <summary>
+        /// 获取输入动作资源
+        /// </summary>
+        /// <returns>输入动作资源</returns>
+        private InputActionAsset GetInputActionAsset()
+        {
+            InputActionContainer container = GameDataMgr.Instance.InputActionContainer;
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(_jsonInputData);
+            //示例
+            //sb.Replace("<Jump>", container.InputActinoDic[E_KeyMap.Jump].path);
+            return InputActionAsset.FromJson(sb.ToString());
+        }
+
+        /// <summary>
+        /// 是否是特殊键位
+        /// </summary>
+        /// <param name="newKey">新键位</param>
+        /// <returns>true：是特殊键位；false：不是特殊键位</returns>
+        private bool IsSpecialKey(Key newKey)
+        {
+            if (newKey == Key.None || newKey == Key.Escape || newKey == Key.Enter || newKey == Key.End || newKey == Key.IMESelected)
+                return true;
+            return false;
+        }
+
+        /// <summary>
+        /// 键位是否冲突
+        /// </summary>
+        /// <param name="oldKeyMap">旧键位映射</param>
+        /// <param name="oldKey">旧键位</param>
+        /// <param name="newKey">新键位</param>
+        /// <param name="newPath">新键位路径</param>
+        /// <returns>是否冲突</returns>
+        private bool IsKeyConflict(E_KeyMap oldKeyMap, Key oldKey, Key newKey, string newPath)
+        {
+            //若改的键是同一个键，且键位修改为自身，不冲突
+            //eg：左转行为原来对应A，现在我又改为了A，说明是自己改为自己，不用处理
+            if (GameDataMgr.Instance.InputActionContainer.InputActinoDic[oldKeyMap].path == newPath)
+            {
+                return false;
+            }
+
+            //改的键和原来的键不一样，eg：左转行为原来对应A，现在我改为了D，说明要处理，处理该D键有没有和其它行为的键冲突
+            foreach (var (key, path) in GameDataMgr.Instance.InputActionContainer.InputActinoDic.Values)
+            {
+                //如果新key等于了数据中的任何其中一个key，说明按键冲突
+                if (newKey == key)
+                {
+                    //存储委托
+                    ExchangeKeyAction += ExchangeKey;
+                    //记录冲突键位和新键位
+                    this.oldKeyMap = oldKeyMap;
+                    this.oldKey = oldKey;
+                    this.newKey = newKey;
+                    this.newPath = newPath;
+                    return true;
+                }
+            }
+
+            //新key都不等于数据中的任何一个key，说明改了不同的键，不冲突
+            return false;
+        }
+
+        /// <summary>
+        /// 交换键位
+        /// </summary>
+        private void ExchangeKey()
+        {
+            InputActionContainer container = GameDataMgr.Instance.InputActionContainer;
+            foreach (E_KeyMap map in container.InputActinoDic.Keys)
+            {
+                var (key, _) = container.InputActinoDic[map];
+
+                //判断容器中存不存在这个键，存在即冲突了
+                if (key == newKey)
+                {
+                    //临时存储老按键
+                    var tempKeyInfo = container.InputActinoDic[oldKeyMap];
+                    //交换键位
+                    //让老键Key等于newKey，让老键的path等于新path
+                    container.InputActinoDic[oldKeyMap] = (newKey, newPath);
+                    //让冲突的Key等于oldKey，冲突的path等于老键的path
+                    container.InputActinoDic[map] = tempKeyInfo;
+                    //更新数据
+                    UpdateActions();
+                    return;
+                }
+            }
+        }
+    }
+}
