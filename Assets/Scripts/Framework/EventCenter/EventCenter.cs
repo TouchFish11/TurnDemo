@@ -21,7 +21,7 @@ namespace Framework
 
         private EventCenter()
         {
-            MonoManager.Instance.AddUpdateListener(Update);
+            MonoManager.Instance.AddUpdateListener(OnUpdate);
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace Framework
         /// <summary>
         /// 自定义帧更新
         /// </summary>
-        private void Update()
+        private void OnUpdate()
         {
             while(_eventQueue.Count > 0 || _eventQueueT.Count > 0)
             {

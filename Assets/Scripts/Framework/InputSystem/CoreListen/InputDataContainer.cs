@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Framework.InputManager
+namespace Framework
 {
     /// <summary>
     /// 输入数据容器类

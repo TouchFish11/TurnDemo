@@ -1,11 +1,3 @@
-/// <remarks>
-/// 作者: Qiu
-/// 创建时间: 2025-04-27
-/// 修改时间: 2025-05-11
-/// </remarks>
-
-
-
 using System.IO;
 using UnityEditor;
 using UnityEngine;

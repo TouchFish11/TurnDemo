@@ -45,14 +45,14 @@ public class AssetBundlesCollections : SingletonSOBase<AssetBundlesCollections>
         /// <summary>
         /// 资源引用
         /// </summary>
-        [Tooltip("资源引用")]
-        public UnityEngine.Object res;
+        [Tooltip("资源名称")]
+        public string name;
 
-        public AssetInfo(string assetPath, long assetBundleSize)
+        public AssetInfo(string assetPath, long assetBundleSize, string name)
         {
             this.assetPath = assetPath;
             this.size = assetBundleSize;
-            this.res = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(assetPath);
+            this.name = name;
         }
     }
 

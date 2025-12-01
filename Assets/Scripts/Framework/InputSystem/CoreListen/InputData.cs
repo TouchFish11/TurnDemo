@@ -2,7 +2,7 @@ using System;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 
-namespace Framework.InputManager
+namespace Framework
 {
     /// <summary>
     ///  ‰»Î ˝æ›

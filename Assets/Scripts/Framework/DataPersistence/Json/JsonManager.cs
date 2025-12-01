@@ -2,6 +2,7 @@ using LitJson;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Framework
@@ -19,11 +20,11 @@ namespace Framework
         /// <summary>
         /// 加载Json数据
         /// </summary>
-        public IEnumerator LoadJsonData()
+        public async Task LoadJsonAsync()
         {
-            //LoadJson<T, K>()
+            //LoadJsonAsync<T, K>()
             //...
-            yield return null;
+            await Task.FromResult(true);
         }
 
         /// <summary>
@@ -31,24 +32,20 @@ namespace Framework
         /// </summary>
         /// <typeparam name="T">容器类名</typeparam>
         /// <typeparam name="K">数据结构类名</typeparam>
-        private IEnumerator LoadJson<T, K>() where T : class where K : class
+        private async Task LoadJsonAsync<T, K>() where T : class where K : class
         {
 #if EDITOR_TEST_AB || !UNITY_EDITOR
             T container = null;
-            AssetBundleLoadManager.Instance.LoadAssetAsync<TextAsset>(E_AssetBundleType.Json, $"{typeof(K).Name}.json", (textAsset) =>
-            {
-                //转换为对象
-                container = JsonUtility.FromJson<T>(textAsset.text);
-                //存储
-                _jsonDic.Add(typeof(T).Name, container);
-            });
-            yield return new WaitUntil(() => container != null);
+            TextAsset textAsset = await AssetBundleManager.Instance.LoadAssetAsync<TextAsset>(E_AssetBundleType.Json, $"{typeof(K).Name}.json");
+            //转换为对象
+            container = JsonUtility.FromJson<T>(textAsset.text);
+            //存储
+            _jsonDic.Add(typeof(T).Name, container);
 #else
             //同步读取
             TextAsset textAsset = EditorResMgr.Instance.LoadEditorAsset<TextAsset>($"{typeof(K).Name}", ".json");
             T container = JsonUtility.FromJson<T>(textAsset.text);
             _jsonDic.Add(typeof(T).Name, container);
-            yield return null;
 #endif
         }
 
@@ -59,81 +56,70 @@ namespace Framework
         /// <returns></returns>
         public T GetJsonData<T>() where T : class
         {
-            if(_jsonDic.ContainsKey(typeof(T).Name))
+            if (_jsonDic.ContainsKey(typeof(T).Name))
                 return _jsonDic[typeof(T).Name] as T;
             return null;
         }
 
         /// <summary>
-        /// 保存为Json数据
+        /// 从Json转换为对象
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="jsonType"></param>
+        /// <param name="json"></param>
+        /// <returns></returns>
+        public T FromJson<T>(string json, E_JsonType jsonType = E_JsonType.JsonUtlity) where T : new()
+        {
+            return jsonType switch
+            {
+                E_JsonType.JsonUtlity => JsonUtility.FromJson<T>(json),
+                E_JsonType.LitJson => JsonMapper.ToObject<T>(json),
+                _ => new T()
+            };
+        }
+
+        /// <summary>
+        /// 从对象转换为Json
         /// </summary>
         /// <param name="data"></param>
-        /// <param name="fileName"></param>
+        /// <param name="saveFilePath"></param>
         /// <param name="type"></param>
-        public void SaveToJson(object data, string fileName, E_JsonType type = E_JsonType.LitJson)
+        public void ToJson(object data, string saveFilePath, E_JsonType type = E_JsonType.JsonUtlity)
         {
-            //确定存储路径
-            string path = Application.persistentDataPath + "/" + fileName + ".json";
             //序列化
             string jsonStr = "";
             switch (type)
             {
                 case E_JsonType.JsonUtlity:
-                    jsonStr = JsonUtility.ToJson(data);
+                    jsonStr = JsonUtility.ToJson(data, true);
                     break;
                 case E_JsonType.LitJson:
                     jsonStr = JsonMapper.ToJson(data);
                     break;
             }
-            File.WriteAllText(path, jsonStr);
+            File.WriteAllText(saveFilePath, jsonStr);
         }
 
         /// <summary>
-        /// 读取Json数据
+        /// 从对象转换为Json
         /// </summary>
-        /// <typeparam name="T">数据类型</typeparam>
-        /// <param name="fileName">文件名称</param>
-        /// <param name="type">使用的Json库</param>
-        /// <returns></returns>
-        public T LoadJson<T>(string fileName, E_JsonType type = E_JsonType.JsonUtlity) where T : new()
+        /// <param name="data"></param>
+        /// <param name="saveFilePath">绝对路径</param>
+        /// <param name="type"></param>
+        public async Task ToJsonAsync(object data, string saveFilePath, E_JsonType type = E_JsonType.JsonUtlity)
         {
-#if EDITOR_TEST_AB || !UNITY_EDITOR
-            string path = PathManager.GetJsonRuntimeLoadPath($"{fileName}.json");
-            if (!File.Exists(path))
-            {
-                return new T();
-            }
-
-            string jsonStr = File.ReadAllText(path);
-            T data = default;
             //序列化
+            string jsonStr = "";
             switch (type)
             {
                 case E_JsonType.JsonUtlity:
-                    data = JsonUtility.FromJson<T>(jsonStr);
+                    jsonStr = JsonUtility.ToJson(data, true);
                     break;
                 case E_JsonType.LitJson:
-                    data = JsonMapper.ToObject<T>(jsonStr);
+                    jsonStr = JsonMapper.ToJson(data);
                     break;
             }
-            return data;
-#else
-            string path = PathManager.GetJsonDebugLoadPath($"{fileName}.json");
-            if (!File.Exists(path))
-            {
-                Debug.LogError($"路径不存在：{path}");
-                return new T();
-            }
-            //读取文件
-            string jsonStr = File.ReadAllText(path);
-            //序列化
-            return type switch
-            {
-                E_JsonType.JsonUtlity => JsonUtility.FromJson<T>(jsonStr),
-                E_JsonType.LitJson => JsonMapper.ToObject<T>(jsonStr),
-                _ => new T(),
-            };
-#endif
+            await File.WriteAllTextAsync(saveFilePath, jsonStr);
         }
     }
 }

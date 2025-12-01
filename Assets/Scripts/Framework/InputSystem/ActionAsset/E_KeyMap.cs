@@ -1,4 +1,4 @@
-namespace Framework.InputSystem
+namespace Framework
 {
     /// <summary>
     /// 键位映射
@@ -11,6 +11,10 @@ namespace Framework.InputSystem
         None,
 
         //自定义行为
-        //Eg：Jump...
+        Up,
+        Down,
+        Left,
+        Right,
+        Attack,
     }
 }

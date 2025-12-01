@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Framework.InputManager
+namespace Framework
 {
     /// <summary>
     /// 输入模式
     /// </summary>
-    public enum E_InputMode
+    public enum E_InputMode : byte
     {
         /// <summary>
         /// 按下

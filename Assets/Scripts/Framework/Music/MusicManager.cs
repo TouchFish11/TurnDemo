@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,43 +10,39 @@ namespace Framework
     /// </summary>
     public class MusicManager : SingletonBase<MusicManager>
     {
-        //存储所有播放的音效
+        // 音效对象列表
         private readonly List<AudioSource> _sounds = new List<AudioSource>();
-
-        //背景音乐对象
+        // 背景音乐组件
         private AudioSource _backgroundMusic;
-
-        //是否清空所有音效
+        // 是否清空所有音效标记
         private bool isClearSounds;
 
         private MusicManager()
         {
-            MonoManager.Instance.AddFixedUpdateListener(FixedUpdate);
+            MonoManager.Instance.AddFixedUpdateListener(OnFixedUpdate);
         }
 
         /// <summary>
         /// 自定义物理帧更新
         /// </summary>
-        private void FixedUpdate()
+        private void OnFixedUpdate()
         {
-            //避免主动暂停或停止音效导入其意外放入缓存池
+            // 避免主动暂停或停止音效导入其意外放入缓存池
             if (!GameDataMgr.Instance.MusicData.SoundIsOpen || isClearSounds)
+            {
                 return;
+            }
 
-            //更新音效
+            // 遍历音效列表，检测未播放的音效
             for (int i = _sounds.Count - 1; i >= 0 ; i--)
             {
-                //音效没有播放
+                // 检测到未播放音效
                 if (!_sounds[i].isPlaying)
                 {
-                    //非循环音效会播放完毕，会被检测到，自动存入缓存池
-                    //暂停音效
+                    // 非循环音效会播放完毕，会被检测到，自动存入缓存池
                     _sounds[i].Stop();
-                    //置空cilp
                     _sounds[i].clip = null;
-                    //放入缓存池
                     PoolManager.Instance.PushObj(_sounds[i].gameObject);
-                    //从音效容器中移除
                     _sounds.RemoveAt(i);
                 }
             }
@@ -57,25 +54,24 @@ namespace Framework
         /// <param name="musicName">背景音乐名</param>
         /// <param name="isLoop">是否循环</param>
         /// <param name="startPlayCallBack">开始播放回调</param>
-        public void PlayBackgroundMusic(string musicName, bool isLoop = true, UnityAction startPlayCallBack = null)
+        public async Task PlayBackgroundMusic(string musicName, bool isLoop = true)
         {
-            if(_backgroundMusic == null)
+            // 创建背景音乐组件
+            if (_backgroundMusic == null)
             {
                 GameObject bkMusicObj = new GameObject("BackgroundMusic/" + musicName);
                 _backgroundMusic = bkMusicObj.AddComponent<AudioSource>();
                 GameObject.DontDestroyOnLoad(bkMusicObj);
             }
 
-            //加载音乐切片资源
-            AssetBundleLoadManager.Instance.LoadAssetAsync<AudioClip>(E_AssetBundleType.Music, musicName, (clip) =>
-            {
-                _backgroundMusic.clip = clip;
-                _backgroundMusic.loop = isLoop;
-                _backgroundMusic.volume = GameDataMgr.Instance.MusicData.MusicValue;
-                _backgroundMusic.mute = !GameDataMgr.Instance.MusicData.MusicIsOpen;
-                _backgroundMusic.Play();
-                startPlayCallBack?.Invoke();
-            });
+            // 加载音乐切片资源
+            AudioClip audioClip = await AssetBundleManager.Instance.LoadAssetAsync<AudioClip>(E_AssetBundleType.Music, musicName);
+            // 设置音乐组件属性并播放
+            _backgroundMusic.clip = audioClip;
+            _backgroundMusic.loop = isLoop;
+            _backgroundMusic.volume = GameDataMgr.Instance.MusicData.MusicValue;
+            _backgroundMusic.mute = !GameDataMgr.Instance.MusicData.MusicIsOpen;
+            _backgroundMusic.Play();
         }
 
         /// <summary>
@@ -130,21 +126,20 @@ namespace Framework
         /// <param name="soundName">音效名</param>
         /// <param name="isLoop">是否循环</param>
         /// <param name="createCallBack">完成回调</param>
-        public void CreateSoundAsync(string soundName, bool isLoop = false, UnityAction<AudioSource> createCallBack = null)
+        public async Task<AudioSource> CreateSoundAsync(string soundName, bool isLoop = false)
         {
-            //加载音乐剪辑资源
-            AssetBundleLoadManager.Instance.LoadAssetAsync<AudioClip>(E_AssetBundleType.Music, soundName, (clip) =>
-            {
-                isClearSounds = false;
-                AudioSource sound = PoolManager.Instance.GetObj<AudioSource>($"Sound_{soundName}");
-                sound.clip = clip;
-                sound.loop = isLoop;
-                sound.volume = GameDataMgr.Instance.MusicData.SoundValue;
-                sound.mute = !GameDataMgr.Instance.MusicData.SoundIsOpen;
-                sound.Play();
-                _sounds.Add(sound);
-                createCallBack?.Invoke(sound);
-            });
+            AudioClip audioClip = await AssetBundleManager.Instance.LoadAssetAsync<AudioClip>(E_AssetBundleType.Music, soundName);
+            isClearSounds = false;
+            // 从缓存池获取音效对象
+            AudioSource sound = PoolManager.Instance.GetObj<AudioSource>($"Sound_{soundName}");
+            // 设置音效组件属性并播放
+            sound.clip = audioClip;
+            sound.loop = isLoop;
+            sound.volume = GameDataMgr.Instance.MusicData.SoundValue;
+            sound.mute = !GameDataMgr.Instance.MusicData.SoundIsOpen;
+            sound.Play();
+            _sounds.Add(sound);
+            return sound;
         }
 
         /// <summary>

@@ -1,3 +1,4 @@
+using CustomEditor.ScriptGeneration;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -44,7 +45,7 @@ namespace Framework
         /// <summary>
         /// AB包拷贝路径
         /// </summary>
-        private const string AB_COPY_PATH = "Assets/StreamingAssets";
+        private const string AB_COPY_PATH = "Assets/StreamingAssets/AssetBundles/";
 
         /// <summary>
         /// 用户名
@@ -91,12 +92,12 @@ namespace Framework
         /// </summary>
         private BuildAssetBundleOptions assetBundleOptions = BuildAssetBundleOptions.None;
 
-        ///AB包打包设置
-        private bool isAppendHashToAssetBundleName = true;
-        private bool isUseContentHash = true;
-        private bool isIgnoreTypeTreeChanges = true;
+        // AB包打包设置
+        private bool isAppendHashToAssetBundleName = false;
+        private bool isUseContentHash = false;
+        private bool isIgnoreTypeTreeChanges = false;
         private bool isDryRunBuild = false;
-        private bool isEnableProtection = true;
+        private bool isEnableProtection = false;
         private bool isStrictMode = false;
 
         /// <summary>
@@ -118,11 +119,17 @@ namespace Framework
         private bool uploadBytesIsAutoSetting = true;
         private bool uploadBytesIsCustomSetting = false;
 
-        //文件信息字典  根文件的子文件夹 《——》文件列表
+        // 文件信息字典  根文件的子文件夹<—>文件列表
         private readonly Dictionary<string, List<FileInfo>> _fileInfoDic = new Dictionary<string, List<FileInfo>>();
 
-        //文件过滤后缀数组
+        // 文件过滤后缀数组
         private readonly string[] _filterSuffixes = new string[] { ".meta" };
+
+        // 预定义枚举数组
+        private readonly string[] defaultNames = new string[] { "UI", "Scene", "Lua", "Music", "Json", "TableInfo", "InputData", "Camera" };
+
+        // 枚举文件生成路径
+        private readonly string filePath = Application.dataPath + "/Scripts/Framework/AssetBundle/Management/E_AssetBundleType.cs";
 
         [MenuItem("GameTool/AssetBundle/Build Package Window")]
         private static void OpenWindow()
@@ -222,15 +229,15 @@ namespace Framework
                 BuildAssetBundles();
             }
 
-            GUILayout.Label(new GUIContent("ABCompareFilePath", "AB包对比文件路径"));
+            GUILayout.Label(new GUIContent("ABListFilePath", "AB包清单文件路径"));
 
             EditorGUI.BeginDisabledGroup(true);
-            GUILayout.TextField(AssetBundlesOutPath + targetPlatformStrs[platformIndex] + "/" + "AssetBundleCompareInfo.txt");
+            GUILayout.TextField(AssetBundlesOutPath + targetPlatformStrs[platformIndex] + "/" + "AssetBundleListInfo.json");
             EditorGUI.EndDisabledGroup();
 
-            if (GUILayout.Button(new GUIContent("Create ABCompareFile", "创建AB包对比文件")))
+            if (GUILayout.Button(new GUIContent("Create ABListFile", "创建AB包清单文件")))
             {
-                CreateAssetBundleCompareFile();
+                CreateAssetBundleListFile(AssetBundlesOutPath, AssetBundlesOutPath + targetPlatformStrs[platformIndex], $"{AssetBundlesOutPath}{targetPlatformStrs[platformIndex]}/{FileUtility.ListFileDefaultName}");
             }
 
             GUILayout.Label(new GUIContent("AssetBundleTransferPath", "AB包转存路径"));
@@ -352,36 +359,13 @@ namespace Framework
                         //设置该文件的AB包名
                         importer.assetBundleName = abName.ToLower();
                         //记录到AB包收集类中
-                        AssetBundlesCollections.Instance.Add(importer.assetBundleName, new AssetBundlesCollections.AssetInfo(dataPath, fileInfos[i].Length));
+                        AssetBundlesCollections.Instance.Add(importer.assetBundleName, new AssetBundlesCollections.AssetInfo(dataPath, fileInfos[i].Length, fileInfos[i].Name));
                     }
                 }
             }
 
-            string classStr = "";
-            classStr += "namespace Framework\n";
-            classStr += "{\n";
-            classStr += "\tpublic enum E_AssetBundleType\n";
-            classStr += "\t{\n";
-            //文件夹名称生成枚举类
-            foreach (string abName in _fileInfoDic.Keys)
-            {
-                classStr += $"\t\t{abName},\n";
-            }
-            classStr += "\t}\n";
-            classStr += "}";
-            if (!Directory.Exists(Application.dataPath + "/Scripts/Framework/ABRes"))
-            {
-                Directory.CreateDirectory(Application.dataPath + "/Scripts/Framework/ABRes");
-            }
-
-            if (File.Exists(Application.dataPath + "/Scripts/Framework/ABRes/E_AssetBundleType.cs"))
-            {
-                File.Delete(Application.dataPath + "/Scripts/Framework/ABRes/E_AssetBundleType.cs");
-            }
-            File.WriteAllText(Application.dataPath + "/Scripts/Framework/ABRes/E_AssetBundleType.cs", classStr);
-
-            //刷新
-            AssetDatabase.Refresh();
+            IScriptGenerator scriptGenerator = new EnumGenerator(_fileInfoDic.Keys, defaultNames, filePath, "Framework");
+            scriptGenerator.GenerateScript();
         }
 
         /// <summary>
@@ -519,41 +503,38 @@ namespace Framework
         }
 
         /// <summary>
-        /// 创建AB包对比文件
+        /// 创建AB包清单文件
         /// </summary>
-        private void CreateAssetBundleCompareFile()
+        private void CreateAssetBundleListFile(string outPath, string dirctoryPath, string filePath)
         {
-            //获取AssetBundle输出路径下的所有AB包
-            if (!Directory.Exists(AssetBundlesOutPath))
+            // 获取AssetBundle输出路径下的所有AB包
+            if (!Directory.Exists(outPath))
             {
-                Directory.CreateDirectory(AssetBundlesOutPath);
+                Directory.CreateDirectory(outPath);
             }
 
-            //获取AB包中的数据，生成MD5码
-            DirectoryInfo directoryInfo = Directory.CreateDirectory(AssetBundlesOutPath + targetPlatformStrs[platformIndex]);
+            // 获取AB包中的数据
+            DirectoryInfo directoryInfo = Directory.CreateDirectory(dirctoryPath);
             FileInfo[] fileInfos = directoryInfo.GetFiles();
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < fileInfos.Length; i++)
+
+            // 创建包集合
+            ABPackageCollection collection = new ABPackageCollection();
+            foreach (FileInfo info in fileInfos)
             {
-                FileInfo info = fileInfos[i];
-                if (info.Extension != AssetBundleLoadManager.AbSuffix)
+                if (info.Extension != AssetBundleManager.Instance.AbSuffix)
+                {
                     continue;
+                }
 
-                //自定义规则
-                //AB包名 + 包大小 + CRC + MD5码
-                sb.Append(info.Name + "=" + info.Length + "=" + GetMD5(info.FullName));
-                sb.Append("\n");
+                // 构建每个包的信息
+                ABPackageInfo packageInfo = new ABPackageInfo(info.Name, info.Length, GetMD5(info.FullName));
+                // 记录包信息
+                collection.TryAdd(info.Name, packageInfo);
             }
 
-            if (sb.Length == 0)
-            {
-                Debug.Log("没有可用于生成的数据");
-                return;
-            }
-
-            //生成信息记录
-            File.WriteAllText(AssetBundlesOutPath + targetPlatformStrs[platformIndex] + "/AssetBundleCompareInfo.txt", sb.ToString()[..(sb.Length - 1)]);
-            //刷新
+            // Json序列化
+            JsonManager.Instance.ToJson(collection, filePath, E_JsonType.JsonUtlity);
+            // 刷新
             AssetDatabase.Refresh();
         }
 
@@ -566,7 +547,7 @@ namespace Framework
             {
                 Directory.CreateDirectory(AB_COPY_PATH);
                 AssetDatabase.Refresh();
-                Debug.Log($"该路径{AB_COPY_PATH}不存在，已自动创建！");
+                Debug.Log($"路径：{AB_COPY_PATH}不存在，已自动创建");
             }
 
             //获取在Project窗口中选中的资源
@@ -585,25 +566,7 @@ namespace Framework
                 AssetDatabase.CopyAsset(assetPath, AB_COPY_PATH + "/" + fileName);
             }
 
-            StringBuilder sb = new StringBuilder();
-            //获取文件夹信息，没有就创建，有就获取
-            DirectoryInfo info = Directory.CreateDirectory(AB_COPY_PATH);
-            //获取文件夹下的所有文件信息
-            FileInfo[] fileInfos = info.GetFiles();
-            for (int i = 0; i < fileInfos.Length; i++)
-            {
-                //只获取没有后缀的AB包文件
-                if (fileInfos[i].Extension != AssetBundleLoadManager.AbSuffix)
-                    continue;
-                //记录所有AB包关键信息：AB包名、大小、MD5
-                sb.Append(fileInfos[i].Name + "=" + fileInfos[i].Length + "=" + GetMD5(fileInfos[i].FullName) + "\n");
-            }
-
-            //创建AB包对比文件，去掉最后一个分隔符，这个API会覆盖源文件
-            File.WriteAllText(Application.streamingAssetsPath + "/" + "AssetBundleCompareInfo.txt", sb.ToString()[..(sb.Length - 1)]);
-
-            //刷新
-            AssetDatabase.Refresh();
+            CreateAssetBundleListFile(AB_COPY_PATH, AB_COPY_PATH, $"{AB_COPY_PATH}{FileUtility.ListFileDefaultName}");
         }
 
         /// <summary>
@@ -620,7 +583,7 @@ namespace Framework
             //获取需要上传的文件
             for (int i = 0; i < fileInfos.Length; i++)
             {
-                if (fileInfos[i].Extension != AssetBundleLoadManager.AbSuffix && fileInfos[i].Extension != ".txt")
+                if (fileInfos[i].Extension != AssetBundleManager.Instance.AbSuffix && fileInfos[i].Extension != ".json")
                     continue;
 
                 list.Add(fileInfos[i]);

@@ -225,22 +225,22 @@ namespace Framework
         /// <returns></returns>
         public static string ToByteUnit(ulong size)
         {
-            //B / 1024 * 1024 * 1024 = GB
+            // B / 1024 * 1024 * 1024 = GB
             if (size / (1024f * 1024 * 1024) > 1f)
             {
                 return $"{size / (1024f * 1024 * 1024):F2}GB";
             }
-            //B / 1024 * 1024 = MB
+            // B / 1024 * 1024 = MB
             else if (size / (1024f * 1024) > 1f)
             {
                 return $"{size / (1024f * 1024):F2}MB";
             }
-            //B / 1024 = KB
+            // B / 1024 = KB
             else if (size / 1024f > 1f)
             {
                 return $"{size / 1024}KB";
             }
-            //B
+            // B
             else
             {
                 return $"{size}B";

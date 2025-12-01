@@ -1,4 +1,4 @@
-namespace Framework.InputSystem
+namespace Framework
 {
     /// <summary>
     /// ¼üÎ»³åÍ»

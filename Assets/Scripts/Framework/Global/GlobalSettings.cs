@@ -1,11 +1,27 @@
 using Framework;
 using UnityEngine;
 
+
 /// <summary>
 /// 全局设置
 /// </summary>
 public sealed class GlobalSettings : SingletonSOBase<GlobalSettings>
 {
+    /// <summary>
+    /// 数据加载路径类型
+    /// </summary>
+    public enum E_DataLoadPath
+    {
+        /// <summary>
+        /// 流文件夹
+        /// </summary>
+        Streaming,
+        /// <summary>
+        /// 持久文件夹
+        /// </summary>
+        Persistent,
+    }
+
     /// <summary>
     /// 日志过滤级别
     /// </summary>
@@ -63,18 +79,18 @@ public sealed class GlobalSettings : SingletonSOBase<GlobalSettings>
     public int MaxConcurrencyNum = 8;
 
     /// <summary>
-    /// 连接超时
+    /// 连接超时（s）
     /// </summary>
     [Header("连接超时")]
-    [Tooltip("建立服务器连接的最大等待时间")]
-    public int connectTimeout = 5;
+    [Tooltip("建立服务器连接的最大等待时间（s）")]
+    public int connectTimeout = 60;
 
     /// <summary>
-    /// 下载超时
+    /// 下载超时（s）
     /// </summary>
     [Header("下载超时")]
-    [Tooltip("数据传输阶段的最大无进展时间")]
-    public int downloadTimeout = 30;
+    [Tooltip("数据传输阶段的最大无进展时间（s）")]
+    public int downloadTimeout = 60;
 
     /// <summary>
     /// 单文件最大重试次数
@@ -96,4 +112,46 @@ public sealed class GlobalSettings : SingletonSOBase<GlobalSettings>
     [Header("速度更新间隔")]
     [Tooltip("单位时间内的下载量")]
     public float SpeedUpdateInterval = 1f;
+
+    /// <summary>
+    /// AB包数据加载路径类型
+    /// </summary>
+    [Header("AB包数据加载路径类型")]
+    [Tooltip("确定从哪个文件夹加载AB包")]
+    public E_DataLoadPath ABLoadPath = E_DataLoadPath.Streaming;
+
+    /// <summary>
+    /// 用户数据加载/保存路径类型
+    /// </summary>
+    [Header("用户数据加载路径类型")]
+    [Tooltip("确定从哪个文件夹加载/保存用户数据")]
+    public E_DataLoadPath UserDataPath = E_DataLoadPath.Streaming;
+
+    /// <summary>
+    /// UDP接收缓冲区大小
+    /// </summary>
+    [Header("UDP接收缓冲区大小")]
+    [Tooltip("缓存帧同步数据包")]
+    public short UdpReceiveBufferSize = 8192;
+
+    /// <summary>
+    /// TCP接收临时缓冲区大小
+    /// </summary>
+    [Header("TCP发送缓冲区大小")]
+    [Tooltip("临时缓存接收的TCP消息")]
+    public short TcpReceiveTempBufferSize = 1024;
+
+    /// <summary>
+    /// TCP接收缓冲区大小
+    /// </summary>
+    [Header("UDP接收缓冲区大小")]
+    [Tooltip("缓存接收的TCP待处理消息")]
+    public short TcpReceiveBufferSize = 1024;
+
+    /// <summary>
+    /// 心跳消息发送间隔时间（ms）
+    /// </summary>
+    [Header("心跳消息发送间隔时间（ms）")]
+    [Tooltip("心跳消息发送间隔（ms）")]
+    public short HeartMsgSendIntervalTime = 3000;
 }

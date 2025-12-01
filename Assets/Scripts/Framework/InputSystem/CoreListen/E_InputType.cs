@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Framework.InputManager
+namespace Framework
 {
     /// <summary>
     ///  ‰»Î¿‡–Õ
     /// </summary>
-    public enum E_InputType
+    public enum E_InputType : byte
     {
         /// <summary>
         /// º¸≈Ã

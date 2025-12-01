@@ -1,0 +1,2 @@
+编辑器模式测试AB包：
+EDITOR_TEST_AB

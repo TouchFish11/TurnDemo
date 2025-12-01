@@ -10,7 +10,7 @@ public class EditorTools
     /// <summary>
     /// SO资源存储路径
     /// </summary>
-    public const string AssetPath = "Assets/Resources/";
+    public const string AssetPath = "Assets/Resources/Global/";
 
     /// <summary>
     /// 创建全局配置文件

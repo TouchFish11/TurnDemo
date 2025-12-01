@@ -88,5 +88,14 @@ namespace Framework
         {
             LateUpdateEvent?.Invoke();
         }
+
+        protected override void OnDestroy()
+        {
+            FixedUpdateEvent = null;
+            UpdateEvent = null;
+            LateUpdateEvent = null;
+
+            base.OnDestroy();
+        }
     }
 }

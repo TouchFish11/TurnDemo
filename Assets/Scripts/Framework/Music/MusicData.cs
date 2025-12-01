@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace Framework
 {
@@ -9,13 +10,13 @@ namespace Framework
     public class MusicData
     {
         //音乐大小
-        private float _musicValue = 1f;
+        [SerializeField] private float _musicValue = 1f;
         //音效大小
-        private float _soundValue = 1f;
+        [SerializeField] private float _soundValue = 1f;
         //音乐是否开启
-        private bool _musicIsOpen = true;
+        [SerializeField] private bool _musicIsOpen = true;
         //音效是否开启
-        private bool _soundIsOpen = true;
+        [SerializeField] private bool _soundIsOpen = true;
 
         /// <summary>
         /// 音乐大小

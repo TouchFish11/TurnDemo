@@ -1,0 +1,142 @@
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
+using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+
+/// <summary>
+/// UI组件绑定器
+/// </summary>
+public class UIComponentBinder
+{
+    private UIBehaviour _componentBehaviour;
+
+    // 存储所有找到的满足条件的UI控件
+    protected Dictionary<string, List<UIBehaviour>> controlDic = new Dictionary<string, List<UIBehaviour>>();
+
+    // 存储默认的控件名列表
+    private readonly List<string> _defaultControlNameList = new List<string>()
+    {
+        "Image", "Text (TMP)", "RawImage", "View", "Toggle", "Slider", "Scrollbar",
+        "Scroll View", "Button", "Dropdown", "InputField (TMP)", "Background", "Checkmark",
+        "Label", "Fill", "Handle", "Viewport", "Arrow",
+    };
+
+    /// <summary>
+    /// 按钮点击事件
+    /// </summary>
+    public event UnityAction<string> OnButtonClick;
+
+    /// <summary>
+    /// 滑动条拖动事件
+    /// </summary>
+    public event UnityAction<string, float> OnSliderValueChanged;
+
+    /// <summary>
+    /// 开关值变化事件
+    /// </summary>
+    public event UnityAction<string, bool> OnToggleValueChanged;
+
+    /// <summary>
+    /// 输入值变化事件
+    /// </summary>
+    public event UnityAction<string, string> OnInputFieldValueChanged;
+
+    public UIComponentBinder(UIBehaviour uIBehaviour)
+    {
+        _componentBehaviour = uIBehaviour;
+    }
+
+    /// <summary>
+    /// 绑定
+    /// </summary>
+    public void Bind()
+    {
+        FindChildrenControl<Button>();
+        FindChildrenControl<Toggle>();
+        FindChildrenControl<ToggleGroup>();
+        FindChildrenControl<Slider>();
+        FindChildrenControl<InputField>();
+        FindChildrenControl<ScrollRect>();
+        FindChildrenControl<Dropdown>();
+        FindChildrenControl<TextMeshProUGUI>();
+        FindChildrenControl<RawImage>();
+        FindChildrenControl<Text>();
+        FindChildrenControl<Image>();
+    }
+
+    /// <summary>
+    /// 获取控件
+    /// </summary>
+    /// <typeparam name="T">控件类型</typeparam>
+    /// <param name="controlName">控件名</param>
+    /// <returns></returns>
+    public T GetControl<T>(string controlName) where T : UIBehaviour
+    {
+        if (controlDic.ContainsKey(controlName))
+        {
+            List<UIBehaviour> uiList = controlDic[controlName];
+            for (int i = 0; i < uiList.Count; i++)
+            {
+                if (uiList[i].GetType() == typeof(T))
+                    return uiList[i] as T;
+            }
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// 寻找某种类型子控件
+    /// </summary>
+    /// <typeparam name="T">控件类型</typeparam>
+    private void FindChildrenControl<T>() where T : UIBehaviour
+    {
+        // 获取该面板上所有该类型的控件
+        T[] controls = _componentBehaviour.GetComponentsInChildren<T>();
+        for (int i = 0; i < controls.Length; i++)
+        {
+            // 用临时变量记录控件名，防止闭包影响
+            string controlName = controls[i].name;
+
+            // 跳过不需要存储的控件、跳过存储过的控件、跳过面板
+            if (_defaultControlNameList.Contains(controlName))
+                continue;
+
+            // 之前存储过该名称的控件
+            if (controlDic.ContainsKey(controlName))
+            {
+                // 若之前存储的控件和当前不一样，才去存储
+                if (!controlDic[controlName].Contains(controls[i]))
+                    controlDic[controlName].Add(controls[i]);
+            }
+            // 第一次存储该名称的控件
+            else
+            {
+                // 存储控件
+                controlDic.Add(controlName, new List<UIBehaviour>() { controls[i] });
+            }
+
+            // 事件监听
+            if (controls[i] is Button button)
+                button.onClick.AddListener(() => { OnButtonClick?.Invoke(controlName); });
+            else if (controls[i] is Slider slider)
+                slider.onValueChanged.AddListener((value) => { OnSliderValueChanged?.Invoke(controlName, value); });
+            else if (controls[i] is Toggle toggle)
+                toggle.onValueChanged.AddListener((isOn) => { OnToggleValueChanged?.Invoke(controlName, isOn); });
+            else if (controls[i] is InputField inputField)
+                inputField.onValueChanged.AddListener((inputValue) => { OnInputFieldValueChanged?.Invoke(controlName, inputValue); });
+        }
+    }
+
+    /// <summary>
+    /// 清空
+    /// </summary>
+    public void Clear()
+    {
+        controlDic.Clear();
+        controlDic = null;
+    }
+}

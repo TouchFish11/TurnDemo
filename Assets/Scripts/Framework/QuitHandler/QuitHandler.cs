@@ -1,6 +1,9 @@
 using Framework;
+using System;
 using System.IO;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// 退出处理器
@@ -8,22 +11,23 @@ using UnityEngine;
 public class QuitHandler : SingletonAutoMono<QuitHandler>
 {
     /// <summary>
-    /// 初始化退出处理器(Main主函数调用)
+    /// 在应用程序退出时
+    /// </summary>
+    public event Func<Task> OnAppQuit;
+
+    /// <summary>
+    /// 初始化退出处理器
     /// </summary>
     public void ActiveHandler()
     {
         LogMgr.Instance.EnableLog = true;
         LogMgr.Log(Application.persistentDataPath);
-        LogMgr.Log("退出处理器激活成功");
+        LogMgr.Log("退出处理器激活");
     }
 
-    private void OnApplicationQuit()
+    private async void OnApplicationQuit()
     {
-        //保存音乐数据
-        if (GameDataMgr.Instance.MusicData != null)
-            BinaryDataMgr.Instance.Save(FileUtility.LocalMusicDataFileName, GameDataMgr.Instance.MusicData);
-        //保存改键数据
-        if (GameDataMgr.Instance.InputActionContainer != null)
-            BinaryDataMgr.Instance.Save(FileUtility.LocalInputDataFileName, GameDataMgr.Instance.InputActionContainer);
+        await OnAppQuit?.Invoke();
+        OnAppQuit = null;
     }
 }

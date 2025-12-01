@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 using UnityEngine.InputSystem.LowLevel;
 
-namespace Framework.InputManager
+namespace Framework
 {
     /// <summary>
     ///  ‰»Îπ‹¿Ì∆˜

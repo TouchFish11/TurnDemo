@@ -21,6 +21,14 @@ public static class FileUtility
     public static string LocalMusicDataFileName => "MusicData.bytes";
 
     /// <summary>
+    /// 本地登录数据缓存文件名
+    /// </summary>
+    /// <value>
+    /// LoginCacheData.bytes
+    /// </value>
+    public static string LocalLoginDataFileName => "LoginCacheData.bytes";
+
+    /// <summary>
     /// 本地输入数据文件名
     /// </summary>
     /// <value>
@@ -29,28 +37,28 @@ public static class FileUtility
     public static string LocalInputDataFileName => "InputData.bytes";
 
     /// <summary>
-    /// AB包对比文件默认名称
+    /// AB包清单文件默认名称
     /// </summary>
     /// <value>
-    /// AssetBundleCompareInfo.txt
+    /// AssetBundleCompareInfo.json
     /// </value>
-    public static string CompareFileDefaultName => "AssetBundleCompareInfo.txt";
+    public static string ListFileDefaultName => "AssetBundleListInfo.json";
 
     /// <summary>
-    /// AB包临时对比文件默认名称
+    /// AB包临时清单文件默认名称
     /// </summary>
     /// <value>
-    /// ABCompareInfo_Temp.txt
+    /// ABCompareInfo_Temp.json
     /// </value>
-    public static string TempCompareFileDefaultName => "ABCompareInfo_Temp.txt";
+    public static string TempListFileDefaultName => "ABListInfo_Temp.json";
 
     /// <summary>
-    /// AB包记录文件默认名称
+    /// AB包缓存文件默认名称
     /// </summary>
     /// <value>
-    /// ABRecordFile.txt
+    /// ABCacheFile.json
     /// </value>
-    public static string RecordDefaultName => "ABRecordFile.txt";
+    public static string CacheDefaultName => "ABCacheFile.json";
 
     /// <summary>
     /// 本地输入动作配置文件名
@@ -58,5 +66,5 @@ public static class FileUtility
     /// <value>
     /// PlayerActionAssets.ias
     /// </value>
-    public static string InputActionLocalFileName => "PlayerActionAssets.ias";
+    public static string InputActionLocalFileName => "PlayerActionAssets.json";
 }

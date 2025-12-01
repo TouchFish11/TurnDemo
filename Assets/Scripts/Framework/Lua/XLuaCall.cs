@@ -1,5 +1,4 @@
 using Framework;
-using Framework.InputSystem;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -48,7 +47,7 @@ public static class XLuaCall
     public static List<Type> luaCallCsharpList = new List<Type>()
     {
         //øÚº‹¿‡
-        typeof(AssetBundleLoadManager),
+        typeof(AssetBundleManager),
         typeof(LogMgr),
         typeof(E_EventType),
         typeof(EventCenter),

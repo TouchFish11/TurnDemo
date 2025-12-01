@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
@@ -13,53 +15,60 @@ namespace Framework
     [LuaCallCSharp]
     public class UIManager : SingletonBase<UIManager>
     {
-        //存储所有面板的字典
+        // 存储所有面板的字典
         private readonly Dictionary<string, BasePanelInfo> _panelDic = new Dictionary<string, BasePanelInfo>();
-        //画布
+        // 画布
         private Canvas _canvas;
-        //ui摄像机
+        // ui摄像机
         private Camera _uiCamera;
-        //上层
+        // 上层
         private Transform _topLayer;
-        //中层
+        // 中层
         private Transform _midLayer;
-        //底层
+        // 底层
         private Transform _botLayer;
-        //系统层
+        // 系统层
         private Transform _systemLayer;
 
-        private UIManager()
+        private readonly Dictionary<Type, IUIControllerFactory> _typeToCtrlFactoryMap = new Dictionary<Type, IUIControllerFactory>();
+
+        private UIManager() { }
+
+        /// <summary>
+        /// 异步初始化UI管理器
+        /// </summary>
+        /// <returns></returns>
+        public async Task InitUIManagerAsync()
         {
+            // 初始化UI控制器工厂
+            InitControllerFactory();
+
 #if EDITOR_TEST_AB || !UNITY_EDITOR
-            //异步加载Canvas
-            AssetBundleLoadManager.Instance.LoadAssetAsync<GameObject>(E_AssetBundleType.UI, "Canvas", (canvasObj) =>
-            {
-                //实例化画布对象
-                GameObject canvasInstance = GameObject.Instantiate(canvasObj);
-                //记录画布对象
-                _canvas = canvasInstance.GetComponent<Canvas>();
-                //过场景不移除
-                GameObject.DontDestroyOnLoad(canvasInstance);
+            // 加载画布资源
+            GameObject canvasObj = await AssetBundleManager.Instance.LoadAssetAsync<GameObject>(E_AssetBundleType.UI, "Canvas");
+            // 实例化画布对象
+            GameObject canvasInstance = GameObject.Instantiate(canvasObj);
+            // 记录画布对象
+            _canvas = canvasInstance.GetComponent<Canvas>();
+            // 过场景不移除
+            GameObject.DontDestroyOnLoad(canvasInstance);
 
-                //获取对应层级对象位置
-                _topLayer = _canvas.transform.Find("Top");
-                _midLayer = _canvas.transform.Find("Mid");
-                _botLayer = _canvas.transform.Find("Bot");
-                _systemLayer = _canvas.transform.Find("System");
+            // 获取对应层级对象位置
+            _topLayer = _canvas.transform.Find("Top");
+            _midLayer = _canvas.transform.Find("Mid");
+            _botLayer = _canvas.transform.Find("Bot");
+            _systemLayer = _canvas.transform.Find("System");
 
-                //异步加载UICamera
-                AssetBundleLoadManager.Instance.LoadAssetAsync<GameObject>(E_AssetBundleType.Camera, "UICamera", (uiCameraObj) =>
-                {
-                    //实例化摄像机对象
-                    GameObject uiCameraInstance = GameObject.Instantiate(uiCameraObj);
-                    //记录UI摄像机
-                    _uiCamera = uiCameraInstance.GetComponent<Camera>();
-                    //过场景不移除
-                    GameObject.DontDestroyOnLoad(uiCameraInstance);
-                    //设置UI摄像机
-                    _canvas.worldCamera = _uiCamera;
-                });
-            });
+            // 加载UI摄像机资源
+            GameObject uiCameraObj = await AssetBundleManager.Instance.LoadAssetAsync<GameObject>(E_AssetBundleType.Camera, "UICamera");
+            // 实例化摄像机对象
+            GameObject uiCameraInstance = GameObject.Instantiate(uiCameraObj);
+            // 记录UI摄像机
+            _uiCamera = uiCameraInstance.GetComponent<Camera>();
+            // 过场景不移除
+            GameObject.DontDestroyOnLoad(uiCameraInstance);
+            // 设置UI摄像机
+            _canvas.worldCamera = _uiCamera;
 #else
             //加载画布资源
             GameObject canvasObj = EditorResMgr.Instance.LoadEditorAsset<GameObject>("Canvas");
@@ -88,6 +97,17 @@ namespace Framework
         }
 
         /// <summary>
+        /// 初始化UI控制器工厂
+        /// </summary>
+        private void InitControllerFactory()
+        {
+            _typeToCtrlFactoryMap.Add(typeof(LoginController), new LoginControllerFactory());
+            _typeToCtrlFactoryMap.Add(typeof(BackController), new BackControllerFactory());
+            _typeToCtrlFactoryMap.Add(typeof(BeginController), new BeginControllerFactory());
+            _typeToCtrlFactoryMap.Add(typeof(VideoController), new VideoControllerFactory());
+        }
+
+        /// <summary>
         /// 获取指定层级对象
         /// </summary>
         /// <param name="layer">层级对象枚举</param>
@@ -105,78 +125,85 @@ namespace Framework
         }
 
         /// <summary>
-        /// 异步加载面板
+        /// 异步显示界面
         /// </summary>
-        /// <typeparam name="T">面板类型</typeparam>
-        /// <param name="layer">显示层级</param>
-        /// <param name="callBack">加载结束回调</param>
-        public void ShowPanelAsync<T>(E_UILayer layer, UnityAction<T> callBack) where T : BasePanel
+        /// <typeparam name="TView"></typeparam>
+        /// <param name="layer"></param>
+        /// <returns></returns>
+        public async Task<TController> ShowViewAsync<TView, TModel, TController>(E_UILayer layer)
+            where TView : UIView where TModel : UIModel, new() where TController : UIController<TView, TModel>
         {
 #if EDITOR_TEST_AB || !UNITY_EDITOR
-            //自定义存储名称
-            string panelName = typeof(T).Name;
-            PanelInfo<T> info;
-            if (_panelDic.ContainsKey(panelName))
+            // 自定义存储名称
+            string cacheName = $"{typeof(TView).Name}";
+            // 存在缓存
+            if (_panelDic.ContainsKey(cacheName))
             {
-                info = _panelDic[panelName] as PanelInfo<T>;
-                //正在异步加载
-                if (info.Panel == null)
-                    info.CallBack += callBack;
-                //资源加载结束，直接使用
-                else
-                    callBack?.Invoke(info.Panel);
-                return;
+                PanelInfo<TView, TModel, TController> cacheInfo = _panelDic[cacheName] as PanelInfo<TView, TModel, TController>;
+                // 返回缓存的面板
+                return cacheInfo.UIController;
             }
 
-            //初始化面板信息
-            info = new PanelInfo<T>(callBack);
-            //存储面板信息
-            _panelDic.Add(panelName, info);
-            //异步加载面板
-            AssetBundleLoadManager.Instance.LoadAssetAsync<GameObject>(E_AssetBundleType.UI, panelName, (panelObj) =>
+            // 不存在工厂
+            if (!_typeToCtrlFactoryMap.TryGetValue(typeof(TController), out var iFactory))
             {
-                if (info.IsDestroy)
-                {
-                    //从字典中移除
-                    _panelDic.Remove(panelName);
-                    return;
-                }
-                //实例化面板对象、设置面板父对象
-                GameObject panelInstanceObj = GameObject.Instantiate(panelObj, GetLayer(layer), false);
-                //获取面板脚本
-                T panel = panelInstanceObj.GetComponent<T>();
-                //调用显示函数
-                panel.Show();
-                //存储面板
-                info.Panel = panel;
-                //执行存储的回调函数
-                info.Invoke(panel);
-            });
+                return null;
+            }
+
+            // 存在工厂
+            var factory = iFactory as UIControllerFactory<TView, TModel, TController>;
+            // 加载面板资源
+            GameObject panelObj = await AssetBundleManager.Instance.LoadAssetAsync<GameObject>(E_AssetBundleType.UI, typeof(TView).Name);
+            // 实例化面板对象、设置面板父对象
+            GameObject panelInstanceObj = GameObject.Instantiate(panelObj, GetLayer(layer), false);
+            // 获取面板脚本
+            TView view = panelInstanceObj.GetComponent<TView>();
+            // 调用显示函数
+            view.Show();
+            // 创建数据
+            TModel model = factory.CreateModel();
+            // 创建控制器
+            TController controller = factory.CreateController(view, model);
+            // 初始化面板信息
+            PanelInfo<TView, TModel, TController> newInfo = new PanelInfo<TView, TModel, TController>(view, model, controller);
+            // 存储面板信息
+            _panelDic.Add(cacheName, newInfo);
+            return controller;
 #else
             //自定义存储名称
-            string panelName = typeof(T).Name;
-            PanelInfo<T> info = null;
-            if (_panelDic.ContainsKey(panelName))
+            string cacheName = $"{typeof(TView).Name}";
+            if (_panelDic.ContainsKey(cacheName))
             {
-                info = _panelDic[panelName] as PanelInfo<T>;
-                callBack?.Invoke(info.Panel);
-                return;
+                PanelInfo<TView, TModel, TController> cacheInfo = _panelDic[cacheName] as PanelInfo<TView, TModel, TController>;
+                // 返回缓存的面板
+                return cacheInfo.UIController;
             }
-            //加载资源
-            GameObject panelObj = EditorResMgr.Instance.LoadEditorAsset<GameObject>(panelName);
-            //实例化面板对象、设置面板父对象
+
+            // 不存在工厂
+            if (!_typeToCtrlFactoryMap.TryGetValue(typeof(TController), out var iFactory))
+            {
+                return null;
+            }
+
+            // 存在工厂
+            var factory = iFactory as UIControllerFactory<TView, TModel, TController>;
+            // 加载资源
+            GameObject panelObj = EditorResMgr.Instance.LoadEditorAsset<GameObject>(cacheName);
+            // 实例化面板对象、设置面板父对象
             GameObject panelInstanceObj = GameObject.Instantiate(panelObj, GetLayer(layer), false);
-            //获取面板脚本
-            T panel = panelInstanceObj.GetComponent<T>();
-            //调用显示函数
-            panel.Show();
-            info = new PanelInfo<T>(callBack);
-            //存储面板
-            info.Panel = panel;
-            //存储面板信息
-            _panelDic.Add(panelName, info);
-            //执行存储的回调函数
-            info.Invoke(panel);
+            // 获取面板脚本
+            TView view = panelInstanceObj.GetComponent<TView>();
+            // 调用显示函数
+            view.Show();
+            // 创建数据
+            TModel model = factory.CreateModel();
+            // 创建控制器
+            TController controller = factory.CreateController(view, model);
+            // 初始化面板信息
+            PanelInfo<TView, TModel, TController> newInfo = new PanelInfo<TView, TModel, TController>(view, model, controller);
+            // 存储面板信息
+            _panelDic.Add(cacheName, newInfo);
+            return controller;
 #endif
         }
 
@@ -184,42 +211,20 @@ namespace Framework
         /// 隐藏面板
         /// </summary>
         /// <typeparam name="T">面板类型</typeparam>
-        public void HidePanel<T>() where T : BasePanel
+        public void HideView<TView, TModel, TController>() where TView : UIView where TModel : UIModel, new() where TController : UIController<TView, TModel>
         {
-#if EDITOR_TEST_AB || !UNITY_EDITOR
-            //自定义存储名称
-            string panelName = typeof(T).Name;
-            if (_panelDic.ContainsKey(panelName))
+            // 自定义存储名称
+            string cacheName = $"{typeof(TView).Name}";
+            if (_panelDic.ContainsKey(cacheName))
             {
-                PanelInfo<T> info = _panelDic[panelName] as PanelInfo<T>;
-                //正在异步加载
-                if (info.Panel == null)
-                    //改变标识
-                    info.IsDestroy = true;
-                else
-                {
-                    //调用面板隐藏
-                    info.Panel.Hide();
-                    //销毁预设体
-                    GameObject.Destroy(info.Panel.gameObject);
-                    //从字典中移除
-                    _panelDic.Remove(panelName);
-                }
+                PanelInfo<TView, TModel, TController> info = _panelDic[cacheName] as PanelInfo<TView, TModel, TController>;
+                // 调用面板隐藏
+                info.View.Hide();
+                // 销毁预设体
+                GameObject.Destroy(info.View.gameObject);
+                // 从字典中移除
+                _panelDic.Remove(cacheName);
             }
-#else
-            //自定义存储名称
-            string panelName = typeof(T).Name;
-            if (_panelDic.ContainsKey(panelName))
-            {
-                PanelInfo<T> info = _panelDic[panelName] as PanelInfo<T>;
-                //调用面板隐藏
-                info.Panel.Hide();
-                //销毁预设体
-                GameObject.Destroy(info.Panel.gameObject);
-                //从字典中移除
-                _panelDic.Remove(panelName);
-            }
-#endif
         }
 
         /// <summary>
@@ -227,32 +232,19 @@ namespace Framework
         /// </summary>
         /// <typeparam name="T">面板类型</typeparam>
         /// <param name="callBack">回调函数</param>
-        public void GetPanel<T>(UnityAction<T> callBack) where T : BasePanel
+        public TController GetView<TView, TModel, TController>() where TView : UIView where TModel : UIModel, new() where TController : UIController<TView, TModel>
         {
-#if EDITOR_TEST_AB || !UNITY_EDITOR
-            //自定义存储名称
-            string panelName = typeof(T).Name;
-            if (_panelDic.ContainsKey(panelName))
+            // 自定义存储名称
+            string cacheName = $"{typeof(TView).Name}";
+            if (_panelDic.ContainsKey(cacheName))
             {
-                PanelInfo<T> info = _panelDic[panelName] as PanelInfo<T>;
-                if (info.Panel == null)
-                    info.CallBack += callBack;
-                else
-                    callBack?.Invoke(info.Panel);
-            }
-#else
-            //自定义存储名称
-            string panelName = typeof(T).Name;
-            if (_panelDic.ContainsKey(panelName))
-            {
-                PanelInfo<T> info = _panelDic[panelName] as PanelInfo<T>;
-                callBack?.Invoke(info.Panel);
+                PanelInfo<TView, TModel, TController> info = _panelDic[cacheName] as PanelInfo<TView, TModel, TController>;
+                return info.UIController;
             }
             else
             {
-                callBack?.Invoke(null);
+                return null;
             }
-#endif
         }
 
         /// <summary>
@@ -264,12 +256,13 @@ namespace Framework
         public void AddCustomEventListener(UIBehaviour control, EventTriggerType type, UnityAction<BaseEventData> listener)
         {
             if (!control.TryGetComponent<EventTrigger>(out var eventTrigger))
+            {
                 eventTrigger = control.AddComponent<EventTrigger>();
+            }
 
             EventTrigger.Entry entry = new EventTrigger.Entry();
             entry.eventID = type;
             entry.callback.AddListener(listener);
-
             eventTrigger.triggers.Add(entry);
         }
 
@@ -279,10 +272,9 @@ namespace Framework
         /// <param name="world">世界摄像机</param>
         /// <param name="ui">UI摄像机</param>
         /// <param name="parent">父对象</param>
-        /// <param name="target">转换目标</param>
+        /// <param name="uiObj">世界点</param>
         /// <param name="worldPoint">世界点</param>
         /// <param name="offset">UI坐标偏移</param>
-        /// <param name="localPoint">本地UI点</param>
         public bool WorldToLocalPointInRectangle(Camera world, Camera ui, Transform parent, GameObject uiObj, Vector3 worldPoint, Vector2 offset)
         {
             //世界转屏幕

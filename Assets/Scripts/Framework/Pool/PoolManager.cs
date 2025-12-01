@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -22,47 +23,6 @@ namespace Framework
         private PoolManager()
         {
 
-        }
-
-        /// <summary>
-        /// 获取来自AB包的缓存对象
-        /// </summary>
-        /// <param name="assetBundleType">AB包类型</param>
-        /// <param name="assetName">资源名称</param>
-        /// <returns></returns>
-        public GameObject GetAssetBundleObj(E_AssetBundleType assetBundleType, string assetName)
-        {
-            //存在该对象就取出来使用
-            if (_poolObjDic.ContainsKey(assetName) && _poolObjDic[assetName].UnUsedCount > 0)
-            {
-                return _poolObjDic[assetName].Get();
-            }
-
-#if EDITOR_TEST_AB || !UNITY_EDITOR
-            //没有就实例化
-            //AB包同步加载资源
-            GameObject asset = AssetBundleLoadManager.Instance.LoadAsset<GameObject>(assetBundleType, assetName);
-            if (asset == null)
-            {
-                LogMgr.LogError("加载的资源为空，无法实例化");
-                return null;
-            }
-            //实例化资源
-            GameObject instanceObj = GameObject.Instantiate(asset);
-            //修改资源名称
-            instanceObj.name = assetName;
-            //返回实例化对象
-            return instanceObj;
-#else
-            //加载编辑器路径下的资源
-            GameObject obj = EditorResMgr.Instance.LoadEditorAsset<GameObject>(assetName);
-            //实例化预设体
-            GameObject instanceObj = GameObject.Instantiate(obj);
-            //修改资源名称
-            instanceObj.name = assetName;
-            //返回外部
-            return instanceObj;
-#endif
         }
 
         /// <summary>
@@ -90,35 +50,30 @@ namespace Framework
         /// <param name="assetName">资源名称</param>
         /// <param name="objCallBack">对象加载完成回调</param>
         /// <returns></returns>
-        public void GetAssetBundleObjAsync(E_AssetBundleType assetBundleType, string assetName, UnityAction<GameObject> objCallBack)
+        public async Task<GameObject> GetAssetBundleObjAsync(E_AssetBundleType assetBundleType, string assetName)
         {
-            //存在该对象就取出来使用
+            // 存在该对象就取出来使用
             if (_poolObjDic.ContainsKey(assetName) && _poolObjDic[assetName].UnUsedCount > 0)
             {
-                objCallBack?.Invoke(_poolObjDic[assetName].Get());
-                return;
+                return _poolObjDic[assetName].Get();
             }
 
 #if EDITOR_TEST_AB || !UNITY_EDITOR
-            //没有就实例化
-            //AB包异步加载
-            AssetBundleLoadManager.Instance.LoadAssetAsync<GameObject>(assetBundleType, assetName, (obj) =>
-            {
-                //实例化预设体
-                GameObject instanceObj = GameObject.Instantiate(obj);
-                //避免实例化出的对象的名字后带有(Clone)
-                instanceObj.name = assetName;
-                objCallBack?.Invoke(instanceObj);
-            });
-#else
-            //加载编辑器路径下的资源
-            GameObject obj = EditorResMgr.Instance.LoadEditorAsset<GameObject>(assetName);
-            //实例化预设体
+            // AB包异步加载
+            GameObject obj = await AssetBundleManager.Instance.LoadAssetAsync<GameObject>(assetBundleType, assetName);
+            // 实例化预设体
             GameObject instanceObj = GameObject.Instantiate(obj);
-            //修改资源名称
+            // 避免实例化出的对象的名字后带有(Clone)
             instanceObj.name = assetName;
-            //执行回调
-            objCallBack?.Invoke(instanceObj);
+            return instanceObj;
+#else
+            // 加载编辑器路径下的资源
+            GameObject obj = EditorResMgr.Instance.LoadEditorAsset<GameObject>(assetName);
+            // 实例化预设体
+            GameObject instanceObj = GameObject.Instantiate(obj);
+            // 避免实例化出的对象的名字后带有(Clone)
+            instanceObj.name = assetName;
+            return instanceObj;
 #endif
         }
 

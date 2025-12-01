@@ -10,6 +10,11 @@ namespace Framework
         /// 场景加载进度(Default)_float
         /// </summary>
         E_Scene_LoadingProgress,
+
+        /// <summary>
+        /// TCP连接完成后
+        /// </summary>
+        E_Net_OnPostConnect,
         #endregion
     }
 }
