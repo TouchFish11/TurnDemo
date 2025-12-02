@@ -2,15 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerObject : BattleObject
+namespace Game
 {
-    public override IEnumerator ExecuteAction()
+    public class PlayerObject : BattleObject
     {
-        throw new System.NotImplementedException();
-    }
+        public override IEnumerator ExecuteAction()
+        {
+            throw new System.NotImplementedException();
+        }
 
-    public override int GetSpeed()
-    {
-        throw new System.NotImplementedException();
+        public override int GetSpeed()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

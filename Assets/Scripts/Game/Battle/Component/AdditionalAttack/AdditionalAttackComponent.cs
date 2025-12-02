@@ -1,23 +1,18 @@
-using GameLogic.BattleMoudule.Core;
-using GameLogic.BattleMoudule.Event;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GameLogic.BattleMoudule.AdditionalAttack
+namespace Game.Battle
 {
     /// <summary>
     /// 角色追加攻击组件（管理所有追加攻击机制）
     /// </summary>
-    public class AdditionalAttackComponent : MonoBehaviour, IAdditionalAttackComponent
+    public class AdditionalAttackComponent : BattleComponent, IAdditionalAttackComponent
     {
         // 追加攻击列表
         private readonly List<IAdditionalAttack> _additionalAttacks = new List<IAdditionalAttack>();
 
-        public IEntityObject EntityObject { get; private set; }
-
-        public void Init(IEntityObject entityObject)
+        public override void Init(IEntityObject entityObject)
         {
-            EntityObject = entityObject;
             // 加载追加攻击机制（可从配置表绑定，新增机制仅需添加实现类）
             _additionalAttacks.Add(new BreakToughnessAdditionalAttack());
 
@@ -45,6 +40,14 @@ namespace GameLogic.BattleMoudule.AdditionalAttack
                     attack.Execute(toughnessBrokenEvent.Context, EntityObject as IBattleEntityObject, toughnessBrokenEvent.Target);
                 }
             }
+        }
+
+        public override void Destroy()
+        {
+            base.Destroy();
+            _additionalAttacks.Clear();
+            // 移除订阅
+            BattleEventCenter.RemoveListener<ToughnessBrokenEvent>(OnToughnessBrokenHandler);
         }
     }
 }

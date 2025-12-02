@@ -1,9 +1,7 @@
 using GameLogic.BattleMoudule.Entity;
-using GameLogic.BattleMoudule.Relic;
-using System;
 using System.Collections;
 
-namespace GameLogic.BattleMoudule
+namespace Game.Battle
 {
     /// <summary>
     /// 战斗实体接口

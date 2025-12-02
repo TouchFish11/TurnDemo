@@ -1,7 +1,5 @@
 
-using GameLogic.BattleMoudule.Entity;
-
-namespace GameLogic.BattleMoudule.Relic
+namespace Game.Battle
 {
     /// <summary>
     /// 遗器组件接口

@@ -105,6 +105,7 @@ namespace Framework
             _typeToCtrlFactoryMap.Add(typeof(BackController), new BackControllerFactory());
             _typeToCtrlFactoryMap.Add(typeof(BeginController), new BeginControllerFactory());
             _typeToCtrlFactoryMap.Add(typeof(VideoController), new VideoControllerFactory());
+            _typeToCtrlFactoryMap.Add(typeof(MainController), new MainControllerFactory());
         }
 
         /// <summary>
@@ -220,6 +221,8 @@ namespace Framework
                 PanelInfo<TView, TModel, TController> info = _panelDic[cacheName] as PanelInfo<TView, TModel, TController>;
                 // 调用面板隐藏
                 info.View.Hide();
+                // 调用控制器的销毁
+                info.UIController.Destroy();
                 // 销毁预设体
                 GameObject.Destroy(info.View.gameObject);
                 // 从字典中移除

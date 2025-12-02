@@ -1,6 +1,5 @@
-using GameLogic.BattleMoudule.Core;
 
-namespace GameLogic.BattleMoudule.Event
+namespace Game.Battle
 {
     /// <summary>
     /// 角色行动结束事

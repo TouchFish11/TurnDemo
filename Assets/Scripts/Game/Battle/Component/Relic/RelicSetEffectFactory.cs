@@ -1,9 +1,5 @@
-using GameLogic.BattleMoudule.Relic;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-namespace GameLogic.BattleMoudule.Relic
+namespace Game.Battle
 {
     /// <summary>
     /// 遗器套装效果工厂（解耦套装效果创建，新增套装仅需扩展工厂）

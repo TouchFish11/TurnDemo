@@ -1,6 +1,5 @@
-using GameLogic.BattleMoudule.Core;
 
-namespace GameLogic.BattleMoudule.Event
+namespace Game.Battle
 {
     /// <summary>
     /// 战斗事件事件基类（所有战斗事件继承此类，携带上下文）

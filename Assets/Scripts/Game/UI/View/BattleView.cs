@@ -1,9 +1,6 @@
-using Framework;
-using GameLogic.BattleMoudule;
+using Game.Battle;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class BattleView : UIView
 {

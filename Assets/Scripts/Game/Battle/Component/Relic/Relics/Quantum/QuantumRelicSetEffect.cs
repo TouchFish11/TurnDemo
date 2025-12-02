@@ -1,9 +1,7 @@
-using GameLogic.BattleMoudule.Core;
 using GameLogic.BattleMoudule.Entity;
-using GameLogic.BattleMoudule.Event;
 using System;
 
-namespace GameLogic.BattleMoudule.Relic
+namespace Game.Battle
 {
     /// <summary>
     /// 量子套4件套效果（实现套装效果接口，作为独立组件）
@@ -60,6 +58,11 @@ namespace GameLogic.BattleMoudule.Relic
             int additionalDamage = (int)(skillCastEvent.Caster.GetField(E_FieldType.Attack) * _additionalDamageRatio);
             skillCastEvent.Targets[0].TakeDamage(additionalDamage, E_PropertyType.Quantum);
             Console.WriteLine($"{skillCastEvent.Targets[0].Name}受到量子追加伤害：{additionalDamage}点");
+        }
+
+        public void Destroy()
+        {
+            throw new NotImplementedException();
         }
     }
 }

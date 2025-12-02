@@ -1,7 +1,5 @@
 
-using GameLogic.BattleMoudule.Core;
-
-namespace GameLogic.BattleMoudule.AdditionalAttack
+namespace Game.Battle
 {
     /// <summary>
     /// 追加攻击接口（所有支持追加攻击的模块实现此接口）

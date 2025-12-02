@@ -1,23 +1,18 @@
 using Framework;
-using GameLogic.BattleMoudule.Core;
-using GameLogic.BattleMoudule.Event;
 using System.Collections.Generic;
 
-namespace GameLogic.BattleMoudule.Status
+namespace Game.Battle
 {
     /// <summary>
     /// 状态管理组件（角色的状态容器，负责管理所有状态）
     /// </summary>
-    public class StatusComponent : IStatusComponent
+    public class StatusComponent : BattleComponent, IStatusComponent
     {
-        // 所属角色
-        public IEntityObject EntityObject { get; private set; }
         // 状态列表
         private List<IStatus> _statuses = new List<IStatus>();
 
-        public void Init(IEntityObject entityObject)
+        public override void Init(IEntityObject entityObject)
         {
-            EntityObject = entityObject;
             // 订阅“回合开始事件”（核心：模块主动订阅，无需核心流程修改）
             BattleEventCenter.AddListener<TurnStartEvent>(OnTurnStartHandler);
         }

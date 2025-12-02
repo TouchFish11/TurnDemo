@@ -1,8 +1,7 @@
-using GameLogic.BattleMoudule.Core;
 using GameLogic.BattleMoudule.Entity;
 using System.Collections.Generic;
 
-namespace GameLogic.BattleMoudule.Skill
+namespace Game.Battle
 {
     /// <summary>
     /// 技能接口

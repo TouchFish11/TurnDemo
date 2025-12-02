@@ -1,10 +1,7 @@
 using GameLogic.BattleMoudule.Entity;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
-namespace GameLogic.BattleMoudule.Toughness
+namespace Game.Battle
 {
     /// <summary>
     /// 韧性（破盾）相关定义

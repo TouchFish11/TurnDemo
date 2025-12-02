@@ -1,24 +1,18 @@
 using Framework;
-using GameLogic.BattleMoudule.Core;
-using GameLogic.BattleMoudule.Event;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GameLogic.BattleMoudule.Talent
+namespace Game.Battle
 {
     /// <summary>
     /// 天赋管理组件（角色的天赋容器，自动订阅事件）
     /// </summary>
-    public class TalentComponent : MonoBehaviour, ITalentComponent
+    public class TalentComponent : BattleComponent, ITalentComponent
     {
         private readonly List<ITalent> _talents = new List<ITalent>();
 
-        public IEntityObject EntityObject { get; private set; }
-
-        public void Init(IEntityObject entityObject)
+        public override void Init(IEntityObject entityObject)
         {
-            EntityObject = entityObject;
-
             // 订阅所有可能触发天赋的事件（可配置，避免冗余订阅）
             BattleEventCenter.AddListener<TurnStartEvent>(OnBattleEventHandler);
             BattleEventCenter.AddListener<TurnEndEvent>(OnBattleEventHandler);

@@ -268,7 +268,7 @@ public static class ExampleConfig
                 new List<string>(){"UnityEngine.Application", "ExternalEval"},
     #endif
                 new List<string>(){"UnityEngine.GameObject", "networkView"}, //4.6.2 not support
-                new List<string>(){"UnityEngine.Component", "networkView"},  //4.6.2 not support
+                new List<string>(){"UnityEngine.BaseComponent", "networkView"},  //4.6.2 not support
                 new List<string>(){"System.IO.FileInfo", "GetAccessControl", "System.Security.AccessControl.AccessControlSections"},
                 new List<string>(){"System.IO.FileInfo", "SetAccessControl", "System.Security.AccessControl.FileSecurity"},
                 new List<string>(){"System.IO.DirectoryInfo", "GetAccessControl", "System.Security.AccessControl.AccessControlSections"},

@@ -1,7 +1,5 @@
 
-using GameLogic.BattleMoudule.Entity;
-
-namespace GameLogic.BattleMoudule.Summon
+namespace Game.Battle
 {
     /// <summary>
     /// 召唤组件接口

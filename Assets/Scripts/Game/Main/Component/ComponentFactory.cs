@@ -1,6 +1,6 @@
 using Framework;
-using GameLogic.BattleMoudule;
-using System.Collections;
+using Game;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,8 +17,10 @@ public class ComponentFactory : SingletonBase<ComponentFactory>
     /// <param name="character"></param>
     /// <param name="componentIds"></param>
     /// <returns></returns>
-    public bool AddComponents(IEntityObject character, IEnumerable<int> componentIds)
+    public IDictionary<Type, Component> AddComponents(IEntityObject character, IEnumerable<int> componentIds)
     {
+        IDictionary<Type, Component> components = new Dictionary<Type, Component>();
+
         foreach (int id in componentIds)
         {
             // 根据id创建不同的组件
@@ -50,10 +52,10 @@ public class ComponentFactory : SingletonBase<ComponentFactory>
                 //    break;
                 default:
                     LogMgr.LogError($"未知的组件ID: {id}");
-                    return false;
+                    break;
             }
         }
-        return true;
+        return components;
     }
 
     /// <summary>
@@ -62,10 +64,9 @@ public class ComponentFactory : SingletonBase<ComponentFactory>
     /// <typeparam name="T"></typeparam>
     /// <param name="character"></param>
     /// <returns></returns>
-    public T AddComponent<T>(IEntityObject entityObject) where T : MonoBehaviour
+    public T AddComponent<T>(IEntityObject entityObject) where T : Component
     {
         T component = entityObject.GameObject.AddComponent<T>();
-
         if (component is IComponent ic)
         {
             ic.Init(entityObject);

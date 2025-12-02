@@ -22,7 +22,7 @@ public abstract class UIController<TView, TModel> : IUIController where TView : 
     /// <summary>
     /// 初始化逻辑（子类实现）
     /// </summary>
-    protected virtual void OnInit() { }
+    protected abstract void OnInit();
 
     /// <summary>
     /// 绑定 View 事件（监听用户操作）
@@ -82,4 +82,13 @@ public abstract class UIController<TView, TModel> : IUIController where TView : 
     /// <param name="fieldName">输入框名</param>
     /// <param name="inputStr">输入内容</param>
     protected virtual void InputFieldValueChanged(string fieldName, string inputStr) { }
+
+    public virtual void Destroy()
+    {
+        _view.GetBinder().OnButtonClick -= ButtonOnClick;
+        _view.GetBinder().OnSliderValueChanged -= SliderValueChanged;
+        _view.GetBinder().OnToggleValueChanged -= ToggleValueChanged;
+        _view.GetBinder().OnInputFieldValueChanged -= InputFieldValueChanged;
+        _model.OnDataChanged -= (this as IUIController).OnHandleModelDataChanged;
+    }
 }

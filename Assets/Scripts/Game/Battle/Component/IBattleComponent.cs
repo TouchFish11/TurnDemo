@@ -1,5 +1,6 @@
 
-namespace GameLogic.BattleMoudule.Entity
+
+namespace Game.Battle
 {
     /// <summary>
     /// 战斗组件接口

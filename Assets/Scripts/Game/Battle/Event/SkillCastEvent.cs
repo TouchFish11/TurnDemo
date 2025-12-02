@@ -1,9 +1,7 @@
-using GameLogic.BattleMoudule.Core;
 using GameLogic.BattleMoudule.Entity;
-using GameLogic.BattleMoudule.Skill;
 using System.Collections.Generic;
 
-namespace GameLogic.BattleMoudule.Event
+namespace Game.Battle
 {
     /// <summary>
     /// 技能释放事件

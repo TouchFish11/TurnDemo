@@ -1,5 +1,5 @@
 
-namespace GameLogic.BattleMoudule.Relic
+namespace Game.Battle
 {
     /// <summary>
     /// ÒÅÆ÷´ÊÌõĞ§¹û

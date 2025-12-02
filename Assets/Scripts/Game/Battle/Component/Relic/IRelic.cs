@@ -1,8 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
-namespace GameLogic.BattleMoudule.Relic
+
+namespace Game.Battle
 {
     /// <summary>
     /// 遗器接口（套装效果+单件效果分离）

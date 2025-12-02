@@ -1,10 +1,5 @@
-using GameLogic.BattleMoudule.Entity;
-using GameLogic.BattleMoudule.Event;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-namespace GameLogic.BattleMoudule.Talent
+namespace Game.Battle
 {
     /// <summary>
     /// 天赋接口（所有角色天赋统一实现，复用触发逻辑）

@@ -1,14 +1,16 @@
-using GameLogic.BattleMoudule.Managers;
-using System.Collections;
-using System.Collections.Generic;
+using Framework;
+using Game.Battle;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class BattleTest : MonoBehaviour
 {
     // Start is called before the first frame update
-    void Start()
+    async void Start()
     {
-        BattleManager.Instance.StartBattle();
+        await UIManager.Instance.InitUIManagerAsync();
+        MainController mainController = await UIManager.Instance.ShowViewAsync<MainView, MainModel, MainController>(E_UILayer.Mid);
+        
     }
 
     // Update is called once per frame

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace GameLogic.BattleMoudule
+namespace Game
 {
     /// <summary>
     /// 自定义组件接口
@@ -19,5 +19,10 @@ namespace GameLogic.BattleMoudule
         /// 初始化组件
         /// </summary>
         void Init(IEntityObject entityObject);
+
+        /// <summary>
+        /// 销毁组件
+        /// </summary>
+        void Destroy();
     }
 }

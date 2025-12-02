@@ -31,9 +31,9 @@ namespace Framework
         /// <typeparam name="T">组件类型</typeparam>
         /// <param name="assetName">资源名称</param>
         /// <returns></returns>
-        public T GetObj<T>(string assetName) where T : Component
+        public T GetObj<T>(string assetName) where T : Behaviour
         {
-            //存在该对象就取出来使用
+            // 存在该对象就取出来使用
             if (_poolObjDic.ContainsKey(assetName) && _poolObjDic[assetName].UnUsedCount > 0)
             {
                 return _poolObjDic[assetName].Get().GetComponent<T>();

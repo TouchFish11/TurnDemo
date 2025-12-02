@@ -1,10 +1,8 @@
 using Framework;
-using GameLogic.BattleMoudule.Core;
 using GameLogic.BattleMoudule.Entity;
-using GameLogic.BattleMoudule.Summon;
 using System.Collections.Generic;
 
-namespace GameLogic.BattleMoudule.Skill
+namespace Game.Battle
 {
     public class SummonMimiSkill : ISkill
     {

@@ -2,7 +2,7 @@
 using GameLogic.BattleMoudule.Entity;
 using System.Collections.Generic;
 
-namespace GameLogic.BattleMoudule.Toughness
+namespace Game.Battle
 {
     /// <summary>
     /// 韧性组件接口
@@ -10,7 +10,7 @@ namespace GameLogic.BattleMoudule.Toughness
     public interface IToughnessComponent : IBattleComponent
     {
         /// <summary>
-        /// 初始化
+        /// 初始化韧性组件
         /// </summary>
         void Init(IBattleEntityObject owner, List<E_PropertyType> weakPropertys, float initialToughness);
     }

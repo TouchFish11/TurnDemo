@@ -1,9 +1,6 @@
-using GameLogic.BattleMoudule.Entity;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
-namespace GameLogic.BattleMoudule.Core
+namespace Game.Battle
 {
     public interface IBattleContext
     {

@@ -3,22 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace GameLogic.BattleMoudule.Relic
+namespace Game.Battle
 {
     /// <summary>
     /// 遗器管理组件（角色的遗器容器，负责加载单件/套装效果）
     /// </summary>
-    public class RelicComponent : MonoBehaviour, IRelicComponent
+    public class RelicComponent : BattleComponent, IRelicComponent
     {
-        private List<IRelic> _equippedRelics = new List<IRelic>();
+        // 已装备仪器
+        private readonly List<IRelic> _equippedRelics = new List<IRelic>();
+        // 仪器套装映射
         private readonly Dictionary<int, IRelicSetEffect> _activeSetEffects = new Dictionary<int, IRelicSetEffect>();
-
-        public IEntityObject EntityObject {  get; private set; }
-
-        public void Init(IEntityObject entityObject)
-        {
-            EntityObject = entityObject;
-        }
 
         /// <summary>
         /// 装备遗器（新增遗器仅需调用此方法，无需改其他代码）

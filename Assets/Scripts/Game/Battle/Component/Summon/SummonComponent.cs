@@ -2,22 +2,15 @@ using Framework;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GameLogic.BattleMoudule.Summon
+namespace Game.Battle
 {
     /// <summary>
     /// 召唤物管理组件（角色的召唤物容器）
     /// </summary>
-    public class SummonComponent : MonoBehaviour, ISummonComponent
+    public class SummonComponent : BattleComponent, ISummonComponent
     {
         // 若角色可创建多个召唤物可用列表,否则可以一个字段表示(可选)
-        private List<ISummon> _summons = new();
-
-        public IEntityObject EntityObject { get; private set; }
-
-        public void Init(IEntityObject entityObject)
-        {
-            EntityObject = entityObject;
-        }
+        private readonly List<ISummon> _summons = new List<ISummon>();
 
         /// <summary>
         /// 创建召唤物（技能释放时调用）

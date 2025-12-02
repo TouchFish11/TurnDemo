@@ -1,9 +1,7 @@
 using Framework;
-using GameLogic.BattleMoudule.Core;
 using GameLogic.BattleMoudule.Entity;
-using GameLogic.BattleMoudule.Toughness;
 
-namespace GameLogic.BattleMoudule.AdditionalAttack
+namespace Game.Battle
 {
     /// <summary>
     /// ÆÆ¶Üºó×·¼Ó´©´Ì

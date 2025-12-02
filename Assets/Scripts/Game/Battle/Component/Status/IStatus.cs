@@ -1,6 +1,5 @@
-using GameLogic.BattleMoudule.Core;
 
-namespace GameLogic.BattleMoudule.Status
+namespace Game.Battle
 {
     /// <summary>
     /// 状态接口（定义状态的核心行为，高内聚）

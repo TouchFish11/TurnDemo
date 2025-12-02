@@ -1,8 +1,6 @@
 using Framework;
-using GameLogic.BattleMoudule.Entity;
-using GameLogic.BattleMoudule.Event;
 
-namespace GameLogic.BattleMoudule.Talent
+namespace Game.Battle
 {
     /// <summary>
     /// 希儿“再现”（击杀敌人后获得额外行动回合）

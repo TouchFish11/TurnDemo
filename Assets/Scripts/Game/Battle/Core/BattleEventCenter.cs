@@ -1,9 +1,8 @@
-using GameLogic.BattleMoudule.Event;
 using System;
 using System.Collections.Generic;
 using UnityEngine.Events;
 
-namespace GameLogic.BattleMoudule.Core
+namespace Game.Battle
 {
     public abstract class BaseBattleEventInfo
     {
@@ -60,6 +59,21 @@ namespace GameLogic.BattleMoudule.Core
             {
                 // 触发所有订阅者的回调
                 (eventInfo as BattleEventInfo<TEvent>).Invoke(battleEvent);
+            }
+        }
+
+        /// <summary>
+        /// 移除事件
+        /// </summary>
+        /// <typeparam name="TEvent"></typeparam>
+        /// <param name="callback"></param>
+        public static void RemoveListener<TEvent>(UnityAction<TEvent> callback) where TEvent : BattleEvent
+        {
+            Type eventType = typeof(TEvent);
+            if (_typeToEventInfoMap.TryGetValue(eventType, out BaseBattleEventInfo eventInfo))
+            {
+                // 移除指定订阅者的回调
+                (eventInfo as BattleEventInfo<TEvent>).OnBattleEvent -= callback;
             }
         }
     }

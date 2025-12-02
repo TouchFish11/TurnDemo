@@ -1,8 +1,7 @@
 using Framework;
-using GameLogic.BattleMoudule.Core;
 using GameLogic.BattleMoudule.Entity;
 
-namespace GameLogic.BattleMoudule.Status
+namespace Game.Battle
 {
     /// <summary>
     /// 具体状态：持续回血状态（实现接口，封装自身逻辑）

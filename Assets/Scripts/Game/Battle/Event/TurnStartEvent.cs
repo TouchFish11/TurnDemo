@@ -1,7 +1,5 @@
 
-using GameLogic.BattleMoudule.Core;
-
-namespace GameLogic.BattleMoudule.Event
+namespace Game.Battle
 {
     public class TurnStartEvent : BattleEvent
     {

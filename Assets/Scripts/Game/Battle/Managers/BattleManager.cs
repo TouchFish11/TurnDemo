@@ -1,8 +1,7 @@
 using Framework;
-using GameLogic.BattleMoudule.Core;
 using System.Threading.Tasks;
 
-namespace GameLogic.BattleMoudule.Managers
+namespace Game.Battle
 {
     /// <summary>
     /// ’Ω∂∑π‹¿Ì∆˜

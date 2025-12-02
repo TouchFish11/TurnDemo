@@ -1,7 +1,6 @@
+using Game.Battle;
 
-using GameLogic.BattleMoudule.Entity;
-
-namespace GameLogic.BattleMoudule.AdditionalAttack
+namespace Game.Battle
 {
     /// <summary>
     /// 追加攻击组件接口

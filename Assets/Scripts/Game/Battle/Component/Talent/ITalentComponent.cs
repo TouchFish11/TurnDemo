@@ -1,7 +1,5 @@
 
-using GameLogic.BattleMoudule.Entity;
-
-namespace GameLogic.BattleMoudule.Talent
+namespace Game.Battle
 {
     /// <summary>
     /// 天赋组件接口

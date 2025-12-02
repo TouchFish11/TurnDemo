@@ -1,11 +1,10 @@
 
 using Framework;
-using GameLogic.BattleMoudule.Entity;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace GameLogic.BattleMoudule.Core
+namespace Game.Battle
 {
     /// <summary>
     /// 战斗上下文

@@ -1,6 +1,5 @@
-using GameLogic.BattleMoudule.Core;
 
-namespace GameLogic.BattleMoudule.Event
+namespace Game.Battle
 {
     /// <summary>
     /// ÆÆ¶ÜÊÂ¼þ

@@ -1,7 +1,5 @@
 
-using GameLogic.BattleMoudule.Entity;
-
-namespace GameLogic.BattleMoudule.Status
+namespace Game.Battle
 {
     /// <summary>
     /// 状态组件接口

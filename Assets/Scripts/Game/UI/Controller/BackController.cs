@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 背景界面控制工厂
+/// 背景界面控制器工厂
 /// </summary>
 public class BackControllerFactory : UIControllerFactory<BackView, BackModel, BackController>
 {
@@ -28,4 +28,8 @@ public class BackController : UIController<BackView, BackModel>
 
     }
 
+    protected override void OnInit()
+    {
+        throw new System.NotImplementedException();
+    }
 }

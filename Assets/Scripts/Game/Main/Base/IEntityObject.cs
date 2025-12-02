@@ -21,12 +21,19 @@ public interface IEntityObject
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    T GetComponent<T>() where T : MonoBehaviour;
+    T GetComponent<T>() where T : Component;
 
     /// <summary>
     /// 添加组件
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="component"></param>
-    T AddComponent<T>() where T : MonoBehaviour;
+    T AddComponent<T>() where T : Component;
+
+    /// <summary>
+    /// 批量添加组件
+    /// </summary>
+    /// <param name="componentIds"></param>
+    /// <returns></returns>
+    bool AddComponents(params int[] componentIds);
 }

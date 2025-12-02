@@ -20,4 +20,9 @@ public interface IUIController
     /// <param name="key"></param>
     /// <param name="value"></param>
     void OnHandleModelDataChanged(string key, object value);
+
+    /// <summary>
+    /// Ïú»Ù
+    /// </summary>
+    void Destroy();
 }

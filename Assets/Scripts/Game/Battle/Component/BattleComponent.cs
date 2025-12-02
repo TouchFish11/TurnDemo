@@ -1,15 +1,10 @@
-using Framework;
 using GameLogic.BattleMoudule;
-using GameLogic.BattleMoudule.AdditionalAttack;
-using GameLogic.BattleMoudule.Core;
-using GameLogic.BattleMoudule.Relic;
 using UnityEngine;
 
-namespace GameLogic.BattleMoudule.Entity
+namespace Game.Battle
 {
     /// <summary>
     /// 战斗组件
-    /// ——管理角色的战斗属性
     /// </summary>
     public class BattleComponent : MonoBehaviour, IBattleComponent
     {
@@ -17,9 +12,14 @@ namespace GameLogic.BattleMoudule.Entity
 
         public IEntityObject EntityObject { get; private set; }
 
-        public void Init(IEntityObject entityObject)
+        public virtual void Init(IEntityObject entityObject)
         {
             EntityObject = entityObject as IBattleEntityObject;
+        }
+
+        public virtual void Destroy()
+        {
+            EntityObject = null;
         }
     }
 }

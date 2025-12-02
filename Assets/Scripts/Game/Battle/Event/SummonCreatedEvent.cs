@@ -1,7 +1,5 @@
-using GameLogic.BattleMoudule.Core;
-using GameLogic.BattleMoudule.Summon;
 
-namespace GameLogic.BattleMoudule.Event
+namespace Game.Battle
 {
     /// <summary>
     /// 召唤物创建事件

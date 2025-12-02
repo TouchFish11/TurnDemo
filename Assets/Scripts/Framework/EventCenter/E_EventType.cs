@@ -16,5 +16,11 @@ namespace Framework
         /// </summary>
         E_Net_OnPostConnect,
         #endregion
+
+        /// <summary>
+        /// ½»»¥
+        /// </summary>
+        E_OnInteract,
+
     }
 }

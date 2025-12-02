@@ -1,23 +1,19 @@
-using GameLogic.BattleMoudule.Core;
 using GameLogic.BattleMoudule.Entity;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GameLogic.BattleMoudule.Skill
+namespace Game.Battle
 {
     /// <summary>
     /// 角色技能组件（管理角色技能，提供释放入口）
     /// </summary>
-    public class SkillComponent : MonoBehaviour, ISkillComponent
+    public class SkillComponent : BattleComponent, ISkillComponent
     {
         // 技能列表（配置表加载）
-        private Dictionary<int, ISkill> _skills = new Dictionary<int, ISkill>();
+        private readonly Dictionary<int, ISkill> _skills = new Dictionary<int, ISkill>();
 
-        public IEntityObject EntityObject { get; private set; }
-
-        public void Init(IEntityObject entityObject)
+        public override void Init(IEntityObject entityObject)
         {
-            EntityObject = entityObject;
             // 从配置表加载技能（示例：加载ID=1的弱点攻击技能）
             _skills.Add(1, new WeakPointAttackSkill("穿刺射击", 1.5f, E_PropertyType.Physical));
             // 添加召唤技能（配置表加载）

@@ -1,10 +1,8 @@
 using Framework;
-using GameLogic.BattleMoudule.Core;
 using GameLogic.BattleMoudule.Entity;
-using GameLogic.BattleMoudule.Event;
 using System.Collections.Generic;
 
-namespace GameLogic.BattleMoudule.Skill
+namespace Game.Battle
 {
     /// <summary>
     /// 弱点属性攻击（如物理属性单体技能）

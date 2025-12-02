@@ -1,25 +1,20 @@
 using Framework;
-using GameLogic.BattleMoudule.Core;
 using GameLogic.BattleMoudule.Entity;
-using GameLogic.BattleMoudule.Event;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GameLogic.BattleMoudule.Toughness
+namespace Game.Battle
 {
     /// <summary>
     /// 角色韧性组件（管理目标的韧性系统）
     /// </summary>
-    public class ToughnessComponent : MonoBehaviour, IToughnessComponent
+    public class ToughnessComponent : BattleComponent, IToughnessComponent
     {
         // 当前韧性状态
         private Toughness _toughness;
 
-        public IEntityObject EntityObject { get; private set; }
-
         public void Init(IBattleEntityObject owner, List<E_PropertyType> weakPropertys, float initialToughness)
         {
-            EntityObject = owner;
             _toughness = new Toughness(weakPropertys, initialToughness);
             // 订阅“技能释放事件”（监听所有技能释放，计算韧性）
             BattleEventCenter.AddListener<SkillCastEvent>(OnSkillCastHandler);
