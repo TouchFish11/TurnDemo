@@ -13,9 +13,14 @@ public interface IInteractable
     string NpcName {  get; }
 
     /// <summary>
-    /// 是否可交互
+    /// Npc提示
     /// </summary>
-    public bool IsInteractable { get; }
+    string NpcTip { get; }
+
+    /// <summary>
+    /// 是否显示浮动文本
+    /// </summary>
+    public bool IsShowFloatingText { get; }
 
     /// <summary>
     /// 交互

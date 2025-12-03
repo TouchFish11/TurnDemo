@@ -2,6 +2,7 @@ using Framework;
 using Game.Battle;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class BattleTest : MonoBehaviour
 {
@@ -10,12 +11,6 @@ public class BattleTest : MonoBehaviour
     {
         await UIManager.Instance.InitUIManagerAsync();
         MainController mainController = await UIManager.Instance.ShowViewAsync<MainView, MainModel, MainController>(E_UILayer.Mid);
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        FloatingTextManager.Instance.Init();
     }
 }

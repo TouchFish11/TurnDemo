@@ -1,4 +1,5 @@
 using Game;
+using Game.Battle;
 using GameLogic.BattleMoudule;
 using System;
 using System.Collections;
@@ -36,17 +37,31 @@ namespace Game
         public new TComponent GetComponent<TComponent>() where TComponent : Component
         {
             // 先从缓存中查找自定义组件
-            TComponent component = typeToIComponentMap[typeof(TComponent)] as TComponent;
-            if (component != null)
+            if (typeToIComponentMap.TryGetValue(typeof(TComponent), out var iComponent))
             {
-                return component;
+                return iComponent as TComponent;
             }
-            else
+
+            // 从缓存中查找内置组件
+            if (typeToComponentMap.TryGetValue(typeof(TComponent), out var component))
             {
-                // 从缓存中查找内置组件
-                component = typeToComponentMap[typeof(TComponent)] as TComponent;
-                return component;
+                return component as TComponent;
             }
+
+            // 从对象上查找内置组件
+            if (base.TryGetComponent<TComponent>(out var tComponent))
+            {
+                // 缓存内置组件
+                typeToComponentMap.Add(typeof(TComponent), tComponent);
+                return tComponent;
+            }
+
+            return null;
+        }
+
+        public new TComponent GetComponentInChildren<TComponent>() where TComponent : Component
+        {
+            return base.GetComponentInChildren<TComponent>();
         }
 
         public TComponent AddComponent<TComponent>() where TComponent : Component

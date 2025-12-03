@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// 输入组件
@@ -14,9 +15,19 @@ public class InputComponent : BaseComponent
     private Vector3 currentInput;
 
     /// <summary>
-    /// 输入改变事件
+    /// 键盘输入改变事件
     /// </summary>
-    public event UnityAction<Vector3> OnInputChanged;
+    public event UnityAction<Vector3> OnKeyInputChanged;
+    
+    /// <summary>
+    /// 鼠标滑动改变事件
+    /// </summary>
+    public event UnityAction<Vector2> OnMouseSlideChanged;
+
+    /// <summary>
+    /// 鼠标左键点击事件
+    /// </summary>
+    public event UnityAction OnMouseLeftClick;
 
     protected override void Awake()
     {
@@ -30,23 +41,35 @@ public class InputComponent : BaseComponent
     /// </summary>
     private void OnUpdate()
     {
+        // 键盘输入
         float h = Input.GetAxisRaw("Horizontal");
         float z = Input.GetAxisRaw("Vertical");
 
-        Vector3 newInput = new Vector3(h, 0, z);
+        Vector3 newInput = new Vector3(h, 0, z).normalized;
         if (newInput != currentInput)
         {
-            OnInputChanged?.Invoke(newInput);
-            currentInput = new Vector3(h, 0, z);
+            OnKeyInputChanged?.Invoke(newInput);
+            currentInput = newInput;
+        }
+
+        // 鼠标滑动输入
+        float x = Input.GetAxisRaw("Mouse X");
+        float y = Input.GetAxisRaw("Mouse Y");
+
+        Vector2 newMouseInput = new Vector2(x, y);
+        OnMouseSlideChanged?.Invoke(newMouseInput);
+
+        // 鼠标左键点击输入
+        if (Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            OnMouseLeftClick?.Invoke();
         }
     }
 
     private void OnDestroy()
     {
-        OnInputChanged = null;
-        if (MonoManager.IsLIve)
-        {
-            MonoManager.Instance.RemoveUpdateListener(OnUpdate);
-        }
+        OnKeyInputChanged = null;
+        OnMouseSlideChanged = null;
+        OnMouseLeftClick = null;
     }
 }

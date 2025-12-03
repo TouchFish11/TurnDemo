@@ -1,6 +1,8 @@
+using Framework;
 using Game.Main;
 using System;
 using System.Collections;
+using UnityEngine;
 
 namespace Game.Battle
 {
@@ -12,9 +14,21 @@ namespace Game.Battle
 
             // 测试
             // 添加移动、输入组件
+
+            CreateCamera();
             this.AddComponent<InputComponent>();
+
+            this.AddComponent<AnimComponent>();
             this.AddComponent<MoveComponent>();
             this.AddComponent<InteractComponent>();
+
+            // 相机跟随
+            OrbitCameraController.Instance.SetTarget(this.transform);
+        }
+
+        private async void CreateCamera()
+        {
+            await PoolManager.Instance.GetAssetBundleObjAsync(E_AssetBundleType.Camera, "Main Camera");
         }
 
         public override IEnumerator ExecuteAction()

@@ -24,6 +24,13 @@ public interface IEntityObject
     T GetComponent<T>() where T : Component;
 
     /// <summary>
+    /// 获取子对象组件
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    T GetComponentInChildren<T>() where T : Component;
+
+    /// <summary>
     /// 添加组件
     /// </summary>
     /// <typeparam name="T"></typeparam>

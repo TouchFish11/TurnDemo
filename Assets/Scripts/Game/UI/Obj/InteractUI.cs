@@ -1,6 +1,7 @@
 using Framework;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -20,7 +21,7 @@ public class InteractUI : UIBehaviour
 
     public void Init(string text)
     {
-        uIComponentBinder.GetControl<Text>("txtName").text = text;
+        uIComponentBinder.GetControl<TextMeshProUGUI>("txtInteractTip").text = text;
     }
 
 }

@@ -8,9 +8,11 @@ namespace Game
     /// </summary>
     public class NpcObject : EntityObject, IInteractable
     {
-        public bool IsInteractable { get; private set; }
+        public bool IsShowFloatingText { get; set; }
 
-        public string NpcName => "测试名称123";
+        public string NpcName => "测试名称1";
+
+        public string NpcTip => "无业游民";
 
         public void OnInteract(IEntityObject entityObject)
         {
