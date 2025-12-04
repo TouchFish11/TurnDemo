@@ -30,6 +30,7 @@ namespace Framework
         {
             //yield return LoadTableAsync<T, K>()
             //...
+            await LoadTableAsync<DialogueInfoContainer, DialogueInfo>();
             await Task.FromResult(true);
         }
 
@@ -46,7 +47,7 @@ namespace Framework
             TextAsset tInfo = await AssetBundleManager.Instance.LoadAssetAsync<TextAsset>(E_AssetBundleType.TableInfo, typeof(K).Name + ".tInfo.txt");
 #else
             // 加载编辑器数据
-            TextAsset tInfo = EditorResMgr.Instance.LoadEditorAsset<TextAsset>(typeof(K).Name + ".tInfo.txt");
+            TextAsset tInfo = EditorResMgr.Instance.LoadEditorAsset<TextAsset>(typeof(K).Name + ".tInfo");
 #endif
             // 转换二进制到数据类
             ConvertFrom<T, K>(tInfo);

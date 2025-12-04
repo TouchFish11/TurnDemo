@@ -24,6 +24,28 @@ public class MainModel : UIModel
         this.interactUIs.Clear();
 
         this.interactUIs.AddRange(interactUIs);
-        TriggerDataChanged("svInteract", interactUIs);
+        TriggerDataChanged(nameof(interactUIs), interactUIs);
+    }
+
+    /// <summary>
+    /// 激活交互UI
+    /// </summary>
+    public void ActiveInteract()
+    {
+        foreach (InteractUI interact in interactUIs)
+        {
+            interact.gameObject.SetActive(true);
+        }
+    }
+
+    /// <summary>
+    /// 失活交互UI
+    /// </summary>
+    public void DeactivateInteract()
+    {
+        foreach (InteractUI interact in interactUIs)
+        {
+            interact.gameObject.SetActive(false);
+        }
     }
 }

@@ -37,6 +37,18 @@ public class OrbitCameraController : SingletonMono<OrbitCameraController>
 
     private void Start()
     {
+        Init();
+
+        MonoManager.Instance.AddUpdateListener(OnUpdate);
+        DialogueManager.Instance.OnDialogueStart += OnDialogueStart;
+        DialogueManager.Instance.OnDialogueEnd += OnDialogueEnd;
+    }
+
+    /// <summary>
+    /// 初始化
+    /// </summary>
+    private void Init()
+    {
         // 初始化：锁定鼠标到屏幕中心
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -48,8 +60,18 @@ public class OrbitCameraController : SingletonMono<OrbitCameraController>
             _horizontalAngle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
             _verticalAngle = Mathf.Asin(dir.y / radius) * Mathf.Rad2Deg;
         }
+    }
 
-        MonoManager.Instance.AddUpdateListener(OnUpdate);
+    private void OnDialogueStart()
+    {
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = true;
+    }
+
+    private void OnDialogueEnd()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     /// <summary>
@@ -154,5 +176,11 @@ public class OrbitCameraController : SingletonMono<OrbitCameraController>
     {
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         radius = Mathf.Clamp(radius - scroll * 2f, 2f, 10f); // 限制半径范围2-10米
+    }
+
+    private void OnDestroy()
+    {
+        DialogueManager.Instance.OnDialogueStart -= OnDialogueStart;
+        DialogueManager.Instance.OnDialogueEnd -= OnDialogueEnd;
     }
 }

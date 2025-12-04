@@ -17,6 +17,13 @@ public class InteractUI : UIBehaviour
     {
         uIComponentBinder = new UIComponentBinder(this);
         uIComponentBinder.Bind();
+
+        uIComponentBinder.OnButtonClick += UIComponentBinder_OnButtonClick;
+    }
+
+    private void UIComponentBinder_OnButtonClick(string arg0)
+    {
+        LogMgr.Log($"°´Å¥µã»÷");
     }
 
     public void Init(string text)

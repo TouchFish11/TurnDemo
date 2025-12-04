@@ -33,14 +33,16 @@ public class MainController : UIController<MainView, MainModel>
 
     protected override void OnInit()
     {
-        EventCenter.Instance.AddEventListener<List<IInteractable>>(E_EventType.E_OnInteract, ShowInteract);
+        EventCenter.Instance.AddEventListener<List<IInteractable>>(E_EventType.E_OnInteract, CreateInteract);
+        DialogueManager.Instance.OnDialogueStart += DeactivateInteract;
+        DialogueManager.Instance.OnDialogueEnd += ActiveInteract;
     }
 
     /// <summary>
     /// 显示交互UI
     /// </summary>
     /// <param name="interactables"></param>
-    private async void ShowInteract(List<IInteractable> interactables)
+    private async void CreateInteract(List<IInteractable> interactables)
     {
         List<InteractUI> interactUIs = new List<InteractUI>(interactables.Count);
         foreach (IInteractable interactable in interactables)
@@ -48,16 +50,35 @@ public class MainController : UIController<MainView, MainModel>
             GameObject interactInstance = await PoolManager.Instance.GetAssetBundleObjAsync(E_AssetBundleType.UI, "InteractUI");
             InteractUI interactUI = interactInstance.GetComponent<InteractUI>();
             // 初始化文本
-            interactUI.Init(interactable.NpcName);
+            interactUI.Init(interactable.NpcConfig.npcName);
             interactUIs.Add(interactUI);
         }
         // 设置交互UI
         _model.SetInteracts(interactUIs);
     }
 
+    /// <summary>
+    /// 激活交互UI
+    /// </summary>
+    private void ActiveInteract()
+    {
+        _model.ActiveInteract();
+    }
+
+    /// <summary>
+    /// 失活交互UI
+    /// </summary>
+    private void DeactivateInteract()
+    {
+        _model.DeactivateInteract();
+    }
+
+
     public override void Destroy()
     {
         base.Destroy();
-        EventCenter.Instance.RemoveEventListener<List<IInteractable>>(E_EventType.E_OnInteract, ShowInteract);
+        EventCenter.Instance.RemoveEventListener<List<IInteractable>>(E_EventType.E_OnInteract, CreateInteract);
+        DialogueManager.Instance.OnDialogueStart -= DeactivateInteract;
+        DialogueManager.Instance.OnDialogueEnd -= ActiveInteract;
     }
 }

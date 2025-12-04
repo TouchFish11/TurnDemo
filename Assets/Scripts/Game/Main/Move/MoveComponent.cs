@@ -33,6 +33,22 @@ public class MoveComponent : BaseComponent
         mainCamera = OrbitCameraController.Instance.GetComponent<Camera>();
         characterController = this.EntityObject.GetComponent<CharacterController>();
         this.EntityObject.GetComponent<InputComponent>().OnKeyInputChanged += OnUpdateInputDir;
+        DialogueManager.Instance.OnDialogueStart += OnDialogueStart;
+        DialogueManager.Instance.OnDialogueEnd += OnDialogueEnd;
+    }
+
+    private void OnDialogueStart()
+    {
+        // Í£Ö¹ÒÆ¶¯
+        moveDir = Vector3.zero;
+        canMove = false;
+        // ×ªÏòNPC
+
+    }
+
+    private void OnDialogueEnd()
+    {
+        canMove = true;
     }
 
     /// <summary>

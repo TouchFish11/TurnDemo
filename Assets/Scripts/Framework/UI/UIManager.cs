@@ -106,6 +106,7 @@ namespace Framework
             _typeToCtrlFactoryMap.Add(typeof(BeginController), new BeginControllerFactory());
             _typeToCtrlFactoryMap.Add(typeof(VideoController), new VideoControllerFactory());
             _typeToCtrlFactoryMap.Add(typeof(MainController), new MainControllerFactory());
+            _typeToCtrlFactoryMap.Add(typeof(DialogueController), new DialogueControllerFactory());
         }
 
         /// <summary>

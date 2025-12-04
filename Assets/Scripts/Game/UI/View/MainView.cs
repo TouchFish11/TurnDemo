@@ -2,6 +2,7 @@ using Framework;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 /// <summary>
@@ -13,11 +14,11 @@ public class MainView : UIView
     {
         switch (key)
         {
-            case "svInteract":
+            case "interactUIs":
                 List<InteractUI> interactUIs = value as List<InteractUI>;
                 foreach (InteractUI interactUI in interactUIs)
                 {
-                    interactUI.transform.SetParent(uIComponentBinder.GetControl<ScrollRect>(key).content, false);
+                    interactUI.transform.SetParent(uIComponentBinder.GetControl<ScrollRect>("svInteract").content, false);
                 }
                 break;
         }

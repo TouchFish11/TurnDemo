@@ -13,6 +13,8 @@ public class InputComponent : BaseComponent
 {
     // 当前输入
     private Vector3 currentInput;
+    // 能否输入
+    private bool enableInput;
 
     /// <summary>
     /// 键盘输入改变事件
@@ -34,6 +36,21 @@ public class InputComponent : BaseComponent
         base.Awake();
 
         MonoManager.Instance.AddUpdateListener(OnUpdate);
+        enableInput = true;
+        // 监听对话开始事件——禁用输入
+        DialogueManager.Instance.OnDialogueStart += OnDisEnableInput;
+        // 监听对话结束事件——启用输入
+        DialogueManager.Instance.OnDialogueEnd += OnEnableInput;
+    }
+
+    private void OnEnableInput()
+    {
+        enableInput = true;
+    }
+
+    private void OnDisEnableInput()
+    {
+        enableInput = false;
     }
 
     /// <summary>
@@ -41,6 +58,11 @@ public class InputComponent : BaseComponent
     /// </summary>
     private void OnUpdate()
     {
+        if (!enableInput)
+        {
+            return;
+        }
+
         // 键盘输入
         float h = Input.GetAxisRaw("Horizontal");
         float z = Input.GetAxisRaw("Vertical");
@@ -64,6 +86,15 @@ public class InputComponent : BaseComponent
         {
             OnMouseLeftClick?.Invoke();
         }
+    }
+
+    public override void Destroy()
+    {
+        base.Destroy();
+        // 取消监听对话开始事件——禁用输入
+        DialogueManager.Instance.OnDialogueStart -= OnDisEnableInput;
+        // 取消监听对话结束事件——启用输入
+        DialogueManager.Instance.OnDialogueEnd -= OnEnableInput;
     }
 
     private void OnDestroy()
