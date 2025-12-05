@@ -31,6 +31,7 @@ namespace Framework
             //yield return LoadTableAsync<T, K>()
             //...
             await LoadTableAsync<DialogueInfoContainer, DialogueInfo>();
+            await LoadTableAsync<BranchInfoContainer, BranchInfo>();
             await Task.FromResult(true);
         }
 

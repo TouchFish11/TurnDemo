@@ -39,7 +39,7 @@ public class MainController : UIController<MainView, MainModel>
     }
 
     /// <summary>
-    /// 显示交互UI
+    /// 创建交互UI
     /// </summary>
     /// <param name="interactables"></param>
     private async void CreateInteract(List<IInteractable> interactables)

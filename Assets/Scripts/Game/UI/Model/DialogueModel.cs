@@ -1,3 +1,4 @@
+using Framework;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,6 +18,29 @@ public class DialogueModel : UIModel
     private bool isPlaying;
     // 是否自动播放
     private bool isAutoPlay;
+    // 对话选项UI列表
+    private readonly List<DialogueOptUI> dialogueOptUIs = new List<DialogueOptUI>();
+
+    /// <summary>
+    /// 设置分支选项
+    /// </summary>
+    /// <param name="optUIs"></param>
+    public void SetBranchOpt(IEnumerable<DialogueOptUI> optUIs)
+    {
+        foreach (DialogueOptUI opt in dialogueOptUIs)
+        {
+            PoolManager.Instance.PushObj(opt.gameObject);
+        }
+        dialogueOptUIs.Clear();
+
+        if (optUIs == null)
+        {
+            return;
+        }
+
+        dialogueOptUIs.AddRange(optUIs);
+        TriggerDataChanged(nameof(dialogueOptUIs), dialogueOptUIs);
+    }
 
     public string SpeakName
     {

@@ -72,9 +72,32 @@ public class DialogueController : UIController<DialogueView, DialogueModel>
     /// <param name="dialogueInfo"></param>
     public void ShowDialogueText(string speakerName ,string dialogueText)
     {
+        // 设置分支选项
+        _model.SetBranchOpt(null);
         // 显示说话者
         _model.SpeakName = speakerName;
         // 显示对话内容
         _model.DialogueText = dialogueText;
+    }
+
+    /// <summary>
+    /// 设置分支选项
+    /// </summary>
+    /// <param name="branchInfos"></param>
+    public async void SetBranchOpt(BranchInfo[] branchInfos)
+    {
+        List<DialogueOptUI> dialogueOpts = new List<DialogueOptUI>(branchInfos.Length);
+
+        foreach (BranchInfo branchInfo in branchInfos)
+        {
+            GameObject branchOptInstance = await PoolManager.Instance.GetAssetBundleObjAsync(E_AssetBundleType.UI, "DialogueOpt");
+            DialogueOptUI optUI = branchOptInstance.GetComponent<DialogueOptUI>();
+            // 初始化
+            optUI.Init(branchInfo);
+            optUI.OnSelectOpt += DialogueManager.Instance.OnSelectOpt;
+            dialogueOpts.Add(optUI);
+        }
+        // 设置分支选项
+        _model.SetBranchOpt(dialogueOpts);
     }
 }

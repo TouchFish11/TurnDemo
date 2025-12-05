@@ -32,7 +32,7 @@ namespace Framework
 
             _updateContext = new ABUpdateContext();
             _updateStateDic.Add(E_UpdatePhase.DownLoadRemoteListFile, new DownloadListFileState(this));
-            _updateStateDic.Add(E_UpdatePhase.GetLocalCompareFile, new GetLocalCompareFileState(this));
+            _updateStateDic.Add(E_UpdatePhase.GetLocalCompareFile, new GetLocalListFileState(this));
             _updateStateDic.Add(E_UpdatePhase.CompareContrast, new CompareContrastState(this));
             _updateStateDic.Add(E_UpdatePhase.DownLoadAssets, new DownLoadAssetState(this));
             _updateStateDic.Add(E_UpdatePhase.CheckAssetsIntegrity, new CheckAssetIntegrityState(this));

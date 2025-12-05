@@ -63,6 +63,9 @@ public class UIComponentBinder
         FindChildrenControl<ScrollRect>();
         FindChildrenControl<Dropdown>();
         FindChildrenControl<TextMeshProUGUI>();
+        FindChildrenControl<VerticalLayoutGroup>();
+        FindChildrenControl<HorizontalLayoutGroup>();
+        FindChildrenControl<GridLayoutGroup>();
         FindChildrenControl<RawImage>();
         FindChildrenControl<Text>();
         FindChildrenControl<Image>();

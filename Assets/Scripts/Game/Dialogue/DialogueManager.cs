@@ -47,7 +47,12 @@ public class DialogueManager : SingletonBase<DialogueManager>
 
     private DialogueManager()
     {
-        enableTypewriter = true;
+        GameSettingManager.Instance.OnEnableTypewriterChanged += OnEnableTypewriterChanged;
+    }
+
+    private void OnEnableTypewriterChanged(bool value)
+    {
+        enableTypewriter = value;
     }
 
     /// <summary>
@@ -76,6 +81,12 @@ public class DialogueManager : SingletonBase<DialogueManager>
     /// </summary>
     private void ShowCurrentDialogue(int startDialogueId)
     {
+        if (startDialogueId == -1)
+        {
+            EndDialogue();
+            return;
+        }
+
         // 获取该ID的对话信息
         DialogueInfo dialogueInfo = BinaryDataMgr.Instance.GetTable<DialogueInfoContainer>().dataDic[startDialogueId];
         // 记录当前对话信息
@@ -92,6 +103,8 @@ public class DialogueManager : SingletonBase<DialogueManager>
             dialogueOver = true;
             // 直接显示对话文本
             dialogueController.ShowDialogueText(currentDialogueInfo.f_speakerName, currentDialogueInfo.f_dialgueText);
+            // 显示对话分支（若有）
+            ShowBranchOpt();
         }
     }
 
@@ -111,6 +124,7 @@ public class DialogueManager : SingletonBase<DialogueManager>
             yield return new WaitForSeconds(TypewriterInterval);
         }
         dialogueOver = true;
+        ShowBranchOpt();
     }
 
     /// <summary>
@@ -129,21 +143,44 @@ public class DialogueManager : SingletonBase<DialogueManager>
             MonoManager.Instance.StopCoroutine(coroutine);
             dialogueController.ShowDialogueText(currentDialogueInfo.f_speakerName, currentDialogueInfo.f_dialgueText);
             dialogueOver = true;
+            ShowBranchOpt();
         }
         // 推进对话
         else
         {
-            if (currentDialogueInfo.f_nextId != -1)
+            if (!currentDialogueInfo.f_hasBranch)
             {
                 // 显示下一ID的对话
                 ShowCurrentDialogue(currentDialogueInfo.f_nextId);
             }
-            // 对话结束
-            else
-            {
-                EndDialogue();
-            }
         }
+    }
+
+    /// <summary>
+    /// 显示对话分支选项
+    /// </summary>
+    private void ShowBranchOpt()
+    {
+        if (currentDialogueInfo.f_hasBranch)
+        {
+            int[] branchIds = TextUtility.SplitToIntArr(currentDialogueInfo.f_branchIds, 2);
+            BranchInfo[] branchInfos = new BranchInfo[branchIds.Length];
+
+            for (int i = 0; i < branchIds.Length; i++)
+            {
+                branchInfos[i] = BinaryDataMgr.Instance.GetTable<BranchInfoContainer>().dataDic[branchIds[i]];
+            }
+            dialogueController.SetBranchOpt(branchInfos);
+        }
+    }
+
+    /// <summary>
+    /// 选择选项
+    /// </summary>
+    /// <param name="dialogueId"></param>
+    public void OnSelectOpt(int dialogueId)
+    {
+        ShowCurrentDialogue(dialogueId);
     }
 
     /// <summary>
