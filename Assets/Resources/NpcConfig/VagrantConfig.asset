@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   npcName: "\u6D4B\u8BD5\u540D\u79F01"
   npcIdentity: "\u6D41\u6D6A\u8005"
+  dialogueId: 1

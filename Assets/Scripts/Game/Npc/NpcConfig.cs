@@ -17,4 +17,9 @@ public class NpcConfig : ScriptableObject
     /// Npc身份
     /// </summary>
     public string npcIdentity;
+
+    /// <summary>
+    /// 对话起始ID
+    /// </summary>
+    public int dialogueId;
 }

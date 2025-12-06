@@ -210,7 +210,7 @@ namespace Framework
         }
 
         /// <summary>
-        /// 隐藏面板
+        /// 销毁界面
         /// </summary>
         /// <typeparam name="T">面板类型</typeparam>
         public void HideView<TView, TModel, TController>() where TView : UIView where TModel : UIModel, new() where TController : UIController<TView, TModel>
@@ -230,6 +230,39 @@ namespace Framework
                 _panelDic.Remove(cacheName);
             }
         }
+
+        /// <summary>
+        /// 显隐界面
+        /// </summary>
+        /// <typeparam name="TView"></typeparam>
+        /// <typeparam name="TModel"></typeparam>
+        /// <typeparam name="TController"></typeparam>
+        /// <param name="isActive"></param>
+        public void SetActve<TView, TModel, TController>(bool isActive) where TView : UIView where TModel : UIModel, new() where TController : UIController<TView, TModel>
+        {
+            // 自定义存储名称
+            string cacheName = $"{typeof(TView).Name}";
+            if (_panelDic.ContainsKey(cacheName))
+            {
+                PanelInfo<TView, TModel, TController> info = _panelDic[cacheName] as PanelInfo<TView, TModel, TController>;
+
+                if (isActive)
+                {
+                    // 激活 / 失活预制体
+                    info.View.gameObject.SetActive(isActive);
+                    // 调用面板显示
+                    info.View.Show();
+                }
+                else
+                {
+                    // 调用面板隐藏
+                    info.View.Hide();
+                    // 激活 / 失活预制体
+                    info.View.gameObject.SetActive(isActive);
+                }
+            }
+        }
+
 
         /// <summary>
         /// 获取面板
@@ -257,7 +290,7 @@ namespace Framework
         /// <param name="control">要监听的控件</param>
         /// <param name="type">事件类型</param>
         /// <param name="listener">监听函数</param>
-        public void AddCustomEventListener(UIBehaviour control, EventTriggerType type, UnityAction<BaseEventData> listener)
+        public static void AddCustomEventListener(UIBehaviour control, EventTriggerType type, UnityAction<BaseEventData> listener)
         {
             if (!control.TryGetComponent<EventTrigger>(out var eventTrigger))
             {

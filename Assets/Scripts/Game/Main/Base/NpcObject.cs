@@ -19,7 +19,7 @@ namespace Game
             // 显示对话界面
             if (!DialogueManager.Instance.IsDialogueActive)
             {
-                DialogueManager.Instance.StartDialogue(1);
+                DialogueManager.Instance.StartDialogue(npcConfig.dialogueId);
             }
             else
             {
