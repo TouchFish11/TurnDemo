@@ -1,7 +1,6 @@
 using Framework;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 /// <summary>
@@ -25,6 +24,20 @@ public class DialogueControllerFactory : UIControllerFactory<DialogueView, Dialo
 /// </summary>
 public class DialogueController : UIController<DialogueView, DialogueModel>
 {
+    private static readonly WaitForSeconds _waitForSeconds0_25 = new WaitForSeconds(0.25f);
+
+    /// <summary>
+    /// 对话提示
+    /// </summary>
+    private const string DialogueTip = "...";
+    /// <summary>
+    /// 默认提示文本
+    /// </summary>
+    private const string DefaultTip = "V";
+
+    // 提示效果文本协程
+    private Coroutine dialogueTipCor;
+
     public DialogueController(DialogueView view, DialogueModel model) : base(view, model)
     {
 
@@ -32,7 +45,21 @@ public class DialogueController : UIController<DialogueView, DialogueModel>
 
     protected override void OnInit()
     {
+        DialogueManager.Instance.OnSingleDialogueStart += OnSingleDialogueStart;
+        DialogueManager.Instance.OnSingleDialogueEnd += OnSingleDialogueEnd;
 
+        StoryReviewView storyReviewView = _view.GetComponentInChildren<StoryReviewView>();
+        storyReviewView.OnSubViewClosed += OnSubViewClosed;
+        _model.SetStoryReviewView(_view.GetComponentInChildren<StoryReviewView>());
+        _model.IsActiveReview = false;
+    }
+
+    /// <summary>
+    /// 子界面关闭
+    /// </summary>
+    private void OnSubViewClosed()
+    {
+        _model.IsActiveReview = false;
     }
 
     protected override void ButtonOnClick(string btnName)
@@ -67,6 +94,35 @@ public class DialogueController : UIController<DialogueView, DialogueModel>
             case "togAuto":
 
                 break;
+        }
+    }
+
+    private void OnSingleDialogueStart(DialogueInfo dialogueInfo)
+    {
+        // 缓存历史对话
+        _model.CacheDialogueInfo(dialogueInfo);
+        // 提示效果协程
+        dialogueTipCor = MonoManager.Instance.StartCoroutine(DialogueTip_Cor());
+    }
+
+    private void OnSingleDialogueEnd()
+    {
+        MonoManager.Instance.StopCoroutine(dialogueTipCor);
+        // 重置文本
+        _model.SetTip(DefaultTip);
+    }
+
+    // 对话提示效果协程
+    public IEnumerator DialogueTip_Cor()
+    {
+        int length = DialogueTip.Length;
+        while (true)
+        {
+            for (int i = 0; i < length; i++)
+            {
+                _model.SetTip(DialogueTip.Substring(0, i + 1));
+                yield return _waitForSeconds0_25;
+            }
         }
     }
 

@@ -70,6 +70,11 @@ namespace Framework
         /// <returns></returns>
         public T FromJson<T>(string json, E_JsonType jsonType = E_JsonType.JsonUtlity) where T : new()
         {
+            if (string.IsNullOrEmpty(json))
+            {
+                return new T();
+            }
+
             return jsonType switch
             {
                 E_JsonType.JsonUtlity => JsonUtility.FromJson<T>(json),

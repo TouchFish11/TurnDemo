@@ -24,7 +24,7 @@ public abstract class UIView : UIBehaviour, IUIView
     protected override void Awake()
     {
         uIComponentBinder = new UIComponentBinder(this);
-        uIComponentBinder.Bind();
+        //uIComponentBinder.Bind();
 
         this.canvasGroup = this.GetComponent<CanvasGroup>();
     }

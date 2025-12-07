@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// UI数据模型
 /// </summary>
-public class UIModel : IUIModel
+public abstract class UIModel : IUIModel
 {
     /// <summary>
     /// 数据变更事件（给 Controller 订阅）
@@ -21,5 +21,10 @@ public class UIModel : IUIModel
     protected void TriggerDataChanged(string key, object value)
     {
         OnDataChanged?.Invoke(key, value);
+    }
+
+    public virtual void ClearData()
+    {
+
     }
 }

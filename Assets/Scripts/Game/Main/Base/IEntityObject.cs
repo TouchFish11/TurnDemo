@@ -14,7 +14,7 @@ public interface IEntityObject
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    void Init(int id);
+    void BaseInit(int id);
 
     /// <summary>
     /// 获取组件

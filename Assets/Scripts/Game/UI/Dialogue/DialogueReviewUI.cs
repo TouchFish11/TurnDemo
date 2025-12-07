@@ -1,18 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class DialogueReviewUI : MonoBehaviour
+/// <summary>
+/// ¶Ô»°»Ø¹ËUI
+/// </summary>
+public class DialogueReviewUI : UIBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private TextMeshProUGUI txtDialogueText;
+
+    protected override void Awake()
     {
-        
+        txtDialogueText = this.GetComponentInChildren<TextMeshProUGUI>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Init(string speakerName, string dialogueText)
     {
-        
+        txtDialogueText.text = $"{speakerName}£º{dialogueText}";
     }
 }

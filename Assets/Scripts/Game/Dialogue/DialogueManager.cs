@@ -16,7 +16,8 @@ public class DialogueManager : SingletonBase<DialogueManager>
     // 当前单句对话是否完成
     private bool dialogueOver;
     // 打字机效果协程
-    private Coroutine coroutine;
+    private Coroutine typewriterCor;
+
     // 当前对话信息
     private DialogueInfo currentDialogueInfo;
     // 对话界面控制器
@@ -26,7 +27,6 @@ public class DialogueManager : SingletonBase<DialogueManager>
     /// 打字机打字间隔
     /// </summary>
     private const float TypewriterInterval = 0.05f;
-
     /// <summary>
     /// 对话开始
     /// </summary>
@@ -39,6 +39,14 @@ public class DialogueManager : SingletonBase<DialogueManager>
     /// 分支选择
     /// </summary>
     public event Action<string> OnBranchSelected;
+    /// <summary>
+    /// 单句对话开始事件
+    /// </summary>
+    public event Action<DialogueInfo> OnSingleDialogueStart;
+    /// <summary>
+    /// 单句对话结束事件
+    /// </summary>
+    public event Action OnSingleDialogueEnd;
 
     /// <summary>
     /// 是否正在显示对话
@@ -47,6 +55,7 @@ public class DialogueManager : SingletonBase<DialogueManager>
 
     private DialogueManager()
     {
+        enableTypewriter = true;
         GameSettingManager.Instance.OnEnableTypewriterChanged += OnEnableTypewriterChanged;
     }
 
@@ -96,7 +105,8 @@ public class DialogueManager : SingletonBase<DialogueManager>
         {
             dialogueOver = false;
             // 逐字显示
-            coroutine = MonoManager.Instance.StartCoroutine(ApplyTypewriter());
+            typewriterCor = MonoManager.Instance.StartCoroutine(ApplyTypewriter());
+            OnSingleDialogueStart?.Invoke(currentDialogueInfo);
         }
         else
         {
@@ -124,6 +134,7 @@ public class DialogueManager : SingletonBase<DialogueManager>
             yield return new WaitForSeconds(TypewriterInterval);
         }
         dialogueOver = true;
+        OnSingleDialogueEnd?.Invoke();
         ShowBranchOpt();
     }
 
@@ -138,11 +149,12 @@ public class DialogueManager : SingletonBase<DialogueManager>
         }
 
         // 若启用打字机效果，且未完成时，则停止效果直接显示完整文本
-        if (!dialogueOver && coroutine != null)
+        if (!dialogueOver && typewriterCor != null)
         {
-            MonoManager.Instance.StopCoroutine(coroutine);
+            MonoManager.Instance.StopCoroutine(typewriterCor);
             dialogueController.ShowDialogueText(currentDialogueInfo.f_speakerName, currentDialogueInfo.f_dialgueText);
             dialogueOver = true;
+            OnSingleDialogueEnd?.Invoke();
             ShowBranchOpt();
         }
         // 推进对话

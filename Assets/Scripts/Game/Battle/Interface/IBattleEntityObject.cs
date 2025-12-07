@@ -11,6 +11,13 @@ namespace Game.Battle
         //[Obsolete("TODO：通过配置数据来获取")]
         string Name { get; }
 
+        /// <summary>
+        /// 战斗初始化
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="context"></param>
+        void BattleInit(int id, IBattleContext context);
+
         IEnumerator ExecuteAction();
 
         /// <summary>

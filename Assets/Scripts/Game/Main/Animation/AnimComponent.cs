@@ -24,6 +24,19 @@ namespace Game
         }
 
         /// <summary>
+        /// ÉèÖÃ´ý»ú
+        /// </summary>
+        public void SetIdle()
+        {
+            animator.SetBool(isRunHash, true);
+        }
+
+        public void SetAnimation()
+        {
+
+        }
+
+        /// <summary>
         /// ÒÆ¶¯
         /// </summary>
         /// <param name="inputDir"></param>

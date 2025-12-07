@@ -9,4 +9,9 @@ public interface IUIModel
     /// 数据变更事件（给 Controller 订阅）
     /// </summary>
     public event Action<string, object> OnDataChanged;
+
+    /// <summary>
+    /// 清空数据
+    /// </summary>
+    public void ClearData();
 }

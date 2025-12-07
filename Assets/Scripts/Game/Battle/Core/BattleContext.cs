@@ -51,7 +51,7 @@ namespace Game.Battle
             {
                 int id = -1;
                 // 注入上下文，供角色内部组件使用
-                fireFly.Init(id, this);
+                fireFly.BattleInit(id, this);
                 _allCharacters.Add(fireFly);
             }
 

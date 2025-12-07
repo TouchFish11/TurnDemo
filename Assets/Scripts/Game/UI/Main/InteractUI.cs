@@ -16,7 +16,7 @@ public class InteractUI : UIBehaviour
     protected override void Awake()
     {
         uIComponentBinder = new UIComponentBinder(this);
-        uIComponentBinder.Bind();
+        //uIComponentBinder.Bind();
 
         uIComponentBinder.OnButtonClick += UIComponentBinder_OnButtonClick;
     }

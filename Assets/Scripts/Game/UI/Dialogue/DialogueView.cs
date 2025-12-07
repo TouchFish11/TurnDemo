@@ -31,10 +31,10 @@ public class DialogueView : UIView
         txtDialogue = uIComponentBinder.GetControl<TextMeshProUGUI>(nameof(txtDialogue));
         txtAuto = uIComponentBinder.GetControl<Text>(nameof(txtAuto));
 
-        dialogueOptBox = uIComponentBinder.GetControl<VerticalLayoutGroup>("DialogueOptBox").transform;
+        dialogueOptBox = uIComponentBinder.GetControl<VerticalLayoutGroup>(nameof(dialogueOptBox)).transform;
         dialogueBox = this.transform.Find(nameof(dialogueBox));
 
-        storyReviewSubView.gameObject.SetActive(false);
+        storyReviewSubView = this.GetComponentInChildren<StoryReviewView>().transform;
         storyReviewContent = uIComponentBinder.GetControl<ScrollRect>("svReview").content;
     }
 
@@ -58,10 +58,12 @@ public class DialogueView : UIView
             case "isActiveBox":
                 dialogueBox.gameObject.SetActive((bool)value);
                 break;
-            case "dialogueReview":
-                DialogueReviewUI dialogueReviewUI = value as DialogueReviewUI;
-                dialogueReviewUI.transform.SetParent(storyReviewContent, false);
-                break; 
+            case "isActiveReview":
+                storyReviewSubView.gameObject.SetActive((bool)value);
+                break;
+            case "txtTip":
+                txtTip.text = value.ToString();
+                break;
         }
     }
 }

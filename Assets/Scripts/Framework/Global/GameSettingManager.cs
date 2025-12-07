@@ -26,6 +26,7 @@ namespace Framework
         public void Init()
         {
             gameSettingData = JsonManager.Instance.FromJson<GameSettingData>("");
+            gameSettingData.enableTypewriter = true;
         }
 
         /// <summary>

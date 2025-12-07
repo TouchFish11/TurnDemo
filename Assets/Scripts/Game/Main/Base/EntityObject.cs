@@ -26,10 +26,10 @@ namespace Game
 
         protected virtual void Awake()
         {
-            Init(1);
+            BaseInit(1);
         }
 
-        public virtual void Init(int id)
+        public virtual void BaseInit(int id)
         {
            // AddComponents(1);
         }

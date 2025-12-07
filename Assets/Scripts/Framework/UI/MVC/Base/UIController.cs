@@ -90,5 +90,6 @@ public abstract class UIController<TView, TModel> : IUIController where TView : 
         _view.GetBinder().OnToggleValueChanged -= ToggleValueChanged;
         _view.GetBinder().OnInputFieldValueChanged -= InputFieldValueChanged;
         _model.OnDataChanged -= (this as IUIController).OnHandleModelDataChanged;
+        _model.ClearData();
     }
 }

@@ -22,10 +22,21 @@ public class DialogueModel : UIModel
     private readonly List<DialogueOptUI> dialogueOptUIs = new List<DialogueOptUI>();
     // 对话框是否显示
     private bool isActiveBox;
-    // 对话回顾文本UI列表
-    private readonly List<DialogueReviewUI> dialogueReviewUIs = new List<DialogueReviewUI>();
+    // 剧情回顾界面音乐
+    private StoryReviewView storyReviewView;
     // 回顾界面是否显示
     private bool isActiveReview;
+    // 对话提示效果
+    private string txtTip;
+
+    /// <summary>
+    /// 设置剧情回顾界面
+    /// </summary>
+    /// <param name="storyReviewView"></param>
+    public void SetStoryReviewView(StoryReviewView storyReviewView)
+    {
+        this.storyReviewView = storyReviewView;
+    }
 
     /// <summary>
     /// 设置分支选项
@@ -48,10 +59,35 @@ public class DialogueModel : UIModel
         TriggerDataChanged(nameof(dialogueOptUIs), dialogueOptUIs);
     }
 
-    public void AddReview(DialogueReviewUI dialogueReview)
+    /// <summary>
+    /// 清理分支选项
+    /// </summary>
+    private void ClearBranchOpt()
     {
-        dialogueReviewUIs.Add(dialogueReview);
-        TriggerDataChanged(nameof(dialogueReview), dialogueReview);
+        foreach (DialogueOptUI opt in dialogueOptUIs)
+        {
+            PoolManager.Instance.PushObj(opt.gameObject);
+        }
+        dialogueOptUIs.Clear();
+    }
+
+    /// <summary>
+    /// 添加回顾UI文本
+    /// </summary>
+    /// <param name="dialogueReview"></param>
+    public void CacheDialogueInfo(DialogueInfo dialogueInfo)
+    {
+        storyReviewView.CacheDialogueInfo(dialogueInfo);
+    }
+
+    /// <summary>
+    /// 设置对话提示效果
+    /// </summary>
+    /// <param name="text"></param>
+    public void SetTip(string text)
+    {
+        txtTip = text;
+        TriggerDataChanged(nameof(txtTip), text);
     }
 
     public bool IsActiveReview
@@ -122,5 +158,10 @@ public class DialogueModel : UIModel
             isActiveBox = value;
             TriggerDataChanged(nameof(isActiveBox), value);
         }
+    }
+
+    public override void ClearData()
+    {
+        ClearBranchOpt();
     }
 }

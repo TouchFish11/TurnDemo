@@ -37,18 +37,14 @@ public class InputComponent : BaseComponent
 
         MonoManager.Instance.AddUpdateListener(OnUpdate);
         enableInput = true;
-        // 监听对话开始事件——禁用输入
-        DialogueManager.Instance.OnDialogueStart += OnDisEnableInput;
-        // 监听对话结束事件——启用输入
-        DialogueManager.Instance.OnDialogueEnd += OnEnableInput;
     }
 
-    private void OnEnableInput()
+    public void EnableInput()
     {
         enableInput = true;
     }
 
-    private void OnDisEnableInput()
+    public void DisEnableInput()
     {
         enableInput = false;
     }
@@ -86,15 +82,6 @@ public class InputComponent : BaseComponent
         {
             OnMouseLeftClick?.Invoke();
         }
-    }
-
-    public override void Destroy()
-    {
-        base.Destroy();
-        // 取消监听对话开始事件——禁用输入
-        DialogueManager.Instance.OnDialogueStart -= OnDisEnableInput;
-        // 取消监听对话结束事件——启用输入
-        DialogueManager.Instance.OnDialogueEnd -= OnEnableInput;
     }
 
     private void OnDestroy()

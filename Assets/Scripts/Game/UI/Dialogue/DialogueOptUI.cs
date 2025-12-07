@@ -24,7 +24,7 @@ public class DialogueOptUI : UIBehaviour
     protected override void Awake()
     {
         uIComponentBinder = new UIComponentBinder(this);
-        uIComponentBinder.Bind();
+        //uIComponentBinder.Bind();
         uIComponentBinder.OnButtonClick += OnOptionClick;
 
         imgHightlight = uIComponentBinder.GetControl<Image>(nameof(imgHightlight));

@@ -18,12 +18,7 @@ namespace Game
         // 额外属性加成
         private readonly Dictionary<E_FieldType, float> _attributeBonuses = new Dictionary<E_FieldType, float>();
 
-        /// <summary>
-        /// 初始化
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="context"></param>
-        public virtual void Init(int id, IBattleContext context)
+        public virtual void BattleInit(int id, IBattleContext context)
         {
             // 加载组件（配置表可配置角色绑定哪些组件）
             BattleComponent battleCharacterComponent = this.gameObject.AddComponent<BattleComponent>();

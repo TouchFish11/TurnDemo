@@ -48,8 +48,10 @@ namespace Framework
         public void Push(GameObject obj)
         {
             if (GlobalSettings.Instance.IsOpenLayout)
+            {
                 //设置父对象
                 obj.transform.SetParent(_parentObj.transform, false);
+            }
             //失活对象
             obj.SetActive(false);
             //存储进容器

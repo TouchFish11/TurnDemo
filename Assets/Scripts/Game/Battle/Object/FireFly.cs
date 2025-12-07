@@ -8,9 +8,9 @@ namespace Game.Battle
 {
     public class FireFly : BattleObject
     {
-        public override void Init(int id)
+        public override void BaseInit(int id)
         {
-            base.Init(id);
+            base.BaseInit(id);
 
             // 测试
             // 添加移动、输入组件
