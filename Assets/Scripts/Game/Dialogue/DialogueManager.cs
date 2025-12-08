@@ -17,7 +17,6 @@ public class DialogueManager : SingletonBase<DialogueManager>
     private bool dialogueOver;
     // 打字机效果协程
     private Coroutine typewriterCor;
-
     // 当前对话信息
     private DialogueInfo currentDialogueInfo;
     // 对话界面控制器

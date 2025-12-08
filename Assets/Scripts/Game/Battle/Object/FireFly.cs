@@ -21,6 +21,7 @@ namespace Game.Battle
             this.AddComponent<AnimComponent>();
             this.AddComponent<MoveComponent>();
             this.AddComponent<InteractComponent>();
+            this.AddComponent<DialogueComponent>();
 
             // Ïà»ú¸úËæ
             OrbitCameraController.Instance.SetTarget(this.transform);

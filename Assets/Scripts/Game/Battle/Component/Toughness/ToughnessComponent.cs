@@ -50,10 +50,5 @@ namespace Game.Battle
         /// </summary>
         /// <returns></returns>
         public bool IsToughnessBroken() => _toughness.IsBroken;
-
-        public void Init(IEntityObject entityObject)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

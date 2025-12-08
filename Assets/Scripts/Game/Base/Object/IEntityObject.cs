@@ -10,7 +10,7 @@ public interface IEntityObject
     GameObject GameObject { get; }
 
     /// <summary>
-    /// 初始化
+    /// 基础初始化
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
