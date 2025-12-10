@@ -11,7 +11,7 @@ namespace Framework
         //存储未使用对象的栈
         private readonly Stack<GameObject> _unUsedObjStack = new Stack<GameObject>();
         //该类对象的父对象
-        private readonly GameObject _parentObj;
+        private GameObject _parentObj;
 
         public PoolObj(GameObject rootObj, string poolObjName)
         {
@@ -56,6 +56,16 @@ namespace Framework
             obj.SetActive(false);
             //存储进容器
             _unUsedObjStack.Push(obj);
+        }
+
+        /// <summary>
+        /// 清理
+        /// </summary>
+        public void Clear()
+        {
+            _unUsedObjStack.Clear();
+            GameObject.Destroy(_parentObj);
+            _parentObj = null;
         }
 
         /// <summary>

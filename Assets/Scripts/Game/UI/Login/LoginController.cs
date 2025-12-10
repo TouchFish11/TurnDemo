@@ -30,7 +30,7 @@ public class LoginController : UIController<LoginView, LoginModel>
 
     }
 
-    protected override void OnInit()
+    protected override async Task OnInit()
     {
         // 获取登录服务实例
         _loginService = ServerManager.Instance.GetService<LoginService>();

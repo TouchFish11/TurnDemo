@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
@@ -13,9 +14,9 @@ public class BattleController : UIController<BattleView, BattleModel>
 
     }
 
-    protected override void OnInit()
+    protected override async Task OnInit()
     {
-        throw new NotImplementedException();
+
     }
 
     internal void BattleOver()

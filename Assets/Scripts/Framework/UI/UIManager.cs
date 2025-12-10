@@ -1,3 +1,4 @@
+using Game.UI;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -107,6 +108,7 @@ namespace Framework
             _typeToCtrlFactoryMap.Add(typeof(VideoController), new VideoControllerFactory());
             _typeToCtrlFactoryMap.Add(typeof(MainController), new MainControllerFactory());
             _typeToCtrlFactoryMap.Add(typeof(DialogueController), new DialogueControllerFactory());
+            _typeToCtrlFactoryMap.Add(typeof(TaskController), new TaskControllerFactory());
         }
 
         /// <summary>
@@ -201,6 +203,8 @@ namespace Framework
             TModel model = factory.CreateModel();
             // 创建控制器
             TController controller = factory.CreateController(view, model);
+            // 等待控制器初始化
+            await controller.Init();
             // 初始化面板信息
             PanelInfo<TView, TModel, TController> newInfo = new PanelInfo<TView, TModel, TController>(view, model, controller);
             // 存储面板信息

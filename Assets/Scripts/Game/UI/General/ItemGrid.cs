@@ -8,5 +8,10 @@ using UnityEngine.EventSystems;
 /// </summary>
 public class ItemGrid : UIBehaviour
 {
+    
 
+    public void Init()
+    {
+
+    }
 }

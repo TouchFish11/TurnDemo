@@ -1,6 +1,7 @@
 using Framework;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
@@ -43,7 +44,7 @@ public class DialogueController : UIController<DialogueView, DialogueModel>
 
     }
 
-    protected override void OnInit()
+    protected override async Task OnInit()
     {
         DialogueManager.Instance.OnSingleDialogueStart += OnSingleDialogueStart;
         DialogueManager.Instance.OnSingleDialogueEnd += OnSingleDialogueEnd;
@@ -150,7 +151,7 @@ public class DialogueController : UIController<DialogueView, DialogueModel>
 
         foreach (BranchInfo branchInfo in branchInfos)
         {
-            GameObject branchOptInstance = await PoolManager.Instance.GetAssetBundleObjAsync(E_AssetBundleType.UI, "DialogueOpt");
+            GameObject branchOptInstance = await PoolManager.Instance.GetAssetBundleObjAsync(E_AssetBundleType.UI, "DialogueOptUI");
             DialogueOptUI optUI = branchOptInstance.GetComponent<DialogueOptUI>();
             // ≥ı ºªØ
             optUI.Init(branchInfo);

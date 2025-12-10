@@ -37,6 +37,14 @@ public static class FileUtility
     public static string LocalInputDataFileName => "InputData.bytes";
 
     /// <summary>
+    /// 本地输入数据文件名
+    /// </summary>
+    /// <value>
+    /// TaskData.json
+    /// </value>
+    public static string LocalTaskDataFileName => "TaskData.json";
+
+    /// <summary>
     /// AB包清单文件默认名称
     /// </summary>
     /// <value>

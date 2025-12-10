@@ -30,7 +30,7 @@ public class BeginController : UIController<BeginView, BeginModel>
 
     }
 
-    protected override void OnInit()
+    protected override async Task OnInit()
     {
         // 注册更新事件
         AssetBundleUpdater.Instance.GetContext().OnUpdatePhase += OnUpdatePhase;

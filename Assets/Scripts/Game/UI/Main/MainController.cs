@@ -1,4 +1,5 @@
 using Framework;
+using Game.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -31,11 +32,21 @@ public class MainController : UIController<MainView, MainModel>
 
     }
 
-    protected override void OnInit()
+    protected override async Task OnInit()
     {
         EventCenter.Instance.AddEventListener<List<IInteractable>>(E_EventType.E_OnInteract, CreateInteract);
         DialogueManager.Instance.OnDialogueStart += DeactivateInteract;
         DialogueManager.Instance.OnDialogueEnd += ActiveInteract;
+    }
+
+    protected override async void ButtonOnClick(string btnName)
+    {
+        switch (btnName)
+        {
+            case "btnTask":
+                await UIManager.Instance.ShowViewAsync<TaskView, TaskModel, TaskController>(E_UILayer.Mid);
+                break;
+        }
     }
 
     /// <summary>

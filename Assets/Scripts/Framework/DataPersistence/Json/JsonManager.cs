@@ -84,6 +84,34 @@ namespace Framework
         }
 
         /// <summary>
+        /// 异步从Json转换为对象
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="path"></param>
+        /// <param name="jsonType"></param>
+        /// <returns></returns>
+        public async Task<T> FromJsonAsync<T>(string path, E_JsonType jsonType = E_JsonType.JsonUtlity) where T : new()
+        {
+            if (!File.Exists(path))
+            {
+                return new T();
+            }
+
+            string json = await File.ReadAllTextAsync(path);
+            if (string.IsNullOrEmpty(json))
+            {
+                return new T();
+            }
+
+            return jsonType switch
+            {
+                E_JsonType.JsonUtlity => JsonUtility.FromJson<T>(json),
+                E_JsonType.LitJson => JsonMapper.ToObject<T>(json),
+                _ => new T()
+            };
+        }
+
+        /// <summary>
         /// 从对象转换为Json
         /// </summary>
         /// <param name="data"></param>

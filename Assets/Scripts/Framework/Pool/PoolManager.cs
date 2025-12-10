@@ -139,6 +139,20 @@ namespace Framework
         }
 
         /// <summary>
+        /// 清理指定类型的缓存
+        /// </summary>
+        /// <param name="typeObjName"></param>
+        public void ClearType<T>()
+        {
+            string objName = typeof(T).Name;
+            if (_poolObjDic.TryGetValue(objName, out PoolObj poolObj))
+            {
+                poolObj.Clear();
+                _poolObjDic.Remove(objName);
+            }
+        }
+
+        /// <summary>
         /// 清空缓存池
         /// </summary>
         public void Clear()

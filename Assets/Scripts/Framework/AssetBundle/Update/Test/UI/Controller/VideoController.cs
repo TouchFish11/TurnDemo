@@ -1,6 +1,7 @@
 using Framework;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Video;
 
@@ -30,7 +31,7 @@ public class VideoController : UIController<VideoView, VideoModel>
 
     }
 
-    protected override void OnInit()
+    protected override async Task OnInit()
     {
 
     }

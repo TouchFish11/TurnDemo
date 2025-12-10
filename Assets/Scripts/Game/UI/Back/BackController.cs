@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
@@ -28,7 +29,7 @@ public class BackController : UIController<BackView, BackModel>
 
     }
 
-    protected override void OnInit()
+    protected override async Task OnInit()
     {
         throw new System.NotImplementedException();
     }

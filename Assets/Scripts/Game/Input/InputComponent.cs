@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 /// <summary>
@@ -77,10 +78,27 @@ public class InputComponent : BaseComponent
         Vector2 newMouseInput = new Vector2(x, y);
         OnMouseSlideChanged?.Invoke(newMouseInput);
 
+        if (Keyboard.current.leftAltKey.isPressed)
+        {
+            MouseManager.Instance.RequestMouseVisible(nameof(Keyboard.current.leftAltKey));
+        }
+        else
+        {
+            MouseManager.Instance.ReleaseMouseVisible(nameof(Keyboard.current.leftAltKey));
+        }
+
         // 鼠标左键点击输入
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
-            OnMouseLeftClick?.Invoke();
+            // 落在UI上
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            {
+
+            }
+            else
+            {
+                OnMouseLeftClick?.Invoke();
+            }
         }
     }
 

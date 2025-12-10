@@ -32,7 +32,8 @@ namespace Framework
             //...
             await LoadTableAsync<DialogueInfoContainer, DialogueInfo>();
             await LoadTableAsync<BranchInfoContainer, BranchInfo>();
-            await Task.FromResult(true);
+            await LoadTableAsync<TaskInfoContainer, TaskInfo>();
+            //await Task.FromResult(true);
         }
 
         /// <summary>

@@ -1,5 +1,7 @@
+using Framework;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
@@ -14,15 +16,20 @@ public abstract class UIController<TView, TModel> : IUIController where TView : 
     {
         _view = view;
         _model = model;
+    }
+
+    public async Task Init()
+    {
         (this as IUIController).BindViewEvents();
         (this as IUIController).BindModelEvents();
-        OnInit();
+        await OnInit();
+        MouseManager.Instance.RequestMouseVisible(this.ToString());
     }
 
     /// <summary>
     /// 初始化逻辑（子类实现）
     /// </summary>
-    protected abstract void OnInit();
+    protected abstract Task OnInit();
 
     /// <summary>
     /// 绑定 View 事件（监听用户操作）
@@ -91,5 +98,7 @@ public abstract class UIController<TView, TModel> : IUIController where TView : 
         _view.GetBinder().OnInputFieldValueChanged -= InputFieldValueChanged;
         _model.OnDataChanged -= (this as IUIController).OnHandleModelDataChanged;
         _model.ClearData();
+
+        MouseManager.Instance.ReleaseMouseVisible(this.ToString());
     }
 }
