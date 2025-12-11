@@ -58,7 +58,7 @@ public class MainController : UIController<MainView, MainModel>
         List<InteractUI> interactUIs = new List<InteractUI>(interactables.Count);
         foreach (IInteractable interactable in interactables)
         {
-            GameObject interactInstance = await PoolManager.Instance.GetAssetBundleObjAsync(E_AssetBundleType.UI, "InteractUI");
+            GameObject interactInstance = await PoolManager.Instance.GetAssetBundleObjAsync(E_AssetBundleType.UI, ResConfigCollection.InteractUI);
             InteractUI interactUI = interactInstance.GetComponent<InteractUI>();
             // 初始化文本
             interactUI.Init(interactable.NpcConfig.npcName);

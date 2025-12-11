@@ -151,7 +151,7 @@ public class DialogueController : UIController<DialogueView, DialogueModel>
 
         foreach (BranchInfo branchInfo in branchInfos)
         {
-            GameObject branchOptInstance = await PoolManager.Instance.GetAssetBundleObjAsync(E_AssetBundleType.UI, "DialogueOptUI");
+            GameObject branchOptInstance = await PoolManager.Instance.GetAssetBundleObjAsync(E_AssetBundleType.UI, ResConfigCollection.DialogueOptUI);
             DialogueOptUI optUI = branchOptInstance.GetComponent<DialogueOptUI>();
             // ≥ı ºªØ
             optUI.Init(branchInfo);

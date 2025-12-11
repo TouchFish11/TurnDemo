@@ -53,7 +53,7 @@ public class StoryReviewView : UIBehaviour
     {
         foreach (DialogueInfo dialogueInfo in historicalDialogueInfos)
         {
-            GameObject reviewObj = await PoolManager.Instance.GetAssetBundleObjAsync(E_AssetBundleType.UI, "DialogueReviewUI");
+            GameObject reviewObj = await PoolManager.Instance.GetAssetBundleObjAsync(E_AssetBundleType.UI, ResConfigCollection.DialogueReviewUI);
             DialogueReviewUI dialogueReviewUI = reviewObj.GetComponent<DialogueReviewUI>();
             dialogueReviewUI.Init(dialogueInfo.f_speakerName, dialogueInfo.f_dialgueText);
             dialogueReviewUI.transform.SetParent(svReview.content, false);

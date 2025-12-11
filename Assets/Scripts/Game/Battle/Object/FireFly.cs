@@ -29,7 +29,7 @@ namespace Game.Battle
 
         private async void CreateCamera()
         {
-            await PoolManager.Instance.GetAssetBundleObjAsync(E_AssetBundleType.Camera, "Main Camera");
+            await PoolManager.Instance.GetAssetBundleObjAsync(E_AssetBundleType.Camera, ResConfigCollection.MainCamera);
         }
 
         public override IEnumerator ExecuteAction()

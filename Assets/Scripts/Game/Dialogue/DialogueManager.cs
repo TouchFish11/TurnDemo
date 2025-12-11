@@ -205,5 +205,9 @@ public class DialogueManager : SingletonBase<DialogueManager>
         UIManager.Instance.HideView<DialogueView, DialogueModel, DialogueController>();
         // 触发“对话结束”事件
         OnDialogueEnd?.Invoke();
+        // 清理对话选项UI缓存
+        PoolManager.Instance.ClearType<DialogueOptUI>();
+        // 清理对话回顾UI缓存
+        PoolManager.Instance.ClearType<DialogueReviewUI>();
     }
 }

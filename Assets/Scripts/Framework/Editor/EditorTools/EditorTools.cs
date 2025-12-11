@@ -1,3 +1,4 @@
+using CustomEditor.ScriptGeneration;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -34,5 +35,15 @@ public class EditorTools
         AssetDatabase.Refresh();
 
         Debug.Log($"已创建GlobalSetting，路径：{AssetPath}{nameof(GlobalSettings)}");
+    }
+
+    /// <summary>
+    /// 生成ResKeyCollection脚本
+    /// </summary>
+    [MenuItem("GameTool/Generate/Generate ResKeyCollection")]
+    public static void GenerateResKeyCollectionScript()
+    {
+        ResKeyCollectionClassGenerator resKeyCollectionClassGenerator = new ResKeyCollectionClassGenerator();
+        resKeyCollectionClassGenerator.GenerateScript();
     }
 }

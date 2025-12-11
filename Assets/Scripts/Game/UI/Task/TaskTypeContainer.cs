@@ -92,7 +92,7 @@ public class TaskTypeContainer : UIBehaviour
     {
         for (int i = 0; i < taskInfos.Count; i++)
         {
-           GameObject taskItemObj = await PoolManager.Instance.GetAssetBundleObjAsync(E_AssetBundleType.UI, "TaskItem");
+           GameObject taskItemObj = await PoolManager.Instance.GetAssetBundleObjAsync(E_AssetBundleType.UI, ResConfigCollection.TaskItem);
             taskItemObj.transform.SetParent(this.transform, false);
             TaskItem taskItem = taskItemObj.GetComponent<TaskItem>();
             taskItem.Init(taskInfos[i], null);  // ÔÝÊ±´«¿Õ

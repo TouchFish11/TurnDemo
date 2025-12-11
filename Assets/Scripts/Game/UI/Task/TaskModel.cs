@@ -58,7 +58,7 @@ namespace Game.UI
             int[] rewardIds = TextUtility.SplitToIntArr(taskInfo.f_taskRewrardIds, 2);
             foreach (int id in rewardIds)
             {
-                GameObject rewardObj = await PoolManager.Instance.GetAssetBundleObjAsync(E_AssetBundleType.UI, "ItemGrid");
+                GameObject rewardObj = await PoolManager.Instance.GetAssetBundleObjAsync(E_AssetBundleType.UI, ResConfigCollection.ItemGrid);
                 ItemGrid itemGrid = rewardObj.GetComponent<ItemGrid>();
                 itemGrid.Init();
                 rewardItems.Add(itemGrid);
