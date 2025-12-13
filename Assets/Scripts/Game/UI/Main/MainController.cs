@@ -27,16 +27,21 @@ public class MainControllerFactory : UIControllerFactory<MainView, MainModel, Ma
 /// </summary>
 public class MainController : UIController<MainView, MainModel>
 {
+    // 交互逻辑
+    private readonly InteractLogic interactLogic;
+
     public MainController(MainView view, MainModel model) : base(view, model)
     {
-
+        interactLogic = new InteractLogic(this, model, view);
     }
 
     protected override async Task OnInit()
     {
-        EventCenter.Instance.AddEventListener<List<IInteractable>>(E_EventType.E_OnInteract, CreateInteract);
-        DialogueManager.Instance.OnDialogueStart += DeactivateInteract;
-        DialogueManager.Instance.OnDialogueEnd += ActiveInteract;
+        EventCenter.Instance.AddEventListener<List<IInteractable>>(E_EventType.E_OnInteract, interactLogic.CreateInteract);
+        DialogueManager.Instance.OnDialogueStart += _model.DeactivateInteract;
+        DialogueManager.Instance.OnDialogueEnd += _model.ActiveInteract;
+
+        await base.OnInit();
     }
 
     protected override async void ButtonOnClick(string btnName)
@@ -49,47 +54,17 @@ public class MainController : UIController<MainView, MainModel>
         }
     }
 
-    /// <summary>
-    /// 创建交互UI
-    /// </summary>
-    /// <param name="interactables"></param>
-    private async void CreateInteract(List<IInteractable> interactables)
+    private void UpdateTask()
     {
-        List<InteractUI> interactUIs = new List<InteractUI>(interactables.Count);
-        foreach (IInteractable interactable in interactables)
-        {
-            GameObject interactInstance = await PoolManager.Instance.GetAssetBundleObjAsync(E_AssetBundleType.UI, ResConfigCollection.InteractUI);
-            InteractUI interactUI = interactInstance.GetComponent<InteractUI>();
-            // 初始化文本
-            interactUI.Init(interactable.NpcConfig.npcName);
-            interactUIs.Add(interactUI);
-        }
-        // 设置交互UI
-        _model.SetInteracts(interactUIs);
-    }
-
-    /// <summary>
-    /// 激活交互UI
-    /// </summary>
-    private void ActiveInteract()
-    {
-        _model.ActiveInteract();
-    }
-
-    /// <summary>
-    /// 失活交互UI
-    /// </summary>
-    private void DeactivateInteract()
-    {
-        _model.DeactivateInteract();
+        _model.IsActiveTaskbar = true;
     }
 
 
     public override void Destroy()
     {
         base.Destroy();
-        EventCenter.Instance.RemoveEventListener<List<IInteractable>>(E_EventType.E_OnInteract, CreateInteract);
-        DialogueManager.Instance.OnDialogueStart -= DeactivateInteract;
-        DialogueManager.Instance.OnDialogueEnd -= ActiveInteract;
+        EventCenter.Instance.RemoveEventListener<List<IInteractable>>(E_EventType.E_OnInteract, interactLogic.CreateInteract);
+        DialogueManager.Instance.OnDialogueStart -= _model.DeactivateInteract;
+        DialogueManager.Instance.OnDialogueEnd -= _model.ActiveInteract;
     }
 }

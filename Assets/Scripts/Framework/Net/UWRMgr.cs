@@ -84,7 +84,7 @@ namespace Framework
 
                 if (!task.IsCompletedSuccessfully)
                 {
-                    LogMgr.LogError(task.Exception.Message);
+                    LogManager.LogError(task.Exception.Message);
                     yield break;
                 }
 
@@ -110,7 +110,7 @@ namespace Framework
                 }
                 else
                 {
-                    LogMgr.LogError($"上传失败: {uwr.error}\nURL: {url}");
+                    LogManager.LogError($"上传失败: {uwr.error}\nURL: {url}");
                 }
             }
         }

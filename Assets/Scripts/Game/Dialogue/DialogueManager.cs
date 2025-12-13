@@ -37,7 +37,7 @@ public class DialogueManager : SingletonBase<DialogueManager>
     /// <summary>
     /// 分支选择
     /// </summary>
-    public event Action<string> OnBranchSelected;
+    public event Action OnBranchSelected;
     /// <summary>
     /// 单句对话开始事件
     /// </summary>
@@ -192,6 +192,7 @@ public class DialogueManager : SingletonBase<DialogueManager>
     public void OnSelectOpt(int dialogueId)
     {
         ShowCurrentDialogue(dialogueId);
+        OnBranchSelected?.Invoke();
     }
 
     /// <summary>

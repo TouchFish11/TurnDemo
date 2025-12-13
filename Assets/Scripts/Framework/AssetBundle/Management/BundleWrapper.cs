@@ -69,7 +69,7 @@ namespace Framework
             {
                 source.SetResult(true);
                 assetBundle = null;
-                LogMgr.Log($"{bundelName}包已被卸载");
+                LogManager.Log($"{bundelName}包已被卸载");
             };
             return source.Task;
         }

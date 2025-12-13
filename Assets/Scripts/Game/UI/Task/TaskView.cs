@@ -17,14 +17,24 @@ namespace Game.UI
         private Transform detailView;
         private Transform rewardBox;
 
+        private ToggleGroup toggleGroup;
+
+        private GameObject hasTaskView;
+        private GameObject noTaskView;
+
         protected override void Awake()
         {
             base.Awake();
 
             svTask = uIComponentBinder.GetControl<ScrollRect>(nameof(svTask));
+            toggleGroup = svTask.content.GetComponent<ToggleGroup>();
             txtTaskName = uIComponentBinder.GetControl<TextMeshProUGUI>(nameof(txtTaskName));
             txtTaskDescription = uIComponentBinder.GetControl<TextMeshProUGUI>(nameof(txtTaskDescription));
             rewardBox = this.transform.Find(nameof(detailView)).Find(nameof(rewardBox));
+
+            detailView = this.transform.Find(nameof(detailView));
+            hasTaskView = detailView.transform.Find(nameof(hasTaskView)).gameObject;
+            noTaskView = detailView.transform.Find(nameof(noTaskView)).gameObject;
         }
 
         public override void UpdateView(string key, object value)
@@ -45,7 +55,14 @@ namespace Game.UI
                     TaskTypeContainer taskTypeContainer = value as TaskTypeContainer;
                     taskTypeContainer.transform.SetParent(svTask.content, false);
                     break;
+                case "hasTasks":
+                    bool hasTasks = (bool)value;
+                    hasTaskView.SetActive(hasTasks);
+                    noTaskView.SetActive(!hasTasks);
+                    break;
             }
         }
+
+        public ToggleGroup ToggleGroup => toggleGroup;
     }
 }

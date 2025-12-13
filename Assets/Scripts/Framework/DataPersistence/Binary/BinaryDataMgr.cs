@@ -50,6 +50,7 @@ namespace Framework
 #else
             // 加载编辑器数据
             TextAsset tInfo = EditorResMgr.Instance.LoadEditorAsset<TextAsset>(typeof(K).Name + ".tInfo");
+            await Task.CompletedTask;
 #endif
             // 转换二进制到数据类
             ConvertFrom<T, K>(tInfo);
@@ -90,7 +91,7 @@ namespace Framework
         {
             if (!File.Exists(PathManager.GetUserDataLocalSavePath(fileName)))
             {
-                LogMgr.Log($"没有找到该路径的二进制数据文件：{fileName}，已返回默认值");
+                LogManager.Log($"没有找到该路径的二进制数据文件：{fileName}，已返回默认值");
                 return new();
             }
 
@@ -104,7 +105,7 @@ namespace Framework
 
             if (dataObj == null)
             {
-                LogMgr.Log("没有找到该路径的二进制数据文件，已返回默认值");
+                LogManager.Log("没有找到该路径的二进制数据文件，已返回默认值");
                 return new();
             }
 

@@ -48,7 +48,7 @@ public static class XLuaCall
     {
         //øÚº‹¿‡
         typeof(AssetBundleManager),
-        typeof(LogMgr),
+        typeof(LogManager),
         typeof(E_EventType),
         typeof(EventCenter),
         typeof(InputActionData),

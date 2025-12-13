@@ -29,7 +29,10 @@ public abstract class UIController<TView, TModel> : IUIController where TView : 
     /// <summary>
     /// 初始化逻辑（子类实现）
     /// </summary>
-    protected abstract Task OnInit();
+    protected virtual Task OnInit()
+    {
+        return Task.CompletedTask;
+    }
 
     /// <summary>
     /// 绑定 View 事件（监听用户操作）

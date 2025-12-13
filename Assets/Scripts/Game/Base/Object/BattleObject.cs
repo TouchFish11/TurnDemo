@@ -92,7 +92,7 @@ namespace Game
 
         public virtual void TakeDamage(int damage, E_PropertyType propertyType)
         {
-            LogMgr.Log($"{Name} £”‡HP£∫{1000 - damage}");
+            LogManager.Log($"{Name} £”‡HP£∫{1000 - damage}");
         }
 
         public abstract IEnumerator ExecuteAction();

@@ -21,7 +21,7 @@ namespace Framework
         {
             if (assetBundle == null)
             {
-                LogMgr.LogError($"获取场景路径失败，场景包：{bundelName}未加载");
+                LogManager.LogError($"获取场景路径失败，场景包：{bundelName}未加载");
                 return false;
             }
 
@@ -43,7 +43,7 @@ namespace Framework
         {
             if (assetBundle == null)
             {
-                LogMgr.LogError($"获取场景路径失败，场景包：{bundelName}未加载");
+                LogManager.LogError($"获取场景路径失败，场景包：{bundelName}未加载");
                 return new string[0];
             }
 

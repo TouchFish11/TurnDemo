@@ -41,6 +41,8 @@ public class LoginController : UIController<LoginView, LoginModel>
         _model.IsLoginBtnEnabled = true;
         // 隐藏登录框
         ShowLoginBox(false);
+
+        await base.OnInit();
     }
 
     protected override void ButtonOnClick(string btnName)
@@ -97,7 +99,7 @@ public class LoginController : UIController<LoginView, LoginModel>
         }
         else
         {
-            LogMgr.Log($"登录失败");
+            LogManager.Log($"登录失败");
             // 恢复按钮可用
             _model.IsLoginBtnEnabled = true;
             // 自动登录失败，手动登录，显示登录框
@@ -110,7 +112,7 @@ public class LoginController : UIController<LoginView, LoginModel>
     /// </summary>
     private async void LoginOver()
     {
-        LogMgr.Log($"登录成功");
+        LogManager.Log($"登录成功");
         // 隐藏登录界面
         UIManager.Instance.HideView<LoginView, LoginModel, LoginController>();
         // 显示开始界面
@@ -124,7 +126,7 @@ public class LoginController : UIController<LoginView, LoginModel>
         // 数据校验（调用 Model 方法）
         if (!_model.CheckLoginData())
         {
-            LogMgr.Log("账号或密码格式错误");
+            LogManager.Log("账号或密码格式错误");
             return;
         }
 

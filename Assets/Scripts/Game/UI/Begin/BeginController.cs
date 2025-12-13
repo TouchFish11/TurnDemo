@@ -45,6 +45,8 @@ public class BeginController : UIController<BeginView, BeginModel>
         _model.TxtProgress = $"{TextUtility.FloatToStr(0, 2)}%";
         _model.TxtSize = "";
         _model.TxtSpeed = "";
+
+        await base.OnInit();
     }
 
     /// <summary>
@@ -54,14 +56,14 @@ public class BeginController : UIController<BeginView, BeginModel>
     {
         if (!await AssetBundleUpdater.Instance.CheckUpdate())
         {
-            LogMgr.Log($"更新失败");
+            LogManager.Log($"更新失败");
             return;
         }
 
         // 初始化AB包
         if (!await AssetBundleManager.Instance.Init())
         {
-            LogMgr.Log($"AB包初始化失败");
+            LogManager.Log($"AB包初始化失败");
             return;
         }
 
@@ -103,7 +105,7 @@ public class BeginController : UIController<BeginView, BeginModel>
                 break;
             default:
                 _model.TxtPhase = "";
-                LogMgr.LogError($"没有实现该枚举项：{updatePhase}");
+                LogManager.LogError($"没有实现该枚举项：{updatePhase}");
                 break;
         }
     }

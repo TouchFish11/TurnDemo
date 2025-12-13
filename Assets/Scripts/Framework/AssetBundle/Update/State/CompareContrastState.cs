@@ -20,7 +20,7 @@ namespace Framework
             IsSuceess = await CompareContrastFileInfo();
             if (!IsSuceess)
             {
-                LogMgr.LogError("差异对比失败");
+                LogManager.LogError("差异对比失败");
                 FinishUpdate();
                 return IsSuceess;
             }
@@ -89,7 +89,7 @@ namespace Framework
                 }
                 catch
                 {
-                    LogMgr.LogError("反序列化缓存文件失败");
+                    LogManager.LogError("反序列化缓存文件失败");
                     return false;
                 }
             }

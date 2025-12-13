@@ -46,6 +46,7 @@ namespace Framework
             TextAsset textAsset = EditorResMgr.Instance.LoadEditorAsset<TextAsset>($"{typeof(K).Name}", ".json");
             T container = JsonUtility.FromJson<T>(textAsset.text);
             _jsonDic.Add(typeof(T).Name, container);
+            await Task.CompletedTask;
 #endif
         }
 

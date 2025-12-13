@@ -56,8 +56,7 @@ public class FloatingTextManager : SingletonAutoMono<FloatingTextManager>
                 if (!npcObject.IsShowFloatingText)
                 {
                     npcObject.IsShowFloatingText = true;
-                    GameObject floatText = await PoolManager.Instance.GetAssetBundleObjAsync(E_AssetBundleType.Prefab, ResConfigCollection.FloatingText);
-                    FloatingText floatingText = floatText.GetComponent<FloatingText>();
+                    FloatingText floatingText = await ObjectBuilder.GetOrCreateInstance<FloatingText>(E_AssetBundleType.Prefab, ResConfigCollection.FloatingText, null);
                     floatingText.Init(npcObject.transform, npcObject.NpcConfig.npcName, npcObject.NpcConfig.npcIdentity);
                     npcToTextMap.TryAdd(npcObject, floatingText);
                 }

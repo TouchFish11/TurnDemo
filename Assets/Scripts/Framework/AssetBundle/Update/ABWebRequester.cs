@@ -122,13 +122,13 @@ public class ABWebRequester : IDisposable
         // 下载超时
         if (isDownloadTimeout)
         {
-            LogMgr.Log($"{_fileName}下载超时，长时间（{_downloadTimeout}s）未收到数据");
+            LogManager.Log($"{_fileName}下载超时，长时间（{_downloadTimeout}s）未收到数据");
             overCallback?.Invoke(false);
         }
         // 检查连接阶段是否失败（包含连接超时）
         else if (_request?.result != UnityWebRequest.Result.Success)
         {
-            LogMgr.LogError($"{_fileName}连接失败：{_request?.error}，响应码：{_request?.responseCode}");
+            LogManager.LogError($"{_fileName}连接失败：{_request?.error}，响应码：{_request?.responseCode}");
             overCallback?.Invoke(false);
         }
         else

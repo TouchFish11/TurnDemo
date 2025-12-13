@@ -94,6 +94,8 @@ namespace Framework
             GameObject.DontDestroyOnLoad(uiCameraInstance);
             //ÉèÖÃUIÉãÏñ»ú
             _canvas.worldCamera = _uiCamera;
+
+            await Task.CompletedTask;
 #endif
         }
 
@@ -330,7 +332,7 @@ namespace Framework
             }
             else
             {
-                LogMgr.Log("×ª»»Ê§°Ü");
+                LogManager.Log("×ª»»Ê§°Ü");
                 return false;
             }
         }

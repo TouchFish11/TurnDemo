@@ -81,7 +81,7 @@ namespace Framework
         {
             if (_backgroundMusic == null)
             {
-                LogMgr.LogError("背景音乐组件为Null");
+                LogManager.LogError("背景音乐组件为Null");
                 return;
             }
 
@@ -96,7 +96,7 @@ namespace Framework
         {
             if (_backgroundMusic == null)
             {
-                LogMgr.LogError("背景音乐组件为Null");
+                LogManager.LogError("背景音乐组件为Null");
                 return;
             }
             _backgroundMusic.Stop();
@@ -116,7 +116,7 @@ namespace Framework
             }
             else
             {
-                LogMgr.LogError("背景音乐组件为Null");
+                LogManager.LogError("背景音乐组件为Null");
             }
         }
 

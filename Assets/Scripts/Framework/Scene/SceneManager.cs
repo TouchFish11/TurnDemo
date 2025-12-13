@@ -30,14 +30,14 @@ namespace Framework
         {
             if (!AssetBundleManager.Instance.ContainPath(scenePath))
             {
-                LogMgr.LogError($"不存在该场景：{scenePath}");
+                LogManager.LogError($"不存在该场景：{scenePath}");
                 return;
             }
 
             // 加载场景所需的AB包
             if (!await AssetBundleManager.Instance.LoadSceneBundleAsync())
             {
-                LogMgr.Log($"场景加载失败：{scenePath}");
+                LogManager.Log($"场景加载失败：{scenePath}");
                 return;
             }
 

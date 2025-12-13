@@ -22,7 +22,7 @@ namespace Framework
 
             if (!IsSuceess)
             {
-                LogMgr.LogError("资源不完整，请重新下载缺失资源");
+                LogManager.LogError("资源不完整，请重新下载缺失资源");
                 FinishUpdate();
                 return IsSuceess;
             }

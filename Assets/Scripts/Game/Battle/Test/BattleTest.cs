@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 public class BattleTest : MonoBehaviour
 {
     // Start is called before the first frame update
-    async void Start()
+    private async void Start()
     {
         await UIManager.Instance.InitUIManagerAsync();
         // 初始化游戏数据

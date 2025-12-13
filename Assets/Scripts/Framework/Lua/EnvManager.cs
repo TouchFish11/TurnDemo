@@ -51,7 +51,7 @@ namespace Framework
         {
             if (_env == null)
             {
-                LogMgr.LogError("lua解析器为null");
+                LogManager.LogError("lua解析器为null");
                 return;
             }
             _env.DoString(luaStr);
@@ -65,7 +65,7 @@ namespace Framework
         {
             if (_env == null)
             {
-                LogMgr.LogError("lua解析器为null");
+                LogManager.LogError("lua解析器为null");
                 return;
             }
             _env.DoString($"require('{fileName}')");
@@ -78,7 +78,7 @@ namespace Framework
         {
             if (_env == null)
             {
-                LogMgr.LogError("lua解析器为null");
+                LogManager.LogError("lua解析器为null");
                 return;
             }
             _env.Tick();
@@ -91,7 +91,7 @@ namespace Framework
         {
             if (_env == null)
             {
-                LogMgr.LogError("lua解析器为null");
+                LogManager.LogError("lua解析器为null");
                 return;
             }
             _env.Dispose();
@@ -120,7 +120,7 @@ namespace Framework
             }
             else
             {
-                LogMgr.LogError($"lua文件加载失败，文件名：{fileName}");
+                LogManager.LogError($"lua文件加载失败，文件名：{fileName}");
                 return null;
             }
         }

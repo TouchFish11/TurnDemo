@@ -53,6 +53,8 @@ public class DialogueController : UIController<DialogueView, DialogueModel>
         storyReviewView.OnSubViewClosed += OnSubViewClosed;
         _model.SetStoryReviewView(_view.GetComponentInChildren<StoryReviewView>());
         _model.IsActiveReview = false;
+
+        await base.OnInit();
     }
 
     /// <summary>
@@ -151,8 +153,7 @@ public class DialogueController : UIController<DialogueView, DialogueModel>
 
         foreach (BranchInfo branchInfo in branchInfos)
         {
-            GameObject branchOptInstance = await PoolManager.Instance.GetAssetBundleObjAsync(E_AssetBundleType.UI, ResConfigCollection.DialogueOptUI);
-            DialogueOptUI optUI = branchOptInstance.GetComponent<DialogueOptUI>();
+            DialogueOptUI optUI = await ObjectBuilder.GetOrCreateInstance<DialogueOptUI>(E_AssetBundleType.UI, ResConfigCollection.DialogueOptUI, null);
             // ≥ı ºªØ
             optUI.Init(branchInfo);
             optUI.OnSelectOpt += DialogueManager.Instance.OnSelectOpt;

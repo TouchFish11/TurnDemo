@@ -33,7 +33,7 @@ namespace Framework
                 _musicData = BinaryDataMgr.Instance.Load<MusicData>(FileUtility.LocalMusicDataFileName);
                 if (_musicData == null)
                 {
-                    LogMgr.LogError($"初始化音乐数据失败");
+                    LogManager.LogError($"初始化音乐数据失败");
                     return;
                 }
 
@@ -41,13 +41,13 @@ namespace Framework
                 _inputActionContainer = BinaryDataMgr.Instance.Load<InputActionContainer>(FileUtility.LocalInputDataFileName);
                 if (_inputActionContainer == null)
                 {
-                    LogMgr.LogError($"初始化输入动作数据失败");
+                    LogManager.LogError($"初始化输入动作数据失败");
                     return;
                 }
             }
             catch (System.Exception ex)
             {
-                LogMgr.LogError($"初始化本地数据失败，{ex.Message}");
+                LogManager.LogError($"初始化本地数据失败，{ex.Message}");
             }
         }
 

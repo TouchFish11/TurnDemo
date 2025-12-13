@@ -40,7 +40,7 @@ namespace Framework
             _isDownloading = false;
             if (!IsSuceess)
             {
-                LogMgr.Log("资源未下载完整");
+                LogManager.Log("资源未下载完整");
                 FinishUpdate();
                 return IsSuceess;
             }
@@ -97,7 +97,7 @@ namespace Framework
                         // 下载成功
                         if (isOver)
                         {
-                            LogMgr.Log($"下载成功：{requester.FileName}");
+                            LogManager.Log($"下载成功：{requester.FileName}");
                             // 获取文件信息
                             FileInfo fileInfo = new FileInfo(PathManager.GetAbLoadPath(requester.FileName));
                             // 构建记录信息对象
@@ -128,7 +128,7 @@ namespace Framework
                 await Task.Yield();
             }
 
-            LogMgr.Log("下载结束");
+            LogManager.Log("下载结束");
 
             // 判断全部是否下载成功
             bool isAllSuccess = true;

@@ -38,7 +38,7 @@ namespace Game.Battle
             // 若韧性为0且未触发过破盾（防止重复触发）
             if (_toughness.IsBroken)
             {
-                LogMgr.Log($"\n{(EntityObject as IBattleEntityObject).Name}被击破！");
+                LogManager.Log($"\n{(EntityObject as IBattleEntityObject).Name}被击破！");
 
                 // 广播“破盾事件”（通知其他模块“目标已破盾”）
                 BattleEventCenter.TriggerEvent(new ToughnessBrokenEvent(skillCastEvent.Context, skillCastEvent.Caster, EntityObject as IBattleEntityObject));

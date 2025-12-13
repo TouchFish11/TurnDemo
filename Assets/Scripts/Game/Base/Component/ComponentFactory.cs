@@ -51,7 +51,7 @@ public class ComponentFactory : SingletonBase<ComponentFactory>
                 //    AddComponent<UIComponent>(character);
                 //    break;
                 default:
-                    LogMgr.LogError($"未知的组件ID: {id}");
+                    LogManager.LogError($"未知的组件ID: {id}");
                     break;
             }
         }

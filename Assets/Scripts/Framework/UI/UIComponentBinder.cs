@@ -66,27 +66,6 @@ public class UIComponentBinder
     }
 
     /// <summary>
-    /// 绑定
-    /// </summary>
-    //public void Bind()
-    //{
-    //    FindChildrenControl<Button>();
-    //    FindChildrenControl<Toggle>();
-    //    FindChildrenControl<ToggleGroup>();
-    //    FindChildrenControl<Slider>();
-    //    FindChildrenControl<InputField>();
-    //    FindChildrenControl<ScrollRect>();
-    //    FindChildrenControl<Dropdown>();
-    //    FindChildrenControl<TextMeshProUGUI>();
-    //    FindChildrenControl<VerticalLayoutGroup>();
-    //    FindChildrenControl<HorizontalLayoutGroup>();
-    //    FindChildrenControl<GridLayoutGroup>();
-    //    FindChildrenControl<RawImage>();
-    //    FindChildrenControl<Text>();
-    //    FindChildrenControl<Image>();
-    //}
-
-    /// <summary>
     /// 获取控件
     /// </summary>
     /// <typeparam name="T">控件类型</typeparam>

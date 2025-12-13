@@ -29,23 +29,69 @@ namespace Game.UI
         private readonly List<ItemGrid> rewardItems = new List<ItemGrid>();
         // 当前任务信息
         private TaskInfo currentTaskInfo;
+        // 是否有任务
+        private bool hasTasks;
 
+        public bool HasTasks
+        {
+            get => hasTasks;
+            set
+            {
+                hasTasks = value;
+                TriggerDataChanged(nameof(hasTasks), value);
+            }
+        }
+
+        /// <summary>
+        /// 是否包含该容器
+        /// </summary>
+        /// <param name="taskType"></param>
+        /// <returns></returns>
         public bool ContainContainer(int taskType)
         {
             return taskTypeToContainerMap.ContainsKey(taskType);
         }
 
+        /// <summary>
+        /// 添加任务类型容器
+        /// </summary>
+        /// <param name="taskType"></param>
+        /// <param name="taskTypeContainer"></param>
         public void AddTaskTypeContainers(int taskType, TaskTypeContainer taskTypeContainer)
         {
             taskTypeToContainerMap.Add(taskType, taskTypeContainer);
             TriggerDataChanged(nameof(taskTypeContainer), taskTypeContainer);
         }
 
+        /// <summary>
+        /// 获取容器
+        /// </summary>
+        /// <param name="taskType"></param>
+        /// <returns></returns>
         public TaskTypeContainer GetContainer(int taskType)
         {
             return taskTypeToContainerMap[taskType];
         }
 
+        /// <summary>
+        /// 获取第一个添加的容器
+        /// </summary>
+        /// <returns></returns>
+        public TaskTypeContainer GetFirstContainer()
+        {
+            foreach (TaskTypeContainer container in taskTypeToContainerMap.Values)
+            {
+                return container;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// 更新任务信息
+        /// </summary>
+        /// <param name="taskInfo"></param>
+        /// <returns></returns>
         public async Task UpdateTaskInfo(TaskInfo taskInfo)
         {
             foreach (var item in rewardItems)
@@ -58,8 +104,7 @@ namespace Game.UI
             int[] rewardIds = TextUtility.SplitToIntArr(taskInfo.f_taskRewrardIds, 2);
             foreach (int id in rewardIds)
             {
-                GameObject rewardObj = await PoolManager.Instance.GetAssetBundleObjAsync(E_AssetBundleType.UI, ResConfigCollection.ItemGrid);
-                ItemGrid itemGrid = rewardObj.GetComponent<ItemGrid>();
+                ItemGrid itemGrid = await ObjectBuilder.GetOrCreateInstance<ItemGrid>(E_AssetBundleType.UI, ResConfigCollection.ItemGrid, null);
                 itemGrid.Init();
                 rewardItems.Add(itemGrid);
             }

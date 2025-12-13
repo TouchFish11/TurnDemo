@@ -21,7 +21,7 @@ namespace Framework
             IsSuceess = await GetLocalCompareFileInfo();
             if (!IsSuceess)
             {
-                LogMgr.LogError("本地对比文件获取失败");
+                LogManager.LogError("本地对比文件获取失败");
                 FinishUpdate();
                 return IsSuceess;
             }
@@ -83,7 +83,7 @@ namespace Framework
             }
             else
             {
-                LogMgr.LogError($"本地AB包对比文件获取失败：{req.result}-{req.error}");
+                LogManager.LogError($"本地AB包对比文件获取失败：{req.result}-{req.error}");
                 //获取失败
                 return false;
             }

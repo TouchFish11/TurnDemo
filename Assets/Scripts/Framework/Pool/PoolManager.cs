@@ -67,6 +67,7 @@ namespace Framework
             instanceObj.name = assetName;
             return instanceObj;
 #else
+            await Task.CompletedTask;
             // 加载编辑器路径下的资源
             GameObject obj = EditorResMgr.Instance.LoadEditorAsset<GameObject>(assetName);
             // 实例化预设体

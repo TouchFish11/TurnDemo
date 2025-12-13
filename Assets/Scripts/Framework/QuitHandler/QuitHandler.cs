@@ -20,9 +20,9 @@ public class QuitHandler : SingletonAutoMono<QuitHandler>
     /// </summary>
     public void ActiveHandler()
     {
-        LogMgr.Instance.EnableLog = true;
-        LogMgr.Log(Application.persistentDataPath);
-        LogMgr.Log("退出处理器激活");
+        LogManager.Instance.EnableLog = true;
+        LogManager.Log(Application.persistentDataPath);
+        LogManager.Log("退出处理器激活");
     }
 
     private async void OnApplicationQuit()

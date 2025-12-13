@@ -34,7 +34,7 @@ namespace Framework
             //该文件夹路径不存在
             if (!Directory.Exists(RootPath))
             {
-                LogMgr.Log($"该路径{RootPath}不存在");
+                LogManager.Log($"该路径{RootPath}不存在");
                 return null;
             }
 
@@ -79,14 +79,14 @@ namespace Framework
 
             if (targetInfo == null)
             {
-                LogMgr.LogError($"未找到该资源，{assetName}{suffixName}");
+                LogManager.LogError($"未找到该资源，{assetName}{suffixName}");
                 return null;
             }
 
             T res = AssetDatabase.LoadAssetAtPath<T>(targetInfo.FullName[targetInfo.FullName.IndexOf("Assets")..]);
             if (res == null)
             {
-                LogMgr.LogError($"编辑器资源加载失败，资源路径：{targetInfo.FullName[targetInfo.FullName.IndexOf("Assets")..]}");
+                LogManager.LogError($"编辑器资源加载失败，资源路径：{targetInfo.FullName[targetInfo.FullName.IndexOf("Assets")..]}");
                 return null;
             }
             return res;
@@ -109,7 +109,7 @@ namespace Framework
             if (!Directory.Exists(RootPath))
             {
                 Directory.CreateDirectory(RootPath);
-                LogMgr.Log($"该路径{RootPath}不存在，已自动创建");
+                LogManager.Log($"该路径{RootPath}不存在，已自动创建");
                 AssetDatabase.Refresh();
             }
 
@@ -132,7 +132,7 @@ namespace Framework
 
             if (targetInfo == null)
             {
-                LogMgr.LogError($"未找到该资源，{spritesName}{".spriteatlasv2"}");
+                LogManager.LogError($"未找到该资源，{spritesName}{".spriteatlasv2"}");
                 return null;
             }
 
@@ -160,7 +160,7 @@ namespace Framework
             if (!Directory.Exists(RootPath))
             {
                 Directory.CreateDirectory(RootPath);
-                LogMgr.Log($"该路径{RootPath}不存在，已自动创建");
+                LogManager.Log($"该路径{RootPath}不存在，已自动创建");
                 AssetDatabase.Refresh();
             }
 
@@ -183,7 +183,7 @@ namespace Framework
 
             if (targetInfo == null)
             {
-                LogMgr.LogError($"未找到该资源，{spritesName}{".spriteatlasv2"}");
+                LogManager.LogError($"未找到该资源，{spritesName}{".spriteatlasv2"}");
                 return null;
             }
 

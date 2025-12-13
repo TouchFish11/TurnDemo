@@ -1,7 +1,9 @@
 using Framework;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game.UI
 {
@@ -45,6 +47,9 @@ namespace Game.UI
                 case "btnClose":
                     UIManager.Instance.HideView<TaskView, TaskModel, TaskController>();
                     break;
+                case "btnAcceptTask":
+
+                    break;
             }
         }
 
@@ -73,7 +78,7 @@ namespace Game.UI
 
                 // 显示任务列表UI
                 TaskTypeContainer taskTypeContainer = null;
-                if (CanCreateContainer(taskInfo.f_taskType))
+                if (!_model.ContainContainer(taskInfo.f_taskType))
                 {
                     // 创建该任务类型父对象
                     taskTypeContainer = await CreateTaskTypeContainer(taskInfo);
@@ -84,11 +89,18 @@ namespace Game.UI
                 }
                 await CreateTaskItem(taskInfo, taskTypeContainer);
             }
-        }
 
-        private bool CanCreateContainer(int taskType)
-        {
-            return !_model.ContainContainer(taskType);
+            // 每次打开界面时, 默认选择第一个任务显示
+            TaskTypeContainer container = _model.GetFirstContainer();
+            if (container != null)
+            {
+                _model.HasTasks = true;
+                container.DefaultSelectFirstTask();
+            }
+            else
+            {
+                _model.HasTasks = false;
+            }
         }
 
         /// <summary>
@@ -99,8 +111,7 @@ namespace Game.UI
         private async Task<TaskTypeContainer> CreateTaskTypeContainer(TaskInfo taskInfo)
         {
             // 创建该任务类型父对象
-            GameObject containerObj = await PoolManager.Instance.GetAssetBundleObjAsync(E_AssetBundleType.UI, ResConfigCollection.TaskTypeContainer);
-            TaskTypeContainer taskTypeContainer = containerObj.GetComponent<TaskTypeContainer>();
+            TaskTypeContainer taskTypeContainer = await ObjectBuilder.GetOrCreateInstance<TaskTypeContainer>(E_AssetBundleType.UI, ResConfigCollection.TaskTypeContainer, null);
             taskTypeContainer.Init(taskInfo.f_taskType, taskInfo.f_taskName);
             _model.AddTaskTypeContainers(taskInfo.f_taskType, taskTypeContainer);
             return taskTypeContainer;
@@ -114,11 +125,9 @@ namespace Game.UI
         /// <returns></returns>
         private async Task CreateTaskItem(TaskInfo taskInfo, TaskTypeContainer container)
         {
-            GameObject taskItemObj = await PoolManager.Instance.GetAssetBundleObjAsync(E_AssetBundleType.UI, ResConfigCollection.TaskItem);
-            taskItemObj.transform.SetParent(container.transform, false);
-            TaskItem taskItem = taskItemObj.GetComponent<TaskItem>();
+            TaskItem taskItem = await ObjectBuilder.GetOrCreateInstance<TaskItem>(E_AssetBundleType.UI, ResConfigCollection.TaskItem, container.transform);
             taskItem.OnSelectedTask += UpdateTaskDetail;
-            taskItem.Init(taskInfo, taskDataContainer[taskInfo.f_id]);
+            taskItem.Init(taskInfo, taskDataContainer[taskInfo.f_id], _view.ToggleGroup);
             container.AddItem(taskItem, taskInfo);
         }
 

@@ -57,7 +57,7 @@ namespace Game.Battle
         public void AddTalent(ITalent talent)
         {
             _talents.Add(talent);
-            LogMgr.Log($"{(EntityObject as IBattleEntityObject).Name}激活天赋：{talent.Name}");
+            LogManager.Log($"{(EntityObject as IBattleEntityObject).Name}激活天赋：{talent.Name}");
         }
     }
 }

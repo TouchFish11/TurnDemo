@@ -49,7 +49,7 @@ namespace Game.Battle
         public void AddStatus(IStatus status)
         {
             _statuses.Add(status);
-            LogMgr.Log($"{(EntityObject as IBattleEntityObject).Name}获得状态：{status.GetType().Name}");
+            LogManager.Log($"{(EntityObject as IBattleEntityObject).Name}获得状态：{status.GetType().Name}");
         }
     }
 }

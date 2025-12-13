@@ -22,7 +22,7 @@ namespace Framework
         {
             if (str == "")
             {
-                LogMgr.LogWarning("进行分割的字符串长度为0");
+                LogManager.LogWarning("进行分割的字符串长度为0");
                 return new string[0];
             }
 
@@ -55,7 +55,7 @@ namespace Framework
                 case 7:
                     return newStr.Split('_');
                 default:
-                    LogMgr.LogError("没有提供该符号类型的分割方式");
+                    LogManager.LogError("没有提供该符号类型的分割方式");
                     return new string[0];
             }
         }
@@ -71,7 +71,7 @@ namespace Framework
             string[] newStr = Split(str, type);
             if (newStr.Length == 0)
             {
-                LogMgr.LogWarning("进行转换的字符串数组长度为0");
+                LogManager.LogWarning("进行转换的字符串数组长度为0");
                 return new int[0];
             }
 
@@ -80,7 +80,7 @@ namespace Framework
             {
                 if(int.TryParse(str, out int value))
                     return value;
-                LogMgr.LogWarning("字符串转换失败，已用默认值代替");
+                LogManager.LogWarning("字符串转换失败，已用默认值代替");
                 return default;
             });
         }
@@ -98,7 +98,7 @@ namespace Framework
             string[] newStr = Split(str, firstSplitCharType);
             if (newStr.Length == 0)
             {
-                LogMgr.LogWarning("进行分割的字符串数组长度为0");
+                LogManager.LogWarning("进行分割的字符串数组长度为0");
                 return;
             }
 
@@ -125,7 +125,7 @@ namespace Framework
             string[] newStr = Split(str, firstSplitCharType);
             if (newStr.Length == 0)
             {
-                LogMgr.LogWarning("进行分割的字符串数组长度为0");
+                LogManager.LogWarning("进行分割的字符串数组长度为0");
                 return;
             }
 

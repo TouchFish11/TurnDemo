@@ -10,6 +10,18 @@ public class MainModel : UIModel
 {
     // 交互UI缓存
     private readonly List<InteractUI> interactUIs = new List<InteractUI>();
+    // 是否激活任务栏
+    private bool isActiveTaskbar;
+
+    public bool IsActiveTaskbar
+    {
+        get => isActiveTaskbar;
+        set
+        {
+            isActiveTaskbar = value;
+            TriggerDataChanged(nameof(isActiveTaskbar), value);
+        }
+    }
 
     /// <summary>
     /// 设置交互

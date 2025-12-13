@@ -15,6 +15,7 @@ public class DialogueOptUI : UIBehaviour
     protected UIComponentBinder uIComponentBinder;
     private BranchInfo branchInfo;
     private Image imgHightlight;
+    private TextMeshProUGUI txtOptText;
 
     /// <summary>
     /// 选择选项事件
@@ -24,10 +25,11 @@ public class DialogueOptUI : UIBehaviour
     protected override void Awake()
     {
         uIComponentBinder = new UIComponentBinder(this);
-        //uIComponentBinder.Bind();
         uIComponentBinder.OnButtonClick += OnOptionClick;
 
         imgHightlight = uIComponentBinder.GetControl<Image>(nameof(imgHightlight));
+        txtOptText = uIComponentBinder.GetControl<TextMeshProUGUI>(nameof(txtOptText));
+
         UIManager.AddCustomEventListener(this, EventTriggerType.PointerEnter, OnPointEnter);
         UIManager.AddCustomEventListener(this, EventTriggerType.PointerExit, OnPointExit);
     }
@@ -39,7 +41,7 @@ public class DialogueOptUI : UIBehaviour
     public void Init(BranchInfo branchInfo)
     {
         this.branchInfo = branchInfo;
-        uIComponentBinder.GetControl<TextMeshProUGUI>("txtOptText").text = branchInfo.f_optText;
+        txtOptText.text = branchInfo.f_optText;
         imgHightlight.gameObject.SetActive(false);
     }
 

@@ -70,7 +70,7 @@ public class ServerManager : SingletonBase<ServerManager>
         // 校验缓存有效性
         if (string.IsNullOrEmpty(loginData.account) || string.IsNullOrEmpty(loginData.password))
         {
-            LogMgr.Log("无缓存的登录信息");
+            LogManager.Log("无缓存的登录信息");
             return false;
         }
         return true;

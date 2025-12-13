@@ -15,7 +15,7 @@ namespace Game.Battle
 
         public void Cast(IBattleContext context, IBattleEntityObject caster, List<IBattleEntityObject> targets)
         {
-            LogMgr.Log($"\n{caster.Name}释放技能：{Name}");
+            LogManager.Log($"\n{caster.Name}释放技能：{Name}");
 
             // 调用召唤物组件API，创建神君（初始行动次数=2，配置表读取）
             //caster.GetBattleComponent<SummonComponent>().CreateSummon<MimiSummon>();

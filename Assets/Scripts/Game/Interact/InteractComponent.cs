@@ -17,8 +17,6 @@ public class InteractComponent : BaseComponent
     [Header("交互配置")]
     // 交互按键
     public Key interactKey = Key.F;
-    // 是否正在交互
-    private bool isInteracting;
     // 当前正在交互的对象
     private IInteractable currentInteractable;
 
@@ -39,7 +37,6 @@ public class InteractComponent : BaseComponent
         }
         else
         {
-            isInteracting = true;
             currentInteractable = interactables[0];
             currentInteractable.OnInteract(this.EntityObject);
         }
@@ -74,7 +71,7 @@ public class InteractComponent : BaseComponent
     /// </summary>
     public void QuitInteract()
     {
-        isInteracting = false;
+
     }
 
     public override void Destroy()

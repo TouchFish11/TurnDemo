@@ -103,7 +103,7 @@ namespace Framework
             string abName = assetBundleType.ToString().ToLower();
             if (!_nameToWrapperMap.TryGetValue(abName, out var wrapper))
             {
-                LogMgr.LogError($"AB包：{abName}不存在");
+                LogManager.LogError($"AB包：{abName}不存在");
                 return null;
             }
 
@@ -130,7 +130,7 @@ namespace Framework
             string abName = assetBundleType.ToString().ToLower();
             if (!_nameToWrapperMap.TryGetValue(abName, out var wrapper))
             {
-                LogMgr.LogError($"AB包：{abName}不存在");
+                LogManager.LogError($"AB包：{abName}不存在");
                 return null;
             }
 
@@ -158,7 +158,7 @@ namespace Framework
             string abName = assetBundleType.ToString().ToLower();
             if (!_nameToWrapperMap.TryGetValue(abName, out var wrapper))
             {
-                LogMgr.LogError($"AB包：{abName}不存在");
+                LogManager.LogError($"AB包：{abName}不存在");
                 return new T[0];
             }
 
@@ -187,7 +187,7 @@ namespace Framework
             string abName = assetBundleType.ToString().ToLower();
             if (!_nameToWrapperMap.TryGetValue(abName, out var wrapper))
             {
-                LogMgr.LogError($"AB包：{abName}不存在");
+                LogManager.LogError($"AB包：{abName}不存在");
                 return new Object[0];
             }
 
@@ -282,7 +282,7 @@ namespace Framework
                 bool isSuccess = await LoadDependenciesAndTargetAsync(abName);
                 if(!isSuccess)
                 {
-                    LogMgr.LogError($"场景包加载失败，无法获取场景路径");
+                    LogManager.LogError($"场景包加载失败，无法获取场景路径");
                     return new string[0];
                 }
                 return wrapper.Convert<SceneBundleWrapper>().GetAllScenePaths();
@@ -324,7 +324,7 @@ namespace Framework
                 bool isSuccess = await wrapper.LoadFromFileAsync();
                 if (!isSuccess)
                 {
-                    LogMgr.LogError($"依赖包：{dependencies[i]}加载失败，无法加载目标包：{abName}");
+                    LogManager.LogError($"依赖包：{dependencies[i]}加载失败，无法加载目标包：{abName}");
                     return isSuccess;
                 }
             }

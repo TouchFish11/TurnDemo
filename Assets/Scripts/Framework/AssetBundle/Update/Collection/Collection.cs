@@ -56,7 +56,7 @@ namespace Framework
             }
             else
             {
-                LogMgr.Log($"已存在键：{key}，值：{value}");
+                LogManager.Log($"已存在键：{key}，值：{value}");
                 return false;
             }
         }

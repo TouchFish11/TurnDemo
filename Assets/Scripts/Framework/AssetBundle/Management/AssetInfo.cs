@@ -29,7 +29,7 @@ namespace Framework
             if (refCount > 0)
             {
                 --refCount;
-                LogMgr.Log($"尝试卸载{assetName}资源，引用数：{refCount}");
+                LogManager.Log($"尝试卸载{assetName}资源，引用数：{refCount}");
             }
         }
 

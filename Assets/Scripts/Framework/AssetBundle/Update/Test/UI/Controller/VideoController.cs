@@ -31,11 +31,6 @@ public class VideoController : UIController<VideoView, VideoModel>
 
     }
 
-    protected override async Task OnInit()
-    {
-
-    }
-
     public async void PlayVideo()
     {
         // œ‘ æ∫⁄±≥æ∞ΩÁ√Ê

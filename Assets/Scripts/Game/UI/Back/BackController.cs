@@ -28,9 +28,4 @@ public class BackController : UIController<BackView, BackModel>
     {
 
     }
-
-    protected override async Task OnInit()
-    {
-        throw new System.NotImplementedException();
-    }
 }

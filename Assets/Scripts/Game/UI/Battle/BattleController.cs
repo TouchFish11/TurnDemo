@@ -14,11 +14,6 @@ public class BattleController : UIController<BattleView, BattleModel>
 
     }
 
-    protected override async Task OnInit()
-    {
-
-    }
-
     internal void BattleOver()
     {
         throw new NotImplementedException();

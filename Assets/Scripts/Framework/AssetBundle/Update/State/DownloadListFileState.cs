@@ -21,7 +21,7 @@ namespace Framework
             // 当前阶段未成功执行
             if (!IsSuceess)
             {
-                LogMgr.LogError("远端对比文件下载失败");
+                LogManager.LogError("远端对比文件下载失败");
                 FinishUpdate();
                 return IsSuceess;
             }
@@ -31,7 +31,7 @@ namespace Framework
             if (!IsSuceess)
             {
                 //记录日志
-                LogMgr.LogError("AB包临时对比文件获取失败");
+                LogManager.LogError("AB包临时对比文件获取失败");
                 FinishUpdate();
                 return IsSuceess;
             }

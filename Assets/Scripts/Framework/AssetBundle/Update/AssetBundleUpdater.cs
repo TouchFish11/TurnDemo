@@ -87,7 +87,7 @@ namespace Framework
             else
             {
                 // Ä¿±ê×´Ì¬Î´×¢²á
-                LogMgr.LogError($"Ä¿±ê×´Ì¬Î´×¢²á£»{updatePhase}");
+                LogManager.LogError($"Ä¿±ê×´Ì¬Î´×¢²á£»{updatePhase}");
             }
         }
 

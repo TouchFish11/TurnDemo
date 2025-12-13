@@ -247,7 +247,7 @@ public class ABUpdateContext
     {
         if (OnUpdateSpeed == null)
         {
-            LogMgr.Log($"{nameof(OnUpdateSpeed)}事件为空");
+            LogManager.Log($"{nameof(OnUpdateSpeed)}事件为空");
         }
 
         OnUpdateSpeed?.Invoke(_currentDownloadTotalSizes);

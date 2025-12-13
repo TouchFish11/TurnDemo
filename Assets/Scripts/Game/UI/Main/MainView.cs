@@ -10,6 +10,15 @@ using UnityEngine.UI;
 /// </summary>
 public class MainView : UIView
 {
+    private GameObject taskPart;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        taskPart = this.transform.Find(nameof(taskPart)).gameObject;
+    }
+
     public override void UpdateView(string key, object value)
     {
         switch (key)
@@ -20,6 +29,9 @@ public class MainView : UIView
                 {
                     interactUI.transform.SetParent(uIComponentBinder.GetControl<ScrollRect>("svInteract").content, false);
                 }
+                break;
+            case "isActiveTaskbar":
+                taskPart.SetActive((bool)value);
                 break;
         }
     }

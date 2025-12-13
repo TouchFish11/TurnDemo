@@ -59,6 +59,7 @@ namespace Framework
             TextAsset json = EditorResMgr.Instance.LoadEditorAsset<TextAsset>(FileUtility.InputActionLocalFileName);
             _jsonInputData = json.text;
             UpdateActions();
+            await Task.CompletedTask;
 #endif
         }
 
@@ -154,7 +155,7 @@ namespace Framework
             }
             else
             {
-                LogMgr.LogError("玩家输入组件获取失败");
+                LogManager.LogError("玩家输入组件获取失败");
                 return;
             }
         }

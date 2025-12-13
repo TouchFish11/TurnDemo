@@ -29,7 +29,7 @@ namespace Framework
             // 先从缓存中查找
             if (_nameToAssetInfoMap.TryGetValue(assetName, out AssetInfo assetInfo))
             {
-                LogMgr.Log($"{assetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{assetInfo.RefCount}");
+                LogManager.Log($"{assetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{assetInfo.RefCount}");
                 return Task.FromResult(assetInfo.GetAsset() as T);
             }
 
@@ -40,7 +40,7 @@ namespace Framework
             {
                 AssetInfo newAssetInfo = new AssetInfo(assetName, abr.asset as T);
                 _nameToAssetInfoMap.Add(assetName, newAssetInfo);
-                LogMgr.Log($"{assetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{newAssetInfo.RefCount}");
+                LogManager.Log($"{assetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{newAssetInfo.RefCount}");
                 source.SetResult(abr.asset as T);
             };
             return source.Task;
@@ -57,7 +57,7 @@ namespace Framework
             // 先从缓存中查找
             if (_nameToAssetInfoMap.TryGetValue(assetName, out AssetInfo assetInfo))
             {
-                LogMgr.Log($"{assetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{assetInfo.RefCount}");
+                LogManager.Log($"{assetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{assetInfo.RefCount}");
                 return Task.FromResult(assetInfo.GetAsset());
             }
 
@@ -69,7 +69,7 @@ namespace Framework
                 AssetInfo newAssetInfo = new AssetInfo(assetName, abr.asset);
                 _nameToAssetInfoMap.Add(assetName, newAssetInfo);
                 source.SetResult(abr.asset);
-                LogMgr.Log($"{assetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{newAssetInfo.RefCount}");
+                LogManager.Log($"{assetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{newAssetInfo.RefCount}");
             };
             return source.Task;
         }
@@ -104,7 +104,7 @@ namespace Framework
                         assetInfo = new AssetInfo(asset.name, asset);
                         _nameToAssetInfoMap.Add(asset.name, assetInfo);
                     }
-                    LogMgr.Log($"{assetInfo.AssetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{assetInfo.RefCount}");
+                    LogManager.Log($"{assetInfo.AssetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{assetInfo.RefCount}");
                 }
                 source.SetResult(assets.ToArray());
             };
@@ -140,7 +140,7 @@ namespace Framework
                         assetInfo = new AssetInfo(asset.name, asset);
                         _nameToAssetInfoMap.Add(asset.name, assetInfo);
                     }
-                    LogMgr.Log($"{assetInfo.AssetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{assetInfo.RefCount}");
+                    LogManager.Log($"{assetInfo.AssetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{assetInfo.RefCount}");
                 }
                 source.SetResult(assets.ToArray());
             };
@@ -160,7 +160,7 @@ namespace Framework
             if(_nameToAssetInfoMap.TryGetValue(assetName, out AssetInfo assetInfo))
             {
                 asset = assetInfo.GetAsset();
-                LogMgr.Log($"{assetInfo.AssetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{assetInfo.RefCount}");
+                LogManager.Log($"{assetInfo.AssetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{assetInfo.RefCount}");
                 return true;
             }
             else
@@ -181,7 +181,7 @@ namespace Framework
             foreach (var assetInfo in _nameToAssetInfoMap.Values)
             {
                 assets.Add(assetInfo.GetAsset() as T);
-                LogMgr.Log($"{assetInfo.AssetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{assetInfo.RefCount}");
+                LogManager.Log($"{assetInfo.AssetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{assetInfo.RefCount}");
             }
             return assets.ToArray();
         }
@@ -197,7 +197,7 @@ namespace Framework
             foreach (var assetInfo in _nameToAssetInfoMap.Values)
             {
                 assets.Add(assetInfo.GetAsset());
-                LogMgr.Log($"{assetInfo.AssetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{assetInfo.RefCount}");
+                LogManager.Log($"{assetInfo.AssetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{assetInfo.RefCount}");
             }
             return assets.ToArray();
         }
@@ -218,7 +218,7 @@ namespace Framework
                 {
                     _nameToAssetInfoMap[assetName] = null;
                     _nameToAssetInfoMap.Remove(assetName);
-                    LogMgr.Log($"{assetInfo.AssetName}资源被卸载，{bundelName}包引用数：{RefCount}");
+                    LogManager.Log($"{assetInfo.AssetName}资源被卸载，{bundelName}包引用数：{RefCount}");
                 }
             }
         }
@@ -239,7 +239,7 @@ namespace Framework
         {
             if (assetBundle == null)
             {
-                LogMgr.LogError($"获取资源名称失败，{bundelName}包未加载");
+                LogManager.LogError($"获取资源名称失败，{bundelName}包未加载");
                 return new string[0];
             }
             return assetBundle.GetAllAssetNames();

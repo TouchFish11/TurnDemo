@@ -19,8 +19,6 @@ public class MoveComponent : BaseComponent
     private Vector3 inputDir;
     // 最终移动方向（世界坐标系）
     private Vector3 moveDir;
-    // 是否正在旋转
-    private bool isRotating;
     // 主摄像机引用
     private Camera mainCamera;
     // 能否移动
@@ -87,7 +85,6 @@ public class MoveComponent : BaseComponent
         if (inputDir.magnitude < 0.1f)
         {
             moveDir = Vector3.zero;
-            isRotating = false;
             return;
         }
 
@@ -121,14 +118,12 @@ public class MoveComponent : BaseComponent
         // 夹角大于阈值，继续旋转
         if (angleDiff > rotateThreshold)
         {
-            isRotating = true;
             // 平滑旋转到目标方向
             this.transform.rotation = Quaternion.Slerp(this.transform.rotation, targetRot, rotateSpeed * Time.deltaTime);
         }
         // 否则停止旋转，保持朝向
         else
         {
-            isRotating = false;
             // 强制对齐目标方向（避免微小偏移）
             transform.rotation = targetRot;
         }

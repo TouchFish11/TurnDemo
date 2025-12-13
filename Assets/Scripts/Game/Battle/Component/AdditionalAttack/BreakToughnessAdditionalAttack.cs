@@ -19,7 +19,7 @@ namespace Game.Battle
             // 计算追加攻击伤害（配置表读取系数）
             int additionalDamage = (int)(attacker.GetField(E_FieldType.Attack) * 0.8f);
             target.TakeDamage(additionalDamage, E_PropertyType.Physical);
-            LogMgr.Log($"{attacker.Name}触发破盾追加攻击！{target.Name}额外受到{additionalDamage}点伤害");
+            LogManager.Log($"{attacker.Name}触发破盾追加攻击！{target.Name}额外受到{additionalDamage}点伤害");
         }
     }
 }

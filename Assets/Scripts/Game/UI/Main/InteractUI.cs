@@ -23,7 +23,7 @@ public class InteractUI : UIBehaviour
 
     private void UIComponentBinder_OnButtonClick(string arg0)
     {
-        LogMgr.Log($"按钮点击");
+        LogManager.Log($"按钮点击");
     }
 
     public void Init(string text)
