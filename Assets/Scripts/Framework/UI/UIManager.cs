@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
 using XLua;
 
 namespace Framework
@@ -16,8 +17,11 @@ namespace Framework
     [LuaCallCSharp]
     public class UIManager : SingletonBase<UIManager>
     {
-        // 存储所有面板的字典
-        private readonly Dictionary<string, BasePanelInfo> _panelDic = new Dictionary<string, BasePanelInfo>();
+        // 存储打开的界面
+        private readonly Stack<BasePanelInfo> _panels = new Stack<BasePanelInfo>();
+
+        // UI控制器类型到UI控制器工程接口映射 
+        private readonly Dictionary<Type, IUIControllerFactory> _typeToCtrlFactoryMap = new Dictionary<Type, IUIControllerFactory>();
         // 画布
         private Canvas _canvas;
         // ui摄像机
@@ -30,8 +34,6 @@ namespace Framework
         private Transform _botLayer;
         // 系统层
         private Transform _systemLayer;
-
-        private readonly Dictionary<Type, IUIControllerFactory> _typeToCtrlFactoryMap = new Dictionary<Type, IUIControllerFactory>();
 
         private UIManager() { }
 
@@ -136,7 +138,7 @@ namespace Framework
         /// <typeparam name="TView"></typeparam>
         /// <param name="layer"></param>
         /// <returns></returns>
-        public async Task<TController> ShowViewAsync<TView, TModel, TController>(E_UILayer layer)
+        public async Task<TController> CreateViewAsync<TView, TModel, TController>(E_UILayer layer)
             where TView : UIView where TModel : UIModel, new() where TController : UIController<TView, TModel>
         {
 #if EDITOR_TEST_AB || !UNITY_EDITOR
@@ -177,28 +179,18 @@ namespace Framework
             return controller;
 #else
             //自定义存储名称
-            string cacheName = $"{typeof(TView).Name}";
-            if (_panelDic.ContainsKey(cacheName))
-            {
-                PanelInfo<TView, TModel, TController> cacheInfo = _panelDic[cacheName] as PanelInfo<TView, TModel, TController>;
-                // 返回缓存的面板
-                return cacheInfo.UIController;
-            }
-
+            string assetName = $"{typeof(TView).Name}";
             // 不存在工厂
             if (!_typeToCtrlFactoryMap.TryGetValue(typeof(TController), out var iFactory))
             {
+                LogManager.LogWarning($"未初始化{typeof(TController)}控制器工厂");
                 return null;
             }
 
             // 存在工厂
             var factory = iFactory as UIControllerFactory<TView, TModel, TController>;
-            // 加载资源
-            GameObject panelObj = EditorResMgr.Instance.LoadEditorAsset<GameObject>(cacheName);
-            // 实例化面板对象、设置面板父对象
-            GameObject panelInstanceObj = GameObject.Instantiate(panelObj, GetLayer(layer), false);
-            // 获取面板脚本
-            TView view = panelInstanceObj.GetComponent<TView>();
+            // 获取面板
+            TView view = await ObjectBuilder.GetOrCreateInstance<TView>(E_AssetBundleType.UI, assetName, GetLayer(layer));
             // 调用显示函数
             view.Show();
             // 创建数据
@@ -210,7 +202,7 @@ namespace Framework
             // 初始化面板信息
             PanelInfo<TView, TModel, TController> newInfo = new PanelInfo<TView, TModel, TController>(view, model, controller);
             // 存储面板信息
-            _panelDic.Add(cacheName, newInfo);
+            _panels.Push(newInfo);
             return controller;
 #endif
         }
@@ -218,76 +210,34 @@ namespace Framework
         /// <summary>
         /// 销毁界面
         /// </summary>
-        /// <typeparam name="T">面板类型</typeparam>
-        public void HideView<TView, TModel, TController>() where TView : UIView where TModel : UIModel, new() where TController : UIController<TView, TModel>
+        public void DestroyView()
         {
-            // 自定义存储名称
-            string cacheName = $"{typeof(TView).Name}";
-            if (_panelDic.ContainsKey(cacheName))
+            if (_panels.TryPop(out BasePanelInfo basePanelInfo))
             {
-                PanelInfo<TView, TModel, TController> info = _panelDic[cacheName] as PanelInfo<TView, TModel, TController>;
                 // 调用面板隐藏
-                info.View.Hide();
+                basePanelInfo.View.Hide();
                 // 调用控制器的销毁
-                info.UIController.Destroy();
+                basePanelInfo.Controller.Destroy();
                 // 销毁预设体
-                GameObject.Destroy(info.View.gameObject);
-                // 从字典中移除
-                _panelDic.Remove(cacheName);
+                GameObject.Destroy(basePanelInfo.View.gameObject);
             }
         }
 
         /// <summary>
-        /// 显隐界面
+        /// 获取界面控制器
         /// </summary>
-        /// <typeparam name="TView"></typeparam>
-        /// <typeparam name="TModel"></typeparam>
         /// <typeparam name="TController"></typeparam>
-        /// <param name="isActive"></param>
-        public void SetActve<TView, TModel, TController>(bool isActive) where TView : UIView where TModel : UIModel, new() where TController : UIController<TView, TModel>
+        /// <returns></returns>
+        public TController GetView<TController>() where TController : class, IUIController
         {
-            // 自定义存储名称
-            string cacheName = $"{typeof(TView).Name}";
-            if (_panelDic.ContainsKey(cacheName))
+            foreach (BasePanelInfo basePanelInfo in _panels)
             {
-                PanelInfo<TView, TModel, TController> info = _panelDic[cacheName] as PanelInfo<TView, TModel, TController>;
-
-                if (isActive)
+                if (basePanelInfo.Controller.GetType() == typeof(TController))
                 {
-                    // 激活 / 失活预制体
-                    info.View.gameObject.SetActive(isActive);
-                    // 调用面板显示
-                    info.View.Show();
-                }
-                else
-                {
-                    // 调用面板隐藏
-                    info.View.Hide();
-                    // 激活 / 失活预制体
-                    info.View.gameObject.SetActive(isActive);
+                    return basePanelInfo.Controller as TController;
                 }
             }
-        }
-
-
-        /// <summary>
-        /// 获取面板
-        /// </summary>
-        /// <typeparam name="T">面板类型</typeparam>
-        /// <param name="callBack">回调函数</param>
-        public TController GetView<TView, TModel, TController>() where TView : UIView where TModel : UIModel, new() where TController : UIController<TView, TModel>
-        {
-            // 自定义存储名称
-            string cacheName = $"{typeof(TView).Name}";
-            if (_panelDic.ContainsKey(cacheName))
-            {
-                PanelInfo<TView, TModel, TController> info = _panelDic[cacheName] as PanelInfo<TView, TModel, TController>;
-                return info.UIController;
-            }
-            else
-            {
-                return null;
-            }
+            return default;
         }
 
         /// <summary>

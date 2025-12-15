@@ -34,7 +34,7 @@ public class VideoController : UIController<VideoView, VideoModel>
     public async void PlayVideo()
     {
         // 显示黑背景界面
-        await UIManager.Instance.ShowViewAsync<BackView, BackModel, BackController>(E_UILayer.Mid);
+        await UIManager.Instance.CreateViewAsync<BackView, BackModel, BackController>(E_UILayer.Mid);
         // 加载渲染纹理
         RenderTexture renderTexture = await AssetBundleManager.Instance.LoadAssetAsync<RenderTexture>(E_AssetBundleType.Texture, "VideoTexture");
         // 设置纹理
@@ -49,6 +49,6 @@ public class VideoController : UIController<VideoView, VideoModel>
     private void OnPrePlay()
     {
         // 隐藏
-        UIManager.Instance.HideView<BackView, BackModel, BackController>();
+        UIManager.Instance.DestroyView();
     }
 }

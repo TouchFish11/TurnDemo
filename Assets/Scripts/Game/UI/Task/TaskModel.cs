@@ -11,18 +11,6 @@ namespace Game.UI
     /// </summary>
     public class TaskModel : UIModel
     {
-        public readonly struct DetailData
-        {
-            public TaskInfo TaskInfo { get; }
-            public List<ItemGrid> RewardItems { get; }
-
-            public DetailData(TaskInfo taskInfo, List<ItemGrid> rewardItems)
-            {
-                this.TaskInfo = taskInfo;
-                this.RewardItems = rewardItems;
-            }
-        }
-
         // 任务类型到任务容器映射
         private readonly Dictionary<int, TaskTypeContainer> taskTypeToContainerMap = new Dictionary<int, TaskTypeContainer>();
         // 当前任务信息的奖励列表
@@ -31,15 +19,36 @@ namespace Game.UI
         private TaskInfo currentTaskInfo;
         // 是否有任务
         private bool hasTasks;
+        // 是否正在追踪任务
+        private bool isFollowingTask;
 
-        public bool HasTasks
+        /// <summary>
+        /// 是否正在追踪任务
+        /// </summary>
+        public bool IsFollowingTask
         {
-            get => hasTasks;
+            get => isFollowingTask;
             set
             {
-                hasTasks = value;
-                TriggerDataChanged(nameof(hasTasks), value);
+                isFollowingTask = value;
+                TriggerDataChanged(nameof(isFollowingTask), value);
             }
+        }
+
+        public bool HasTask()
+        {
+            hasTasks = taskTypeToContainerMap.Count > 0;
+            TriggerDataChanged(nameof(hasTasks), hasTasks);
+            return hasTasks;
+        }
+
+        /// <summary>
+        /// 获取当前选择的任务
+        /// </summary>
+        /// <returns></returns>
+        public TaskInfo GetCurrentSelectTaskInfo()
+        {
+            return currentTaskInfo;
         }
 
         /// <summary>
@@ -73,6 +82,14 @@ namespace Game.UI
             return taskTypeToContainerMap[taskType];
         }
 
+        public void SelectTrackingTask(string id)
+        {
+            foreach (var item in taskTypeToContainerMap.Values)
+            {
+                item.SelectTask(id);
+            }
+        }
+
         /// <summary>
         /// 获取第一个添加的容器
         /// </summary>
@@ -90,9 +107,9 @@ namespace Game.UI
         /// <summary>
         /// 更新任务信息
         /// </summary>
-        /// <param name="taskInfo"></param>
+        /// <param name="taskId"></param>
         /// <returns></returns>
-        public async Task UpdateTaskInfo(TaskInfo taskInfo)
+        public async Task UpdateTaskInfoById(string taskId)
         {
             foreach (var item in rewardItems)
             {
@@ -100,8 +117,8 @@ namespace Game.UI
             }
             rewardItems.Clear();
 
-            currentTaskInfo = taskInfo;
-            int[] rewardIds = TextUtility.SplitToIntArr(taskInfo.f_taskRewrardIds, 2);
+            currentTaskInfo = BinaryDataMgr.Instance.GetTable<TaskInfoContainer>().dataDic[taskId];
+            int[] rewardIds = TextUtility.SplitToIntArr(currentTaskInfo.f_taskRewrardIds, 2);
             foreach (int id in rewardIds)
             {
                 ItemGrid itemGrid = await ObjectBuilder.GetOrCreateInstance<ItemGrid>(E_AssetBundleType.UI, ResConfigCollection.ItemGrid, null);
@@ -109,8 +126,15 @@ namespace Game.UI
                 rewardItems.Add(itemGrid);
             }
 
-            DetailData detailData = new DetailData(currentTaskInfo, rewardItems);
-            TriggerDataChanged(nameof(currentTaskInfo), detailData);
+            TriggerDataChanged(nameof(currentTaskInfo), (currentTaskInfo, rewardItems));
+            if (GameDataMgr.Instance.TaskDataCollection.TryGetValue(taskId, out TaskData taskData))
+            {
+                IsFollowingTask = taskData.isTracking;
+            }
+            else
+            {
+                IsFollowingTask = false;
+            }
         }
 
         public override void ClearData()

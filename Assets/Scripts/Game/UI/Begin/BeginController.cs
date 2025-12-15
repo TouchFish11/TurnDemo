@@ -73,7 +73,7 @@ public class BeginController : UIController<BeginView, BeginModel>
 
     public async void PlayVideo()
     {
-        VideoController videoController = await UIManager.Instance.ShowViewAsync<VideoView, VideoModel, VideoController>(E_UILayer.Mid);
+        VideoController videoController = await UIManager.Instance.CreateViewAsync<VideoView, VideoModel, VideoController>(E_UILayer.Mid);
         videoController.PlayVideo();
     }
 

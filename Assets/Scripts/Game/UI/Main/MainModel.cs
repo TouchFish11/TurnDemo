@@ -12,6 +12,9 @@ public class MainModel : UIModel
     private readonly List<InteractUI> interactUIs = new List<InteractUI>();
     // 是否激活任务栏
     private bool isActiveTaskbar;
+    //
+    private TaskInfo currentTaskInfo;
+    private TaskData currentTaskData;
 
     public bool IsActiveTaskbar
     {
@@ -21,6 +24,11 @@ public class MainModel : UIModel
             isActiveTaskbar = value;
             TriggerDataChanged(nameof(isActiveTaskbar), value);
         }
+    }
+
+    public void UpdateTask(TaskInfo currentTaskInfo, TaskData currentTaskData)
+    {
+        TriggerDataChanged(nameof(UpdateTask), (currentTaskInfo, currentTaskData));
     }
 
     /// <summary>

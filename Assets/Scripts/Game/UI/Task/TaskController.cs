@@ -28,7 +28,7 @@ namespace Game.UI
     /// </summary>
     public class TaskController : UIController<TaskView, TaskModel>
     {
-        private TaskDataContainer taskDataContainer;
+        private TaskDataCollection taskDataCollection;
 
         public TaskController(TaskView view, TaskModel model) : base(view, model)
         {
@@ -38,6 +38,28 @@ namespace Game.UI
         protected override async Task OnInit()
         {
             await InitTasks();
+
+            // 存在任务
+            if (_model.HasTask())
+            {
+                // 有正在追踪的任务
+                if (taskDataCollection.IsTracking(out TaskData taskData))
+                {
+                    // 显示当前追踪任务和进度
+                    _model.IsFollowingTask = true;
+                    _model.SelectTrackingTask(taskData.currentTaskId);
+                }
+                else
+                {
+                    // 不显示任务栏
+                    _model.IsFollowingTask = false;
+                    // 默认显示第一个任务
+                    _model.GetFirstContainer().DefaultSelectFirstTask();
+                }
+            }
+
+            // 选中完其中任务后，禁止“每一个都不选中”选项
+            _view.TaskItemGroup.allowSwitchOff = false;
         }
 
         protected override void ButtonOnClick(string btnName)
@@ -45,10 +67,18 @@ namespace Game.UI
             switch (btnName)
             {
                 case "btnClose":
-                    UIManager.Instance.HideView<TaskView, TaskModel, TaskController>();
+                    UIManager.Instance.DestroyView();
                     break;
                 case "btnAcceptTask":
-
+                    _model.IsFollowingTask = !_model.IsFollowingTask;
+                    if (_model.IsFollowingTask)
+                    {
+                        TaskManager.Instance.AcceptTask(_model.GetCurrentSelectTaskInfo().f_id);
+                    }
+                    else
+                    {
+                        TaskManager.Instance.CancelTask();
+                    }
                     break;
             }
         }
@@ -59,18 +89,20 @@ namespace Game.UI
         /// <returns></returns>
         private async Task InitTasks()
         {
+            // 暂时允许都不选中，避免任务更新出现Toggle无法响应事件问题
+            _view.TaskItemGroup.allowSwitchOff = true;
             // 读取任务数据
-            taskDataContainer = await JsonManager.Instance.FromJsonAsync<TaskDataContainer>(PathManager.GetUserDataLocalSavePath(FileUtility.LocalTaskDataFileName));
+            taskDataCollection = GameDataMgr.Instance.TaskDataCollection;
             // 读取任务信息
             var idToInfoMap = BinaryDataMgr.Instance.GetTable<TaskInfoContainer>().dataDic;
 
             foreach (TaskInfo taskInfo in idToInfoMap.Values)
             {
                 // 存在说明接取过
-                if (taskDataContainer.Contain(taskInfo.f_id))
+                if (taskDataCollection.ContainsKey(taskInfo.f_id))
                 {
                     // 若已完成，跳过显示
-                    if (taskDataContainer.IsFinished(taskInfo.f_id))
+                    if (taskDataCollection.IsFinished(taskInfo.f_id))
                     {
                         continue;
                     }
@@ -88,18 +120,6 @@ namespace Game.UI
                     taskTypeContainer = _model.GetContainer(taskInfo.f_taskType);
                 }
                 await CreateTaskItem(taskInfo, taskTypeContainer);
-            }
-
-            // 每次打开界面时, 默认选择第一个任务显示
-            TaskTypeContainer container = _model.GetFirstContainer();
-            if (container != null)
-            {
-                _model.HasTasks = true;
-                container.DefaultSelectFirstTask();
-            }
-            else
-            {
-                _model.HasTasks = false;
             }
         }
 
@@ -127,17 +147,18 @@ namespace Game.UI
         {
             TaskItem taskItem = await ObjectBuilder.GetOrCreateInstance<TaskItem>(E_AssetBundleType.UI, ResConfigCollection.TaskItem, container.transform);
             taskItem.OnSelectedTask += UpdateTaskDetail;
-            taskItem.Init(taskInfo, taskDataContainer[taskInfo.f_id], _view.ToggleGroup);
-            container.AddItem(taskItem, taskInfo);
+            taskDataCollection.TryGetValue(taskInfo.f_id, out TaskData taskData);
+            taskItem.Init(taskInfo, _view.TaskItemGroup);
+            container.AddItem(taskItem);
         }
 
         /// <summary>
         /// 更新任务详细
         /// </summary>
         /// <param name="taskInfo"></param>
-        private async void UpdateTaskDetail(TaskInfo taskInfo)
+        private async void UpdateTaskDetail(string id)
         {
-            await _model.UpdateTaskInfo(taskInfo);
+            await _model.UpdateTaskInfoById(id);
         }
     }
 }

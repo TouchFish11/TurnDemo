@@ -7,12 +7,15 @@ namespace Framework
     /// </summary>
     public class GameDataMgr : SingletonBase<GameDataMgr>
     {
-        //音乐数据
+        // 音乐数据
         private MusicData _musicData;
-        //输入系统动作数据容器对象
+        // 输入系统动作数据容器对象
         private InputActionContainer _inputActionContainer;
-        //输入系统输入数据容器对象
+        // 输入系统输入数据容器对象
         private InputDataContainer _inputDataContainer;
+
+        // 任务数据
+        private TaskDataCollection taskDataCollection;
 
         private GameDataMgr() { }
 
@@ -44,6 +47,9 @@ namespace Framework
                     LogManager.LogError($"初始化输入动作数据失败");
                     return;
                 }
+
+                // 读取任务数据
+                taskDataCollection = await JsonManager.Instance.FromJsonAsync<TaskDataCollection>(PathManager.GetUserDataLocalSavePath(FileUtility.LocalTaskDataFileName));
             }
             catch (System.Exception ex)
             {
@@ -66,5 +72,9 @@ namespace Framework
         /// </summary>
         public InputDataContainer InputDataContainer { get => _inputDataContainer; }
 
+        /// <summary>
+        /// 任务数据集合
+        /// </summary>
+        public TaskDataCollection TaskDataCollection => taskDataCollection;
     }
 }

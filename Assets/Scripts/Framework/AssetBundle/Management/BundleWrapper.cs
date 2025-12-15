@@ -93,9 +93,8 @@ namespace Framework
                 return Task.FromResult(true);
             }
 
-            TaskCompletionSource<bool> source = new TaskCompletionSource<bool>();
+            TaskCompletionSource<bool> source = TaskSourceBuilder.CreateTCS<bool>();
             assetBundleLoadTask = source.Task;
-
             // Òì²½¼ÓÔØAB°ü
             AssetBundleCreateRequest abcr = AssetBundle.LoadFromFileAsync(loadPath);
             abcr.completed += (asyncOperation) =>

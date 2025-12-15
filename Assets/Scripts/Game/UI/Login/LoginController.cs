@@ -53,7 +53,7 @@ public class LoginController : UIController<LoginView, LoginModel>
                 OnLoginClick();
                 break;
             case "btnClose":
-                UIManager.Instance.HideView<LoginView, LoginModel, LoginController>();
+                UIManager.Instance.DestroyView();
                 break;
         }
     }
@@ -114,9 +114,9 @@ public class LoginController : UIController<LoginView, LoginModel>
     {
         LogManager.Log($"登录成功");
         // 隐藏登录界面
-        UIManager.Instance.HideView<LoginView, LoginModel, LoginController>();
+        UIManager.Instance.DestroyView();
         // 显示开始界面
-        BeginController beginController = await UIManager.Instance.ShowViewAsync<BeginView, BeginModel, BeginController>(E_UILayer.Mid);
+        BeginController beginController = await UIManager.Instance.CreateViewAsync<BeginView, BeginModel, BeginController>(E_UILayer.Mid);
         // 检查更新
         await beginController.CheckUpdate();
     }

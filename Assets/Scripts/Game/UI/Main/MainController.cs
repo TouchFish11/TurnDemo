@@ -29,17 +29,25 @@ public class MainController : UIController<MainView, MainModel>
 {
     // 交互逻辑
     private readonly InteractLogic interactLogic;
+    // 任务逻辑
+    private readonly TaskLogic taskLogic;
 
     public MainController(MainView view, MainModel model) : base(view, model)
     {
         interactLogic = new InteractLogic(this, model, view);
+        taskLogic = new TaskLogic(this, model, view);
     }
 
     protected override async Task OnInit()
     {
         EventCenter.Instance.AddEventListener<List<IInteractable>>(E_EventType.E_OnInteract, interactLogic.CreateInteract);
-        DialogueManager.Instance.OnDialogueStart += _model.DeactivateInteract;
-        DialogueManager.Instance.OnDialogueEnd += _model.ActiveInteract;
+        // 对话事件监听
+        DialogueManager.Instance.OnDialogueStart += interactLogic.DeactivateInteract;
+        DialogueManager.Instance.OnDialogueEnd += interactLogic.ActiveInteract;
+        // 任务事件监听
+        TaskManager.Instance.OnUpdateTask += taskLogic.UpdateTask;
+        TaskManager.Instance.OnCancelTask += taskLogic.CancelTask;
+        taskLogic.CancelTask();
 
         await base.OnInit();
     }
@@ -49,22 +57,16 @@ public class MainController : UIController<MainView, MainModel>
         switch (btnName)
         {
             case "btnTask":
-                await UIManager.Instance.ShowViewAsync<TaskView, TaskModel, TaskController>(E_UILayer.Mid);
+                await UIManager.Instance.CreateViewAsync<TaskView, TaskModel, TaskController>(E_UILayer.Mid);
                 break;
         }
     }
-
-    private void UpdateTask()
-    {
-        _model.IsActiveTaskbar = true;
-    }
-
 
     public override void Destroy()
     {
         base.Destroy();
         EventCenter.Instance.RemoveEventListener<List<IInteractable>>(E_EventType.E_OnInteract, interactLogic.CreateInteract);
-        DialogueManager.Instance.OnDialogueStart -= _model.DeactivateInteract;
-        DialogueManager.Instance.OnDialogueEnd -= _model.ActiveInteract;
+        DialogueManager.Instance.OnDialogueStart -= interactLogic.DeactivateInteract;
+        DialogueManager.Instance.OnDialogueEnd -= interactLogic.ActiveInteract;
     }
 }

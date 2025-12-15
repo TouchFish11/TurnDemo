@@ -16,8 +16,10 @@ public class TaskTypeContainer : UIBehaviour
     private UIComponentBinder uIComponentBinder;
     private TextMeshProUGUI txtTaskName;
 
-    private readonly List<TaskInfo> taskInfos = new List<TaskInfo>();
+    //private readonly List<TaskData> taskDatas = new List<TaskData>();
     private readonly List<TaskItem> taskItems = new List<TaskItem>();
+
+    private readonly Dictionary<string, TaskItem> idToItemMap = new Dictionary<string, TaskItem>();
 
     private int taskType;
     private bool isExpand = true;
@@ -63,10 +65,11 @@ public class TaskTypeContainer : UIBehaviour
     /// 添加任务项
     /// </summary>
     /// <param name="taskItem"></param>
-    public void AddItem(TaskItem taskItem, TaskInfo taskInfo)
+    public void AddItem(TaskItem taskItem)
     {
+        //taskDatas.Add(taskData);
         taskItems.Add(taskItem);
-        taskInfos.Add(taskInfo);
+        idToItemMap.Add(taskItem.TaskId, taskItem);
     }
 
     /// <summary>
@@ -76,7 +79,19 @@ public class TaskTypeContainer : UIBehaviour
     {
         if (taskItems.Count > 0)
         {
-            taskItems[0].Select(true);
+            taskItems[0].Select();
+        }
+    }
+
+    /// <summary>
+    /// 选择指定任务
+    /// </summary>
+    /// <param name="id"></param>
+    public void SelectTask(string id)
+    {
+        if (idToItemMap.TryGetValue(id, out TaskItem taskItem))
+        {
+            taskItem.Select();
         }
     }
 

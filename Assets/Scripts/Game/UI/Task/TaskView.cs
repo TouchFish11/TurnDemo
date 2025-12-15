@@ -1,4 +1,5 @@
 
+using Framework;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -22,6 +23,9 @@ namespace Game.UI
         private GameObject hasTaskView;
         private GameObject noTaskView;
 
+        private Button btnAcceptTask;
+        private TextMeshProUGUI txtAccceptInfo;
+
         protected override void Awake()
         {
             base.Awake();
@@ -30,11 +34,14 @@ namespace Game.UI
             toggleGroup = svTask.content.GetComponent<ToggleGroup>();
             txtTaskName = uIComponentBinder.GetControl<TextMeshProUGUI>(nameof(txtTaskName));
             txtTaskDescription = uIComponentBinder.GetControl<TextMeshProUGUI>(nameof(txtTaskDescription));
-            rewardBox = this.transform.Find(nameof(detailView)).Find(nameof(rewardBox));
 
             detailView = this.transform.Find(nameof(detailView));
             hasTaskView = detailView.transform.Find(nameof(hasTaskView)).gameObject;
             noTaskView = detailView.transform.Find(nameof(noTaskView)).gameObject;
+            rewardBox = this.transform.Find(nameof(detailView)).Find(nameof(hasTaskView)).Find(nameof(rewardBox));
+
+            btnAcceptTask = uIComponentBinder.GetControl<Button>(nameof(btnAcceptTask));
+            txtAccceptInfo = uIComponentBinder.GetControl<TextMeshProUGUI>(nameof(txtAccceptInfo));
         }
 
         public override void UpdateView(string key, object value)
@@ -42,11 +49,11 @@ namespace Game.UI
             switch (key)
             {
                 case "currentTaskInfo":
-                    TaskModel.DetailData detailData = (TaskModel.DetailData)value;
-
-                    txtTaskName.text = detailData.TaskInfo.f_taskName;
-                    txtTaskDescription.text = detailData.TaskInfo.f_taskDescription;
-                    foreach (ItemGrid itemGrid in detailData.RewardItems)
+                    Clear();
+                    (TaskInfo taskinfo, List<ItemGrid> itemGrids) = ((TaskInfo taskinfo, List<ItemGrid> itemGrids))value;
+                    txtTaskName.text = taskinfo.f_taskName;
+                    txtTaskDescription.text = taskinfo.f_taskDescription;
+                    foreach (ItemGrid itemGrid in itemGrids)
                     {
                         itemGrid.transform.SetParent(rewardBox, false);
                     }
@@ -60,9 +67,25 @@ namespace Game.UI
                     hasTaskView.SetActive(hasTasks);
                     noTaskView.SetActive(!hasTasks);
                     break;
+                case "isFollowingTask":
+                    bool isFollowingTask = (bool)value;
+                    txtAccceptInfo.text = isFollowingTask ? "取消追踪" : "开始追踪";
+                    break;
             }
         }
 
-        public ToggleGroup ToggleGroup => toggleGroup;
+        private void Clear()
+        {
+            int childCount = rewardBox.childCount;
+            for (int i = 0; i < childCount; i++)
+            {
+                PoolManager.Instance.PushObj(rewardBox.GetChild(i).gameObject);
+            }
+        }
+
+        /// <summary>
+        /// 任务项组
+        /// </summary>
+        public ToggleGroup TaskItemGroup => toggleGroup;
     }
 }

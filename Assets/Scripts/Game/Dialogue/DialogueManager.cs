@@ -75,7 +75,7 @@ public class DialogueManager : SingletonBase<DialogueManager>
         }
 
         // 获取对话界面控制器
-        dialogueController = await UIManager.Instance.ShowViewAsync<DialogueView, DialogueModel, DialogueController>(E_UILayer.Mid);
+        dialogueController = await UIManager.Instance.CreateViewAsync<DialogueView, DialogueModel, DialogueController>(E_UILayer.Mid);
         // 对话中
         IsDialogueActive = true;
         // 触发“对话开始”事件
@@ -203,7 +203,7 @@ public class DialogueManager : SingletonBase<DialogueManager>
         // 重置标志
         IsDialogueActive = false;
         // 隐藏对话UI
-        UIManager.Instance.HideView<DialogueView, DialogueModel, DialogueController>();
+        UIManager.Instance.DestroyView();
         // 触发“对话结束”事件
         OnDialogueEnd?.Invoke();
         // 清理对话选项UI缓存

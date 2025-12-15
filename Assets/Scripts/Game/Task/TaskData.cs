@@ -14,5 +14,7 @@ public class TaskData
     // 当前任务进度
     public int currentPro;
     // 是否完成
-    public bool isFinished;
+    public bool isCompleted;
+    // 是否正在追踪
+    public bool isTracking;
 }

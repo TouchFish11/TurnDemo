@@ -59,7 +59,7 @@ namespace Game.Battle
         {
             BattleView battlePanel = null;
             //显示战斗UI、播放入场动画等
-            await UIManager.Instance.ShowViewAsync<BattleView, BattleModel, BattleController>(E_UILayer.Mid);
+            await UIManager.Instance.CreateViewAsync<BattleView, BattleModel, BattleController>(E_UILayer.Mid);
 
             //更新UI显示
             battlePanel.InitUI(_actionList);
@@ -163,10 +163,10 @@ namespace Game.Battle
         {
             //显示战斗结束UI
             //隐藏战斗UI
-            BattleController battleController = UIManager.Instance.GetView<BattleView, BattleModel, BattleController>();
+            BattleController battleController = UIManager.Instance.GetView<BattleController>();
 
             //切换为正常倍速
-            TimerMgr.Instance.SetTimeRate(E_TimeRate.Normal);
+            TimerManager.Instance.SetTimeRate(E_TimeRate.Normal);
             battleController.BattleOver();
 
             //切换场景
@@ -178,7 +178,7 @@ namespace Game.Battle
             //清空缓存池
             PoolManager.Instance.Clear();
             //显示主界面
-           await UIManager.Instance.ShowViewAsync<MainView, MainModel, MainController>(E_UILayer.Top);
+           await UIManager.Instance.CreateViewAsync<MainView, MainModel, MainController>(E_UILayer.Top);
             //改变阶段
             _battlePhase = E_BattlePhase.QuitBattle;
         }

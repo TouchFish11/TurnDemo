@@ -34,8 +34,8 @@ namespace Framework
             }
 
             // 缓存中没有则异步加载
+            TaskCompletionSource<T> source = TaskSourceBuilder.CreateTCS<T>();
             AssetBundleRequest abr = assetBundle.LoadAssetAsync<T>(assetName);
-            TaskCompletionSource<T> source = new TaskCompletionSource<T>();
             abr.completed += (asyncOperation) =>
             {
                 AssetInfo newAssetInfo = new AssetInfo(assetName, abr.asset as T);
@@ -63,7 +63,7 @@ namespace Framework
 
             // 缓存中没有则异步加载
             AssetBundleRequest abr = assetBundle.LoadAssetAsync(assetName, type);
-            TaskCompletionSource<Object> source = new TaskCompletionSource<Object>();
+            TaskCompletionSource<Object> source = TaskSourceBuilder.CreateTCS<Object>();
             abr.completed += (asyncOperation) =>
             {
                 AssetInfo newAssetInfo = new AssetInfo(assetName, abr.asset);
@@ -83,7 +83,7 @@ namespace Framework
         public Task<T[]> LoadAllAssetsAsync<T>() where T : Object
         {
             AssetBundleRequest abr = assetBundle.LoadAllAssetsAsync<T>();
-            TaskCompletionSource<T[]> source = new TaskCompletionSource<T[]>();
+            TaskCompletionSource<T[]> source = TaskSourceBuilder.CreateTCS<T[]>();
             abr.completed += (asyncOperation) =>
             {
                 int length = abr.allAssets.Length;
@@ -119,7 +119,7 @@ namespace Framework
         public Task<Object[]> LoadAllAssetsAsync(System.Type type)
         {
             AssetBundleRequest abr = assetBundle.LoadAllAssetsAsync(type);
-            TaskCompletionSource<Object[]> source = new TaskCompletionSource<Object[]>();
+            TaskCompletionSource<Object[]> source = TaskSourceBuilder.CreateTCS<Object[]>();
             abr.completed += (asyncOperation) =>
             {
                 int length = abr.allAssets.Length;

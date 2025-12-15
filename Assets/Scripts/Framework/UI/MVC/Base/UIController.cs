@@ -29,9 +29,9 @@ public abstract class UIController<TView, TModel> : IUIController where TView : 
     /// <summary>
     /// 初始化逻辑（子类实现）
     /// </summary>
-    protected virtual Task OnInit()
+    protected virtual async Task OnInit()
     {
-        return Task.CompletedTask;
+        await Task.CompletedTask;
     }
 
     /// <summary>

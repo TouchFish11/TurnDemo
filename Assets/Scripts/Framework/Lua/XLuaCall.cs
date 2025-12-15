@@ -62,7 +62,7 @@ public static class XLuaCall
         typeof(ResourcesManager),
         typeof(SceneManager),
         typeof(Timer),
-        typeof(TimerMgr),
+        typeof(TimerManager),
         typeof(UWRMgr),
         typeof(EncryptionUtility),
         typeof(FileUtility),

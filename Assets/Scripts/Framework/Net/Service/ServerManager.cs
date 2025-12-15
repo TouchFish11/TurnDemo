@@ -34,7 +34,7 @@ public class ServerManager : SingletonBase<ServerManager>
     /// <returns></returns>
     public async Task TryAutoLogin()
     {
-        LoginController loginController = await UIManager.Instance.ShowViewAsync<LoginView, LoginModel, LoginController>(E_UILayer.Mid);
+        LoginController loginController = await UIManager.Instance.CreateViewAsync<LoginView, LoginModel, LoginController>(E_UILayer.Mid);
         LoginData loginData = loginController.GetLoginData();
 
         // 校验缓存有效性
@@ -47,7 +47,7 @@ public class ServerManager : SingletonBase<ServerManager>
         else
         {
             // 自动登录失败，显示登录框
-            UIManager.Instance.GetView<LoginView, LoginModel, LoginController>().ShowLoginBox(true);
+            UIManager.Instance.GetView<LoginController>().ShowLoginBox(true);
         }
     }
 

@@ -18,13 +18,12 @@ public class TaskItem : UIBehaviour
     private Image imgSel;
     private Toggle toggle;
 
-    private TaskInfo taskInfo;
-    private TaskData taskData;
+    private string taskId;
 
     /// <summary>
     /// 任务选择事件
     /// </summary>
-    public event Action<TaskInfo> OnSelectedTask;
+    public event Action<string> OnSelectedTask;
 
     protected override void Awake()
     {
@@ -41,10 +40,9 @@ public class TaskItem : UIBehaviour
     /// 初始化
     /// </summary>
     /// <param name="taskInfo"></param>
-    public void Init(TaskInfo taskInfo, TaskData taskData, ToggleGroup group)
+    public void Init(TaskInfo taskInfo, ToggleGroup group)
     {
-        this.taskInfo = taskInfo;
-        this.taskData = taskData;
+        this.taskId = taskInfo.f_id;
         this.toggle.group = group;
 
         txtTaskName.text = taskInfo.f_taskName;
@@ -55,7 +53,7 @@ public class TaskItem : UIBehaviour
         imgSel.gameObject.SetActive(isOn);
         if (isOn)
         {
-            OnSelectedTask?.Invoke(taskInfo);
+            OnSelectedTask?.Invoke(taskId);
         }
     }
 
@@ -63,8 +61,10 @@ public class TaskItem : UIBehaviour
     /// 选择
     /// </summary>
     /// <param name="isOn"></param>
-    public void Select(bool isOn)
+    public void Select()
     {
         toggle.isOn = true;
     }
+
+    public string TaskId => taskId;
 }
