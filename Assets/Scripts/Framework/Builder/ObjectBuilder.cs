@@ -29,5 +29,22 @@ namespace Framework
             T component = cacheObj.GetComponent<T>();
             return component;
         }
+
+        /// <summary>
+        /// 获取或创建实例
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="assetBundleType"></param>
+        /// <param name="assetName"></param>
+        /// <param name="parent"></param>
+        /// <param name="worldPosStay"></param>
+        /// <returns></returns>
+        public static async Task<T> GetOrCreateInstance<T>(E_AssetBundleType assetBundleType, string assetName, Vector3 position, Quaternion quaternion) where T : Component
+        {
+            GameObject cacheObj = await PoolManager.Instance.GetAssetBundleObjAsync(assetBundleType, assetName);
+            cacheObj.transform.SetPositionAndRotation(position, quaternion);
+            T component = cacheObj.GetComponent<T>();
+            return component;
+        }
     }
 }

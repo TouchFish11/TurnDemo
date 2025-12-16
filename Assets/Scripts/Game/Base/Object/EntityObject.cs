@@ -26,7 +26,7 @@ namespace Game
 
         protected virtual void Awake()
         {
-            BaseInit(1);
+
         }
 
         public virtual void BaseInit(int id)

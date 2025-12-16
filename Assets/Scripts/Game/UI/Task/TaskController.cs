@@ -109,7 +109,7 @@ namespace Game.UI
                 }
 
                 // 显示任务列表UI
-                TaskTypeContainer taskTypeContainer = null;
+                TaskTypeContainer taskTypeContainer;
                 if (!_model.ContainContainer(taskInfo.f_taskType))
                 {
                     // 创建该任务类型父对象
@@ -119,7 +119,11 @@ namespace Game.UI
                 {
                     taskTypeContainer = _model.GetContainer(taskInfo.f_taskType);
                 }
-                await CreateTaskItem(taskInfo, taskTypeContainer);
+
+                if (!taskTypeContainer.ContainTask(taskInfo.f_id))
+                {
+                    await CreateTaskItem(taskInfo, taskTypeContainer);
+                }
             }
         }
 
@@ -132,7 +136,7 @@ namespace Game.UI
         {
             // 创建该任务类型父对象
             TaskTypeContainer taskTypeContainer = await ObjectBuilder.GetOrCreateInstance<TaskTypeContainer>(E_AssetBundleType.UI, ResConfigCollection.TaskTypeContainer, null);
-            taskTypeContainer.Init(taskInfo.f_taskType, taskInfo.f_taskName);
+            taskTypeContainer.Init(taskInfo.f_taskType);
             _model.AddTaskTypeContainers(taskInfo.f_taskType, taskTypeContainer);
             return taskTypeContainer;
         }

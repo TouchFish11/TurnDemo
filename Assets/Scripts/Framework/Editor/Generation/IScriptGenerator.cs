@@ -5,7 +5,7 @@ using UnityEngine;
 namespace CustomEditor.ScriptGeneration
 {
     /// <summary>
-    /// 脚本生成接口
+    /// 脚本器生成接口
     /// </summary>
     public interface IScriptGenerator
     {

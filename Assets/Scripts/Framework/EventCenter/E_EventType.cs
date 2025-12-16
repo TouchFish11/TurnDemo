@@ -22,5 +22,10 @@ namespace Framework
         /// </summary>
         E_OnInteract,
 
+        /// <summary>
+        /// ¶Ô»°
+        /// </summary>
+        E_OnDialogue,
+
     }
 }

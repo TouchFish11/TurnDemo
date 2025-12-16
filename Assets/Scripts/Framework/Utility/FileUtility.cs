@@ -1,8 +1,12 @@
 
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
 /// <summary>
 /// 文件工具类
 /// </summary>
-public static class FileUtility
+public class FileUtility
 {
     /// <summary>
     /// 本地日志文件名
@@ -75,4 +79,34 @@ public static class FileUtility
     /// PlayerActionAssets.ias
     /// </value>
     public static string InputActionLocalFileName => "PlayerActionAssets.json";
+
+
+    /// <summary>
+    /// 获取所有文件
+    /// </summary>
+    /// <param name="directoryInfo"></param>
+    /// <param name="fileInfos"></param>
+    /// <returns></returns>
+    public static List<FileInfo> GetTotalFiles(DirectoryInfo directoryInfo, List<FileInfo> fileInfos, string[] filterSuffixes)
+    {
+        //获取并存储当前文件夹的所有文件
+        List<FileInfo> temps = directoryInfo.GetFiles().ToList();
+        for (int i = temps.Count - 1; i >= 0; i--)
+        {
+            if (filterSuffixes.Contains(temps[i].Extension))
+            {
+                temps.RemoveAt(i);
+            }
+        }
+
+        fileInfos.AddRange(temps);
+        //获取下一级的所有子文件夹
+        DirectoryInfo[] subDirectoryInfos = directoryInfo.GetDirectories();
+        //存储该级的所有子文件夹信息
+        foreach (DirectoryInfo info in subDirectoryInfos)
+        {
+            GetTotalFiles(info, fileInfos, filterSuffixes);
+        }
+        return fileInfos;
+    }
 }

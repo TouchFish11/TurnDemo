@@ -29,22 +29,35 @@ public class MainView : UIView
         switch (key)
         {
             case "interactUIs":
-                List<InteractUI> interactUIs = value as List<InteractUI>;
-                foreach (InteractUI interactUI in interactUIs)
-                {
-                    interactUI.transform.SetParent(uIComponentBinder.GetControl<ScrollRect>("svInteract").content, false);
-                }
+                UpdateInteract(value);
                 break;
             case "isActiveTaskbar":
                 taskPart.SetActive((bool)value);
                 break;
             case "UpdateTask":
-                (TaskInfo taskInfo, TaskData taskData) = ((TaskInfo taskInfo, TaskData taskData))value;
-                txtTaskTitle.text = taskInfo.f_taskName;
-                txtTaskDescription.text = taskInfo.f_taskDescription;
+                UpdateTask(value);
                 break;
         }
     }
 
+    private void UpdateInteract(object value)
+    {
+        List<InteractUI> interactUIs = value as List<InteractUI>;
+        // 显示交互UI
+        foreach (InteractUI interactUI in interactUIs)
+        {
+            interactUI.transform.SetParent(uIComponentBinder.GetControl<ScrollRect>("svInteract").content, false);
+        }
+    }
 
+    private void UpdateTask(object value)
+    {
+        (TaskInfo taskInfo, TaskData taskData) = ((TaskInfo taskInfo, TaskData taskData))value;
+        // 初始化任务名称
+        txtTaskTitle.text = taskInfo.f_taskName;
+        // 获取任务条件
+        TaskConditionInfo taskCondition = BinaryDataMgr.Instance.GetTable<TaskConditionInfoContainer>().dataDic[taskInfo.f_completionConditionId];
+        // 初始化描述和当前进度
+        txtTaskDescription.text = $"{taskInfo.f_taskDescription}  {taskData.currentPro}/{taskCondition.f_maxPro}";
+    }
 }

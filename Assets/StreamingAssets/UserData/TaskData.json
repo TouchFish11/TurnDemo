@@ -1,0 +1,27 @@
+{
+    "keys": [
+        "1_1",
+        "1_2",
+        "2_1"
+    ],
+    "values": [
+        {
+            "currentTaskId": "1_1",
+            "currentPro": 1,
+            "isCompleted": true,
+            "isTracking": false
+        },
+        {
+            "currentTaskId": "1_2",
+            "currentPro": 1,
+            "isCompleted": true,
+            "isTracking": false
+        },
+        {
+            "currentTaskId": "2_1",
+            "currentPro": 0,
+            "isCompleted": false,
+            "isTracking": true
+        }
+    ]
+}

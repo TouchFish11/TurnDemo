@@ -23,7 +23,8 @@ public class InteractComponent : BaseComponent
     protected override void Awake()
     {
         base.Awake();
-        MonoManager.Instance.AddUpdateListener(OnUpdate);
+        // 对话结束事件监听
+        DialogueManager.Instance.OnDialogueEnd += QuitInteract;
     }
 
     /// <summary>
@@ -31,6 +32,11 @@ public class InteractComponent : BaseComponent
     /// </summary>
     public void Initeract()
     {
+        if (interactables.Count == 0)
+        {
+            return;
+        }
+
         if (currentInteractable != null)
         {
             currentInteractable.OnInteract(this.EntityObject);
@@ -43,23 +49,19 @@ public class InteractComponent : BaseComponent
     }
 
     /// <summary>
-    /// 帧更新
+    /// 添加交互
     /// </summary>
-    private void OnUpdate()
-    {
-        // F键交互
-        if (Keyboard.current.fKey.wasPressedThisFrame && interactables.Count > 0)
-        {
-            Initeract();
-        }
-    }
-
+    /// <param name="interactable"></param>
     public void AddInteract(IInteractable interactable)
     {
         interactables.Add(interactable);
         EventCenter.Instance.TriggerEvent(E_EventType.E_OnInteract, interactables);
     }
 
+    /// <summary>
+    /// 移除交互
+    /// </summary>
+    /// <param name="interactable"></param>
     public void RemoveInteract(IInteractable interactable)
     {
         interactables.Remove(interactable);
@@ -69,14 +71,8 @@ public class InteractComponent : BaseComponent
     /// <summary>
     /// 退出交互
     /// </summary>
-    public void QuitInteract()
+    private void QuitInteract()
     {
-
-    }
-
-    public override void Destroy()
-    {
-        base.Destroy();
-        MonoManager.Instance.RemoveUpdateListener(OnUpdate);
+        currentInteractable = null;
     }
 }

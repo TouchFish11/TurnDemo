@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public interface IInteractable
 {
-    NpcConfig NpcConfig { get; }
+    NpcInfo NpcInfo { get; }
 
     /// <summary>
     /// 是否显示浮动文本

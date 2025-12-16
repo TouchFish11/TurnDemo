@@ -16,9 +16,7 @@ public class TaskTypeContainer : UIBehaviour
     private UIComponentBinder uIComponentBinder;
     private TextMeshProUGUI txtTaskName;
 
-    //private readonly List<TaskData> taskDatas = new List<TaskData>();
     private readonly List<TaskItem> taskItems = new List<TaskItem>();
-
     private readonly Dictionary<string, TaskItem> idToItemMap = new Dictionary<string, TaskItem>();
 
     private int taskType;
@@ -54,11 +52,22 @@ public class TaskTypeContainer : UIBehaviour
     /// ≥ı ºªØ
     /// </summary>
     /// <param name="taskType"></param>
-    /// <param name="taskTypeName"></param>
-    public void Init(int taskType, string taskTypeName)
+    public void Init(int taskType)
     {
         this.taskType = taskType;
-        //txtTaskName.text = taskName;
+        txtTaskName.text = taskType.TaskTypeToStr();
+    }
+
+    public bool ContainTask(string id)
+    {
+        foreach (string cacheId in idToItemMap.Keys)
+        {
+            if (TextUtility.Split(cacheId, 7)[0] == TextUtility.Split(id, 7)[0])
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     /// <summary>

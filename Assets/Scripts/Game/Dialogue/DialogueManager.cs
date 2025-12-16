@@ -21,6 +21,8 @@ public class DialogueManager : SingletonBase<DialogueManager>
     private DialogueInfo currentDialogueInfo;
     // 对话界面控制器
     private DialogueController dialogueController;
+    // 当前对话的NpcId
+    private NpcInfo npcInfo;
 
     /// <summary>
     /// 打字机打字间隔
@@ -99,6 +101,8 @@ public class DialogueManager : SingletonBase<DialogueManager>
         DialogueInfo dialogueInfo = BinaryDataMgr.Instance.GetTable<DialogueInfoContainer>().dataDic[startDialogueId];
         // 记录当前对话信息
         currentDialogueInfo = dialogueInfo;
+        // 记录当前对话的Npc信息
+        npcInfo = BinaryDataMgr.Instance.GetTable<NpcInfoContainer>().dataDic[dialogueInfo.f_speakerId];
 
         if (enableTypewriter)
         {
@@ -111,7 +115,7 @@ public class DialogueManager : SingletonBase<DialogueManager>
         {
             dialogueOver = true;
             // 直接显示对话文本
-            dialogueController.ShowDialogueText(currentDialogueInfo.f_speakerName, currentDialogueInfo.f_dialgueText);
+            dialogueController.ShowDialogueText(npcInfo.f_speakerName, currentDialogueInfo.f_dialgueText);
             // 显示对话分支（若有）
             ShowBranchOpt();
         }
@@ -129,7 +133,7 @@ public class DialogueManager : SingletonBase<DialogueManager>
         for (int i = 0; i < text.Length; i++)
         {
             sb.Append(text[i]);
-            dialogueController.ShowDialogueText(currentDialogueInfo.f_speakerName, sb.ToString());
+            dialogueController.ShowDialogueText(npcInfo.f_speakerName, sb.ToString());
             yield return new WaitForSeconds(TypewriterInterval);
         }
         dialogueOver = true;
@@ -151,7 +155,7 @@ public class DialogueManager : SingletonBase<DialogueManager>
         if (!dialogueOver && typewriterCor != null)
         {
             MonoManager.Instance.StopCoroutine(typewriterCor);
-            dialogueController.ShowDialogueText(currentDialogueInfo.f_speakerName, currentDialogueInfo.f_dialgueText);
+            dialogueController.ShowDialogueText(npcInfo.f_speakerName, currentDialogueInfo.f_dialgueText);
             dialogueOver = true;
             OnSingleDialogueEnd?.Invoke();
             ShowBranchOpt();
@@ -204,6 +208,8 @@ public class DialogueManager : SingletonBase<DialogueManager>
         IsDialogueActive = false;
         // 隐藏对话UI
         UIManager.Instance.DestroyView();
+        // 分发对话结束事件
+        EventCenter.Instance.TriggerEvent(E_EventType.E_OnDialogue, new DialogueEvent() { npcId = npcInfo.f_id });
         // 触发“对话结束”事件
         OnDialogueEnd?.Invoke();
         // 清理对话选项UI缓存

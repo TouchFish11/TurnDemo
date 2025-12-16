@@ -22,7 +22,7 @@ namespace Tutorial
             luaenv.DoString("print('hello world')");
         }
 
-        // Update is called once per frame
+        // OnInitDataCompleted is called once per frame
         void Update()
         {
             if (luaenv != null)

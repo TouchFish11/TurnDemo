@@ -76,39 +76,39 @@ namespace CustomEditor.ScriptGeneration
             for (int i = 0; i < directoryInfos.Length; i++)
             {
                 //获取其中一个文件夹下的所有文件
-                List<FileInfo> fileInfos = GetTotalFiles(directoryInfos[i], new List<FileInfo>());
+                List<FileInfo> fileInfos = FileUtility.GetTotalFiles(directoryInfos[i], new List<FileInfo>(), _filterSuffixes);
                 //存储文件列表
                 this.fileInfos.AddRange(fileInfos);
             }
         }
 
-        /// <summary>
-        /// 获取所有文件
-        /// </summary>
-        /// <param name="directoryInfo"></param>
-        /// <param name="fileInfos"></param>
-        /// <returns></returns>
-        private List<FileInfo> GetTotalFiles(DirectoryInfo directoryInfo, List<FileInfo> fileInfos)
-        {
-            //获取并存储当前文件夹的所有文件
-            List<FileInfo> temps = directoryInfo.GetFiles().ToList();
-            for (int i = temps.Count - 1; i >= 0; i--)
-            {
-                if (_filterSuffixes.Contains(temps[i].Extension))
-                {
-                    temps.RemoveAt(i);
-                }
-            }
+        ///// <summary>
+        ///// 获取所有文件
+        ///// </summary>
+        ///// <param name="directoryInfo"></param>
+        ///// <param name="fileInfos"></param>
+        ///// <returns></returns>
+        //private List<FileInfo> GetTotalFiles(DirectoryInfo directoryInfo, List<FileInfo> fileInfos)
+        //{
+        //    //获取并存储当前文件夹的所有文件
+        //    List<FileInfo> temps = directoryInfo.GetFiles().ToList();
+        //    for (int i = temps.Count - 1; i >= 0; i--)
+        //    {
+        //        if (_filterSuffixes.Contains(temps[i].Extension))
+        //        {
+        //            temps.RemoveAt(i);
+        //        }
+        //    }
 
-            fileInfos.AddRange(temps);
-            //获取下一级的所有子文件夹
-            DirectoryInfo[] subDirectoryInfos = directoryInfo.GetDirectories();
-            //存储该级的所有子文件夹信息
-            foreach (DirectoryInfo info in subDirectoryInfos)
-            {
-                GetTotalFiles(info, fileInfos);
-            }
-            return fileInfos;
-        }
+        //    fileInfos.AddRange(temps);
+        //    //获取下一级的所有子文件夹
+        //    DirectoryInfo[] subDirectoryInfos = directoryInfo.GetDirectories();
+        //    //存储该级的所有子文件夹信息
+        //    foreach (DirectoryInfo info in subDirectoryInfos)
+        //    {
+        //        GetTotalFiles(info, fileInfos);
+        //    }
+        //    return fileInfos;
+        //}
     }
 }

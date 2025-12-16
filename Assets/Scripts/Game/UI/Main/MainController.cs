@@ -1,9 +1,11 @@
 using Framework;
 using Game.UI;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.UI;
 
 /// <summary>
@@ -27,27 +29,27 @@ public class MainControllerFactory : UIControllerFactory<MainView, MainModel, Ma
 /// </summary>
 public class MainController : UIController<MainView, MainModel>
 {
-    // 交互逻辑
-    private readonly InteractLogic interactLogic;
-    // 任务逻辑
-    private readonly TaskLogic taskLogic;
+    private readonly Dictionary<Type, MainLogic> mainLogics = new Dictionary<Type, MainLogic>();
 
     public MainController(MainView view, MainModel model) : base(view, model)
     {
-        interactLogic = new InteractLogic(this, model, view);
-        taskLogic = new TaskLogic(this, model, view);
+        mainLogics.Add(typeof(InteractLogic), new InteractLogic(this, model, view));
+        mainLogics.Add(typeof(TaskLogic), new TaskLogic(this, model, view));
     }
 
     protected override async Task OnInit()
     {
-        EventCenter.Instance.AddEventListener<List<IInteractable>>(E_EventType.E_OnInteract, interactLogic.CreateInteract);
+        // 交互逻辑监听
+        EventCenter.Instance.AddEventListener<List<IInteractable>>(E_EventType.E_OnInteract, mainLogics[typeof(InteractLogic)].As<InteractLogic>().CreateInteract);
         // 对话事件监听
-        DialogueManager.Instance.OnDialogueStart += interactLogic.DeactivateInteract;
-        DialogueManager.Instance.OnDialogueEnd += interactLogic.ActiveInteract;
+        DialogueManager.Instance.OnDialogueStart += mainLogics[typeof(InteractLogic)].As<InteractLogic>().DeactivateInteract;
+        DialogueManager.Instance.OnDialogueEnd += mainLogics[typeof(InteractLogic)].As<InteractLogic>().ActiveInteract;
         // 任务事件监听
-        TaskManager.Instance.OnUpdateTask += taskLogic.UpdateTask;
-        TaskManager.Instance.OnCancelTask += taskLogic.CancelTask;
-        taskLogic.CancelTask();
+        TaskManager.Instance.OnUpdateTask += mainLogics[typeof(TaskLogic)].As<TaskLogic>().UpdateTask;
+        TaskManager.Instance.OnCancelTask += mainLogics[typeof(TaskLogic)].As<TaskLogic>().CancelTask;
+        mainLogics[typeof(TaskLogic)].As<TaskLogic>().SetTaskbarActive(false);
+
+        InitState();
 
         await base.OnInit();
     }
@@ -62,11 +64,22 @@ public class MainController : UIController<MainView, MainModel>
         }
     }
 
+    /// <summary>
+    /// 初始化界面状态
+    /// </summary>
+    private void InitState()
+    {
+        foreach (var item in mainLogics.Values)
+        {
+            item.Init();
+        }
+    }
+
     public override void Destroy()
     {
         base.Destroy();
-        EventCenter.Instance.RemoveEventListener<List<IInteractable>>(E_EventType.E_OnInteract, interactLogic.CreateInteract);
-        DialogueManager.Instance.OnDialogueStart -= interactLogic.DeactivateInteract;
-        DialogueManager.Instance.OnDialogueEnd -= interactLogic.ActiveInteract;
+        EventCenter.Instance.RemoveEventListener<List<IInteractable>>(E_EventType.E_OnInteract, mainLogics[typeof(InteractLogic)].As<InteractLogic>().CreateInteract);
+        DialogueManager.Instance.OnDialogueStart -= mainLogics[typeof(InteractLogic)].As<InteractLogic>().DeactivateInteract;
+        DialogueManager.Instance.OnDialogueEnd -= mainLogics[typeof(InteractLogic)].As<InteractLogic>().ActiveInteract;
     }
 }

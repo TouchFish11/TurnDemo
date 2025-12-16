@@ -13,6 +13,11 @@ public class InteractLogic : MainLogic
 
     }
 
+    public override void Init()
+    {
+
+    }
+
     /// <summary>
     /// 创建交互UI
     /// </summary>
@@ -24,7 +29,7 @@ public class InteractLogic : MainLogic
         {
             InteractUI interactUI = await ObjectBuilder.GetOrCreateInstance<InteractUI>(E_AssetBundleType.UI, ResConfigCollection.InteractUI, null);
             // 初始化文本
-            interactUI.Init(interactable.NpcConfig.npcName);
+            interactUI.Init(interactable.NpcInfo.f_speakerName);
             interactUIs.Add(interactUI);
         }
         // 设置交互UI

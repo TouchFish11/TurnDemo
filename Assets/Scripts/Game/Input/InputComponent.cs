@@ -100,6 +100,12 @@ public class InputComponent : BaseComponent
                 OnMouseLeftClick?.Invoke();
             }
         }
+
+        // F¼ü½»»¥
+        if (Keyboard.current.fKey.wasPressedThisFrame)
+        {
+            this.EntityObject.GetComponent<InteractComponent>().Initeract();
+        }
     }
 
     private void OnDestroy()

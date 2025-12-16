@@ -3,23 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// NPC配置
+/// 任务内容类型
 /// </summary>
-[CreateAssetMenu()]
-public class NpcConfig : ScriptableObject
+public enum E_TaskContentType : byte
 {
     /// <summary>
-    /// NPC名称
+    /// 对话
     /// </summary>
-    public string npcName;
-
+    Dialogue = 1,
     /// <summary>
-    /// Npc身份
+    /// 战斗
     /// </summary>
-    public string npcIdentity;
-
+    Battle,
     /// <summary>
-    /// 对话起始ID
+    /// 其它
     /// </summary>
-    public int dialogueId;
+    Other,
 }

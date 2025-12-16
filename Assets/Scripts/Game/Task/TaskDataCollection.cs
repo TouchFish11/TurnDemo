@@ -8,6 +8,19 @@ using UnityEngine;
 /// </summary>
 public class TaskDataCollection : Collection<string, TaskData>
 {
+    public bool ContainTask(string id)
+    {
+        foreach (string cacheId in keyToValueMap.Keys)
+        {
+            if (TextUtility.Split(cacheId, 7)[0] == TextUtility.Split(id, 7)[0])
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     /// <summary>
     /// ÊÇ·ñÍê³É
     /// </summary>

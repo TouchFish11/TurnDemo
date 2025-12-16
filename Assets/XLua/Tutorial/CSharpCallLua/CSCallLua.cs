@@ -112,7 +112,7 @@ namespace Tutorial
 
         }
 
-        // Update is called once per frame
+        // OnInitDataCompleted is called once per frame
         void Update()
         {
             if (luaenv != null)

@@ -184,7 +184,7 @@ namespace Framework
             GUILayout.Label(new GUIContent("AssetBundleConfigPath", "AB包配置文件"));
 
             EditorGUI.BeginDisabledGroup(true);
-            GUILayout.TextField(EditorTools.AssetPath + "AssetBundlesCollections.asset");
+            GUILayout.TextField(MenuItemTools.AssetPath + "AssetBundlesCollections.asset");
             EditorGUI.EndDisabledGroup();
 
             if (GUILayout.Button(new GUIContent("Create Config", "创建AB包配置文件")))
@@ -300,16 +300,16 @@ namespace Framework
         {
             //判断是否存在该文件夹
             //不存在则创建
-            if (!Directory.Exists(EditorTools.AssetPath))
+            if (!Directory.Exists(MenuItemTools.AssetPath))
             {
-                Directory.CreateDirectory(EditorTools.AssetPath);
-                Debug.Log($"该路径不存在：{EditorTools.AssetPath}，已自动创建路径！");
+                Directory.CreateDirectory(MenuItemTools.AssetPath);
+                Debug.Log($"该路径不存在：{MenuItemTools.AssetPath}，已自动创建路径！");
             }
 
             //创建ScriptableObject实例
             AssetBundlesCollections collections = ScriptableObject.CreateInstance<AssetBundlesCollections>();
             //创建配置文件
-            AssetDatabase.CreateAsset(collections, $"{EditorTools.AssetPath}AssetBundlesCollections.asset");
+            AssetDatabase.CreateAsset(collections, $"{MenuItemTools.AssetPath}AssetBundlesCollections.asset");
             //保存文件
             AssetDatabase.SaveAssets();
             //刷新
@@ -340,7 +340,7 @@ namespace Framework
             for (int i = 0; i < directoryInfos.Length; i++)
             {
                 //获取其中一个文件夹下的所有文件
-                List<FileInfo> fileInfos = GetTotalFiles(directoryInfos[i], new List<FileInfo>());
+                List<FileInfo> fileInfos = FileUtility.GetTotalFiles(directoryInfos[i], new List<FileInfo>(), _filterSuffixes);
                 //存储文件列表
                 _fileInfoDic.Add(directoryInfos[i].Name, fileInfos);
             }
@@ -720,33 +720,33 @@ namespace Framework
             return sb.ToString();
         }
 
-        /// <summary>
-        /// 获取所有文件
-        /// </summary>
-        /// <param name="directoryInfo"></param>
-        /// <param name="fileInfos"></param>
-        /// <returns></returns>
-        private List<FileInfo> GetTotalFiles(DirectoryInfo directoryInfo, List<FileInfo> fileInfos)
-        {
-            //获取并存储当前文件夹的所有文件
-            List<FileInfo> temps = directoryInfo.GetFiles().ToList();
-            for (int i = temps.Count - 1; i >= 0; i--)
-            {
-                if (_filterSuffixes.Contains(temps[i].Extension))
-                {
-                    temps.RemoveAt(i);
-                }
-            }
+        ///// <summary>
+        ///// 获取所有文件
+        ///// </summary>
+        ///// <param name="directoryInfo"></param>
+        ///// <param name="fileInfos"></param>
+        ///// <returns></returns>
+        //private List<FileInfo> GetTotalFiles(DirectoryInfo directoryInfo, List<FileInfo> fileInfos)
+        //{
+        //    //获取并存储当前文件夹的所有文件
+        //    List<FileInfo> temps = directoryInfo.GetFiles().ToList();
+        //    for (int i = temps.Count - 1; i >= 0; i--)
+        //    {
+        //        if (_filterSuffixes.Contains(temps[i].Extension))
+        //        {
+        //            temps.RemoveAt(i);
+        //        }
+        //    }
 
-            fileInfos.AddRange(temps);
-            //获取下一级的所有子文件夹
-            DirectoryInfo[] subDirectoryInfos = directoryInfo.GetDirectories();
-            //存储该级的所有子文件夹信息
-            foreach (DirectoryInfo info in subDirectoryInfos)
-            {
-                GetTotalFiles(info, fileInfos);
-            }
-            return fileInfos;
-        }
+        //    fileInfos.AddRange(temps);
+        //    //获取下一级的所有子文件夹
+        //    DirectoryInfo[] subDirectoryInfos = directoryInfo.GetDirectories();
+        //    //存储该级的所有子文件夹信息
+        //    foreach (DirectoryInfo info in subDirectoryInfos)
+        //    {
+        //        GetTotalFiles(info, fileInfos);
+        //    }
+        //    return fileInfos;
+        //}
     }
 }

@@ -17,4 +17,16 @@ public abstract class MainLogic
         this.mainModel = mainModel;
         this.mainView = mainView;
     }
+
+    /// <summary>
+    /// ³õÊ¼»¯
+    /// </summary>
+    public abstract void Init();
+
+    /// <summary>
+    /// ×ª»»
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public T As<T>() where T : MainLogic => this as T;
 }

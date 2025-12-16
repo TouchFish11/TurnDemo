@@ -8,29 +8,28 @@ namespace Game
     /// </summary>
     public class NpcObject : EntityObject, IInteractable
     {
-        // NPC配置
-        [SerializeField] private NpcConfig npcConfig;
-
         public bool IsShowFloatingText { get; set; }
-        public NpcConfig NpcConfig => npcConfig;
+
+        public NpcInfo NpcInfo { get; private set; }
+
+        public override void BaseInit(int id)
+        {
+            base.BaseInit(id);
+
+            NpcInfo = BinaryDataMgr.Instance.GetTable<NpcInfoContainer>().dataDic[id];
+        }
 
         public void OnInteract(IEntityObject entityObject)
         {
             // 显示对话界面
             if (!DialogueManager.Instance.IsDialogueActive)
             {
-                DialogueManager.Instance.StartDialogue(npcConfig.dialogueId);
+                DialogueManager.Instance.StartDialogue(NpcInfo.f_dialogueId);
             }
             else
             {
                 // 已有对话时推进文本
                 DialogueManager.Instance.NextDialogue();
-            }
-
-            if (!DialogueManager.Instance.IsDialogueActive)
-            {
-                // 交互完毕
-                entityObject.GetComponent<InteractComponent>().QuitInteract();
             }
         }
     }

@@ -20,7 +20,7 @@ namespace Framework
 
         private BinaryDataMgr()
         {
-            QuitHandler.Instance.OnAppQuit += OnApplicationQuit;
+
         }
 
         /// <summary>
@@ -33,6 +33,9 @@ namespace Framework
             await LoadTableAsync<DialogueInfoContainer, DialogueInfo>();
             await LoadTableAsync<BranchInfoContainer, BranchInfo>();
             await LoadTableAsync<TaskInfoContainer, TaskInfo>();
+            await LoadTableAsync<TaskConditionInfoContainer, TaskConditionInfo>();
+            await LoadTableAsync<NpcInfoContainer, NpcInfo>();
+
             //await Task.FromResult(true);
         }
 
@@ -186,23 +189,6 @@ namespace Framework
             }
             //把读取完的表记录下来
             _tableDic.Add(typeof(T).Name, containerObj);
-        }
-
-        private Task OnApplicationQuit()
-        {
-            // 保存音乐数据
-            if (GameDataMgr.Instance.MusicData != null)
-            {
-                Save(FileUtility.LocalMusicDataFileName, GameDataMgr.Instance.MusicData);
-            }
-
-            // 保存改键数据
-            if (GameDataMgr.Instance.InputActionContainer != null)
-            {
-                Save(FileUtility.LocalInputDataFileName, GameDataMgr.Instance.InputActionContainer);
-            }
-
-            return Task.CompletedTask;
         }
     }
 }

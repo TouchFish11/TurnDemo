@@ -54,7 +54,8 @@ public class StoryReviewView : UIBehaviour
         foreach (DialogueInfo dialogueInfo in historicalDialogueInfos)
         {
             DialogueReviewUI dialogueReviewUI = await ObjectBuilder.GetOrCreateInstance<DialogueReviewUI>(E_AssetBundleType.UI, ResConfigCollection.DialogueReviewUI, svReview.content);
-            dialogueReviewUI.Init(dialogueInfo.f_speakerName, dialogueInfo.f_dialgueText);
+            NpcInfo npcInfo = BinaryDataMgr.Instance.GetTable<NpcInfoContainer>().dataDic[dialogueInfo.f_speakerId];
+            dialogueReviewUI.Init(npcInfo.f_speakerName, dialogueInfo.f_dialgueText);
             dialogueReviewUIs.Add(dialogueReviewUI);
         }
     }

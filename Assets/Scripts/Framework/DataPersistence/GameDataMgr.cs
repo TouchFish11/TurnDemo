@@ -1,4 +1,6 @@
+using System;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 
 namespace Framework
 {
@@ -13,11 +15,13 @@ namespace Framework
         private InputActionContainer _inputActionContainer;
         // 输入系统输入数据容器对象
         private InputDataContainer _inputDataContainer;
-
-        // 任务数据
+        // 任务数据集合
         private TaskDataCollection taskDataCollection;
 
-        private GameDataMgr() { }
+        private GameDataMgr()
+        {
+            QuitHandler.Instance.OnAppQuit += OnApplicationQuit;
+        }
 
         /// <summary>
         /// 异步初始化数据
@@ -57,20 +61,41 @@ namespace Framework
             }
         }
 
+        private async Task OnApplicationQuit()
+        {
+            // 保存音乐数据
+            if (MusicData != null)
+            {
+                BinaryDataMgr.Instance.Save(FileUtility.LocalMusicDataFileName, _musicData);
+            }
+
+            // 保存改键数据
+            if (InputActionContainer != null)
+            {
+                BinaryDataMgr.Instance.Save(FileUtility.LocalInputDataFileName, _inputActionContainer);
+            }
+
+            // 保存任务数据
+            if (taskDataCollection != null)
+            {
+                await JsonManager.Instance.ToJsonAsync(taskDataCollection, PathManager.GetUserDataLocalSavePath(FileUtility.LocalTaskDataFileName));
+            }
+        }
+
         /// <summary>
         /// 音乐数据
         /// </summary>
-        public MusicData MusicData { get => _musicData; }
+        public MusicData MusicData => _musicData;
 
         /// <summary>
         /// 输入系统动作数据容器
         /// </summary>
-        public InputActionContainer InputActionContainer { get => _inputActionContainer; }
+        public InputActionContainer InputActionContainer => _inputActionContainer;
 
         /// <summary>
         /// 输入系统输入数据容器
         /// </summary>
-        public InputDataContainer InputDataContainer { get => _inputDataContainer; }
+        public InputDataContainer InputDataContainer => _inputDataContainer;
 
         /// <summary>
         /// 任务数据集合

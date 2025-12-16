@@ -10,12 +10,16 @@ namespace Framework
 		public static string UICamera => "UICamera";
 		public static string BranchInfo => "BranchInfo";
 		public static string DialogueInfo => "DialogueInfo";
+		public static string NpcInfo => "NpcInfo";
+		public static string Sheet1 => "Sheet1";
 		public static string TaskConditionInfo => "TaskConditionInfo";
 		public static string TaskInfo => "TaskInfo";
 		public static string ItemGrid => "ItemGrid";
 		public static string Ground => "Ground";
+		public static string MergedMesh => "MergedMesh";
 		public static string Dog => "Dog";
 		public static string FloatingText => "FloatingText";
+		public static string Npc => "Npc";
 		public static string BeginScene => "BeginScene";
 		public static string LevelScene => "LevelScene";
 		public static string MainScene => "MainScene";
