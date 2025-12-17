@@ -142,7 +142,7 @@ namespace Framework
         /// <summary>
         /// 清理指定类型的缓存
         /// </summary>
-        /// <param name="typeObjName"></param>
+        /// <typeparam name="T">对象类型，与对象名称一致</typeparam>
         public void ClearType<T>()
         {
             string objName = typeof(T).Name;

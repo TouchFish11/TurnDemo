@@ -8,16 +8,16 @@ namespace Framework
     /// </summary>
     public class EventCenter : SingletonBase<EventCenter>
     {
-        //存储事件的字典
+        // 存储事件的字典
         private readonly Dictionary<E_EventType, BaseEventInfo> _eventDic = new Dictionary<E_EventType, BaseEventInfo>();
-        //事件队列
+        // 事件队列
         private readonly Queue<E_EventType> _eventQueue = new Queue<E_EventType>();
-        //携带信息的事件队列
+        // 携带信息的事件队列
         private readonly Queue<(E_EventType, object)> _eventQueueT = new Queue<(E_EventType, object)>();
-        //每帧最大分发事件数
+        // 每帧最大分发事件数
         private const byte EventTriggerMaxNumPerFrame = 20 / 2;
-        //计时
-        private byte _currentTriggeredEvent;
+        // 当前触发事件数
+        private byte _currentTriggeredEventCount;
 
         private EventCenter()
         {
@@ -30,8 +30,10 @@ namespace Framework
         /// <param name="eventType"></param>
         public void TriggerEvent(E_EventType eventType)
         {
-            if(_eventDic.ContainsKey(eventType))
-                (_eventDic[eventType] as EventInfo).Invoke();
+            if (_eventDic.ContainsKey(eventType))
+            {
+                (_eventDic[eventType] as EventInfo)?.Invoke();
+            }
         }
 
         /// <summary>
@@ -43,7 +45,9 @@ namespace Framework
         public void TriggerEvent<T>(E_EventType eventType, T info)
         {
             if (_eventDic.ContainsKey(eventType))
-                (_eventDic[eventType] as EventInfo<T>).Invoke(info);
+            {
+                (_eventDic[eventType] as EventInfo<T>)?.Invoke(info);
+            }
         }
 
         /// <summary>
@@ -72,8 +76,10 @@ namespace Framework
         /// <param name="callBack"></param>
         public void AddEventListener(E_EventType eventType, UnityAction callBack)
         {
-            if( _eventDic.ContainsKey(eventType) )
+            if (_eventDic.ContainsKey(eventType))
+            {
                 (_eventDic[eventType] as EventInfo).EventCallBack += callBack;
+            }
             else
             {
                 EventInfo eventInfo = new EventInfo(callBack);
@@ -90,7 +96,9 @@ namespace Framework
         public void AddEventListener<T>(E_EventType eventType, UnityAction<T> callBack)
         {
             if (_eventDic.ContainsKey(eventType))
+            {
                 (_eventDic[eventType] as EventInfo<T>).EventCallBack += callBack;
+            }
             else
             {
                 EventInfo<T> eventInfo = new EventInfo<T>(callBack);
@@ -106,7 +114,9 @@ namespace Framework
         public void RemoveEventListener(E_EventType eventType, UnityAction callBack)
         {
             if (_eventDic.ContainsKey(eventType))
+            {
                 (_eventDic[eventType] as EventInfo).EventCallBack -= callBack;
+            }
         }
 
         /// <summary>
@@ -118,7 +128,9 @@ namespace Framework
         public void RemoveEventListener<T>(E_EventType eventType, UnityAction<T> callBack)
         {
             if (_eventDic.ContainsKey(eventType))
+            {
                 (_eventDic[eventType] as EventInfo<T>).EventCallBack -= callBack;
+            }
         }
 
         /// <summary>
@@ -128,7 +140,9 @@ namespace Framework
         public void RemoveEventsFrom(E_EventType eventType)
         {
             if( _eventDic.ContainsKey(eventType))
+            {
                 _eventDic.Remove(eventType);
+            }
         }
 
         /// <summary>
@@ -138,9 +152,9 @@ namespace Framework
         {
             while(_eventQueue.Count > 0 || _eventQueueT.Count > 0)
             {
-                if (_currentTriggeredEvent >= EventTriggerMaxNumPerFrame)
+                if (_currentTriggeredEventCount >= EventTriggerMaxNumPerFrame)
                 {
-                    _currentTriggeredEvent = default;
+                    _currentTriggeredEventCount = default;
                     return;
                 }
 
@@ -148,7 +162,7 @@ namespace Framework
                 TriggerEvent(_eventQueue.Dequeue());
                 //分发有参数的事件
                 TriggerEvent(_eventQueueT.Dequeue().Item1, _eventQueueT.Dequeue().Item2);
-                ++_currentTriggeredEvent;
+                ++_currentTriggeredEventCount;
             }
         }
 

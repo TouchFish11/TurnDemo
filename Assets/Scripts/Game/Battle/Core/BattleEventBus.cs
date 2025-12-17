@@ -21,19 +21,19 @@ namespace Game.Battle
 
 
     /// <summary>
-    /// 事件总线（核心：负责事件的注册、取消注册、广播）
+    /// 战斗事件总线（核心：负责事件的注册、取消注册、广播）
     /// </summary>
-    public class BattleEventCenter
+    public class BattleEventBus
     {
         // 存储“事件类型→战斗事件信息”的映射（订阅者是接收事件的回调方法）
-        private static readonly Dictionary<Type, BaseBattleEventInfo> _typeToEventInfoMap = new Dictionary<Type, BaseBattleEventInfo>();
+        private readonly Dictionary<Type, BaseBattleEventInfo> _typeToEventInfoMap = new Dictionary<Type, BaseBattleEventInfo>();
 
         /// <summary>
         /// 添加事件（模块通过此方法注册自己要监听的事件）
         /// </summary>
         /// <typeparam name="TEvent"></typeparam>
         /// <param name="callback"></param>
-        public static void AddListener<TEvent>(UnityAction<TEvent> callback) where TEvent : BattleEvent
+        public void AddListener<TEvent>(UnityAction<TEvent> callback) where TEvent : BattleEvent
         {
             Type eventType = typeof(TEvent);
             if (!_typeToEventInfoMap.TryGetValue(eventType, out BaseBattleEventInfo eventInfo))
@@ -52,13 +52,13 @@ namespace Game.Battle
         /// 触发事件（核心流程通过此方法通知所有订阅者）
         /// </summary>
         /// <param name="battleEvent"></param>
-        public static void TriggerEvent<TEvent>(TEvent battleEvent) where TEvent : BattleEvent
+        public void TriggerEvent<TEvent>(TEvent battleEvent) where TEvent : BattleEvent
         {
             Type eventType = typeof(TEvent);
             if (_typeToEventInfoMap.TryGetValue(eventType, out BaseBattleEventInfo eventInfo))
             {
                 // 触发所有订阅者的回调
-                (eventInfo as BattleEventInfo<TEvent>).Invoke(battleEvent);
+                (eventInfo as BattleEventInfo<TEvent>)?.Invoke(battleEvent);
             }
         }
 
@@ -67,7 +67,7 @@ namespace Game.Battle
         /// </summary>
         /// <typeparam name="TEvent"></typeparam>
         /// <param name="callback"></param>
-        public static void RemoveListener<TEvent>(UnityAction<TEvent> callback) where TEvent : BattleEvent
+        public void RemoveListener<TEvent>(UnityAction<TEvent> callback) where TEvent : BattleEvent
         {
             Type eventType = typeof(TEvent);
             if (_typeToEventInfoMap.TryGetValue(eventType, out BaseBattleEventInfo eventInfo))
@@ -75,6 +75,14 @@ namespace Game.Battle
                 // 移除指定订阅者的回调
                 (eventInfo as BattleEventInfo<TEvent>).OnBattleEvent -= callback;
             }
+        }
+
+        /// <summary>
+        /// 清理总线
+        /// </summary>
+        public void Clear()
+        {
+            _typeToEventInfoMap.Clear();
         }
     }
 }

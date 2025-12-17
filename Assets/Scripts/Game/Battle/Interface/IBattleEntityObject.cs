@@ -12,6 +12,11 @@ namespace Game.Battle
         string Name { get; }
 
         /// <summary>
+        /// 战斗上下文
+        /// </summary>
+        IBattleContext Context { get; }
+
+        /// <summary>
         /// 战斗初始化
         /// </summary>
         /// <param name="id"></param>

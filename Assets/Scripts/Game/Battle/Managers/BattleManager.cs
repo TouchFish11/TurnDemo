@@ -1,4 +1,5 @@
 using Framework;
+using System;
 using System.Threading.Tasks;
 
 namespace Game.Battle
@@ -8,9 +9,9 @@ namespace Game.Battle
     /// </summary>
     public class BattleManager : SingletonBase<BattleManager>
     {
-        //敌人数量
+        // 敌人数量
         private int _monsterNum;
-
+        // 战斗上下文
         private IBattleContext context;
 
         private BattleManager()
@@ -23,20 +24,10 @@ namespace Game.Battle
         /// </summary>
         public async Task StartBattle(/* 战斗角色选择，怪物选择，战斗场景选择（可选）， */)
         {
-            // 加载战斗场景（异步加载，避免卡顿）
-            await SceneManager.Instance.LoadSceneAsync("", UnityEngine.SceneManagement.LoadSceneMode.Single, (progress) =>
-            {
-
-            });
-
             // 初始化战斗上下文
             context = new BattleContext();
-
-            // 创建实体
-            await (context as BattleContext).CreateEntity();
-
             // 初始化战斗
-            context.InitBattle();
+            await context.InitBattle();
             // 启动回合
             MonoManager.Instance.StartCoroutine(context.GetTurnManager().BattleLoop());
         }

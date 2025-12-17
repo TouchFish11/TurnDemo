@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -26,7 +27,7 @@ namespace Framework
         /// <param name="scenePath">场景路径</param>
         /// <param name="mode">加载模式</param>
         /// <param name="overCallBack">结束回调</param>
-        public async Task LoadSceneAsync(string scenePath, LoadSceneMode mode, UnityAction<float> onLoadProgress)
+        public async void LoadSceneAsync(string scenePath, LoadSceneMode mode, UnityAction<float> onLoadProgress, Func<Task> completed)
         {
             if (!AssetBundleManager.Instance.ContainPath(scenePath))
             {
@@ -54,6 +55,9 @@ namespace Framework
                 onLoadProgress?.Invoke(currentProgress);
                 await Task.Yield();
             }
+
+            // 执行加载完成事件
+            await completed?.Invoke();
 
             // 激活场景
             ao.allowSceneActivation = true;

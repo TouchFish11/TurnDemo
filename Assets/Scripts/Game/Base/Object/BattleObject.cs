@@ -13,36 +13,38 @@ namespace Game
     {
         public string Name { get; protected set; }
 
+        public IBattleContext Context { get; protected set; }
+
         // 基础属性
         private readonly Dictionary<E_FieldType, float> _attributes = new Dictionary<E_FieldType, float>();
         // 额外属性加成
         private readonly Dictionary<E_FieldType, float> _attributeBonuses = new Dictionary<E_FieldType, float>();
 
-        public virtual void BattleInit(int id, IBattleContext context)
+        public virtual void BattleInit(int roleId, IBattleContext context)
         {
+            // 记录上下文
+            Context = context;
+
             // 加载组件（配置表可配置角色绑定哪些组件）
-            BattleComponent battleCharacterComponent = this.gameObject.AddComponent<BattleComponent>();
-            battleCharacterComponent.Init(this);
+            SkillComponent skillComponent = this.AddComponent<SkillComponent>();
+            skillComponent.BattleInit(this);
 
-            SkillComponent skillComponent = this.gameObject.AddComponent<SkillComponent>();
-            skillComponent.Init(this);
+            TalentComponent talentComponent = this.AddComponent<TalentComponent>();
+            talentComponent.BattleInit(this);
 
-            TalentComponent talentComponent = this.gameObject.AddComponent<TalentComponent>();
-            talentComponent.Init(this);
+            RelicComponent relicComponent = this.AddComponent<RelicComponent>();
+            relicComponent.BattleInit(this);
 
-            RelicComponent relicComponent = this.gameObject.AddComponent<RelicComponent>();
-            relicComponent.Init(this);
+            AdditionalAttackComponent additionalAttackComponent = this.AddComponent<AdditionalAttackComponent>();
+            additionalAttackComponent.BattleInit(this);
 
-            AdditionalAttackComponent additionalAttackComponent = this.gameObject.AddComponent<AdditionalAttackComponent>();
-            additionalAttackComponent.Init(this);
-
-            SummonComponent summonComponent = this.gameObject.AddComponent<SummonComponent>();
-            summonComponent.Init(this);
+            SummonComponent summonComponent =   this.AddComponent<SummonComponent>();
+            summonComponent.BattleInit(this);
 
             // 敌人角色额外加载韧性组件（示例：弱点属性=物理，初始韧性=200）
             if (name.Contains("敌人"))
             {
-                ToughnessComponent toughnessComponent = this.gameObject.AddComponent<ToughnessComponent>();
+                ToughnessComponent toughnessComponent = this.AddComponent<ToughnessComponent>();
                 toughnessComponent.Init(this, new() { E_PropertyType.Physical }, 200);
             }
         }

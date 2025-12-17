@@ -1,3 +1,4 @@
+using Game.Battle;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,6 +14,27 @@ public class BattleController : UIController<BattleView, BattleModel>
     {
 
     }
+
+    /// <summary>
+    /// 初始化战斗UI
+    /// </summary>
+    /// <param name="battleEntities"></param>
+    public async Task InitBattleUI(List<IBattleEntityObject> battleEntities)
+    {
+        await InitPlayerUI();
+        await InitMonsterUI();
+    }
+
+    private async Task InitPlayerUI()
+    {
+        // 玩家操作UI、玩家角色显示UI、行动条UI等
+    }
+
+    private async Task InitMonsterUI()
+    {
+        // 怪物血量UI
+    }
+
 
     internal void BattleOver()
     {

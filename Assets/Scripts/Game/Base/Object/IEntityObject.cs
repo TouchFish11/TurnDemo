@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 实体对象接口
+/// </summary>
 public interface IEntityObject
 {
     /// <summary>

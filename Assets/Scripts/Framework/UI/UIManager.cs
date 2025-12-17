@@ -43,8 +43,7 @@ namespace Framework
         /// <returns></returns>
         public async Task InitUIManagerAsync()
         {
-            // 初始化UI控制器工厂
-            InitControllerFactory();
+            RegisterControllerFactory();
 
 #if EDITOR_TEST_AB || !UNITY_EDITOR
             // 加载画布资源
@@ -102,9 +101,9 @@ namespace Framework
         }
 
         /// <summary>
-        /// 初始化UI控制器工厂
+        /// 注册UI控制器工厂
         /// </summary>
-        private void InitControllerFactory()
+        private void RegisterControllerFactory()
         {
             _typeToCtrlFactoryMap.Add(typeof(LoginController), new LoginControllerFactory());
             _typeToCtrlFactoryMap.Add(typeof(BackController), new BackControllerFactory());
@@ -113,6 +112,7 @@ namespace Framework
             _typeToCtrlFactoryMap.Add(typeof(MainController), new MainControllerFactory());
             _typeToCtrlFactoryMap.Add(typeof(DialogueController), new DialogueControllerFactory());
             _typeToCtrlFactoryMap.Add(typeof(TaskController), new TaskControllerFactory());
+            _typeToCtrlFactoryMap.Add(typeof(BattleLoadingController), new BattleLoadingControllerFactory());
         }
 
         /// <summary>
@@ -220,6 +220,32 @@ namespace Framework
                 basePanelInfo.Controller.Destroy();
                 // 销毁预设体
                 GameObject.Destroy(basePanelInfo.View.gameObject);
+            }
+        }
+
+        /// <summary>
+        /// 设置界面活动状态
+        /// </summary>
+        /// <typeparam name="TController"></typeparam>
+        /// <param name="isActive"></param>
+        public void SetViewActive<TController>(bool isActive) where TController : class, IUIController
+        {
+            foreach (BasePanelInfo basePanelInfo in _panels)
+            {
+                if (basePanelInfo.Controller.GetType() == typeof(TController))
+                {
+                    UIView view = basePanelInfo.View;
+                    if (!isActive)
+                    {
+                        view.Hide();
+                        view.gameObject.SetActive(isActive);
+                    }
+                    else
+                    {
+                        view.gameObject.SetActive(isActive);
+                        view.Show();
+                    }
+                }
             }
         }
 

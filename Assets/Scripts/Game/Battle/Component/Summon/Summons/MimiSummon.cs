@@ -16,7 +16,7 @@ namespace Game.Battle
             Name = "迷迷";
             Owner = owner;
             // 订阅“主人技能释放事件”（主人放技能时，召唤物协同攻击）(可选)
-            //BattleEventCenter.AddListener<SkillCastEvent>(OnOwnerSkillCastHandler);
+            //BattleEventBus.AddListener<SkillCastEvent>(OnOwnerSkillCastHandler);
         }
 
         /// <summary>

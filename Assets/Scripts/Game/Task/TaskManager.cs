@@ -45,8 +45,8 @@ public class TaskManager : SingletonBase<TaskManager>
             currentTaskData = taskData;
             // 更新任务
             OnUpdateTask?.Invoke(currentTaskInfo, currentTaskData);
-            // 监听对话事件
-            EventCenter.Instance.AddEventListener<DialogueEvent>(E_EventType.E_OnDialogue, OnDialogueEvent);
+            // 监听事件
+            ListenTaskEvent();
         }
     }
 
@@ -115,11 +115,11 @@ public class TaskManager : SingletonBase<TaskManager>
         switch (currentConditionInfo.f_taskContentType.ToTaskContentType())
         {
             case E_TaskContentType.Dialogue:
-                // 监听对话事件
+                // 移除监听对话事件
                 EventCenter.Instance.RemoveEventListener<DialogueEvent>(E_EventType.E_OnDialogue, OnDialogueEvent);
                 break;
             case E_TaskContentType.Battle:
-                // 监听战斗事件
+                // 移除监听战斗事件
                 EventCenter.Instance.RemoveEventListener<BattleEvent>(E_EventType.E_OnDialogue, OnBattleEvent);
                 break;
             case E_TaskContentType.Other:

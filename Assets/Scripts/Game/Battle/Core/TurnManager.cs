@@ -13,19 +13,20 @@ namespace Game.Battle
     public class TurnManager
     {
         // 战斗上下文
-        private IBattleContext _context;
+        private readonly IBattleContext _context;
         // 行动链表（按速度排序）
-        private List<IBattleEntityObject> _actionList;
+        private readonly List<IBattleEntityObject> _actionList;
         // 当前行动实体
         private IBattleEntityObject _currentActEntity;
         //当前战斗阶段
-        private E_BattlePhase _battlePhase;
+        private E_BattlePhase _battlePhase = E_BattlePhase.None;
 
         public TurnManager(IBattleContext context)
         {
             _context = context;
             _actionList = new List<IBattleEntityObject>(context.GetAllBattleEntity());
             _actionList.Sort(SortActionBySpeed);
+            _battlePhase = E_BattlePhase.Preparation;
         }
 
         /// <summary>
@@ -57,17 +58,11 @@ namespace Game.Battle
         /// </summary>
         private async Task BattlePreparation()
         {
-            BattleView battlePanel = null;
-            //显示战斗UI、播放入场动画等
-            await UIManager.Instance.CreateViewAsync<BattleView, BattleModel, BattleController>(E_UILayer.Mid);
-
-            //更新UI显示
-            battlePanel.InitUI(_actionList);
-            //更新敌人相关UI
-            battlePanel.InitMonsterUI(_actionList);
-            //更新玩家UI
-            battlePanel.InitPlayerObjUI(_actionList);
-            //设置为角色行动阶段
+            // 显示战斗UI、播放入场动画等
+            BattleController battleController = await UIManager.Instance.CreateViewAsync<BattleView, BattleModel, BattleController>(E_UILayer.Mid);
+            // 更新UI显示
+            await battleController.InitBattleUI(_actionList);
+            // 设置为角色行动阶段
             _battlePhase = E_BattlePhase.EntityTurn;
         }
 
@@ -79,16 +74,19 @@ namespace Game.Battle
             IBattleEntityObject currentEntity = _actionList[0];
 
             BattleComponent battleComponent = currentEntity.GetComponent<BattleComponent>();
-            //获取当前行动的角色
+            // 获取当前行动的角色
             while (currentEntity == null || battleComponent.IsDeath || currentEntity != _actionList[0])
             {
                 currentEntity = _actionList[0];
             }
 
-            //改变标识
+            // 改变标识
             _battlePhase = E_BattlePhase.Waiting;
-            //等待实体行动完毕
+            // 等待实体行动完毕
             yield return currentEntity.ExecuteAction();
+
+            // 检查战斗是否结束
+
 
             //设置为未选中
             //for (int i = 0; i < actionableObjs.Count; i++)
@@ -101,12 +99,12 @@ namespace Game.Battle
             {
                 //切换到下一个目标行动
                 SortOrder();
-
                 //改变阶段
                 _battlePhase = E_BattlePhase.EntityTurn;
             }
             else
             {
+                _battlePhase = E_BattlePhase.BattleOver;
                 yield break;
             }
         }
@@ -161,25 +159,27 @@ namespace Game.Battle
         /// </summary>
         private async void BattleOver()
         {
-            //显示战斗结束UI
-            //隐藏战斗UI
+            // 显示战斗结束UI
             BattleController battleController = UIManager.Instance.GetView<BattleController>();
-
-            //切换为正常倍速
+            // 切换为正常倍速
             TimerManager.Instance.SetTimeRate(E_TimeRate.Normal);
             battleController.BattleOver();
 
             //切换场景
-            await SceneManager.Instance.LoadSceneAsync("MainScene", UnityEngine.SceneManagement.LoadSceneMode.Single, (progress) =>
+            SceneManager.Instance.LoadSceneAsync(ResConfigCollection.MainScene, UnityEngine.SceneManagement.LoadSceneMode.Single, (progress) =>
             {
 
-            });
+            }, null);
 
-            //清空缓存池
+            // 清空事件总线
+            _context.GetEventBus().Clear();
+            // 清理战斗
+            _context.CleanupBattle();
+            // 清空缓存池
             PoolManager.Instance.Clear();
-            //显示主界面
-           await UIManager.Instance.CreateViewAsync<MainView, MainModel, MainController>(E_UILayer.Top);
-            //改变阶段
+            // 显示主界面
+            await UIManager.Instance.CreateViewAsync<MainView, MainModel, MainController>(E_UILayer.Top);
+            // 改变阶段
             _battlePhase = E_BattlePhase.QuitBattle;
         }
 

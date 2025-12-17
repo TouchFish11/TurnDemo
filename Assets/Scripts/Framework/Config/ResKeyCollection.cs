@@ -20,6 +20,8 @@ namespace Framework
 		public static string Dog => "Dog";
 		public static string FloatingText => "FloatingText";
 		public static string Npc => "Npc";
+		public static string TestMonster => "TestMonster";
+		public static string TestPlayer => "TestPlayer";
 		public static string BeginScene => "BeginScene";
 		public static string LevelScene => "LevelScene";
 		public static string MainScene => "MainScene";
@@ -31,6 +33,7 @@ namespace Framework
 		public static string DialogueReviewUI => "DialogueReviewUI";
 		public static string DialogueView => "DialogueView";
 		public static string InteractUI => "InteractUI";
+		public static string BattleLoadingView => "BattleLoadingView";
 		public static string LoginView => "LoginView";
 		public static string MainView => "MainView";
 		public static string TaskItem => "TaskItem";

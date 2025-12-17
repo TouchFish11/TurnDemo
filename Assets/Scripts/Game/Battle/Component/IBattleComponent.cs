@@ -7,6 +7,14 @@ namespace Game.Battle
     /// </summary>
     public interface IBattleComponent : IComponent
     {
+        /// <summary>
+        /// 战斗实体
+        /// </summary>
+        IBattleEntityObject BattleEntity { get; }
 
+        /// <summary>
+        /// 战斗初始化
+        /// </summary>
+        void BattleInit(IBattleEntityObject battleEntity);
     }
 }

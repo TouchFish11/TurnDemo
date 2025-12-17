@@ -21,7 +21,7 @@ namespace Game.Battle
             //caster.GetBattleComponent<SummonComponent>().CreateSummon<MimiSummon>();
 
             // 广播“技能释放事件”（触发召唤物协同攻击）(可选)
-            //BattleEventCenter.TriggerEvent(new SkillCastEvent(context, caster, target, this, DamageCoefficient * caster.GetAttribute(AttributeType.Attack), AttackAttribute));
+            //BattleEventBus.TriggerEvent(new SkillCastEvent(context, caster, target, this, DamageCoefficient * caster.GetAttribute(AttributeType.Attack), AttackAttribute));
         }
     }
 }

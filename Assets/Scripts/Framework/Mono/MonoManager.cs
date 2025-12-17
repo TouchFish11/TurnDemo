@@ -5,7 +5,7 @@ namespace Framework
     /// <summary>
     /// 公共Mono管理器
     /// </summary>
-    public sealed class MonoManager : SingletonAutoMono<MonoManager>
+    public class MonoManager : SingletonAutoMono<MonoManager>
     {
         /// <summary>
         /// 物理帧更新事件

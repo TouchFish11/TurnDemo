@@ -1,4 +1,5 @@
 using Framework;
+using Game.Battle;
 using Game.UI;
 using System;
 using System.Collections;
@@ -42,8 +43,8 @@ public class MainController : UIController<MainView, MainModel>
         // 交互逻辑监听
         EventCenter.Instance.AddEventListener<List<IInteractable>>(E_EventType.E_OnInteract, mainLogics[typeof(InteractLogic)].As<InteractLogic>().CreateInteract);
         // 对话事件监听
-        DialogueManager.Instance.OnDialogueStart += mainLogics[typeof(InteractLogic)].As<InteractLogic>().DeactivateInteract;
-        DialogueManager.Instance.OnDialogueEnd += mainLogics[typeof(InteractLogic)].As<InteractLogic>().ActiveInteract;
+        DialogueManager.Instance.OnDialogueStart += InActive;
+        DialogueManager.Instance.OnDialogueEnd += Active;
         // 任务事件监听
         TaskManager.Instance.OnUpdateTask += mainLogics[typeof(TaskLogic)].As<TaskLogic>().UpdateTask;
         TaskManager.Instance.OnCancelTask += mainLogics[typeof(TaskLogic)].As<TaskLogic>().CancelTask;
@@ -61,7 +62,20 @@ public class MainController : UIController<MainView, MainModel>
             case "btnTask":
                 await UIManager.Instance.CreateViewAsync<TaskView, TaskModel, TaskController>(E_UILayer.Mid);
                 break;
+            case "btnBattleTest":
+                await BattleManager.Instance.StartBattle();
+                break;
         }
+    }
+
+    private void Active()
+    {
+        UIManager.Instance.SetViewActive<MainController>(true);
+    }
+
+    private void InActive()
+    {
+        UIManager.Instance.SetViewActive<MainController>(false);
     }
 
     /// <summary>
@@ -79,7 +93,5 @@ public class MainController : UIController<MainView, MainModel>
     {
         base.Destroy();
         EventCenter.Instance.RemoveEventListener<List<IInteractable>>(E_EventType.E_OnInteract, mainLogics[typeof(InteractLogic)].As<InteractLogic>().CreateInteract);
-        DialogueManager.Instance.OnDialogueStart -= mainLogics[typeof(InteractLogic)].As<InteractLogic>().DeactivateInteract;
-        DialogueManager.Instance.OnDialogueEnd -= mainLogics[typeof(InteractLogic)].As<InteractLogic>().ActiveInteract;
     }
 }

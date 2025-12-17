@@ -13,13 +13,19 @@ namespace Game.Battle
 
         public IBattleEntityObject Owner { get; private set; }
 
-        public IEntityObject EntityObject { get; private set; }
+        //public IEntityObject EntityObject { get; private set; }
+
+        public IBattleEntityObject BattleEntity { get; private set; }
+
+        IEntityObject IComponent.EntityObject { get; }
 
         private float _additionalDamageRatio = 0.5f; // 追加伤害倍率（配置表读取）
 
-        public void Init(IEntityObject entityObject)
+        void IComponent.Init(IEntityObject entityObject) { }
+
+        public virtual void BattleInit(IBattleEntityObject battleEntity)
         {
-            EntityObject = entityObject;
+            BattleEntity = battleEntity;
         }
 
         public void SetOwner(IBattleEntityObject owner)
@@ -32,7 +38,7 @@ namespace Game.Battle
             Console.WriteLine($"{owner.Name}激活{SetName}4件套效果！暴击后追加量子伤害");
 
             // 订阅“技能释放事件”（判断是否暴击，触发追加伤害）
-            BattleEventCenter.AddListener<SkillCastEvent>(OnSkillCastHandler);
+            BattleEntity.Context.GetEventBus().AddListener<SkillCastEvent>(OnSkillCastHandler);
 
             // 辅助逻辑：2件套/4件套基础属性加成（直接调用角色属性API）
             var attributeBonus = RequiredCount switch

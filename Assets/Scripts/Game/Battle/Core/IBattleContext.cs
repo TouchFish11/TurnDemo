@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Game.Battle
 {
@@ -19,6 +20,17 @@ namespace Game.Battle
         /// <summary>
         /// 初始化战斗
         /// </summary>
-        void InitBattle();
+        Task InitBattle();
+
+        /// <summary>
+        /// 清理战斗
+        /// </summary>
+        void CleanupBattle();
+
+        /// <summary>
+        /// 获取战斗事件总线
+        /// </summary>
+        /// <returns></returns>
+        BattleEventBus GetEventBus();
     }
 }

@@ -11,6 +11,7 @@ using UnityEngine.UI;
 /// </summary>
 public class MainView : UIView
 {
+    private ScrollRect svInteract;
     private GameObject taskPart;
     private TextMeshProUGUI txtTaskTitle;
     private TextMeshProUGUI txtTaskDescription;
@@ -19,6 +20,7 @@ public class MainView : UIView
     {
         base.Awake();
 
+        svInteract = uIComponentBinder.GetControl<ScrollRect>(nameof(svInteract));
         taskPart = this.transform.Find(nameof(taskPart)).gameObject;
         txtTaskTitle = uIComponentBinder.GetControl<TextMeshProUGUI>(nameof(txtTaskTitle));
         txtTaskDescription = uIComponentBinder.GetControl<TextMeshProUGUI>(nameof(txtTaskDescription));
@@ -46,7 +48,7 @@ public class MainView : UIView
         // œ‘ æΩªª•UI
         foreach (InteractUI interactUI in interactUIs)
         {
-            interactUI.transform.SetParent(uIComponentBinder.GetControl<ScrollRect>("svInteract").content, false);
+            interactUI.transform.SetParent(svInteract.content, false);
         }
     }
 

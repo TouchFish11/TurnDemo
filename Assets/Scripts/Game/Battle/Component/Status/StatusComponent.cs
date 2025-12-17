@@ -9,12 +9,14 @@ namespace Game.Battle
     public class StatusComponent : BattleComponent, IStatusComponent
     {
         // 状态列表
-        private List<IStatus> _statuses = new List<IStatus>();
+        private readonly List<IStatus> _statuses = new List<IStatus>();
 
-        public override void Init(IEntityObject entityObject)
+        public override void BattleInit(IBattleEntityObject battleEntity)
         {
+            base.BattleInit(battleEntity);
+
             // 订阅“回合开始事件”（核心：模块主动订阅，无需核心流程修改）
-            BattleEventCenter.AddListener<TurnStartEvent>(OnTurnStartHandler);
+            battleEntity.Context.GetEventBus().AddListener<TurnStartEvent>(OnTurnStartHandler);
         }
 
         /// <summary>
@@ -24,7 +26,7 @@ namespace Game.Battle
         private void OnTurnStartHandler(TurnStartEvent turnStartEvent)
         {
             // 只处理当前行动角色的状态（避免给其他角色触发）
-            if (turnStartEvent.CurrentBattleObject != EntityObject)
+            if (turnStartEvent.CurrentBattleObject != BattleEntity)
             {
                 return;
             }
@@ -34,7 +36,7 @@ namespace Game.Battle
             {
                 if (_statuses[i].IsValid)
                 {
-                    _statuses[i].OnTurnStart(EntityObject as IBattleEntityObject, turnStartEvent.Context);
+                    _statuses[i].OnTurnStart(BattleEntity, turnStartEvent.Context);
                 }
             }
 
@@ -49,7 +51,7 @@ namespace Game.Battle
         public void AddStatus(IStatus status)
         {
             _statuses.Add(status);
-            LogManager.Log($"{(EntityObject as IBattleEntityObject).Name}获得状态：{status.GetType().Name}");
+            LogManager.Log($"{BattleEntity.Name}获得状态：{status.GetType().Name}");
         }
     }
 }

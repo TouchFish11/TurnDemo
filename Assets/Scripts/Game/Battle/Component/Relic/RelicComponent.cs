@@ -7,6 +7,7 @@ namespace Game.Battle
 {
     /// <summary>
     /// 遗器管理组件（角色的遗器容器，负责加载单件/套装效果）
+    /// 战斗外存储仪器数据，战斗时通过数据初始化仪器组件，然后在动态添加仪器效果
     /// </summary>
     public class RelicComponent : BattleComponent, IRelicComponent
     {
@@ -22,12 +23,12 @@ namespace Game.Battle
         public void EquipRelic(IRelic relic)
         {
             _equippedRelics.Add(relic);
-            Console.WriteLine($"{(EntityObject as IBattleEntityObject).Name}装备遗器：{relic.Name}");
+            Console.WriteLine($"{BattleEntity.Name}装备遗器：{relic.Name}");
 
             // 触发单件属性加成
             foreach (var effect in relic.SingleEffects)
             {
-                (EntityObject as IBattleEntityObject).AddRelicBonus(effect.RelicBoun, effect.BounValue);
+                BattleEntity.AddRelicBonus(effect.RelicBoun, effect.BounValue);
             }
 
             // 检查套装效果（统计同套装件数，满足条件则激活）
@@ -50,8 +51,8 @@ namespace Game.Battle
                 if (setEffect == null || count < setEffect.RequiredCount) continue;
 
                 // 激活套装效果（注入所有者）
-                setEffect.SetOwner(EntityObject as IBattleEntityObject);
-                setEffect.Activate(EntityObject as IBattleEntityObject);
+                setEffect.SetOwner(BattleEntity);
+                setEffect.Activate(BattleEntity);
                 _activeSetEffects.Add(setId, setEffect);
             }
         }

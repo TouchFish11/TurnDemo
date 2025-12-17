@@ -27,7 +27,6 @@ public class DialogueComponent : BaseComponent, IDialable
         this.EntityObject.GetComponent<MoveComponent>().Disable();
     }
 
-
     void IDialable.OnDialogueEnd()
     {
         // ∆Ù”√ ‰»Î

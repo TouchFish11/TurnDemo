@@ -40,6 +40,18 @@ public class InputComponent : BaseComponent
         enableInput = true;
     }
 
+    // 限制输入
+    public void LimitInput()
+    {
+
+    }
+
+    // 取消限制输入
+    public void CancelLimitInput()
+    {
+
+    }
+
     public void EnableInput()
     {
         enableInput = true;
@@ -55,6 +67,13 @@ public class InputComponent : BaseComponent
     /// </summary>
     private void OnUpdate()
     {
+        // 暂时这样写，对话需要F键输入。之后在修改。
+        // F键交互
+        if (Keyboard.current.fKey.wasPressedThisFrame)
+        {
+            this.EntityObject.GetComponent<InteractComponent>().Initeract();
+        }
+
         if (!enableInput)
         {
             return;
@@ -99,12 +118,6 @@ public class InputComponent : BaseComponent
             {
                 OnMouseLeftClick?.Invoke();
             }
-        }
-
-        // F键交互
-        if (Keyboard.current.fKey.wasPressedThisFrame)
-        {
-            this.EntityObject.GetComponent<InteractComponent>().Initeract();
         }
     }
 

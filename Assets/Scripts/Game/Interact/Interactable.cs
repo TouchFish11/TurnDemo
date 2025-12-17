@@ -7,6 +7,9 @@ using UnityEngine;
 /// </summary>
 public interface IInteractable
 {
+    /// <summary>
+    /// Npc–≈œ¢
+    /// </summary>
     NpcInfo NpcInfo { get; }
 
     /// <summary>

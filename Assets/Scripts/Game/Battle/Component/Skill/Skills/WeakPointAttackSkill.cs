@@ -36,7 +36,7 @@ namespace Game.Battle
             }
 
             // 3. 广播“技能释放事件”（关键：通知其他模块“技能已释放”）
-            BattleEventCenter.TriggerEvent(new SkillCastEvent(context, caster, targets, this, finalDamage, PropertyType));
+            caster.Context.GetEventBus().TriggerEvent(new SkillCastEvent(context, caster, targets, this, finalDamage, PropertyType));
         }
     }
 }

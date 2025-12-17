@@ -16,8 +16,13 @@ namespace Game.Battle
         public void Init(IBattleEntityObject owner, List<E_PropertyType> weakPropertys, float initialToughness)
         {
             _toughness = new Toughness(weakPropertys, initialToughness);
+        }
+
+        public override void BattleInit(IBattleEntityObject battleEntity)
+        {
+            base.BattleInit(battleEntity);
             // 订阅“技能释放事件”（监听所有技能释放，计算韧性）
-            BattleEventCenter.AddListener<SkillCastEvent>(OnSkillCastHandler);
+            BattleEntity.Context.GetEventBus().AddListener<SkillCastEvent>(OnSkillCastHandler);
         }
 
         /// <summary>
@@ -27,7 +32,7 @@ namespace Game.Battle
         private void OnSkillCastHandler(SkillCastEvent skillCastEvent)
         {
             // 只处理当前组件所属角色的韧性（避免处理其他角色）
-            if (!skillCastEvent.Contain(EntityObject as IBattleEntityObject))
+            if (!skillCastEvent.Contain(BattleEntity))
             {
                 return;
             }
@@ -38,10 +43,10 @@ namespace Game.Battle
             // 若韧性为0且未触发过破盾（防止重复触发）
             if (_toughness.IsBroken)
             {
-                LogManager.Log($"\n{(EntityObject as IBattleEntityObject).Name}被击破！");
+                LogManager.Log($"\n{BattleEntity.Name}被击破！");
 
                 // 广播“破盾事件”（通知其他模块“目标已破盾”）
-                BattleEventCenter.TriggerEvent(new ToughnessBrokenEvent(skillCastEvent.Context, skillCastEvent.Caster, EntityObject as IBattleEntityObject));
+                BattleEntity.Context.GetEventBus().TriggerEvent(new ToughnessBrokenEvent(skillCastEvent.Context, skillCastEvent.Caster, BattleEntity));
             }
         }
 

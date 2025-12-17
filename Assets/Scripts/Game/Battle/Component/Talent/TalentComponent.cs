@@ -11,12 +11,14 @@ namespace Game.Battle
     {
         private readonly List<ITalent> _talents = new List<ITalent>();
 
-        public override void Init(IEntityObject entityObject)
+        public override void BattleInit(IBattleEntityObject battleEntity)
         {
+            base.BattleInit(battleEntity);
+
             // 订阅所有可能触发天赋的事件（可配置，避免冗余订阅）
-            BattleEventCenter.AddListener<TurnStartEvent>(OnBattleEventHandler);
-            BattleEventCenter.AddListener<TurnEndEvent>(OnBattleEventHandler);
-            BattleEventCenter.AddListener<SkillCastEvent>(OnBattleEventHandler);
+            BattleEntity.Context.GetEventBus().AddListener<TurnStartEvent>(OnBattleEventHandler);
+            BattleEntity.Context.GetEventBus().AddListener<TurnEndEvent>(OnBattleEventHandler);
+            BattleEntity.Context.GetEventBus().AddListener<SkillCastEvent>(OnBattleEventHandler);
         }
 
         /// <summary>
@@ -43,9 +45,9 @@ namespace Game.Battle
 
             foreach (var talent in _talents)
             {
-                if (talent.CanTrigger(battleEvent, EntityObject as IBattleEntityObject))
+                if (talent.CanTrigger(battleEvent, BattleEntity))
                 {
-                    talent.Execute(battleEvent, EntityObject as IBattleEntityObject);
+                    talent.Execute(battleEvent, BattleEntity);
                 }
             }
         }
@@ -57,7 +59,7 @@ namespace Game.Battle
         public void AddTalent(ITalent talent)
         {
             _talents.Add(talent);
-            LogManager.Log($"{(EntityObject as IBattleEntityObject).Name}激活天赋：{talent.Name}");
+            LogManager.Log($"{BattleEntity.Name}激活天赋：{talent.Name}");
         }
     }
 }

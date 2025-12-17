@@ -11,13 +11,15 @@ namespace Game.Battle
         // 追加攻击列表
         private readonly List<IAdditionalAttack> _additionalAttacks = new List<IAdditionalAttack>();
 
-        public override void Init(IEntityObject entityObject)
+        public override void BattleInit(IBattleEntityObject battleEntity)
         {
+            base.BattleInit(battleEntity);
+
             // 加载追加攻击机制（可从配置表绑定，新增机制仅需添加实现类）
             _additionalAttacks.Add(new BreakToughnessAdditionalAttack());
 
             // 订阅“破盾事件”（监听破盾，触发追加攻击）
-            BattleEventCenter.AddListener<ToughnessBrokenEvent>(OnToughnessBrokenHandler);
+            battleEntity.Context.GetEventBus().AddListener<ToughnessBrokenEvent>(OnToughnessBrokenHandler);
         }
 
         /// <summary>
@@ -27,7 +29,7 @@ namespace Game.Battle
         private void OnToughnessBrokenHandler(ToughnessBrokenEvent toughnessBrokenEvent)
         {
             // 只处理当前组件所属角色的追加攻击（即破盾者）
-            if (toughnessBrokenEvent.Breaker != EntityObject)
+            if (toughnessBrokenEvent.Breaker != BattleEntity)
             {
                 return;
             }
@@ -35,9 +37,9 @@ namespace Game.Battle
             // 遍历所有追加攻击，判断是否满足触发条件
             foreach (var attack in _additionalAttacks)
             {
-                if (attack.CanTrigger(toughnessBrokenEvent.Context, EntityObject as IBattleEntityObject, toughnessBrokenEvent.Target))
+                if (attack.CanTrigger(toughnessBrokenEvent.Context, BattleEntity, toughnessBrokenEvent.Target))
                 {
-                    attack.Execute(toughnessBrokenEvent.Context, EntityObject as IBattleEntityObject, toughnessBrokenEvent.Target);
+                    attack.Execute(toughnessBrokenEvent.Context, BattleEntity, toughnessBrokenEvent.Target);
                 }
             }
         }
@@ -47,7 +49,7 @@ namespace Game.Battle
             base.Destroy();
             _additionalAttacks.Clear();
             // 移除订阅
-            BattleEventCenter.RemoveListener<ToughnessBrokenEvent>(OnToughnessBrokenHandler);
+            BattleEntity.Context.GetEventBus().RemoveListener<ToughnessBrokenEvent>(OnToughnessBrokenHandler);
         }
     }
 }

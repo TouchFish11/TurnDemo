@@ -12,8 +12,10 @@ namespace Game.Battle
         // 技能列表（配置表加载）
         private readonly Dictionary<int, ISkill> _skills = new Dictionary<int, ISkill>();
 
-        public override void Init(IEntityObject entityObject)
+        public override void BattleInit(IBattleEntityObject battleEntity)
         {
+            base.BattleInit(battleEntity);
+
             // 从配置表加载技能（示例：加载ID=1的弱点攻击技能）
             _skills.Add(1, new WeakPointAttackSkill("穿刺射击", 1.5f, E_PropertyType.Physical));
             // 添加召唤技能（配置表加载）
@@ -30,7 +32,7 @@ namespace Game.Battle
         {
             if (_skills.TryGetValue(skillId, out ISkill skill))
             {
-                skill.Cast(context, EntityObject as IBattleEntityObject, targets);
+                skill.Cast(context, BattleEntity, targets);
             }
         }
 

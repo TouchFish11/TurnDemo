@@ -35,20 +35,4 @@ public class InteractLogic : MainLogic
         // 设置交互UI
         mainModel.SetInteracts(interactUIs);
     }
-
-    /// <summary>
-    /// 激活交互UI
-    /// </summary>
-    public void ActiveInteract()
-    {
-        mainModel.ActiveInteract();
-    }
-
-    /// <summary>
-    /// 失活交互UI
-    /// </summary>
-    public void DeactivateInteract()
-    {
-        mainModel.DeactivateInteract();
-    }
 }

@@ -12,9 +12,6 @@ public class MainModel : UIModel
     private readonly List<InteractUI> interactUIs = new List<InteractUI>();
     // 是否激活任务栏
     private bool isActiveTaskbar;
-    //
-    private TaskInfo currentTaskInfo;
-    private TaskData currentTaskData;
 
     public bool IsActiveTaskbar
     {
@@ -45,27 +42,5 @@ public class MainModel : UIModel
 
         this.interactUIs.AddRange(interactUIs);
         TriggerDataChanged(nameof(interactUIs), interactUIs);
-    }
-
-    /// <summary>
-    /// 激活交互UI
-    /// </summary>
-    public void ActiveInteract()
-    {
-        foreach (InteractUI interact in interactUIs)
-        {
-            interact.gameObject.SetActive(true);
-        }
-    }
-
-    /// <summary>
-    /// 失活交互UI
-    /// </summary>
-    public void DeactivateInteract()
-    {
-        foreach (InteractUI interact in interactUIs)
-        {
-            interact.gameObject.SetActive(false);
-        }
     }
 }
