@@ -112,7 +112,7 @@ public static class ExampleConfig
     //        {
     //            if (typeof(Delegate).IsAssignableFrom(field.FieldType))
     //            {
-    //                delegate_types.Add(field.FieldType);
+    //                delegate_types.TryAdd(field.FieldType);
     //            }
     //        }
 
@@ -120,14 +120,14 @@ public static class ExampleConfig
     //        {
     //            if (typeof(Delegate).IsAssignableFrom(method.ReturnType))
     //            {
-    //                delegate_types.Add(method.ReturnType);
+    //                delegate_types.TryAdd(method.ReturnType);
     //            }
     //            foreach (var param in method.GetParameters())
     //            {
     //                var paramType = param.ParameterType.IsByRef ? param.ParameterType.GetElementType() : param.ParameterType;
     //                if (typeof(Delegate).IsAssignableFrom(paramType))
     //                {
-    //                    delegate_types.Add(paramType);
+    //                    delegate_types.TryAdd(paramType);
     //                }
     //            }
     //        }
@@ -229,7 +229,7 @@ public static class ExampleConfig
     //            var p = t;
     //            while (p != null)
     //            {
-    //                allTypes.Add(p);
+    //                allTypes.TryAdd(p);
     //                p = p.BaseType;
     //            }
     //        }
