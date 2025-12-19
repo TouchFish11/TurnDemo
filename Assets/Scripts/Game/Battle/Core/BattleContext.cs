@@ -52,7 +52,7 @@ namespace Game.Battle
             // 批量创建玩家角色（从配置+预制体）
             foreach (Transform transform in playerTrans)
             {
-                PlayerObject playerObject = await ObjectBuilder.GetOrCreateInstance<PlayerObject>(E_AssetBundleType.Prefab, ResConfigCollection.TestPlayer, transform.position, transform.rotation);
+                PlayerObject playerObject = await ObjectBuilder.GetOrCreateInstance<PlayerObject>(E_AssetBundleType.Prefab, ResKeyCollection.TestPlayer, transform.position, transform.rotation);
                 // 注入上下文，供角色内部组件使用
                 playerObject.BattleInit(-1, this);
                 _allCharacters.Add(playerObject);
@@ -63,7 +63,7 @@ namespace Game.Battle
             // 批量创建玩家角色（从配置+预制体）
             foreach (Transform transform in monsterTrans)
             {
-                MonsterObject monsterObject = await ObjectBuilder.GetOrCreateInstance<MonsterObject>(E_AssetBundleType.Prefab, ResConfigCollection.TestPlayer, transform.position, transform.rotation);
+                MonsterObject monsterObject = await ObjectBuilder.GetOrCreateInstance<MonsterObject>(E_AssetBundleType.Prefab, ResKeyCollection.TestPlayer, transform.position, transform.rotation);
                 // 注入上下文，供角色内部组件使用
                 monsterObject.BattleInit(-1, this);
                 _allCharacters.Add(monsterObject);

@@ -135,7 +135,7 @@ namespace Game.UI
         private async Task<TaskTypeContainer> CreateTaskTypeContainer(TaskInfo taskInfo)
         {
             // 创建该任务类型父对象
-            TaskTypeContainer taskTypeContainer = await ObjectBuilder.GetOrCreateInstance<TaskTypeContainer>(E_AssetBundleType.UI, ResConfigCollection.TaskTypeContainer, null);
+            TaskTypeContainer taskTypeContainer = await ObjectBuilder.GetOrCreateInstance<TaskTypeContainer>(E_AssetBundleType.UI, ResKeyCollection.TaskTypeContainer, null);
             taskTypeContainer.Init(taskInfo.f_taskType);
             _model.AddTaskTypeContainers(taskInfo.f_taskType, taskTypeContainer);
             return taskTypeContainer;
@@ -149,7 +149,7 @@ namespace Game.UI
         /// <returns></returns>
         private async Task CreateTaskItem(TaskInfo taskInfo, TaskTypeContainer container)
         {
-            TaskItem taskItem = await ObjectBuilder.GetOrCreateInstance<TaskItem>(E_AssetBundleType.UI, ResConfigCollection.TaskItem, container.transform);
+            TaskItem taskItem = await ObjectBuilder.GetOrCreateInstance<TaskItem>(E_AssetBundleType.UI, ResKeyCollection.TaskItem, container.transform);
             taskItem.OnSelectedTask += UpdateTaskDetail;
             taskDataCollection.TryGetValue(taskInfo.f_id, out TaskData taskData);
             taskItem.Init(taskInfo, _view.TaskItemGroup);

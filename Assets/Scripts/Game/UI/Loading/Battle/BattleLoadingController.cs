@@ -28,7 +28,7 @@ public class BattleLoadingController : UIController<BattleLoadingView, BattleLoa
     public void LoadBattle()
     {
         //// ¼ÓÔØÕ½¶·³¡¾°£¨Òì²½¼ÓÔØ£¬±ÜÃâ¿¨¶Ù£©
-        //SceneManager.Instance.LoadSceneAsync(ResConfigCollection.LevelScene, UnityEngine.SceneManagement.LoadSceneMode.Single, (progress) => UpdateProgress(progress), async () =>
+        //SceneManager.Instance.LoadSceneAsync(ResKeyCollection.LevelScene, UnityEngine.SceneManagement.LoadSceneMode.Single, (progress) => UpdateProgress(progress), async () =>
         //{
         //    bool isSuccess = await BattleManager.Instance.StartBattle();
         //    if (isSuccess)

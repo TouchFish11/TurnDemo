@@ -2,8 +2,8 @@ namespace Framework
 {
 	/// <summary>
 	/// 资源键集合类
-	/// </summary>
-	public class ResConfigCollection
+	/// <summary>
+	public class ResKeyCollection
 	{
 		public static string PlayerController => "PlayerController";
 		public static string MainCamera => "MainCamera";
@@ -11,7 +11,6 @@ namespace Framework
 		public static string BranchInfo => "BranchInfo";
 		public static string DialogueInfo => "DialogueInfo";
 		public static string NpcInfo => "NpcInfo";
-		public static string Sheet1 => "Sheet1";
 		public static string TaskConditionInfo => "TaskConditionInfo";
 		public static string TaskInfo => "TaskInfo";
 		public static string ItemGrid => "ItemGrid";

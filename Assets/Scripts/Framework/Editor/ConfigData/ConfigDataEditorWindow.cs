@@ -1,3 +1,5 @@
+using CustomEditor.ScriptGeneration;
+using NUnit.Framework;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -16,8 +18,6 @@ public class ConfigDataEditorWindow : EditorWindow
     // 选择的配置数据
     private ConfigData selectConfigData;
     private string configName = "NewInfo";
-
-    private List<RowData> _rowDatas = new List<RowData>();
     private int _selectedRowIndex = -1;
 
     // 滚动位置
@@ -32,22 +32,19 @@ public class ConfigDataEditorWindow : EditorWindow
     private readonly List<ConfigData> configDatas = new List<ConfigData>();
 
     private string searchText;
-    private string jsonOutPath;
-    private string fileName;
-    private bool prettyPrint;
     private Vector2 scrollPosition;
-    private readonly string configSavePath = $"{Application.dataPath}/ConfigData/";
+    private string configSavePath = $"Editor/ConfigData/";
 
-    private static ConfigDataEditorWindow configDataEditorWindow;
+    private IScriptGenerator scriptGenerator;
 
     // 窗口入口
     [MenuItem("GameTool/EditorWindow/Config Data Editor")]
     public static void OpenWindow()
     {
-        configDataEditorWindow = GetWindow<ConfigDataEditorWindow>("Config Data Editor");
-        configDataEditorWindow.minSize = new Vector2(900, 700);
+        ConfigDataEditorWindow window = GetWindow<ConfigDataEditorWindow>("Config Data Editor");
+        window.minSize = new Vector2(900, 700);
         fieldIndex = 1;
-        configDataEditorWindow.LoadConfig(); // 加载已有配置
+        window.LoadConfigs(); // 加载已有配置
     }
 
     #region UI绘制
@@ -62,6 +59,34 @@ public class ConfigDataEditorWindow : EditorWindow
         EditorGUILayout.EndHorizontal();
     }
 
+    private void OnEnable()
+    {
+        // 注册程序集重载事件
+        AssemblyReloadEvents.beforeAssemblyReload += OnBeforeAssemblyReload;
+        AssemblyReloadEvents.afterAssemblyReload += OnAfterAssemblyReload;
+    }
+
+    private void OnDisable()
+    {
+        // 注销事件（避免内存泄漏）
+        AssemblyReloadEvents.beforeAssemblyReload -= OnBeforeAssemblyReload;
+        AssemblyReloadEvents.afterAssemblyReload -= OnAfterAssemblyReload;
+    }
+
+    private void OnBeforeAssemblyReload()
+    {
+        SaveConfigs();
+        Debug.Log("程序集重载前，已保存所有数据");
+    }
+
+    private void OnAfterAssemblyReload()
+    {
+        selectConfigData = null;
+        LoadConfigs(); // 从磁盘重新加载数据
+        Repaint(); // 重绘窗口
+        Debug.Log("程序集重载后，已恢复数据");
+    }
+
     /// <summary>
     /// 工具栏区域
     /// </summary>
@@ -72,14 +97,12 @@ public class ConfigDataEditorWindow : EditorWindow
         // 搜索框
         searchText = EditorGUILayout.TextField(searchText, EditorStyles.toolbarSearchField, GUILayout.Width(300));
         //json保存路径输入框
-        GUILayout.Label(new GUIContent("JsonSavePath", "Json文件保存路径"), EditorStyles.boldLabel, GUILayout.Width(90));
-        jsonOutPath = EditorGUILayout.TextField(jsonOutPath, EditorStyles.toolbarTextField);
-        //选项框，是否格式化输出
-        prettyPrint = GUILayout.Toggle(prettyPrint, "格式化Json");
-        // 序列化按钮：点击可以将对象序列化为json文件
-        if (GUILayout.Button("生成Json"))
+        GUILayout.Label(new GUIContent("ConfigDataSavePath", "配置数据文件保存路径"), EditorStyles.boldLabel, GUILayout.Width(130));
+        configSavePath = EditorGUILayout.TextField(configSavePath, EditorStyles.toolbarTextField, GUILayout.ExpandWidth(true));
+
+        if (GUILayout.Button("保存配置数据", GUILayout.Width(200)))
         {
-            //SaveJson(Encoding.UTF8);
+            SaveConfig();
         }
         EditorGUILayout.EndHorizontal();
     }
@@ -162,12 +185,12 @@ public class ConfigDataEditorWindow : EditorWindow
         }
 
         // 创建新的配置数据
-        if (!Directory.Exists(configSavePath))
+        if (!Directory.Exists(GetSavePath()))
         {
-            Directory.CreateDirectory(configSavePath);
+            Directory.CreateDirectory(GetSavePath());
         }
 
-        string assetPath = $"{configSavePath}{configName}.bytes";
+        string assetPath = $"{GetSavePath()}{configName}.bytes";
         if (File.Exists(assetPath))
         {
             EditorUtility.DisplayDialog("提示", $"已存在名为 '{configName}' 的配置数据", "确定");
@@ -178,37 +201,11 @@ public class ConfigDataEditorWindow : EditorWindow
         using FileStream fs = new FileStream(assetPath, FileMode.Create, FileAccess.Write);
         BinaryFormatter bf = new BinaryFormatter();
         bf.Serialize(fs, newConfigData);
+        // 缓存新配置数据
+        configDatas.Add(newConfigData);
         fs.Close();
         AssetDatabase.Refresh();
         Debug.Log($"创建路径:{assetPath}");
-
-        //刷新配置列表
-        RefresConfigArea();
-    }
-
-    /// <summary>
-    /// 刷新配置数据区域
-    /// </summary>
-    private void RefresConfigArea()
-    {
-        //清空缓存
-        configDatas.Clear();
-
-        FileInfo[] fileInfos = Directory.CreateDirectory(configSavePath).GetFiles();
-        foreach (FileInfo fileInfo in fileInfos)
-        {
-            if (fileInfo.Extension == ".meta")
-            {
-                continue;
-            }
-
-            Debug.Log($"读取路径:{configSavePath}{fileInfo.Name}");
-            using FileStream fs = File.Open($"{configSavePath}{fileInfo.Name}", FileMode.Open, FileAccess.Read);
-            BinaryFormatter bf = new BinaryFormatter();
-            ConfigData configData = bf.Deserialize(fs) as ConfigData;
-            fs.Close();
-            configDatas.Add(configData);
-        }
     }
 
     /// <summary>
@@ -223,7 +220,7 @@ public class ConfigDataEditorWindow : EditorWindow
         GUILayout.Space(10);
 
         // 表格编辑区域
-        DrawTableArea();
+        DrawDataEditorArea();
         GUILayout.Space(10);
 
         // 底部按钮
@@ -269,15 +266,15 @@ public class ConfigDataEditorWindow : EditorWindow
                 selectConfigData.columns[i].fieldName = EditorGUILayout.TextField(selectConfigData.columns[i].fieldName, GUILayout.Width(250));
                 if (selectConfigData.columns[i].fieldName != oldFieldName)
                 {
-                    foreach (RowData rowData in _rowDatas)
+                    foreach (EntryData rowData in selectConfigData.rows)
                     {
-                        string oldValue = rowData.fieldToValueMap[oldFieldName];
-                        rowData.fieldToValueMap.Remove(oldFieldName);
+                        string oldValue = rowData[oldFieldName];
+                        rowData.Remove(oldFieldName);
                         if (!rowData.TryAdd(selectConfigData.columns[i].fieldName, oldValue))
                         {
                             EditorUtility.DisplayDialog("错误", $"该字段名（{selectConfigData.columns[i].fieldName}）已存在", "确定");
                             selectConfigData.columns[i].fieldName = oldFieldName;
-                            rowData.fieldToValueMap.Add(oldFieldName, oldValue);
+                            rowData.TryAdd(oldFieldName, oldValue);
                         }
                     }
                 }
@@ -287,7 +284,7 @@ public class ConfigDataEditorWindow : EditorWindow
                 selectConfigData.columns[i].fieldType = (E_FieldType)EditorGUILayout.EnumPopup(selectConfigData.columns[i].fieldType, GUILayout.Width(100));
                 if (selectConfigData.columns[i].fieldType != oldType)
                 {
-                    foreach (RowData rowData in _rowDatas)
+                    foreach (EntryData rowData in selectConfigData.rows)
                     {
                         string value = string.Empty;
                         switch (selectConfigData.columns[i].fieldType)
@@ -302,7 +299,7 @@ public class ConfigDataEditorWindow : EditorWindow
                                 value = default(bool).ToString();
                                 break;
                         }
-                        rowData.fieldToValueMap[selectConfigData.columns[i].fieldName] = value;
+                        rowData.SetValue(selectConfigData.columns[i].fieldName, value);
                     }
                 }
 
@@ -310,9 +307,9 @@ public class ConfigDataEditorWindow : EditorWindow
                 if (GUILayout.Button("×", GUILayout.Width(50)))
                 {
                     // 刷新行数据的字段
-                    foreach (var row in _rowDatas)
+                    foreach (var row in selectConfigData.rows)
                     {
-                        row.fieldToValueMap.Remove(selectConfigData.columns[i].fieldName);
+                        row.Remove(selectConfigData.columns[i].fieldName);
                     }
                     selectConfigData.columns.RemoveAt(i);
                     isDelete = true;
@@ -336,11 +333,7 @@ public class ConfigDataEditorWindow : EditorWindow
             AddNewField();
         }
 
-        if (GUILayout.Button("生成二进制数据", GUILayout.Width(200)))
-        {
-            SaveConfig();
-        }
-        if (GUILayout.Button("生成数据结构类", GUILayout.Width(200)))
+        if (GUILayout.Button("生成数据结构类/数据容器类/二进制数据", GUILayout.Width(300)))
         {
             GenerateCode();
         }
@@ -368,11 +361,11 @@ public class ConfigDataEditorWindow : EditorWindow
         }
 
         string currentNewFieldName = $"{_newFieldName}{fieldIndex++}";
-        ColumnTemplate columnTemplate = new ColumnTemplate(currentNewFieldName, _newFieldType);
+        FieldTemplate columnTemplate = new FieldTemplate(currentNewFieldName, _newFieldType);
         selectConfigData.columns.Add(columnTemplate);
 
         // 为现有行添加新列的默认值
-        foreach (var row in _rowDatas)
+        foreach (var row in selectConfigData.rows)
         {
             string value = string.Empty;
             switch (_newFieldType)
@@ -392,7 +385,7 @@ public class ConfigDataEditorWindow : EditorWindow
             {
                 selectConfigData.columns.Remove(columnTemplate);
                 currentNewFieldName = $"{_newFieldName}{fieldIndex++}";
-                columnTemplate = new ColumnTemplate(currentNewFieldName, _newFieldType);
+                columnTemplate = new FieldTemplate(currentNewFieldName, _newFieldType);
                 selectConfigData.columns.Add(columnTemplate);
                 if (row.TryAdd($"{currentNewFieldName}", value))
                 {
@@ -403,9 +396,9 @@ public class ConfigDataEditorWindow : EditorWindow
     }
 
     /// <summary>
-    /// 绘制表格编辑区域
+    /// 绘制数据编辑区域
     /// </summary>
-    private void DrawTableArea()
+    private void DrawDataEditorArea()
     {
         EditorGUILayout.BeginVertical("box");
 
@@ -428,7 +421,7 @@ public class ConfigDataEditorWindow : EditorWindow
             EditorGUILayout.EndHorizontal();
 
             // 表格内容
-            for (int i = 0; i < _rowDatas.Count; i++)
+            for (int i = 0; i < selectConfigData.rows.Count; i++)
             {
                 // 选中行高亮
                 if (_selectedRowIndex == i)
@@ -443,21 +436,27 @@ public class ConfigDataEditorWindow : EditorWindow
                 // 单元格编辑
                 foreach (var col in selectConfigData.columns)
                 {
-                    object newValue = DrawField(col.fieldType, _rowDatas[i].GetValue(col.fieldName));
+                    object newValue = DrawField(col.fieldType, selectConfigData.rows[i].GetValue(col.fieldName));
+
+                    //if (string.IsNullOrEmpty(newValue.ToString()))
+                    //{
+                    //    continue;
+                    //}
+
                     // GUI渲染位置不对
                     switch (col.fieldType)
                     {
                         case E_FieldType.Int:
-                            _rowDatas[i].SetValue(col.fieldName, ((int)newValue).ToString());
+                            selectConfigData.rows[i].SetValue(col.fieldName, ((int)newValue).ToString());
                             break;
                         case E_FieldType.Float:
-                            _rowDatas[i].SetValue(col.fieldName, ((float)newValue).ToString());
+                            selectConfigData.rows[i].SetValue(col.fieldName, ((float)newValue).ToString());
                             break;
                         case E_FieldType.String:
-                            _rowDatas[i].SetValue(col.fieldName, newValue.ToString());
+                            selectConfigData.rows[i].SetValue(col.fieldName, newValue.ToString());
                             break;
                         case E_FieldType.Bool:
-                            _rowDatas[i].SetValue(col.fieldName, ((bool)newValue).ToString());
+                            selectConfigData.rows[i].SetValue(col.fieldName, ((bool)newValue).ToString());
                             break;
                     }
                 }
@@ -466,7 +465,7 @@ public class ConfigDataEditorWindow : EditorWindow
                 // 删除行按钮
                 if (GUILayout.Button("×", GUILayout.Width(30)))
                 {
-                    _rowDatas.RemoveAt(i);
+                    selectConfigData.rows.RemoveAt(i);
                     if (_selectedRowIndex == i)
                     {
                         _selectedRowIndex = -1;
@@ -515,7 +514,7 @@ public class ConfigDataEditorWindow : EditorWindow
     /// <returns></returns>
     private object DrawField(E_FieldType type, string value, params GUILayoutOption[] options)
     {
-        if (value == null)
+        if (string.IsNullOrEmpty(value))
         {
             return value?.ToString();
         }
@@ -535,47 +534,64 @@ public class ConfigDataEditorWindow : EditorWindow
     /// </summary>
     private void DrawBottomButtons()
     {
-        EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button("添加行", GUILayout.Width(100)))
-        {
-            // 检查若有重复字段名则提示
-            foreach (var item in selectConfigData.columns)
-            {
-
-            }
-
-            _rowDatas.Add(new RowData(selectConfigData.columns));
-            _selectedRowIndex = _rowDatas.Count - 1;
-        }
-        if (GUILayout.Button("删除选中行", GUILayout.Width(100)))
-        {
-            if (_selectedRowIndex >= 0 && _selectedRowIndex < _rowDatas.Count)
-            {
-                _rowDatas.RemoveAt(_selectedRowIndex);
-                _selectedRowIndex = -1;
-            }
-        }
-        if (GUILayout.Button("保存数据", GUILayout.Width(100)))
-        {
-            SaveConfig();
-        }
-        EditorGUILayout.EndHorizontal();
-    }
-    #endregion
-
-    #region 数据加载/保存
-    /// <summary>
-    /// 加载配置（列模板+行数据）
-    /// </summary>
-    private void LoadConfig()
-    {
-        if (!Directory.Exists(configSavePath))
+        if (selectConfigData == null)
         {
             return;
         }
 
+        EditorGUILayout.BeginHorizontal();
+
+        if (GUILayout.Button("添加行", GUILayout.Width(100)))
+        {
+            bool isMul = false;
+            // 检查若有重复字段名则提示
+            for (int i = 0; i < selectConfigData.columns.Count; i++)
+            {
+                for (int j = i + 1; j < selectConfigData.columns.Count; j++)
+                {
+                    // 可替换为自定义比较规则（如string.Equals(list[i], list[j], StringComparison.OrdinalIgnoreCase)）
+                    if (string.Equals(selectConfigData.columns[i].fieldName, selectConfigData.columns[j].fieldName))
+                    {
+                        isMul = true;
+                        EditorUtility.DisplayDialog("错误", $"存在重复的字段名：{selectConfigData.columns[i].fieldName}", "确定");
+                    }
+                }
+            }
+
+            if (!isMul)
+            {
+                selectConfigData.rows.Add(new EntryData(selectConfigData.columns));
+                _selectedRowIndex = selectConfigData.rows.Count - 1;
+            }
+        }
+
+        if (GUILayout.Button("删除选中行", GUILayout.Width(100)))
+        {
+            if (_selectedRowIndex >= 0 && _selectedRowIndex < selectConfigData.rows.Count)
+            {
+                selectConfigData.rows.RemoveAt(_selectedRowIndex);
+                _selectedRowIndex = -1;
+            }
+        }
+
+        EditorGUILayout.EndHorizontal();
+    }
+    #endregion
+
+    /// <summary>
+    /// 加载配置
+    /// </summary>
+    private void LoadConfigs()
+    {
+        if (!Directory.Exists(GetSavePath()))
+        {
+            Directory.CreateDirectory(GetSavePath());
+            Debug.Log($"路径：{GetSavePath()}不存在，已创建");
+            AssetDatabase.Refresh();
+        }
+
         // 获取所有配置数据文件
-        FileInfo[] fileInfos = Directory.CreateDirectory(configSavePath).GetFiles();
+        FileInfo[] fileInfos = Directory.CreateDirectory(GetSavePath()).GetFiles();
 
         BinaryFormatter bf = new BinaryFormatter();
         // 遍历文件信息
@@ -586,8 +602,8 @@ public class ConfigDataEditorWindow : EditorWindow
                 continue;
             }
 
-            Debug.Log($"加载路径：{configSavePath}{fileInfo.Name}");
-            using FileStream fs = File.OpenRead($"{configSavePath}{fileInfo.Name}");
+            Debug.Log($"已加载路径：{GetSavePath()}{fileInfo.Name}");
+            using FileStream fs = File.OpenRead($"{GetSavePath()}{fileInfo.Name}");
             ConfigData configData = bf.Deserialize(fs) as ConfigData;
             fs.Close();
             configDatas.Add(configData);
@@ -595,7 +611,7 @@ public class ConfigDataEditorWindow : EditorWindow
     }
 
     /// <summary>
-    /// 保存配置
+    /// 保存选择的配置
     /// </summary>
     private void SaveConfig()
     {
@@ -603,60 +619,60 @@ public class ConfigDataEditorWindow : EditorWindow
         {
             return;
         }
+
         string savePath = $"{configSavePath}{selectConfigData.configName}";
         using FileStream fs = new FileStream(savePath, FileMode.OpenOrCreate, FileAccess.Write);
         BinaryFormatter bf = new BinaryFormatter();
         bf.Serialize(fs, selectConfigData);
         fs.Close();
         AssetDatabase.Refresh();
-        Debug.Log($"配置保存成功：{savePath}");
+        Debug.Log($"配置：{selectConfigData.configName}，保存成功");
     }
-    #endregion
 
-    #region 代码生成
+    /// <summary>
+    /// 保存所有配置
+    /// </summary>
+    private void SaveConfigs()
+    {
+        BinaryFormatter bf = new BinaryFormatter();
+        foreach (ConfigData configData in configDatas)
+        {
+            string savePath = $"{GetSavePath()}{configData.configName}.bytes";
+            using FileStream fs = new FileStream(savePath, FileMode.OpenOrCreate, FileAccess.Write);
+            bf.Serialize(fs, configData);
+            fs.Close();
+            AssetDatabase.Refresh();
+            Debug.Log($"配置：{configData.configName}，保存成功");
+        }
+    }
+
+    /// <summary>
+    /// 代码生成
+    /// </summary>
     private void GenerateCode()
     {
+        if (selectConfigData == null)
+        {
+            EditorUtility.DisplayDialog("提示", "请选择数据配置", "确定");
+            return;
+        }
+        
         if (selectConfigData.columns.Count == 0)
         {
-            EditorUtility.DisplayDialog("提示", "请先添加列模板！", "确定");
+            EditorUtility.DisplayDialog("提示", "请添加字段模板！", "确定");
             return;
         }
 
-        // 构建代码内容
-        StringBuilder sb = new StringBuilder();
-        sb.AppendLine("using System;");
-        sb.AppendLine("using UnityEngine;");
-        sb.AppendLine();
-        sb.AppendLine("[Serializable]");
-        sb.AppendLine($"public class {selectConfigData.configName}Info");
-        sb.AppendLine("{");
-        foreach (var col in selectConfigData.columns)
-        {
-            string typeStr = GetCSharpType(col.fieldType);
-            sb.AppendLine($"    public {typeStr} {col.fieldName}; // {col.fieldType}类型");
-        }
-        sb.AppendLine("}");
-
-        // 保存代码文件
-        string path = Application.dataPath + $"/Scripts/ConfigInfo/{selectConfigData.configName}Info.cs";
-        File.WriteAllText(path, sb.ToString()); 
-        AssetDatabase.Refresh();
-        EditorUtility.DisplayDialog("成功", "代码生成成功！", "确定");
+        scriptGenerator ??= new ConfigDataClassGenerator(selectConfigData);
+        scriptGenerator.GenerateScript();
     }
 
-    // 转换为C#类型字符串
-    private string GetCSharpType(E_FieldType type)
+    /// <summary>
+    /// 获取保存路径
+    /// </summary>
+    /// <returns></returns>
+    private string GetSavePath()
     {
-        return type switch
-        {
-            E_FieldType.Int => "int",
-            E_FieldType.Float => "float",
-            E_FieldType.Bool => "bool",
-            E_FieldType.String => "string",
-            _ => "object",
-        };
+        return $"{Application.dataPath}/{configSavePath}";
     }
-    #endregion
-
-
 }

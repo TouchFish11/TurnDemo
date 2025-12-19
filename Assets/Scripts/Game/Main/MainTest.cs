@@ -17,13 +17,13 @@ public class MainTest : MonoBehaviour
         await GameDataMgr.Instance.InitDataAsync();
 
         // ≤‚ ‘¥¥Ω®Npc°¢ÕÊº“
-        NpcObject villager = await ObjectBuilder.GetOrCreateInstance<NpcObject>(E_AssetBundleType.Prefab, ResConfigCollection.Npc, new Vector3(0, 1, 8.39f), Quaternion.identity);
+        NpcObject villager = await ObjectBuilder.GetOrCreateInstance<NpcObject>(E_AssetBundleType.Prefab, ResKeyCollection.Npc, new Vector3(0, 1, 8.39f), Quaternion.identity);
         villager.BaseInit(1);
 
-        NpcObject Vagrant = await ObjectBuilder.GetOrCreateInstance<NpcObject>(E_AssetBundleType.Prefab, ResConfigCollection.Npc, new Vector3(6.94f, 1, 8.39f), Quaternion.identity);
+        NpcObject Vagrant = await ObjectBuilder.GetOrCreateInstance<NpcObject>(E_AssetBundleType.Prefab, ResKeyCollection.Npc, new Vector3(6.94f, 1, 8.39f), Quaternion.identity);
         Vagrant.BaseInit(2);
 
-        FireFly fireFly = await ObjectBuilder.GetOrCreateInstance<FireFly>(E_AssetBundleType.Prefab, ResConfigCollection.Dog, new Vector3(0, 0, -5.6f), Quaternion.identity);
+        FireFly fireFly = await ObjectBuilder.GetOrCreateInstance<FireFly>(E_AssetBundleType.Prefab, ResKeyCollection.Dog, new Vector3(0, 0, -5.6f), Quaternion.identity);
         fireFly.BaseInit(-1);
 
         MainController mainController = await UIManager.Instance.CreateViewAsync<MainView, MainModel, MainController>(E_UILayer.Mid);

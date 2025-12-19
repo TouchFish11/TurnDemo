@@ -29,7 +29,7 @@ namespace Game.Battle
 
         private async void CreateCamera()
         {
-            await ObjectBuilder.GetOrCreateInstance<OrbitCameraController>(E_AssetBundleType.Camera, ResConfigCollection.MainCamera, null);
+            await ObjectBuilder.GetOrCreateInstance<OrbitCameraController>(E_AssetBundleType.Camera, ResKeyCollection.MainCamera, null);
         }
 
         public override IEnumerator ExecuteAction()

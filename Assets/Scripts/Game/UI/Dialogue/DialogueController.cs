@@ -153,7 +153,7 @@ public class DialogueController : UIController<DialogueView, DialogueModel>
 
         foreach (BranchInfo branchInfo in branchInfos)
         {
-            DialogueOptUI optUI = await ObjectBuilder.GetOrCreateInstance<DialogueOptUI>(E_AssetBundleType.UI, ResConfigCollection.DialogueOptUI, null);
+            DialogueOptUI optUI = await ObjectBuilder.GetOrCreateInstance<DialogueOptUI>(E_AssetBundleType.UI, ResKeyCollection.DialogueOptUI, null);
             // ≥ı ºªØ
             optUI.Init(branchInfo);
             optUI.OnSelectOpt += DialogueManager.Instance.OnSelectOpt;

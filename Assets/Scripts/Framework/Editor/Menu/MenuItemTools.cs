@@ -1,4 +1,5 @@
 using CustomEditor.ScriptGeneration;
+using Framework;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -43,8 +44,9 @@ public class MenuItemTools
     [MenuItem("GameTool/Generate/Generate ResKeyCollection")]
     public static void GenerateResKeyCollectionScript()
     {
-        ResKeyCollectionClassGenerator resKeyCollectionClassGenerator = new ResKeyCollectionClassGenerator();
-        resKeyCollectionClassGenerator.GenerateScript();
+        IScriptGenerator scriptGenerator = new ResKeyCollectionClassGenerator();
+        scriptGenerator.GenerateScript();
+        Debug.Log($"ResKeyCollection£¬Â·¾¶£º{AssetPath}{nameof(ResKeyCollection)}");
     }
 
     /// <summary>

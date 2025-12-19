@@ -19,14 +19,14 @@ public enum E_FieldType
 public class ConfigData
 {
     public string configName; // 类名
-    public List<ColumnTemplate> columns; // 列模板列表
-    public List<RowData> rows; // 行数据
+    public List<FieldTemplate> columns; // 列模板列表
+    public List<EntryData> rows; // 行数据
 
     // 构造函数
     public ConfigData(string name)
     {
         configName = name;
-        columns = new List<ColumnTemplate>();
-        rows = new List<RowData>();
+        columns = new List<FieldTemplate>();
+        rows = new List<EntryData>();
     }
 }

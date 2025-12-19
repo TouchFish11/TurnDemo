@@ -166,7 +166,7 @@ namespace Game.Battle
             battleController.BattleOver();
 
             //ÇÐ»»³¡¾°
-            SceneManager.Instance.LoadSceneAsync(ResConfigCollection.MainScene, UnityEngine.SceneManagement.LoadSceneMode.Single, (progress) =>
+            SceneManager.Instance.LoadSceneAsync(ResKeyCollection.MainScene, UnityEngine.SceneManagement.LoadSceneMode.Single, (progress) =>
             {
 
             }, null);
