@@ -13,6 +13,8 @@ public class BattleTest : MonoBehaviour
     // Start is called before the first frame update
     private async void Start()
     {
+        await BinaryDataMgr.Instance.LoadConfig();
+
         await BattleManager.Instance.StartBattle();
     }
 }

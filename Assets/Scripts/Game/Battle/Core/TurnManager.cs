@@ -1,5 +1,6 @@
 using Framework;
 using GameLogic.BattleMoudule.Entity;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace Game.Battle
         // 战斗上下文
         private readonly IBattleContext _context;
         // 行动链表（按速度排序）
-        private readonly List<IBattleEntityObject> _actionList;
+        private readonly LinkedList<IBattleEntityObject> _actions;
         // 当前行动实体
         private IBattleEntityObject _currentActEntity;
         //当前战斗阶段
@@ -24,8 +25,8 @@ namespace Game.Battle
         public TurnManager(IBattleContext context)
         {
             _context = context;
-            _actionList = new List<IBattleEntityObject>(context.GetAllBattleEntity());
-            _actionList.Sort(SortActionBySpeed);
+            _actions = new LinkedList<IBattleEntityObject>(context.GetAllBattleEntity());
+            //_actions.Sort(SortActionBySpeed);
             _battlePhase = E_BattlePhase.Preparation;
         }
 
@@ -58,10 +59,10 @@ namespace Game.Battle
         /// </summary>
         private async Task BattlePreparation()
         {
-            // 显示战斗UI、播放入场动画等
-            BattleController battleController = await UIManager.Instance.CreateViewAsync<BattleView, BattleModel, BattleController>(E_UILayer.Mid);
+            // 更新战斗UI、播放入场动画等
+            BattleController battleController = UIManager.Instance.GetView<BattleController>();
             // 更新UI显示
-            await battleController.InitBattleUI(_actionList);
+            await battleController.InitBattleUI(_actions);
             // 设置为角色行动阶段
             _battlePhase = E_BattlePhase.EntityTurn;
         }
@@ -71,17 +72,29 @@ namespace Game.Battle
         /// </summary>
         private IEnumerator ActEntityTurn()
         {
-            IBattleEntityObject currentEntity = _actionList[0];
-
-            BattleComponent battleComponent = currentEntity.GetComponent<BattleComponent>();
-            // 获取当前行动的角色
-            while (currentEntity == null || battleComponent.IsDeath || currentEntity != _actionList[0])
+            LinkedListNode<IBattleEntityObject> currentNode = _actions.First;
+            IBattleEntityObject currentEntity = currentNode.Value;
+            while (currentNode.Next != null)
             {
-                currentEntity = _actionList[0];
+                BattleComponent battleComponent = currentEntity.GetComponent<BattleComponent>();
+                // 获取当前行动的角色
+                if (currentEntity == null || battleComponent.IsDeath || currentEntity != _actions.First.Value)
+                {
+                    currentEntity = _actions.First.Value;
+                }
+                else
+                {
+                    break;
+                }
+                currentNode = currentNode.Next;
             }
 
             // 改变标识
             _battlePhase = E_BattlePhase.Waiting;
+
+            // 执行实体回合开始事件
+            BattleController battleController = UIManager.Instance.GetView<BattleController>();
+
             // 等待实体行动完毕
             yield return currentEntity.ExecuteAction();
 
@@ -94,7 +107,6 @@ namespace Game.Battle
             //    actionableObjs[i].SetSelectFlag(false);
             //}
 
-            //战斗结束，退出循环
             if (_battlePhase != E_BattlePhase.BattleOver)
             {
                 //切换到下一个目标行动
@@ -104,6 +116,7 @@ namespace Game.Battle
             }
             else
             {
+                // 战斗结束，退出循环
                 _battlePhase = E_BattlePhase.BattleOver;
                 yield break;
             }
@@ -112,33 +125,28 @@ namespace Game.Battle
         /// <summary>
         /// 排序顺序
         /// </summary>
-        public void SortOrder(/*List<IBattleTarget> playerTeam, List<IBattleTarget> enemyTeam*/)
+        public async void SortOrder()
         {
             // 测试，行动完放在最后
-            IBattleEntityObject currentEntity = _actionList[0];
-            _actionList.RemoveAt(0);
-            _actionList.Add(currentEntity);
+            LinkedListNode<IBattleEntityObject> currentEntity = _actions.First;
+            _actions.RemoveFirst();
+            _actions.AddLast(currentEntity);
 
-            // TODO：基于速度排序
-            ////分别存储玩家、敌人角色
-            //_playerCharacters.AddRange(playerTeam);
-            //_monsterCharacters.AddRange(enemyTeam);
+            // 更新行动轴UI显示
+            BattleController battleController = UIManager.Instance.GetView<BattleController>();
+            await battleController.UpadteActionBar(_actions);
 
-            ////存储所有可行动对象
-            //_actionableObjs.AddRange(playerTeam);
-            //_actionableObjs.AddRange(enemyTeam);
-
-            ////初始化所有角色的行动值
-            //for (int i = 0; i < _actionableObjs.Count; i++)
+            //List<IBattleEntityObject> entityObjects = new List<IBattleEntityObject>(_context.GetAllBattleEntity());
+            //// 初始化所有角色的行动值
+            //foreach (IBattleEntityObject battleEntityObject in entityObjects)
             //{
-            //    _actionableObjs[i].SetActionValue(Distance);
+            //    battleEntityObject.SetActionValue(-1);
             //}
 
-            ////基于行动值初始化行动顺序
-            //_actionableObjs.Sort((c1, c2) =>
+            //// 基于行动值初始化行动顺序
+            //entityObjects.Sort((c1, c2) =>
             //{
-            //    //比较行动值确定行动顺序
-            //    // 行动值低，越先行动
+            //    // 比较行动值确定行动顺序。行动值低，越先行动
             //    if (c1.ActionValue < c2.ActionValue)
             //    {
             //        return -1;
@@ -189,7 +197,7 @@ namespace Game.Battle
         /// <param name="battleEntity"></param>
         public void InsertToActionHead(IBattleEntityObject battleEntity)
         {
-            _actionList.Insert(0, battleEntity);
+            _actions.AddFirst(_actions.Find(battleEntity));
         }
 
         /// <summary>

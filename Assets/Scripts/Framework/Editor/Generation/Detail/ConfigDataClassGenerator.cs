@@ -151,21 +151,21 @@ public class ConfigDataClassGenerator : ClassGenerator
         fs.Write(BitConverter.GetBytes(keyBytes.Length), 0, 4);
         //存储字符串
         fs.Write(keyBytes, 0, keyBytes.Length);
-        // 遍历所有类型
-        for (int i = 0; i < configData.columns.Count; i++)
+        // 遍历所有条目
+        for (int i = 0; i < configData.rows.Count; i++)
         {
-            E_FieldType fieldType = configData.columns[i].fieldType;
-            string fieldName = configData.columns[i].fieldName;
+            EntryData rowData = configData.rows[i];
 
-            // 遍历所有数据
-            for (int j = 0; j < configData.rows.Count; j++)
+            // 遍历所有类型
+            for (int j = 0; j < configData.columns.Count; j++)
             {
-                EntryData rowData = configData.rows[j];
+                E_FieldType fieldType = configData.columns[j].fieldType;
+                string fieldName = configData.columns[j].fieldName;
 
                 switch (fieldType)
                 {
                     case E_FieldType.None:
-                        Debug.LogError($"字段类型不能为None，字段名：{configData.columns[i].fieldName}");
+                        Debug.LogError($"字段类型不能为None，字段名：{configData.columns[j].fieldName}");
                         return;
                     case E_FieldType.Int:
                         fs.Write(BitConverter.GetBytes(int.Parse(rowData.GetValue(fieldName).ToString())), 0, 4);
@@ -186,7 +186,8 @@ public class ConfigDataClassGenerator : ClassGenerator
         }
         fs.Close();
         fs.Dispose();
-        //刷新窗口
+
+        // 刷新窗口
         AssetDatabase.Refresh();
     }
 

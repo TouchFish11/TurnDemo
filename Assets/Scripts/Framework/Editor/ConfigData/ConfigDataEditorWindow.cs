@@ -437,12 +437,6 @@ public class ConfigDataEditorWindow : EditorWindow
                 foreach (var col in selectConfigData.columns)
                 {
                     object newValue = DrawField(col.fieldType, selectConfigData.rows[i].GetValue(col.fieldName));
-
-                    //if (string.IsNullOrEmpty(newValue.ToString()))
-                    //{
-                    //    continue;
-                    //}
-
                     // GUI‰÷»æŒª÷√≤ª∂‘
                     switch (col.fieldType)
                     {
@@ -514,18 +508,33 @@ public class ConfigDataEditorWindow : EditorWindow
     /// <returns></returns>
     private object DrawField(E_FieldType type, string value, params GUILayoutOption[] options)
     {
-        if (string.IsNullOrEmpty(value))
+        string tempValue = value;
+        if (string.IsNullOrEmpty(tempValue))
         {
-            return value?.ToString();
+            switch (type)
+            {
+                case E_FieldType.None:
+                case E_FieldType.String:
+                    break;
+                case E_FieldType.Int:
+                    tempValue = default(int).ToString();
+                    break;
+                case E_FieldType.Float:
+                    tempValue = default(float).ToString();
+                    break;
+                case E_FieldType.Bool:
+                    tempValue = default(bool).ToString();
+                    break;
+            }
         }
-        
+
         return type switch
         {
-            E_FieldType.Int => EditorGUILayout.IntField(int.Parse(value), options),
-            E_FieldType.Float => EditorGUILayout.FloatField(float.Parse(value), options),
-            E_FieldType.Bool => EditorGUILayout.Toggle(bool.Parse(value), options),
-            E_FieldType.String => EditorGUILayout.TextField(value, options),
-            _ => value,
+            E_FieldType.Int => EditorGUILayout.IntField(int.Parse(tempValue), options),
+            E_FieldType.Float => EditorGUILayout.FloatField(float.Parse(tempValue), options),
+            E_FieldType.Bool => EditorGUILayout.Toggle(bool.Parse(tempValue), options),
+            E_FieldType.String => EditorGUILayout.TextField(tempValue, options),
+            _ => tempValue,
         };
     }
 
@@ -620,7 +629,7 @@ public class ConfigDataEditorWindow : EditorWindow
             return;
         }
 
-        string savePath = $"{configSavePath}{selectConfigData.configName}";
+        string savePath = $"{GetSavePath()}{selectConfigData.configName}.bytes";
         using FileStream fs = new FileStream(savePath, FileMode.OpenOrCreate, FileAccess.Write);
         BinaryFormatter bf = new BinaryFormatter();
         bf.Serialize(fs, selectConfigData);

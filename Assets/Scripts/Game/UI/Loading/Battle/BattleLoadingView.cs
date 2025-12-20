@@ -13,8 +13,8 @@ public class BattleLoadingView : UIView
     {
         base.Awake();
 
-        sliderLoading = uIComponentBinder.GetControl<Slider>(nameof(sliderLoading));
-        txtLoading = uIComponentBinder.GetControl<TextMeshProUGUI>(nameof(txtLoading));
+        sliderLoading = binder.GetControl<Slider>(nameof(sliderLoading));
+        txtLoading = binder.GetControl<TextMeshProUGUI>(nameof(txtLoading));
     }
 
     public override void UpdateView(string key, object value)

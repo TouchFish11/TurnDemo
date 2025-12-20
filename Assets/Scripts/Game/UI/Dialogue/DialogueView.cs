@@ -26,16 +26,16 @@ public class DialogueView : UIView
     {
         base.Awake();
 
-        txtSpeakerName = uIComponentBinder.GetControl<TextMeshProUGUI>(nameof(txtSpeakerName));
-        txtTip = uIComponentBinder.GetControl<TextMeshProUGUI>(nameof(txtTip));
-        txtDialogue = uIComponentBinder.GetControl<TextMeshProUGUI>(nameof(txtDialogue));
-        txtAuto = uIComponentBinder.GetControl<Text>(nameof(txtAuto));
+        txtSpeakerName = binder.GetControl<TextMeshProUGUI>(nameof(txtSpeakerName));
+        txtTip = binder.GetControl<TextMeshProUGUI>(nameof(txtTip));
+        txtDialogue = binder.GetControl<TextMeshProUGUI>(nameof(txtDialogue));
+        txtAuto = binder.GetControl<Text>(nameof(txtAuto));
 
-        dialogueOptBox = uIComponentBinder.GetControl<VerticalLayoutGroup>(nameof(dialogueOptBox)).transform;
+        dialogueOptBox = binder.GetControl<VerticalLayoutGroup>(nameof(dialogueOptBox)).transform;
         dialogueBox = this.transform.Find(nameof(dialogueBox));
 
         storyReviewSubView = this.GetComponentInChildren<StoryReviewView>().transform;
-        storyReviewContent = uIComponentBinder.GetControl<ScrollRect>("svReview").content;
+        storyReviewContent = binder.GetControl<ScrollRect>("svReview").content;
     }
 
     public override void UpdateView(string key, object value)

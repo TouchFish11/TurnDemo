@@ -15,11 +15,6 @@ namespace Game
             base.BaseInit(id);
         }
 
-        public override void BattleInit(int id, IBattleContext context)
-        {
-            base.BattleInit(id, context);
-        }
-
         public override IEnumerator ExecuteAction()
         {
             throw new System.NotImplementedException();

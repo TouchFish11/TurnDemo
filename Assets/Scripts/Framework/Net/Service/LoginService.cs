@@ -25,11 +25,11 @@ public class LoginService : ILoginService
 
     public void SaveLoginData(LoginData loginData)
     {
-        BinaryDataMgr.Instance.Save(FileUtility.LocalLoginDataFileName, loginData);
+        BinaryDataMgr.Save(FileUtility.LocalLoginDataFileName, loginData);
     }
 
     public LoginData LoadLoginData()
     {
-        return BinaryDataMgr.Instance.Load<LoginData>(FileUtility.LocalLoginDataFileName);
+        return BinaryDataMgr.Load<LoginData>(FileUtility.LocalLoginDataFileName);
     }
 }

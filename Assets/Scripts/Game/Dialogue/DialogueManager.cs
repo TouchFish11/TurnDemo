@@ -98,11 +98,11 @@ public class DialogueManager : SingletonBase<DialogueManager>
         }
 
         // 获取该ID的对话信息
-        DialogueInfo dialogueInfo = BinaryDataMgr.Instance.GetTable<DialogueInfoContainer>().dataDic[startDialogueId];
+        DialogueInfo dialogueInfo = BinaryDataMgr.Instance.GetConfig<DialogueInfoContainer>(E_ConfigLoadType.Excel).dataDic[startDialogueId];
         // 记录当前对话信息
         currentDialogueInfo = dialogueInfo;
         // 记录当前对话的Npc信息
-        npcInfo = BinaryDataMgr.Instance.GetTable<NpcInfoContainer>().dataDic[dialogueInfo.f_speakerId];
+        npcInfo = BinaryDataMgr.Instance.GetConfig<NpcInfoContainer>(E_ConfigLoadType.Excel).dataDic[dialogueInfo.f_speakerId];
 
         if (enableTypewriter)
         {
@@ -183,7 +183,7 @@ public class DialogueManager : SingletonBase<DialogueManager>
 
             for (int i = 0; i < branchIds.Length; i++)
             {
-                branchInfos[i] = BinaryDataMgr.Instance.GetTable<BranchInfoContainer>().dataDic[branchIds[i]];
+                branchInfos[i] = BinaryDataMgr.Instance.GetConfig<BranchInfoContainer>(E_ConfigLoadType.Excel).dataDic[branchIds[i]];
             }
             dialogueController.SetBranchOpt(branchInfos);
         }

@@ -15,7 +15,7 @@ public class VideoView : UIView
         switch (key)
         {
             case "rawImgVideo":
-                uIComponentBinder.GetControl<RawImage>(key).texture = value as RenderTexture;
+                binder.GetControl<RawImage>(key).texture = value as RenderTexture;
                 break;
         }
     }

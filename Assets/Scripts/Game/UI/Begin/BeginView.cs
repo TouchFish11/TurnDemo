@@ -26,19 +26,19 @@ public class BeginView : UIView
         switch (key)
         {
             case "sliderProgress":
-                uIComponentBinder.GetControl<Slider>(key).value = (float)value;
+                binder.GetControl<Slider>(key).value = (float)value;
                 break;
             case "txtPro":
-                uIComponentBinder.GetControl<Text>(key).text = value.ToString();
+                binder.GetControl<Text>(key).text = value.ToString();
                 break;
             case "txtPhase":
-                uIComponentBinder.GetControl<Text>(key).text = value.ToString();
+                binder.GetControl<Text>(key).text = value.ToString();
                 break;
             case "txtSize":
-                uIComponentBinder.GetControl<Text>(key).text = value.ToString();
+                binder.GetControl<Text>(key).text = value.ToString();
                 break;
             case "txtSpeed":
-                uIComponentBinder.GetControl<Text>(key).text = value.ToString();
+                binder.GetControl<Text>(key).text = value.ToString();
                 break;
             case "isActiveProgress":
                 ShowProgress((bool)value);

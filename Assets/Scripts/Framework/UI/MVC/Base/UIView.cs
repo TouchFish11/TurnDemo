@@ -8,10 +8,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(CanvasGroup))]
-public abstract class UIView : UIBehaviour, IUIView
+public abstract class UIView : BaseUIBehaviour, IUIView
 {
-    // UI组件绑定器
-    protected UIComponentBinder uIComponentBinder;
     // 画布组
     protected CanvasGroup canvasGroup;
     // 透明度变化率
@@ -23,9 +21,7 @@ public abstract class UIView : UIBehaviour, IUIView
 
     protected override void Awake()
     {
-        uIComponentBinder = new UIComponentBinder(this);
-        //uIComponentBinder.Bind();
-
+        base.Awake();
         this.canvasGroup = this.GetComponent<CanvasGroup>();
     }
 
@@ -84,11 +80,6 @@ public abstract class UIView : UIBehaviour, IUIView
     /// <returns></returns>
     public UIComponentBinder GetBinder()
     {
-        return uIComponentBinder;
-    }
-
-    protected override void OnDestroy()
-    {
-        uIComponentBinder.Clear();
+        return binder;
     }
 }

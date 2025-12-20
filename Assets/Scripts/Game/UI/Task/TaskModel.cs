@@ -117,7 +117,7 @@ namespace Game.UI
             }
             rewardItems.Clear();
 
-            currentTaskInfo = BinaryDataMgr.Instance.GetTable<TaskInfoContainer>().dataDic[taskId];
+            currentTaskInfo = BinaryDataMgr.Instance.GetConfig<TaskInfoContainer>(E_ConfigLoadType.Excel).dataDic[taskId];
             int[] rewardIds = TextUtility.SplitToIntArr(currentTaskInfo.f_taskRewrardIds, 2);
             foreach (int id in rewardIds)
             {

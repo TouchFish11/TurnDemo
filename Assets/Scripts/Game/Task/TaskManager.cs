@@ -40,8 +40,8 @@ public class TaskManager : SingletonBase<TaskManager>
         // 读取任务数据，是否有正在追踪的任务
         if (GameDataMgr.Instance.TaskDataCollection.IsTracking(out TaskData taskData))
         {
-            currentTaskInfo = BinaryDataMgr.Instance.GetTable<TaskInfoContainer>().dataDic[taskData.currentTaskId];
-            currentConditionInfo = BinaryDataMgr.Instance.GetTable<TaskConditionInfoContainer>().dataDic[currentTaskInfo.f_completionConditionId];
+            currentTaskInfo = BinaryDataMgr.Instance.GetConfig<TaskInfoContainer>(E_ConfigLoadType.Excel).dataDic[taskData.currentTaskId];
+            currentConditionInfo = BinaryDataMgr.Instance.GetConfig<TaskConditionInfoContainer>(E_ConfigLoadType.Excel).dataDic[currentTaskInfo.f_completionConditionId];
             currentTaskData = taskData;
             // 更新任务
             OnUpdateTask?.Invoke(currentTaskInfo, currentTaskData);
@@ -63,8 +63,8 @@ public class TaskManager : SingletonBase<TaskManager>
             CancelTask();
         }
 
-        currentTaskInfo = BinaryDataMgr.Instance.GetTable<TaskInfoContainer>().dataDic[id];
-        currentConditionInfo = BinaryDataMgr.Instance.GetTable<TaskConditionInfoContainer>().dataDic[currentTaskInfo.f_completionConditionId];
+        currentTaskInfo = BinaryDataMgr.Instance.GetConfig<TaskInfoContainer>(E_ConfigLoadType.Excel).dataDic[id];
+        currentConditionInfo = BinaryDataMgr.Instance.GetConfig<TaskConditionInfoContainer>(E_ConfigLoadType.Excel).dataDic[currentTaskInfo.f_completionConditionId];
 
         if (GameDataMgr.Instance.TaskDataCollection.TryGetValue(id, out TaskData taskData))
         {
@@ -178,8 +178,8 @@ public class TaskManager : SingletonBase<TaskManager>
             // 切换为下一节点
             if (ids[1] != -1)
             {
-                currentTaskInfo = BinaryDataMgr.Instance.GetTable<TaskInfoContainer>().dataDic[currentTaskInfo.f_nextTaskId];
-                currentConditionInfo = BinaryDataMgr.Instance.GetTable<TaskConditionInfoContainer>().dataDic[currentTaskInfo.f_completionConditionId];
+                currentTaskInfo = BinaryDataMgr.Instance.GetConfig<TaskInfoContainer>(E_ConfigLoadType.Excel).dataDic[currentTaskInfo.f_nextTaskId];
+                currentConditionInfo = BinaryDataMgr.Instance.GetConfig<TaskConditionInfoContainer>(E_ConfigLoadType.Excel).dataDic[currentTaskInfo.f_completionConditionId];
                 TaskData nextTaskData = new TaskData() { currentTaskId = currentTaskInfo.f_id, currentPro = default, isCompleted = false, isTracking = true };
                 // 缓存到任务集合数据
                 GameDataMgr.Instance.TaskDataCollection.TryAdd(currentTaskInfo.f_id, nextTaskData);

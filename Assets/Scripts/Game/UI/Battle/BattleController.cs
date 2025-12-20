@@ -1,3 +1,4 @@
+using Framework;
 using Game.Battle;
 using System;
 using System.Collections;
@@ -19,8 +20,9 @@ public class BattleController : UIController<BattleView, BattleModel>
     /// 初始化战斗UI
     /// </summary>
     /// <param name="battleEntities"></param>
-    public async Task InitBattleUI(List<IBattleEntityObject> battleEntities)
+    public async Task InitBattleUI(IEnumerable<IBattleEntityObject> battleEntities)
     {
+        await UpadteActionBar(battleEntities);
         await InitPlayerUI();
         await InitMonsterUI();
     }
@@ -33,6 +35,27 @@ public class BattleController : UIController<BattleView, BattleModel>
     private async Task InitMonsterUI()
     {
         // 怪物血量UI
+    }
+
+    /// <summary>
+    /// 更新行动条
+    /// </summary>
+    public async Task UpadteActionBar(IEnumerable<IBattleEntityObject> battleEntities)
+    {
+        List<ActionGridUI> actionGridUIs = new List<ActionGridUI>(); 
+        foreach (IBattleEntityObject entityObject in battleEntities)
+        {
+            ActionGridUI actionGridUI = await ObjectBuilder.GetOrCreateInstance<ActionGridUI>(E_AssetBundleType.UI, ResKeyCollection.ActionGridUI, null);
+            actionGridUI.Init(null, (int)entityObject.ActionValue);
+            actionGridUIs.Add(actionGridUI);
+        }
+        _model.UpdateAcitonbar(actionGridUIs);
+    }
+
+    // 更新操作UI
+    public void UpdateOperatorUI()
+    {
+
     }
 
 

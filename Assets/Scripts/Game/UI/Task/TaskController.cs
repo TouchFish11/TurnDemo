@@ -94,7 +94,7 @@ namespace Game.UI
             // 读取任务数据
             taskDataCollection = GameDataMgr.Instance.TaskDataCollection;
             // 读取任务信息
-            var idToInfoMap = BinaryDataMgr.Instance.GetTable<TaskInfoContainer>().dataDic;
+            var idToInfoMap = BinaryDataMgr.Instance.GetConfig<TaskInfoContainer>(E_ConfigLoadType.Excel).dataDic;
 
             foreach (TaskInfo taskInfo in idToInfoMap.Values)
             {

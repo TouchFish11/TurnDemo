@@ -33,11 +33,11 @@ namespace Framework
             try
             {
                 // 读取表数据
-                await BinaryDataMgr.Instance.InitTableAsync();
+                await BinaryDataMgr.Instance.LoadConfig();
                 // 读取Json数据
                 await JsonManager.Instance.LoadJsonAsync();
                 // 读取音乐数据
-                _musicData = BinaryDataMgr.Instance.Load<MusicData>(FileUtility.LocalMusicDataFileName);
+                _musicData = BinaryDataMgr.Load<MusicData>(FileUtility.LocalMusicDataFileName);
                 if (_musicData == null)
                 {
                     LogManager.LogError($"初始化音乐数据失败");
@@ -45,7 +45,7 @@ namespace Framework
                 }
 
                 // 读取输入动作数据
-                _inputActionContainer = BinaryDataMgr.Instance.Load<InputActionContainer>(FileUtility.LocalInputDataFileName);
+                _inputActionContainer = BinaryDataMgr.Load<InputActionContainer>(FileUtility.LocalInputDataFileName);
                 if (_inputActionContainer == null)
                 {
                     LogManager.LogError($"初始化输入动作数据失败");
@@ -66,13 +66,13 @@ namespace Framework
             // 保存音乐数据
             if (MusicData != null)
             {
-                BinaryDataMgr.Instance.Save(FileUtility.LocalMusicDataFileName, _musicData);
+                BinaryDataMgr.Save(FileUtility.LocalMusicDataFileName, _musicData);
             }
 
             // 保存改键数据
             if (InputActionContainer != null)
             {
-                BinaryDataMgr.Instance.Save(FileUtility.LocalInputDataFileName, _inputActionContainer);
+                BinaryDataMgr.Save(FileUtility.LocalInputDataFileName, _inputActionContainer);
             }
 
             // 保存任务数据

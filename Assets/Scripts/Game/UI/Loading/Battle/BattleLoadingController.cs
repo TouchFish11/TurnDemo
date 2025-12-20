@@ -18,6 +18,9 @@ public class BattleLoadingControllerFactory : UIControllerFactory<BattleLoadingV
     }
 }
 
+/// <summary>
+/// 战斗加载界面控制器
+/// </summary>
 public class BattleLoadingController : UIController<BattleLoadingView, BattleLoadingModel>
 {
     public BattleLoadingController(BattleLoadingView view, BattleLoadingModel model) : base(view, model)
@@ -27,16 +30,15 @@ public class BattleLoadingController : UIController<BattleLoadingView, BattleLoa
 
     public void LoadBattle()
     {
-        //// 加载战斗场景（异步加载，避免卡顿）
-        //SceneManager.Instance.LoadSceneAsync(ResKeyCollection.LevelScene, UnityEngine.SceneManagement.LoadSceneMode.Single, (progress) => UpdateProgress(progress), async () =>
-        //{
-        //    bool isSuccess = await BattleManager.Instance.StartBattle();
-        //    if (isSuccess)
-        //    {
-        //        // 隐藏加载界面
-        //        UIManager.Instance.DestroyView();
-        //    }
-        //});
+        // 加载战斗场景（异步加载，避免卡顿）
+        SceneManager.Instance.LoadSceneAsync(ResKeyCollection.LevelScene, UnityEngine.SceneManagement.LoadSceneMode.Single, (progress) => UpdateProgress(progress), async () =>
+        {
+            // 显示战斗界面
+            BattleController battleController = await UIManager.Instance.CreateViewAsync<BattleView, BattleModel, BattleController>(E_UILayer.Mid);
+            await BattleManager.Instance.StartBattle();
+            // 隐藏加载界面
+            UIManager.Instance.DestroyView();
+        });
     }
 
     /// <summary>

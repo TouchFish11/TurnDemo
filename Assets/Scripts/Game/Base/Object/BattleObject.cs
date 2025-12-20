@@ -3,6 +3,7 @@ using Game.Battle;
 using GameLogic.BattleMoudule.Entity;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Game
 {
@@ -15,38 +16,53 @@ namespace Game
 
         public IBattleContext Context { get; protected set; }
 
+        public float ActionValue { get; protected set;  }
+
         // 基础属性
         private readonly Dictionary<E_FieldType, float> _attributes = new Dictionary<E_FieldType, float>();
         // 额外属性加成
         private readonly Dictionary<E_FieldType, float> _attributeBonuses = new Dictionary<E_FieldType, float>();
 
+        public override void BaseInit(int id)
+        {
+            base.BaseInit(id);
+            // 初始化与战斗无关的属性
+            Name = RoleInfo.f_name;
+        }
+
         public virtual void BattleInit(int roleId, IBattleContext context)
         {
+            // 基础初始化
+            BaseInit(roleId);
+
             // 记录上下文
             Context = context;
 
+            // 添加战斗相关组件
+            AddComponents(TextUtility.SplitToIntArr(RoleInfo.f_comIds, 2));
+
             // 加载组件（配置表可配置角色绑定哪些组件）
-            SkillComponent skillComponent = this.AddComponent<SkillComponent>();
-            skillComponent.BattleInit(this);
+            //SkillComponent skillComponent = this.AddComponent<SkillComponent>();
+            //skillComponent.BattleInit(this);
 
-            TalentComponent talentComponent = this.AddComponent<TalentComponent>();
-            talentComponent.BattleInit(this);
+            //TalentComponent talentComponent = this.AddComponent<TalentComponent>();
+            //talentComponent.BattleInit(this);
 
-            RelicComponent relicComponent = this.AddComponent<RelicComponent>();
-            relicComponent.BattleInit(this);
+            //RelicComponent relicComponent = this.AddComponent<RelicComponent>();
+            //relicComponent.BattleInit(this);
 
-            AdditionalAttackComponent additionalAttackComponent = this.AddComponent<AdditionalAttackComponent>();
-            additionalAttackComponent.BattleInit(this);
+            //AdditionalAttackComponent additionalAttackComponent = this.AddComponent<AdditionalAttackComponent>();
+            //additionalAttackComponent.BattleInit(this);
 
-            SummonComponent summonComponent =   this.AddComponent<SummonComponent>();
-            summonComponent.BattleInit(this);
+            //SummonComponent summonComponent =   this.AddComponent<SummonComponent>();
+            //summonComponent.BattleInit(this);
 
-            // 敌人角色额外加载韧性组件（示例：弱点属性=物理，初始韧性=200）
-            if (name.Contains("敌人"))
-            {
-                ToughnessComponent toughnessComponent = this.AddComponent<ToughnessComponent>();
-                toughnessComponent.Init(this, new() { E_PropertyType.Physical }, 200);
-            }
+            //// 敌人角色额外加载韧性组件（示例：弱点属性=物理，初始韧性=200）
+            //if (name.Contains("敌人"))
+            //{
+            //    ToughnessComponent toughnessComponent = this.AddComponent<ToughnessComponent>();
+            //    toughnessComponent.Init(this, new() { E_PropertyType.Physical }, 200);
+            //}
         }
 
         public virtual void AddRelicBonus(E_RelicBoun type, float value)
@@ -98,5 +114,12 @@ namespace Game
         }
 
         public abstract IEnumerator ExecuteAction();
+
+        public void SetActionValue(float actionValue)
+        {
+            ActionValue = Random.Range(0, 100);
+
+            //this.ActionValue = actionValue;
+        }
     }
 }

@@ -30,18 +30,18 @@ namespace Game.UI
         {
             base.Awake();
 
-            svTask = uIComponentBinder.GetControl<ScrollRect>(nameof(svTask));
+            svTask = binder.GetControl<ScrollRect>(nameof(svTask));
             toggleGroup = svTask.content.GetComponent<ToggleGroup>();
-            txtTaskName = uIComponentBinder.GetControl<TextMeshProUGUI>(nameof(txtTaskName));
-            txtTaskDescription = uIComponentBinder.GetControl<TextMeshProUGUI>(nameof(txtTaskDescription));
+            txtTaskName = binder.GetControl<TextMeshProUGUI>(nameof(txtTaskName));
+            txtTaskDescription = binder.GetControl<TextMeshProUGUI>(nameof(txtTaskDescription));
 
             detailView = this.transform.Find(nameof(detailView));
             hasTaskView = detailView.transform.Find(nameof(hasTaskView)).gameObject;
             noTaskView = detailView.transform.Find(nameof(noTaskView)).gameObject;
             rewardBox = this.transform.Find(nameof(detailView)).Find(nameof(hasTaskView)).Find(nameof(rewardBox));
 
-            btnAcceptTask = uIComponentBinder.GetControl<Button>(nameof(btnAcceptTask));
-            txtAccceptInfo = uIComponentBinder.GetControl<TextMeshProUGUI>(nameof(txtAccceptInfo));
+            btnAcceptTask = binder.GetControl<Button>(nameof(btnAcceptTask));
+            txtAccceptInfo = binder.GetControl<TextMeshProUGUI>(nameof(txtAccceptInfo));
         }
 
         public override void UpdateView(string key, object value)

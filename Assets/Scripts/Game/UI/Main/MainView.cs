@@ -20,10 +20,10 @@ public class MainView : UIView
     {
         base.Awake();
 
-        svInteract = uIComponentBinder.GetControl<ScrollRect>(nameof(svInteract));
+        svInteract = binder.GetControl<ScrollRect>(nameof(svInteract));
         taskPart = this.transform.Find(nameof(taskPart)).gameObject;
-        txtTaskTitle = uIComponentBinder.GetControl<TextMeshProUGUI>(nameof(txtTaskTitle));
-        txtTaskDescription = uIComponentBinder.GetControl<TextMeshProUGUI>(nameof(txtTaskDescription));
+        txtTaskTitle = binder.GetControl<TextMeshProUGUI>(nameof(txtTaskTitle));
+        txtTaskDescription = binder.GetControl<TextMeshProUGUI>(nameof(txtTaskDescription));
     }
 
     public override void UpdateView(string key, object value)
@@ -58,7 +58,7 @@ public class MainView : UIView
         // 初始化任务名称
         txtTaskTitle.text = taskInfo.f_taskName;
         // 获取任务条件
-        TaskConditionInfo taskCondition = BinaryDataMgr.Instance.GetTable<TaskConditionInfoContainer>().dataDic[taskInfo.f_completionConditionId];
+        TaskConditionInfo taskCondition = BinaryDataMgr.Instance.GetConfig<TaskConditionInfoContainer>(E_ConfigLoadType.Excel).dataDic[taskInfo.f_completionConditionId];
         // 初始化描述和当前进度
         txtTaskDescription.text = $"{taskInfo.f_taskDescription}  {taskData.currentPro}/{taskCondition.f_maxPro}";
     }

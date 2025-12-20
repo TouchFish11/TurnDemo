@@ -15,9 +15,9 @@ public class LoginView : UIView
     {
         base.Awake();
 
-        inputAccount = uIComponentBinder.GetControl<InputField>(nameof(inputAccount));
-        inputPassword = uIComponentBinder.GetControl<InputField>(nameof(inputPassword));
-        btnLogin = uIComponentBinder.GetControl<Button>(nameof(btnLogin));
+        inputAccount = binder.GetControl<InputField>(nameof(inputAccount));
+        inputPassword = binder.GetControl<InputField>(nameof(inputPassword));
+        btnLogin = binder.GetControl<Button>(nameof(btnLogin));
 
         loginBox = this.transform.Find(nameof(loginBox)).gameObject;
     }

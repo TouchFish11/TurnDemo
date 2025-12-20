@@ -8,7 +8,9 @@ namespace Game.Battle
     /// </summary>
     public interface IBattleEntityObject : IEntityObject
     {
-        //[Obsolete("TODO：通过配置数据来获取")]
+        /// <summary>
+        /// 临时名称
+        /// </summary>
         string Name { get; }
 
         /// <summary>
@@ -17,12 +19,26 @@ namespace Game.Battle
         IBattleContext Context { get; }
 
         /// <summary>
+        /// 行动值
+        /// </summary>
+        float ActionValue { get; }
+
+        /// <summary>
+        /// 设置行动值
+        /// </summary>
+        void SetActionValue(float actionValue);
+
+        /// <summary>
         /// 战斗初始化
         /// </summary>
         /// <param name="id"></param>
         /// <param name="context"></param>
         void BattleInit(int id, IBattleContext context);
 
+        /// <summary>
+        /// 执行行动
+        /// </summary>
+        /// <returns></returns>
         IEnumerator ExecuteAction();
 
         /// <summary>

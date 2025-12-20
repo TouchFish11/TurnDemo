@@ -10,7 +10,9 @@ namespace Framework
 		public static string UICamera => "UICamera";
 		public static string BranchInfo => "BranchInfo";
 		public static string DialogueInfo => "DialogueInfo";
+		public static string MonsterInfo => "MonsterInfo";
 		public static string NpcInfo => "NpcInfo";
+		public static string RoleInfo => "RoleInfo";
 		public static string TaskConditionInfo => "TaskConditionInfo";
 		public static string TaskInfo => "TaskInfo";
 		public static string ItemGrid => "ItemGrid";
@@ -26,7 +28,10 @@ namespace Framework
 		public static string MainScene => "MainScene";
 		public static string Canvas => "Canvas";
 		public static string BackView => "BackView";
+		public static string ActionGridUI => "ActionGridUI";
+		public static string BattlePointUI => "BattlePointUI";
 		public static string BattleView => "BattleView";
+		public static string SkillKeyUI => "SkillKeyUI";
 		public static string BeginView => "BeginView";
 		public static string DialogueOptUI => "DialogueOptUI";
 		public static string DialogueReviewUI => "DialogueReviewUI";

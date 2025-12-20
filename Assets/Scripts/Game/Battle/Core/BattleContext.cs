@@ -1,10 +1,9 @@
-
 using Framework;
-using Game.Main;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Game.Battle
 {
@@ -48,25 +47,42 @@ namespace Game.Battle
         /// <returns></returns>
         private async Task CreateBattleEntity(/*object config, int ownerId*/)
         {
-            var playerTrans = BattlePoint.Instance.GetPlayerTransforms();
+            List<Transform> playerTrans = new List<Transform>(BattlePoint.Instance.GetPlayerTransforms());
             // 批量创建玩家角色（从配置+预制体）
-            foreach (Transform transform in playerTrans)
+            var playerDataDic = BinaryDataMgr.Instance.GetConfig<RoleInfoContainer>(E_ConfigLoadType.Editor).dataDic;
+            int index = 0;
+            foreach (int roleId in playerDataDic.Keys)
             {
+                if (index == playerTrans.Count)
+                {
+                    break;
+                }
+
+                Transform transform = playerTrans[index];
                 PlayerObject playerObject = await ObjectBuilder.GetOrCreateInstance<PlayerObject>(E_AssetBundleType.Prefab, ResKeyCollection.TestPlayer, transform.position, transform.rotation);
                 // 注入上下文，供角色内部组件使用
-                playerObject.BattleInit(-1, this);
+                playerObject.BattleInit(roleId, this);
                 _allCharacters.Add(playerObject);
+                index++;
             }
 
-            // 批量创建敌人角色
-            var monsterTrans = BattlePoint.Instance.GetMonsterTransforms();
-            // 批量创建玩家角色（从配置+预制体）
-            foreach (Transform transform in monsterTrans)
+            // 批量创建怪物角色（从配置+预制体）
+            List<Transform> monsterTrans = new List<Transform>(BattlePoint.Instance.GetMonsterTransforms());
+            var monsterDataDic = BinaryDataMgr.Instance.GetConfig<MonsterInfoContainer>(E_ConfigLoadType.Editor).dataDic;
+            index = 0;
+            foreach (int monsterId in monsterDataDic.Keys)
             {
-                MonsterObject monsterObject = await ObjectBuilder.GetOrCreateInstance<MonsterObject>(E_AssetBundleType.Prefab, ResKeyCollection.TestPlayer, transform.position, transform.rotation);
+                if (index == monsterTrans.Count)
+                {
+                    break;
+                }
+
+                Transform transform = monsterTrans[index];
+                PlayerObject monsterObject = await ObjectBuilder.GetOrCreateInstance<PlayerObject>(E_AssetBundleType.Prefab, ResKeyCollection.TestMonster, transform.position, transform.rotation);
                 // 注入上下文，供角色内部组件使用
-                monsterObject.BattleInit(-1, this);
+                monsterObject.BattleInit(monsterId, this);
                 _allCharacters.Add(monsterObject);
+                index++;
             }
         }
 
