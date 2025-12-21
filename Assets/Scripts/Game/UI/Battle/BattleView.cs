@@ -15,6 +15,10 @@ public class BattleView : UIView
     private Transform operatorArea;
     private Transform playerArea;
 
+    /// <summary>
+    /// ¼¼ÄÜ¼ü×é
+    /// </summary>
+    public ToggleGroup SkillKeyGroup { get; private set; }
 
     protected override void Awake()
     {
@@ -27,6 +31,8 @@ public class BattleView : UIView
 
         operatorArea = this.transform.Find(nameof(operatorArea));
         playerArea = this.transform.Find(nameof(playerArea));
+
+        SkillKeyGroup = binder.GetControl<ToggleGroup>(nameof(operatorArea));
     }
 
 
@@ -37,7 +43,8 @@ public class BattleView : UIView
             case "actions":
                 UpdateActionbar(value as List<ActionGridUI>);
                 break;
-            default:
+            case "skillKeyUIs":
+                UpdateOperator(value as List<SkillKeyUI>);
                 break;
         }
     }
@@ -54,23 +61,12 @@ public class BattleView : UIView
         }
     }
 
-    internal void BattleOver(Action value)
+    public void UpdateOperator(List<SkillKeyUI> skillKeyUIs)
     {
-        throw new NotImplementedException();
-    }
-
-    internal object InitMonsterUI(object value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal object InitPlayerObjUI(object value)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal object InitUI(List<IBattleEntityObject> actionList)
-    {
-        throw new NotImplementedException();
+        operatorArea.DetachChildren();
+        foreach (SkillKeyUI skillKeyUI in skillKeyUIs)
+        {
+            skillKeyUI.transform.SetParent(operatorArea, false);
+        }
     }
 }

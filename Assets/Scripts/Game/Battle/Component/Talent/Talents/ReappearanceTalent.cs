@@ -43,7 +43,7 @@ namespace Game.Battle
 
         public void OnTurnStartHandler(TurnStartEvent turnStartEvent)
         {
-            if (turnStartEvent.CurrentBattleObject == Owner)
+            if (turnStartEvent.CurrentBattleEntity == Owner)
             {
                 _hasTriggeredThisTurn = false;
             }

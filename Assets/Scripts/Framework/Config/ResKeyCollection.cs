@@ -13,6 +13,7 @@ namespace Framework
 		public static string MonsterInfo => "MonsterInfo";
 		public static string NpcInfo => "NpcInfo";
 		public static string RoleInfo => "RoleInfo";
+		public static string SkillInfo => "SkillInfo";
 		public static string TaskConditionInfo => "TaskConditionInfo";
 		public static string TaskInfo => "TaskInfo";
 		public static string ItemGrid => "ItemGrid";
@@ -28,6 +29,7 @@ namespace Framework
 		public static string MainScene => "MainScene";
 		public static string Canvas => "Canvas";
 		public static string BackView => "BackView";
+		public static string ActingFlag => "ActingFlag";
 		public static string ActionGridUI => "ActionGridUI";
 		public static string BattlePointUI => "BattlePointUI";
 		public static string BattleView => "BattleView";

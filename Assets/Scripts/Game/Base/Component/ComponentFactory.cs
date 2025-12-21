@@ -37,7 +37,7 @@ public class ComponentFactory : SingletonBase<ComponentFactory>
                     break;
                 // 属性组件
                 case 3:
-                    //AddComponent<PropertyComponent>(entityObject);
+                    AddComponent<PropertyComponent>(entityObject);
                     break;
                 // UI组件
                 case 4:

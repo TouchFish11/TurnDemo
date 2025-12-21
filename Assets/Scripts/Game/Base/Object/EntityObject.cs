@@ -25,8 +25,6 @@ namespace Game
 
         public GameObject GameObject => this.gameObject;
 
-        public RoleInfo RoleInfo { get; private set; }
-
         protected virtual void Awake()
         {
 
@@ -34,10 +32,7 @@ namespace Game
 
         public virtual void BaseInit(int id)
         {
-            RoleInfo = BinaryDataMgr.Instance.GetConfig<RoleInfoContainer>(E_ConfigLoadType.Editor).dataDic[id];
-
             // Ìí¼Ó×é¼þ
-
         }
 
         public new TComponent GetComponent<TComponent>() where TComponent : Component

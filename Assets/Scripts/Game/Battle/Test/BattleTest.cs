@@ -15,6 +15,8 @@ public class BattleTest : MonoBehaviour
     {
         await BinaryDataMgr.Instance.LoadConfig();
 
+        await UIManager.Instance.InitUIManagerAsync();
+
         await BattleManager.Instance.StartBattle();
     }
 }

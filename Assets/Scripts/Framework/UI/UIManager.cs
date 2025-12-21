@@ -113,6 +113,7 @@ namespace Framework
             _typeToCtrlFactoryMap.Add(typeof(DialogueController), new DialogueControllerFactory());
             _typeToCtrlFactoryMap.Add(typeof(TaskController), new TaskControllerFactory());
             _typeToCtrlFactoryMap.Add(typeof(BattleLoadingController), new BattleLoadingControllerFactory());
+            _typeToCtrlFactoryMap.Add(typeof(BattleController), new BattleControllerFactory());
         }
 
         /// <summary>

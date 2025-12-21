@@ -1,10 +1,8 @@
 using Framework;
-using GameLogic.BattleMoudule.Entity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Unity.VisualScripting;
 
 namespace Game.Battle
 {
@@ -16,17 +14,31 @@ namespace Game.Battle
         // 战斗上下文
         private readonly IBattleContext _context;
         // 行动链表（按速度排序）
-        private readonly LinkedList<IBattleEntityObject> _actions;
+        private LinkedList<IBattleEntityObject> _actions;
+        // 技能命令队列
+        private readonly Queue<ISkill> skillCommands = new Queue<ISkill>();
         // 当前行动实体
         private IBattleEntityObject _currentActEntity;
         //当前战斗阶段
         private E_BattlePhase _battlePhase = E_BattlePhase.None;
 
+        /// <summary>
+        /// 在回合开始时触发
+        /// </summary>
+        public event Action<TurnStartEvent> OnTurnStart;
+
         public TurnManager(IBattleContext context)
         {
             _context = context;
-            _actions = new LinkedList<IBattleEntityObject>(context.GetAllBattleEntity());
-            //_actions.Sort(SortActionBySpeed);
+        }
+
+        /// <summary>
+        /// 初始化行动
+        /// </summary>
+        /// <param name="battleEntityObjects"></param>
+        public void InitActions(IEnumerable<IBattleEntityObject> battleEntityObjects)
+        {
+            _actions = new LinkedList<IBattleEntityObject>(battleEntityObjects);
             _battlePhase = E_BattlePhase.Preparation;
         }
 
@@ -36,22 +48,26 @@ namespace Game.Battle
         /// <returns></returns>
         public IEnumerator BattleLoop()
         {
-            while (_battlePhase != E_BattlePhase.QuitBattle)
-            {
-                switch (_battlePhase)
-                {
-                    case E_BattlePhase.Preparation:
-                        yield return BattlePreparation();
-                        break;
-                    case E_BattlePhase.EntityTurn:
-                        yield return ActEntityTurn();
-                        break;
-                    case E_BattlePhase.BattleOver:
-                        BattleOver();
-                        break;
-                }
-                yield return null;
-            }
+            yield return TaskUtility.WaitForTask(BattlePreparation());
+            yield return ActEntityTurn();
+            BattleOver();
+
+            //while (_battlePhase != E_BattlePhase.QuitBattle)
+            //{
+            //    switch (_battlePhase)
+            //    {
+            //        case E_BattlePhase.Preparation:
+            //            yield return TaskUtility.WaitForTask(BattlePreparation());
+            //            break;
+            //        case E_BattlePhase.EntityTurn:
+            //            yield return ActEntityTurn();
+            //            break;
+            //        case E_BattlePhase.BattleOver:
+            //            BattleOver();
+            //            break;
+            //    }
+            //    yield return null;
+            //}
         }
 
         /// <summary>
@@ -59,10 +75,13 @@ namespace Game.Battle
         /// </summary>
         private async Task BattlePreparation()
         {
-            // 更新战斗UI、播放入场动画等
-            BattleController battleController = UIManager.Instance.GetView<BattleController>();
-            // 更新UI显示
-            await battleController.InitBattleUI(_actions);
+            _context.GetEventBus().AddListener<TurnStartEvent>(OnTurnStart);
+            // 初始化行动实体
+            UpdateActEntity();
+            // 排序行动顺序
+            SortOrder();
+            // 启用当前实体行动
+            _currentActEntity.EnableAct();
             // 设置为角色行动阶段
             _battlePhase = E_BattlePhase.EntityTurn;
         }
@@ -72,54 +91,100 @@ namespace Game.Battle
         /// </summary>
         private IEnumerator ActEntityTurn()
         {
-            LinkedListNode<IBattleEntityObject> currentNode = _actions.First;
-            IBattleEntityObject currentEntity = currentNode.Value;
-            while (currentNode.Next != null)
+            // 等待战斗结束
+            _battlePhase = E_BattlePhase.WaitingBattleOver;
+
+            while (true)
             {
-                BattleComponent battleComponent = currentEntity.GetComponent<BattleComponent>();
-                // 获取当前行动的角色
-                if (currentEntity == null || battleComponent.IsDeath || currentEntity != _actions.First.Value)
+                // 存在命令，执行
+                while (skillCommands.Count > 0)
                 {
-                    currentEntity = _actions.First.Value;
+                    // 执行技能命令
+                    yield return skillCommands.Dequeue().Cast(_context);
+
+                    // 检查战斗是否结束
+                    if (CheckBattleOver())
+                    {
+                        yield break;
+                    }
                 }
-                else
+
+                // 当前实体正在行动，等待其行动结束
+                if (!_currentActEntity.IsActing)
                 {
-                    break;
+                    // 更新当前行动实体
+                    UpdateActEntity();
+                    // 排序
+                    SortOrder();
+                    // 启用当前实体行动
+                    _currentActEntity.EnableAct();
                 }
-                currentNode = currentNode.Next;
+
+                yield return null;
             }
 
-            // 改变标识
-            _battlePhase = E_BattlePhase.Waiting;
+            //LinkedListNode<IBattleEntityObject> currentNode = _actions.First;
+            //_currentActEntity = currentNode.Value;
+            //while (currentNode.Next != null)
+            //{
+            //    BattleComponent battleComponent = _currentActEntity.GetComponent<BattleComponent>();
+            //    // 获取当前行动的角色
+            //    if (_currentActEntity == null || battleComponent.IsDeath || _currentActEntity != _actions.First.Value)
+            //    {
+            //        _currentActEntity = _actions.First.Value;
+            //    }
+            //    else
+            //    {
+            //        break;
+            //    }
+            //    currentNode = currentNode.Next;
+            //}
 
-            // 执行实体回合开始事件
-            BattleController battleController = UIManager.Instance.GetView<BattleController>();
+            //// 改变标识
+            //_battlePhase = E_BattlePhase.Waiting;
 
-            // 等待实体行动完毕
-            yield return currentEntity.ExecuteAction();
+            //// 执行实体回合开始事件
+            //BattleController battleController = UIManager.Instance.GetView<BattleController>();
+            //_context.GetEventBus().TriggerEvent(new TurnStartEvent(_context, _currentActEntity));
 
-            // 检查战斗是否结束
-
+            //// 等待实体行动完毕
+            //_currentActEntity.ExecuteAction();
 
             //设置为未选中
             //for (int i = 0; i < actionableObjs.Count; i++)
             //{
             //    actionableObjs[i].SetSelectFlag(false);
             //}
+        }
 
-            if (_battlePhase != E_BattlePhase.BattleOver)
+        /// <summary>
+        /// 更新当前行动实体
+        /// </summary>
+        private void UpdateActEntity()
+        {
+#if EDITOR_TEST_AB || !UNITY_EDITOR
+        targetSelect = new BattleTargetSelect();
+#else
+            LinkedListNode<IBattleEntityObject> currentNode = _actions.First;
+            _currentActEntity = currentNode.Value;
+            LogManager.Log($"{_currentActEntity}");
+            while (currentNode.Next != null)
             {
-                //切换到下一个目标行动
-                SortOrder();
-                //改变阶段
-                _battlePhase = E_BattlePhase.EntityTurn;
+                PropertyComponent propertyComponent = _currentActEntity.GetComponent<PropertyComponent>();
+                // 获取当前行动的角色
+                if (_currentActEntity == null || propertyComponent.IsDeath || _currentActEntity != _actions.First.Value)
+                {
+                    _currentActEntity = _actions.First.Value;
+                }
+                else
+                {
+                    _actions.RemoveFirst();
+                    _actions.AddLast(currentNode);
+                    break;
+                }
+                currentNode = currentNode.Next;
             }
-            else
-            {
-                // 战斗结束，退出循环
-                _battlePhase = E_BattlePhase.BattleOver;
-                yield break;
-            }
+#endif
         }
 
         /// <summary>
@@ -128,13 +193,13 @@ namespace Game.Battle
         public async void SortOrder()
         {
             // 测试，行动完放在最后
-            LinkedListNode<IBattleEntityObject> currentEntity = _actions.First;
-            _actions.RemoveFirst();
-            _actions.AddLast(currentEntity);
+            //LinkedListNode<IBattleEntityObject> currentEntity = _actions.First;
+            //_actions.RemoveFirst();
+            //_actions.AddLast(currentEntity);
 
             // 更新行动轴UI显示
-            BattleController battleController = UIManager.Instance.GetView<BattleController>();
-            await battleController.UpadteActionBar(_actions);
+            //BattleController battleController = UIManager.Instance.GetView<BattleController>();
+            //await battleController.UpadteActionBar(_actions);
 
             //List<IBattleEntityObject> entityObjects = new List<IBattleEntityObject>(_context.GetAllBattleEntity());
             //// 初始化所有角色的行动值
@@ -160,6 +225,41 @@ namespace Game.Battle
             //        return 0;
             //    }
             //});
+        }
+
+        /// <summary>
+        /// 检查战斗是否结束
+        /// </summary>
+        /// <returns></returns>
+        private bool CheckBattleOver()
+        {
+            // 每次执行完命令后，检查战斗是否结束
+            if (_battlePhase != E_BattlePhase.BattleOver)
+            {
+                //改变阶段
+                _battlePhase = E_BattlePhase.EntityTurn;
+                return false;
+            }
+            else
+            {
+                // 战斗结束，退出循环
+                _battlePhase = E_BattlePhase.BattleOver;
+                return true;
+            }
+        }
+
+        public void EnqueueCommand(ISkill skill)
+        {
+            skillCommands.Enqueue(skill);
+        }
+
+        /// <summary>
+        /// 获取当前行动实体
+        /// </summary>
+        /// <returns></returns>
+        public IBattleEntityObject GetCurrentEntity()
+        {
+            return _currentActEntity;
         }
 
         /// <summary>

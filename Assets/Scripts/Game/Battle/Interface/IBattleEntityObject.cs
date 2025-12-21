@@ -14,6 +14,21 @@ namespace Game.Battle
         string Name { get; }
 
         /// <summary>
+        /// 是否正在行动
+        /// </summary>
+        bool IsActing { get; }
+
+        /// <summary>
+        /// 启动行动
+        /// </summary>
+        void EnableAct();
+
+        /// <summary>
+        /// 禁用行动
+        /// </summary>
+        void DisableAct();
+
+        /// <summary>
         /// 战斗上下文
         /// </summary>
         IBattleContext Context { get; }

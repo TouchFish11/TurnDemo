@@ -13,11 +13,6 @@ public interface IEntityObject
     GameObject GameObject { get; }
 
     /// <summary>
-    /// 角色信息
-    /// </summary>
-    RoleInfo RoleInfo { get; }
-
-    /// <summary>
     /// 基础初始化
     /// </summary>
     /// <param name="id"></param>
@@ -42,7 +37,6 @@ public interface IEntityObject
     /// 添加组件
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    /// <param name="component"></param>
     T AddComponent<T>() where T : Component;
 
     /// <summary>

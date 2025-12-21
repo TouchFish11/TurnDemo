@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Õ½¶·½×¶Î
+/// </summary>
 public enum E_BattlePhase
 {
     None,
@@ -9,5 +12,5 @@ public enum E_BattlePhase
     Preparation,
     EntityTurn,
     BattleOver,
-    Waiting
+    WaitingBattleOver
 }

@@ -11,7 +11,7 @@ namespace Game.Battle
 
     public class BattleEventInfo<TEvent> : BaseBattleEventInfo where TEvent : BattleEvent
     {
-        public event UnityAction<TEvent> OnBattleEvent;
+        public event Action<TEvent> OnBattleEvent;
 
         public void Invoke(TEvent eventInfo)
         {
@@ -33,7 +33,7 @@ namespace Game.Battle
         /// </summary>
         /// <typeparam name="TEvent"></typeparam>
         /// <param name="callback"></param>
-        public void AddListener<TEvent>(UnityAction<TEvent> callback) where TEvent : BattleEvent
+        public void AddListener<TEvent>(Action<TEvent> callback) where TEvent : BattleEvent
         {
             Type eventType = typeof(TEvent);
             if (!_typeToEventInfoMap.TryGetValue(eventType, out BaseBattleEventInfo eventInfo))
@@ -67,7 +67,7 @@ namespace Game.Battle
         /// </summary>
         /// <typeparam name="TEvent"></typeparam>
         /// <param name="callback"></param>
-        public void RemoveListener<TEvent>(UnityAction<TEvent> callback) where TEvent : BattleEvent
+        public void RemoveListener<TEvent>(Action<TEvent> callback) where TEvent : BattleEvent
         {
             Type eventType = typeof(TEvent);
             if (_typeToEventInfoMap.TryGetValue(eventType, out BaseBattleEventInfo eventInfo))

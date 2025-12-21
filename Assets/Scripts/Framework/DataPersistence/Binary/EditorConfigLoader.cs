@@ -18,6 +18,8 @@ public class EditorConfigLoader : ConfigLoader
     public override async Task LoadConfig()
     {
         await LoadTableAsync<RoleInfoContainer, RoleInfo>();
+        await LoadTableAsync<MonsterInfoContainer, MonsterInfo>();
+        await LoadTableAsync<SkillInfoContainer, SkillInfo>();
     }
 
     /// <summary>
@@ -47,7 +49,6 @@ public class EditorConfigLoader : ConfigLoader
             return _tableDic[typeof(T).Name] as T;
         }
 
-        LogManager.Log($"{typeof(T).Name}ЮЊПе");
         return null;
     }
 

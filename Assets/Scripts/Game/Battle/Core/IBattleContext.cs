@@ -6,16 +6,37 @@ namespace Game.Battle
     public interface IBattleContext
     {
         /// <summary>
+        /// 当前战斗实体
+        /// </summary>
+        IBattleEntityObject CurrentBattleEntity { get; }
+
+        /// <summary>
         /// 获取所有战斗的实体
         /// </summary>
         /// <returns></returns>
         IEnumerable<IBattleEntityObject> GetAllBattleEntity();
 
         /// <summary>
+        /// 获取所有玩家角色实体
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<IBattleEntityObject> GetPlayerObjects();
+
+        /// <summary>
+        /// 获取所有怪物角色实体
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<IBattleEntityObject> GetMonsterObjects();
+
+        /// <summary>
         /// 获取回合管理器
         /// </summary>
         /// <returns></returns>
         TurnManager GetTurnManager();
+
+        // TODO：封装目标获取逻辑，避免技能实例直接依赖管理器
+        //IBattleEntityObject GetMainTaraget();
+        //List<IBattleEntityObject> GetSelectedTargets();
 
         /// <summary>
         /// 初始化战斗

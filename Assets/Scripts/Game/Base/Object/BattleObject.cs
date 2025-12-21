@@ -3,6 +3,7 @@ using Game.Battle;
 using GameLogic.BattleMoudule.Entity;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Game
@@ -18,28 +19,19 @@ namespace Game
 
         public float ActionValue { get; protected set;  }
 
+        public bool IsActing { get; private set; }
+
         // 基础属性
         private readonly Dictionary<E_FieldType, float> _attributes = new Dictionary<E_FieldType, float>();
         // 额外属性加成
         private readonly Dictionary<E_FieldType, float> _attributeBonuses = new Dictionary<E_FieldType, float>();
 
-        public override void BaseInit(int id)
-        {
-            base.BaseInit(id);
-            // 初始化与战斗无关的属性
-            Name = RoleInfo.f_name;
-        }
-
         public virtual void BattleInit(int roleId, IBattleContext context)
         {
             // 基础初始化
             BaseInit(roleId);
-
             // 记录上下文
             Context = context;
-
-            // 添加战斗相关组件
-            AddComponents(TextUtility.SplitToIntArr(RoleInfo.f_comIds, 2));
 
             // 加载组件（配置表可配置角色绑定哪些组件）
             //SkillComponent skillComponent = this.AddComponent<SkillComponent>();
@@ -120,6 +112,36 @@ namespace Game
             ActionValue = Random.Range(0, 100);
 
             //this.ActionValue = actionValue;
+        }
+
+        /// <summary>
+        /// 在回合开始时调用
+        /// </summary>
+        protected virtual void OnTurnStart()
+        {
+
+        }
+
+        /// <summary>
+        /// 在回合结束时调用
+        /// </summary>
+        protected virtual void OnTurnEnd()
+        {
+
+        }
+
+        public void EnableAct()
+        {
+            IsActing = true;
+            // 执行实体回合开始事件
+            Context.GetEventBus().TriggerEvent(new TurnStartEvent(Context, this));
+        }
+
+        public void DisableAct()
+        {
+            IsActing = false;
+            // 执行实体回合结束事件
+            Context.GetEventBus().TriggerEvent(new TurnEndEvent(Context, this, false));
         }
     }
 }

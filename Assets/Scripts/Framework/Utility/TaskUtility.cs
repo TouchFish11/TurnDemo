@@ -29,4 +29,22 @@ public class TaskUtility
             await Task.Yield();
         }
     }
+
+    /// <summary>
+    /// 等待任务完成
+    /// </summary>
+    /// <param name="task"></param>
+    /// <returns></returns>
+    public static IEnumerator WaitForTask(Task task)
+    {
+        while (!task.IsCompleted)
+        {
+            yield return null;
+        }
+
+        if (task.IsFaulted)
+        {
+            Debug.LogError($"任务执行错误: {task.Exception}");
+        }
+    }
 }

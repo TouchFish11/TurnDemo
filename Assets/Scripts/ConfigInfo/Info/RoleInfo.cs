@@ -5,4 +5,5 @@ public class RoleInfo
 	public string f_description;
 	public int f_elementType;
 	public string f_comIds;
+	public string f_skillIds;
 }

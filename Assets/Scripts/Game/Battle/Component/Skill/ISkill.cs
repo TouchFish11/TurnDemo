@@ -1,4 +1,5 @@
 using GameLogic.BattleMoudule.Entity;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Game.Battle
@@ -8,7 +9,16 @@ namespace Game.Battle
     /// </summary>
     public interface ISkill
     {
-        string Name { get; }
+        /// <summary>
+        /// 技能配置
+        /// </summary>
+        SkillInfo SkillInfo { get; }
+
+        IBattleEntityObject Caster { get; }
+
+        IBattleEntityObject MainTarget { get; }
+
+        List<IBattleEntityObject> AllTargets { get; }
 
         /// <summary>
         /// 伤害系数（配置表读取）
@@ -21,11 +31,17 @@ namespace Game.Battle
         E_PropertyType PropertyType { get; }
 
         /// <summary>
+        /// 初始化技能
+        /// </summary>
+        /// <param name="skillId"></param>
+        void Init(SkillInfo skillInfo, IBattleEntityObject caster, IBattleEntityObject mainTarget, List<IBattleEntityObject> allTargets);
+
+        /// <summary>
         /// 释放技能
         /// </summary>
         /// <param name="context"></param>
         /// <param name="caster"></param>
         /// <param name="targets"></param>
-        void Cast(IBattleContext context, IBattleEntityObject caster, List<IBattleEntityObject> targets); 
+        IEnumerator Cast(IBattleContext context); 
     }
 }

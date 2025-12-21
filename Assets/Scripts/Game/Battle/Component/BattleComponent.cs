@@ -8,19 +8,13 @@ namespace Game.Battle
     /// </summary>
     public abstract class BattleComponent : MonoBehaviour, IBattleComponent
     {
-        public bool IsDeath { get; internal set; }
-
         IEntityObject IComponent.EntityObject { get; }
-
-        //public IEntityObject EntityObject { get; private set; }
 
         public IBattleEntityObject BattleEntity { get; private set; }
 
-        //public void Init(IEntityObject entityObject) { }
-
-        void IComponent.Init(IEntityObject entityObject)
+        public void Init(IEntityObject entityObject)
         {
-
+            BattleInit(entityObject as IBattleEntityObject);
         }
 
         public virtual void BattleInit(IBattleEntityObject battleEntity)

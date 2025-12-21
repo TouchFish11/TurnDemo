@@ -31,4 +31,30 @@ public static class IntExtension
         return (E_TaskContentType)i;
     }
 
+    /// <summary>
+    /// 转换技能范围类型为文本
+    /// </summary>
+    /// <param name="i"></param>
+    /// <returns></returns>
+    public static string ToSkillRangeTypeText(this int i)
+    {
+        E_SkillRangeType skillRangeType = (E_SkillRangeType)i;
+        return skillRangeType switch
+        {
+            E_SkillRangeType.Singel => "单体",
+            E_SkillRangeType.Diffusion => "扩散",
+            E_SkillRangeType.All => "全体",
+            _ => "None"
+        };
+    }
+
+    /// <summary>
+    /// 转换为技能类型枚举
+    /// </summary>
+    /// <param name="i"></param>
+    /// <returns></returns>
+    public static E_SkillType ToSkillType(this int i)
+    {
+        return (E_SkillType)i;
+    }
 }

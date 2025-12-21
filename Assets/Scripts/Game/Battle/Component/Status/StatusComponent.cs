@@ -26,7 +26,7 @@ namespace Game.Battle
         private void OnTurnStartHandler(TurnStartEvent turnStartEvent)
         {
             // 只处理当前行动角色的状态（避免给其他角色触发）
-            if (turnStartEvent.CurrentBattleObject != BattleEntity)
+            if (turnStartEvent.CurrentBattleEntity != BattleEntity)
             {
                 return;
             }
