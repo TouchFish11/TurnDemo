@@ -40,11 +40,11 @@ public class BeginController : UIController<BeginView, BeginModel>
         AssetBundleUpdater.Instance.GetContext().OnUpdateFinish += OnUpdateFinish;
 
         OnUpdatePhase(E_UpdatePhase.None);
-        _model.IsActiveProgress = true;
-        _model.SilderProgress = 0;
-        _model.TxtProgress = $"{TextUtility.FloatToStr(0, 2)}%";
-        _model.TxtSize = "";
-        _model.TxtSpeed = "";
+        model.IsActiveProgress = true;
+        model.SilderProgress = 0;
+        model.TxtProgress = $"{TextUtility.FloatToStr(0, 2)}%";
+        model.TxtSize = "";
+        model.TxtSpeed = "";
 
         await base.OnInit();
     }
@@ -82,29 +82,29 @@ public class BeginController : UIController<BeginView, BeginModel>
         switch (updatePhase)
         {
             case E_UpdatePhase.None:
-                _model.TxtPhase = "正在检查更新...";
+                model.TxtPhase = "正在检查更新...";
                 break;
             case E_UpdatePhase.DownLoadRemoteListFile:
-                _model.TxtPhase = "正在下载清单文件...";
+                model.TxtPhase = "正在下载清单文件...";
                 break;
             case E_UpdatePhase.GetLocalCompareFile:
-                _model.TxtPhase = "正在读取本地清单文件中...";
+                model.TxtPhase = "正在读取本地清单文件中...";
                 break;
             case E_UpdatePhase.CompareContrast:
-                _model.TxtPhase = "正在分析文件差异...";
+                model.TxtPhase = "正在分析文件差异...";
                 break;
             case E_UpdatePhase.DownLoadAssets:
-                _model.TxtPhase = "正在下载资源...";
+                model.TxtPhase = "正在下载资源...";
                 break;
             case E_UpdatePhase.CheckAssetsIntegrity:
-                _model.TxtPhase = "正在检查资源完整性...";
+                model.TxtPhase = "正在检查资源完整性...";
                 break;
             case E_UpdatePhase.Finished:
             case E_UpdatePhase.NullState:
-                _model.TxtPhase = "更新完成";
+                model.TxtPhase = "更新完成";
                 break;
             default:
-                _model.TxtPhase = "";
+                model.TxtPhase = "";
                 LogManager.LogError($"没有实现该枚举项：{updatePhase}");
                 break;
         }
@@ -112,24 +112,24 @@ public class BeginController : UIController<BeginView, BeginModel>
 
     private void OnProgress(long currentloadedBytes, long totalBytes)
     {
-        _model.TxtSize = $"{TextUtility.ToByteUnit((ulong)currentloadedBytes)}/{TextUtility.ToByteUnit((ulong)totalBytes)}";
-        _model.SilderProgress = currentloadedBytes / (float)totalBytes;
-        _model.TxtProgress = $"{TextUtility.FloatToStr(_model.SilderProgress * 100, 2)}%";
+        model.TxtSize = $"{TextUtility.ToByteUnit((ulong)currentloadedBytes)}/{TextUtility.ToByteUnit((ulong)totalBytes)}";
+        model.SilderProgress = currentloadedBytes / (float)totalBytes;
+        model.TxtProgress = $"{TextUtility.FloatToStr(model.SilderProgress * 100, 2)}%";
     }
 
     private void OnCheckProgress(int current, int total)
     {
-        _model.TxtProgress = $"{TextUtility.FloatToStr((current / (float)total) * 100, 2)}%";
+        model.TxtProgress = $"{TextUtility.FloatToStr((current / (float)total) * 100, 2)}%";
     }
 
     private void OnUpdateSpeed(long currentBytes)
     {
-        _model.TxtSpeed = $"{TextUtility.ToByteUnit((ulong)currentBytes)}/s";
+        model.TxtSpeed = $"{TextUtility.ToByteUnit((ulong)currentBytes)}/s";
     }
 
     private void OnUpdateFinish()
     {
         // 隐藏进度条
-        _model.IsActiveProgress = false;
+        model.IsActiveProgress = false;
     }
 }

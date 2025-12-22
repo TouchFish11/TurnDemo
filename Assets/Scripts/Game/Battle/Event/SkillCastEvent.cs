@@ -1,4 +1,3 @@
-using GameLogic.BattleMoudule.Entity;
 using System.Collections.Generic;
 
 namespace Game.Battle
@@ -31,9 +30,9 @@ namespace Game.Battle
         /// <summary>
         /// ººƒ‹ Ù–‘
         /// </summary>
-        public E_PropertyType PropertyType { get; }
+        public E_ElementType PropertyType { get; }
 
-        public SkillCastEvent(IBattleContext context, IBattleEntityObject caster, List<IBattleEntityObject> targets, ISkill skill, float damage, E_PropertyType attackAttr) : base(context)
+        public SkillCastEvent(IBattleContext context, IBattleEntityObject caster, List<IBattleEntityObject> targets, ISkill skill, float damage, E_ElementType attackAttr) : base(context)
         {
             Caster = caster;
             Targets = targets;

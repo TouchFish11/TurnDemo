@@ -1,4 +1,3 @@
-using GameLogic.BattleMoudule.Entity;
 using System;
 
 namespace Game.Battle
@@ -48,7 +47,7 @@ namespace Game.Battle
                 _ => throw new NotImplementedException()
             };
 
-            owner.AddRelicBonus(attributeBonus.RelicBoun, attributeBonus.BounValue);
+            // owner.GetComponent<PropertyComponent>().AddRelicBonus(attributeBonus.RelicBoun, attributeBonus.BounValue);
         }
 
         private void OnSkillCastHandler(SkillCastEvent skillCastEvent)
@@ -61,8 +60,8 @@ namespace Game.Battle
 
             Console.WriteLine($"\n【遗器效果】{SetName}4件套触发！");
 
-            int additionalDamage = (int)(skillCastEvent.Caster.GetField(E_FieldType.Attack) * _additionalDamageRatio);
-            skillCastEvent.Targets[0].TakeDamage(additionalDamage, E_PropertyType.Quantum);
+            int additionalDamage = (int)(skillCastEvent.Caster.GetComponent<PropertyComponent>().GetProperty<BattleProperty>().MaxAtk * _additionalDamageRatio);
+            skillCastEvent.Targets[0].TakeDamage(additionalDamage, E_ElementType.Quantum);
             Console.WriteLine($"{skillCastEvent.Targets[0].Name}受到量子追加伤害：{additionalDamage}点");
         }
 

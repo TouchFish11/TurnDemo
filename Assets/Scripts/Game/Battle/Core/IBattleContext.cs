@@ -11,6 +11,11 @@ namespace Game.Battle
         IBattleEntityObject CurrentBattleEntity { get; }
 
         /// <summary>
+        /// 战技点数
+        /// </summary>
+        int BattlePointCount { get; }
+
+        /// <summary>
         /// 获取所有战斗的实体
         /// </summary>
         /// <returns></returns>

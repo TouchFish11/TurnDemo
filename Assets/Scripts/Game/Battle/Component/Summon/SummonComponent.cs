@@ -23,7 +23,7 @@ namespace Game.Battle
             summon.Init(BattleEntity);
             //// 反射赋值（实际用构造函数注入，此处简化）
             //typeof(T).GetProperty(nameof(ISummon.Owner)).SetValue(summon, _owner);
-            //typeof(T).GetField("_initialActionTimes", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(summon, initialActionTimes);
+            //typeof(T).GetProperty("_initialActionTimes", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(summon, initialActionTimes);
 
             _summons.Add(summon);
             LogManager.Log($"{BattleEntity.Name}召唤了：{summon.Name}");

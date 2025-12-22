@@ -1,5 +1,3 @@
-using GameLogic.BattleMoudule.Entity;
-using System.Collections;
 
 namespace Game.Battle
 {
@@ -14,9 +12,14 @@ namespace Game.Battle
         string Name { get; }
 
         /// <summary>
-        /// 是否正在行动
+        /// 战斗实体ID
         /// </summary>
-        bool IsActing { get; }
+        int BattleEntityId { get; }
+
+        /// <summary>
+        /// 能否行动
+        /// </summary>
+        bool CanAct { get; }
 
         /// <summary>
         /// 启动行动
@@ -54,20 +57,13 @@ namespace Game.Battle
         /// 执行行动
         /// </summary>
         /// <returns></returns>
-        IEnumerator ExecuteAction();
-
+        void ExecuteAction();
+        
         /// <summary>
-        /// 获取属性值
+        /// 释放技能
         /// </summary>
-        /// <param name="propertyType"></param>
-        /// <returns></returns>
-        int GetField(E_FieldType propertyType);
-
-        /// <summary>
-        /// 添加遗器属性加成
-        /// </summary>
-        /// <param name="propertyType"></param>
-        void AddRelicBonus(E_RelicBoun relicBoun, float value);
+        /// <param name="skillId"></param>
+        void CastSkill(int skillId);
 
         /// <summary>
         /// 获取速度
@@ -85,6 +81,16 @@ namespace Game.Battle
         /// 受到伤害
         /// </summary>
         /// <param name="value"></param>
-        void TakeDamage(int damage, E_PropertyType propertyType);
+        void TakeDamage(int damage, E_ElementType propertyType);
+
+        /// <summary>
+        /// 增加行动次数
+        /// </summary>
+        void AddActCount();
+
+        /// <summary>
+        /// 减少行动次数
+        /// </summary>
+        void SubActCount();
     }
 }

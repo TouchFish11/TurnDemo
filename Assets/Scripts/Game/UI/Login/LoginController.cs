@@ -37,8 +37,8 @@ public class LoginController : UIController<LoginView, LoginModel>
         // 注册自动登录完成事件
         _loginService.OnAutoLoginCompleted += OnAutoLoginCompleted;
         // 初始化登录数据
-        _model.LoginData = _loginService.LoadLoginData();
-        _model.IsLoginBtnEnabled = true;
+        model.LoginData = _loginService.LoadLoginData();
+        model.IsLoginBtnEnabled = true;
         // 隐藏登录框
         ShowLoginBox(false);
 
@@ -63,10 +63,10 @@ public class LoginController : UIController<LoginView, LoginModel>
         switch (fieldName)
         {
             case "inputAccount":
-                _model.SetAccount(inputStr);
+                model.SetAccount(inputStr);
                 break;
             case "inputPassword":
-                _model.SetPassword(inputStr);
+                model.SetPassword(inputStr);
                 break;
         }
     }
@@ -76,7 +76,7 @@ public class LoginController : UIController<LoginView, LoginModel>
     /// </summary>
     public void ShowLoginBox(bool isShow)
     {
-        _model.IsActiveLoginBox = isShow;
+        model.IsActiveLoginBox = isShow;
     }
 
     /// <summary>
@@ -85,7 +85,7 @@ public class LoginController : UIController<LoginView, LoginModel>
     /// <returns></returns>
     public LoginData GetLoginData()
     {
-        return _model.LoginData;
+        return model.LoginData;
     }
 
     private void OnAutoLoginCompleted(bool result)
@@ -93,7 +93,7 @@ public class LoginController : UIController<LoginView, LoginModel>
         if (result)
         {
             // 自动登录成功，保存账号
-            _loginService.SaveLoginData(_model.LoginData);
+            _loginService.SaveLoginData(model.LoginData);
             // 开始检查更新
             LoginOver();
         }
@@ -101,7 +101,7 @@ public class LoginController : UIController<LoginView, LoginModel>
         {
             LogManager.Log($"登录失败");
             // 恢复按钮可用
-            _model.IsLoginBtnEnabled = true;
+            model.IsLoginBtnEnabled = true;
             // 自动登录失败，手动登录，显示登录框
             ShowLoginBox(true);
         }
@@ -124,16 +124,16 @@ public class LoginController : UIController<LoginView, LoginModel>
     private async void OnLoginClick()
     {
         // 数据校验（调用 Model 方法）
-        if (!_model.CheckLoginData())
+        if (!model.CheckLoginData())
         {
             LogManager.Log("账号或密码格式错误");
             return;
         }
 
         // 禁用登录按钮（修改 Model 数据 → 自动更新 View）
-        _model.IsLoginBtnEnabled = false;
+        model.IsLoginBtnEnabled = false;
 
         // 调用外部服务（网络请求）
-        await _loginService.LoginAsync(_model.LoginData);
+        await _loginService.LoginAsync(model.LoginData);
     }
 }

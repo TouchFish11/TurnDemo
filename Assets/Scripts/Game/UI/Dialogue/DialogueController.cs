@@ -49,10 +49,10 @@ public class DialogueController : UIController<DialogueView, DialogueModel>
         DialogueManager.Instance.OnSingleDialogueStart += OnSingleDialogueStart;
         DialogueManager.Instance.OnSingleDialogueEnd += OnSingleDialogueEnd;
 
-        StoryReviewView storyReviewView = _view.GetComponentInChildren<StoryReviewView>();
+        StoryReviewView storyReviewView = view.GetComponentInChildren<StoryReviewView>();
         storyReviewView.OnSubViewClosed += OnSubViewClosed;
-        _model.SetStoryReviewView(_view.GetComponentInChildren<StoryReviewView>());
-        _model.IsActiveReview = false;
+        model.SetStoryReviewView(view.GetComponentInChildren<StoryReviewView>());
+        model.IsActiveReview = false;
 
         await base.OnInit();
     }
@@ -62,7 +62,7 @@ public class DialogueController : UIController<DialogueView, DialogueModel>
     /// </summary>
     private void OnSubViewClosed()
     {
-        _model.IsActiveReview = false;
+        model.IsActiveReview = false;
     }
 
     protected override void ButtonOnClick(string btnName)
@@ -71,21 +71,21 @@ public class DialogueController : UIController<DialogueView, DialogueModel>
         {
             case "btnContinue":
                 // 对话框显示时，才能推进对话
-                if (_model.IsActiveBox)
+                if (model.IsActiveBox)
                 {
                     DialogueManager.Instance.NextDialogue();
                 }
                 else
                 {
                     // 否则先显示对话框
-                    _model.IsActiveBox = true;
+                    model.IsActiveBox = true;
                 }
                 break;
             case "btnHide":
-                _model.IsActiveBox = false;
+                model.IsActiveBox = false;
                 break;
             case "btnReview":
-                _model.IsActiveReview = true;
+                model.IsActiveReview = true;
                 break;
         }
     }
@@ -103,7 +103,7 @@ public class DialogueController : UIController<DialogueView, DialogueModel>
     private void OnSingleDialogueStart(DialogueInfo dialogueInfo)
     {
         // 缓存历史对话
-        _model.CacheDialogueInfo(dialogueInfo);
+        model.CacheDialogueInfo(dialogueInfo);
         // 提示效果协程
         dialogueTipCor = MonoManager.Instance.StartCoroutine(DialogueTip_Cor());
     }
@@ -112,7 +112,7 @@ public class DialogueController : UIController<DialogueView, DialogueModel>
     {
         MonoManager.Instance.StopCoroutine(dialogueTipCor);
         // 重置文本
-        _model.SetTip(DefaultTip);
+        model.SetTip(DefaultTip);
     }
 
     // 对话提示效果协程
@@ -123,7 +123,7 @@ public class DialogueController : UIController<DialogueView, DialogueModel>
         {
             for (int i = 0; i < length; i++)
             {
-                _model.SetTip(DialogueTip.Substring(0, i + 1));
+                model.SetTip(DialogueTip.Substring(0, i + 1));
                 yield return _waitForSeconds0_25;
             }
         }
@@ -136,11 +136,11 @@ public class DialogueController : UIController<DialogueView, DialogueModel>
     public void ShowDialogueText(string speakerName ,string dialogueText)
     {
         // 设置分支选项
-        _model.SetBranchOpt(null);
+        model.SetBranchOpt(null);
         // 显示说话者
-        _model.SpeakName = speakerName;
+        model.SpeakName = speakerName;
         // 显示对话内容
-        _model.DialogueText = dialogueText;
+        model.DialogueText = dialogueText;
     }
 
     /// <summary>
@@ -160,6 +160,6 @@ public class DialogueController : UIController<DialogueView, DialogueModel>
             dialogueOpts.Add(optUI);
         }
         // 设置分支选项
-        _model.SetBranchOpt(dialogueOpts);
+        model.SetBranchOpt(dialogueOpts);
     }
 }

@@ -19,6 +19,8 @@ namespace Game.Battle
 
         public IBattleEntityObject CurrentBattleEntity => _turnManager.GetCurrentEntity();
 
+        public int BattlePointCount { get; private set; } = 5;
+
         // 自定义扩展数据（如战斗难度、场景ID）
         //private Dictionary<string, object> _customData = new(); 
 
@@ -60,7 +62,8 @@ namespace Game.Battle
                 }
 
                 Transform transform = playerTrans[index];
-                PlayerObject playerObject = await ObjectBuilder.GetOrCreateInstance<PlayerObject>(E_AssetBundleType.Prefab, ResKeyCollection.TestPlayer, transform.position, transform.rotation);
+
+                PlayerObject playerObject = await RoleBuilder.CreateRole(roleId, transform.position, transform.rotation);
                 // 注入上下文，供角色内部组件使用
                 playerObject.BattleInit(roleId, this);
                 _allBattleEntity.Add(playerObject);
@@ -79,7 +82,7 @@ namespace Game.Battle
                 }
 
                 Transform transform = monsterTrans[index];
-                MonsterObject monsterObject = await ObjectBuilder.GetOrCreateInstance<MonsterObject>(E_AssetBundleType.Prefab, ResKeyCollection.TestMonster, transform.position, transform.rotation);
+                MonsterObject monsterObject = await MonsterBuilder.CreateMonster(monsterId, transform.position, transform.rotation);
                 // 注入上下文，供角色内部组件使用
                 monsterObject.BattleInit(monsterId, this);
                 _allBattleEntity.Add(monsterObject);

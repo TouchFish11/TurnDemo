@@ -38,7 +38,7 @@ public class VideoController : UIController<VideoView, VideoModel>
         // 加载渲染纹理
         RenderTexture renderTexture = await AssetBundleManager.Instance.LoadAssetAsync<RenderTexture>(E_AssetBundleType.Texture, "VideoTexture");
         // 设置纹理
-        _model.RawImgVideo = renderTexture;
+        model.RawImgVideo = renderTexture;
         // 加载视频
         VideoClip videoClip = await AssetBundleManager.Instance.LoadAssetAsync<VideoClip>(E_AssetBundleType.Video, "六月花陌-《面壁者》-邓紫棋(高清)");
         // 播放视频

@@ -1,4 +1,3 @@
-using GameLogic.BattleMoudule;
 using UnityEngine;
 
 namespace Game.Battle
@@ -26,7 +25,5 @@ namespace Game.Battle
         {
             BattleEntity = null;
         }
-
-
     }
 }

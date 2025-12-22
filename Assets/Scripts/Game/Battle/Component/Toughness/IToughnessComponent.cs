@@ -1,5 +1,3 @@
-
-using GameLogic.BattleMoudule.Entity;
 using System.Collections.Generic;
 
 namespace Game.Battle
@@ -12,6 +10,6 @@ namespace Game.Battle
         /// <summary>
         /// 初始化韧性组件
         /// </summary>
-        void Init(IBattleEntityObject owner, List<E_PropertyType> weakPropertys, float initialToughness);
+        void Init(IBattleEntityObject owner, List<E_ElementType> weakPropertys, float initialToughness);
     }
 }

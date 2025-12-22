@@ -9,13 +9,13 @@ using UnityEngine;
 /// </summary>
 public abstract class UIController<TView, TModel> : IUIController where TView : UIView where TModel : UIModel, new()
 {
-    protected TView _view;
-    protected TModel _model;
+    protected TView view;
+    protected TModel model;
 
     public UIController(TView view, TModel model)
     {
-        _view = view;
-        _model = model;
+        this.view = view;
+        this.model = model;
     }
 
     public async Task Init()
@@ -39,10 +39,10 @@ public abstract class UIController<TView, TModel> : IUIController where TView : 
     /// </summary>
     void IUIController.BindViewEvents()
     {
-        _view.GetBinder().OnButtonClick += ButtonOnClick;
-        _view.GetBinder().OnSliderValueChanged += SliderValueChanged;
-        _view.GetBinder().OnToggleValueChanged += ToggleValueChanged;
-        _view.GetBinder().OnInputFieldValueChanged += InputFieldValueChanged;
+        view.GetBinder().OnButtonClick += ButtonOnClick;
+        view.GetBinder().OnSliderValueChanged += SliderValueChanged;
+        view.GetBinder().OnToggleValueChanged += ToggleValueChanged;
+        view.GetBinder().OnInputFieldValueChanged += InputFieldValueChanged;
     }
 
     /// <summary>
@@ -50,9 +50,9 @@ public abstract class UIController<TView, TModel> : IUIController where TView : 
     /// </summary>
     void IUIController.BindModelEvents()
     {
-        if (_model != null)
+        if (model != null)
         {
-            _model.OnDataChanged += (this as IUIController).OnHandleModelDataChanged;
+            model.OnDataChanged += (this as IUIController).OnHandleModelDataChanged;
         }
     }
 
@@ -63,7 +63,7 @@ public abstract class UIController<TView, TModel> : IUIController where TView : 
     /// <param name="value"></param>
     void IUIController.OnHandleModelDataChanged(string key, object value)
     {
-        _view.UpdateView(key, value);
+        view.UpdateView(key, value);
     }
 
     /// <summary>
@@ -95,12 +95,12 @@ public abstract class UIController<TView, TModel> : IUIController where TView : 
 
     public virtual void Destroy()
     {
-        _view.GetBinder().OnButtonClick -= ButtonOnClick;
-        _view.GetBinder().OnSliderValueChanged -= SliderValueChanged;
-        _view.GetBinder().OnToggleValueChanged -= ToggleValueChanged;
-        _view.GetBinder().OnInputFieldValueChanged -= InputFieldValueChanged;
-        _model.OnDataChanged -= (this as IUIController).OnHandleModelDataChanged;
-        _model.ClearData();
+        view.GetBinder().OnButtonClick -= ButtonOnClick;
+        view.GetBinder().OnSliderValueChanged -= SliderValueChanged;
+        view.GetBinder().OnToggleValueChanged -= ToggleValueChanged;
+        view.GetBinder().OnInputFieldValueChanged -= InputFieldValueChanged;
+        model.OnDataChanged -= (this as IUIController).OnHandleModelDataChanged;
+        model.ClearData();
 
         MouseManager.Instance.ReleaseMouseVisible(this.ToString());
     }

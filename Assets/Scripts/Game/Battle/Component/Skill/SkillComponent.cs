@@ -1,37 +1,32 @@
 using Framework;
-using GameLogic.BattleMoudule.Entity;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Game.Battle
 {
     /// <summary>
-    /// 角色技能组件（管理角色技能，提供释放入口）
+    /// 战斗实体技能组件（管理实体技能，提供释放入口）
     /// </summary>
     public class SkillComponent : BattleComponent, ISkillComponent
     {
         // 技能列表（配置表加载）  可能这个组件只有技能Id列表就可以了
         private readonly Dictionary<int, ISkill> _skills = new Dictionary<int, ISkill>();
+        // 技能工厂接口
+        private ISkillFactory skillFactory;
 
-        public override void BattleInit(IBattleEntityObject battleEntity)
+        /// <summary>
+        /// 初始化技能列表
+        /// </summary>
+        /// <param name="f_skillIds"></param>
+        public void InitSkills(string f_skillIds, ISkillFactory skillFactory)
         {
-            base.BattleInit(battleEntity);
-            
+            this.skillFactory = skillFactory;
             // TODO：通过技能工厂加载技能（配置表读取角色技能ID列表）
-            int[] skillIds = TextUtility.SplitToIntArr((this.BattleEntity as PlayerObject).RoleInfo.f_skillIds, 2);
-            foreach (int skillId in skillIds)
+            int[] skillIds = TextUtility.SplitToIntArr(f_skillIds, 2);
+            var skills = skillFactory.CreateSkills(skillIds);
+
+            foreach (ISkill skill in skills)
             {
-                switch (skillId)
-                {
-                    case 10:
-                        // 从配置表加载技能（示例：加载ID=1的弱点攻击技能）
-                        _skills.Add(skillId, new WeakPointAttackSkill());
-                        break;
-                    case 11:
-                        // 添加召唤技能（配置表加载）
-                        this.AddSkill(skillId, new SummonMimiSkill());
-                        break;
-                }
+                _skills.Add(skill.SkillInfo.f_id, skill);
             }
         }
 
@@ -41,15 +36,14 @@ namespace Game.Battle
         /// <param name="skillId"></param>
         public void CastSkill(int skillId)
         {
-            if (_skills.TryGetValue(skillId, out var _))
+            if (_skills.TryGetValue(skillId, out var skill))
             {
-                SkillInfo skillInfo = BinaryDataMgr.Instance.GetConfig<SkillInfoContainer>(E_ConfigLoadType.Editor).dataDic[skillId];
                 // 发送技能命令到回合队列
-                SkillManager.Instance.AddSkillCommand(skillInfo, (this.BattleEntity as PlayerObject).RoleInfo);
+                SkillManager.Instance.AddSkillCommand(skill, this.BattleEntity);
             }
             else
             {
-                LogManager.Log($"未找到技能ID， skillId = {skillId}");
+                LogManager.Log($"未找到技能实例， skillId = {skillId}");
             }
         }
 
@@ -73,6 +67,15 @@ namespace Game.Battle
         public IEnumerable<int> GetSkillIds()
         {
             return _skills.Keys;
+        }
+
+        /// <summary>
+        /// 获取所有的技能
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<ISkill> GetSkills()
+        {
+            return _skills.Values;
         }
     }
 }

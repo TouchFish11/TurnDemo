@@ -1,4 +1,3 @@
-using GameLogic.BattleMoudule.Entity;
 using System.Collections.Generic;
 
 namespace Game.Battle
@@ -11,7 +10,7 @@ namespace Game.Battle
         /// <summary>
         /// 弱点属性（如物理、风）
         /// </summary>
-        public List<E_PropertyType> WeakPropertys { get; }
+        public List<E_ElementType> WeakPropertys { get; }
 
         /// <summary>
         /// 当前韧性值
@@ -23,7 +22,7 @@ namespace Game.Battle
         /// </summary>
         public bool IsBroken => CurrentValue <= 0;
 
-        public Toughness(List<E_PropertyType> weakPropertys, float initialValue)
+        public Toughness(List<E_ElementType> weakPropertys, float initialValue)
         {
             WeakPropertys = weakPropertys;
             CurrentValue = initialValue;
@@ -34,7 +33,7 @@ namespace Game.Battle
         /// </summary>
         /// <param name="damage"></param>
         /// <param name="attackAttr"></param>
-        public void ReduceToughness(E_PropertyType propertyType, float value)
+        public void ReduceToughness(E_ElementType propertyType, float value)
         {
             // 弱点属性伤害翻倍
             //var finalDamage = attackAttr == WeakAttribute ? damage * 2 : damage;

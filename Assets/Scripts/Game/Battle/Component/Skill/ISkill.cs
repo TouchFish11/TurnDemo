@@ -1,4 +1,3 @@
-using GameLogic.BattleMoudule.Entity;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -28,13 +27,13 @@ namespace Game.Battle
         /// <summary>
         /// 技能属性（配置表读取）
         /// </summary>
-        E_PropertyType PropertyType { get; }
+        E_ElementType PropertyType { get; }
 
         /// <summary>
         /// 初始化技能
         /// </summary>
         /// <param name="skillId"></param>
-        void Init(SkillInfo skillInfo, IBattleEntityObject caster, IBattleEntityObject mainTarget, List<IBattleEntityObject> allTargets);
+        void Init(IBattleEntityObject caster, IBattleEntityObject mainTarget, List<IBattleEntityObject> allTargets);
 
         /// <summary>
         /// 释放技能

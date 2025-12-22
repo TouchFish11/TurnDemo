@@ -19,19 +19,10 @@ public class SkillManager : SingletonBase<SkillManager>
     /// </summary>
     /// <param name="skillInfo"></param>
     /// <param name="roleInfo"></param>
-    public void AddSkillCommand(SkillInfo skillInfo, RoleInfo roleInfo)
+    public void AddSkillCommand(ISkill skill, IBattleEntityObject entityObject)
     {
         // 获取上下文
         IBattleContext battleContext = BattleManager.Instance.GetContext();
-        // 创建技能实例
-        ISkill skill = GetSKill(skillInfo.f_id);
-
-        if(skill == null)
-        {
-            Debug.LogError($"未添加技能实例，实例为空 , skillId = {skillInfo.f_id}");
-            return;
-        }
-
         // 获取技能释放对象  待优化：应为触发技能的实体对象，而不一定是当前回合实体
         IBattleEntityObject caster = battleContext.GetTurnManager().GetCurrentEntity();
         // 通过目标选择管理器获取技能主目标
@@ -39,24 +30,8 @@ public class SkillManager : SingletonBase<SkillManager>
         // 通过目标选择管理器获取技能所有目标
         List<IBattleEntityObject> selectedTargets = TargetSelectManager.Instance.GetTargets();
         // 初始化技能
-        skill.Init(skillInfo, caster, mainTaget, selectedTargets);
-
+        skill.Init(caster, mainTaget, selectedTargets);
         BattleManager.Instance.GetContext().GetTurnManager().EnqueueCommand(skill);
-    }
-
-    /// <summary>
-    /// 获取技能实例
-    /// </summary>
-    /// <param name="skillId"></param>
-    /// <returns></returns>
-    private ISkill GetSKill(int skillId)
-    {
-        return skillId switch
-        {
-            10 => new WeakPointAttackSkill(),
-            11 => new SummonMimiSkill(),
-            _ => null,
-        };
     }
 
     private List<IBattleEntityObject> FindTargets(SkillInfo skillInfo, IBattleContext context, IBattleEntityObject mainTarget)

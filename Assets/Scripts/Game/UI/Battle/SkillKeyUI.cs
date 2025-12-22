@@ -36,8 +36,8 @@ public class SkillKeyUI : BaseUIBehaviour
     private TextMeshProUGUI txtSkillTip;
     // 选择时的缩放比例
     private readonly Vector3 SelectedScale = Vector3.one * 1.3f;
-    // 技能信息
-    private SkillInfo skillInfo;
+    // 技能ID
+    private int skillId;
     // 角色信息
     private RoleInfo roleInfo;
     // 能否触发技能
@@ -62,7 +62,7 @@ public class SkillKeyUI : BaseUIBehaviour
     /// <param name="skillInfo"></param>
     public void Init(SkillInfo skillInfo, RoleInfo roleInfo, ToggleGroup group)
     {
-        this.skillInfo = skillInfo;
+        this.skillId = skillInfo.f_id;
         this.roleInfo = roleInfo;
         togSkillKeyUI.group = group;
         txtSkillTip.text = skillInfo.f_skillRangeType.ToSkillRangeTypeText();
@@ -117,7 +117,7 @@ public class SkillKeyUI : BaseUIBehaviour
         if (triggerPhase == E_TriggerPhase.Trigger)
         {
             // 执行触发技能事件
-            OnTriggerSkill?.Invoke(skillInfo.f_id);
+            OnTriggerSkill?.Invoke(skillId);
             triggerPhase = E_TriggerPhase.Selected;
         }
     }

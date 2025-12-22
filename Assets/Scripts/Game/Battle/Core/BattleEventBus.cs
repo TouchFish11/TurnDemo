@@ -21,7 +21,8 @@ namespace Game.Battle
 
 
     /// <summary>
-    /// 战斗事件总线（核心：负责事件的注册、取消注册、广播）
+    /// 战斗事件总线
+    /// 局部事件总线，负责战斗流程中各模块间的事件通信
     /// </summary>
     public class BattleEventBus
     {

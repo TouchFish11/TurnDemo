@@ -10,9 +10,9 @@ namespace Framework
         where TView : UIView where TModel : UIModel, new() where TController : UIController<TView, TModel>
     {
         // 视图对象
-        //private readonly TView _view;
+        //private readonly TView view;
         //// UI数据
-        //private readonly TModel _model;
+        //private readonly TModel model;
         //// UI控制器
         //private readonly TController _controller;
 
@@ -26,11 +26,11 @@ namespace Framework
         /// <summary>
         /// 面板对象
         /// </summary>
-        //public TView View => _view;
+        //public TView View => view;
 
         public override UIView View { get; protected set; }
 
-        //public TModel Model => _model;
+        //public TModel Model => model;
 
         public override UIModel Model { get; protected set; }
 

@@ -46,6 +46,12 @@ public class BattleView : UIView
             case "skillKeyUIs":
                 UpdateOperator(value as List<SkillKeyUI>);
                 break;
+            case "roleStateUIs":
+                InitRoleStateUI(value as List<RoleStateUI>);
+                break;
+            case "battlePointCount":
+                txtCount.text = ((int)value).ToString();
+                break;
         }
     }
 
@@ -67,6 +73,14 @@ public class BattleView : UIView
         foreach (SkillKeyUI skillKeyUI in skillKeyUIs)
         {
             skillKeyUI.transform.SetParent(operatorArea, false);
+        }
+    }
+
+    public void InitRoleStateUI(IEnumerable<RoleStateUI> roleStateUIs)
+    {
+        foreach (RoleStateUI roleStateUI in roleStateUIs)
+        {
+            roleStateUI.transform.SetParent(playerArea, false);
         }
     }
 }

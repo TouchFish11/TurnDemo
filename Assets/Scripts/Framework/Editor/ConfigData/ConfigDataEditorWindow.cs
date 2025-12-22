@@ -431,12 +431,12 @@ public class ConfigDataEditorWindow : EditorWindow
 
                 EditorGUILayout.BeginHorizontal("box");
                 // 行号
-                GUILayout.Label((i + 1).ToString());
+                GUILayout.Label((i + 1).ToString(), GUILayout.Width(50));
 
                 // 单元格编辑
                 foreach (var col in selectConfigData.columns)
                 {
-                    object newValue = DrawField(col.fieldType, selectConfigData.rows[i].GetValue(col.fieldName));
+                    object newValue = DrawField(col.fieldType, selectConfigData.rows[i].GetValue(col.fieldName), GUILayout.Width(120));
                     // GUI渲染位置不对
                     switch (col.fieldType)
                     {

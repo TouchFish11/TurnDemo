@@ -81,7 +81,7 @@ namespace Game.Battle
             // 排序行动顺序
             SortOrder();
             // 启用当前实体行动
-            _currentActEntity.EnableAct();
+            _currentActEntity.ExecuteAction();
             // 设置为角色行动阶段
             _battlePhase = E_BattlePhase.EntityTurn;
         }
@@ -110,14 +110,14 @@ namespace Game.Battle
                 }
 
                 // 当前实体正在行动，等待其行动结束
-                if (!_currentActEntity.IsActing)
+                if (!_currentActEntity.CanAct)
                 {
                     // 更新当前行动实体
                     UpdateActEntity();
                     // 排序
                     SortOrder();
                     // 启用当前实体行动
-                    _currentActEntity.EnableAct();
+                    _currentActEntity.ExecuteAction();
                 }
 
                 yield return null;
@@ -167,7 +167,6 @@ namespace Game.Battle
 #else
             LinkedListNode<IBattleEntityObject> currentNode = _actions.First;
             _currentActEntity = currentNode.Value;
-            LogManager.Log($"{_currentActEntity}");
             while (currentNode.Next != null)
             {
                 PropertyComponent propertyComponent = _currentActEntity.GetComponent<PropertyComponent>();

@@ -6,4 +6,5 @@ public class SkillInfo
 	public int f_skillRangeType;
 	public int f_SkillType;
 	public int f_SkillTargetType;
+	public int f_recoveryEnergy;
 }

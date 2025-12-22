@@ -28,7 +28,7 @@ namespace Game.Battle
             // 触发单件属性加成
             foreach (var effect in relic.SingleEffects)
             {
-                BattleEntity.AddRelicBonus(effect.RelicBoun, effect.BounValue);
+               // BattleEntity.GetComponent<PropertyComponent>().AddRelicBonus(effect.RelicBoun, effect.BounValue);
             }
 
             // 检查套装效果（统计同套装件数，满足条件则激活）

@@ -1,4 +1,3 @@
-using GameLogic.BattleMoudule.Entity;
 using System.Collections;
 
 namespace Game.Battle
@@ -29,7 +28,7 @@ namespace Game.Battle
 
             //Console.WriteLine($"\n{Name}响应{Owner.Name}的技能，发动协同攻击！");
             //// 协同攻击（复用角色受伤害API）
-            //var summonDamage = Owner.GetAttribute(AttributeType.Attack) * _协同AttackRatio;
+            //var summonDamage = Owner.GetAttribute(AttributeType.BaseAtk) * _协同AttackRatio;
             //evt.Target.TakeDamage(summonDamage);
             //Console.WriteLine($"{evt.Target.Name}受到{Name}的协同伤害：{summonDamage}点");
 
@@ -46,12 +45,6 @@ namespace Game.Battle
             return isTrue;
         }
 
-        public override int GetField(E_FieldType propertyType)
-        {
-            // 属性依赖主人(可选)
-            return (int)(Owner.GetField(propertyType) * 0.8f);
-        }
-
         public override int GetSpeed()
         {
             // 召唤物不参与行动队列，仅协同（可扩展为参与行动队列）
@@ -63,19 +56,19 @@ namespace Game.Battle
             // 召唤物不可回复（可扩展为可回复）
         }
 
-        public override void TakeDamage(int damage, E_PropertyType propertyType)
+        public override void TakeDamage(int damage, E_ElementType propertyType)
         {
             // 召唤物不可被攻击（可扩展为可被攻击）
         }
 
-        public override void AddRelicBonus(E_RelicBoun relicBoun, float value)
+        protected override IEnumerator OnExceuteAction()
         {
-
+            throw new System.NotImplementedException();
         }
 
-        public override IEnumerator ExecuteAction()
+        public override void CastSkill(int skillId)
         {
-            yield return null;
+            throw new System.NotImplementedException();
         }
     }
 }

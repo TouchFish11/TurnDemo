@@ -1,5 +1,4 @@
 using Framework;
-using GameLogic.BattleMoudule.Entity;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -10,13 +9,18 @@ namespace Game.Battle
     /// </summary>
     public class WeakPointAttackSkill : Skill
     {
+        public WeakPointAttackSkill(int skillId) : base(skillId)
+        {
+
+        }
+
         public override IEnumerator Cast(IBattleContext context)
         {
             LogManager.Log($"{Caster.Name}释放技能：{SkillInfo.f_name}");
 
-            Caster.DisableAct();
+            this.Caster.SubActCount();
             //// 计算技能伤害（基于角色攻击力+技能系数）
-            //int finalDamage = (int)(Caster.GetField(E_FieldType.Attack) * DamageCoefficient);
+            //int finalDamage = (int)(Caster.GetProperty(E_DynamicPropertyType.BaseAtk) * DamageCoefficient);
 
             //for (int i = 0; i < AllTargets.Count; i++)
             //{

@@ -1,5 +1,4 @@
 using Framework;
-using GameLogic.BattleMoudule.Entity;
 
 namespace Game.Battle
 {
@@ -29,7 +28,7 @@ namespace Game.Battle
             }
 
             // 调用角色的“回血API”执行具体逻辑（模块内部/依赖模块API调用）
-            int healValue = (int)(owner.GetField(E_FieldType.MaxHp) * _healRatio);
+            int healValue = (int)(owner.GetComponent<PropertyComponent>().GetProperty<BattleProperty>().MaxHp * _healRatio);
             owner.Heal(healValue);
             LogManager.Log($"{owner.Name}触发持续回血，恢复{healValue}点HP");
 

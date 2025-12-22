@@ -6,4 +6,9 @@ public class RoleInfo
 	public int f_elementType;
 	public string f_comIds;
 	public string f_skillIds;
+	public int f_baseHp;
+	public int f_baseDef;
+	public int f_baseAtk;
+	public int f_baseSpeed;
+	public int f_maxEnergy;
 }

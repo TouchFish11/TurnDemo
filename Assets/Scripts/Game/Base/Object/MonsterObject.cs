@@ -12,6 +12,8 @@ namespace Game.Battle
         /// </summary>
         public MonsterInfo MonsterInfo { get; private set; }
 
+        private readonly List<int> skillIds = new List<int>();
+
         public override void BaseInit(int id)
         {
             base.BaseInit(id);
@@ -24,14 +26,23 @@ namespace Game.Battle
         public override void BattleInit(int monsterId, IBattleContext context)
         {
             base.BattleInit(monsterId, context);
+
+            // 初始化技能列表
+            skillIds.AddRange(TextUtility.SplitToIntArr(MonsterInfo.f_skillIds, 2));
             // 添加战斗相关组件
             AddComponents(TextUtility.SplitToIntArr(MonsterInfo.f_comIds, 2));
         }
 
-        public override IEnumerator ExecuteAction()
+        protected override IEnumerator OnExceuteAction()
         {
-            throw new System.NotImplementedException();
+            // 模拟怪物行动的延迟
+            yield return new WaitForSeconds(1.0f);
+
+            // 怪物AI逻辑，随机选择一个技能释放
+            int skillId = skillIds[Random.Range(0, skillIds.Count)];
+            CastSkill(skillId);
         }
+
 
         public override int GetSpeed()
         {

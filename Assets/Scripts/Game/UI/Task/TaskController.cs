@@ -40,26 +40,26 @@ namespace Game.UI
             await InitTasks();
 
             // 存在任务
-            if (_model.HasTask())
+            if (model.HasTask())
             {
                 // 有正在追踪的任务
                 if (taskDataCollection.IsTracking(out TaskData taskData))
                 {
                     // 显示当前追踪任务和进度
-                    _model.IsFollowingTask = true;
-                    _model.SelectTrackingTask(taskData.currentTaskId);
+                    model.IsFollowingTask = true;
+                    model.SelectTrackingTask(taskData.currentTaskId);
                 }
                 else
                 {
                     // 不显示任务栏
-                    _model.IsFollowingTask = false;
+                    model.IsFollowingTask = false;
                     // 默认显示第一个任务
-                    _model.GetFirstContainer().DefaultSelectFirstTask();
+                    model.GetFirstContainer().DefaultSelectFirstTask();
                 }
             }
 
             // 选中完其中任务后，禁止“每一个都不选中”选项
-            _view.TaskItemGroup.allowSwitchOff = false;
+            view.TaskItemGroup.allowSwitchOff = false;
         }
 
         protected override void ButtonOnClick(string btnName)
@@ -70,10 +70,10 @@ namespace Game.UI
                     UIManager.Instance.DestroyView();
                     break;
                 case "btnAcceptTask":
-                    _model.IsFollowingTask = !_model.IsFollowingTask;
-                    if (_model.IsFollowingTask)
+                    model.IsFollowingTask = !model.IsFollowingTask;
+                    if (model.IsFollowingTask)
                     {
-                        TaskManager.Instance.AcceptTask(_model.GetCurrentSelectTaskInfo().f_id);
+                        TaskManager.Instance.AcceptTask(model.GetCurrentSelectTaskInfo().f_id);
                     }
                     else
                     {
@@ -90,7 +90,7 @@ namespace Game.UI
         private async Task InitTasks()
         {
             // 暂时允许都不选中，避免任务更新出现Toggle无法响应事件问题
-            _view.TaskItemGroup.allowSwitchOff = true;
+            view.TaskItemGroup.allowSwitchOff = true;
             // 读取任务数据
             taskDataCollection = GameDataMgr.Instance.TaskDataCollection;
             // 读取任务信息
@@ -110,14 +110,14 @@ namespace Game.UI
 
                 // 显示任务列表UI
                 TaskTypeContainer taskTypeContainer;
-                if (!_model.ContainContainer(taskInfo.f_taskType))
+                if (!model.ContainContainer(taskInfo.f_taskType))
                 {
                     // 创建该任务类型父对象
                     taskTypeContainer = await CreateTaskTypeContainer(taskInfo);
                 }
                 else
                 {
-                    taskTypeContainer = _model.GetContainer(taskInfo.f_taskType);
+                    taskTypeContainer = model.GetContainer(taskInfo.f_taskType);
                 }
 
                 if (!taskTypeContainer.ContainTask(taskInfo.f_id))
@@ -137,7 +137,7 @@ namespace Game.UI
             // 创建该任务类型父对象
             TaskTypeContainer taskTypeContainer = await ObjectBuilder.GetOrCreateInstance<TaskTypeContainer>(E_AssetBundleType.UI, ResKeyCollection.TaskTypeContainer, null);
             taskTypeContainer.Init(taskInfo.f_taskType);
-            _model.AddTaskTypeContainers(taskInfo.f_taskType, taskTypeContainer);
+            model.AddTaskTypeContainers(taskInfo.f_taskType, taskTypeContainer);
             return taskTypeContainer;
         }
 
@@ -152,7 +152,7 @@ namespace Game.UI
             TaskItem taskItem = await ObjectBuilder.GetOrCreateInstance<TaskItem>(E_AssetBundleType.UI, ResKeyCollection.TaskItem, container.transform);
             taskItem.OnSelectedTask += UpdateTaskDetail;
             taskDataCollection.TryGetValue(taskInfo.f_id, out TaskData taskData);
-            taskItem.Init(taskInfo, _view.TaskItemGroup);
+            taskItem.Init(taskInfo, view.TaskItemGroup);
             container.AddItem(taskItem);
         }
 
@@ -162,7 +162,7 @@ namespace Game.UI
         /// <param name="taskInfo"></param>
         private async void UpdateTaskDetail(string id)
         {
-            await _model.UpdateTaskInfoById(id);
+            await model.UpdateTaskInfoById(id);
         }
     }
 }

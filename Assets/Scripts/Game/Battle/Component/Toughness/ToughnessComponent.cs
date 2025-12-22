@@ -1,7 +1,5 @@
 using Framework;
-using GameLogic.BattleMoudule.Entity;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Game.Battle
 {
@@ -13,7 +11,7 @@ namespace Game.Battle
         // µ±Ç°ÈÍÐÔ×´Ì¬
         private Toughness _toughness;
 
-        public void Init(IBattleEntityObject owner, List<E_PropertyType> weakPropertys, float initialToughness)
+        public void Init(IBattleEntityObject owner, List<E_ElementType> weakPropertys, float initialToughness)
         {
             _toughness = new Toughness(weakPropertys, initialToughness);
         }

@@ -1,8 +1,10 @@
 using Framework;
 using Game.Battle;
-using GameLogic.BattleMoudule.Entity;
 using System.Collections;
 using System.Collections.Generic;
+
+
+
 /// <summary>
 /// 技能基类
 /// </summary>
@@ -12,7 +14,7 @@ public abstract class Skill : ISkill
 
     public float DamageCoefficient { get; }
 
-    public E_PropertyType PropertyType { get; }
+    public E_ElementType PropertyType { get; }
 
     public IBattleEntityObject Caster { get; private set; }
 
@@ -20,9 +22,13 @@ public abstract class Skill : ISkill
 
     public List<IBattleEntityObject> AllTargets { get; private set; }
 
-    public void Init(SkillInfo skillInfo, IBattleEntityObject caster, IBattleEntityObject mainTarget, List<IBattleEntityObject> allTargets)
+    protected Skill(int skillId)
     {
-        SkillInfo = skillInfo;
+        SkillInfo = BinaryDataMgr.Instance.GetConfig<SkillInfoContainer>(E_ConfigLoadType.Editor).dataDic[skillId];
+    }
+
+    public void Init(IBattleEntityObject caster, IBattleEntityObject mainTarget, List<IBattleEntityObject> allTargets)
+    {
         Caster = caster;
         MainTarget = mainTarget;
         AllTargets = allTargets;

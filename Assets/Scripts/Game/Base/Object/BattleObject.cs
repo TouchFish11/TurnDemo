@@ -1,9 +1,6 @@
 using Framework;
 using Game.Battle;
-using GameLogic.BattleMoudule.Entity;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Game
@@ -19,19 +16,21 @@ namespace Game
 
         public float ActionValue { get; protected set;  }
 
-        public bool IsActing { get; private set; }
+        public bool CanAct => actCount > 0;
 
-        // 基础属性
-        private readonly Dictionary<E_FieldType, float> _attributes = new Dictionary<E_FieldType, float>();
-        // 额外属性加成
-        private readonly Dictionary<E_FieldType, float> _attributeBonuses = new Dictionary<E_FieldType, float>();
+        public int BattleEntityId { get; private set; }
 
-        public virtual void BattleInit(int roleId, IBattleContext context)
+        // 行动次数
+        protected int actCount;
+
+        public virtual void BattleInit(int battleEntityId, IBattleContext context)
         {
             // 基础初始化
-            BaseInit(roleId);
+            //BaseInit(battleEntityId);
             // 记录上下文
             Context = context;
+            // 缓存战斗实体ID
+            BattleEntityId = battleEntityId;
 
             // 加载组件（配置表可配置角色绑定哪些组件）
             //SkillComponent skillComponent = this.AddComponent<SkillComponent>();
@@ -53,45 +52,11 @@ namespace Game
             //if (name.Contains("敌人"))
             //{
             //    ToughnessComponent toughnessComponent = this.AddComponent<ToughnessComponent>();
-            //    toughnessComponent.Init(this, new() { E_PropertyType.Physical }, 200);
+            //    toughnessComponent.Init(this, new() { E_ElementType.Physical }, 200);
             //}
         }
 
-        public virtual void AddRelicBonus(E_RelicBoun type, float value)
-        {
-            E_FieldType fieldType = E_FieldType.None;
-            switch (type)
-            {
-                case E_RelicBoun.CriticalRate:
-                    fieldType = E_FieldType.CriticalRate;
-                    break;
-                case E_RelicBoun.CriticalDmg:
-                    fieldType = E_FieldType.CriticalDmg;
-                    break;
-                case E_RelicBoun.BuildHp:
-                    fieldType = E_FieldType.MaxHp;
-                    break;
-                case E_RelicBoun.Speed:
-                    fieldType = E_FieldType.Speed;
-                    break;
-            }
 
-            if (_attributeBonuses.ContainsKey(fieldType))
-            {
-                _attributeBonuses[fieldType] += value;
-            }
-            else
-            {
-                _attributeBonuses[fieldType] = value;
-            }
-        }
-
-        public virtual int GetField(E_FieldType propertyType)
-        {
-            _attributes.TryGetValue(propertyType, out var baseValue);
-            _attributeBonuses.TryGetValue(propertyType, out var bonusValue);
-            return (int)(baseValue + bonusValue);
-        }
 
         public abstract int GetSpeed();
 
@@ -100,18 +65,40 @@ namespace Game
 
         }
 
-        public virtual void TakeDamage(int damage, E_PropertyType propertyType)
+        public virtual void TakeDamage(int damage, E_ElementType propertyType)
         {
             LogManager.Log($"{Name}剩余HP：{1000 - damage}");
         }
 
-        public abstract IEnumerator ExecuteAction();
+        /// <summary>
+        /// 执行行动
+        /// </summary>
+        public void ExecuteAction()
+        {
+            EnableAct();
+            MonoManager.Instance.StartCoroutine(OnExceuteAction());
+        }
+
+        /// <summary>
+        /// 在执行行动时调用
+        /// </summary>
+        /// <returns></returns>
+        protected abstract IEnumerator OnExceuteAction();
 
         public void SetActionValue(float actionValue)
         {
             ActionValue = Random.Range(0, 100);
 
             //this.ActionValue = actionValue;
+        }
+
+        /// <summary>
+        /// 释放技能
+        /// </summary>
+        /// <param name="skillId"></param>
+        public virtual void CastSkill(int skillId)
+        {
+            this.GetComponent<SkillComponent>().CastSkill(skillId);
         }
 
         /// <summary>
@@ -132,16 +119,28 @@ namespace Game
 
         public void EnableAct()
         {
-            IsActing = true;
+            AddActCount();
             // 执行实体回合开始事件
             Context.GetEventBus().TriggerEvent(new TurnStartEvent(Context, this));
         }
 
         public void DisableAct()
         {
-            IsActing = false;
+            SubActCount();
             // 执行实体回合结束事件
             Context.GetEventBus().TriggerEvent(new TurnEndEvent(Context, this, false));
+        }
+
+        public void AddActCount()
+        {
+            ++actCount;
+            LogManager.Log($"行动数增加，{Name}剩余行动次数：{actCount}");
+        }
+
+        public void SubActCount()
+        {
+            actCount = Mathf.Clamp(--actCount, 0, actCount);
+            LogManager.Log($"行动数减少，{Name}剩余行动次数：{actCount}");
         }
     }
 }
