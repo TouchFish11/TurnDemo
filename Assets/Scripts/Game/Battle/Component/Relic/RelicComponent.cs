@@ -23,7 +23,7 @@ namespace Game.Battle
         public void EquipRelic(IRelic relic)
         {
             _equippedRelics.Add(relic);
-            Console.WriteLine($"{BattleEntity.Name}装备遗器：{relic.Name}");
+            Console.WriteLine($"{BattleEntity.GameObject.name}装备遗器：{relic.Name}");
 
             // 触发单件属性加成
             foreach (var effect in relic.SingleEffects)

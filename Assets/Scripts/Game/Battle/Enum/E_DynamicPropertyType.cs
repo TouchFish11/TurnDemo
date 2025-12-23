@@ -8,8 +8,10 @@ namespace Game.Battle
     {
         CurrentHp,
         MaxHp,
-        MaxAtk,
-        MaxDef,
+        TotalAtk,
+        TotalDef,
         CurrentSpeed,
+        TotalCrit,
+        TotalCritDmg,
     }
 }

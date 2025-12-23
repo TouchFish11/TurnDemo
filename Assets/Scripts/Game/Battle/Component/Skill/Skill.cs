@@ -3,8 +3,6 @@ using Game.Battle;
 using System.Collections;
 using System.Collections.Generic;
 
-
-
 /// <summary>
 /// 技能基类
 /// </summary>
@@ -13,8 +11,6 @@ public abstract class Skill : ISkill
     public SkillInfo SkillInfo { get; private set; }
 
     public float DamageCoefficient { get; }
-
-    public E_ElementType PropertyType { get; }
 
     public IBattleEntityObject Caster { get; private set; }
 
@@ -35,5 +31,13 @@ public abstract class Skill : ISkill
     }
 
     // 一定是通过技能对象实例来驱动角色释放技能行为的
-    public abstract IEnumerator Cast(IBattleContext context);
+    public virtual IEnumerator Cast(IBattleContext context)
+    {
+        // 通用处理逻辑
+        // 处理战技点
+        context.CurentBattlePointCount -= SkillInfo.f_costBP;
+        // 减少行动次数
+        this.Caster.SubActCount();
+        yield break;
+    }
 }

@@ -2,7 +2,7 @@
 namespace Game.Battle
 {
     /// <summary>
-    /// 角色行动结束事
+    /// 角色行动结束事件
     /// </summary>
     public class TurnEndEvent : BattleEvent
     {

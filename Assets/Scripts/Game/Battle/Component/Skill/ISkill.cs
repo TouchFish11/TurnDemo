@@ -25,11 +25,6 @@ namespace Game.Battle
         float DamageCoefficient { get; }
 
         /// <summary>
-        /// 技能属性（配置表读取）
-        /// </summary>
-        E_ElementType PropertyType { get; }
-
-        /// <summary>
         /// 初始化技能
         /// </summary>
         /// <param name="skillId"></param>

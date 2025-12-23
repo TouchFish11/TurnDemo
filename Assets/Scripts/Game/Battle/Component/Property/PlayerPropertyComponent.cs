@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 玩家属性组件
+/// 玩家属性组件（组件ID：）
 /// </summary>
 public class PlayerPropertyComponent : PropertyComponent
 {
@@ -12,7 +12,7 @@ public class PlayerPropertyComponent : PropertyComponent
     {
         base.BattleInit(battleEntity);
 
-        battleProperty = new PlayerProperty();
+        battleProperty = new RoleProperty();
         battleProperty.InitProperty(battleEntity.BattleEntityId);
     }
 }

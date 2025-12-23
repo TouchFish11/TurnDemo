@@ -22,11 +22,6 @@ namespace Game.Battle
         //当前战斗阶段
         private E_BattlePhase _battlePhase = E_BattlePhase.None;
 
-        /// <summary>
-        /// 在回合开始时触发
-        /// </summary>
-        public event Action<TurnStartEvent> OnTurnStart;
-
         public TurnManager(IBattleContext context)
         {
             _context = context;
@@ -75,7 +70,6 @@ namespace Game.Battle
         /// </summary>
         private async Task BattlePreparation()
         {
-            _context.GetEventBus().AddListener<TurnStartEvent>(OnTurnStart);
             // 初始化行动实体
             UpdateActEntity();
             // 排序行动顺序

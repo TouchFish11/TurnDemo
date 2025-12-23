@@ -17,8 +17,6 @@ public class SkillManager : SingletonBase<SkillManager>
     /// <summary>
     /// 添加技能命令到回合队列
     /// </summary>
-    /// <param name="skillInfo"></param>
-    /// <param name="roleInfo"></param>
     public void AddSkillCommand(ISkill skill, IBattleEntityObject entityObject)
     {
         // 获取上下文

@@ -59,7 +59,7 @@ namespace Game.Battle
         public void AddTalent(ITalent talent)
         {
             _talents.Add(talent);
-            LogManager.Log($"{BattleEntity.Name}激活天赋：{talent.Name}");
+            LogManager.Log($"{BattleEntity.GameObject.name}激活天赋：{talent.Name}");
         }
     }
 }

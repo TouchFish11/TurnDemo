@@ -20,6 +20,8 @@ namespace Game
 
         public GameObject GameObject => this.gameObject;
 
+        public EntityProperty EntityProperty { get; protected set; }
+
         protected virtual void Awake()
         {
 
@@ -27,7 +29,7 @@ namespace Game
 
         public virtual void BaseInit(int id)
         {
-            // Ìí¼Ó×é¼þ
+
         }
 
         public new TComponent GetComponent<TComponent>() where TComponent : Component

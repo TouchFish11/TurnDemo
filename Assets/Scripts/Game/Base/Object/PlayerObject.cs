@@ -15,6 +15,12 @@ namespace Game
         /// </summary>
         public RoleInfo RoleInfo { get; private set; }
 
+        public override void BaseInit(int id)
+        {
+            base.BaseInit(id);
+            RoleInfo = BinaryDataMgr.Instance.GetConfig<RoleInfoContainer>(E_ConfigLoadType.Editor).dataDic[id];
+        }
+
         public override void BattleInit(int battleEntityId, IBattleContext context)
         {
             base.BattleInit(battleEntityId, context);

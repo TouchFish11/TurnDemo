@@ -1,3 +1,4 @@
+using Game.Battle;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -56,5 +57,43 @@ public static class IntExtension
     public static E_SkillType ToSkillType(this int i)
     {
         return (E_SkillType)i;
+    }
+
+    /// <summary>
+    /// 元素类型转换为颜色
+    /// </summary>
+    /// <param name="i"></param>
+    /// <returns></returns>
+    public static Color ToElementTypeColor(this int i)
+    {
+        E_ElementType elementType = (E_ElementType)i;
+        return elementType switch
+        {
+            E_ElementType.Fire => Color.red,
+            E_ElementType.Ice => Color.blue,
+            E_ElementType.Physical => Color.white,
+            E_ElementType.Quantum => new Color(128, 0, 128),    // 紫色
+            _ => Color.white
+        };
+    }
+
+    /// <summary>
+    /// 转换为元素类型
+    /// </summary>
+    /// <param name="i"></param>
+    /// <returns></returns>
+    public static E_ElementType ToElementType(this int i)
+    {
+        return (E_ElementType)i;
+    }
+
+    /// <summary>
+    /// 转换为伤害类型
+    /// </summary>
+    /// <param name="i"></param>
+    /// <returns></returns>
+    public static E_DamageType ToDamageType(this int i)
+    {
+        return (E_DamageType)i;
     }
 }

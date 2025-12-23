@@ -29,6 +29,10 @@ public class BattleControllerFactory : UIControllerFactory<BattleView, BattleMod
 public class BattleController : UIController<BattleView, BattleModel>
 {
     private GameObject actingFlagObj;
+
+    private Vector2 damageTextXOffsetRange = new Vector2(-60, 60);
+    private Vector2 damageTextYOffsetRange = new Vector2(-20, 20);
+
     public BattleController(BattleView view, BattleModel model) : base(view, model)
     {
 
@@ -40,13 +44,16 @@ public class BattleController : UIController<BattleView, BattleModel>
     /// <param name="battleEntities"></param>
     public async Task InitBattleUI(IBattleContext battleContext)
     {
-        UpdateBattlePoint();
         await UpadteActionBar(battleContext.GetAllBattleEntity());
         await InitPlayerUI(battleContext.GetPlayerObjects());
         await InitMonsterUI(battleContext.GetMonsterObjects());
+        await UpdateBattlePointCount(battleContext.CurentBattlePointCount, battleContext.MaxBattlePointCount);
 
-        battleContext.GetTurnManager().OnTurnStart += OnTurnStart;
-        model.UpdateBattlePointCount(battleContext.BattlePointCount);
+        battleContext.GetEventBus().AddListener<OnBattlePointCountChangedEvent>(OnBattlePointCountChanged);
+        battleContext.GetEventBus().AddListener<TurnStartEvent>(OnTurnStart);
+        battleContext.GetEventBus().AddListener<TurnEndEvent>(OnTurnEnd);
+        //battleContext.GetEventBus().AddListener<OnHpChangedEvent>(OnHpChanged);
+        battleContext.GetEventBus().AddListener<OnTakeDamageEvent>(OnTakeDamage);
     }
 
     /// <summary>
@@ -66,7 +73,7 @@ public class BattleController : UIController<BattleView, BattleModel>
             {
                 // TODO：暂时用对象级事件，后续优化为局部事件中心
                 roleStateUI.OnTriggerUltimateSkill += entityObject.CastSkill;
-                roleStateUI.Init((entityObject as PlayerObject).RoleInfo, skillId);
+                roleStateUI.Init(entityObject.GetComponent<PlayerPropertyComponent>().GetProperty<RoleProperty>(), skillId);
                 roleStateUIs.Add(roleStateUI);
             }
         }
@@ -147,12 +154,60 @@ public class BattleController : UIController<BattleView, BattleModel>
         await UpdateActingFlag(turnStartEvent.CurrentBattleEntity.GameObject.transform.position);
     }
 
-    /// <summary>
-    /// 更新战技点数
-    /// </summary>
-    private void UpdateBattlePoint()
+    private void OnTurnEnd(TurnEndEvent turnEndEvent)
     {
 
+    }
+
+    /// <summary>
+    /// 受到伤害回调事件
+    /// </summary>
+    /// <param name="onTakeDamageEvent"></param>
+    private async void OnTakeDamage(OnTakeDamageEvent onTakeDamageEvent)
+    {
+        DamageResult damageResult = onTakeDamageEvent.DamageResult;
+        DamageTextUI damageTextUI = await ObjectBuilder.GetOrCreateInstance<DamageTextUI>(E_AssetBundleType.UI, ResKeyCollection.DamageTextUI, null);
+        Vector2 dmgTextOffset = new Vector2(UnityEngine.Random.Range(damageTextXOffsetRange.x, damageTextXOffsetRange.y), UnityEngine.Random.Range(damageTextYOffsetRange.x, damageTextYOffsetRange.y));
+        //坐标转换，初始化
+        if (UIManager.WorldToLocalPointInRectangle(Camera.main, UIManager.Instance.UICamera, view.transform, damageTextUI.gameObject, damageResult.Target.GameObject.transform.position, dmgTextOffset))
+        {
+            string critText = damageResult.IsCrit ? "暴击" : "";
+            damageTextUI.InitDamageText(((int)damageResult.ElementType).ToElementTypeColor(), critText, damageResult.FinalDamage);
+        }
+    }
+
+    /// <summary>
+    /// 血量变化回调事件
+    /// </summary>
+    /// <param name="onHpChangedEvent"></param>
+    private async void OnHpChanged(OnHpChangedEvent onHpChangedEvent)
+    {
+        // 显示伤害/治疗文本
+        //DamageTextUI damageTextUI = await ObjectBuilder.GetOrCreateInstance<DamageTextUI>(E_AssetBundleType.UI, ResKeyCollection.DamageTextUI, null);
+        //damageTextUI.InitDamageText();
+    }
+
+    /// <summary>
+    /// 战技点变化事件
+    /// </summary>
+    /// <param name="battlePointCountChanged"></param>
+    private async void OnBattlePointCountChanged(OnBattlePointCountChangedEvent battlePointCountChanged)
+    {
+        await UpdateBattlePointCount(battlePointCountChanged.CurentBattlePointCount, battlePointCountChanged.MaxBattlePointCount);
+    }
+
+    private async Task UpdateBattlePointCount(int current, int max)
+    {
+        LogManager.Log($"当前战技点数：{current}");
+        List<BattlePointUI> battlePointUIs = new List<BattlePointUI>();
+        for (int i = 0; i < max; i++)
+        {
+            BattlePointUI battlePointUI = await ObjectBuilder.GetOrCreateInstance<BattlePointUI>(E_AssetBundleType.UI, ResKeyCollection.BattlePointUI, null);
+            battlePointUI.SetActivePoint(i < current);
+            battlePointUIs.Add(battlePointUI);
+        }
+
+        model.UpdateBattlePointCount(current, battlePointUIs);
     }
 
     /// <summary>
@@ -170,7 +225,7 @@ public class BattleController : UIController<BattleView, BattleModel>
         actingFlagObj = await ObjectBuilder.GetOrCreateInstance(E_AssetBundleType.UI, ResKeyCollection.ActingFlag, null);
 
         // HACK：UI坐标的偏移数值临时写死，后续根据需求调整
-        UIManager.Instance.WorldToLocalPointInRectangle(Camera.main, UIManager.Instance.UICamera, view.transform, actingFlagObj, worldPos, Vector2.up * 125f);
+        UIManager.WorldToLocalPointInRectangle(Camera.main, UIManager.Instance.UICamera, view.transform, actingFlagObj, worldPos, Vector2.up * 125f);
     }
 
     internal void BattleOver()

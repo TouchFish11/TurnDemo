@@ -50,7 +50,8 @@ public class BattleView : UIView
                 InitRoleStateUI(value as List<RoleStateUI>);
                 break;
             case "battlePointCount":
-                txtCount.text = ((int)value).ToString();
+                (int currentBP, List<BattlePointUI> battlePointUIs) = ((int currentBP, List<BattlePointUI>))value;
+                UpdateBattlePointCount(currentBP, battlePointUIs);
                 break;
         }
     }
@@ -81,6 +82,15 @@ public class BattleView : UIView
         foreach (RoleStateUI roleStateUI in roleStateUIs)
         {
             roleStateUI.transform.SetParent(playerArea, false);
+        }
+    }
+
+    public void UpdateBattlePointCount(int current, List<BattlePointUI> battlePointUIs)
+    {
+        txtCount.text = current.ToString();
+        foreach (BattlePointUI battlePointUI in battlePointUIs)
+        {
+            battlePointUI.transform.SetParent(svPoint.content, false);
         }
     }
 }

@@ -1,4 +1,5 @@
 using Framework;
+using UnityEngine;
 
 namespace Game.Battle
 {
@@ -33,8 +34,8 @@ namespace Game.Battle
         public void Execute(BattleEvent battleEvent, IBattleEntityObject owner)
         {
             var turnEndEvt = (TurnEndEvent)battleEvent;
-            LogManager.Log($"\n【天赋触发】{owner.Name}触发天赋「{Name}」！");
-            LogManager.Log($"{owner.Name}获得额外行动回合！");
+            LogManager.Log($"\n【天赋触发】{owner.GameObject.name}触发天赋「{Name}」！");
+            LogManager.Log($"{owner.GameObject.name}获得额外行动回合！");
 
             // 核心逻辑：修改行动队列，将角色插入队首（调用核心层API，而非直接操作）(修改:应该是获得额外回合,而不是插入队首)
             turnEndEvt.Context.GetTurnManager().InsertToActionHead(owner);

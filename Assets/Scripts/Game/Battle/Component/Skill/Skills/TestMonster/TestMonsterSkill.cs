@@ -11,8 +11,14 @@ public class TestMonsterSkill : Skill
 
     public override IEnumerator Cast(IBattleContext context)
     {
-        LogManager.Log($"{Caster.Name}释放技能：{SkillInfo.f_name}");
-        this.Caster.SubActCount();
-        yield break;
+        yield return base.Cast(context);
+
+        foreach (var item in AllTargets)
+        {
+            DamageCalcManager.Instance.CalcDamage(Caster, item, this, out DamageResult result);
+            item.TakeDamage(result);
+        }
+
+        LogManager.Log($"{Caster.GameObject.name}释放技能：{SkillInfo.f_name}");
     }
 }

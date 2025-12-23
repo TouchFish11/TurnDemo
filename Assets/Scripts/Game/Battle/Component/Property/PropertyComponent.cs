@@ -1,3 +1,4 @@
+using Framework;
 using Game.Battle;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,38 +9,81 @@ using UnityEngine;
 /// </summary>
 public abstract class PropertyComponent : BattleComponent
 {
-    // 额外属性加成
-    private readonly Dictionary<E_DynamicPropertyType, int> _propertyBonuses = new Dictionary<E_DynamicPropertyType, int>();
+    // 属性类型到加成数值（百分比）映射
+    private readonly Dictionary<E_PropertyBonusType, int> _bonusToValueMap = new Dictionary<E_PropertyBonusType, int>();
     // 战斗属性
     protected BattleProperty battleProperty;
 
     public bool IsDeath { get; protected set; }
 
-    public void SetProperty(E_DynamicPropertyType dynamicPropertyType, int newValue)
+    /// <summary>
+    /// 设置属性值
+    /// </summary>
+    /// <param name="dynamicPropertyType"></param>
+    /// <param name="damageType"></param>
+    /// <param name="newValue"></param>
+    public void SetPropertyValue(E_DynamicPropertyType dynamicPropertyType, E_DamageType damageType, int newValue)
     {
         IBattleContext battleContext = BattleManager.Instance.GetContext();
         switch (dynamicPropertyType)
         {
             case E_DynamicPropertyType.CurrentHp:
+                int currentHpDelta = battleProperty.CurrentHp - newValue;
                 battleProperty.CurrentHp = newValue;
-                battleContext.GetEventBus().TriggerEvent(new OnHpChangedEvent(battleContext, newValue, battleProperty.MaxHp));
+                battleContext.GetEventBus().TriggerEvent(new OnHpChangedEvent(battleContext, newValue, battleProperty.MaxHp, currentHpDelta, BattleEntity));
                 break;
             case E_DynamicPropertyType.MaxHp:
+                int maxHpDelta = battleProperty.MaxHp - newValue;
                 battleProperty.MaxHp = newValue;
-                battleContext.GetEventBus().TriggerEvent(new OnHpChangedEvent(battleContext, battleProperty.CurrentHp, newValue));
+                battleContext.GetEventBus().TriggerEvent(new OnHpChangedEvent(battleContext, battleProperty.CurrentHp, newValue, maxHpDelta, BattleEntity));
                 break;
-            case E_DynamicPropertyType.MaxAtk:
-                battleProperty.MaxAtk = newValue;
+            case E_DynamicPropertyType.TotalAtk:
+                battleProperty.TotalAtk = newValue;
 
                 break;
-            case E_DynamicPropertyType.MaxDef:
-                battleProperty.MaxDef = newValue;
+            case E_DynamicPropertyType.TotalDef:
+                battleProperty.TotalDef = newValue;
 
                 break;
             case E_DynamicPropertyType.CurrentSpeed:
                 battleProperty.CurrentSpeed = newValue;
 
                 break;
+            case E_DynamicPropertyType.TotalCrit:
+                battleProperty.TotalCrit = newValue;
+                break;
+            case E_DynamicPropertyType.TotalCritDmg:
+                battleProperty.TotalCritDmg = newValue;
+                break;
+        }
+    }
+
+    /// <summary>
+    /// 获取属性值
+    /// </summary>
+    /// <param name="dynamicPropertyType"></param>
+    /// <returns></returns>
+    public int GetPropertyValue(E_DynamicPropertyType dynamicPropertyType)
+    {
+        switch (dynamicPropertyType)
+        {
+            case E_DynamicPropertyType.CurrentHp:
+                return battleProperty.CurrentHp;
+            case E_DynamicPropertyType.MaxHp:
+                return battleProperty.MaxHp;
+            case E_DynamicPropertyType.TotalAtk:
+                return battleProperty.TotalAtk;
+            case E_DynamicPropertyType.TotalDef:
+                return battleProperty.TotalDef;
+            case E_DynamicPropertyType.CurrentSpeed:
+                return battleProperty.CurrentSpeed;
+            case E_DynamicPropertyType.TotalCrit:
+                return battleProperty.TotalCrit;
+            case E_DynamicPropertyType.TotalCritDmg:
+                return battleProperty.TotalCritDmg;
+            default:
+                LogManager.LogError($"未找到动态属性类型，{dynamicPropertyType}，已返回默认值{default}");
+                return default;
         }
     }
 
@@ -52,33 +96,36 @@ public abstract class PropertyComponent : BattleComponent
         return battleProperty as T;
     }
 
-    public virtual void AddBonus(E_RelicBoun type, int value)
+    /// <summary>
+    /// 设置属性加成
+    /// </summary>
+    /// <param name="bonusType"></param>
+    /// <param name="value"></param>
+    public void SetPropertyBonus(E_PropertyBonusType bonusType, int value)
     {
-        //E_DynamicPropertyType fieldType = E_DynamicPropertyType.None;
-        //switch (type)
-        //{
-        //    case E_RelicBoun.CriticalRate:
-        //        fieldType = E_DynamicPropertyType.CriticalRate;
-        //        break;
-        //    case E_RelicBoun.CriticalDmg:
-        //        fieldType = E_DynamicPropertyType.CriticalDmg;
-        //        break;
-        //    case E_RelicBoun.BuildHp:
-        //        fieldType = E_DynamicPropertyType.BaseHp;
-        //        break;
-        //    case E_RelicBoun.Speed:
-        //        fieldType = E_DynamicPropertyType.BaseSpeed;
-        //        break;
-        //}
-
-        //if (_propertyBonuses.ContainsKey(fieldType))
-        //{
-        //    _propertyBonuses[fieldType] += value;
-        //}
-        //else
-        //{
-        //    _propertyBonuses[fieldType] = value;
-        //}
+        if (_bonusToValueMap.ContainsKey(bonusType))
+        {
+            _bonusToValueMap[bonusType] += value;
+        }
+        else
+        {
+            _bonusToValueMap.Add(bonusType, value);
+        }
     }
 
+    /// <summary>
+    /// 获取属性加成
+    /// </summary>
+    /// <param name="bonusType"></param>
+    /// <returns></returns>
+    public int GetPropertyBonus(E_PropertyBonusType bonusType)
+    {
+        if (_bonusToValueMap.TryGetValue(bonusType, out var value))
+        {
+            return value;
+        }
+
+        LogManager.LogWarning($"该属性加成不存在，{bonusType}，已返回{default}");
+        return default;
+    }
 }

@@ -7,4 +7,8 @@ public class SkillInfo
 	public int f_SkillType;
 	public int f_SkillTargetType;
 	public int f_recoveryEnergy;
+	public int f_costBP;
+	public int f_elementType;
+	public int f_damageType;
+	public int f_damageModel;
 }

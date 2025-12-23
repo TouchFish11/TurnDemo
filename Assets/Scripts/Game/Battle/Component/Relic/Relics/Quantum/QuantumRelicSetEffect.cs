@@ -34,7 +34,7 @@ namespace Game.Battle
 
         public void Activate(IBattleEntityObject owner)
         {
-            Console.WriteLine($"{owner.Name}激活{SetName}4件套效果！暴击后追加量子伤害");
+            Console.WriteLine($"{owner.GameObject.name}激活{SetName}4件套效果！暴击后追加量子伤害");
 
             // 订阅“技能释放事件”（判断是否暴击，触发追加伤害）
             BattleEntity.Context.GetEventBus().AddListener<SkillCastEvent>(OnSkillCastHandler);
@@ -60,9 +60,9 @@ namespace Game.Battle
 
             Console.WriteLine($"\n【遗器效果】{SetName}4件套触发！");
 
-            int additionalDamage = (int)(skillCastEvent.Caster.GetComponent<PropertyComponent>().GetProperty<BattleProperty>().MaxAtk * _additionalDamageRatio);
-            skillCastEvent.Targets[0].TakeDamage(additionalDamage, E_ElementType.Quantum);
-            Console.WriteLine($"{skillCastEvent.Targets[0].Name}受到量子追加伤害：{additionalDamage}点");
+            int additionalDamage = (int)(skillCastEvent.Caster.GetComponent<PropertyComponent>().GetProperty<BattleProperty>().TotalAtk * _additionalDamageRatio);
+            //skillCastEvent.Targets[0].TakeDamage(additionalDamage, E_ElementType.Quantum, E_DamageType.Direct);
+            Console.WriteLine($"{skillCastEvent.Targets[0].GameObject.name}受到量子追加伤害：{additionalDamage}点");
         }
 
         public void Destroy()

@@ -32,6 +32,7 @@ namespace Framework
 		public static string Canvas => "Canvas";
 		public static string BackView => "BackView";
 		public static string BattleView => "BattleView";
+		public static string DamageTextUI => "DamageTextUI";
 		public static string ActionGridUI => "ActionGridUI";
 		public static string BuffGridUI => "BuffGridUI";
 		public static string BattlePointUI => "BattlePointUI";

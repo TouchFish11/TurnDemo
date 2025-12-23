@@ -9,7 +9,7 @@ namespace Game.Battle
         /// <summary>
         /// »ð
         /// </summary>
-        Fire,
+        Fire =1,
         /// <summary>
         /// ±ù
         /// </summary>

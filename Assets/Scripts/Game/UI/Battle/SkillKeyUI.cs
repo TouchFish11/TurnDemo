@@ -121,4 +121,9 @@ public class SkillKeyUI : BaseUIBehaviour
             triggerPhase = E_TriggerPhase.Selected;
         }
     }
+
+    protected override void OnDisable()
+    {
+        OnTriggerSkill = null;
+    }
 }

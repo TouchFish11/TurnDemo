@@ -15,6 +15,8 @@ public class BattleModel : UIModel
     private readonly List<SkillKeyUI> skillKeyUIs = new List<SkillKeyUI>();
     // 角色状态UI列表
     private readonly List<RoleStateUI> roleStateUIs = new List<RoleStateUI>();
+    // 战技点UI列表
+    private readonly List<BattlePointUI> battlePointUIs = new List<BattlePointUI>();
 
     public void UpdateAcitonbar(IEnumerable<ActionGridUI> actionGridUIs)
     {
@@ -40,9 +42,16 @@ public class BattleModel : UIModel
         TriggerDataChanged(nameof(this.skillKeyUIs), skillKeyUIs);
     }
 
-    public void UpdateBattlePointCount(int battlePointCount)
+    public void UpdateBattlePointCount(int current, IEnumerable<BattlePointUI> battlePointUIs)
     {
-        TriggerDataChanged(nameof(battlePointCount), battlePointCount);
+        foreach (BattlePointUI battlePointUI in this.battlePointUIs)
+        {
+            PoolManager.Instance.PushObj(battlePointUI.gameObject);
+        }
+        this.battlePointUIs.Clear();
+
+        this.battlePointUIs.AddRange(battlePointUIs);
+        TriggerDataChanged("battlePointCount", (current, this.battlePointUIs));
     }
 
     public void InitRoleStateUI(IEnumerable<RoleStateUI> roleStateUIs)

@@ -16,10 +16,33 @@ namespace Game.Battle
         private readonly List<IBattleEntityObject> _allBattleEntity = new List<IBattleEntityObject>();
         // 回合管理器（核心依赖）
         private readonly TurnManager _turnManager;
+        // 当前战机点数
+        private int currentBattlePointCount;
+        // 最大战技点数
+        private int maxBattlePointCount = 5;
 
         public IBattleEntityObject CurrentBattleEntity => _turnManager.GetCurrentEntity();
 
-        public int BattlePointCount { get; private set; } = 5;
+        public int CurentBattlePointCount
+        {
+            get => currentBattlePointCount;
+            set
+            {
+                currentBattlePointCount = Mathf.Clamp(value, default, maxBattlePointCount);
+                eventBus.TriggerEvent(new OnBattlePointCountChangedEvent(this, currentBattlePointCount, maxBattlePointCount));
+            }
+        }
+
+        public int MaxBattlePointCount
+        {
+            get => maxBattlePointCount;
+            set
+            {
+                maxBattlePointCount = Mathf.Clamp(value, default, value);
+                eventBus.TriggerEvent(new OnBattlePointCountChangedEvent(this, currentBattlePointCount, maxBattlePointCount));
+            }
+        }
+
 
         // 自定义扩展数据（如战斗难度、场景ID）
         //private Dictionary<string, object> _customData = new(); 
@@ -29,6 +52,7 @@ namespace Game.Battle
             eventBus = new BattleEventBus();
             // 注入自身（IBattleContext）
             _turnManager = new TurnManager(this);
+            CurentBattlePointCount = MaxBattlePointCount;
         }
 
         /// <summary>

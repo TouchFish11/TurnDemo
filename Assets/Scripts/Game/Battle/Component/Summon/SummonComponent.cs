@@ -26,7 +26,7 @@ namespace Game.Battle
             //typeof(T).GetProperty("_initialActionTimes", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(summon, initialActionTimes);
 
             _summons.Add(summon);
-            LogManager.Log($"{BattleEntity.Name}召唤了：{summon.Name}");
+            LogManager.Log($"{BattleEntity.GameObject.name}召唤了：{summon.GameObject.name}");
             // 广播“召唤物创建事件”（供连击模块监听）
             //BattleEventBus.Publish(new SummonCreatedEvent(_owner.GetBattleComponent<IBattleContext>(), summon, _owner));
         }

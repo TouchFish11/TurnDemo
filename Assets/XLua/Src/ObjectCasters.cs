@@ -669,8 +669,8 @@ namespace XLua
                         {
                             try
                             {
-                                prop.SetValue(obj, GetCaster(prop.PropertyType)(L, n + 1,
-                                    target == null || prop.PropertyType.IsPrimitive() || prop.PropertyType == typeof(string) ? null : prop.GetValue(obj, null)), null);
+                                prop.SetValue(obj, GetCaster(prop.ElementType)(L, n + 1,
+                                    target == null || prop.ElementType.IsPrimitive() || prop.ElementType == typeof(string) ? null : prop.GetValue(obj, null)), null);
                             }
                             catch (Exception e)
                             {

@@ -8,9 +8,13 @@ using UnityEngine;
 public enum E_SkillType : byte
 {
     /// <summary>
+    /// 怪物技能类型统一用该类型表示
+    /// </summary>
+    Monster,
+    /// <summary>
     /// 普通攻击
     /// </summary>
-    NormalAttack = 1,
+    NormalAttack,
     /// <summary>
     /// 战技
     /// </summary>

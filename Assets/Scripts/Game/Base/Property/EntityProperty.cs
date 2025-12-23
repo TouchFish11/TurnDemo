@@ -7,8 +7,12 @@ using UnityEngine;
 /// </summary>
 public abstract class EntityProperty
 {
+    protected int id;
+
     /// <summary>
     /// ≥ı ºªØ Ù–‘
     /// </summary>
     public abstract void InitProperty(int id);
+
+    public int Id => id;
 }

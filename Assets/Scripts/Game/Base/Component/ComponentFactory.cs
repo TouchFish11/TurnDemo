@@ -35,29 +35,29 @@ public class ComponentFactory : SingletonBase<ComponentFactory>
                 case 2:
                     AddComponent<SkillComponent>(entityObject);
                     break;
-                // 属性组件
-                case 3:
-                    AddComponent<PropertyComponent>(entityObject);
-                    break;
-                // UI组件
-                case 4:
-                    //AddComponent<UIComponent>(entityObject);
-                    break;
-                // 玩家角色组件
-                case 5:
-                    AddComponent<PlayerObject>(entityObject);
-                    break;
-                // 怪物角色组件
-                case 6:
-                    AddComponent<MonsterObject>(entityObject);
-                    break;
+                //// 玩家角色组件
+                //case 3:
+                //    AddComponent<PlayerObject>(entityObject);
+                //    break;
+                //// 怪物角色组件
+                //case 4:
+                //    AddComponent<MonsterObject>(entityObject);
+                //    break;
                 // 网络移动组件
-                case 7:
+                case 5:
                     //AddComponent<NetMoveComponent>(entityObject);
                     break;
                 // 本地移动组件
-                case 8:
+                case 6:
                     //AddComponent<LocalMoveComponent>(entityObject);
+                    break;
+                // 玩家属性组件
+                case 7:
+                    AddComponent<PlayerPropertyComponent>(entityObject);
+                    break;
+                // 怪物属性组件
+                case 8:
+                    AddComponent<MonsterPropertyComponent>(entityObject);
                     break;
                 default:
                     LogManager.LogError($"未知的组件ID: {id}");

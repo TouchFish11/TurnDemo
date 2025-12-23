@@ -16,9 +16,11 @@ namespace Game.Battle
         public void Execute(IBattleContext context, IBattleEntityObject attacker, IBattleEntityObject target)
         {
             // 计算追加攻击伤害（配置表读取系数）
-            int additionalDamage = (int)(attacker.GetComponent<PropertyComponent>().GetProperty<BattleProperty>().MaxAtk * 0.8f);
-            target.TakeDamage(additionalDamage, E_ElementType.Physical);
-            LogManager.Log($"{attacker.Name}触发破盾追加攻击！{target.Name}额外受到{additionalDamage}点伤害");
+            int additionalDamage = (int)(attacker.GetComponent<PropertyComponent>().GetProperty<BattleProperty>().TotalAtk * 0.8f);
+
+            DamageCalcManager.Instance.CalcDamage(attacker, target, null, out DamageResult result);
+            target.TakeDamage(result);
+            LogManager.Log($"{attacker.GameObject.name}触发破盾追加攻击！{target.GameObject.name}额外受到{additionalDamage}点伤害");
         }
     }
 }

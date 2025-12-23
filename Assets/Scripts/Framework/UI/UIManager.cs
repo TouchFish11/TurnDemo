@@ -295,7 +295,7 @@ namespace Framework
         /// <param name="uiObj">世界点</param>
         /// <param name="worldPoint">世界点</param>
         /// <param name="offset">UI坐标偏移</param>
-        public bool WorldToLocalPointInRectangle(Camera world, Camera ui, Transform parent, GameObject uiObj, Vector3 worldPoint, Vector2 offset)
+        public static bool WorldToLocalPointInRectangle(Camera world, Camera ui, Transform parent, GameObject uiObj, Vector3 worldPoint, Vector2 offset)
         {
             //世界转屏幕
             Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(world, worldPoint);

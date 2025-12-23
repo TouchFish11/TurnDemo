@@ -51,7 +51,7 @@ namespace Game.Battle
         public void AddStatus(IStatus status)
         {
             _statuses.Add(status);
-            LogManager.Log($"{BattleEntity.Name}获得状态：{status.GetType().Name}");
+            LogManager.Log($"{BattleEntity.GameObject.name}获得状态：{status.GetType().Name}");
         }
     }
 }

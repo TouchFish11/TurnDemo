@@ -14,23 +14,36 @@ public abstract class BattleProperty : EntityProperty
 
     // 进阶属性
     protected int baseSpeed;    // 速度
+    protected int baseCrit;     // 暴击率
+    protected int baseCritDmg;  // 暴击伤害
     // ...
 
     // 动态属性
     protected int currentHp;    // 当前生命值
     protected int maxHp;    // 最大生命值
-    protected int maxAtk;   // 最大攻击力
-    protected int maxDef;   // 最大防御力
+    protected int totalAtk;   // 总攻击力
+    protected int totalDef;   // 总防御力
     protected int currentSpeed;     // 当前速度
+    protected int totalCrit;    // 总暴击率
+    protected int totalCritDmg;     // 总暴击伤害
+
+    public override void InitProperty(int id)
+    {
+        this.id = id;
+    }
 
     public int BaseHp => baseHp;
     public int BaseAtk => baseAtk;
     public int BaseDef => baseDef;
     public int BaseSpeed => baseSpeed;
+    public int BaseCrit => baseCrit;
+    public int BaseCritDmg => baseCritDmg;
 
     public int CurrentHp { get => currentHp; set => currentHp = value; }
     public int MaxHp { get => maxHp; set => maxHp = value; }
-    public int MaxAtk { get => maxAtk; set => maxAtk = value; }
-    public int MaxDef { get => maxDef; set => maxDef = value; }
+    public int TotalAtk { get => totalAtk; set => totalAtk = value; }
+    public int TotalDef { get => totalDef; set => totalDef = value; }
     public int CurrentSpeed { get => currentSpeed; set => currentSpeed = value; }
+    public int TotalCrit { get => totalCrit; set => totalCrit = value; }
+    public int TotalCritDmg { get => totalCritDmg; set => totalCritDmg = Mathf.Clamp(value, default, value); }
 }

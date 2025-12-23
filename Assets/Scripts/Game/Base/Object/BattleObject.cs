@@ -10,8 +10,6 @@ namespace Game
     /// </summary>
     public abstract class BattleObject : EntityObject, IBattleEntityObject
     {
-        public string Name { get; protected set; }
-
         public IBattleContext Context { get; protected set; }
 
         public float ActionValue { get; protected set;  }
@@ -26,7 +24,7 @@ namespace Game
         public virtual void BattleInit(int battleEntityId, IBattleContext context)
         {
             // 基础初始化
-            //BaseInit(battleEntityId);
+            BaseInit(battleEntityId);
             // 记录上下文
             Context = context;
             // 缓存战斗实体ID
@@ -65,9 +63,26 @@ namespace Game
 
         }
 
-        public virtual void TakeDamage(int damage, E_ElementType propertyType)
+        public virtual void TakeDamage(DamageResult damageResult)
         {
-            LogManager.Log($"{Name}剩余HP：{1000 - damage}");
+            PropertyComponent propertyComponent = this.GetComponent<PropertyComponent>();
+            BattleProperty battleProperty = propertyComponent.GetProperty<BattleProperty>();
+
+            propertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentHp, damageResult.DamageType, battleProperty.CurrentHp - damageResult.FinalDamage);
+            if (battleProperty.CurrentHp <= 0)
+            {
+                battleProperty.CurrentHp = 0;
+                Die();
+            }
+
+            LogManager.Log($"{gameObject.name}剩余HP：{battleProperty.CurrentHp}");
+        }
+
+        public virtual void Die()
+        {
+            // TODO：待优化，目前直接失活对象。之后播放死亡动画
+            LogManager.Log($"实体：{this.GameObject.name}死亡");
+            // this.GameObject.SetActive(false);
         }
 
         /// <summary>
@@ -134,13 +149,15 @@ namespace Game
         public void AddActCount()
         {
             ++actCount;
-            LogManager.Log($"行动数增加，{Name}剩余行动次数：{actCount}");
+            LogManager.Log($"行动数增加，{gameObject.name}剩余行动次数：{actCount}");
         }
 
         public void SubActCount()
         {
             actCount = Mathf.Clamp(--actCount, 0, actCount);
-            LogManager.Log($"行动数减少，{Name}剩余行动次数：{actCount}");
+            LogManager.Log($"行动数减少，{gameObject.name}剩余行动次数：{actCount}");
         }
+
+
     }
 }

@@ -7,11 +7,6 @@ namespace Game.Battle
     public interface IBattleEntityObject : IEntityObject
     {
         /// <summary>
-        /// 临时名称
-        /// </summary>
-        string Name { get; }
-
-        /// <summary>
         /// 战斗实体ID
         /// </summary>
         int BattleEntityId { get; }
@@ -81,7 +76,12 @@ namespace Game.Battle
         /// 受到伤害
         /// </summary>
         /// <param name="value"></param>
-        void TakeDamage(int damage, E_ElementType propertyType);
+        void TakeDamage(DamageResult damageResult);
+
+        /// <summary>
+        /// 死亡
+        /// </summary>
+        void Die();
 
         /// <summary>
         /// 增加行动次数

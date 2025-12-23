@@ -11,7 +11,6 @@ namespace Game.Battle
 
         public void Init(IBattleEntityObject owner)
         {
-            Name = "迷迷";
             Owner = owner;
             // 订阅“主人技能释放事件”（主人放技能时，召唤物协同攻击）(可选)
             //BattleEventBus.AddListener<SkillCastEvent>(OnOwnerSkillCastHandler);
@@ -56,10 +55,10 @@ namespace Game.Battle
             // 召唤物不可回复（可扩展为可回复）
         }
 
-        public override void TakeDamage(int damage, E_ElementType propertyType)
-        {
-            // 召唤物不可被攻击（可扩展为可被攻击）
-        }
+        //public override void TakeDamage(int damage, E_ElementType propertyType)
+        //{
+        //    // 召唤物不可被攻击（可扩展为可被攻击）
+        //}
 
         protected override IEnumerator OnExceuteAction()
         {

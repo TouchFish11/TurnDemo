@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace Game.Battle
 {
+    /// <summary>
+    /// 怪物对象
+    /// </summary>
     public class MonsterObject : BattleObject
     {
         /// <summary>
@@ -17,10 +20,7 @@ namespace Game.Battle
         public override void BaseInit(int id)
         {
             base.BaseInit(id);
-
             MonsterInfo = BinaryDataMgr.Instance.GetConfig<MonsterInfoContainer>(E_ConfigLoadType.Editor).dataDic[id];
-            // 初始化与战斗无关的属性
-            Name = MonsterInfo.f_name;
         }
 
         public override void BattleInit(int monsterId, IBattleContext context)
