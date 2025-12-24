@@ -42,7 +42,7 @@ public static class IntExtension
         E_SkillRangeType skillRangeType = (E_SkillRangeType)i;
         return skillRangeType switch
         {
-            E_SkillRangeType.Singel => "单体",
+            E_SkillRangeType.Single => "单体",
             E_SkillRangeType.Diffusion => "扩散",
             E_SkillRangeType.All => "全体",
             _ => "None"
@@ -95,5 +95,15 @@ public static class IntExtension
     public static E_DamageType ToDamageType(this int i)
     {
         return (E_DamageType)i;
+    }
+
+    /// <summary>
+    /// 转换为技能目标类型
+    /// </summary>
+    /// <param name="i"></param>
+    /// <returns></returns>
+    public static E_SkillTargetType ToSkillTargetType(this int i)
+    {
+        return (E_SkillTargetType)i;
     }
 }

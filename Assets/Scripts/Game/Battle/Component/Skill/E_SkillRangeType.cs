@@ -10,7 +10,7 @@ public enum E_SkillRangeType : byte
     /// <summary>
     /// µ¥Ìå
     /// </summary>
-    Singel = 1,
+    Single = 1,
     /// <summary>
     /// À©É¢
     /// </summary>

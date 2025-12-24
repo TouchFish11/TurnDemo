@@ -26,17 +26,16 @@ public class TargetSelectManager : SingletonBase<TargetSelectManager>
 #endif
     }
 
-    /// <summary>
-    /// 更新目标选择
-    /// </summary>
-    /// <param name="mainTarget"></param>
-    /// <param name="targets"></param>
-    public void UpdateTargetSelection(IBattleEntityObject mainTarget, List<IBattleEntityObject> targets)
+    public void ActiveSelectTarget(SkillInfo skillInfo)
     {
-        targetSelect.UpdateTargets(mainTarget, targets);
+        targetSelect.ActiveSelectTarget(skillInfo);
         // 分发目标选择变化事件
         OnTargetSelectionChanged?.Invoke((targetSelect.GetMainTarget(), targetSelect.GetTargets()));
-        //EventCenter.Instance.TriggerEvent(E_EventType.OnSelectTarget, (this._mainTarget, this._selectedTargets));
+    }
+
+    public void InActiveSelectTarget()
+    {
+        targetSelect.InActiveSelectTarget();
     }
 
     /// <summary>

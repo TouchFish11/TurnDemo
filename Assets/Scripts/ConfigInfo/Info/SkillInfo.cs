@@ -11,4 +11,5 @@ public class SkillInfo
 	public int f_elementType;
 	public int f_damageType;
 	public int f_damageModel;
+	public int f_targetType;
 }

@@ -27,11 +27,11 @@ public class TargetSelector : SingletonAutoMono<TargetSelector>
     ///// <param name="chooser">选择者</param>
     ///// <param name="skillId">技能ID</param>
     ///// <param name="isNew">是否重新选择主目标</param>
-    //public void EnableSelectTarget(bool isNew = false)
+    //public void ActiveSelectTarget(bool isNew = false)
     //{
-    //    InputHandler.Instance.OnLeftDrag += SelectPreviousMainTarget;
-    //    InputHandler.Instance.OnRightDrag += SelectNextMainTarget;
-    //    InputHandler.Instance.OnClick += SelectClickMainTarget;
+    //    BattleInputHandler.Instance.OnLeftDrag += SelectPreviousMainTarget;
+    //    BattleInputHandler.Instance.OnRightDrag += SelectNextMainTarget;
+    //    BattleInputHandler.Instance.OnSelectedObject += SelectClickMainTarget;
 
     //    //_isEnable = true;
     //    UpdateTarget(isNew);
@@ -40,11 +40,11 @@ public class TargetSelector : SingletonAutoMono<TargetSelector>
     ///// <summary>
     ///// 禁用目标选择
     ///// </summary>
-    //public void DisableSelectTarget()
+    //public void InActiveSelectTarget()
     //{
-    //    InputHandler.Instance.OnLeftDrag -= SelectPreviousMainTarget;
-    //    InputHandler.Instance.OnRightDrag -= SelectNextMainTarget;
-    //    InputHandler.Instance.OnClick -= SelectClickMainTarget;
+    //    BattleInputHandler.Instance.OnLeftDrag -= SelectPreviousMainTarget;
+    //    BattleInputHandler.Instance.OnRightDrag -= SelectNextMainTarget;
+    //    BattleInputHandler.Instance.OnSelectedObject -= SelectClickMainTarget;
     //    //_isEnable = false;
     //    //清除UI
     //    UIMgr.Instance.GetPanel<BattlePanel>((panel) => panel.ClearTargetSelectMasker());
@@ -96,14 +96,14 @@ public class TargetSelector : SingletonAutoMono<TargetSelector>
     ////    if (!_isEnable)
     ////        return;
 
-    ////    //HandleInput();
+    ////    //OnUpdate();
     ////}
 
     ///// <summary>
     ///// TODO：这里的方法迁移到玩家输入模块中处理
     ///// 处理点击拖曳输入
     ///// </summary>
-    ////private void HandleInput()
+    ////private void OnUpdate()
     ////{
     ////    //处理按下逻辑
     ////    if (Mouse.current.leftButton.wasPressedThisFrame)

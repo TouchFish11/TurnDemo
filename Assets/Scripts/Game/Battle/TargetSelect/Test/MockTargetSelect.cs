@@ -5,6 +5,11 @@ using UnityEngine;
 
 public class MockTargetSelect : ITargetSelect
 {
+    public void ActiveSelectTarget(SkillInfo skillInfo)
+    {
+
+    }
+
     public IBattleEntityObject GetMainTarget()
     {
         return GameObject.FindFirstObjectByType<MonsterObject>();
@@ -15,7 +20,17 @@ public class MockTargetSelect : ITargetSelect
         return new List<IBattleEntityObject>(GameObject.FindObjectsByType<MonsterObject>(FindObjectsSortMode.None));
     }
 
+    public void InActiveSelectTarget()
+    {
+
+    }
+
     public void UpdateTargets(IBattleEntityObject mainTarget, List<IBattleEntityObject> targets)
+    {
+
+    }
+
+    public void UpdateTargets()
     {
 
     }

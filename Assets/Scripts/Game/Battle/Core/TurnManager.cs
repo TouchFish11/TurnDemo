@@ -13,8 +13,6 @@ namespace Game.Battle
     {
         // 战斗上下文
         private readonly IBattleContext _context;
-        // 行动链表（按速度排序）
-        private LinkedList<IBattleEntityObject> _actions;
         // 技能命令队列
         private readonly Queue<ISkill> skillCommands = new Queue<ISkill>();
         // 当前行动实体
@@ -33,7 +31,6 @@ namespace Game.Battle
         /// <param name="battleEntityObjects"></param>
         public void InitActions(IEnumerable<IBattleEntityObject> battleEntityObjects)
         {
-            _actions = new LinkedList<IBattleEntityObject>(battleEntityObjects);
             _battlePhase = E_BattlePhase.Preparation;
         }
 
@@ -157,25 +154,21 @@ namespace Game.Battle
         private void UpdateActEntity()
         {
 #if EDITOR_TEST_AB || !UNITY_EDITOR
-        targetSelect = new BattleTargetSelect();
+        // 根据行动值获取实体
+        // ,,,
 #else
-            LinkedListNode<IBattleEntityObject> currentNode = _actions.First;
-            _currentActEntity = currentNode.Value;
-            while (currentNode.Next != null)
+            List<IBattleEntityObject> battleEntities = new List<IBattleEntityObject>(_context.GetAllBattleEntity());
+            IBattleEntityObject _currentActEntity = battleEntities[0];
+            PropertyComponent propertyComponent = _currentActEntity.GetComponent<PropertyComponent>();
+            // 获取当前行动的角色
+            if (_currentActEntity == null || propertyComponent.IsDeath || _currentActEntity != battleEntities[0])
             {
-                PropertyComponent propertyComponent = _currentActEntity.GetComponent<PropertyComponent>();
-                // 获取当前行动的角色
-                if (_currentActEntity == null || propertyComponent.IsDeath || _currentActEntity != _actions.First.Value)
-                {
-                    _currentActEntity = _actions.First.Value;
-                }
-                else
-                {
-                    _actions.RemoveFirst();
-                    _actions.AddLast(currentNode);
-                    break;
-                }
-                currentNode = currentNode.Next;
+                _currentActEntity = battleEntities[0];
+            }
+            else
+            {
+                battleEntities.RemoveAt(0);
+                battleEntities.Add(_currentActEntity);
             }
 #endif
         }
@@ -290,7 +283,7 @@ namespace Game.Battle
         /// <param name="battleEntity"></param>
         public void InsertToActionHead(IBattleEntityObject battleEntity)
         {
-            _actions.AddFirst(_actions.Find(battleEntity));
+            // _actions.AddFirst(_actions.Find(battleEntity));
         }
 
         /// <summary>

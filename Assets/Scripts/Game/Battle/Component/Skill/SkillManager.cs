@@ -20,9 +20,9 @@ public class SkillManager : SingletonBase<SkillManager>
     public void AddSkillCommand(ISkill skill, IBattleEntityObject entityObject)
     {
         // 获取上下文
-        IBattleContext battleContext = BattleManager.Instance.GetContext();
+        IBattleContext battleContext = entityObject.Context;
         // 获取技能释放对象  待优化：应为触发技能的实体对象，而不一定是当前回合实体
-        IBattleEntityObject caster = battleContext.GetTurnManager().GetCurrentEntity();
+        IBattleEntityObject caster = entityObject;
         // 通过目标选择管理器获取技能主目标
         IBattleEntityObject mainTaget = TargetSelectManager.Instance.GetMainTarget();
         // 通过目标选择管理器获取技能所有目标
@@ -50,7 +50,7 @@ public class SkillManager : SingletonBase<SkillManager>
         // 根据技能范围类型查找目标
         switch ((E_SkillRangeType)skillInfo.f_skillRangeType)
         {
-            case E_SkillRangeType.Singel:
+            case E_SkillRangeType.Single:
                 return new List<IBattleEntityObject>() { mainTarget };
             case E_SkillRangeType.Diffusion:
                 // 通过战斗上下文获取扩散范围内的目标（示例代码，需根据实际逻辑实现）

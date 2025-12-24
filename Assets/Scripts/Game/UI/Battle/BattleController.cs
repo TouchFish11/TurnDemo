@@ -160,6 +160,14 @@ public class BattleController : UIController<BattleView, BattleModel>
     }
 
     /// <summary>
+    /// 清除目标选择标记
+    /// </summary>
+    public void ClearTargetSelectMasker()
+    {
+
+    }
+
+    /// <summary>
     /// 受到伤害回调事件
     /// </summary>
     /// <param name="onTakeDamageEvent"></param>
@@ -196,6 +204,12 @@ public class BattleController : UIController<BattleView, BattleModel>
         await UpdateBattlePointCount(battlePointCountChanged.CurentBattlePointCount, battlePointCountChanged.MaxBattlePointCount);
     }
 
+    /// <summary>
+    /// 更新战技点数
+    /// </summary>
+    /// <param name="current"></param>
+    /// <param name="max"></param>
+    /// <returns></returns>
     private async Task UpdateBattlePointCount(int current, int max)
     {
         LogManager.Log($"当前战技点数：{current}");
