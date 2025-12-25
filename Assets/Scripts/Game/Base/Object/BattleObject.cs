@@ -75,7 +75,7 @@ namespace Game
                 Die();
             }
 
-            LogManager.Log($"{gameObject.name}剩余HP：{battleProperty.CurrentHp}");
+           // LogManager.Log($"{gameObject.name}剩余HP：{battleProperty.CurrentHp}");
         }
 
         public virtual void Die()
@@ -90,7 +90,7 @@ namespace Game
         /// </summary>
         public void ExecuteAction()
         {
-            EnableAct();
+            AddActCount();
             MonoManager.Instance.StartCoroutine(OnExceuteAction());
         }
 
@@ -134,27 +134,33 @@ namespace Game
 
         public void EnableAct()
         {
-            AddActCount();
-            // 执行实体回合开始事件
-            Context.GetEventBus().TriggerEvent(new TurnStartEvent(Context, this));
+
         }
 
         public void DisableAct()
         {
-            SubActCount();
-            // 执行实体回合结束事件
-            Context.GetEventBus().TriggerEvent(new TurnEndEvent(Context, this, false));
+
         }
 
         public void AddActCount()
         {
             ++actCount;
+            if (actCount > 0)
+            {
+                // 执行实体回合开始事件
+                Context.GetEventBus().TriggerEvent(new TurnStartEvent(Context, this));
+            }
             LogManager.Log($"行动数增加，{gameObject.name}剩余行动次数：{actCount}");
         }
 
         public void SubActCount()
         {
             actCount = Mathf.Clamp(--actCount, 0, actCount);
+            if (actCount <= 0)
+            {
+                // 执行实体回合结束事件
+                Context.GetEventBus().TriggerEvent(new TurnEndEvent(Context, this, false));
+            }
             LogManager.Log($"行动数减少，{gameObject.name}剩余行动次数：{actCount}");
         }
 

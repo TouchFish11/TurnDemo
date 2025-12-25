@@ -1,3 +1,4 @@
+using Framework;
 using Game.Battle;
 using System;
 using System.Collections.Generic;
@@ -11,14 +12,20 @@ public class BattleView : UIView
     private ScrollRect svPoint;
 
     private TextMeshProUGUI txtCount;
+    private TextMeshProUGUI txtDmg;
 
     private Transform operatorArea;
     private Transform playerArea;
+    private Transform selectMarkerArea;
+
+    private GameObject totalDmgArea;
 
     /// <summary>
     /// 技能键组
     /// </summary>
     public ToggleGroup SkillKeyGroup { get; private set; }
+
+    public Transform SelectMarkerArea => selectMarkerArea;
 
     protected override void Awake()
     {
@@ -28,9 +35,13 @@ public class BattleView : UIView
         svPoint = binder.GetControl<ScrollRect>(nameof(svPoint));
 
         txtCount = binder.GetControl<TextMeshProUGUI>(nameof(txtCount));
+        txtDmg = binder.GetControl<TextMeshProUGUI>(nameof(txtDmg));
 
         operatorArea = this.transform.Find(nameof(operatorArea));
         playerArea = this.transform.Find(nameof(playerArea));
+        selectMarkerArea = this.transform.Find(nameof(selectMarkerArea));
+        totalDmgArea = this.transform.Find(nameof(totalDmgArea)).gameObject;
+        totalDmgArea.SetActive(false);
 
         SkillKeyGroup = binder.GetControl<ToggleGroup>(nameof(operatorArea));
     }
@@ -52,6 +63,18 @@ public class BattleView : UIView
             case "battlePointCount":
                 (int currentBP, List<BattlePointUI> battlePointUIs) = ((int currentBP, List<BattlePointUI>))value;
                 UpdateBattlePointCount(currentBP, battlePointUIs);
+                break;
+            case "selectMarkerUIs":
+                UpdateSelectMarker(value as List<SelectMarkerUI>);
+                //LogManager.Log($"更新目标选择逻辑，目标数量{(value as List<SelectMarkerUI>).Count}");
+                break;
+            case "currentCalcDamage":
+                (bool isShow, long dmg) = ((bool, long))value;
+                totalDmgArea.SetActive(isShow);
+                if (isShow)
+                {
+                    txtDmg.text = dmg.ToString();
+                }
                 break;
         }
     }
@@ -91,6 +114,14 @@ public class BattleView : UIView
         foreach (BattlePointUI battlePointUI in battlePointUIs)
         {
             battlePointUI.transform.SetParent(svPoint.content, false);
+        }
+    }
+
+    public void UpdateSelectMarker(List<SelectMarkerUI> selectMarkerUIs)
+    {
+        foreach (SelectMarkerUI selectMarkerUI in selectMarkerUIs)
+        {
+            selectMarkerUI.transform.SetParent(selectMarkerArea, false);
         }
     }
 }

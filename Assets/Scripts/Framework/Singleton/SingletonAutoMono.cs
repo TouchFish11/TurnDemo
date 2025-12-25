@@ -33,6 +33,10 @@ namespace Framework
 
         protected virtual void OnDestroy()
         {
+            if (_instance != null)
+            {
+                Destroy(_instance.gameObject);
+            }
             _instance = null;
         }
     }

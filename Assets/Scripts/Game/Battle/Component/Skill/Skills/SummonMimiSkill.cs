@@ -10,10 +10,11 @@ namespace Game.Battle
 
         }
 
-        public override IEnumerator Cast(IBattleContext context)
+        protected override IEnumerator OnCast(IBattleContext context)
         {
-            yield return base.Cast(context);
             LogManager.Log($"{Caster.GameObject.name}释放技能：{SkillInfo.f_name}");
+
+            yield break;
 
             // 调用召唤物组件API，创建神君（初始行动次数=2，配置表读取）
             //caster.GetBattleComponent<SummonComponent>().CreateSummon<MimiSummon>();

@@ -74,7 +74,7 @@ namespace Game.Battle
                     int tempBP = this.BattleEntity.Context.CurentBattlePointCount;
                     if (tempBP - skill.SkillInfo.f_costBP >= 0)
                     {
-                        LogManager.Log($"释放技能，消耗战技点：{skill.SkillInfo.f_costBP}");
+                        //LogManager.Log($"释放技能，消耗战技点：{skill.SkillInfo.f_costBP}");
                         return true;
                     }
                     else

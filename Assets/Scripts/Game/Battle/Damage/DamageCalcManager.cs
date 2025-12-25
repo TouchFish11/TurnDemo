@@ -10,7 +10,6 @@ public class DamageCalcManager : SingletonBase<DamageCalcManager>
 {
     //策略字典
     private readonly Dictionary<E_DamageType, IDamageStrategy> _strategyDic = new Dictionary<E_DamageType, IDamageStrategy>();
-
     //当前总伤害
     private int _currentTotalDamage;
 
@@ -83,7 +82,7 @@ public class DamageCalcManager : SingletonBase<DamageCalcManager>
     /// </summary>
     public void ClearDamage()
     {
-        //重置伤害累计
+        // 重置伤害累计
         _currentTotalDamage = 0;
         //隐藏伤害显示
         //UIMgr.Instance.GetPanel<BattlePanel>((panel) => { panel.UpdateCumulativeDamageText(false); });

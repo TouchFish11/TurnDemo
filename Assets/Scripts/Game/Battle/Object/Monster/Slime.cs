@@ -1,18 +1,34 @@
+using Framework;
+using Game.Battle;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Slime : MonoBehaviour
+/// <summary>
+/// Slime技能工厂类
+/// </summary>
+public class SlimeSkillFactory : SkillFactory
 {
-    // Start is called before the first frame update
-    void Start()
+    public override ISkill CreateSkill(int skillId)
     {
-        
+        switch (skillId)
+        {
+            case 101:
+                return new SlimeSkill(skillId);
+            default:
+                LogManager.Log($"未找到技能ID， skillId = {skillId}");
+                return null;
+        }
     }
+}
 
-    // Update is called once per frame
-    void Update()
+public class Slime : MonsterObject
+{
+    public override void BattleInit(int roleId, IBattleContext context)
     {
-        
+        base.BattleInit(roleId, context);
+
+        // 初始化技能组件
+        this.GetComponent<SkillComponent>().InitSkills(MonsterInfo.f_skillIds, new SlimeSkillFactory());
     }
 }

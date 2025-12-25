@@ -8,11 +8,12 @@ using UnityEngine;
 
 public class MonsterBuilder
 {
-    public static async Task<MonsterObject> CreateMonster(int monsterId, Vector3 position, Quaternion quaternion)
+    public static async Task<MonsterObject> CreateMonster(int monsterId, Transform parent, bool stay = false)
     {
         return monsterId switch
         {
-            1 => await ObjectBuilder.GetOrCreateInstance<MonsterObject>(E_AssetBundleType.Prefab, ResKeyCollection.TestMonster, position, quaternion),
+            1 => await ObjectBuilder.GetOrCreateInstance<MonsterObject>(E_AssetBundleType.Prefab, ResKeyCollection.Slime, parent, stay),
+            2 => await ObjectBuilder.GetOrCreateInstance<MonsterObject>(E_AssetBundleType.Prefab, ResKeyCollection.TurtleShell, parent, stay),
             _ => null,
         };
     }

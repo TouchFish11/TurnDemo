@@ -1,4 +1,6 @@
 using Framework;
+using Game;
+using Game.Battle;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,11 +10,28 @@ using UnityEngine;
 /// </summary>
 public class BattlePoint : SingletonMono<BattlePoint>
 {
+    // 玩家位置列表
     [SerializeField] private List<Transform> playerTrans;
+    // 怪物位置列表
     [SerializeField] private List<Transform> monsterTrans;
-
+    // 怪物位置中心点
     [SerializeField] private Transform monsterPointCenter;
+    // 角色相机列表
     [SerializeField] private List<Camera> roleCameras;
+    // 当前激活的相机
+    private Camera currentCamera;
+
+    /// <summary>
+    /// 激活的相机
+    /// </summary>
+    public Camera CurrentActiveCamera => currentCamera;
+
+    public void InitBattlePoint()
+    {
+        // 监听角色回合开始事件
+        BattleManager.Instance.GetContext().GetEventBus().AddListener<TurnStartEvent>(OnTurnStartEvent);
+
+    }
 
     /// <summary>
     /// 获取所有的角色位置点
@@ -37,4 +56,37 @@ public class BattlePoint : SingletonMono<BattlePoint>
     /// </summary>
     /// <returns></returns>
     public Transform GetMonsterPointCenter() => monsterPointCenter;
+
+    /// <summary>
+    /// 激活指定玩家角色相机
+    /// 玩家行动时激活指定相机、怪物攻击玩家激活被攻击玩家的相机
+    /// </summary>
+    /// <param name="battleEntity"></param>
+    public void ActiveCamera(IBattleEntityObject battleEntity)
+    {
+        if (battleEntity is PlayerObject)
+        {
+            Transform[] transform = battleEntity.GameObject.GetComponentsInParent<Transform>();
+
+            int index = playerTrans.IndexOf(transform[1]);
+            if (index != -1)
+            {
+                if (currentCamera != null)
+                {
+                    currentCamera.gameObject.SetActive(false);
+                }
+                currentCamera = roleCameras[index];
+                currentCamera.gameObject.SetActive(true);
+            }
+        }
+        //else if (battleEntity is MonsterObject)
+        //{
+
+        //}
+    }
+
+    private void OnTurnStartEvent(TurnStartEvent turnStartEvent)
+    {
+        ActiveCamera(turnStartEvent.CurrentBattleEntity);
+    }
 }

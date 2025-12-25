@@ -15,10 +15,8 @@ namespace Game.Battle
 
         }
 
-        public override IEnumerator Cast(IBattleContext context)
+        protected override IEnumerator OnCast(IBattleContext context)
         {
-            yield return base.Cast(context);
-
             LogManager.Log($"{Caster.GameObject.name}ÊÍ·Å¼¼ÄÜ£º{SkillInfo.f_name}");
 
             foreach (IBattleEntityObject battleEntity in AllTargets)
@@ -29,15 +27,6 @@ namespace Game.Battle
             // Caster.Context.GetEventBus().TriggerEvent(new SkillCastEvent(context, Caster, AllTargets, this, finalDamage, ElementType));
 
             yield break;
-        }
-
-        private void MulTest(IBattleEntityObject battleEntity, int count)
-        {
-            for (int i = 0; i < count; i++)
-            {
-                DamageCalcManager.Instance.CalcDamage(Caster, battleEntity, this, out DamageResult result);
-                battleEntity.TakeDamage(result);
-            }
         }
     }
 }

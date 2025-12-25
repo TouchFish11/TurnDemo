@@ -1,4 +1,5 @@
 using Game.Battle;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,9 +9,13 @@ using UnityEngine;
 /// </summary>
 public interface ITargetSelect
 {
-    void ActiveSelectTarget(SkillInfo skillInfo);
+    event Action<(IBattleEntityObject maintarget, List<IBattleEntityObject> selectedTargets)> OnTargetSelectionChanged;
+
+    void ActiveSelectTarget(int skillId);
 
     void InActiveSelectTarget();
+
+    void UpdateSkillSelect(int skillId);
 
     IBattleEntityObject GetMainTarget();
 

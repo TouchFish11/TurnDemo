@@ -1,8 +1,5 @@
 using Framework;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine;
 
 /// <summary>
 /// 战斗界面数据
@@ -17,6 +14,11 @@ public class BattleModel : UIModel
     private readonly List<RoleStateUI> roleStateUIs = new List<RoleStateUI>();
     // 战技点UI列表
     private readonly List<BattlePointUI> battlePointUIs = new List<BattlePointUI>();
+    // 选择标记UI列表
+    private readonly List<SelectMarkerUI> selectMarkerUIs = new List<SelectMarkerUI>();
+
+    // 当前累计伤害
+    private long currentCalcDamage;
 
     public void UpdateAcitonbar(IEnumerable<ActionGridUI> actionGridUIs)
     {
@@ -54,9 +56,39 @@ public class BattleModel : UIModel
         TriggerDataChanged("battlePointCount", (current, this.battlePointUIs));
     }
 
+    public void ClearSelectMarker()
+    {
+        foreach (SelectMarkerUI selectMarkerUI in this.selectMarkerUIs)
+        {
+            PoolManager.Instance.PushObj(selectMarkerUI.gameObject);
+        }
+        this.selectMarkerUIs.Clear();
+    }
+
+    public void UpdateSelectMarker(List<SelectMarkerUI> selectMarkerUIs)
+    {
+        ClearSelectMarker();
+
+        this.selectMarkerUIs.AddRange(selectMarkerUIs);
+        TriggerDataChanged(nameof(this.selectMarkerUIs), selectMarkerUIs);
+    }
+
     public void InitRoleStateUI(IEnumerable<RoleStateUI> roleStateUIs)
     {
         this.roleStateUIs.AddRange(roleStateUIs);
         TriggerDataChanged(nameof(this.roleStateUIs), roleStateUIs);
+    }
+
+    public void UpdateCumulativeDamage(bool isShow, int dmg)
+    {
+        if (isShow)
+        {
+            currentCalcDamage += dmg;
+        }
+        else
+        {
+            currentCalcDamage = 0;
+        }
+        TriggerDataChanged(nameof(currentCalcDamage), (isShow, currentCalcDamage));
     }
 }

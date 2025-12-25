@@ -87,7 +87,7 @@ namespace Game.Battle
 
                 Transform transform = playerTrans[index];
 
-                PlayerObject playerObject = await RoleBuilder.CreateRole(roleId, transform.position, transform.rotation);
+                PlayerObject playerObject = await RoleBuilder.CreateRole(roleId, transform);
                 // 注入上下文，供角色内部组件使用
                 playerObject.BattleInit(roleId, this);
                 _allBattleEntity.Add(playerObject);
@@ -106,7 +106,7 @@ namespace Game.Battle
                 }
 
                 Transform transform = monsterTrans[index];
-                MonsterObject monsterObject = await MonsterBuilder.CreateMonster(monsterId, transform.position, transform.rotation);
+                MonsterObject monsterObject = await MonsterBuilder.CreateMonster(monsterId, transform);
                 // 注入上下文，供角色内部组件使用
                 monsterObject.BattleInit(monsterId, this);
                 _allBattleEntity.Add(monsterObject);

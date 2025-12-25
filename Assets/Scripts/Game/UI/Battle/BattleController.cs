@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 
 /// <summary>
@@ -30,8 +31,8 @@ public class BattleController : UIController<BattleView, BattleModel>
 {
     private GameObject actingFlagObj;
 
-    private Vector2 damageTextXOffsetRange = new Vector2(-60, 60);
-    private Vector2 damageTextYOffsetRange = new Vector2(-20, 20);
+    private Vector2 damageTextXOffsetRange = new Vector2(-40, 40);
+    private Vector2 damageTextYOffsetRange = new Vector2(-10, 10);
 
     public BattleController(BattleView view, BattleModel model) : base(view, model)
     {
@@ -54,6 +55,8 @@ public class BattleController : UIController<BattleView, BattleModel>
         battleContext.GetEventBus().AddListener<TurnEndEvent>(OnTurnEnd);
         //battleContext.GetEventBus().AddListener<OnHpChangedEvent>(OnHpChanged);
         battleContext.GetEventBus().AddListener<OnTakeDamageEvent>(OnTakeDamage);
+
+        TargetSelectManager.Instance.RegisterTargetSelectionChanged(OnTargetSelectionChanged);
     }
 
     /// <summary>
@@ -141,7 +144,29 @@ public class BattleController : UIController<BattleView, BattleModel>
     }
 
     /// <summary>
-    /// 回合开始事件
+    /// 目标选择变化事件回调
+    /// </summary>
+    /// <param name="info"></param>
+    private async void OnTargetSelectionChanged((IBattleEntityObject maintarget, List<IBattleEntityObject> selectedTargets) info)
+    {
+        List<SelectMarkerUI> selectMarkerUIs = new List<SelectMarkerUI>();
+        // 更新目标标记UI显示
+        foreach (IBattleEntityObject battleEntity in info.selectedTargets)
+        {
+            SelectMarkerUI selectMarkerUI = await ObjectBuilder.GetOrCreateInstance<SelectMarkerUI>(E_AssetBundleType.UI, ResKeyCollection.SelectMarkerUI, null);
+            if (UIManager.WorldToLocalPointInRectangle(BattlePoint.Instance.CurrentActiveCamera, UIManager.Instance.UICamera, view.SelectMarkerArea, selectMarkerUI.gameObject, battleEntity.GameObject.transform.position, Vector2.up * 50))
+            {
+                selectMarkerUI.InitSelectMarker((battleEntity is PlayerObject) ? E_SkillTargetType.Friend : E_SkillTargetType.Enemy);
+                selectMarkerUIs.Add(selectMarkerUI);
+            }
+        }
+        model.UpdateSelectMarker(selectMarkerUIs);
+
+        // 更新行动轴目标高亮显示
+    }
+
+    /// <summary>
+    /// 回合开始事件监听
     /// </summary>
     /// <param name="turnStartEvent"></param>
     private async void OnTurnStart(TurnStartEvent turnStartEvent)
@@ -151,20 +176,20 @@ public class BattleController : UIController<BattleView, BattleModel>
         // 更新当前操作UI
         UpdateOperator(turnStartEvent.CurrentBattleEntity);
         // 更新目标行动标识（Test）
-        await UpdateActingFlag(turnStartEvent.CurrentBattleEntity.GameObject.transform.position);
-    }
-
-    private void OnTurnEnd(TurnEndEvent turnEndEvent)
-    {
-
+        //await UpdateActingFlag(turnStartEvent.CurrentBattleEntity.GameObject.transform.position);
     }
 
     /// <summary>
-    /// 清除目标选择标记
+    /// 回合结束事件监听
     /// </summary>
-    public void ClearTargetSelectMasker()
+    /// <param name="turnEndEvent"></param>
+    private void OnTurnEnd(TurnEndEvent turnEndEvent)
     {
-
+        // TODO：不是回合结束，而是造成伤害的指令结束后清空
+        model.UpdateCumulativeDamage(false, 0);
+        TargetSelectManager.Instance.InActiveSelectTarget();
+        // 清除UI
+        model.ClearSelectMarker();
     }
 
     /// <summary>
@@ -177,11 +202,14 @@ public class BattleController : UIController<BattleView, BattleModel>
         DamageTextUI damageTextUI = await ObjectBuilder.GetOrCreateInstance<DamageTextUI>(E_AssetBundleType.UI, ResKeyCollection.DamageTextUI, null);
         Vector2 dmgTextOffset = new Vector2(UnityEngine.Random.Range(damageTextXOffsetRange.x, damageTextXOffsetRange.y), UnityEngine.Random.Range(damageTextYOffsetRange.x, damageTextYOffsetRange.y));
         //坐标转换，初始化
-        if (UIManager.WorldToLocalPointInRectangle(Camera.main, UIManager.Instance.UICamera, view.transform, damageTextUI.gameObject, damageResult.Target.GameObject.transform.position, dmgTextOffset))
+        if (UIManager.WorldToLocalPointInRectangle(BattlePoint.Instance.CurrentActiveCamera, UIManager.Instance.UICamera, view.transform, damageTextUI.gameObject, damageResult.Target.GameObject.transform.position, Vector2.up * 50 + dmgTextOffset))
         {
             string critText = damageResult.IsCrit ? "暴击" : "";
             damageTextUI.InitDamageText(((int)damageResult.ElementType).ToElementTypeColor(), critText, damageResult.FinalDamage);
         }
+
+        // 更新累计伤害
+        model.UpdateCumulativeDamage(true, damageResult.FinalDamage);
     }
 
     /// <summary>
@@ -212,7 +240,6 @@ public class BattleController : UIController<BattleView, BattleModel>
     /// <returns></returns>
     private async Task UpdateBattlePointCount(int current, int max)
     {
-        LogManager.Log($"当前战技点数：{current}");
         List<BattlePointUI> battlePointUIs = new List<BattlePointUI>();
         for (int i = 0; i < max; i++)
         {
@@ -224,24 +251,29 @@ public class BattleController : UIController<BattleView, BattleModel>
         model.UpdateBattlePointCount(current, battlePointUIs);
     }
 
-    /// <summary>
-    /// 更新目标行动标识（Test）
-    /// </summary>
-    /// <param name="worldPos"></param>
-    /// <returns></returns>
-    private async Task UpdateActingFlag(Vector3 worldPos)
+    ///// <summary>
+    ///// 更新目标行动标识（Test）
+    ///// </summary>
+    ///// <param name="worldPos"></param>
+    ///// <returns></returns>
+    //private async Task UpdateActingFlag(Vector3 worldPos)
+    //{
+    //    if (actingFlagObj != null)
+    //    {
+    //        PoolManager.Instance.PushObj(actingFlagObj);
+    //    }
+
+    //    actingFlagObj = await ObjectBuilder.GetOrCreateInstance(E_AssetBundleType.UI, ResKeyCollection.ActingFlag, null);
+
+    //    // HACK：UI坐标的偏移数值临时写死，后续根据需求调整
+    //    UIManager.WorldToLocalPointInRectangle(Camera.main, UIManager.Instance.UICamera, view.transform, actingFlagObj, worldPos, Vector2.up * 125f);
+    //}
+
+    public override void Destroy()
     {
-        if (actingFlagObj != null)
-        {
-            PoolManager.Instance.PushObj(actingFlagObj);
-        }
-
-        actingFlagObj = await ObjectBuilder.GetOrCreateInstance(E_AssetBundleType.UI, ResKeyCollection.ActingFlag, null);
-
-        // HACK：UI坐标的偏移数值临时写死，后续根据需求调整
-        UIManager.WorldToLocalPointInRectangle(Camera.main, UIManager.Instance.UICamera, view.transform, actingFlagObj, worldPos, Vector2.up * 125f);
+        TargetSelectManager.Instance.CancelTargetSelectionChanged(OnTargetSelectionChanged);
+        base.Destroy();
     }
-
     internal void BattleOver()
     {
         throw new NotImplementedException();

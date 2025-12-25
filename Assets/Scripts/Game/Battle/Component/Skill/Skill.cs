@@ -2,6 +2,7 @@ using Framework;
 using Game.Battle;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// 技能基类
@@ -31,13 +32,29 @@ public abstract class Skill : ISkill
     }
 
     // 一定是通过技能对象实例来驱动角色释放技能行为的
-    public virtual IEnumerator Cast(IBattleContext context)
+    public IEnumerator Cast(IBattleContext context)
     {
         // 通用处理逻辑
         // 处理战技点
         context.CurentBattlePointCount -= SkillInfo.f_costBP;
+        yield return OnCast(context);
         // 减少行动次数
         this.Caster.SubActCount();
-        yield break;
+    }
+
+    protected abstract IEnumerator OnCast(IBattleContext context);
+
+    /// <summary>
+    /// 测试
+    /// </summary>
+    /// <param name="battleEntity"></param>
+    /// <param name="count"></param>
+    public void MulTest(IBattleEntityObject battleEntity, int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            DamageCalcManager.Instance.CalcDamage(Caster, battleEntity, this, out DamageResult result);
+            battleEntity.TakeDamage(result);
+        }
     }
 }

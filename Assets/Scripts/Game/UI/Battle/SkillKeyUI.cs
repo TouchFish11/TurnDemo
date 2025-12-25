@@ -79,6 +79,8 @@ public class SkillKeyUI : BaseUIBehaviour
     /// </summary>
     public void DefaultSelect()
     {
+        // 激活目标标记
+        TargetSelectManager.Instance.ActiveSelectTarget(skillId);
         togSkillKeyUI.isOn = true;
         triggerPhase = E_TriggerPhase.Selected;
     }
@@ -101,7 +103,7 @@ public class SkillKeyUI : BaseUIBehaviour
             {
                 triggerPhase = E_TriggerPhase.Selected;
                 // TODO：暂时直接获取实例，后续通过服务定位器来获取
-                BattleInputHandler.Instance.SetSkillId(this.skillId);
+                TargetSelectManager.Instance.UpdateSkillSelect(this.skillId);
             }
         }
         else

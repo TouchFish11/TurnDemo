@@ -14,11 +14,11 @@ public class HertaSkillFactory : SkillFactory
         switch (skillId)
         {
             case 20:
-                return new WeakPointAttackSkill(skillId);
+                return new HertaNormalSkill(skillId);
             case 21:
-                return new SummonMimiSkill(skillId);
+                return new HertaBattleSkill(skillId);
             case 22:
-                return new SummonMimiSkill(skillId);
+                return new HertaUltimateSkill(skillId);
             default:
                 return null;
         }

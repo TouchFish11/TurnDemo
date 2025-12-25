@@ -40,6 +40,10 @@ public class BattleInputHandler : SingletonAutoMono<BattleInputHandler>
         MonoManager.Instance.AddUpdateListener(OnUpdate);
     }
 
+    /// <summary>
+    /// 设置技能ID
+    /// </summary>
+    /// <param name="skillId"></param>
     public void SetSkillId(int skillId)
     {
         this.skillId = skillId;
@@ -110,10 +114,10 @@ public class BattleInputHandler : SingletonAutoMono<BattleInputHandler>
             switch (targetType)
             {
                 case E_SkillTargetType.Friend:
-                    layerMask = 1 << LayerMask.NameToLayer("PlayerCharacter");
+                    layerMask = 1 << LayerMask.NameToLayer("PlayerObject");
                     break;
                 case E_SkillTargetType.Enemy:
-                    layerMask = 1 << LayerMask.NameToLayer("MonsterCharacter");
+                    layerMask = 1 << LayerMask.NameToLayer("MonsterObject");
                     break;
             }
 
@@ -124,7 +128,19 @@ public class BattleInputHandler : SingletonAutoMono<BattleInputHandler>
                 BattleObject currentMainTarget = hitInfo.collider.GetComponent<BattleObject>();
                 // 执行选选择对象事件
                 OnSelectedObject?.Invoke(currentMainTarget);
+                LogManager.Log($"命中目标，{currentMainTarget}");
+            }
+            else
+            {
+                //LogManager.Log($"未命中目标");
             }
         }
+    }
+
+    private void OnDisable()
+    {
+        OnSelectedObject = null;
+        OnLeftDrag = null;
+        OnRightDrag = null;
     }
 }

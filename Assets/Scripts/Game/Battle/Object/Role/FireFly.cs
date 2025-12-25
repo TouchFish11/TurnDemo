@@ -12,11 +12,11 @@ namespace Game.Battle
             switch (skillId)
             {
                 case 10:
-                    return new WeakPointAttackSkill(skillId);
+                    return new FireFlyNormalSkill(skillId);
                 case 11:
-                    return new SummonMimiSkill(skillId);
+                    return new FireFlyBattleSkill(skillId);
                 case 12:
-                    return new SummonMimiSkill(skillId);
+                    return new FireFlyUltimateSkill(skillId);
                 default:
                     LogManager.Log($"Î´ÕÒµ½¼¼ÄÜID£¬ skillId = {skillId}");
                     return null;

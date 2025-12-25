@@ -1,11 +1,14 @@
 using Game.Battle;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MockTargetSelect : ITargetSelect
 {
-    public void ActiveSelectTarget(SkillInfo skillInfo)
+    public event Action<(IBattleEntityObject maintarget, List<IBattleEntityObject> selectedTargets)> OnTargetSelectionChanged;
+
+    public void ActiveSelectTarget(int skillId)
     {
 
     }
@@ -21,6 +24,11 @@ public class MockTargetSelect : ITargetSelect
     }
 
     public void InActiveSelectTarget()
+    {
+
+    }
+
+    public void UpdateSkillSelect(int skillId)
     {
 
     }

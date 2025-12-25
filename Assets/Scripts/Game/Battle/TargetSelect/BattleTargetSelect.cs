@@ -1,5 +1,6 @@
 using Framework;
 using Game.Battle;
+using System;
 using System.Collections.Generic;
 
 /// <summary>
@@ -14,17 +15,19 @@ public class BattleTargetSelect : ITargetSelect
     // 当前技能信息
     private SkillInfo skillInfo;
 
+    public event Action<(IBattleEntityObject maintarget, List<IBattleEntityObject> selectedTargets)> OnTargetSelectionChanged;
+
     /// <summary>
     /// 激活目标选择
     /// </summary>
-    /// <param name="skillInfo"></param>
-    public void ActiveSelectTarget(SkillInfo skillInfo)
+    /// <param name="skillId"></param>
+    public void ActiveSelectTarget(int skillId)
     {
         BattleInputHandler.Instance.OnLeftDrag += SelectPreviousMainTarget;
         BattleInputHandler.Instance.OnRightDrag += SelectNextMainTarget;
         BattleInputHandler.Instance.OnSelectedObject += SelectClickMainTarget;
 
-        //_isEnable = true;
+        this.skillInfo = BinaryDataMgr.Instance.GetConfig<SkillInfoContainer>(E_ConfigLoadType.Editor).dataDic[skillId];
         DefaultSelectTarget();
     }
 
@@ -36,9 +39,6 @@ public class BattleTargetSelect : ITargetSelect
         BattleInputHandler.Instance.OnLeftDrag -= SelectPreviousMainTarget;
         BattleInputHandler.Instance.OnRightDrag -= SelectNextMainTarget;
         BattleInputHandler.Instance.OnSelectedObject -= SelectClickMainTarget;
-
-        // 清除UI
-        UIManager.Instance.GetView<BattleController>().ClearTargetSelectMasker();
     }
 
     /// <summary>
@@ -51,8 +51,15 @@ public class BattleTargetSelect : ITargetSelect
         {
             // 根据规则选择主目标
             _mainTarget = BattleUtil.GetMainTarget(this.skillInfo, BattleManager.Instance.GetContext());
+            LogManager.Log($"主目标：{_mainTarget}");
         }
 
+        UpdateTargets();
+    }
+
+    public void UpdateSkillSelect(int skillId)
+    {
+        this.skillInfo = BinaryDataMgr.Instance.GetConfig<SkillInfoContainer>(E_ConfigLoadType.Editor).dataDic[skillId];
         UpdateTargets();
     }
 
@@ -92,6 +99,9 @@ public class BattleTargetSelect : ITargetSelect
         //chooser.SetTargets(targets);
         //TODO：分发事件处理，UI战斗界面处理，批量选择目标
         //UpdateSelectMasker(targets);
+
+        // 分发目标选择变化事件，更新目标标记UI
+        OnTargetSelectionChanged?.Invoke((_mainTarget, _selectedTargets));
     }
 
     /// <summary>

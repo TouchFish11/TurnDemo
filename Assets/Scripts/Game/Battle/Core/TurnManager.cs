@@ -13,6 +13,8 @@ namespace Game.Battle
     {
         // 战斗上下文
         private readonly IBattleContext _context;
+        // 战斗实体列表
+        private List<IBattleEntityObject> battleEntities;
         // 技能命令队列
         private readonly Queue<ISkill> skillCommands = new Queue<ISkill>();
         // 当前行动实体
@@ -31,6 +33,7 @@ namespace Game.Battle
         /// <param name="battleEntityObjects"></param>
         public void InitActions(IEnumerable<IBattleEntityObject> battleEntityObjects)
         {
+            battleEntities = new List<IBattleEntityObject>(battleEntityObjects);
             _battlePhase = E_BattlePhase.Preparation;
         }
 
@@ -157,8 +160,7 @@ namespace Game.Battle
         // 根据行动值获取实体
         // ,,,
 #else
-            List<IBattleEntityObject> battleEntities = new List<IBattleEntityObject>(_context.GetAllBattleEntity());
-            IBattleEntityObject _currentActEntity = battleEntities[0];
+            _currentActEntity = battleEntities[0];
             PropertyComponent propertyComponent = _currentActEntity.GetComponent<PropertyComponent>();
             // 获取当前行动的角色
             if (_currentActEntity == null || propertyComponent.IsDeath || _currentActEntity != battleEntities[0])
