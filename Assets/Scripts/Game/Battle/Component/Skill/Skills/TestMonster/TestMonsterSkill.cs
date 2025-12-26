@@ -19,6 +19,6 @@ public class TestMonsterSkill : Skill
             MulTest(battleEntity, 1);
         }
 
-        yield return new WaitForSeconds(0.5f);
+        yield break;
     }
 }

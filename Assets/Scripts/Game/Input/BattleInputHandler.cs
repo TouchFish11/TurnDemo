@@ -38,15 +38,12 @@ public class BattleInputHandler : SingletonAutoMono<BattleInputHandler>
     private void Awake()
     {
         MonoManager.Instance.AddUpdateListener(OnUpdate);
+        ServiceLocator.Instance.Get<IBattleManager>().GetContext().GetEventBus().AddListener<SelectSkillEvent>(OnSelectSkillEvent);
     }
 
-    /// <summary>
-    /// …Ë÷√ººƒ‹ID
-    /// </summary>
-    /// <param name="skillId"></param>
-    public void SetSkillId(int skillId)
+    private void OnSelectSkillEvent(SelectSkillEvent selectSkillEvent)
     {
-        this.skillId = skillId;
+        this.skillId = selectSkillEvent.SkillId;
     }
 
     /// <summary>

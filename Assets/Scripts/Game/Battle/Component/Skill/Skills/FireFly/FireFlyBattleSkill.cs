@@ -20,6 +20,6 @@ public class FireFlyBattleSkill : Skill
             MulTest(battleEntity, 2);
         }
 
-        yield return new WaitForSeconds(0.5f);
+        yield break;
     }
 }

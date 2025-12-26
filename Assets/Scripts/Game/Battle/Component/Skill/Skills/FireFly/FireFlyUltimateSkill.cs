@@ -19,6 +19,6 @@ public class FireFlyUltimateSkill : Skill
             MulTest(battleEntity, 5);
         }
 
-        yield return new WaitForSeconds(0.5f);
+        yield break;
     }
 }

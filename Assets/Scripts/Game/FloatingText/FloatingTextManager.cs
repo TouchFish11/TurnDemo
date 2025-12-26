@@ -37,7 +37,7 @@ public class FloatingTextManager : SingletonAutoMono<FloatingTextManager>
         }
 
         // 测试：通过玩家标签查找
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        player = GameObject.FindGameObjectWithTag("PlayerObject").transform;
     }
 
     private async void OnFixedUpdate()

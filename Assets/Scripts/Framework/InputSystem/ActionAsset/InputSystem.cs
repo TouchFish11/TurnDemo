@@ -27,7 +27,10 @@ namespace Framework
         private Key newKey;
         // 记录新路径
         private string newPath;
-        // 输入行为触发事件
+
+        /// <summary>
+        /// 输入行为触发事件
+        /// </summary>
         public event Action<InputAction.CallbackContext> OnActionTrigger;
 
         private InputSystem()
@@ -39,16 +42,16 @@ namespace Framework
         /// 初始化玩家输入
         /// </summary>
         /// <param name="callBack"></param>
-        public async Task InitPlayerInput(PlayerInput playerInput)
+        public async Task InitPlayerInput(PlayerInput playerInput, Action<InputAction.CallbackContext> onActionTrigger)
         {
             // 存储玩家输入组件
             _playerInput = playerInput;
             // 设置通知行为
             _playerInput.notificationBehavior = PlayerNotifications.InvokeCSharpEvents;
             // 订阅行为触发事件
-            if (OnActionTrigger != null)
+            if (playerInput != null && onActionTrigger != null)
             {
-                _playerInput.onActionTriggered += OnActionTrigger;
+                _playerInput.onActionTriggered += onActionTrigger;
             }
 
 #if EDITOR_TEST_AB || !UNITY_EDITOR
@@ -56,11 +59,21 @@ namespace Framework
             _jsonInputData = json.text;
             UpdateActions();
 #else
-            TextAsset json = EditorResMgr.Instance.LoadEditorAsset<TextAsset>(FileUtility.InputActionLocalFileName);
+            TextAsset json = EditorResMgr.Instance.LoadEditorAsset<TextAsset>(FileUtility.InputActionLocalFileName, "None");
             _jsonInputData = json.text;
             UpdateActions();
             await Task.CompletedTask;
 #endif
+        }
+
+        public void EnableInput()
+        {
+            _playerInput.actions.Enable();
+        }
+
+        public void DisableInput()
+        {
+            _playerInput.actions.Disable();
         }
 
         /// <summary>
@@ -78,8 +91,8 @@ namespace Framework
         /// </summary>
         /// <param name="keyMap">键位对应的行为映射类型</param>
         /// <param name="oldKey">行为对应键位</param>
-        /// <param name="callBack">结束回调</param>
-        public void EditInput(E_KeyMap keyMap, Key oldKey, UnityAction<E_KeyConflict> callBack)
+        /// <param name="overCallBack">结束回调</param>
+        public void EditInput(E_KeyMap keyMap, Key oldKey, UnityAction<E_KeyConflict> overCallBack)
         {
             UnityEngine.InputSystem.InputSystem.onAnyButtonPress.CallOnce(inputControl =>
             {
@@ -92,7 +105,7 @@ namespace Framework
                 if (!Enum.TryParse(typeof(Key), originalPaths[2], true, out object result))
                 {
                     //非键盘按键冲突
-                    callBack?.Invoke(E_KeyConflict.NotKeyboard);
+                    overCallBack?.Invoke(E_KeyConflict.NotKeyboard);
                 }
                 
                 Key newKey = (Key)result;
@@ -100,28 +113,49 @@ namespace Framework
                 if (IsSpecialKey(newKey))
                 {
                     //特殊键位冲突
-                    callBack?.Invoke(E_KeyConflict.SpecialKey);
+                    overCallBack?.Invoke(E_KeyConflict.SpecialKey);
                     return;
                 }
                 //判断按键冲突
                 if (IsKeyConflict(keyMap, oldKey, newKey, newpath))
                 {
                     //键位冲突
-                    callBack?.Invoke(E_KeyConflict.ExistKey);
+                    overCallBack?.Invoke(E_KeyConflict.ExistKey);
                     return;
                 }
 
                 //修改对应行为的按键和路径
-                GameDataMgr.Instance.InputActionContainer.InputActinoDic[keyMap] = new InputActionContainer.KeyPathMap(newKey, newpath);
+                GameDataMgr.Instance.InputActionContainer.InputActionDic[keyMap] = new InputActionContainer.KeyPathMap(newKey, newpath);
                 //更新数据
                 UpdateActions();
                 //执行回调
-                callBack?.Invoke(E_KeyConflict.Over);
+                overCallBack?.Invoke(E_KeyConflict.Over);
             });
         }
 
         /// <summary>
-        /// 执行交换键位
+        /// 获取输入动作资源
+        /// </summary>
+        /// <returns>输入动作资源</returns>
+        private InputActionAsset GetInputActionAsset()
+        {
+            InputActionContainer container = GameDataMgr.Instance.InputActionContainer;
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(_jsonInputData);
+            // 示例
+            sb.Replace("<Up>", container.InputActionDic[E_KeyMap.Up].path);
+            sb.Replace("<Down>", container.InputActionDic[E_KeyMap.Down].path);
+            sb.Replace("<Left>", container.InputActionDic[E_KeyMap.Left].path);
+            sb.Replace("<Right>", container.InputActionDic[E_KeyMap.Right].path);
+            sb.Replace("<NormalAttack>", container.InputActionDic[E_KeyMap.NormalAttack].path);
+
+            LogManager.Log($"输入数据：{sb}");
+            return InputActionAsset.FromJson(sb.ToString());
+        }
+
+        /// <summary>
+        /// 执行交换键位（调用后即可改建）
         /// </summary>
         public void InvokeExchangeKey()
         {
@@ -152,31 +186,13 @@ namespace Framework
             {
                 _playerInput.actions = GetInputActionAsset();
                 _playerInput.actions.Enable();
+                LogManager.Log("玩家输入组件激活成功");
             }
             else
             {
                 LogManager.LogError("玩家输入组件获取失败");
                 return;
             }
-        }
-
-        /// <summary>
-        /// 获取输入动作资源
-        /// </summary>
-        /// <returns>输入动作资源</returns>
-        private InputActionAsset GetInputActionAsset()
-        {
-            InputActionContainer container = GameDataMgr.Instance.InputActionContainer;
-
-            StringBuilder sb = new StringBuilder();
-            sb.Append(_jsonInputData);
-            //示例
-            sb.Replace("<Up>", container.InputActinoDic[E_KeyMap.Up].path);
-            sb.Replace("<Down>", container.InputActinoDic[E_KeyMap.Down].path);
-            sb.Replace("<Left>", container.InputActinoDic[E_KeyMap.Left].path);
-            sb.Replace("<Right>", container.InputActinoDic[E_KeyMap.Right].path);
-            sb.Replace("<Attack>", container.InputActinoDic[E_KeyMap.Attack].path);
-            return InputActionAsset.FromJson(sb.ToString());
         }
 
         /// <summary>
@@ -203,13 +219,13 @@ namespace Framework
         {
             //若改的键是同一个键，且键位修改为自身，不冲突
             //eg：左转行为原来对应A，现在我又改为了A，说明是自己改为自己，不用处理
-            if (GameDataMgr.Instance.InputActionContainer.InputActinoDic[oldKeyMap].path == newPath)
+            if (GameDataMgr.Instance.InputActionContainer.InputActionDic[oldKeyMap].path == newPath)
             {
                 return false;
             }
 
             //改的键和原来的键不一样，eg：左转行为原来对应A，现在我改为了D，说明要处理，处理该D键有没有和其它行为的键冲突
-            foreach (InputActionContainer.KeyPathMap map in GameDataMgr.Instance.InputActionContainer.InputActinoDic.Values)
+            foreach (InputActionContainer.KeyPathMap map in GameDataMgr.Instance.InputActionContainer.InputActionDic.Values)
             {
                 //如果新key等于了数据中的任何其中一个key，说明按键冲突
                 if (newKey == map.key)
@@ -235,20 +251,20 @@ namespace Framework
         private void ExchangeKey()
         {
             InputActionContainer container = GameDataMgr.Instance.InputActionContainer;
-            foreach (E_KeyMap keyMap in container.InputActinoDic.Keys)
+            foreach (E_KeyMap keyMap in container.InputActionDic.Keys)
             {
-                InputActionContainer.KeyPathMap keyPathMap = container.InputActinoDic[keyMap];
+                InputActionContainer.KeyPathMap keyPathMap = container.InputActionDic[keyMap];
 
                 //判断容器中存不存在这个键，存在即冲突了
                 if (keyPathMap.key == newKey)
                 {
                     // 临时存储老按键
-                    InputActionContainer.KeyPathMap tempKeyPathMap = container.InputActinoDic[oldKeyMap];
+                    InputActionContainer.KeyPathMap tempKeyPathMap = container.InputActionDic[oldKeyMap];
                     // 交换键位
                     // 让老键Key等于newKey，让老键的path等于新path
-                    container.InputActinoDic[oldKeyMap] = new InputActionContainer.KeyPathMap(newKey, newPath);
+                    container.InputActionDic[oldKeyMap] = new InputActionContainer.KeyPathMap(newKey, newPath);
                     // 让冲突的Key等于oldKey，冲突的path等于老键的path
-                    container.InputActinoDic[keyMap] = tempKeyPathMap;
+                    container.InputActionDic[keyMap] = tempKeyPathMap;
                     //更新数据
                     UpdateActions();
                     return;

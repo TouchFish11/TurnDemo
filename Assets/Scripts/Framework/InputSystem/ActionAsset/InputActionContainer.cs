@@ -12,13 +12,22 @@ namespace Framework
     public class InputActionContainer
     {
         /// <summary>
-        /// 键位路基映射结构
+        /// 键位路径映射结构
         /// </summary>
         [Serializable]
         public struct KeyPathMap
         {
+            /// <summary>
+            /// 键盘键位
+            /// </summary>
             public Key key;
+            /// <summary>
+            /// 鼠标按钮
+            /// </summary>
             public MouseButton mouseButton;
+            /// <summary>
+            /// 路径
+            /// </summary>
             public string path;
 
             public KeyPathMap(Key key, string path)
@@ -47,12 +56,12 @@ namespace Framework
             _inputActinoMap.Add(E_KeyMap.Down, new KeyPathMap(Key.S, data.Down));
             _inputActinoMap.Add(E_KeyMap.Left, new KeyPathMap(Key.A, data.Left));
             _inputActinoMap.Add(E_KeyMap.Right, new KeyPathMap(Key.D, data.Right));
-            _inputActinoMap.Add(E_KeyMap.Attack, new KeyPathMap(MouseButton.Left, data.Attack));
+            _inputActinoMap.Add(E_KeyMap.NormalAttack, new KeyPathMap(MouseButton.Left, data.Attack));
         }
 
         /// <summary>
         /// 输入动作数据字典
         /// </summary>
-        public Dictionary<E_KeyMap, KeyPathMap> InputActinoDic => _inputActinoMap;
+        public Dictionary<E_KeyMap, KeyPathMap> InputActionDic => _inputActinoMap;
     }
 }

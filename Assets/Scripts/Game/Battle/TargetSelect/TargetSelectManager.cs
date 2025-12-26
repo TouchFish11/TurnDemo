@@ -7,7 +7,7 @@ using System.Collections.Generic;
 /// 目标选择管理器
 /// ——存储玩家回合选中的目标
 /// </summary>
-public class TargetSelectManager : SingletonBase<TargetSelectManager>
+public class TargetSelectManager : SingletonBase<TargetSelectManager>, ITargetSelectManager
 {
     // 目标选择接口
     private ITargetSelect targetSelect;
@@ -18,9 +18,10 @@ public class TargetSelectManager : SingletonBase<TargetSelectManager>
         targetSelect = new BattleTargetSelect();
 #else
         targetSelect = new BattleTargetSelect();
-
-
 #endif
+        // 注册到定位器中
+        ServiceLocator.Instance.Register<ITargetSelectManager>(Instance);
+        ServiceLocator.Instance.Get<IBattleManager>().GetContext().GetEventBus().AddListener<SelectSkillEvent>(OnSelectSkillEvent);
     }
 
     public void ActiveSelectTarget(int skillId)
@@ -33,17 +34,10 @@ public class TargetSelectManager : SingletonBase<TargetSelectManager>
         targetSelect.InActiveSelectTarget();
     }
 
-    /// <summary>
-    /// 更新技能选择
-    /// </summary>
-    /// <param name="skillId"></param>
-    public void UpdateSkillSelect(int skillId)
+    private void OnSelectSkillEvent(SelectSkillEvent selectSkillEvent)
     {
         // 当选择的技能改变时，也要触发目标选择UI的改变
-        targetSelect.UpdateSkillSelect(skillId);
-
-        // 设置技能ID，滑动时能根据设置好的ID读取配置信息，进行范围判断
-        BattleInputHandler.Instance.SetSkillId(skillId);
+        targetSelect.UpdateSkillSelect(selectSkillEvent.SkillId);
     }
 
     public void RegisterTargetSelectionChanged(Action<(IBattleEntityObject, List<IBattleEntityObject>)> onTargetSelectChanged)

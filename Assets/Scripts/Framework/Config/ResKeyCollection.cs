@@ -6,6 +6,11 @@ namespace Framework
 	public class ResKeyCollection
 	{
 		public static string PlayerController => "PlayerController";
+		public static string SlimeAnimtor => "SlimeAnimtor";
+		public static string TurtleShellAnimtor => "TurtleShellAnimtor";
+		public static string BaseRole => "BaseRole";
+		public static string FireFlyAnimtor => "FireFlyAnimtor";
+		public static string HertaAnimtor => "HertaAnimtor";
 		public static string MainCamera => "MainCamera";
 		public static string UICamera => "UICamera";
 		public static string BranchInfo => "BranchInfo";
@@ -16,6 +21,7 @@ namespace Framework
 		public static string SkillInfo => "SkillInfo";
 		public static string TaskConditionInfo => "TaskConditionInfo";
 		public static string TaskInfo => "TaskInfo";
+		public static string PlayerActionAssets => "PlayerActionAssets";
 		public static string ItemGrid => "ItemGrid";
 		public static string Ground => "Ground";
 		public static string MergedMesh => "MergedMesh";
@@ -30,7 +36,9 @@ namespace Framework
 		public static string BeginScene => "BeginScene";
 		public static string LevelScene => "LevelScene";
 		public static string MainScene => "MainScene";
+		public static string BrightIcons => "BrightIcons";
 		public static string CrossCircle4Split128 => "CrossCircle4Split128";
+		public static string DarkIcons => "DarkIcons";
 		public static string WhiteImage => "WhiteImage";
 		public static string xArrowheadInwards128 => "xArrowheadInwards128";
 		public static string Canvas => "Canvas";
@@ -43,7 +51,6 @@ namespace Framework
 		public static string BattlePointUI => "BattlePointUI";
 		public static string RoleStateUI => "RoleStateUI";
 		public static string SkillKeyUI => "SkillKeyUI";
-		public static string ActingFlag => "ActingFlag";
 		public static string BeginView => "BeginView";
 		public static string DialogueOptUI => "DialogueOptUI";
 		public static string DialogueReviewUI => "DialogueReviewUI";

@@ -65,6 +65,10 @@ namespace Framework
                 else if (typeof(T) == typeof(SpriteAtlas))
                     suffixName = ".spriteatlasv2";
             }
+            else if(suffixName == "None")
+            {
+                suffixName = "";
+            }
 
             FileInfo targetInfo = null;
             //遍历所有文件

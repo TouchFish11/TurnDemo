@@ -29,8 +29,6 @@ public class BattleControllerFactory : UIControllerFactory<BattleView, BattleMod
 /// </summary>
 public class BattleController : UIController<BattleView, BattleModel>
 {
-    private GameObject actingFlagObj;
-
     private Vector2 damageTextXOffsetRange = new Vector2(-40, 40);
     private Vector2 damageTextYOffsetRange = new Vector2(-10, 10);
 
@@ -199,6 +197,11 @@ public class BattleController : UIController<BattleView, BattleModel>
     private async void OnTakeDamage(OnTakeDamageEvent onTakeDamageEvent)
     {
         DamageResult damageResult = onTakeDamageEvent.DamageResult;
+        if (damageResult.Target is not MonsterObject)
+        {
+            return;
+        }
+
         DamageTextUI damageTextUI = await ObjectBuilder.GetOrCreateInstance<DamageTextUI>(E_AssetBundleType.UI, ResKeyCollection.DamageTextUI, null);
         Vector2 dmgTextOffset = new Vector2(UnityEngine.Random.Range(damageTextXOffsetRange.x, damageTextXOffsetRange.y), UnityEngine.Random.Range(damageTextYOffsetRange.x, damageTextYOffsetRange.y));
         //坐标转换，初始化

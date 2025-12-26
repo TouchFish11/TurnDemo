@@ -19,6 +19,8 @@ public abstract class Skill : ISkill
 
     public List<IBattleEntityObject> AllTargets { get; private set; }
 
+    private float waitTime = 1f;
+
     protected Skill(int skillId)
     {
         SkillInfo = BinaryDataMgr.Instance.GetConfig<SkillInfoContainer>(E_ConfigLoadType.Editor).dataDic[skillId];
@@ -38,6 +40,11 @@ public abstract class Skill : ISkill
         // 处理战技点
         context.CurentBattlePointCount -= SkillInfo.f_costBP;
         yield return OnCast(context);
+
+
+        yield return new WaitForSeconds(waitTime);
+
+        // 暂时写这里
         // 减少行动次数
         this.Caster.SubActCount();
     }

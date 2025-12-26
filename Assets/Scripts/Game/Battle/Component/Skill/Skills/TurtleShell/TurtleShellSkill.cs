@@ -20,6 +20,6 @@ public class TurtleShellSkill : Skill
             MulTest(battleEntity, 1);
         }
 
-        yield return new WaitForSeconds(0.5f);
+        yield break;
     }
 }

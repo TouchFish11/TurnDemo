@@ -15,6 +15,6 @@ namespace Framework
         Down,
         Left,
         Right,
-        Attack,
+        NormalAttack,
     }
 }

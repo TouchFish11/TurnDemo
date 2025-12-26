@@ -70,7 +70,7 @@ public class DirectDamageStrategy : IDamageStrategy
     //            //最终生命值 = （角色基础生命值 + 光锥基础生命值）* (1 + 大生命) + 小生命
     //            finalPropertyValue = (int)((attacker.GetProperty<BaseProperty>().F_basicHp + 0) * (1 + totalHpPercentBonus) + totalHpBuildBonus);
     //            break;
-    //        case E_DamageModel.Attack:
+    //        case E_DamageModel.NormalAttack:
     //            //大攻击（攻击百分比加成）= 光锥加成 + 仪器加成 + Buff效果
     //            float totalAtkPercentBonus = (0 + 0 + attacker.BuffController.GetTotalAtkPercentBonus()) / 100f;
     //            //小攻击（攻击固定数值加成）= 光锥加成 + 仪器加成 + Buff效果

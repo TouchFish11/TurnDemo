@@ -102,8 +102,8 @@ public class SkillKeyUI : BaseUIBehaviour
             else
             {
                 triggerPhase = E_TriggerPhase.Selected;
-                // TODO：暂时直接获取实例，后续通过服务定位器来获取
-                TargetSelectManager.Instance.UpdateSkillSelect(this.skillId);
+                IBattleContext context = ServiceLocator.Instance.Get<IBattleManager>().GetContext();
+                context.GetEventBus().TriggerEvent(new SelectSkillEvent(context, skillId));
             }
         }
         else

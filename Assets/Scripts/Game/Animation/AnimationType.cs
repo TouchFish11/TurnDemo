@@ -10,5 +10,11 @@ public enum AnimationType : byte
     None,
     Idle,
     Run,
-    Attack,
+    NormalAttack,
+    PreBattleAtk,
+    BattleAttack,
+    UltimateAttack,
+    Hit,
+    Death,
+    Rebirth,
 }

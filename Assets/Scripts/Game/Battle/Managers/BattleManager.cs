@@ -8,7 +8,7 @@ namespace Game.Battle
     /// <summary>
     /// 战斗管理器
     /// </summary>
-    public class BattleManager : SingletonBase<BattleManager>
+    public class BattleManager : SingletonBase<BattleManager>, IBattleManager
     {
         // 敌人数量
         private int _monsterNum;
@@ -19,7 +19,7 @@ namespace Game.Battle
 
         private BattleManager()
         {
-
+            ServiceLocator.Instance.Register<IBattleManager>(Instance);
         }
 
         /// <summary>

@@ -19,6 +19,6 @@ public class HertaUltimateSkill : Skill
             MulTest(battleEntity, 8);
         }
 
-        yield return new WaitForSeconds(0.5f);
+        yield break;
     }
 }

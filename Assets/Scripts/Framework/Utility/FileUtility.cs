@@ -76,7 +76,7 @@ public class FileUtility
     /// 本地输入动作配置文件名
     /// </summary>
     /// <value>
-    /// PlayerActionAssets.ias
+    /// PlayerActionAssets.json
     /// </value>
     public static string InputActionLocalFileName => "PlayerActionAssets.json";
 

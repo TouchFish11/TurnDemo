@@ -29,6 +29,20 @@ namespace Game.Battle
     /// </summary>
     public class FireFly : PlayerObject
     {
+        public override void BaseInit(int id)
+        {
+            base.BaseInit(id);
+
+            CreateCamera();
+            this.AddComponent<InputComponent>();
+
+            this.AddComponent<AnimComponent>();
+            this.AddComponent<MoveComponent>();
+            this.AddComponent<InteractComponent>();
+            this.AddComponent<DialogueComponent>();
+
+        }
+
         public override void BattleInit(int roleId, IBattleContext context)
         {
             base.BattleInit(roleId, context);
@@ -57,9 +71,9 @@ namespace Game.Battle
         //    OrbitCameraController.Instance.SetTarget(this.transform);
         //}
 
-        //private async void CreateCamera()
-        //{
-        //    await ObjectBuilder.GetOrCreateInstance<OrbitCameraController>(E_AssetBundleType.Camera, ResKeyCollection.MainCamera, null);
-        //}
+        private async void CreateCamera()
+        {
+            await ObjectBuilder.GetOrCreateInstance<OrbitCameraController>(E_AssetBundleType.Camera, ResKeyCollection.MainCamera, null);
+        }
     }
 }
