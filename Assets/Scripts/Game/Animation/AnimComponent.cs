@@ -45,11 +45,6 @@ namespace Game
         /// <param name="animationType"></param>
         public void SetAnimationState(AnimationType animationType)
         {
-            if (animationType == currentAnimationType)
-            {
-                return;
-            }
-
             switch (animationType)
             {
                 case AnimationType.None:

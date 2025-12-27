@@ -51,7 +51,7 @@ public static class XLuaCall
         typeof(LogManager),
         typeof(E_EventType),
         typeof(EventCenter),
-        typeof(InputActionData),
+        typeof(MainActionMapData),
         typeof(InputSystem),
         typeof(BinaryDataMgr),
         typeof(GameDataMgr),

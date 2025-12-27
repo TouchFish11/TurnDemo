@@ -78,7 +78,7 @@ public class FileUtility
     /// <value>
     /// PlayerActionAssets.json
     /// </value>
-    public static string InputActionLocalFileName => "PlayerActionAssets.json";
+    public static string InputActionLocalFileName => "MainActionMap.json";
 
 
     /// <summary>

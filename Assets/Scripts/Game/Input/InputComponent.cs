@@ -31,6 +31,9 @@ public class InputComponent : BaseComponent
     /// </summary>
     public event UnityAction OnMouseLeftClick;
 
+    /// <summary>
+    /// Êó±ê¹öÂÖÊÂ¼þ
+    /// </summary>
     public event Action<float> OnScrollWheel;
 
     protected override async void Awake()
@@ -77,7 +80,7 @@ public class InputComponent : BaseComponent
                     OnKeyInputChanged?.Invoke(Vector3.zero);
                 }
                 break;
-            case "NormalAttack":
+            case "NormalAttack" when !ServiceLocator.Instance.Get<IMouseManager>().Visible:
                 if (context.phase == InputActionPhase.Performed)
                 {
                     this.EntityObject.GetComponent<AnimComponent>().OnAttack();
@@ -95,11 +98,11 @@ public class InputComponent : BaseComponent
             case "MouseVisible":
                 if (context.phase == InputActionPhase.Performed)
                 {
-                    MouseManager.Instance.RequestMouseVisible(nameof(Keyboard.current.leftAltKey));
+                    ServiceLocator.Instance.Get<IMouseManager>().RequestMouseVisible(nameof(Keyboard.current.leftAltKey));
                 }
                 else
                 {
-                    MouseManager.Instance.ReleaseMouseVisible(nameof(Keyboard.current.leftAltKey));
+                    ServiceLocator.Instance.Get<IMouseManager>().ReleaseMouseVisible(nameof(Keyboard.current.leftAltKey));
                 }
                 break;
         }

@@ -18,14 +18,13 @@ namespace CustomEditor.ScriptGeneration
         private readonly IEnumerable<string> _enumNames;
         // 预定义枚举项名
         private readonly IEnumerable<string> _predefinedNames;
-        // 文件保存路径
-        private readonly string _filePath;
+        public string FilePath { get; private set; }
 
         public EnumGenerator(IEnumerable<string> enumNames, IEnumerable<string> predefinedNames, string filePath, string nameSpace = "")
         {
             this._enumNames = enumNames;
             this._predefinedNames = predefinedNames;
-            this._filePath = filePath;
+            this.FilePath = filePath;
             this._nameSpace = nameSpace;
             this._enumName = GetEnumName(filePath);
         }
@@ -37,21 +36,23 @@ namespace CustomEditor.ScriptGeneration
             classStr += "{\n";
             classStr += $"\tpublic enum {_enumName}\n";
             classStr += "\t{\n";
-            classStr += "\t\t// 预定义类型\n";
-
-            // 文件夹名称生成枚举类
-            // 生成默认枚举项
-            foreach (string enumName in _predefinedNames)
+            classStr += _predefinedNames != null ? "\t\t// 预定义类型\n" : "";
+            
+            if (_predefinedNames != null)
             {
-                classStr += $"\t\t{enumName},\n";
+                // 文件夹名称生成枚举类
+                // 生成默认枚举项
+                foreach (string enumName in _predefinedNames)
+                {
+                    classStr += $"\t\t{enumName},\n";
+                }
             }
 
             classStr += "\t\t// 生成类型\n";
-
             // 生成自定义枚举项
             foreach (string abName in _enumNames)
             {
-                if (_predefinedNames.Contains(abName))
+                if (_predefinedNames != null && _predefinedNames.Contains(abName))
                 {
                     continue;
                 }
@@ -63,11 +64,11 @@ namespace CustomEditor.ScriptGeneration
             classStr += "}";
 
             // 先删除再生成
-            if (File.Exists(_filePath))
+            if (File.Exists(FilePath))
             {
-                File.Delete(_filePath);
+                File.Delete(FilePath);
             }
-            File.WriteAllText(_filePath, classStr);
+            File.WriteAllText(FilePath, classStr);
 
             //刷新
             AssetDatabase.Refresh();

@@ -8,9 +8,9 @@ using UnityEngine;
 public class MoveComponent : BaseComponent
 {
     // 移动速度
-    [SerializeField] private float speed = 8;
+    [SerializeField] private float speed = 7;
     // 旋转速度
-    [SerializeField] private float rotateSpeed = 17;
+    [SerializeField] private float rotateSpeed = 15;
     // 旋转阈值（角度，小于该值则停止旋转）
     [SerializeField] private float rotateThreshold = 5f;
     // 角色控制器组件

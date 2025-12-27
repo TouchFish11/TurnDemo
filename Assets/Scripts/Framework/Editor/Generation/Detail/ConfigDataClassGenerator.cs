@@ -30,6 +30,12 @@ public class ConfigDataClassGenerator : ClassGenerator
 
     private readonly ConfigData configData;
 
+    public override string FilePath => string.Empty;
+
+    protected override string Note => string.Empty;
+
+    protected override string NameSpace => string.Empty;
+
     public ConfigDataClassGenerator(ConfigData configData)
     {
         this.configData = configData;

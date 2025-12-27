@@ -1,9 +1,9 @@
 namespace Framework
 {
     /// <summary>
-    /// 键位映射
+    /// 行为枚举
     /// </summary>
-    public enum E_KeyMap : byte
+    public enum E_Action : byte
     {
         /// <summary>
         /// 无
@@ -16,5 +16,9 @@ namespace Framework
         Left,
         Right,
         NormalAttack,
+        Initeract,
+        MouseMove,
+        ScrollZoom,
+        MouseVisible,
     }
 }

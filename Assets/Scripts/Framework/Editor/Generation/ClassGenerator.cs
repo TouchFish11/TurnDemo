@@ -9,6 +9,13 @@ namespace CustomEditor.ScriptGeneration
     /// </summary>
     public abstract class ClassGenerator : IScriptGenerator
     {
+        // 注释
+        protected abstract string Note { get; }
+        // 命名空间
+        protected abstract string NameSpace { get; }
+        // 类文件生成路径
+        public abstract string FilePath { get; }
+
         public abstract void GenerateScript();
     }
 }

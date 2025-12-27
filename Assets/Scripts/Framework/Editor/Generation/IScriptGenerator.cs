@@ -9,6 +9,8 @@ namespace CustomEditor.ScriptGeneration
     /// </summary>
     public interface IScriptGenerator
     {
+        string FilePath { get; }
+
         /// <summary>
         /// Éú³É½Å±¾
         /// </summary>

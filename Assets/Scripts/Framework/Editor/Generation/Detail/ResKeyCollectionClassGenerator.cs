@@ -8,20 +8,33 @@ using UnityEngine;
 
 namespace CustomEditor.ScriptGeneration
 {
+    public enum E_AccessModifier
+    {
+        None,
+        Public,
+        Protected,
+        Priveta,
+        Internal,
+    }
+
+    public static class EnumExtension
+    {
+        public static string ToEnumString(this E_AccessModifier e_AccessModifier)
+        {
+            return e_AccessModifier.ToString().ToLower();
+        }
+    }
+
     /// <summary>
     /// 资源配置集合类生成器
     /// </summary>
     public class ResKeyCollectionClassGenerator : ClassGenerator
     {
         private readonly string rootPath = $"{Application.dataPath}/Editor/ArtRes";
-        // 类文件生成路径
-        private readonly string filePath = Application.dataPath + "/Scripts/Framework/Config/ResKeyCollection.cs";
         // 文件过滤后缀数组
         private readonly string[] _filterSuffixes = new string[] { ".meta" };
         // 文件列表
         private readonly List<FileInfo> fileInfos = new List<FileInfo>();
-        // 命名空间
-        private readonly string nameSpace = "Framework";
         // 类名
         private readonly string className = "ResKeyCollection";
         // 访问修饰符
@@ -30,8 +43,12 @@ namespace CustomEditor.ScriptGeneration
         private readonly string variableType = "string";
         // 静态修饰符
         private readonly string staticModifier = "static";
-        // 注释
-        private readonly string note = "资源键集合类";
+
+        public override string FilePath => $"{Application.dataPath}/Scripts/Framework/Config/ResKeyCollection.cs";
+
+        protected override string NameSpace => "Framework";
+
+        protected override string Note => "资源键集合类";
 
         private void Init()
         {
@@ -54,10 +71,10 @@ namespace CustomEditor.ScriptGeneration
             Init();
 
             StringBuilder sb = new StringBuilder(256);
-            sb.AppendLine($"namespace {nameSpace}");
+            sb.AppendLine($"namespace {NameSpace}");
             sb.AppendLine("{");
             sb.AppendLine($"\t/// <summary>");
-            sb.AppendLine($"\t/// {note}");
+            sb.AppendLine($"\t/// {Note}");
             sb.AppendLine($"\t/// <summary>");
             sb.AppendLine($"\tpublic class {className}");
             sb.AppendLine("\t{");
@@ -74,11 +91,11 @@ namespace CustomEditor.ScriptGeneration
             sb.AppendLine("}");
 
             // 先删除再生成
-            if (File.Exists(filePath))
+            if (File.Exists(FilePath))
             {
-                File.Delete(filePath);
+                File.Delete(FilePath);
             }
-            File.WriteAllText(filePath, sb.ToString());
+            File.WriteAllText(FilePath, sb.ToString());
 
             //刷新
             AssetDatabase.Refresh();

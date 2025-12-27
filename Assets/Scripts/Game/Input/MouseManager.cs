@@ -6,14 +6,19 @@ using UnityEngine;
 /// <summary>
 /// 鼠标管理器
 /// </summary>
-public class MouseManager : SingletonAutoMono<MouseManager>
+public class MouseManager : SingletonAutoMono<MouseManager>, IMouseManager
 {
     // 默认锁定模式
-    private CursorLockMode defaultLockMode = CursorLockMode.Locked;
+    private readonly CursorLockMode defaultLockMode = CursorLockMode.Locked;
     // 默认是否显示
-    private bool defaultVisible = false;
+    private readonly bool defaultVisible = false;
     // 记录每个触发鼠标状态的对象标识
-    private Stack<string> mouseVisibleSources = new Stack<string>();
+    private readonly Stack<string> mouseVisibleSources = new Stack<string>();
+
+    private void Start()
+    {
+        ServiceLocator.Instance.Register<IMouseManager>(Instance);
+    }
 
     /// <summary>
     /// 申请显示并解锁鼠标
@@ -82,4 +87,9 @@ public class MouseManager : SingletonAutoMono<MouseManager>
 
         return true;
     }
+
+    /// <summary>
+    /// 鼠标可见状态
+    /// </summary>
+    public bool Visible => Cursor.visible;
 }

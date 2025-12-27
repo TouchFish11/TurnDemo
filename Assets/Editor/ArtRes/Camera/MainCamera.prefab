@@ -107,7 +107,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   radius: 4.0000005
   lookOffset: {x: 0, y: 1.5, z: 0}
-  mouseSensitivity: 1
+  mouseSensitivity: 0.2
   minVerticalAngle: 50
   maxVerticalAngle: 90
   smoothRotate: 0

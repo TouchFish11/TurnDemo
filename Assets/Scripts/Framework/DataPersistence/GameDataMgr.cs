@@ -12,7 +12,7 @@ namespace Framework
         // 音乐数据
         private MusicData _musicData;
         // 输入系统动作数据容器对象
-        private InputActionContainer _inputActionContainer;
+        private MainActionMapDataContainer _inputActionContainer;
         // 输入系统输入数据容器对象
         private InputDataContainer _inputDataContainer;
         // 任务数据集合
@@ -45,7 +45,7 @@ namespace Framework
                 }
 
                 // 读取输入动作数据
-                _inputActionContainer = BinaryDataMgr.Load<InputActionContainer>(FileUtility.LocalInputDataFileName);
+                _inputActionContainer = BinaryDataMgr.Load<MainActionMapDataContainer>(FileUtility.LocalInputDataFileName);
                 if (_inputActionContainer == null)
                 {
                     LogManager.LogError($"初始化输入动作数据失败");
@@ -90,7 +90,7 @@ namespace Framework
         /// <summary>
         /// 输入系统动作数据容器
         /// </summary>
-        public InputActionContainer InputActionContainer => _inputActionContainer;
+        public MainActionMapDataContainer InputActionContainer => _inputActionContainer;
 
         /// <summary>
         /// 输入系统输入数据容器
