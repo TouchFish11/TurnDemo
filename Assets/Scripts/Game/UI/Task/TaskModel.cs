@@ -117,7 +117,7 @@ namespace Game.UI
             }
             rewardItems.Clear();
 
-            currentTaskInfo = BinaryDataMgr.Instance.GetConfig<TaskInfoContainer>(E_ConfigLoadType.Excel).dataDic[taskId];
+            currentTaskInfo = BinaryDataManager.Instance.GetConfig<TaskInfoContainer>(E_ConfigLoadType.Excel).dataDic[taskId];
             int[] rewardIds = TextUtility.SplitToIntArr(currentTaskInfo.f_taskRewrardIds, 2);
             foreach (int id in rewardIds)
             {
@@ -127,7 +127,7 @@ namespace Game.UI
             }
 
             TriggerDataChanged(nameof(currentTaskInfo), (currentTaskInfo, rewardItems));
-            if (GameDataMgr.Instance.TaskDataCollection.TryGetValue(taskId, out TaskData taskData))
+            if (GameDataManager.Instance.TaskDataCollection.TryGetValue(taskId, out TaskData taskData))
             {
                 IsFollowingTask = taskData.isTracking;
             }

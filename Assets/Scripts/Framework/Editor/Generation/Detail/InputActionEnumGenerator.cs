@@ -8,7 +8,7 @@ using UnityEditor;
 using UnityEngine;
 
 /// <summary>
-/// 
+/// 输入动作枚举生成器
 /// </summary>
 public class InputActionEnumGenerator : IScriptGenerator
 {
@@ -35,9 +35,6 @@ public class InputActionEnumGenerator : IScriptGenerator
     {
         StringBuilder sb = new StringBuilder();
 
-
-
-
         sb.AppendLine($"namespace {_nameSpace}");
         sb.AppendLine("{");
         sb.AppendLine($"\tpublic enum {_enumName}");
@@ -56,15 +53,15 @@ public class InputActionEnumGenerator : IScriptGenerator
 
         sb.AppendLine("\t\t// 生成类型");
         // 生成自定义枚举项
-        foreach (string abName in _enumNames)
+        foreach (string enumName in _enumNames)
         {
-            if (_predefinedNames != null && _predefinedNames.Contains(abName))
+            if (_predefinedNames != null && _predefinedNames.Contains(enumName))
             {
                 continue;
             }
             // 添加特性
-            sb.AppendLine($"\t\t[{nameof(ActionMapReplaceKeyAttribute)}(\"<{abName}>\")]");
-            sb.AppendLine($"\t\t{abName},");
+            sb.AppendLine($"\t\t[{nameof(ActionMapReplaceKeyAttribute)}(\"<{enumName}>\")]");
+            sb.AppendLine($"\t\t{enumName},");
         }
 
         sb.AppendLine("\t}");

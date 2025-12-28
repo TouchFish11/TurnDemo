@@ -74,7 +74,7 @@ public class RoleStateUI : BaseUIBehaviour
     /// <param name="ultimateSkillId"></param>
     public async void Init(RoleProperty playerProperty, int ultimateSkillId)
     {
-        RoleInfo roleInfo = BinaryDataMgr.Instance.GetConfig<RoleInfoContainer>(E_ConfigLoadType.Editor).dataDic[playerProperty.Id];
+        RoleInfo roleInfo = BinaryDataManager.Instance.GetConfig<RoleInfoContainer>(E_ConfigLoadType.Editor).dataDic[playerProperty.Id];
         // 设置图标
         // imgIcon.sprite = await AssetBundleManager.Instance.LoadAssetAsync<Sprite>(E_AssetBundleType.Texture, ResKeyCollection.WhiteImage);
         // 设置血量

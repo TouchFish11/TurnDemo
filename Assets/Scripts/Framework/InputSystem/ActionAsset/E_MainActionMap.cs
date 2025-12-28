@@ -5,8 +5,14 @@ namespace Framework
 		// 预定义类型
 		None,
 		// 生成类型
-		[ActionMapReplaceKeyAttribute("<Move>")]
-		Move,
+		[ActionMapReplaceKeyAttribute("<Up>")]
+		Up,
+		[ActionMapReplaceKeyAttribute("<Down>")]
+		Down,
+		[ActionMapReplaceKeyAttribute("<Left>")]
+		Left,
+		[ActionMapReplaceKeyAttribute("<Right>")]
+		Right,
 		[ActionMapReplaceKeyAttribute("<NormalAttack>")]
 		NormalAttack,
 		[ActionMapReplaceKeyAttribute("<Initeract>")]

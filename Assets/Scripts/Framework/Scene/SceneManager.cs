@@ -11,7 +11,7 @@ namespace Framework
     /// <summary>
     /// 场景管理器
     /// </summary>
-    public class SceneManager : SingletonBase<SceneManager>
+    public class SceneManager : SingletonBase<SceneManager>, ISceneManager
     {
         // 当前加载进度
         private float currentProgress = 0;

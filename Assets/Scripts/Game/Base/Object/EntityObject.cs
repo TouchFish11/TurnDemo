@@ -1,3 +1,4 @@
+using Framework;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -64,7 +65,7 @@ namespace Game
 
         public TComponent AddComponent<TComponent>() where TComponent : Component
         {
-            TComponent component = ComponentFactory.Instance.AddComponent<TComponent>(this);
+            TComponent component = ComponentFactory.AddComponent<TComponent>(this);
             // 缓存自定义组件
             if (component is IComponent iComponent)
             {
@@ -80,7 +81,7 @@ namespace Game
 
         public bool AddComponents(params int[] componentIds)
         {
-            var components = ComponentFactory.Instance.AddComponents(this, componentConfig == null ? componentIds : componentConfig.compnentIds);
+            var components = ComponentFactory.AddComponents(this, componentConfig == null ? componentIds : componentConfig.compnentIds);
             foreach (var info in components)
             {
                 if (info.Value is IComponent iComponent)

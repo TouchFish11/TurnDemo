@@ -8,17 +8,15 @@ using UnityEngine;
 /// <summary>
 /// 组件工厂
 /// </summary>
-public class ComponentFactory : SingletonBase<ComponentFactory>
+public class ComponentFactory
 {
-    private ComponentFactory() { }
-
     /// <summary>
     /// 批量添加组件
     /// </summary>
     /// <param name="entityObject"></param>
     /// <param name="componentIds"></param>
     /// <returns></returns>
-    public IDictionary<Type, Component> AddComponents(IEntityObject entityObject, IEnumerable<int> componentIds)
+    public static IDictionary<Type, Component> AddComponents(IEntityObject entityObject, IEnumerable<int> componentIds)
     {
         IDictionary<Type, Component> components = new Dictionary<Type, Component>();
 
@@ -73,7 +71,7 @@ public class ComponentFactory : SingletonBase<ComponentFactory>
     /// <typeparam name="T"></typeparam>
     /// <param name="character"></param>
     /// <returns></returns>
-    public T AddComponent<T>(IEntityObject entityObject) where T : Component
+    public static T AddComponent<T>(IEntityObject entityObject) where T : Component
     {
         T component = entityObject.GameObject.AddComponent<T>();
         if (component is IComponent ic)

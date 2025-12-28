@@ -67,14 +67,14 @@ namespace Framework
             foreach (KeyValuePair<string, ABPackageInfo> localPair in localCollection)
             {
                 // 对于PC平台，删除存在的AB包文件
-                if (File.Exists(PathManager.GetAbLoadPath(localPair.Key)))
+                if (File.Exists(PathUtility.GetAbLoadPath(localPair.Key)))
                 {
-                    File.Delete(PathManager.GetAbLoadPath(localPair.Key));
+                    File.Delete(PathUtility.GetAbLoadPath(localPair.Key));
                 }
             }
 
             // 异步获取本地的AB包缓存文件内容
-            string cache = await File.ReadAllTextAsync(PathManager.GetAbLoadPath(FileUtility.CacheDefaultName));
+            string cache = await File.ReadAllTextAsync(PathUtility.GetAbLoadPath(FileUtility.CacheDefaultName));
             if (!string.IsNullOrEmpty(cache))
             {
                 // 有内容说明之前更新中断过，需要进行对比，决定下载哪些资源和断点续传

@@ -43,12 +43,10 @@ namespace CustomEditor.ScriptGeneration
         private readonly string variableType = "string";
         // 静态修饰符
         private readonly string staticModifier = "static";
-
-        public override string FilePath => $"{Application.dataPath}/Scripts/Framework/Config/ResKeyCollection.cs";
-
+        // 文件保存路径
+        public string filePath = $"{Application.dataPath}/Scripts/Framework/Config/ResKeyCollection.cs";
         protected override string NameSpace => "Framework";
-
-        protected override string Note => "资源键集合类";
+        protected override string Note { get; set; }
 
         private void Init()
         {
@@ -71,6 +69,8 @@ namespace CustomEditor.ScriptGeneration
             Init();
 
             StringBuilder sb = new StringBuilder(256);
+            Note = "资源键集合类";
+
             sb.AppendLine($"namespace {NameSpace}");
             sb.AppendLine("{");
             sb.AppendLine($"\t/// <summary>");
@@ -91,11 +91,11 @@ namespace CustomEditor.ScriptGeneration
             sb.AppendLine("}");
 
             // 先删除再生成
-            if (File.Exists(FilePath))
+            if (File.Exists(filePath))
             {
-                File.Delete(FilePath);
+                File.Delete(filePath);
             }
-            File.WriteAllText(FilePath, sb.ToString());
+            File.WriteAllText(filePath, sb.ToString());
 
             //刷新
             AssetDatabase.Refresh();

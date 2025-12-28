@@ -40,8 +40,8 @@ public class OrbitCameraController : SingletonMono<OrbitCameraController>
         Init();
 
         MonoManager.Instance.AddUpdateListener(OnUpdate);
-        DialogueManager.Instance.OnDialogueStart += OnDialogueStart;
-        DialogueManager.Instance.OnDialogueEnd += OnDialogueEnd;
+        ServiceLocator.Instance.Get<IDialogueManager>().OnDialogueStart += OnDialogueStart;
+        ServiceLocator.Instance.Get<IDialogueManager>().OnDialogueEnd += OnDialogueEnd;
     }
 
     /// <summary>
@@ -180,7 +180,7 @@ public class OrbitCameraController : SingletonMono<OrbitCameraController>
 
     private void OnDestroy()
     {
-        DialogueManager.Instance.OnDialogueStart -= OnDialogueStart;
-        DialogueManager.Instance.OnDialogueEnd -= OnDialogueEnd;
+        ServiceLocator.Instance.Get<IDialogueManager>().OnDialogueStart -= OnDialogueStart;
+        ServiceLocator.Instance.Get<IDialogueManager>().OnDialogueEnd -= OnDialogueEnd;
     }
 }

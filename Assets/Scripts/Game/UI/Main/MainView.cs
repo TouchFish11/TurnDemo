@@ -58,7 +58,7 @@ public class MainView : UIView
         // 初始化任务名称
         txtTaskTitle.text = taskInfo.f_taskName;
         // 获取任务条件
-        TaskConditionInfo taskCondition = BinaryDataMgr.Instance.GetConfig<TaskConditionInfoContainer>(E_ConfigLoadType.Excel).dataDic[taskInfo.f_completionConditionId];
+        TaskConditionInfo taskCondition = BinaryDataManager.Instance.GetConfig<TaskConditionInfoContainer>(E_ConfigLoadType.Excel).dataDic[taskInfo.f_completionConditionId];
         // 初始化描述和当前进度
         txtTaskDescription.text = $"{taskInfo.f_taskDescription}  {taskData.currentPro}/{taskCondition.f_maxPro}";
     }

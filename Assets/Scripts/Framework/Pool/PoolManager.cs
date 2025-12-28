@@ -9,15 +9,13 @@ namespace Framework
     /// <summary>
     /// 缓存池管理器
     /// </summary>
-    public class PoolManager : SingletonBase<PoolManager>
+    public class PoolManager : SingletonBase<PoolManager>, IPoolManager
     {
-        //存储继承Mono对象
+        // 存储继承Mono对象
         private readonly Dictionary<string, PoolObj> _poolObjDic = new Dictionary<string, PoolObj>();
-
-        //存储不继承Mono对象
+        // 存储不继承Mono对象
         private readonly Dictionary<string, BasePoolData> _poolDataDic = new Dictionary<string, BasePoolData>();
-
-        //缓存池根对象
+        // 缓存池根对象
         private GameObject _poolRootObj;
 
         private PoolManager()
@@ -69,7 +67,7 @@ namespace Framework
 #else
             await Task.CompletedTask;
             // 加载编辑器路径下的资源
-            GameObject obj = EditorResMgr.Instance.LoadEditorAsset<GameObject>(assetName);
+            GameObject obj = EditorResManager.Instance.LoadEditorAsset<GameObject>(assetName);
             // 实例化预设体
             GameObject instanceObj = GameObject.Instantiate(obj);
             // 避免实例化出的对象的名字后带有(Clone)

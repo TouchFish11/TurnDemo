@@ -11,7 +11,7 @@ public class MonsterProperty : BattleProperty
     public override void InitProperty(int id)
     {
         base.InitProperty(id);
-        MonsterInfo monsterInfo = BinaryDataMgr.Instance.GetConfig<MonsterInfoContainer>(E_ConfigLoadType.Editor).dataDic[id];
+        MonsterInfo monsterInfo = BinaryDataManager.Instance.GetConfig<MonsterInfoContainer>(E_ConfigLoadType.Editor).dataDic[id];
 
         baseHp = monsterInfo.f_baseHp;
         baseAtk = monsterInfo.f_baseAtk;

@@ -35,7 +35,7 @@ namespace Game
         private void OnSelectSkillEvent(SelectSkillEvent selectSkillEvent)
         {
             // 根据技能信息获取动画类型
-            SkillInfo skillInfo = BinaryDataMgr.Instance.GetConfig<SkillInfoContainer>(E_ConfigLoadType.Editor).dataDic[selectSkillEvent.SkillId];
+            SkillInfo skillInfo = BinaryDataManager.Instance.GetConfig<SkillInfoContainer>(E_ConfigLoadType.Editor).dataDic[selectSkillEvent.SkillId];
             SetAnimationState(AnimationType.None/* 技能配置动画 */);
         }
 

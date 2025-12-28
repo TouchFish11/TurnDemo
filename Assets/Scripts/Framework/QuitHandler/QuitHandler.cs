@@ -8,7 +8,7 @@ using UnityEngine.Events;
 /// <summary>
 /// 退出处理器
 /// </summary>
-public class QuitHandler : SingletonAutoMono<QuitHandler>
+public class QuitHandler : SingletonAutoMono<QuitHandler>, IQuitHandler
 {
     /// <summary>
     /// 在应用程序退出时

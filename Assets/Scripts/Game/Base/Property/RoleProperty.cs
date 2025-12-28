@@ -20,7 +20,7 @@ public class RoleProperty : BattleProperty
     public override void InitProperty(int id)
     {
         base.InitProperty(id);
-        RoleInfo roleInfo = BinaryDataMgr.Instance.GetConfig<RoleInfoContainer>(E_ConfigLoadType.Editor).dataDic[id];
+        RoleInfo roleInfo = BinaryDataManager.Instance.GetConfig<RoleInfoContainer>(E_ConfigLoadType.Editor).dataDic[id];
 
         baseHp = roleInfo.f_baseHp;
         baseAtk = roleInfo.f_baseAtk;

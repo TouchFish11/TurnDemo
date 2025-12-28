@@ -15,6 +15,17 @@ namespace Framework
         /// TCP连接完成后
         /// </summary>
         E_Net_OnPostConnect,
+
+        /// <summary>
+        /// 打开界面事件
+        /// </summary>
+        E_OpenView,
+
+        /// <summary>
+        /// 关闭界面事件
+        /// </summary>
+        E_CloseView,
+
         #endregion
 
         /// <summary>

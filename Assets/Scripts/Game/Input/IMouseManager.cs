@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 /// <summary>
-/// 鼠标管理器接口
+/// 鼠标管理器
 /// </summary>
 public interface IMouseManager
 {

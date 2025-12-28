@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Framework
@@ -11,26 +12,27 @@ namespace Framework
     /// <summary>
     /// 日志管理器
     /// </summary>
-    public sealed class LogManager : SingletonAutoMono<LogManager>
+    public class LogManager : SingletonBase<LogManager>, ILogManager
     {
-        //日志列表
+        // 日志列表
         private readonly ConcurrentQueue<string> _logs = new ConcurrentQueue<string>();
-        //日志写入线程
+        // 日志写入线程
         private Thread logThread;
-        //是否正在执行日志线程
+        // 是否正在执行日志线程
         private bool _isLogRunning;
-        //日志id
+        // 日志id
         private static ulong Id = 0;
-        //拼接日志信息
+        // 拼接日志信息
         private readonly StringBuilder sb = new StringBuilder();
-        //日志保存路径缓存
+        // 日志保存路径缓存
         private static string LogSavePath;
-        //日志写入最大间隔时间
+        // 日志写入最大间隔时间
         private static ushort WriteLogMaxIntervalTime;
 
-        private void Awake()
+        private LogManager()
         {
-            LogSavePath = PathManager.GetLogLocalSavePath(FileUtility.LocalLogFileName);
+            QuitHandler.Instance.OnAppQuit += OnApplicationQuit;
+            LogSavePath = PathUtility.GetLogLocalSavePath(FileUtility.LocalLogFileName);
             WriteLogMaxIntervalTime = GlobalSettings.Instance.WriteLogMaxIntervalTime;
             InitLogFile();
             StartLogWrite();
@@ -90,7 +92,7 @@ namespace Framework
         /// <param name="progressCallBack">上传进度回调当前进度（0-1）</param>
         public void UploadLog(UploadProgressCallBack progressCallBack)
         {
-            UWRMgr.Instance.UploadAssetAsync(GlobalSettings.Instance.UploadServerIp, LogSavePath, progressCallBack: progressCallBack);
+            UWRManager.Instance.UploadAssetAsync(GlobalSettings.Instance.UploadServerIp, LogSavePath, progressCallBack: progressCallBack);
         }
 
         /// <summary>
@@ -241,7 +243,7 @@ namespace Framework
             }
         }
 
-        private void OnApplicationQuit()
+        private async Task OnApplicationQuit()
         {
             //关闭日志写入线程
             _isLogRunning = false;

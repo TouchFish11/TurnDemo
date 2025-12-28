@@ -20,7 +20,7 @@ namespace Game.Battle
         public override void BaseInit(int id)
         {
             base.BaseInit(id);
-            MonsterInfo = BinaryDataMgr.Instance.GetConfig<MonsterInfoContainer>(E_ConfigLoadType.Editor).dataDic[id];
+            MonsterInfo = BinaryDataManager.Instance.GetConfig<MonsterInfoContainer>(E_ConfigLoadType.Editor).dataDic[id];
         }
 
         public override void BattleInit(int monsterId, IBattleContext context)

@@ -16,9 +16,9 @@ namespace Framework
         {
             IsSuceess = true;
             // 删除缓存文件
-            //if (File.Exists(PathManager.GetAbLoadPath(FileUtility.CacheDefaultName)))
+            //if (File.Exists(PathUtility.GetAbLoadPath(FileUtility.CacheDefaultName)))
             //{
-            //    File.Delete(PathManager.GetAbLoadPath(FileUtility.CacheDefaultName));
+            //    File.Delete(PathUtility.GetAbLoadPath(FileUtility.CacheDefaultName));
             //}
             // 执行更新完成事件
             assetBundleUpdater.GetContext().UpdateFinish();

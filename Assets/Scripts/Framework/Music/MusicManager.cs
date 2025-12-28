@@ -8,7 +8,7 @@ namespace Framework
     /// <summary>
     /// 音乐管理器
     /// </summary>
-    public class MusicManager : SingletonBase<MusicManager>
+    public class MusicManager : SingletonBase<MusicManager>, IMusicManager
     {
         // 音效对象列表
         private readonly List<AudioSource> _sounds = new List<AudioSource>();
@@ -19,16 +19,17 @@ namespace Framework
 
         private MusicManager()
         {
-            MonoManager.Instance.AddFixedUpdateListener(OnFixedUpdate);
+
+            MonoManager.Instance.AddUpdateListener(OnUpdate);
         }
 
         /// <summary>
-        /// 自定义物理帧更新
+        /// 帧更新
         /// </summary>
-        private void OnFixedUpdate()
+        private void OnUpdate()
         {
             // 避免主动暂停或停止音效导入其意外放入缓存池
-            if (!GameDataMgr.Instance.MusicData.SoundIsOpen || isClearSounds)
+            if (!GameDataManager.Instance.MusicData.SoundIsOpen || isClearSounds)
             {
                 return;
             }
@@ -69,8 +70,8 @@ namespace Framework
             // 设置音乐组件属性并播放
             _backgroundMusic.clip = audioClip;
             _backgroundMusic.loop = isLoop;
-            _backgroundMusic.volume = GameDataMgr.Instance.MusicData.MusicValue;
-            _backgroundMusic.mute = !GameDataMgr.Instance.MusicData.MusicIsOpen;
+            _backgroundMusic.volume = GameDataManager.Instance.MusicData.MusicValue;
+            _backgroundMusic.mute = !GameDataManager.Instance.MusicData.MusicIsOpen;
             _backgroundMusic.Play();
         }
 
@@ -86,7 +87,7 @@ namespace Framework
             }
 
             _backgroundMusic.Pause();
-            GameDataMgr.Instance.MusicData.MusicIsOpen = false;
+            GameDataManager.Instance.MusicData.MusicIsOpen = false;
         }
 
         /// <summary>
@@ -100,7 +101,7 @@ namespace Framework
                 return;
             }
             _backgroundMusic.Stop();
-            GameDataMgr.Instance.MusicData.MusicIsOpen = false;
+            GameDataManager.Instance.MusicData.MusicIsOpen = false;
         }
 
         /// <summary>
@@ -109,7 +110,7 @@ namespace Framework
         /// <param name="value">音量值：0~1</param>
         public void ChangeBackgroundMusicVolume(float value)
         {
-            GameDataMgr.Instance.MusicData.MusicValue = value;
+            GameDataManager.Instance.MusicData.MusicValue = value;
             if (_backgroundMusic != null)
             {
                 _backgroundMusic.volume = value;
@@ -135,8 +136,8 @@ namespace Framework
             // 设置音效组件属性并播放
             sound.clip = audioClip;
             sound.loop = isLoop;
-            sound.volume = GameDataMgr.Instance.MusicData.SoundValue;
-            sound.mute = !GameDataMgr.Instance.MusicData.SoundIsOpen;
+            sound.volume = GameDataManager.Instance.MusicData.SoundValue;
+            sound.mute = !GameDataManager.Instance.MusicData.SoundIsOpen;
             sound.Play();
             _sounds.Add(sound);
             return sound;
@@ -151,7 +152,7 @@ namespace Framework
             {
                 _sounds[i].Play();
             }
-            GameDataMgr.Instance.MusicData.SoundIsOpen = true;
+            GameDataManager.Instance.MusicData.SoundIsOpen = true;
         }
 
         /// <summary>
@@ -163,7 +164,7 @@ namespace Framework
             {
                 _sounds[i].Pause();
             }
-            GameDataMgr.Instance.MusicData.SoundIsOpen = false;
+            GameDataManager.Instance.MusicData.SoundIsOpen = false;
         }
 
         /// <summary>
@@ -175,7 +176,7 @@ namespace Framework
             {
                 _sounds[i].Stop();
             }
-            GameDataMgr.Instance.MusicData.SoundIsOpen = false;
+            GameDataManager.Instance.MusicData.SoundIsOpen = false;
         }
 
         /// <summary>
@@ -214,7 +215,7 @@ namespace Framework
         /// <param name="value">音量值：0~1</param>
         public void ChangeSoundVolume(float value)
         {
-            GameDataMgr.Instance.MusicData.SoundValue = value;
+            GameDataManager.Instance.MusicData.SoundValue = value;
             for (int i = 0; i < _sounds.Count; i++)
             {
                 _sounds[i].volume = value;

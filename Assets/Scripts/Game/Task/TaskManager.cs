@@ -7,7 +7,7 @@ using System;
 /// <summary>
 /// 任务管理器
 /// </summary>
-public class TaskManager : SingletonBase<TaskManager>
+public class TaskManager : SingletonBase<TaskManager>, ITaskManager
 {
     // 当前任务信息
     private TaskInfo currentTaskInfo;
@@ -38,10 +38,10 @@ public class TaskManager : SingletonBase<TaskManager>
     public void CheckTaskState()
     {
         // 读取任务数据，是否有正在追踪的任务
-        if (GameDataMgr.Instance.TaskDataCollection.IsTracking(out TaskData taskData))
+        if (GameDataManager.Instance.TaskDataCollection.IsTracking(out TaskData taskData))
         {
-            currentTaskInfo = BinaryDataMgr.Instance.GetConfig<TaskInfoContainer>(E_ConfigLoadType.Excel).dataDic[taskData.currentTaskId];
-            currentConditionInfo = BinaryDataMgr.Instance.GetConfig<TaskConditionInfoContainer>(E_ConfigLoadType.Excel).dataDic[currentTaskInfo.f_completionConditionId];
+            currentTaskInfo = BinaryDataManager.Instance.GetConfig<TaskInfoContainer>(E_ConfigLoadType.Excel).dataDic[taskData.currentTaskId];
+            currentConditionInfo = BinaryDataManager.Instance.GetConfig<TaskConditionInfoContainer>(E_ConfigLoadType.Excel).dataDic[currentTaskInfo.f_completionConditionId];
             currentTaskData = taskData;
             // 更新任务
             OnUpdateTask?.Invoke(currentTaskInfo, currentTaskData);
@@ -63,10 +63,10 @@ public class TaskManager : SingletonBase<TaskManager>
             CancelTask();
         }
 
-        currentTaskInfo = BinaryDataMgr.Instance.GetConfig<TaskInfoContainer>(E_ConfigLoadType.Excel).dataDic[id];
-        currentConditionInfo = BinaryDataMgr.Instance.GetConfig<TaskConditionInfoContainer>(E_ConfigLoadType.Excel).dataDic[currentTaskInfo.f_completionConditionId];
+        currentTaskInfo = BinaryDataManager.Instance.GetConfig<TaskInfoContainer>(E_ConfigLoadType.Excel).dataDic[id];
+        currentConditionInfo = BinaryDataManager.Instance.GetConfig<TaskConditionInfoContainer>(E_ConfigLoadType.Excel).dataDic[currentTaskInfo.f_completionConditionId];
 
-        if (GameDataMgr.Instance.TaskDataCollection.TryGetValue(id, out TaskData taskData))
+        if (GameDataManager.Instance.TaskDataCollection.TryGetValue(id, out TaskData taskData))
         {
             taskData.isTracking = true;
             currentTaskData = taskData;
@@ -74,7 +74,7 @@ public class TaskManager : SingletonBase<TaskManager>
         else
         {
             TaskData newTaskData = new TaskData() { currentPro = default, currentTaskId = id, isCompleted = false, isTracking = true };
-            GameDataMgr.Instance.TaskDataCollection.TryAdd(id, newTaskData);
+            GameDataManager.Instance.TaskDataCollection.TryAdd(id, newTaskData);
             currentTaskData = newTaskData;
         }
 
@@ -153,8 +153,6 @@ public class TaskManager : SingletonBase<TaskManager>
 
     private void OnBattleEvent(BattleEvent battleEvent)
     {
-
-
         UpdateTaskNodeProgress();
     }
 
@@ -178,11 +176,11 @@ public class TaskManager : SingletonBase<TaskManager>
             // 切换为下一节点
             if (ids[1] != -1)
             {
-                currentTaskInfo = BinaryDataMgr.Instance.GetConfig<TaskInfoContainer>(E_ConfigLoadType.Excel).dataDic[currentTaskInfo.f_nextTaskId];
-                currentConditionInfo = BinaryDataMgr.Instance.GetConfig<TaskConditionInfoContainer>(E_ConfigLoadType.Excel).dataDic[currentTaskInfo.f_completionConditionId];
+                currentTaskInfo = BinaryDataManager.Instance.GetConfig<TaskInfoContainer>(E_ConfigLoadType.Excel).dataDic[currentTaskInfo.f_nextTaskId];
+                currentConditionInfo = BinaryDataManager.Instance.GetConfig<TaskConditionInfoContainer>(E_ConfigLoadType.Excel).dataDic[currentTaskInfo.f_completionConditionId];
                 TaskData nextTaskData = new TaskData() { currentTaskId = currentTaskInfo.f_id, currentPro = default, isCompleted = false, isTracking = true };
                 // 缓存到任务集合数据
-                GameDataMgr.Instance.TaskDataCollection.TryAdd(currentTaskInfo.f_id, nextTaskData);
+                GameDataManager.Instance.TaskDataCollection.TryAdd(currentTaskInfo.f_id, nextTaskData);
                 // 初始化为新任务节点信息
                 currentTaskData = nextTaskData;
                 ListenTaskEvent();

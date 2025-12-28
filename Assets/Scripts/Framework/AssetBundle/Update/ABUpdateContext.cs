@@ -273,7 +273,7 @@ public class ABUpdateContext
         while (node != null)
         {
             // 获取文件信息
-            FileInfo fileInfo = new FileInfo(PathManager.GetAbLoadPath(node.Value.FileName));
+            FileInfo fileInfo = new FileInfo(PathUtility.GetAbLoadPath(node.Value.FileName));
             // 构造记录信息对象
             ABPackageCacheInfo cacheInfo = new ABPackageCacheInfo(node.Value.AbName, node.Value.MD5, fileInfo.Length);
             node = node.Next;
@@ -307,13 +307,13 @@ public class ABUpdateContext
         for (int i = 0; i < tempList.Count; i++)
         {
             // 若该路径不存在，说明还没有开始下载，不用记录，只需记录正在下载的和下载失败和下载失败后等待下载的
-            if (!File.Exists(PathManager.GetAbLoadPath(tempList[i].AbName)))
+            if (!File.Exists(PathUtility.GetAbLoadPath(tempList[i].AbName)))
             {
                 continue;
             }
 
             // 获取文件信息
-            FileInfo fileInfo = new FileInfo(PathManager.GetAbLoadPath(tempList[i].AbName));
+            FileInfo fileInfo = new FileInfo(PathUtility.GetAbLoadPath(tempList[i].AbName));
             // 构建缓存文件
             ABPackageCacheInfo cacheInfo = new ABPackageCacheInfo(tempList[i].AbName, tempList[i].MD5, fileInfo.Length);
             // 更新缓存文件信息
@@ -348,7 +348,7 @@ public class ABUpdateContext
     /// </summary>
     public async Task WriteCacheFile()
     {
-        await JsonManager.Instance.ToJsonAsync(CachePackageCollection, PathManager.GetAbLoadPath(FileUtility.CacheDefaultName));
+        await JsonManager.Instance.SaveToJsonAsync(CachePackageCollection, PathUtility.GetAbLoadPath(FileUtility.CacheDefaultName));
     }
 
     /// <summary>

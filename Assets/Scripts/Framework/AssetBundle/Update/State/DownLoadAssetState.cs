@@ -90,7 +90,7 @@ namespace Framework
                     // 取出第一个请求，放入正在下载列表
                     context.AddRequesterToLoad(requester);
                     // 调用请求者的下载方法
-                    requester.DownLoadAsync(PathManager.GetAbLoadPath(requester.FileName), (isOver) =>
+                    requester.DownLoadAsync(PathUtility.GetAbLoadPath(requester.FileName), (isOver) =>
                     {
                         // 无论是否下载成功，都是下载结束，从正在下载的列表中移除
                         context.RemoveRequesterFromLoad(requester);
@@ -99,7 +99,7 @@ namespace Framework
                         {
                             LogManager.Log($"下载成功：{requester.FileName}");
                             // 获取文件信息
-                            FileInfo fileInfo = new FileInfo(PathManager.GetAbLoadPath(requester.FileName));
+                            FileInfo fileInfo = new FileInfo(PathUtility.GetAbLoadPath(requester.FileName));
                             // 构建记录信息对象
                             ABPackageCacheInfo cacheInfo = new ABPackageCacheInfo(requester.FileName, context.RemotePackageCollection[requester.FileName].Md5, fileInfo.Length);
                             // 更新缓存文件信息

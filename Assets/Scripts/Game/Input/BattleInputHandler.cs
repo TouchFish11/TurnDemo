@@ -103,7 +103,7 @@ public class BattleInputHandler : SingletonAutoMono<BattleInputHandler>
             // 取消拖曳
             this._isDragging = false;
 
-            SkillInfo skillInfo = BinaryDataMgr.Instance.GetConfig<SkillInfoContainer>(E_ConfigLoadType.Editor).dataDic[skillId];
+            SkillInfo skillInfo = BinaryDataManager.Instance.GetConfig<SkillInfoContainer>(E_ConfigLoadType.Editor).dataDic[skillId];
             //如何取获取当前行动对象的技能ID，获取其中的技能目标类型，为了后续的射线检测能作用到正确的目标层级
             E_SkillTargetType targetType = skillInfo.f_skillRangeType.ToSkillTargetType();
 

@@ -24,7 +24,7 @@ public class InteractComponent : BaseComponent
     {
         base.Awake();
         // 对话结束事件监听
-        DialogueManager.Instance.OnDialogueEnd += QuitInteract;
+        ServiceLocator.Instance.Get<IDialogueManager>().OnDialogueEnd += QuitInteract;
     }
 
     /// <summary>

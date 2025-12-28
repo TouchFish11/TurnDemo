@@ -9,7 +9,7 @@ using UnityEngine;
 /// <summary>
 /// 对话管理器
 /// </summary>
-public class DialogueManager : SingletonBase<DialogueManager>
+public class DialogueManager : SingletonBase<DialogueManager>, IDialogueManager
 {
     // 是否启用打字机效果（全局配置，可让玩家选择）
     private bool enableTypewriter;
@@ -28,30 +28,17 @@ public class DialogueManager : SingletonBase<DialogueManager>
     /// 打字机打字间隔
     /// </summary>
     private const float TypewriterInterval = 0.05f;
-    /// <summary>
-    /// 对话开始
-    /// </summary>
+
     public event Action OnDialogueStart;
-    /// <summary>
-    /// 对话结束
-    /// </summary>
+
     public event Action OnDialogueEnd;
-    /// <summary>
-    /// 分支选择
-    /// </summary>
+
     public event Action OnBranchSelected;
-    /// <summary>
-    /// 单句对话开始事件
-    /// </summary>
+
     public event Action<DialogueInfo> OnSingleDialogueStart;
-    /// <summary>
-    /// 单句对话结束事件
-    /// </summary>
+
     public event Action OnSingleDialogueEnd;
 
-    /// <summary>
-    /// 是否正在显示对话
-    /// </summary>
     public bool IsDialogueActive { get; private set; } 
 
     private DialogueManager()
@@ -65,10 +52,6 @@ public class DialogueManager : SingletonBase<DialogueManager>
         enableTypewriter = value;
     }
 
-    /// <summary>
-    /// 启动对话（外部调用，如NPC交互时）
-    /// </summary>
-    /// <param name="startDialogueId"></param>
     public async void StartDialogue(int startDialogueId)
     {
         if (IsDialogueActive)
@@ -98,11 +81,11 @@ public class DialogueManager : SingletonBase<DialogueManager>
         }
 
         // 获取该ID的对话信息
-        DialogueInfo dialogueInfo = BinaryDataMgr.Instance.GetConfig<DialogueInfoContainer>(E_ConfigLoadType.Excel).dataDic[startDialogueId];
+        DialogueInfo dialogueInfo = BinaryDataManager.Instance.GetConfig<DialogueInfoContainer>(E_ConfigLoadType.Excel).dataDic[startDialogueId];
         // 记录当前对话信息
         currentDialogueInfo = dialogueInfo;
         // 记录当前对话的Npc信息
-        npcInfo = BinaryDataMgr.Instance.GetConfig<NpcInfoContainer>(E_ConfigLoadType.Excel).dataDic[dialogueInfo.f_speakerId];
+        npcInfo = BinaryDataManager.Instance.GetConfig<NpcInfoContainer>(E_ConfigLoadType.Excel).dataDic[dialogueInfo.f_speakerId];
 
         if (enableTypewriter)
         {
@@ -141,9 +124,6 @@ public class DialogueManager : SingletonBase<DialogueManager>
         ShowBranchOpt();
     }
 
-    /// <summary>
-    /// 推进对话
-    /// </summary>
     public void NextDialogue()
     {
         if (!IsDialogueActive)
@@ -183,25 +163,18 @@ public class DialogueManager : SingletonBase<DialogueManager>
 
             for (int i = 0; i < branchIds.Length; i++)
             {
-                branchInfos[i] = BinaryDataMgr.Instance.GetConfig<BranchInfoContainer>(E_ConfigLoadType.Excel).dataDic[branchIds[i]];
+                branchInfos[i] = BinaryDataManager.Instance.GetConfig<BranchInfoContainer>(E_ConfigLoadType.Excel).dataDic[branchIds[i]];
             }
             dialogueController.SetBranchOpt(branchInfos);
         }
     }
 
-    /// <summary>
-    /// 选择选项
-    /// </summary>
-    /// <param name="dialogueId"></param>
     public void OnSelectOpt(int dialogueId)
     {
         ShowCurrentDialogue(dialogueId);
         OnBranchSelected?.Invoke();
     }
 
-    /// <summary>
-    /// 结束对话
-    /// </summary>
     public void EndDialogue()
     {
         // 重置标志

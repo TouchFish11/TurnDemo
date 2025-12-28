@@ -53,7 +53,7 @@ namespace Framework
             {
                 TaskCompletionSource<bool> source = new TaskCompletionSource<bool>();
                 // 下载
-                aBWebRequester.DownLoadAsync(PathManager.GetAbLoadPath(FileUtility.TempListFileDefaultName), (isOver) =>
+                aBWebRequester.DownLoadAsync(PathUtility.GetAbLoadPath(FileUtility.TempListFileDefaultName), (isOver) =>
                 {
                     IsSuceess = isOver;
                     source.SetResult(IsSuceess);
@@ -83,10 +83,10 @@ namespace Framework
         public async Task<bool> AnalyzeRemoteCompareFileInfo()
         {
             // 本地有该文件才去读取
-            if (File.Exists(PathManager.GetAbLoadPath(FileUtility.TempListFileDefaultName)))
+            if (File.Exists(PathUtility.GetAbLoadPath(FileUtility.TempListFileDefaultName)))
             {
                 // 读取已经下载的AB包临时清单文件
-                string listInfo = await File.ReadAllTextAsync(PathManager.GetAbLoadPath(FileUtility.TempListFileDefaultName));
+                string listInfo = await File.ReadAllTextAsync(PathUtility.GetAbLoadPath(FileUtility.TempListFileDefaultName));
                 // 解析文件信息到远端下载的AB包信息集合
                 AnalyzeCompareFileInfo(listInfo, E_FileAnalyzeType.Remote);
                 return true;

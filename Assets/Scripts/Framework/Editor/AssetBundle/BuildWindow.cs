@@ -533,7 +533,7 @@ namespace Framework
             }
 
             // JsonÐòÁÐ»¯
-            JsonManager.Instance.ToJson(collection, filePath, E_JsonType.JsonUtlity);
+            JsonManager.Instance.SaveToJson(collection, filePath, E_JsonType.JsonUtlity);
             // Ë¢ÐÂ
             AssetDatabase.Refresh();
         }

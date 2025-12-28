@@ -27,7 +27,7 @@ public class BattleTargetSelect : ITargetSelect
         BattleInputHandler.Instance.OnRightDrag += SelectNextMainTarget;
         BattleInputHandler.Instance.OnSelectedObject += SelectClickMainTarget;
 
-        this.skillInfo = BinaryDataMgr.Instance.GetConfig<SkillInfoContainer>(E_ConfigLoadType.Editor).dataDic[skillId];
+        this.skillInfo = BinaryDataManager.Instance.GetConfig<SkillInfoContainer>(E_ConfigLoadType.Editor).dataDic[skillId];
         DefaultSelectTarget();
     }
 
@@ -59,7 +59,7 @@ public class BattleTargetSelect : ITargetSelect
 
     public void UpdateSkillSelect(int skillId)
     {
-        this.skillInfo = BinaryDataMgr.Instance.GetConfig<SkillInfoContainer>(E_ConfigLoadType.Editor).dataDic[skillId];
+        this.skillInfo = BinaryDataManager.Instance.GetConfig<SkillInfoContainer>(E_ConfigLoadType.Editor).dataDic[skillId];
         UpdateTargets();
     }
 

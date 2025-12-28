@@ -5,7 +5,7 @@ namespace Framework
 {
     public delegate void GameSettingEvent<in T>(T value);
 
-    public class GameSettingManager : SingletonBase<GameSettingManager>
+    public class GameSettingManager : SingletonBase<GameSettingManager>, IGameSettingManager
     {
         // 游戏设置数据
         private GameSettingData gameSettingData;

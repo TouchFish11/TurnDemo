@@ -3,13 +3,14 @@ using Net.FrameSync.UDP;
 using Net.TCP;
 using Net.TCP.Message;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace Net.FrameSync
 {
     /// <summary>
     /// ÍøÂç¹ÜÀíÆ÷
     /// </summary>
-    public class NetManager : SingletonAutoMono<NetManager>
+    public class NetManager : SingletonAutoMono<NetManager>, INetManager
     {
         // TcpÂß¼­
         private TcpClient _tcpClient;
@@ -32,6 +33,7 @@ namespace Net.FrameSync
 
         private void Awake()
         {
+            ServiceLocator.Instance.Get<IQuitHandler>().OnAppQuit += OnAppQuit;
             MonoManager.Instance.AddUpdateListener(OnUpdate);
         }
 
@@ -128,7 +130,7 @@ namespace Net.FrameSync
             _udpClient?.OnUpdate();
         }
 
-        private void OnApplicationQuit()
+        private async Task OnAppQuit()
         {
             RequestCloseConnect();
             MonoManager.Instance.RemoveUpdateListener(OnUpdate);

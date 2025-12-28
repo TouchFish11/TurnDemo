@@ -12,7 +12,7 @@ namespace Framework
     /// <summary>
     /// 输入系统
     /// </summary>
-    public class InputSystem : SingletonBase<InputSystem>
+    public class InputSystem : SingletonBase<InputSystem>, IInputSystem
     {
         // 输入动作json数据
         private string _jsonInputData;
@@ -60,7 +60,7 @@ namespace Framework
             _jsonInputData = json.text;
             UpdateActions();
 #else
-            TextAsset json = EditorResMgr.Instance.LoadEditorAsset<TextAsset>(FileUtility.InputActionLocalFileName, "None");
+            TextAsset json = EditorResManager.Instance.LoadEditorAsset<TextAsset>(FileUtility.InputActionLocalFileName, "None");
             _jsonInputData = json.text;
             UpdateActions();
             await Task.CompletedTask;
@@ -126,7 +126,7 @@ namespace Framework
                 }
 
                 //修改对应行为的按键和路径
-                GameDataMgr.Instance.InputActionContainer.actionMap[keyMap] = new KeyPathMap(newKey, newpath);
+                GameDataManager.Instance.InputActionContainer.actionMap[keyMap] = new KeyPathMap(newKey, newpath);
                 //更新数据
                 UpdateActions();
                 //执行回调
@@ -140,7 +140,7 @@ namespace Framework
         /// <returns>输入动作资源</returns>
         private InputActionAsset GetInputActionAsset()
         {
-            MainActionMapDataContainer container = GameDataMgr.Instance.InputActionContainer;
+            MainActionMapDataContainer container = GameDataManager.Instance.InputActionContainer;
 
             StringBuilder sb = new StringBuilder();
             sb.Append(_jsonInputData);
@@ -226,13 +226,13 @@ namespace Framework
         {
             //若改的键是同一个键，且键位修改为自身，不冲突
             //eg：左转行为原来对应A，现在我又改为了A，说明是自己改为自己，不用处理
-            if (GameDataMgr.Instance.InputActionContainer.actionMap[oldKeyMap].path == newPath)
+            if (GameDataManager.Instance.InputActionContainer.actionMap[oldKeyMap].path == newPath)
             {
                 return false;
             }
 
             //改的键和原来的键不一样，eg：左转行为原来对应A，现在我改为了D，说明要处理，处理该D键有没有和其它行为的键冲突
-            foreach (KeyPathMap map in GameDataMgr.Instance.InputActionContainer.actionMap.Values)
+            foreach (KeyPathMap map in GameDataManager.Instance.InputActionContainer.actionMap.Values)
             {
                 //如果新key等于了数据中的任何其中一个key，说明按键冲突
                 if (newKey == map.key)
@@ -257,7 +257,7 @@ namespace Framework
         /// </summary>
         private void ExchangeKey()
         {
-            MainActionMapDataContainer container = GameDataMgr.Instance.InputActionContainer;
+            MainActionMapDataContainer container = GameDataManager.Instance.InputActionContainer;
             foreach (E_MainActionMap keyMap in container.actionMap.Keys)
             {
                 KeyPathMap keyPathMap = container.actionMap[keyMap];

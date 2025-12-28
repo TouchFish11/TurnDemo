@@ -15,7 +15,7 @@ namespace Framework
     /// UI管理器
     /// </summary>
     [LuaCallCSharp]
-    public class UIManager : SingletonBase<UIManager>
+    public class UIManager : SingletonBase<UIManager>, IUIManager
     {
         // 存储打开的界面
         private readonly Stack<BasePanelInfo> _panels = new Stack<BasePanelInfo>();
@@ -35,7 +35,10 @@ namespace Framework
         // 系统层
         private Transform _systemLayer;
 
-        private UIManager() { }
+        private UIManager()
+        {
+
+        }
 
         /// <summary>
         /// 异步初始化UI管理器
@@ -43,7 +46,7 @@ namespace Framework
         /// <returns></returns>
         public async Task InitUIManagerAsync()
         {
-            RegisterControllerFactory();
+            (this as IUIManager).RegisterControllerFactory();
 
 #if EDITOR_TEST_AB || !UNITY_EDITOR
             // 加载画布资源
@@ -73,7 +76,7 @@ namespace Framework
             _canvas.worldCamera = _uiCamera;
 #else
             //加载画布资源
-            GameObject canvasObj = EditorResMgr.Instance.LoadEditorAsset<GameObject>("Canvas");
+            GameObject canvasObj = EditorResManager.Instance.LoadEditorAsset<GameObject>("Canvas");
             //实例化画布对象
             GameObject canvasInstance = GameObject.Instantiate(canvasObj);
             //记录画布对象
@@ -86,7 +89,7 @@ namespace Framework
             _botLayer = _canvas.transform.Find("Bot");
             _systemLayer = _canvas.transform.Find("System");
             //加载UI摄像机资源
-            GameObject uiCameraObj = EditorResMgr.Instance.LoadEditorAsset<GameObject>("UICamera");
+            GameObject uiCameraObj = EditorResManager.Instance.LoadEditorAsset<GameObject>("UICamera");
             //实例化摄像机对象
             GameObject uiCameraInstance = GameObject.Instantiate(uiCameraObj);
             //记录UI摄像机
@@ -103,7 +106,7 @@ namespace Framework
         /// <summary>
         /// 注册UI控制器工厂
         /// </summary>
-        private void RegisterControllerFactory()
+        void IUIManager.RegisterControllerFactory()
         {
             _typeToCtrlFactoryMap.Add(typeof(LoginController), new LoginControllerFactory());
             _typeToCtrlFactoryMap.Add(typeof(BackController), new BackControllerFactory());

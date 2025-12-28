@@ -10,12 +10,15 @@ namespace Framework
     /// <summary>
     /// Json数据管理类 主要用于Json的序列化(存储)和反序列化(读取)
     /// </summary>
-    public class JsonManager : SingletonBase<JsonManager>
+    public class JsonManager : SingletonBase<JsonManager>, IJsonManager
     {
         //存储所有Json数据   键：容器名  值：容器
         private readonly Dictionary<string, object> _jsonDic = new Dictionary<string, object>();
 
-        private JsonManager() { }
+        private JsonManager()
+        {
+
+        }
 
         /// <summary>
         /// 加载Json数据
@@ -43,7 +46,7 @@ namespace Framework
             _jsonDic.Add(typeof(T).Name, container);
 #else
             //同步读取
-            TextAsset textAsset = EditorResMgr.Instance.LoadEditorAsset<TextAsset>($"{typeof(K).Name}", ".json");
+            TextAsset textAsset = EditorResManager.Instance.LoadEditorAsset<TextAsset>($"{typeof(K).Name}", ".json");
             T container = JsonUtility.FromJson<T>(textAsset.text);
             _jsonDic.Add(typeof(T).Name, container);
             await Task.CompletedTask;
@@ -118,7 +121,7 @@ namespace Framework
         /// <param name="data"></param>
         /// <param name="saveFilePath"></param>
         /// <param name="type"></param>
-        public void ToJson(object data, string saveFilePath, E_JsonType type = E_JsonType.JsonUtlity)
+        public void SaveToJson(object data, string saveFilePath, E_JsonType type = E_JsonType.JsonUtlity)
         {
             //序列化
             string jsonStr = "";
@@ -140,7 +143,7 @@ namespace Framework
         /// <param name="data"></param>
         /// <param name="saveFilePath">绝对路径</param>
         /// <param name="type"></param>
-        public async Task ToJsonAsync(object data, string saveFilePath, E_JsonType type = E_JsonType.JsonUtlity)
+        public async Task SaveToJsonAsync(object data, string saveFilePath, E_JsonType type = E_JsonType.JsonUtlity)
         {
             //序列化
             string jsonStr = "";

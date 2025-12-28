@@ -6,17 +6,15 @@ namespace Framework
     /// <summary>
     /// 时间检查器(本地)
     /// </summary>
-    public class TimeChecker : SingletonBase<TimeChecker>
+    public class TimeChecker : ITimeChecker
     {
-        //存储时间对象字典 Key：唯一键，Value；时间对象
+        // 存储时间对象字典 Key：唯一键，Value；时间对象
         private Dictionary<int, DateTime> _dateTimeDic = new Dictionary<int, DateTime>();
 
         /// <summary>
         /// 时间对象唯一键
         /// </summary>
         private static int TIME_KEY = 0;
-
-        private TimeChecker() { }
 
         /// <summary>
         /// 创建目标时间

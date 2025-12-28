@@ -8,7 +8,7 @@ namespace Framework
     /// <summary>
     /// AssetBundle更新器
     /// </summary>
-    public class AssetBundleUpdater : SingletonBase<AssetBundleUpdater>
+    public class AssetBundleUpdater : SingletonBase<AssetBundleUpdater>, IAssetBundleUpdater
     {
         // 更新上下文
         private ABUpdateContext _updateContext;
@@ -19,7 +19,7 @@ namespace Framework
 
         private AssetBundleUpdater()
         {
-            QuitHandler.Instance.OnAppQuit += OnApplicationQuit;
+
         }
 
         /// <summary>
@@ -27,6 +27,8 @@ namespace Framework
         /// </summary>
         public void Init()
         {
+            ServiceLocator.Instance.Get<IQuitHandler>().OnAppQuit += OnApplicationQuit;
+
             _updateContext?.ResetData();
             InitLocalPath();
 
@@ -66,9 +68,9 @@ namespace Framework
         private void InitLocalPath()
         {
             // 没有缓存文件就创建缓存文件
-            if (!File.Exists(PathManager.GetAbLoadPath(FileUtility.CacheDefaultName)))
+            if (!File.Exists(PathUtility.GetAbLoadPath(FileUtility.CacheDefaultName)))
             {
-                File.Create(PathManager.GetAbLoadPath(FileUtility.CacheDefaultName)).Close();
+                File.Create(PathUtility.GetAbLoadPath(FileUtility.CacheDefaultName)).Close();
             }
         }
 

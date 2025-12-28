@@ -7,9 +7,12 @@ namespace Framework
     /// <summary>
     /// 主管理器
     /// </summary>
-    public class MainManager : SingletonBase<MainManager>
+    public class MainManager : SingletonBase<MainManager>, IMainManager
     {
-        private MainManager() { }
+        private MainManager()
+        {
+
+        }
 
         /// <summary>
         /// 初始化
@@ -17,17 +20,17 @@ namespace Framework
         public async Task Init()
         {
             // 激活处理器
-            QuitHandler.Instance.ActiveHandler();
+            ServiceLocator.Instance.Get<IQuitHandler>().ActiveHandler();
             // 初始化AB包资源
-            await AssetBundleManager.Instance.Init();
+            await ServiceLocator.Instance.Get<AssetBundleManager>().Init();
             // 初始化UI管理器
-            await UIManager.Instance.InitUIManagerAsync();
+            await ServiceLocator.Instance.Get<IUIManager>().InitUIManagerAsync();
             // 初始化游戏数据
-            await GameDataMgr.Instance.InitDataAsync();
+            await ServiceLocator.Instance.Get<IGameDataManager>().InitDataAsync();
             // 初始化Lua管理器
             // await EnvManager.Instance.InitLuaAsync("Main");
             // 初始化更新器
-            AssetBundleUpdater.Instance.Init();
+            ServiceLocator.Instance.Get<IAssetBundleUpdater>().Init();
         }
     }
 }

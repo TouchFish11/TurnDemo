@@ -76,7 +76,7 @@ namespace Game.Battle
         {
             List<Transform> playerTrans = new List<Transform>(BattlePoint.Instance.GetPlayerTransforms());
             // 批量创建玩家角色（从配置+预制体）
-            var playerDataDic = BinaryDataMgr.Instance.GetConfig<RoleInfoContainer>(E_ConfigLoadType.Editor).dataDic;
+            var playerDataDic = BinaryDataManager.Instance.GetConfig<RoleInfoContainer>(E_ConfigLoadType.Editor).dataDic;
             int index = 0;
             foreach (int roleId in playerDataDic.Keys)
             {
@@ -96,7 +96,7 @@ namespace Game.Battle
 
             // 批量创建怪物角色（从配置+预制体）
             List<Transform> monsterTrans = new List<Transform>(BattlePoint.Instance.GetMonsterTransforms());
-            var monsterDataDic = BinaryDataMgr.Instance.GetConfig<MonsterInfoContainer>(E_ConfigLoadType.Editor).dataDic;
+            var monsterDataDic = BinaryDataManager.Instance.GetConfig<MonsterInfoContainer>(E_ConfigLoadType.Editor).dataDic;
             index = 0;
             foreach (int monsterId in monsterDataDic.Keys)
             {

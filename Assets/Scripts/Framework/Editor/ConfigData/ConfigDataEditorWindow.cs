@@ -672,7 +672,7 @@ public class ConfigDataEditorWindow : EditorWindow
             return;
         }
 
-        scriptGenerator ??= new ConfigDataClassGenerator(selectConfigData);
+        scriptGenerator ??= new ConfigDataGenerator(selectConfigData);
         scriptGenerator.GenerateScript();
     }
 

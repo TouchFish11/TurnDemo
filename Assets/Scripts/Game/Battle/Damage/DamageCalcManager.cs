@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// 伤害计算管理器
 /// </summary>
-public class DamageCalcManager : SingletonBase<DamageCalcManager>
+public class DamageCalcManager : SingletonBase<DamageCalcManager>, IDamageCalcManager
 {
     //策略字典
     private readonly Dictionary<E_DamageType, IDamageStrategy> _strategyDic = new Dictionary<E_DamageType, IDamageStrategy>();
@@ -54,27 +54,27 @@ public class DamageCalcManager : SingletonBase<DamageCalcManager>
     ///// <param name="damageType">伤害类型</param>
     ///// <param name="extraData"></param>
     ///// <returns>最终伤害</returns>
-    //public void CalcDotDamage(IBattleTarget source, IBattleTarget target, IDotBuff dot)
+    //public void CalcDotDamage(IBattleEntityObject source, IBattleEntityObject target, IDotBuff dot)
     //{
-    //    if (_strategyDic.TryGetValue(E_DamageType.Dot, out IDamageStrategy strategy))
-    //    {
-    //        UIMgr.Instance.GetPanel<BattlePanel>((panel) =>
-    //        {
-    //            //计算最终伤害
-    //            int tempDmg = dot.CalcDamage();
-    //            target.ProcessDamage(new DamageResult());
-    //            //分发事件
-    //            //EventCenter.Instance.EventTrigger(E_EventType.OnApplyDamage, new ApplyDamageEvent(attacker, target, tempDmg));
-    //            //显示伤害
-    //            CreateDamageText(tempDmg, target);
-    //            //显示累计伤害
-    //            panel.UpdateCumulativeDamageText(dmg: _currentTotalDamage += tempDmg);
-    //        });
-    //    }
-    //    else
-    //    {
-    //        DebugMgr.LogError("未实现对应的策略");
-    //    }
+    //    //if (_strategyDic.TryGetValue(E_DamageType.Dot, out IDamageStrategy strategy))
+    //    //{
+    //    //    UIMgr.Instance.GetPanel<BattlePanel>((panel) =>
+    //    //    {
+    //    //        //计算最终伤害
+    //    //        int tempDmg = dot.CalcDamage();
+    //    //        target.ProcessDamage(new DamageResult());
+    //    //        //分发事件
+    //    //        //EventCenter.Instance.EventTrigger(E_EventType.OnApplyDamage, new ApplyDamageEvent(attacker, target, tempDmg));
+    //    //        //显示伤害
+    //    //        CreateDamageText(tempDmg, target);
+    //    //        //显示累计伤害
+    //    //        panel.UpdateCumulativeDamageText(dmg: _currentTotalDamage += tempDmg);
+    //    //    });
+    //    //}
+    //    //else
+    //    //{
+    //    //    DebugMgr.LogError("未实现对应的策略");
+    //    //}
     //}
 
     /// <summary>

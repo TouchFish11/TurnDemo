@@ -6,7 +6,7 @@ namespace Framework
     /// <summary>
     /// 事件中心
     /// </summary>
-    public class EventCenter : SingletonBase<EventCenter>
+    public class EventCenter : SingletonBase<EventCenter>, IEventCenter
     {
         // 存储事件的字典
         private readonly Dictionary<E_EventType, BaseEventInfo> _eventDic = new Dictionary<E_EventType, BaseEventInfo>();

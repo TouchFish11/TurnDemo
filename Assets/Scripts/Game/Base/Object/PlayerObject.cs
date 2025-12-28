@@ -18,7 +18,7 @@ namespace Game
         public override void BaseInit(int id)
         {
             base.BaseInit(id);
-            RoleInfo = BinaryDataMgr.Instance.GetConfig<RoleInfoContainer>(E_ConfigLoadType.Editor).dataDic[id];
+            RoleInfo = BinaryDataManager.Instance.GetConfig<RoleInfoContainer>(E_ConfigLoadType.Editor).dataDic[id];
         }
 
         public override void BattleInit(int battleEntityId, IBattleContext context)

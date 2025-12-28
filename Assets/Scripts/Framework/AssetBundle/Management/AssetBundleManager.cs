@@ -11,7 +11,7 @@ namespace Framework
     /// AB包管理器
     /// </summary>
     [LuaCallCSharp]
-    public class AssetBundleManager : SingletonBase<AssetBundleManager>
+    public class AssetBundleManager : SingletonBase<AssetBundleManager>, IAssetBundleManager
     {
         // 缓存全部包加载器
         private readonly Dictionary<string, BundleWrapper> _nameToWrapperMap = new Dictionary<string, BundleWrapper>();
@@ -20,7 +20,10 @@ namespace Framework
         // 主包清单信息
         private AssetBundleManifest _abManifest;
 
-        private AssetBundleManager() { }
+        private AssetBundleManager()
+        {
+
+        }
 
         /// <summary>
         /// 获取AssetBundle主包名
@@ -64,7 +67,7 @@ namespace Framework
             ClearCache();
 
             // 构建主包信息
-            _mainWrapper = new AssetBundleWrapper(AbMainName, PathManager.GetAbLoadPath(AbMainName + AbSuffix));
+            _mainWrapper = new AssetBundleWrapper(AbMainName, PathUtility.GetAbLoadPath(AbMainName + AbSuffix));
             // 加载主包
             bool isSuccess = await _mainWrapper.LoadFromFileAsync();
             if(!isSuccess)
@@ -86,7 +89,7 @@ namespace Framework
                 // 没用即添加，有即比较MD5是否相同：不同则替换，同则不处理
                 string abName = abNames[i].ToLower();
                 // 初始化包装器
-                _nameToWrapperMap.TryAdd(abName, new AssetBundleWrapper(abName, PathManager.GetAbLoadPath(abName + AbSuffix)));
+                _nameToWrapperMap.TryAdd(abName, new AssetBundleWrapper(abName, PathUtility.GetAbLoadPath(abName + AbSuffix)));
             }
 
             return true;
@@ -271,8 +274,6 @@ namespace Framework
         /// <summary>
         /// 获取所有的场景路径
         /// </summary>
-        /// <param name="assetBundleType"></param>
-        /// <param name="onScenePathsLoad"></param>
         public async Task<string[]> GetAllScenePaths()
         {
             string abName = E_AssetBundleType.Scene.ToString().ToLower();

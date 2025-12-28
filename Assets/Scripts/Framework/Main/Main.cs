@@ -15,10 +15,12 @@ namespace Framework
     {
         private async void Start()
         {
+            // 初始化服务定位器
+            ServiceLocator.Instance.InitService();
             // 初始化主管理器
-            await MainManager.Instance.Init();
+            await ServiceLocator.Instance.Get<IMainManager>().Init();
             // 尝试自动登录
-            await ServerManager.Instance.TryAutoLogin();
+            await ServiceLocator.Instance.Get<IServerManager>().TryAutoLogin();
         }
     }
 }

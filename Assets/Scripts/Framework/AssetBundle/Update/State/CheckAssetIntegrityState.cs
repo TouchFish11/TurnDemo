@@ -28,11 +28,11 @@ namespace Framework
             }
 
             // 更新本地的AB包清单文件
-            File.Copy(PathManager.GetAbLoadPath(FileUtility.TempListFileDefaultName), PathManager.GetAbLoadPath(FileUtility.ListFileDefaultName), true);
+            File.Copy(PathUtility.GetAbLoadPath(FileUtility.TempListFileDefaultName), PathUtility.GetAbLoadPath(FileUtility.ListFileDefaultName), true);
             // 删除临时清单文件
-            //File.Delete(PathManager.GetAbLoadPath(FileUtility.CacheDefaultName));
+            //File.Delete(PathUtility.GetAbLoadPath(FileUtility.CacheDefaultName));
             // 删除临时对比文件
-            File.Delete(PathManager.GetAbLoadPath(FileUtility.TempListFileDefaultName));
+            File.Delete(PathUtility.GetAbLoadPath(FileUtility.TempListFileDefaultName));
             // 写入缓存文件
             await assetBundleUpdater.GetContext().WriteCacheFile();
             // 切换至完成状态

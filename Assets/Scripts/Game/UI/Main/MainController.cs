@@ -43,8 +43,8 @@ public class MainController : UIController<MainView, MainModel>
         // 交互逻辑监听
         EventCenter.Instance.AddEventListener<List<IInteractable>>(E_EventType.E_OnInteract, mainLogics[typeof(InteractLogic)].As<InteractLogic>().CreateInteract);
         // 对话事件监听
-        DialogueManager.Instance.OnDialogueStart += InActive;
-        DialogueManager.Instance.OnDialogueEnd += Active;
+        ServiceLocator.Instance.Get<IDialogueManager>().OnDialogueStart += InActive;
+        ServiceLocator.Instance.Get<IDialogueManager>().OnDialogueEnd += Active;
         // 任务事件监听
         TaskManager.Instance.OnUpdateTask += mainLogics[typeof(TaskLogic)].As<TaskLogic>().UpdateTask;
         TaskManager.Instance.OnCancelTask += mainLogics[typeof(TaskLogic)].As<TaskLogic>().CancelTask;

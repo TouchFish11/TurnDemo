@@ -8,12 +8,15 @@ namespace Framework
     /// <summary>
     /// Resources资源管理器
     /// </summary>
-    public class ResourcesManager : SingletonBase<ResourcesManager>
+    public class ResourcesManager : SingletonBase<ResourcesManager>, IResourcesManager
     {
-        //存储资源的字典
-        private readonly Dictionary<string, BaseResourcesInfo> _resDic = new Dictionary<string, BaseResourcesInfo>();
+        // 资源名到资源信息映射
+        private readonly Dictionary<string, BaseResourcesInfo> _nameToResInfoMap = new Dictionary<string, BaseResourcesInfo>();
 
-        private ResourcesManager() { }
+        private ResourcesManager()
+        {
+
+        }
 
         /// <summary>
         /// 同步加载资源
@@ -26,9 +29,9 @@ namespace Framework
             //自定义存储名称
             string cacheName = $"{resPath}_{typeof(T).Name}";
             ResourcesInfo<T> info = null;
-            if (_resDic.ContainsKey(cacheName))
+            if (_nameToResInfoMap.ContainsKey(cacheName))
             {
-                info = _resDic[cacheName] as ResourcesInfo<T>;
+                info = _nameToResInfoMap[cacheName] as ResourcesInfo<T>;
                 if (info.Asset == null)
                 {
                     MonoManager.Instance.StopCoroutine(info.ResCoroutine);
@@ -48,7 +51,7 @@ namespace Framework
 
             info = new ResourcesInfo<T>(null);
             //存储到字典中
-            _resDic.Add(cacheName, info);
+            _nameToResInfoMap.Add(cacheName, info);
             //同步加载，记录资源
             info.Asset = Resources.Load<T>(resPath);
             return info.Asset;
@@ -66,9 +69,9 @@ namespace Framework
             string cacheName = $"{resName}_{typeof(T).Name}";
 
             ResourcesInfo<T> info;
-            if (_resDic.ContainsKey(cacheName))
+            if (_nameToResInfoMap.ContainsKey(cacheName))
             {
-                info = _resDic[cacheName] as ResourcesInfo<T>;
+                info = _nameToResInfoMap[cacheName] as ResourcesInfo<T>;
                 //增加引用计数
                 ++info.RefCount;
                 //正在异步加载资源
@@ -80,7 +83,7 @@ namespace Framework
             }
 
             info = new ResourcesInfo<T>(callBack);
-            _resDic.Add(cacheName, info);
+            _nameToResInfoMap.Add(cacheName, info);
 
             //通过Mono管理器开启协程
             info.ResCoroutine = MonoManager.Instance.StartCoroutine(LoadAsync_Cor());
@@ -90,7 +93,7 @@ namespace Framework
                 //异步加载资源
                 ResourceRequest req = Resources.LoadAsync<T>(resName);
                 yield return req;
-                ResourcesInfo<T> info = _resDic[cacheName] as ResourcesInfo<T>;
+                ResourcesInfo<T> info = _nameToResInfoMap[cacheName] as ResourcesInfo<T>;
                 //不处于待删除才执行资源回调
                 if (!info.IsDelete)
                 {
@@ -118,9 +121,9 @@ namespace Framework
             ResourcesInfo<T> info;
 
             //字典中存在在资源，说明资源正在异步加载或加载完毕
-            if (_resDic.ContainsKey(cacheName))
+            if (_nameToResInfoMap.ContainsKey(cacheName))
             {
-                info = _resDic[cacheName] as ResourcesInfo<T>;
+                info = _nameToResInfoMap[cacheName] as ResourcesInfo<T>;
                 if(!info.IsDelete)
                     //不是待删除资源，才减少引用计数
                     --info.RefCount;
@@ -137,7 +140,7 @@ namespace Framework
                     //引用置空
                     info.Asset = null;
                     //从字典中移除
-                    _resDic.Remove(cacheName);
+                    _nameToResInfoMap.Remove(cacheName);
                 }
                 //否则该资源正在异步加载，不用在这里处理
             }
@@ -164,7 +167,7 @@ namespace Framework
         /// </summary>
         public void Clear()
         {
-            _resDic.Clear();
+            _nameToResInfoMap.Clear();
             UnloadUnusedAssets();
             System.GC.Collect();
         }

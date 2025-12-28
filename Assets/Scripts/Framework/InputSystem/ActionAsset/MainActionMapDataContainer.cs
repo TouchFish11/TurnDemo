@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Framework
 {
 	/// <summary>
-	/// 输入动作数据容器
+	/// MainActionMapData输入动作数据容器
 	/// <summary>
 	[Serializable]
 	public class MainActionMapDataContainer

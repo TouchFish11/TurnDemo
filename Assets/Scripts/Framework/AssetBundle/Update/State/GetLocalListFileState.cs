@@ -38,10 +38,10 @@ namespace Framework
         public async Task<bool> GetLocalCompareFileInfo()
         {
             // 可读写路径有本地对比文件，说明已经更新过了，通过UnityWebRequest获取本地的对比文件
-            if (File.Exists(PathManager.GetAbLoadPath(FileUtility.ListFileDefaultName)))
+            if (File.Exists(PathUtility.GetAbLoadPath(FileUtility.ListFileDefaultName)))
             {
                 // 通过UnityWebRequest获取本地可读写路径的对比文件需要添加文件协议
-                return await GetLocaListFileInfo("file:///" + PathManager.GetAbLoadPath(FileUtility.ListFileDefaultName));
+                return await GetLocaListFileInfo("file:///" + PathUtility.GetAbLoadPath(FileUtility.ListFileDefaultName));
             }
             // 流文件夹有对比文件，说明是有默认资源且是第一次更新，通过UnityWebRequest获取本地的对比文件
             else if (File.Exists(Application.streamingAssetsPath + "/" + FileUtility.ListFileDefaultName))

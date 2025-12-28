@@ -46,7 +46,7 @@ public class MenuItemTools
     /// <summary>
     /// 生成ResKeyCollection脚本
     /// </summary>
-    [MenuItem("GameTool/Generate/Generate ResKeyCollection")]
+    [MenuItem("GameTool/Generate/Generate ResKeyCollection Code")]
     public static void GenerateResKeyCollectionScript()
     {
         IScriptGenerator scriptGenerator = new ResKeyCollectionClassGenerator();
@@ -55,76 +55,13 @@ public class MenuItemTools
     }
 
     /// <summary>
-    /// 生成E_Action枚举脚本
+    /// 生成相关InputActionData
     /// </summary>
-    [MenuItem("GameTool/Generate/InputSystem/Generate ActionEnum")]
-    public static void GenerateE_ActionScript()
-    {
-        // 加载输入动作资源
-        Dictionary<string, List<string>> mapToActionsMap = new Dictionary<string, List<string>>();
-        InputActionAsset inputActions = ResourcesManager.Instance.Load<InputActionAsset>("PlayerinputAction");
-        foreach (InputActionMap map in inputActions.actionMaps)
-        {
-            mapToActionsMap.Add(map.name, new List<string>());
-            foreach (InputAction action in map.actions)
-            {
-                mapToActionsMap[map.name].Add(action.name);
-            }
-        }
-
-        foreach (var pair in mapToActionsMap)
-        {
-            string filePath = $"{Application.dataPath}/Scripts/Framework/InputSystem/ActionAsset/E_{pair.Key}.cs";
-            IScriptGenerator scriptGenerator = new InputActionEnumGenerator(pair.Value, new string[] {"None"}, filePath, nameof(Framework));
-            scriptGenerator.GenerateScript();
-            Debug.Log($"E_{pair.Key}，路径：{filePath}");
-        }
-    }
-
-    /// <summary>
-    /// 生成InputActionData脚本
-    /// </summary>
-    [MenuItem("GameTool/Generate/InputSystem/Generate InputActionData")]
+    [MenuItem("GameTool/Generate/Generate InputActionData")]
     public static void GenerateInputActionDataScript()
     {
-        IScriptGenerator scriptGenerator = new InputActionDataClassGenerator();
+        IScriptGenerator scriptGenerator = new InputActionDataGenerator();
         scriptGenerator.GenerateScript();
-        Debug.Log($"InputActionData，路径：{scriptGenerator.FilePath}");
-    }
-
-    /// <summary>
-    /// 生成PlayerActionAssets.Json文件
-    /// </summary>
-    [MenuItem("GameTool/Generate/InputSystem/Generate PlayerActionAssets.Json")]
-    public static void GeneratePlayerActionAssetsJson()
-    {
-        Dictionary<string, string> nameToJsonMap = new Dictionary<string, string>();
-        InputActionAsset inputActions = ResourcesManager.Instance.Load<InputActionAsset>("PlayerinputAction");
-        string json = inputActions.ToJson();
-        StringBuilder sb = new StringBuilder(json);
-
-        foreach (InputActionMap map in inputActions.actionMaps)
-        {
-            string className = $"{nameof(Framework)}.{map.name}Data";
-            Type inputActionDataType = typeof(MainActionMapData);
-            Debug.Log($"{className}" + inputActionDataType);
-
-            PropertyInfo[] properties = inputActionDataType.GetProperties(BindingFlags.Public | BindingFlags.Static);
-            foreach (PropertyInfo propertyInfo in properties)
-            {
-                sb.Replace(propertyInfo.GetValue(null).ToString(), $"<{propertyInfo.Name}>");
-                Debug.Log($"存在，值：{propertyInfo.GetValue(null)}，替换为：{$"<{propertyInfo.Name}>"}");
-            }
-            nameToJsonMap.Add(map.name, sb.ToString());
-        }
-
-        foreach (var item in nameToJsonMap)
-        {
-            string filePath = $"{Application.dataPath}/Editor/ArtRes/GameData/Input/{item.Key}.json";
-            File.WriteAllText(filePath, item.Value);
-        }
-
-        AssetDatabase.Refresh();
     }
 
     /// <summary>

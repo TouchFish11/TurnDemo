@@ -7,7 +7,7 @@ namespace Framework
     /// </summary>
     public class DateTime : IPoolData
     {
-        //指定的天数
+        // 指定的天数
         private int _targetDay;
         // 指定的小时数
         private int _targetHour;

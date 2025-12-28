@@ -11,7 +11,8 @@ namespace Framework
     /// <summary>
     /// 输入管理器
     /// </summary>
-    public class InputManager : SingletonBase<InputManager>
+    [Obsolete("使用FrameworkInputSystem", true)]
+    public class InputManager : SingletonBase<InputManager>, IInputManager
     {
         //存储输入数据
         private Dictionary<E_EventType, InputData> _inputDataDic = new Dictionary<E_EventType, InputData>();
@@ -31,7 +32,7 @@ namespace Framework
         public void InitSystem()
         {
             //读取数据
-            _inputDataDic = GameDataMgr.Instance.InputDataContainer.InputDataDic;
+            _inputDataDic = GameDataManager.Instance.InputDataContainer.InputDataDic;
             //判断是否是第一次进入游戏，第一次进入游戏该字典没有长度
             if (_inputDataDic.Count == 0)
             {

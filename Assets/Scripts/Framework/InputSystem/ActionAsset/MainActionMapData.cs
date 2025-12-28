@@ -4,7 +4,7 @@ using UnityEngine.InputSystem.LowLevel;
 namespace Framework
 {
 	/// <summary>
-	/// 输入动作数据
+	/// MainActionMapData输入动作数据
 	/// <summary>
 	public class MainActionMapData
 	{

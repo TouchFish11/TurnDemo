@@ -15,9 +15,10 @@ public class MouseManager : SingletonAutoMono<MouseManager>, IMouseManager
     // 记录每个触发鼠标状态的对象标识
     private readonly Stack<string> mouseVisibleSources = new Stack<string>();
 
-    private void Start()
+    private void Awake()
     {
-        ServiceLocator.Instance.Register<IMouseManager>(Instance);
+        EventCenter.Instance.AddEventListener<IUIController>(E_EventType.E_OpenView, OnOpenView);
+        EventCenter.Instance.AddEventListener<IUIController>(E_EventType.E_CloseView, OnCloseView);
     }
 
     /// <summary>
@@ -39,6 +40,7 @@ public class MouseManager : SingletonAutoMono<MouseManager>, IMouseManager
             }
         }
 
+        LogManager.Log($"{value}：请求鼠标可见");
         mouseVisibleSources.Push(sorce);
         UpdateMouseState();
     }
@@ -56,6 +58,7 @@ public class MouseManager : SingletonAutoMono<MouseManager>, IMouseManager
                 return;
             }
 
+            LogManager.Log($"{value}：释放鼠标可见");
             mouseVisibleSources.Pop();
             UpdateMouseState();
         }
@@ -86,6 +89,31 @@ public class MouseManager : SingletonAutoMono<MouseManager>, IMouseManager
         }
 
         return true;
+    }
+
+    /// <summary>
+    /// 打开界面事件回调
+    /// </summary>
+    /// <param name="controller"></param>
+    private void OnOpenView(IUIController controller)
+    {
+        RequestMouseVisible(controller.ToString());
+    }
+
+    /// <summary>
+    /// 关闭界面事件回调
+    /// </summary>
+    /// <param name="controller"></param>
+    private void OnCloseView(IUIController controller)
+    {
+        ReleaseMouseVisible(controller.ToString());
+    }
+
+    protected override void OnDestroy()
+    {
+        EventCenter.Instance.RemoveEventListener<IUIController>(E_EventType.E_OpenView, OnOpenView);
+        EventCenter.Instance.RemoveEventListener<IUIController>(E_EventType.E_CloseView, OnCloseView);
+        base.OnDestroy();
     }
 
     /// <summary>

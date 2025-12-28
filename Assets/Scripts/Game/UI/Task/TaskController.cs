@@ -92,9 +92,9 @@ namespace Game.UI
             // 暂时允许都不选中，避免任务更新出现Toggle无法响应事件问题
             view.TaskItemGroup.allowSwitchOff = true;
             // 读取任务数据
-            taskDataCollection = GameDataMgr.Instance.TaskDataCollection;
+            taskDataCollection = GameDataManager.Instance.TaskDataCollection;
             // 读取任务信息
-            var idToInfoMap = BinaryDataMgr.Instance.GetConfig<TaskInfoContainer>(E_ConfigLoadType.Excel).dataDic;
+            var idToInfoMap = BinaryDataManager.Instance.GetConfig<TaskInfoContainer>(E_ConfigLoadType.Excel).dataDic;
 
             foreach (TaskInfo taskInfo in idToInfoMap.Values)
             {

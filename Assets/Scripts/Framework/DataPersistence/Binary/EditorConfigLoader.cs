@@ -35,7 +35,7 @@ public class EditorConfigLoader : ConfigLoader
             TextAsset tInfo = await AssetBundleManager.Instance.LoadAssetAsync<TextAsset>(E_AssetBundleType.TableInfo, $"{typeof(K).Name}.btyes");
 #else
         // 加载编辑器数据
-        TextAsset tInfo = EditorResMgr.Instance.LoadEditorAsset<TextAsset>($"{typeof(K).Name}", ".bytes");
+        TextAsset tInfo = EditorResManager.Instance.LoadEditorAsset<TextAsset>($"{typeof(K).Name}", ".bytes");
         await Task.CompletedTask;
 #endif
         // 转换二进制到数据类

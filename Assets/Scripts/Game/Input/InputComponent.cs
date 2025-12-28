@@ -87,7 +87,10 @@ public class InputComponent : BaseComponent
                 }
                 break;
             case "Initeract":
-                this.EntityObject.GetComponent<InteractComponent>().Initeract();
+                if(context.phase == InputActionPhase.Started)
+                {
+                    this.EntityObject.GetComponent<InteractComponent>().Initeract();
+                }
                 break;
             case "MouseMove":
                 OnMouseSlideChanged?.Invoke(context.ReadValue<Vector2>());
@@ -96,11 +99,11 @@ public class InputComponent : BaseComponent
                 OnScrollWheel?.Invoke(context.ReadValue<float>());
                 break;
             case "MouseVisible":
-                if (context.phase == InputActionPhase.Performed)
+                if (context.phase == InputActionPhase.Started)
                 {
                     ServiceLocator.Instance.Get<IMouseManager>().RequestMouseVisible(nameof(Keyboard.current.leftAltKey));
                 }
-                else
+                else if(context.phase == InputActionPhase.Canceled)
                 {
                     ServiceLocator.Instance.Get<IMouseManager>().ReleaseMouseVisible(nameof(Keyboard.current.leftAltKey));
                 }

@@ -1,4 +1,5 @@
 using Framework;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,25 +9,30 @@ using UnityEngine.Video;
 /// <summary>
 /// 视频管理器
 /// </summary>
-public class VideoManager : SingletonBase<VideoManager>
+public class VideoManager : SingletonBase<VideoManager>, IVideoManager
 {
     private VideoPlayer videoPlayer;
 
     /// <summary>
     /// 在播放前
     /// </summary>
-    public UnityAction OnPrePlay;
+    public event Action OnPrePlay;
 
     /// <summary>
     /// 在播放后
     /// </summary>
-    public UnityAction OnPostPlay;
+    public event Action OnPostPlay;
 
     private VideoManager()
     {
 
     }
 
+    /// <summary>
+    /// 播放视频
+    /// </summary>
+    /// <param name="videoClip"></param>
+    /// <param name="renderTexture"></param>
     public void PlayVideo(VideoClip videoClip, RenderTexture renderTexture)
     {
         // 初始化视频播放器

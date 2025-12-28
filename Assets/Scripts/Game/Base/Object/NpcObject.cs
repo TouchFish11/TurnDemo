@@ -14,20 +14,20 @@ namespace Game
 
         public override void BaseInit(int id)
         {
-            NpcInfo = BinaryDataMgr.Instance.GetConfig<NpcInfoContainer>(E_ConfigLoadType.Excel).dataDic[id];
+            NpcInfo = BinaryDataManager.Instance.GetConfig<NpcInfoContainer>(E_ConfigLoadType.Excel).dataDic[id];
         }
 
         public void OnInteract(IEntityObject entityObject)
         {
             // 显示对话界面
-            if (!DialogueManager.Instance.IsDialogueActive)
+            if (!ServiceLocator.Instance.Get<IDialogueManager>().IsDialogueActive)
             {
-                DialogueManager.Instance.StartDialogue(NpcInfo.f_dialogueId);
+                ServiceLocator.Instance.Get<IDialogueManager>().StartDialogue(NpcInfo.f_dialogueId);
             }
             else
             {
                 // 已有对话时推进文本
-                DialogueManager.Instance.NextDialogue();
+                ServiceLocator.Instance.Get<IDialogueManager>().NextDialogue();
             }
         }
     }

@@ -1,7 +1,5 @@
+using Framework;
 using Game;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 /// <summary>
 /// 对话组件
@@ -13,10 +11,11 @@ public class DialogueComponent : BaseComponent, IDialable
         base.Awake();
 
         // 监听对话结束事件
-        DialogueManager.Instance.OnDialogueEnd += (this as IDialable).OnDialogueEnd;
+        ServiceLocator.Instance.Get<IDialogueManager>().OnDialogueEnd += (this as IDialable).OnDialogueEnd;
         // 监听对话开始事件
-        DialogueManager.Instance.OnDialogueStart += (this as IDialable).OnDialogueStart;
+        ServiceLocator.Instance.Get<IDialogueManager>().OnDialogueStart += (this as IDialable).OnDialogueStart;
     }
+
     void IDialable.OnDialogueStart()
     {
         // 禁用输入
@@ -38,9 +37,9 @@ public class DialogueComponent : BaseComponent, IDialable
     public override void Destroy()
     {
         // 取消监听对话开始事件
-        DialogueManager.Instance.OnDialogueStart -= (this as IDialable).OnDialogueStart;
+        ServiceLocator.Instance.Get<IDialogueManager>().OnDialogueStart -= (this as IDialable).OnDialogueStart;
         // 取消监听对话结束事件
-        DialogueManager.Instance.OnDialogueEnd -= (this as IDialable).OnDialogueEnd;
+        ServiceLocator.Instance.Get<IDialogueManager>().OnDialogueEnd -= (this as IDialable).OnDialogueEnd;
 
         base.Destroy();
     }

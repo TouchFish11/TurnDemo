@@ -8,29 +8,29 @@ namespace Framework
     /// <summary>
     /// 计时器管理器
     /// </summary>
-    public class TimerManager : SingletonBase<TimerManager>
+    public class TimerManager : SingletonBase<TimerManager>, ITimerManager
     {
-        //存储受时间缩放影响的计时器的字典
+        // 存储受时间缩放影响的计时器的字典
         private readonly Dictionary<int, Timer> _timerDic = new Dictionary<int, Timer>();
-        //存储不受时间缩放影响的计时器的字典
+        // 存储不受时间缩放影响的计时器的字典
         private readonly Dictionary<int, Timer> _realTimerDic = new Dictionary<int, Timer>();
-        //存储受时间缩放影响的计时器的待移除列表
+        // 存储受时间缩放影响的计时器的待移除列表
         private readonly List<int> _delTimerIDList = new List<int>();
-        //存储不受时间缩放影响的计时器的待移除列表
+        // 存储不受时间缩放影响的计时器的待移除列表
         private readonly List<int> _realDelTimerIDList = new List<int>();
-        //计时器唯一ID
+        // 计时器唯一ID
         private static int _TimerKey;
-        //受时间缩放影响的计时器协程
+        // 受时间缩放影响的计时器协程
         private Coroutine _coroutine;
-        //不受时间缩放影响的计时器协程
+        // 不受时间缩放影响的计时器协程
         private Coroutine _realCoroutine;
-        //计时更新间隔
+        // 计时更新间隔
         private const float IntervalTime = 0.1f;
-        //受时间缩放影响的协程返回对象
+        // 受时间缩放影响的协程返回对象
         private readonly WaitForSeconds _WaitForSecondsTime = new WaitForSeconds(IntervalTime);
-        //不受时间缩放影响的协程返回对象
+        // 不受时间缩放影响的协程返回对象
         private readonly WaitForSecondsRealtime _WaitForSecondsRealTime = new WaitForSecondsRealtime(IntervalTime);
-        //当前设置的时间速度
+        // 当前设置的时间速度
         private E_TimeRate _timeRate;
 
         private TimerManager()
