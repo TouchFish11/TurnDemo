@@ -12,9 +12,12 @@ namespace Game.Battle
     {
         public int SkillId { get; private set; }
 
-        public SelectSkillEvent(IBattleContext context, int skillId) : base(context)
+        public IBattleEntityObject BattleEntity { get; private set; }
+
+        public SelectSkillEvent(IBattleContext context, int skillId, IBattleEntityObject battleEntity) : base(context)
         {
             SkillId = skillId;
+            BattleEntity = battleEntity;
         }
     }
 }

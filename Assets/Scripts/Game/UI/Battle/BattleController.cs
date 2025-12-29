@@ -54,6 +54,8 @@ public class BattleController : UIController<BattleView, BattleModel>
         //battleContext.GetEventBus().AddListener<OnHpChangedEvent>(OnHpChanged);
         battleContext.GetEventBus().AddListener<OnTakeDamageEvent>(OnTakeDamage);
 
+        battleContext.GetEventBus().AddListener<TriggerSkillEvent>(UpdateActTip);
+
         TargetSelectManager.Instance.RegisterTargetSelectionChanged(OnTargetSelectionChanged);
     }
 
@@ -66,15 +68,13 @@ public class BattleController : UIController<BattleView, BattleModel>
     {
         List<RoleStateUI> roleStateUIs = new List<RoleStateUI>();
         // 玩家角色显示UI
-        foreach (IBattleEntityObject entityObject in battleEntities)
+        foreach (IBattleEntityObject battleEntity in battleEntities)
         {
             RoleStateUI roleStateUI = await ObjectBuilder.GetOrCreateInstance<RoleStateUI>(E_AssetBundleType.UI, ResKeyCollection.RoleStateUI, null);
-            int skillId = entityObject.GetComponent<SkillComponent>().GetUltimateSkill();
+            int skillId = battleEntity.GetComponent<SkillComponent>().GetUltimateSkill();
             if (skillId != -1)
             {
-                // TODO：暂时用对象级事件，后续优化为局部事件中心
-                roleStateUI.OnTriggerUltimateSkill += entityObject.CastSkill;
-                roleStateUI.Init(entityObject.GetComponent<PlayerPropertyComponent>().GetProperty<RoleProperty>(), skillId);
+                roleStateUI.Init(battleEntity.GetComponent<PlayerPropertyComponent>().GetProperty<RoleProperty>(), skillId, battleEntity);
                 roleStateUIs.Add(roleStateUI);
             }
         }
@@ -94,6 +94,18 @@ public class BattleController : UIController<BattleView, BattleModel>
         {
 
         }
+    }
+
+    /// <summary>
+    /// 更新行动提示UI
+    /// </summary>
+    private void UpdateActTip(TriggerSkillEvent triggerSkillEvent)
+    {
+        // 隐藏玩家操作UI
+        model.UpdateOperator(new List<SkillKeyUI>());
+
+        // 显示行动提示UI
+        model.SetActTipActive(true, triggerSkillEvent.BattleEntity is MonsterObject);
     }
 
     /// <summary>
@@ -119,8 +131,10 @@ public class BattleController : UIController<BattleView, BattleModel>
     {
         if (currentObject is PlayerObject playerObject)
         {
-            List<ISkill> skills = new List<ISkill>(currentObject.GetComponent<SkillComponent>().GetSkills());
+            // 隐藏行动提示
+            model.SetActTipActive(false, false);
 
+            List<ISkill> skills = new List<ISkill>(currentObject.GetComponent<SkillComponent>().GetSkills());
             List<SkillKeyUI> skillKeyUIs = new List<SkillKeyUI>();
             // 遍历技能
             foreach (ISkill skill in skills)
@@ -132,8 +146,7 @@ public class BattleController : UIController<BattleView, BattleModel>
 
                 // 当前玩家操作UI
                 SkillKeyUI skillKeyUI = await ObjectBuilder.GetOrCreateInstance<SkillKeyUI>(E_AssetBundleType.UI, ResKeyCollection.SkillKeyUI, null);
-                skillKeyUI.OnTriggerSkill += playerObject.CastSkill;
-                skillKeyUI.Init(skill.SkillInfo, playerObject.RoleInfo, view.SkillKeyGroup);
+                skillKeyUI.Init(skill.SkillInfo, playerObject.RoleInfo, view.SkillKeyGroup, currentObject);
                 skillKeyUIs.Add(skillKeyUI);
             }
 

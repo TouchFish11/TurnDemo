@@ -6,10 +6,8 @@ using Game;
 /// </summary>
 public class DialogueComponent : BaseComponent, IDialable
 {
-    protected override void Awake()
+    public override void Init(IEntityObject entityObject)
     {
-        base.Awake();
-
         // 监听对话结束事件
         ServiceLocator.Instance.Get<IDialogueManager>().OnDialogueEnd += (this as IDialable).OnDialogueEnd;
         // 监听对话开始事件
@@ -21,7 +19,7 @@ public class DialogueComponent : BaseComponent, IDialable
         // 禁用输入
         this.EntityObject.GetComponent<InputComponent>().DisEnableInput();
         // 切换为待机动画
-        this.EntityObject.GetComponent<AnimComponent>().SetAnimationState(AnimationType.Idle);
+        this.EntityObject.GetComponent<NormalAnimationComponent>().SetAnimationState(E_AnimationType.Idle);
         // 禁用移动
         this.EntityObject.GetComponent<MoveComponent>().Disable();
     }

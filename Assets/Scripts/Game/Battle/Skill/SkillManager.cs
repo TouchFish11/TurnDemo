@@ -19,8 +19,6 @@ public class SkillManager : SingletonBase<SkillManager>, ISkillManager
     /// </summary>
     public void AddSkillCommand(ISkill skill, IBattleEntityObject entityObject)
     {
-        // 获取上下文
-        IBattleContext battleContext = entityObject.Context;
         // 获取技能释放对象  待优化：应为触发技能的实体对象，而不一定是当前回合实体
         IBattleEntityObject caster = entityObject;
         // 通过目标选择管理器获取技能主目标

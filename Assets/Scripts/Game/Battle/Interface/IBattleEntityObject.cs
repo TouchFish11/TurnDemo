@@ -58,7 +58,7 @@ namespace Game.Battle
         /// 释放技能
         /// </summary>
         /// <param name="skillId"></param>
-        void CastSkill(int skillId);
+        //void CastSkill(int skillId);
 
         /// <summary>
         /// 获取速度

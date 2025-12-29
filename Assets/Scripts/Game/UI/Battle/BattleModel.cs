@@ -20,6 +20,15 @@ public class BattleModel : UIModel
     // 当前累计伤害
     private long currentCalcDamage;
 
+    // 行动提示状态
+    private bool activeActTip;
+
+    public void SetActTipActive(bool isShow, bool isMonster)
+    {
+        activeActTip = isShow;
+        TriggerDataChanged(nameof(activeActTip), (isShow, isMonster));
+    }
+
     public void UpdateAcitonbar(IEnumerable<ActionGridUI> actionGridUIs)
     {
         foreach (ActionGridUI actionGridUI in actions)

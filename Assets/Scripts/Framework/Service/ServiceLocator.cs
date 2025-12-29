@@ -20,6 +20,12 @@ namespace Framework
         /// </summary>
         public void InitService()
         {
+            // ¼Ì³ÐMono
+            Register<IMonoManager>(MonoManager.Instance);
+            Register<IMouseManager>(MouseManager.Instance);
+            Register<IQuitHandler>(QuitHandler.Instance);
+            Register<IUWRManager>(UWRManager.Instance);
+
             // ²»¼Ì³ÐMono
             Register<IAssetBundleManager>(AssetBundleManager.Instance);
             Register<IAssetBundleUpdater>(AssetBundleUpdater.Instance);
@@ -41,18 +47,8 @@ namespace Framework
             Register<IUIManager>(UIManager.Instance);
             Register<IVideoManager>(VideoManager.Instance);
 
-            // ¼Ì³ÐMono
-            Register<IMonoManager>(MonoManager.Instance);
-            Register<IMouseManager>(MouseManager.Instance);
-            Register<IQuitHandler>(QuitHandler.Instance);
-            Register<IUWRManager>(UWRManager.Instance);
-
-            // ·Ç¿ò¼Ü
-            Register<IBattleManager>(BattleManager.Instance);
-            Register<IDamageCalcManager>(DamageCalcManager.Instance);
+            // ·Ç¿ò¼Ü£¨Ö÷½çÃæ£©
             Register<IDialogueManager>(DialogueManager.Instance);
-            Register<ISkillManager>(SkillManager.Instance);
-            Register<ITargetSelectManager>(TargetSelectManager.Instance);
             Register<ITaskManager>(TaskManager.Instance);
         }
 
@@ -83,7 +79,7 @@ namespace Framework
             {
                 return service as T;
             }
-            Debug.LogError($"Î´ÕÒµ½{type.Name}");
+            LogManager.LogError($"Î´ÕÒµ½{type.Name}");
             return null;
         }
 

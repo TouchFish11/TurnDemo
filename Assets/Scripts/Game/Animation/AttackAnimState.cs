@@ -9,12 +9,22 @@ public class AttackAnimState : StateMachineBehaviour
 {
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        if (animator.GetComponentInParent<IEntityObject>().GetComponent<MoveComponent>() == null)
+        {
+            return;
+        }
+
         // 禁用移动
         animator.GetComponentInParent<IEntityObject>().GetComponent<MoveComponent>().SetMoveFlag(false);
     }
 
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        if (animator.GetComponentInParent<IEntityObject>().GetComponent<MoveComponent>() == null)
+        {
+            return;
+        }
+
         // 解禁移动
         animator.GetComponentInParent<IEntityObject>().GetComponent<MoveComponent>().SetMoveFlag(true);
     }

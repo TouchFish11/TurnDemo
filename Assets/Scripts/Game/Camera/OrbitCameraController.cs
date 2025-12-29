@@ -4,8 +4,10 @@ using UnityEngine;
 /// <summary>
 /// 环绕式第三人称摄像机
 /// </summary>
-public class OrbitCameraController : SingletonMono<OrbitCameraController>
+public class OrbitCameraController : SingletonMono<OrbitCameraController>, IOrbitCameraController
 {
+    public Transform Transform { get; private set; }
+
     [Header("核心配置")]
     // 绕玩家的固定半径（距离）
     public float radius = 5f;
@@ -35,13 +37,19 @@ public class OrbitCameraController : SingletonMono<OrbitCameraController>
     // 鼠标输入
     private Vector2 mouseInput;
 
-    private void Start()
+    protected override void Awake()
     {
-        Init();
+        base.Awake();
 
+        // 注册
+        ServiceLocator.Instance.Register<IOrbitCameraController>(Instance);
         MonoManager.Instance.AddUpdateListener(OnUpdate);
         ServiceLocator.Instance.Get<IDialogueManager>().OnDialogueStart += OnDialogueStart;
         ServiceLocator.Instance.Get<IDialogueManager>().OnDialogueEnd += OnDialogueEnd;
+
+        Transform = this.transform;
+
+        Init();
     }
 
     /// <summary>
@@ -180,7 +188,7 @@ public class OrbitCameraController : SingletonMono<OrbitCameraController>
 
     private void OnDestroy()
     {
-        ServiceLocator.Instance.Get<IDialogueManager>().OnDialogueStart -= OnDialogueStart;
-        ServiceLocator.Instance.Get<IDialogueManager>().OnDialogueEnd -= OnDialogueEnd;
+        //ServiceLocator.Instance.Get<IDialogueManager>().OnDialogueStart -= OnDialogueStart;
+        //ServiceLocator.Instance.Get<IDialogueManager>().OnDialogueEnd -= OnDialogueEnd;
     }
 }

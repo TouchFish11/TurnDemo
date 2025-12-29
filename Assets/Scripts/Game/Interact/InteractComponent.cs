@@ -13,24 +13,24 @@ public class InteractComponent : BaseComponent
 {
     // 缓存当前可交互的对象
     private readonly List<IInteractable> interactables = new List<IInteractable>();
-
     [Header("交互配置")]
     // 交互按键
     public Key interactKey = Key.F;
     // 当前正在交互的对象
     private IInteractable currentInteractable;
 
-    protected override void Awake()
+    public override void Init(IEntityObject entityObject)
     {
-        base.Awake();
         // 对话结束事件监听
         ServiceLocator.Instance.Get<IDialogueManager>().OnDialogueEnd += QuitInteract;
+        // 交互触发事件监听
+        this.EntityObject.GetComponent<InputComponent>().OnIniteract += OnIniteract;
     }
 
     /// <summary>
-    /// 交互
+    /// 交互事件回调
     /// </summary>
-    public void Initeract()
+    private void OnIniteract()
     {
         if (interactables.Count == 0)
         {
@@ -43,6 +43,7 @@ public class InteractComponent : BaseComponent
         }
         else
         {
+            // TODO：暂时取第一个对象，之后提供主动切换选择功能
             currentInteractable = interactables[0];
             currentInteractable.OnInteract(this.EntityObject);
         }
@@ -75,4 +76,6 @@ public class InteractComponent : BaseComponent
     {
         currentInteractable = null;
     }
+
+
 }

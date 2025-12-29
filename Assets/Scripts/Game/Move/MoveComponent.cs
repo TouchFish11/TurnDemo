@@ -20,15 +20,15 @@ public class MoveComponent : BaseComponent
     // 最终移动方向（世界坐标系）
     private Vector3 moveDir;
     // 主摄像机引用
-    private Camera mainCamera;
+    private IOrbitCameraController mainCamera;
     // 能否移动
     private bool canMove;
 
-    protected override void Awake()
+    public override void Init(IEntityObject entityObject)
     {
-        base.Awake();
+        mainCamera = ServiceLocator.Instance.Get<IOrbitCameraController>();
+        mainCamera.SetTarget(this.transform);
 
-        mainCamera = OrbitCameraController.Instance.GetComponent<Camera>();
         characterController = this.EntityObject.GetComponent<CharacterController>();
         this.EntityObject.GetComponent<InputComponent>().OnKeyInputChanged += OnUpdateInputDir;
     }
@@ -90,8 +90,8 @@ public class MoveComponent : BaseComponent
 
         // 将输入方向转换为，摄像机视角下的世界方向
         // 摄像机的前/右方向（忽略Y轴，保持水平，单位化）
-        Vector3 camForward = mainCamera.transform.forward;
-        Vector3 camRight = mainCamera.transform.right;
+        Vector3 camForward = mainCamera.Transform.forward;
+        Vector3 camRight = mainCamera.Transform.right;
         camForward.y = 0;
         camRight.y = 0;
         camForward.Normalize();

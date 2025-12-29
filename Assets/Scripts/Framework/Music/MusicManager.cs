@@ -19,7 +19,6 @@ namespace Framework
 
         private MusicManager()
         {
-
             MonoManager.Instance.AddUpdateListener(OnUpdate);
         }
 
@@ -28,6 +27,11 @@ namespace Framework
         /// </summary>
         private void OnUpdate()
         {
+            if (GameDataManager.Instance.MusicData == null)
+            {
+                return;
+            }
+
             // 避免主动暂停或停止音效导入其意外放入缓存池
             if (!GameDataManager.Instance.MusicData.SoundIsOpen || isClearSounds)
             {

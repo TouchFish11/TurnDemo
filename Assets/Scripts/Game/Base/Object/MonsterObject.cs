@@ -40,9 +40,10 @@ namespace Game.Battle
 
             // 怪物AI逻辑，随机选择一个技能释放
             int skillId = skillIds[Random.Range(0, skillIds.Count)];
-            CastSkill(skillId);
-        }
 
+            this.GetComponent<SkillComponent>().CastSkill(skillId);
+            Context.GetEventBus().TriggerEvent(new TriggerSkillEvent(Context, skillId, this));
+        }
 
         public override int GetSpeed()
         {

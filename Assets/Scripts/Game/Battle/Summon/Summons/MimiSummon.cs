@@ -64,10 +64,5 @@ namespace Game.Battle
         {
             throw new System.NotImplementedException();
         }
-
-        public override void CastSkill(int skillId)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

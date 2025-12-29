@@ -36,7 +36,7 @@ namespace Game.Battle
             }
 
             // 技能对韧性造成削减（调用韧性API）
-            _toughness.ReduceToughness(skillCastEvent.PropertyType, 25);
+            //_toughness.ReduceToughness(skillCastEvent.PropertyType, 25);
 
             // 若韧性为0且未触发过破盾（防止重复触发）
             if (_toughness.IsBroken)
@@ -44,7 +44,7 @@ namespace Game.Battle
                 LogManager.Log($"\n{BattleEntity.GameObject.name}被击破！");
 
                 // 广播“破盾事件”（通知其他模块“目标已破盾”）
-                BattleEntity.Context.GetEventBus().TriggerEvent(new ToughnessBrokenEvent(skillCastEvent.Context, skillCastEvent.Caster, BattleEntity));
+                BattleEntity.Context.GetEventBus().TriggerEvent(new ToughnessBrokenEvent(skillCastEvent.Context, skillCastEvent.Skill.Caster, BattleEntity));
             }
         }
 

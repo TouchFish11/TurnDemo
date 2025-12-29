@@ -33,49 +33,26 @@ namespace Game.Battle
         {
             base.BaseInit(id);
 
-            CreateCamera();
-            this.AddComponent<InputComponent>();
-
-            this.AddComponent<AnimComponent>();
-            this.AddComponent<MoveComponent>();
-            this.AddComponent<InteractComponent>();
-            this.AddComponent<DialogueComponent>();
-
             // 相机跟随
-            OrbitCameraController.Instance.SetTarget(this.transform);
+            //CreateCamera();
+            //this.AddComponent<InputComponent>();
+            //this.AddComponent<NormalAnimationComponent>();
+            //this.AddComponent<MoveComponent>();
+            //this.AddComponent<InteractComponent>();
+            //this.AddComponent<DialogueComponent>();
+
         }
 
         public override void BattleInit(int roleId, IBattleContext context)
         {
             base.BattleInit(roleId, context);
-
             // 初始化技能组件
             this.GetComponent<SkillComponent>().InitSkills(RoleInfo.f_skillIds, new FireFlySkillFactory());
         }
 
-
-        //public override void BaseInit(int id)
-        //{
-        //    base.BaseInit(id);
-
-        //    // 测试
-        //    // 添加移动、输入组件
-
-        //    CreateCamera();
-        //    this.AddComponent<InputComponent>();
-
-        //    this.AddComponent<AnimComponent>();
-        //    this.AddComponent<MoveComponent>();
-        //    this.AddComponent<InteractComponent>();
-        //    this.AddComponent<DialogueComponent>();
-
-        //    // 相机跟随
-        //    OrbitCameraController.Instance.SetTarget(this.transform);
-        //}
-
         private async void CreateCamera()
         {
-            await ObjectBuilder.GetOrCreateInstance<OrbitCameraController>(E_AssetBundleType.Camera, ResKeyCollection.MainCamera, null);
+            OrbitCameraController orbitCameraController = await ObjectBuilder.GetOrCreateInstance<OrbitCameraController>(E_AssetBundleType.Camera, ResKeyCollection.MainCamera, null);
         }
     }
 }

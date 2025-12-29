@@ -23,36 +23,16 @@ namespace Game.Battle
 
         public IBattleEntityObject CurrentBattleEntity => _turnManager.GetCurrentEntity();
 
-        public int CurentBattlePointCount
-        {
-            get => currentBattlePointCount;
-            set
-            {
-                currentBattlePointCount = Mathf.Clamp(value, default, maxBattlePointCount);
-                eventBus.TriggerEvent(new OnBattlePointCountChangedEvent(this, currentBattlePointCount, maxBattlePointCount));
-            }
-        }
+        public int CurentBattlePointCount => currentBattlePointCount;
 
-        public int MaxBattlePointCount
-        {
-            get => maxBattlePointCount;
-            set
-            {
-                maxBattlePointCount = Mathf.Clamp(value, default, value);
-                eventBus.TriggerEvent(new OnBattlePointCountChangedEvent(this, currentBattlePointCount, maxBattlePointCount));
-            }
-        }
-
-
-        // 自定义扩展数据（如战斗难度、场景ID）
-        //private Dictionary<string, object> _customData = new(); 
+        public int MaxBattlePointCount => maxBattlePointCount;
 
         public BattleContext()
         {
             eventBus = new BattleEventBus();
             // 注入自身（IBattleContext）
             _turnManager = new TurnManager(this);
-            CurentBattlePointCount = MaxBattlePointCount;
+            currentBattlePointCount = maxBattlePointCount;
         }
 
         /// <summary>
@@ -64,6 +44,18 @@ namespace Game.Battle
             await CreateBattleEntity();
             // 初始化回合管理器
             _turnManager.InitActions(_allBattleEntity);
+        }
+
+        public void ConsumeSkillPoint(int cost)
+        {
+            currentBattlePointCount = Mathf.Clamp(currentBattlePointCount - cost, default, maxBattlePointCount);
+            eventBus.TriggerEvent(new OnBattlePointCountChangedEvent(this, currentBattlePointCount, maxBattlePointCount));
+        }
+
+        public void ExpandSkillPoint(int cost)
+        {
+            maxBattlePointCount = Mathf.Max(default, maxBattlePointCount - cost);
+            eventBus.TriggerEvent(new OnBattlePointCountChangedEvent(this, currentBattlePointCount, maxBattlePointCount));
         }
 
         /// <summary>

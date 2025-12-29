@@ -1,0 +1,22 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+/// <summary>
+/// ∂Øª≠¿‡–Õ
+/// </summary>
+public enum E_AnimationType : byte
+{
+    None,
+    Idle = 1,
+    Run = 2,
+    PreNormalAttack = 3,
+    NormalAttack = 4,
+    PreBattleAtk = 5,
+    BattleAttack = 6,
+    PreUltimateAttack = 7,
+    UltimateAttack = 8,
+    Hit,
+    Death,
+    Rebirth,
+}

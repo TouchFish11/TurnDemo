@@ -2,19 +2,17 @@ using UnityEngine;
 
 namespace Game
 {
+    [RequireComponent(typeof(IEntityObject))]
     public abstract class BaseComponent : MonoBehaviour, IComponent
     {
         public IEntityObject EntityObject { get; private set; }
 
-        protected virtual void Awake()
+        private void Awake()
         {
             EntityObject = this.GetComponent<IEntityObject>();
         }
 
-        public void Init(IEntityObject entityObject)
-        {
-
-        }
+        public abstract void Init(IEntityObject entityObject);
 
         public virtual void Destroy()
         {

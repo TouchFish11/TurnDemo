@@ -17,6 +17,16 @@ namespace Framework
         E_Net_OnPostConnect,
 
         /// <summary>
+        /// 鼠标可见
+        /// </summary>
+        E_MouseVisible,
+
+        /// <summary>
+        /// 鼠标不可见
+        /// </summary>
+        E_MouseInvisible,
+
+        /// <summary>
         /// 打开界面事件
         /// </summary>
         E_OpenView,

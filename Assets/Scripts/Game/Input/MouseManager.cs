@@ -2,6 +2,7 @@ using Framework;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// 鼠标管理器
@@ -17,8 +18,11 @@ public class MouseManager : SingletonAutoMono<MouseManager>, IMouseManager
 
     private void Awake()
     {
-        EventCenter.Instance.AddEventListener<IUIController>(E_EventType.E_OpenView, OnOpenView);
-        EventCenter.Instance.AddEventListener<IUIController>(E_EventType.E_CloseView, OnCloseView);
+        EventCenter.Instance.AddEventListener<string>(E_EventType.E_OpenView, RequestMouseVisible);
+        EventCenter.Instance.AddEventListener<string>(E_EventType.E_CloseView, ReleaseMouseVisible);
+
+        EventCenter.Instance.AddEventListener<string>(E_EventType.E_MouseVisible, RequestMouseVisible);
+        EventCenter.Instance.AddEventListener<string>(E_EventType.E_MouseInvisible, ReleaseMouseVisible);
     }
 
     /// <summary>
@@ -40,7 +44,7 @@ public class MouseManager : SingletonAutoMono<MouseManager>, IMouseManager
             }
         }
 
-        LogManager.Log($"{value}：请求鼠标可见");
+        LogManager.Log($"{sorce}：请求鼠标可见");
         mouseVisibleSources.Push(sorce);
         UpdateMouseState();
     }
@@ -58,7 +62,7 @@ public class MouseManager : SingletonAutoMono<MouseManager>, IMouseManager
                 return;
             }
 
-            LogManager.Log($"{value}：释放鼠标可见");
+            LogManager.Log($"{sorce}：释放鼠标可见");
             mouseVisibleSources.Pop();
             UpdateMouseState();
         }
@@ -111,8 +115,8 @@ public class MouseManager : SingletonAutoMono<MouseManager>, IMouseManager
 
     protected override void OnDestroy()
     {
-        EventCenter.Instance.RemoveEventListener<IUIController>(E_EventType.E_OpenView, OnOpenView);
-        EventCenter.Instance.RemoveEventListener<IUIController>(E_EventType.E_CloseView, OnCloseView);
+        //EventCenter.Instance.RemoveEventListener<IUIController>(E_EventType.E_OpenView, OnOpenView);
+        //EventCenter.Instance.RemoveEventListener<IUIController>(E_EventType.E_CloseView, OnCloseView);
         base.OnDestroy();
     }
 

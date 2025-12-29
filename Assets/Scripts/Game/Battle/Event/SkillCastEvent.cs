@@ -8,16 +8,6 @@ namespace Game.Battle
     public class SkillCastEvent : BattleEvent
     {
         /// <summary>
-        /// 技能释放者
-        /// </summary>
-        public IBattleEntityObject Caster { get; }
-
-        /// <summary>
-        /// 技能目标
-        /// </summary>
-        public List<IBattleEntityObject> Targets { get; }
-
-        /// <summary>
         /// 释放的技能
         /// </summary>
         public ISkill Skill { get; }
@@ -27,23 +17,15 @@ namespace Game.Battle
         /// </summary>
         public float Damage { get; }
 
-        /// <summary>
-        /// 技能属性
-        /// </summary>
-        public E_ElementType PropertyType { get; }
-
-        public SkillCastEvent(IBattleContext context, IBattleEntityObject caster, List<IBattleEntityObject> targets, ISkill skill, float damage, E_ElementType attackAttr) : base(context)
+        public SkillCastEvent(IBattleContext context, ISkill skill, float damage) : base(context)
         {
-            Caster = caster;
-            Targets = targets;
             Skill = skill;
             Damage = damage;
-            PropertyType = attackAttr;
         }
 
         public bool Contain(IBattleEntityObject battleEntity)
         {
-            return Targets.Contains(battleEntity);
+            return Skill.AllTargets.Contains(battleEntity);
         }
     }
 }

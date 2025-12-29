@@ -14,11 +14,15 @@ public class BattleView : UIView
     private TextMeshProUGUI txtCount;
     private TextMeshProUGUI txtDmg;
 
+    private TextMeshProUGUI txtActingTip;
+    private Image imgActingIcon;
+
     private Transform operatorArea;
     private Transform playerArea;
     private Transform selectMarkerArea;
 
     private GameObject totalDmgArea;
+    private ActingTipUI actingTipUI;
 
     /// <summary>
     /// 技能键组
@@ -36,12 +40,18 @@ public class BattleView : UIView
 
         txtCount = binder.GetControl<TextMeshProUGUI>(nameof(txtCount));
         txtDmg = binder.GetControl<TextMeshProUGUI>(nameof(txtDmg));
+        txtActingTip = binder.GetControl<TextMeshProUGUI>(nameof(txtActingTip));
+        imgActingIcon = binder.GetControl<Image>(nameof(imgActingIcon));
 
         operatorArea = this.transform.Find(nameof(operatorArea));
         playerArea = this.transform.Find(nameof(playerArea));
         selectMarkerArea = this.transform.Find(nameof(selectMarkerArea));
         totalDmgArea = this.transform.Find(nameof(totalDmgArea)).gameObject;
         totalDmgArea.SetActive(false);
+
+        actingTipUI = this.GetComponentInChildren<ActingTipUI>();
+        actingTipUI.Init(imgActingIcon, txtActingTip);
+        actingTipUI.gameObject.SetActive(false);
 
         SkillKeyGroup = binder.GetControl<ToggleGroup>(nameof(operatorArea));
     }
@@ -66,7 +76,6 @@ public class BattleView : UIView
                 break;
             case "selectMarkerUIs":
                 UpdateSelectMarker(value as List<SelectMarkerUI>);
-                //LogManager.Log($"更新目标选择逻辑，目标数量{(value as List<SelectMarkerUI>).Count}");
                 break;
             case "currentCalcDamage":
                 (bool isShow, long dmg) = ((bool, long))value;
@@ -74,6 +83,14 @@ public class BattleView : UIView
                 if (isShow)
                 {
                     txtDmg.text = dmg.ToString();
+                }
+                break;
+            case "activeActTip":
+                (bool isActive, bool isMonster) = ((bool, bool))value;
+                actingTipUI.gameObject.SetActive(isActive);
+                if (isActive)
+                {
+                    actingTipUI.UpdateTipText(isMonster);
                 }
                 break;
         }

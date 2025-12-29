@@ -19,11 +19,14 @@ public abstract class Skill : ISkill
 
     public List<IBattleEntityObject> AllTargets { get; private set; }
 
+    public IDamageCalcManager DamageCalcManager { get; set; }
+
     private float waitTime = 1f;
 
     protected Skill(int skillId)
     {
         SkillInfo = BinaryDataManager.Instance.GetConfig<SkillInfoContainer>(E_ConfigLoadType.Editor).dataDic[skillId];
+        DamageCalcManager = ServiceLocator.Instance.Get<IDamageCalcManager>();
     }
 
     public void Init(IBattleEntityObject caster, IBattleEntityObject mainTarget, List<IBattleEntityObject> allTargets)
@@ -38,7 +41,10 @@ public abstract class Skill : ISkill
     {
         // 通用处理逻辑
         // 处理战技点
-        context.CurentBattlePointCount -= SkillInfo.f_costBP;
+        context.ConsumeSkillPoint(SkillInfo.f_costBP);
+        // TODO：暂时直接触发对应动画，之后根据具体技能的时机触发
+        context.GetEventBus().TriggerEvent(new SkillCastEvent(context, this, 0));
+
         yield return OnCast(context);
 
 
@@ -60,7 +66,7 @@ public abstract class Skill : ISkill
     {
         for (int i = 0; i < count; i++)
         {
-            DamageCalcManager.Instance.CalcDamage(Caster, battleEntity, this, out DamageResult result);
+            DamageCalcManager.CalcDamage(Caster, battleEntity, this, out DamageResult result);
             battleEntity.TakeDamage(result);
         }
     }

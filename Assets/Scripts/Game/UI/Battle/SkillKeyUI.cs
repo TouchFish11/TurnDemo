@@ -34,6 +34,7 @@ public class SkillKeyUI : BaseUIBehaviour
 
     private Toggle togSkillKeyUI;
     private TextMeshProUGUI txtSkillTip;
+
     // 选择时的缩放比例
     private readonly Vector3 SelectedScale = Vector3.one * 1.3f;
     // 技能ID
@@ -42,11 +43,10 @@ public class SkillKeyUI : BaseUIBehaviour
     private RoleInfo roleInfo;
     // 能否触发技能
     private E_TriggerPhase triggerPhase = E_TriggerPhase.NonSeleceted;
-
-    /// <summary>
-    /// 触发技能事件
-    /// </summary>
-    public event Action<int> OnTriggerSkill;
+    // 战斗上下文接口
+    private IBattleContext battleContext;
+    // 战斗实体接口
+    private IBattleEntityObject battleEntity;
 
     protected override void Awake()
     {
@@ -54,17 +54,19 @@ public class SkillKeyUI : BaseUIBehaviour
         togSkillKeyUI = binder.GetControl<Toggle>(this.gameObject.name);
         txtSkillTip = binder.GetControl<TextMeshProUGUI>(nameof(txtSkillTip));
         UIManager.AddCustomEventListener(this, EventTriggerType.PointerClick, OnClick);
+        battleContext = ServiceLocator.Instance.Get<IBattleManager>().GetContext();
     }
 
     /// <summary>
     /// 初始化
     /// </summary>
     /// <param name="skillInfo"></param>
-    public void Init(SkillInfo skillInfo, RoleInfo roleInfo, ToggleGroup group)
+    public void Init(SkillInfo skillInfo, RoleInfo roleInfo, ToggleGroup group, IBattleEntityObject battleEntity)
     {
         this.skillId = skillInfo.f_id;
         this.roleInfo = roleInfo;
         togSkillKeyUI.group = group;
+        this.battleEntity = battleEntity;
         txtSkillTip.text = skillInfo.f_skillRangeType.ToSkillRangeTypeText();
 
         if(skillInfo.f_skillRangeType.ToSkillType() == E_SkillType.NormalAttack)
@@ -102,8 +104,7 @@ public class SkillKeyUI : BaseUIBehaviour
             else
             {
                 triggerPhase = E_TriggerPhase.Selected;
-                IBattleContext context = ServiceLocator.Instance.Get<IBattleManager>().GetContext();
-                context.GetEventBus().TriggerEvent(new SelectSkillEvent(context, skillId));
+                battleContext.GetEventBus().TriggerEvent(new SelectSkillEvent(battleContext, skillId, battleEntity));
             }
         }
         else
@@ -121,13 +122,8 @@ public class SkillKeyUI : BaseUIBehaviour
         if (triggerPhase == E_TriggerPhase.Trigger)
         {
             // 执行触发技能事件
-            OnTriggerSkill?.Invoke(skillId);
+            battleContext.GetEventBus().TriggerEvent(new TriggerSkillEvent(battleContext, skillId, battleEntity));
             triggerPhase = E_TriggerPhase.Selected;
         }
-    }
-
-    protected override void OnDisable()
-    {
-        OnTriggerSkill = null;
     }
 }

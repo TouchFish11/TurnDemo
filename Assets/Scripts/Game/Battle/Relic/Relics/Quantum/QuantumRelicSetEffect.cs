@@ -53,16 +53,16 @@ namespace Game.Battle
         private void OnSkillCastHandler(SkillCastEvent skillCastEvent)
         {
             // 触发条件：1. 是套装所有者释放技能 2. 技能触发暴击（简化：假设伤害>150判定为暴击）
-            if (skillCastEvent.Caster != Owner || skillCastEvent.Damage <= 150)
-            {
-                return;
-            }
+            //if (skillCastEvent.Caster != Owner || skillCastEvent.Damage <= 150)
+            //{
+            //    return;
+            //}
 
             Console.WriteLine($"\n【遗器效果】{SetName}4件套触发！");
 
-            int additionalDamage = (int)(skillCastEvent.Caster.GetComponent<PropertyComponent>().GetProperty<BattleProperty>().TotalAtk * _additionalDamageRatio);
+            //int additionalDamage = (int)(skillCastEvent.Caster.GetComponent<PropertyComponent>().GetProperty<BattleProperty>().TotalAtk * _additionalDamageRatio);
             //skillCastEvent.Targets[0].TakeDamage(additionalDamage, E_ElementType.Quantum, E_DamageType.Direct);
-            Console.WriteLine($"{skillCastEvent.Targets[0].GameObject.name}受到量子追加伤害：{additionalDamage}点");
+            //Console.WriteLine($"{skillCastEvent.Targets[0].GameObject.name}受到量子追加伤害：{additionalDamage}点");
         }
 
         public void Destroy()

@@ -19,8 +19,13 @@ public class TargetSelectManager : SingletonBase<TargetSelectManager>, ITargetSe
 #else
         targetSelect = new BattleTargetSelect();
 #endif
-        // 注册到定位器中
-        ServiceLocator.Instance.Register<ITargetSelectManager>(Instance);
+    }
+
+    /// <summary>
+    /// 初始化管理器
+    /// </summary>
+    public void Init()
+    {
         ServiceLocator.Instance.Get<IBattleManager>().GetContext().GetEventBus().AddListener<SelectSkillEvent>(OnSelectSkillEvent);
     }
 

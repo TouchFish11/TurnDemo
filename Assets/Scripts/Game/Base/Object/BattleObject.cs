@@ -30,6 +30,8 @@ namespace Game
             // 缓存战斗实体ID
             BattleEntityId = battleEntityId;
 
+            Context.GetEventBus().AddListener<TriggerSkillEvent>(CastSkill);
+
             // 加载组件（配置表可配置角色绑定哪些组件）
             //SkillComponent skillComponent = this.AddComponent<SkillComponent>();
             //skillComponent.BattleInit(this);
@@ -81,7 +83,7 @@ namespace Game
         public virtual void Die()
         {
             // TODO：待优化，目前直接失活对象。之后播放死亡动画
-            LogManager.Log($"实体：{this.GameObject.name}死亡");
+            //LogManager.Log($"实体：{this.GameObject.name}死亡");
             // this.GameObject.SetActive(false);
         }
 
@@ -111,9 +113,9 @@ namespace Game
         /// 释放技能
         /// </summary>
         /// <param name="skillId"></param>
-        public virtual void CastSkill(int skillId)
+        protected virtual void CastSkill(TriggerSkillEvent triggerSkillEvent)
         {
-            this.GetComponent<SkillComponent>().CastSkill(skillId);
+            this.GetComponent<SkillComponent>().CastSkill(triggerSkillEvent.SkillId);
         }
 
         /// <summary>
@@ -150,7 +152,7 @@ namespace Game
                 // 执行实体回合开始事件
                 Context.GetEventBus().TriggerEvent(new TurnStartEvent(Context, this));
             }
-            LogManager.Log($"行动数增加，{gameObject.name}剩余行动次数：{actCount}");
+           // LogManager.Log($"行动数增加，{gameObject.name}剩余行动次数：{actCount}");
         }
 
         public void SubActCount()
@@ -161,9 +163,6 @@ namespace Game
                 // 执行实体回合结束事件
                 Context.GetEventBus().TriggerEvent(new TurnEndEvent(Context, this, false));
             }
-            LogManager.Log($"行动数减少，{gameObject.name}剩余行动次数：{actCount}");
         }
-
-
     }
 }

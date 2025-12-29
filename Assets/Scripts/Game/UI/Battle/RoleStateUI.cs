@@ -43,10 +43,11 @@ public class RoleStateUI : BaseUIBehaviour
     // 角色相关
     private int roleId;
 
-    /// <summary>
-    /// 终结技触发事件
-    /// </summary>
-    public event Action<int> OnTriggerUltimateSkill;
+    // 战斗上下文接口
+    private IBattleContext battleContext;
+    // 战斗实体接口
+    private IBattleEntityObject battleEntity;
+
 
     protected override void Awake()
     {
@@ -63,17 +64,18 @@ public class RoleStateUI : BaseUIBehaviour
         // 监听战斗相关事件
 
         // 应该是数据驱动
-        BattleManager.Instance.GetContext().GetEventBus().AddListener<OnHpChangedEvent>(OnHpChanged); 
-
-        MonoManager.Instance.AddUpdateListener(OnUpdate);
+        battleContext = ServiceLocator.Instance.Get<IBattleManager>().GetContext();
+        battleContext.GetEventBus().AddListener<OnHpChangedEvent>(OnHpChanged);
+        ServiceLocator.Instance.Get<IMonoManager>().AddUpdateListener(OnUpdate);
     }
 
     /// <summary>
     /// 初始化
     /// </summary>
     /// <param name="ultimateSkillId"></param>
-    public async void Init(RoleProperty playerProperty, int ultimateSkillId)
+    public async void Init(RoleProperty playerProperty, int ultimateSkillId, IBattleEntityObject battleEntity)
     {
+        this.battleEntity = battleEntity;
         RoleInfo roleInfo = BinaryDataManager.Instance.GetConfig<RoleInfoContainer>(E_ConfigLoadType.Editor).dataDic[playerProperty.Id];
         // 设置图标
         // imgIcon.sprite = await AssetBundleManager.Instance.LoadAssetAsync<Sprite>(E_AssetBundleType.Texture, ResKeyCollection.WhiteImage);
@@ -169,8 +171,7 @@ public class RoleStateUI : BaseUIBehaviour
         switch (btnName)
         {
             case "btnSkill":
-                // BattleManager.Instance.GetContext().GetEventBus().TriggerEvent(new TriggerUltimateSkillEvent(BattleManager.Instance.GetContext()) { UltimateSkillId = ultimateSkillId });
-                OnTriggerUltimateSkill?.Invoke(ultimateSkillId);
+                battleContext.GetEventBus().TriggerEvent(new TriggerSkillEvent(battleContext, ultimateSkillId, battleEntity));
                 break;
         }
     }

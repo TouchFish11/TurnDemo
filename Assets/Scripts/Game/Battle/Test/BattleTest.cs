@@ -13,10 +13,23 @@ public class BattleTest : MonoBehaviour
     // Start is called before the first frame update
     private async void Start()
     {
-        await BinaryDataManager.Instance.LoadConfig();
+        // 初始化服务定位器
+        ServiceLocator.Instance.InitService();
+        // 初始化配置
+        await ServiceLocator.Instance.Get<IBinaryDataManager>().LoadConfig();
+        // 初始化UI管理器
+        await ServiceLocator.Instance.Get<IUIManager>().InitUIManagerAsync();
+        // 初始化战斗相关管理器
+        InitBattle();
+        // 开始战斗
+        await ServiceLocator.Instance.Get<IBattleManager>().StartBattle();
+    }
 
-        await UIManager.Instance.InitUIManagerAsync();
-
-        await BattleManager.Instance.StartBattle();
+    private void InitBattle()
+    {
+        ServiceLocator.Instance.Register<IBattleManager>(BattleManager.Instance);
+        ServiceLocator.Instance.Register<IDamageCalcManager>(DamageCalcManager.Instance);
+        ServiceLocator.Instance.Register<ISkillManager>(SkillManager.Instance);
+        ServiceLocator.Instance.Register<ITargetSelectManager>(TargetSelectManager.Instance);
     }
 }

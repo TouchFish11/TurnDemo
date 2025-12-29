@@ -19,6 +19,8 @@ namespace Game.Battle
 
         List<IBattleEntityObject> AllTargets { get; }
 
+        IDamageCalcManager DamageCalcManager { get; }
+
         /// <summary>
         /// 伤害系数（配置表读取）
         /// </summary>

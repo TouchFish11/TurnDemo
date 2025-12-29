@@ -27,7 +27,7 @@ public class ComponentFactory
             {
                 // 动画组件
                 case 1:
-                    AddComponent<AnimComponent>(entityObject);
+                    AddComponent<BattleAnimationComponent>(entityObject);
                     break;
                 // 技能组件
                 case 2:

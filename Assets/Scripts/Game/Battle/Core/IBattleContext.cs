@@ -13,12 +13,12 @@ namespace Game.Battle
         /// <summary>
         /// 当前战技点数
         /// </summary>
-        int CurentBattlePointCount { get; set; }
+        int CurentBattlePointCount { get; }
 
         /// <summary>
         /// 最大战技点数
         /// </summary>
-        int MaxBattlePointCount { get; set; }
+        int MaxBattlePointCount { get; }
 
         /// <summary>
         /// 获取所有战斗的实体
@@ -63,5 +63,8 @@ namespace Game.Battle
         /// </summary>
         /// <returns></returns>
         BattleEventBus GetEventBus();
+
+        void ConsumeSkillPoint(int cost);
+        void ExpandSkillPoint(int cost);
     }
 }

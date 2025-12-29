@@ -14,5 +14,6 @@ public interface ITargetSelectManager
     IBattleEntityObject GetMainTarget();
     List<IBattleEntityObject> GetTargets();
     void InActiveSelectTarget();
+    void Init();
     void RegisterTargetSelectionChanged(Action<(IBattleEntityObject, List<IBattleEntityObject>)> onTargetSelectChanged);
 }

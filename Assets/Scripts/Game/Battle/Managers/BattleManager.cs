@@ -19,7 +19,7 @@ namespace Game.Battle
 
         private BattleManager()
         {
-            ServiceLocator.Instance.Register<IBattleManager>(Instance);
+
         }
 
         /// <summary>
@@ -32,6 +32,8 @@ namespace Game.Battle
             context = new BattleContext();
             // 初始化战斗
             await context.InitBattle();
+            // 初始化目标选择管理器
+            ServiceLocator.Instance.Get<ITargetSelectManager>().Init();
             // 获取场景上的战斗点对象，初始化战斗点对象
             battlePoint = BattlePoint.Instance;
             battlePoint.InitBattlePoint();

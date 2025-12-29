@@ -164,7 +164,7 @@
                     "name": "",
                     "id": "adc00e11-236d-47eb-9b49-d4a29f28292e",
                     "path": "<Keyboard>/leftAlt",
-                    "interactions": "Press(pressPoint=0.5)",
+                    "interactions": "Hold",
                     "processors": "",
                     "groups": "",
                     "action": "MouseVisible",

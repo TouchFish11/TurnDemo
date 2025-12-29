@@ -67,11 +67,17 @@ namespace Framework
 #endif
         }
 
+        /// <summary>
+        /// 启用输入
+        /// </summary>
         public void EnableInput()
         {
             _playerInput.actions.Enable();
         }
 
+        /// <summary>
+        /// 禁用输入
+        /// </summary>
         public void DisableInput()
         {
             _playerInput.actions.Disable();
@@ -186,13 +192,13 @@ namespace Framework
             if (playerInput != null)
             {
                 playerInput.actions = GetInputActionAsset();
-                playerInput.actions.Enable();
                 _playerInput = playerInput;
+                EnableInput();
             }
             else if (_playerInput != null)
             {
                 _playerInput.actions = GetInputActionAsset();
-                _playerInput.actions.Enable();
+                EnableInput();
                 LogManager.Log("玩家输入组件激活成功");
             }
             else

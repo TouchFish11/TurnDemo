@@ -1,14 +1,10 @@
 using Framework;
 using Game;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.Windows;
 
 /// <summary>
 /// 输入组件
@@ -16,31 +12,40 @@ using UnityEngine.Windows;
 [RequireComponent(typeof(PlayerInput))]
 public class InputComponent : BaseComponent
 {
-     /// <summary>
+    private IInputSystem inputSystem;
+
+    private bool isVisableMouse;
+
+    /// <summary>
     /// 键盘输入改变事件
     /// </summary>
-    public event UnityAction<Vector3> OnKeyInputChanged;
+    public event Action<Vector3> OnKeyInputChanged;
     
     /// <summary>
     /// 鼠标滑动改变事件
     /// </summary>
-    public event UnityAction<Vector2> OnMouseSlideChanged;
+    public event Action<Vector2> OnMouseSlideChanged;
 
     /// <summary>
     /// 鼠标左键点击事件
     /// </summary>
-    public event UnityAction OnMouseLeftClick;
+    public event Action OnMouseLeftClick;
 
     /// <summary>
     /// 鼠标滚轮事件
     /// </summary>
     public event Action<float> OnScrollWheel;
 
-    protected override async void Awake()
+    /// <summary>
+    /// 交互事件
+    /// </summary>
+    public event Action OnIniteract;
+
+    public override async void Init(IEntityObject entityObject)
     {
-        base.Awake();
-        await Framework.InputSystem.Instance.InitPlayerInput(this.EntityObject.GetComponent<PlayerInput>(), OnActionTrigger);
-        MonoManager.Instance.AddUpdateListener(OnUpdate);
+        inputSystem = ServiceLocator.Instance.Get<IInputSystem>();
+        await inputSystem.InitPlayerInput(this.EntityObject.GetComponent<PlayerInput>(), OnActionTrigger);
+        ServiceLocator.Instance.Get<IMonoManager>().AddUpdateListener(OnUpdate);
     }
 
     // 限制输入
@@ -55,14 +60,20 @@ public class InputComponent : BaseComponent
 
     }
 
+    /// <summary>
+    /// 启用输入系统
+    /// </summary>
     public async void EnableInput()
     {
-        Framework.InputSystem.Instance.EnableInput();
+        inputSystem.EnableInput();
     }
 
+    /// <summary>
+    /// 禁用输入系统
+    /// </summary>
     public void DisEnableInput()
     {
-        Framework.InputSystem.Instance.DisableInput();
+        inputSystem.DisableInput();
     }
 
     private void OnActionTrigger(InputAction.CallbackContext context)
@@ -81,15 +92,15 @@ public class InputComponent : BaseComponent
                 }
                 break;
             case "NormalAttack" when !ServiceLocator.Instance.Get<IMouseManager>().Visible:
-                if (context.phase == InputActionPhase.Performed)
+                if (context.phase == InputActionPhase.Started)
                 {
-                    this.EntityObject.GetComponent<AnimComponent>().OnAttack();
+                    OnMouseLeftClick?.Invoke();
                 }
                 break;
             case "Initeract":
-                if(context.phase == InputActionPhase.Started)
+                if(context.phase == InputActionPhase.Performed)
                 {
-                    this.EntityObject.GetComponent<InteractComponent>().Initeract();
+                    OnIniteract?.Invoke();
                 }
                 break;
             case "MouseMove":
@@ -101,11 +112,13 @@ public class InputComponent : BaseComponent
             case "MouseVisible":
                 if (context.phase == InputActionPhase.Started)
                 {
-                    ServiceLocator.Instance.Get<IMouseManager>().RequestMouseVisible(nameof(Keyboard.current.leftAltKey));
+                    EventCenter.Instance.TriggerEvent(E_EventType.E_MouseVisible, nameof(Keyboard.current.leftAltKey));
+                    isVisableMouse = true;
                 }
                 else if(context.phase == InputActionPhase.Canceled)
                 {
-                    ServiceLocator.Instance.Get<IMouseManager>().ReleaseMouseVisible(nameof(Keyboard.current.leftAltKey));
+                    // FIXME：鼠标可见后，触发鼠标点击，会导致该状态无法进入，无法准确隐藏鼠标
+                    EventCenter.Instance.TriggerEvent(E_EventType.E_MouseInvisible, nameof(Keyboard.current.leftAltKey));
                 }
                 break;
         }
@@ -120,57 +133,28 @@ public class InputComponent : BaseComponent
         //// F键交互
         //if (Keyboard.current.fKey.wasPressedThisFrame)
         //{
-        //    this.EntityObject.GetComponent<InteractComponent>().Initeract();
-        //}
-
-        //// 键盘输入
-        //float h = Input.GetAxisRaw("Horizontal");
-        //float z = Input.GetAxisRaw("Vertical");
-
-        //Vector3 newInput = new Vector3(h, 0, z).normalized;
-        //if (newInput != currentInput)
-        //{
-        //    OnKeyInputChanged?.Invoke(newInput);
-        //    currentInput = newInput;
-        //}
-
-        //// 鼠标滑动输入
-        //float x = Input.GetAxisRaw("Mouse X");
-        //float y = Input.GetAxisRaw("Mouse Y");
-
-        //Vector2 newMouseInput = new Vector2(x, y);
-        //OnMouseSlideChanged?.Invoke(newMouseInput);
-
-        //if (Keyboard.current.leftAltKey.isPressed)
-        //{
-        //    MouseManager.Instance.RequestMouseVisible(nameof(Keyboard.current.leftAltKey));
-        //}
-        //else
-        //{
-        //    MouseManager.Instance.ReleaseMouseVisible(nameof(Keyboard.current.leftAltKey));
+        //    this.EntityObject.GetComponent<InteractComponent>().OnIniteract();
         //}
 
         // 鼠标左键点击输入
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
-            // 落在UI上
-            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
-            {
-
-            }
-            else
-            {
-                OnMouseLeftClick?.Invoke();
-            }
+            //// 落在UI上
+            //if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            //{
+            //    isVisableMouse = false;
+            //    EventCenter.Instance.TriggerEvent(E_EventType.E_MouseInvisible, nameof(Keyboard.current.leftAltKey));
+            //}
         }
     }
 
     private void OnDestroy()
     {
-        Framework.InputSystem.Instance.OnActionTrigger -= OnActionTrigger;
-
+        inputSystem.OnActionTrigger -= OnActionTrigger;
         OnKeyInputChanged = null;
         OnMouseSlideChanged = null;
         OnMouseLeftClick = null;
+        OnMouseLeftClick = null;
+        OnIniteract = null;
     }
 }
