@@ -14,8 +14,13 @@ public class BattleTargetSelect : ITargetSelect
     private IBattleEntityObject _mainTarget;
     // 当前技能信息
     private SkillInfo skillInfo;
+    // 战斗上下文接口
+    private IBattleContext battleContext;
 
-    public event Action<(IBattleEntityObject maintarget, List<IBattleEntityObject> selectedTargets)> OnTargetSelectionChanged;
+    public BattleTargetSelect()
+    {
+        battleContext = ServiceLocator.Instance.Get<IBattleManager>().GetContext();
+    }
 
     /// <summary>
     /// 激活目标选择
@@ -89,19 +94,8 @@ public class BattleTargetSelect : ITargetSelect
         // 记录选择的所有目标
         _selectedTargets.Clear();
         _selectedTargets.AddRange(BattleUtil.GetRangeTargets(E_CharacterType.PlayerCharacter, _mainTarget, skillInfo.f_skillRangeType));
-        // 设置为选中
-        //for (int i = 0; i < targets.Count; i++)
-        //{
-        //    (targets[i] as IActionable).SetSelectFlag(true);
-        //}
-
-        //设置角色技能所有目标
-        //chooser.SetTargets(targets);
-        //TODO：分发事件处理，UI战斗界面处理，批量选择目标
-        //UpdateSelectMasker(targets);
-
-        // 分发目标选择变化事件，更新目标标记UI
-        OnTargetSelectionChanged?.Invoke((_mainTarget, _selectedTargets));
+        // 分发目标选择变化事件，更新目标标记UI、行动轴UI
+        battleContext.GetEventBus().TriggerEvent<SelectTargetEvent>(new SelectTargetEvent(battleContext, _mainTarget, _selectedTargets));
     }
 
     /// <summary>

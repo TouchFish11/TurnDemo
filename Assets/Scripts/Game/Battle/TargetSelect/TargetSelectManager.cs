@@ -47,12 +47,12 @@ public class TargetSelectManager : SingletonBase<TargetSelectManager>, ITargetSe
 
     public void RegisterTargetSelectionChanged(Action<(IBattleEntityObject, List<IBattleEntityObject>)> onTargetSelectChanged)
     {
-        targetSelect.OnTargetSelectionChanged += onTargetSelectChanged;
+
     }
 
     public void CancelTargetSelectionChanged(Action<(IBattleEntityObject, List<IBattleEntityObject>)> onTargetSelectChanged)
     {
-        targetSelect.OnTargetSelectionChanged -= onTargetSelectChanged;
+
     }
 
     /// <summary>

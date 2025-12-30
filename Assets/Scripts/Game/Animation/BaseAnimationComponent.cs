@@ -38,19 +38,19 @@ public abstract class BaseAnimationComponent : BaseComponent
                 animator.SetBool(animationArg.IsRunHash, true);
                 break;
             case E_AnimationType.PreNormalAttack:
-                animator.SetBool(animationArg.IsPreBattleAtkHash, false);
+                animator.SetTrigger(animationArg.PreNormalAttackTriggerHash);
                 break;
             case E_AnimationType.NormalAttack:
                 animator.SetTrigger(animationArg.NormalAtkTirggerHash);
                 break;
-            case E_AnimationType.PreBattleAtk:
-                animator.SetBool(animationArg.IsPreBattleAtkHash, true);
+            case E_AnimationType.PreBattleAttack:
+                animator.SetTrigger(animationArg.PreBattleAttackTriggerHash);
                 break;
             case E_AnimationType.BattleAttack:
                 animator.SetTrigger(animationArg.BattleAtkTriggerHash);
                 break;
             case E_AnimationType.PreUltimateAttack:
-
+                animator.SetTrigger(animationArg.PreUltimateAttackTriggerHash);
                 break;
             case E_AnimationType.UltimateAttack:
                 animator.SetTrigger(animationArg.UltimateAtkTriggerHash);

@@ -1,5 +1,6 @@
 using Framework;
 using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// 战斗界面数据
@@ -45,7 +46,9 @@ public class BattleModel : UIModel
     {
         foreach (SkillKeyUI skillKeyUI in this.skillKeyUIs)
         {
+            // 使用对象池复用，会出现状态残留问题
             PoolManager.Instance.PushObj(skillKeyUI.gameObject);
+            //GameObject.Destroy(skillKeyUI.gameObject);
         }
         this.skillKeyUIs.Clear();
 

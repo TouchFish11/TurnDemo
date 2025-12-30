@@ -26,12 +26,28 @@ namespace Game
             base.BattleInit(battleEntityId, context);
             // 添加战斗相关组件
             AddComponents(TextUtility.SplitToIntArr(RoleInfo.f_comIds, 2));
+            // 监听玩家技能触发事件
+            Context.GetEventBus().AddListener<PlayerTriggerSkillEvent>(OnCastSkill);
         }
 
         protected override IEnumerator OnExceuteAction()
         {
             // 等待玩家行动结束
             yield return new WaitWhile(() => CanAct);
+        }
+
+        /// <summary>
+        /// 释放技能
+        /// </summary>
+        /// <param name="triggerSkillEvent"></param>
+        protected virtual void OnCastSkill(PlayerTriggerSkillEvent triggerSkillEvent)
+        {
+            if ((Object)triggerSkillEvent.BattleEntity != this)
+            {
+                return;
+            }
+
+            CastSkill(triggerSkillEvent.SkillId);
         }
 
         public override int GetSpeed()

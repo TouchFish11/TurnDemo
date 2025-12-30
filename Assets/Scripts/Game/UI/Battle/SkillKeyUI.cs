@@ -84,7 +84,6 @@ public class SkillKeyUI : BaseUIBehaviour
         // 激活目标标记
         TargetSelectManager.Instance.ActiveSelectTarget(skillId);
         togSkillKeyUI.isOn = true;
-        triggerPhase = E_TriggerPhase.Selected;
     }
 
     protected override void OnToggleValueChanged(string togName, bool isOn)
@@ -96,24 +95,23 @@ public class SkillKeyUI : BaseUIBehaviour
     {
         if (isOn)
         {
-            this.transform.localScale = SelectedScale;
             if (triggerPhase == E_TriggerPhase.Selected)
             {
                 triggerPhase = E_TriggerPhase.Trigger;
             }
             else
             {
+                // 选中：放大+标记为Selected
+                this.transform.localScale = SelectedScale;
                 triggerPhase = E_TriggerPhase.Selected;
                 battleContext.GetEventBus().TriggerEvent(new SelectSkillEvent(battleContext, skillId, battleEntity));
             }
         }
         else
         {
+            // 取消选中：缩放到1倍+标记为NonSeleceted
             this.transform.localScale = Vector3.one;
-            if (triggerPhase == E_TriggerPhase.Selected)
-            {
-                triggerPhase = E_TriggerPhase.NonSeleceted;
-            }
+            triggerPhase = E_TriggerPhase.NonSeleceted;
         }
     }
 
@@ -122,8 +120,26 @@ public class SkillKeyUI : BaseUIBehaviour
         if (triggerPhase == E_TriggerPhase.Trigger)
         {
             // 执行触发技能事件
-            battleContext.GetEventBus().TriggerEvent(new TriggerSkillEvent(battleContext, skillId, battleEntity));
-            triggerPhase = E_TriggerPhase.Selected;
+            battleContext.GetEventBus().TriggerEvent(new PlayerTriggerSkillEvent(battleContext, skillId, battleEntity));
         }
+    }
+
+    /// <summary>
+    /// 重置状态
+    /// </summary>
+    private void ResetState()
+    {
+        togSkillKeyUI.group = null;
+        // 重置Toggle状态
+        togSkillKeyUI.isOn = false;
+        // 重置逻辑状态（和Toggle强绑定）
+        triggerPhase = E_TriggerPhase.NonSeleceted;
+        // 重置视觉状态
+        this.transform.localScale = Vector3.one;
+    }
+
+    protected override void OnDisable()
+    {
+        ResetState();
     }
 }

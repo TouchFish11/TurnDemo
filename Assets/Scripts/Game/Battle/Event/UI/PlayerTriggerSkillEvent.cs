@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace Game.Battle
 {
-    public class TriggerSkillEvent : BattleEvent
+    public class PlayerTriggerSkillEvent : BattleEvent
     {
         public int SkillId { get; private set; }
 
         public IBattleEntityObject BattleEntity { get; private set; }
 
-        public TriggerSkillEvent(IBattleContext context, int skillId, IBattleEntityObject battleEntity) : base(context)
+        public PlayerTriggerSkillEvent(IBattleContext context, int skillId, IBattleEntityObject battleEntity) : base(context)
         {
             SkillId = skillId;
             BattleEntity = battleEntity;

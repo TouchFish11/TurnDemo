@@ -30,24 +30,6 @@ namespace Game
             // 缓存战斗实体ID
             BattleEntityId = battleEntityId;
 
-            Context.GetEventBus().AddListener<TriggerSkillEvent>(CastSkill);
-
-            // 加载组件（配置表可配置角色绑定哪些组件）
-            //SkillComponent skillComponent = this.AddComponent<SkillComponent>();
-            //skillComponent.BattleInit(this);
-
-            //TalentComponent talentComponent = this.AddComponent<TalentComponent>();
-            //talentComponent.BattleInit(this);
-
-            //RelicComponent relicComponent = this.AddComponent<RelicComponent>();
-            //relicComponent.BattleInit(this);
-
-            //AdditionalAttackComponent additionalAttackComponent = this.AddComponent<AdditionalAttackComponent>();
-            //additionalAttackComponent.BattleInit(this);
-
-            //SummonComponent summonComponent =   this.AddComponent<SummonComponent>();
-            //summonComponent.BattleInit(this);
-
             //// 敌人角色额外加载韧性组件（示例：弱点属性=物理，初始韧性=200）
             //if (name.Contains("敌人"))
             //{
@@ -55,8 +37,6 @@ namespace Game
             //    toughnessComponent.Init(this, new() { E_ElementType.Physical }, 200);
             //}
         }
-
-
 
         public abstract int GetSpeed();
 
@@ -104,18 +84,16 @@ namespace Game
 
         public void SetActionValue(float actionValue)
         {
-            ActionValue = Random.Range(0, 100);
-
-            //this.ActionValue = actionValue;
+            this.ActionValue = actionValue;
         }
 
         /// <summary>
         /// 释放技能
         /// </summary>
-        /// <param name="skillId"></param>
-        protected virtual void CastSkill(TriggerSkillEvent triggerSkillEvent)
+        /// <param name="triggerSkillEvent"></param>
+        protected virtual void CastSkill(int skillId)
         {
-            this.GetComponent<SkillComponent>().CastSkill(triggerSkillEvent.SkillId);
+            this.GetComponent<SkillComponent>().CastSkill(skillId);
         }
 
         /// <summary>

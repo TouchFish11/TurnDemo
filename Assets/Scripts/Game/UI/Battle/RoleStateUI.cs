@@ -171,7 +171,7 @@ public class RoleStateUI : BaseUIBehaviour
         switch (btnName)
         {
             case "btnSkill":
-                battleContext.GetEventBus().TriggerEvent(new TriggerSkillEvent(battleContext, ultimateSkillId, battleEntity));
+                battleContext.GetEventBus().TriggerEvent(new PlayerTriggerSkillEvent(battleContext, ultimateSkillId, battleEntity));
                 break;
         }
     }

@@ -29,11 +29,6 @@ namespace Framework
         // 记录新路径
         private string newPath;
 
-        /// <summary>
-        /// 输入行为触发事件
-        /// </summary>
-        public event Action<InputAction.CallbackContext> OnActionTrigger;
-
         private InputSystem()
         {
 

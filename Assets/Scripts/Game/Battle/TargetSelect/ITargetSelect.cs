@@ -9,8 +9,6 @@ using UnityEngine;
 /// </summary>
 public interface ITargetSelect
 {
-    event Action<(IBattleEntityObject maintarget, List<IBattleEntityObject> selectedTargets)> OnTargetSelectionChanged;
-
     void ActiveSelectTarget(int skillId);
 
     void InActiveSelectTarget();

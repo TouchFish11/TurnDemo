@@ -13,6 +13,7 @@ namespace Game.Battle
         {
             base.Init(entityObject);
             BattleInit(entityObject as IBattleEntityObject);
+            animator.SetLayerWeight(animator.GetLayerIndex("Battle Layer"), 1);
         }
 
         public virtual void BattleInit(IBattleEntityObject battleEntity)
@@ -39,13 +40,13 @@ namespace Game.Battle
             switch ((E_SkillType)skillInfo.f_SkillType)
             {
                 case E_SkillType.Monster:
-                    SetAnimationState(E_AnimationType.Idle);
+                    SetAnimationState(E_AnimationType.PreNormalAttack);
                     break;
                 case E_SkillType.NormalAttack:
                     SetAnimationState(E_AnimationType.PreNormalAttack);
                     break;
                 case E_SkillType.CombatSkill:
-                    SetAnimationState(E_AnimationType.PreBattleAtk);
+                    SetAnimationState(E_AnimationType.PreBattleAttack);
                     break;
                 case E_SkillType.UltimateSkill:
                     SetAnimationState(E_AnimationType.PreUltimateAttack);
@@ -56,6 +57,7 @@ namespace Game.Battle
                     break;
             }
 
+            //LogManager.Log($"改变动画:{(E_SkillType)skillInfo.f_SkillType}");
 
             // NOTE：技能释放结束后，自动切换为待机状态;
         }

@@ -12,7 +12,7 @@ public enum E_AnimationType : byte
     Run = 2,
     PreNormalAttack = 3,
     NormalAttack = 4,
-    PreBattleAtk = 5,
+    PreBattleAttack = 5,
     BattleAttack = 6,
     PreUltimateAttack = 7,
     UltimateAttack = 8,

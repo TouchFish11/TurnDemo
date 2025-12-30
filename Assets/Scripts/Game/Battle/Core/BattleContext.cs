@@ -15,7 +15,7 @@ namespace Game.Battle
         // 核心数据存储（战斗内需要全局访问的数据），所有角色（玩家、敌人、召唤物）
         private readonly List<IBattleEntityObject> _allBattleEntity = new List<IBattleEntityObject>();
         // 回合管理器（核心依赖）
-        private readonly TurnManager _turnManager;
+        private readonly TurnController _turnManager;
         // 当前战机点数
         private int currentBattlePointCount;
         // 最大战技点数
@@ -31,7 +31,7 @@ namespace Game.Battle
         {
             eventBus = new BattleEventBus();
             // 注入自身（IBattleContext）
-            _turnManager = new TurnManager(this);
+            _turnManager = new TurnController(this);
             currentBattlePointCount = maxBattlePointCount;
         }
 
@@ -150,7 +150,7 @@ namespace Game.Battle
             return monsterBattleEntityObjects;
         }
 
-        public TurnManager GetTurnManager()
+        public TurnController GetTurnManager()
         {
             return _turnManager;
         }

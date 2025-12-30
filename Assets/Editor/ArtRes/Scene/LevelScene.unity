@@ -368,7 +368,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &220143794
 Transform:
   m_ObjectHideFlags: 0
@@ -1694,6 +1694,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1063120690}
+    - target: {fileID: 1228537824623311460, guid: 7df46167f66641644862d5fd9469830d, type: 3}
+      propertyPath: m_VertexColorAlwaysGammaSpace
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1228537824623311460, guid: 7df46167f66641644862d5fd9469830d, type: 3}
       propertyPath: m_AdditionalShaderChannelsFlag
       value: 25

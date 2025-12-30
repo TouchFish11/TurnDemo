@@ -150,7 +150,6 @@ public class InputComponent : BaseComponent
 
     private void OnDestroy()
     {
-        inputSystem.OnActionTrigger -= OnActionTrigger;
         OnKeyInputChanged = null;
         OnMouseSlideChanged = null;
         OnMouseLeftClick = null;

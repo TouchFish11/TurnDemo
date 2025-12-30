@@ -42,7 +42,7 @@ namespace Game.Battle
         /// 获取回合管理器
         /// </summary>
         /// <returns></returns>
-        TurnManager GetTurnManager();
+        TurnController GetTurnManager();
 
         // TODO：封装目标获取逻辑，避免技能实例直接依赖管理器
         //IBattleEntityObject GetMainTaraget();

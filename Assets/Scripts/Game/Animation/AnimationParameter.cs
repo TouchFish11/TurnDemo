@@ -13,19 +13,29 @@ public class AnimationParameter
     public int IsRunHash { get; } = Animator.StringToHash("IsRun");
 
     /// <summary>
+    /// 普攻预备释放hash
+    /// </summary>
+    public int PreNormalAttackTriggerHash { get; } = Animator.StringToHash("PreNormalAttackTrigger");
+
+    /// <summary>
     /// 普通攻击触发hash
     /// </summary>
     public int NormalAtkTirggerHash { get; } = Animator.StringToHash("NormalAtkTirgger");
 
     /// <summary>
-    /// 战技预备释放hash（bool）
+    /// 战技预备释放hash
     /// </summary>
-    public int IsPreBattleAtkHash { get; } = Animator.StringToHash("IsPreBattleAtk");
+    public int PreBattleAttackTriggerHash { get; } = Animator.StringToHash("PreBattleAttackTrigger");
 
     /// <summary>
     /// 战技攻击触发hash
     /// </summary>
     public int BattleAtkTriggerHash { get; } = Animator.StringToHash("BattleAtkTrigger");
+
+    /// <summary>
+    /// 终结技预备释放hash
+    /// </summary>
+    public int PreUltimateAttackTriggerHash { get; } = Animator.StringToHash("PreUltimateAttackTrigger");
 
     /// <summary>
     /// 终结技攻击触发hash

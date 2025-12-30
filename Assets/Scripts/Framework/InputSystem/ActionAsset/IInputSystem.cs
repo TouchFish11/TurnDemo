@@ -12,8 +12,6 @@ using UnityEngine.InputSystem;
 /// </summary>
 public interface IInputSystem
 {
-    event Action<InputAction.CallbackContext> OnActionTrigger;
-
     void DisableInput();
     void EditInput(E_MainActionMap keyMap, Key oldKey, UnityAction<E_KeyConflict> overCallBack);
     void EnableInput();

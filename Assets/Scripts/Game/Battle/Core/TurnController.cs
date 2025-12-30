@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 namespace Game.Battle
 {
     /// <summary>
-    /// 战斗核心流程：回合管理器（负责回合推进，仅依赖事件总线）
+    /// 回合控制器
+    /// 控制战斗循环
     /// </summary>
-    public class TurnManager
+    public class TurnController
     {
         // 战斗上下文
         private readonly IBattleContext _context;
@@ -22,7 +23,16 @@ namespace Game.Battle
         //当前战斗阶段
         private E_BattlePhase _battlePhase = E_BattlePhase.None;
 
-        public TurnManager(IBattleContext context)
+        /// <summary>
+        /// 基础行动值
+        /// </summary>
+        private const float BASE_ACTION_VALUE = 10000f;
+        /// <summary>
+        /// 速度修正系数（平衡不同速度区间）
+        /// </summary>
+        private const float SPEED_CORRECTION = 1.0f;
+
+        public TurnController(IBattleContext context)
         {
             _context = context;
         }
@@ -46,23 +56,6 @@ namespace Game.Battle
             yield return TaskUtility.WaitForTask(BattlePreparation());
             yield return ActEntityTurn();
             BattleOver();
-
-            //while (_battlePhase != E_BattlePhase.QuitBattle)
-            //{
-            //    switch (_battlePhase)
-            //    {
-            //        case E_BattlePhase.Preparation:
-            //            yield return TaskUtility.WaitForTask(BattlePreparation());
-            //            break;
-            //        case E_BattlePhase.EntityTurn:
-            //            yield return ActEntityTurn();
-            //            break;
-            //        case E_BattlePhase.BattleOver:
-            //            BattleOver();
-            //            break;
-            //    }
-            //    yield return null;
-            //}
         }
 
         /// <summary>
@@ -72,8 +65,8 @@ namespace Game.Battle
         {
             // 初始化行动实体
             UpdateActEntity();
-            // 排序行动顺序
-            SortOrder();
+            // 初始化行动顺序
+            InitOrder();
             // 启用当前实体行动
             _currentActEntity.ExecuteAction();
             // 设置为角色行动阶段
@@ -108,47 +101,12 @@ namespace Game.Battle
                 {
                     // 更新当前行动实体
                     UpdateActEntity();
-                    // 排序
-                    SortOrder();
                     // 启用当前实体行动
                     _currentActEntity.ExecuteAction();
                 }
 
                 yield return null;
             }
-
-            //LinkedListNode<IBattleEntityObject> currentNode = _actions.First;
-            //_currentActEntity = currentNode.Value;
-            //while (currentNode.Next != null)
-            //{
-            //    BattleComponent battleComponent = _currentActEntity.GetComponent<BattleComponent>();
-            //    // 获取当前行动的角色
-            //    if (_currentActEntity == null || battleComponent.IsDeath || _currentActEntity != _actions.First.Value)
-            //    {
-            //        _currentActEntity = _actions.First.Value;
-            //    }
-            //    else
-            //    {
-            //        break;
-            //    }
-            //    currentNode = currentNode.Next;
-            //}
-
-            //// 改变标识
-            //_battlePhase = E_BattlePhase.Waiting;
-
-            //// 执行实体回合开始事件
-            //BattleController battleController = UIManager.Instance.GetView<BattleController>();
-            //_context.GetEventBus().TriggerEvent(new TurnStartEvent(_context, _currentActEntity));
-
-            //// 等待实体行动完毕
-            //_currentActEntity.ExecuteAction();
-
-            //设置为未选中
-            //for (int i = 0; i < actionableObjs.Count; i++)
-            //{
-            //    actionableObjs[i].SetSelectFlag(false);
-            //}
         }
 
         /// <summary>
@@ -156,63 +114,87 @@ namespace Game.Battle
         /// </summary>
         private void UpdateActEntity()
         {
-#if EDITOR_TEST_AB || !UNITY_EDITOR
-        // 根据行动值获取实体
-        // ,,,
-#else
+            // 先计算当前实体的位置
+            InsertOrder(_currentActEntity);
+            // 再让下一个实体行动
             _currentActEntity = battleEntities[0];
-            PropertyComponent propertyComponent = _currentActEntity.GetComponent<PropertyComponent>();
-            // 获取当前行动的角色
-            if (_currentActEntity == null || propertyComponent.IsDeath || _currentActEntity != battleEntities[0])
-            {
-                _currentActEntity = battleEntities[0];
-            }
-            else
-            {
-                battleEntities.RemoveAt(0);
-                battleEntities.Add(_currentActEntity);
-            }
-#endif
+            //PropertyComponent propertyComponent = _currentActEntity.GetComponent<PropertyComponent>();
+            //// 获取当前行动的角色
+            //if (_currentActEntity == null || propertyComponent.IsDeath || _currentActEntity != battleEntities[0])
+            //{
+            //    _currentActEntity = battleEntities[0];
+            //}
+            //else
+            //{
+            //    battleEntities.RemoveAt(0);
+            //    battleEntities.Add(_currentActEntity);
+            //}
         }
 
         /// <summary>
-        /// 排序顺序
+        /// 初始化排序
         /// </summary>
-        public async void SortOrder()
+        private async void InitOrder()
         {
-            // 测试，行动完放在最后
-            //LinkedListNode<IBattleEntityObject> currentEntity = _actions.First;
-            //_actions.RemoveFirst();
-            //_actions.AddLast(currentEntity);
+            // 初始化所有角色的行动值
+            foreach (IBattleEntityObject battleEntityObject in battleEntities)
+            {
+                // 初始化行动值
+                battleEntityObject.SetActionValue(CalcActionValue(battleEntityObject.GetSpeed()));
+            }
+
+            // 基于行动值初始化行动顺序
+            battleEntities.Sort((c1, c2) =>
+            {
+                // 比较行动值确定行动顺序。行动值低，越先行动
+                if (c1.ActionValue < c2.ActionValue)
+                {
+                    return -1;
+                }
+                else if (c1.ActionValue > c2.ActionValue)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return 0;
+                }
+            });
 
             // 更新行动轴UI显示
-            //BattleController battleController = UIManager.Instance.GetView<BattleController>();
-            //await battleController.UpadteActionBar(_actions);
+            BattleController battleController = UIManager.Instance.GetView<BattleController>();
+            await battleController.UpadteActionBar(battleEntities);
+        }
 
-            //List<IBattleEntityObject> entityObjects = new List<IBattleEntityObject>(_context.GetAllBattleEntity());
-            //// 初始化所有角色的行动值
-            //foreach (IBattleEntityObject battleEntityObject in entityObjects)
-            //{
-            //    battleEntityObject.SetActionValue(-1);
-            //}
+        /// <summary>
+        /// 插入队列
+        /// </summary>
+        /// <param name="actEndEntity"></param>
+        public async void InsertOrder(IBattleEntityObject actEndEntity)
+        {
+            float currentActionValue = CalcActionValue(actEndEntity.GetSpeed());
+            int index = battleEntities.FindIndex(battleEntity => battleEntity.ActionValue > currentActionValue);
+            if (index != -1)
+            {
+                // 找到第一个行动值大于当前角色的索引，插入到该位置前
+                battleEntities.Insert(index, actEndEntity);
+            }
+            else
+            {
+                // 所有角色行动值都更小，插入末尾
+                battleEntities.Add(actEndEntity);
+            }
+        }
 
-            //// 基于行动值初始化行动顺序
-            //entityObjects.Sort((c1, c2) =>
-            //{
-            //    // 比较行动值确定行动顺序。行动值低，越先行动
-            //    if (c1.ActionValue < c2.ActionValue)
-            //    {
-            //        return -1;
-            //    }
-            //    else if (c1.ActionValue > c2.ActionValue)
-            //    {
-            //        return 1;
-            //    }
-            //    else
-            //    {
-            //        return 0;
-            //    }
-            //});
+        /// <summary>
+        /// 计算行动值
+        /// </summary>
+        /// <param name="speed"></param>
+        /// <returns></returns>
+        private float CalcActionValue(float speed)
+        {
+            // 计算行动值，基准行动值 / 速度 * 修正系数
+            return BASE_ACTION_VALUE / speed * SPEED_CORRECTION;
         }
 
         /// <summary>

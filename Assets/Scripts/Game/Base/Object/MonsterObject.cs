@@ -35,14 +35,11 @@ namespace Game.Battle
 
         protected override IEnumerator OnExceuteAction()
         {
-            // 模拟怪物行动的延迟
-            yield return new WaitForSeconds(1.0f);
-
             // 怪物AI逻辑，随机选择一个技能释放
             int skillId = skillIds[Random.Range(0, skillIds.Count)];
-
-            this.GetComponent<SkillComponent>().CastSkill(skillId);
-            Context.GetEventBus().TriggerEvent(new TriggerSkillEvent(Context, skillId, this));
+            // 模拟怪物行动的延迟
+            yield return new WaitForSeconds(1.0f);
+            CastSkill(skillId);
         }
 
         public override int GetSpeed()

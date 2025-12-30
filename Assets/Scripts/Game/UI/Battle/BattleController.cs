@@ -53,10 +53,8 @@ public class BattleController : UIController<BattleView, BattleModel>
         battleContext.GetEventBus().AddListener<TurnEndEvent>(OnTurnEnd);
         //battleContext.GetEventBus().AddListener<OnHpChangedEvent>(OnHpChanged);
         battleContext.GetEventBus().AddListener<OnTakeDamageEvent>(OnTakeDamage);
-
-        battleContext.GetEventBus().AddListener<TriggerSkillEvent>(UpdateActTip);
-
-        TargetSelectManager.Instance.RegisterTargetSelectionChanged(OnTargetSelectionChanged);
+        battleContext.GetEventBus().AddListener<PlayerTriggerSkillEvent>(UpdateActTip);
+        battleContext.GetEventBus().AddListener<SelectTargetEvent>(OnTargetSelectionChanged);
     }
 
     /// <summary>
@@ -99,13 +97,12 @@ public class BattleController : UIController<BattleView, BattleModel>
     /// <summary>
     /// 更新行动提示UI
     /// </summary>
-    private void UpdateActTip(TriggerSkillEvent triggerSkillEvent)
+    private void UpdateActTip(PlayerTriggerSkillEvent playerTriggerSkillEvent)
     {
         // 隐藏玩家操作UI
         model.UpdateOperator(new List<SkillKeyUI>());
-
         // 显示行动提示UI
-        model.SetActTipActive(true, triggerSkillEvent.BattleEntity is MonsterObject);
+        model.SetActTipActive(true, false);
     }
 
     /// <summary>
@@ -114,10 +111,11 @@ public class BattleController : UIController<BattleView, BattleModel>
     public async Task UpadteActionBar(IEnumerable<IBattleEntityObject> battleEntities)
     {
         List<ActionGridUI> actionGridUIs = new List<ActionGridUI>();
-        foreach (IBattleEntityObject entityObject in battleEntities)
+        foreach (IBattleEntityObject battleEntity in battleEntities)
         {
             ActionGridUI actionGridUI = await ObjectBuilder.GetOrCreateInstance<ActionGridUI>(E_AssetBundleType.UI, ResKeyCollection.ActionGridUI, null);
-            actionGridUI.Init(null, (int)entityObject.ActionValue);
+            //Sprite icon = await AssetBundleManager.Instance.LoadAssetAsync<Sprite>(E_AssetBundleType.UI, "");
+            actionGridUI.Init(null, battleEntity.ActionValue, battleEntity.BattleEntityId);
             actionGridUIs.Add(actionGridUI);
         }
         model.UpdateAcitonbar(actionGridUIs);
@@ -158,11 +156,22 @@ public class BattleController : UIController<BattleView, BattleModel>
     /// 目标选择变化事件回调
     /// </summary>
     /// <param name="info"></param>
-    private async void OnTargetSelectionChanged((IBattleEntityObject maintarget, List<IBattleEntityObject> selectedTargets) info)
+    private async void OnTargetSelectionChanged(SelectTargetEvent selectTargetEvent)
+    {
+        // 更新目标标记UI显示
+        await UpdateTargetMarker(selectTargetEvent.SelectedTargets);
+        // 更新行动轴目标高亮显示
+        await UpdateActionGridHighlight(selectTargetEvent.SelectedTargets);
+    }
+
+    /// <summary>
+    /// 更新目标标记
+    /// </summary>
+    /// <param name="selectedTargets"></param>
+    private async Task UpdateTargetMarker(List<IBattleEntityObject> selectedTargets)
     {
         List<SelectMarkerUI> selectMarkerUIs = new List<SelectMarkerUI>();
-        // 更新目标标记UI显示
-        foreach (IBattleEntityObject battleEntity in info.selectedTargets)
+        foreach (IBattleEntityObject battleEntity in selectedTargets)
         {
             SelectMarkerUI selectMarkerUI = await ObjectBuilder.GetOrCreateInstance<SelectMarkerUI>(E_AssetBundleType.UI, ResKeyCollection.SelectMarkerUI, null);
             if (UIManager.WorldToLocalPointInRectangle(BattlePoint.Instance.CurrentActiveCamera, UIManager.Instance.UICamera, view.SelectMarkerArea, selectMarkerUI.gameObject, battleEntity.GameObject.transform.position, Vector2.up * 50))
@@ -172,8 +181,26 @@ public class BattleController : UIController<BattleView, BattleModel>
             }
         }
         model.UpdateSelectMarker(selectMarkerUIs);
+    }
 
-        // 更新行动轴目标高亮显示
+    /// <summary>
+    /// 更新行动格子高亮
+    /// </summary>
+    /// <param name="selectedTargets"></param>
+    /// <returns></returns>
+    private async Task UpdateActionGridHighlight(List<IBattleEntityObject> selectedTargets)
+    {
+        List<SelectMarkerUI> selectMarkerUIs = new List<SelectMarkerUI>();
+        foreach (IBattleEntityObject battleEntity in selectedTargets)
+        {
+            SelectMarkerUI selectMarkerUI = await ObjectBuilder.GetOrCreateInstance<SelectMarkerUI>(E_AssetBundleType.UI, ResKeyCollection.SelectMarkerUI, null);
+            if (UIManager.WorldToLocalPointInRectangle(BattlePoint.Instance.CurrentActiveCamera, UIManager.Instance.UICamera, view.SelectMarkerArea, selectMarkerUI.gameObject, battleEntity.GameObject.transform.position, Vector2.up * 50))
+            {
+                selectMarkerUI.InitSelectMarker((battleEntity is PlayerObject) ? E_SkillTargetType.Friend : E_SkillTargetType.Enemy);
+                selectMarkerUIs.Add(selectMarkerUI);
+            }
+        }
+        model.UpdateSelectMarker(selectMarkerUIs);
     }
 
     /// <summary>
@@ -184,10 +211,16 @@ public class BattleController : UIController<BattleView, BattleModel>
     {
         // 更新行动轴显示
         await UpadteActionBar(turnStartEvent.Context.GetAllBattleEntity());
-        // 更新当前操作UI
-        UpdateOperator(turnStartEvent.CurrentBattleEntity);
-        // 更新目标行动标识（Test）
-        //await UpdateActingFlag(turnStartEvent.CurrentBattleEntity.GameObject.transform.position);
+        if (turnStartEvent.CurrentBattleEntity is PlayerObject)
+        {
+            // 更新当前操作UI
+            UpdateOperator(turnStartEvent.CurrentBattleEntity);
+        }
+        else if(turnStartEvent.CurrentBattleEntity is MonsterObject)
+        {
+            // 显示怪物行动提示
+            model.SetActTipActive(true, true);
+        }
     }
 
     /// <summary>
@@ -267,29 +300,6 @@ public class BattleController : UIController<BattleView, BattleModel>
         model.UpdateBattlePointCount(current, battlePointUIs);
     }
 
-    ///// <summary>
-    ///// 更新目标行动标识（Test）
-    ///// </summary>
-    ///// <param name="worldPos"></param>
-    ///// <returns></returns>
-    //private async Task UpdateActingFlag(Vector3 worldPos)
-    //{
-    //    if (actingFlagObj != null)
-    //    {
-    //        PoolManager.Instance.PushObj(actingFlagObj);
-    //    }
-
-    //    actingFlagObj = await ObjectBuilder.GetOrCreateInstance(E_AssetBundleType.UI, ResKeyCollection.ActingFlag, null);
-
-    //    // HACK：UI坐标的偏移数值临时写死，后续根据需求调整
-    //    UIManager.WorldToLocalPointInRectangle(Camera.main, UIManager.Instance.UICamera, view.transform, actingFlagObj, worldPos, Vector2.up * 125f);
-    //}
-
-    public override void Destroy()
-    {
-        TargetSelectManager.Instance.CancelTargetSelectionChanged(OnTargetSelectionChanged);
-        base.Destroy();
-    }
     internal void BattleOver()
     {
         throw new NotImplementedException();
