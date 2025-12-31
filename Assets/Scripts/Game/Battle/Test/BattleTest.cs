@@ -10,9 +10,13 @@ using UnityEngine.InputSystem;
 /// </summary>
 public class BattleTest : MonoBehaviour
 {
+    [SerializeField] private new Light light;
+
     // Start is called before the first frame update
     private async void Start()
     {
+        light.transform.rotation = Quaternion.Euler(-5, -30, 0);
+
         // 初始化服务定位器
         ServiceLocator.Instance.InitService();
         // 初始化配置

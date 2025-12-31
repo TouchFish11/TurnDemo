@@ -43,7 +43,6 @@ public class BattleController : UIController<BattleView, BattleModel>
     /// <param name="battleEntities"></param>
     public async Task InitBattleUI(IBattleContext battleContext)
     {
-        await UpadteActionBar(battleContext.GetAllBattleEntity());
         await InitPlayerUI(battleContext.GetPlayerObjects());
         await InitMonsterUI(battleContext.GetMonsterObjects());
         await UpdateBattlePointCount(battleContext.CurentBattlePointCount, battleContext.MaxBattlePointCount);
@@ -111,12 +110,14 @@ public class BattleController : UIController<BattleView, BattleModel>
     public async Task UpadteActionBar(IEnumerable<IBattleEntityObject> battleEntities)
     {
         List<ActionGridUI> actionGridUIs = new List<ActionGridUI>();
+        bool isFirst = true;
         foreach (IBattleEntityObject battleEntity in battleEntities)
         {
             ActionGridUI actionGridUI = await ObjectBuilder.GetOrCreateInstance<ActionGridUI>(E_AssetBundleType.UI, ResKeyCollection.ActionGridUI, null);
             //Sprite icon = await AssetBundleManager.Instance.LoadAssetAsync<Sprite>(E_AssetBundleType.UI, "");
-            actionGridUI.Init(null, battleEntity.ActionValue, battleEntity.BattleEntityId);
+            actionGridUI.Init(null, battleEntity.ActionValue, battleEntity, isFirst);
             actionGridUIs.Add(actionGridUI);
+            isFirst = false;
         }
         model.UpdateAcitonbar(actionGridUIs);
     }
@@ -155,9 +156,14 @@ public class BattleController : UIController<BattleView, BattleModel>
     /// <summary>
     /// 目标选择变化事件回调
     /// </summary>
-    /// <param name="info"></param>
+    /// <param name="selectTargetEvent"></param>
     private async void OnTargetSelectionChanged(SelectTargetEvent selectTargetEvent)
     {
+        if (selectTargetEvent.MainTarget is PlayerObject)
+        {
+            return;
+        }
+
         // 更新目标标记UI显示
         await UpdateTargetMarker(selectTargetEvent.SelectedTargets);
         // 更新行动轴目标高亮显示
@@ -190,17 +196,36 @@ public class BattleController : UIController<BattleView, BattleModel>
     /// <returns></returns>
     private async Task UpdateActionGridHighlight(List<IBattleEntityObject> selectedTargets)
     {
-        List<SelectMarkerUI> selectMarkerUIs = new List<SelectMarkerUI>();
-        foreach (IBattleEntityObject battleEntity in selectedTargets)
+        List<ActionGridUI> actionGridUI = model.GetActionGridUIs();
+
+        foreach (ActionGridUI actionGrid in actionGridUI)
         {
-            SelectMarkerUI selectMarkerUI = await ObjectBuilder.GetOrCreateInstance<SelectMarkerUI>(E_AssetBundleType.UI, ResKeyCollection.SelectMarkerUI, null);
-            if (UIManager.WorldToLocalPointInRectangle(BattlePoint.Instance.CurrentActiveCamera, UIManager.Instance.UICamera, view.SelectMarkerArea, selectMarkerUI.gameObject, battleEntity.GameObject.transform.position, Vector2.up * 50))
+            actionGrid.CheckSelect(null);
+        }
+
+        if (selectedTargets.Count > 1)
+        {
+            foreach (ActionGridUI actionGrid in actionGridUI)
             {
-                selectMarkerUI.InitSelectMarker((battleEntity is PlayerObject) ? E_SkillTargetType.Friend : E_SkillTargetType.Enemy);
-                selectMarkerUIs.Add(selectMarkerUI);
+                foreach (IBattleEntityObject battleEntity in selectedTargets)
+                {
+                    if (!actionGrid.IsSelect)
+                    {
+                        actionGrid.CheckSelect(battleEntity);
+                    }
+                }
             }
         }
-        model.UpdateSelectMarker(selectMarkerUIs);
+        else if(selectedTargets.Count == 1)
+        {
+            foreach (ActionGridUI actionGrid in actionGridUI)
+            {
+                foreach (IBattleEntityObject battleEntity in selectedTargets)
+                {
+                    actionGrid.CheckSelect(battleEntity);
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -210,7 +235,7 @@ public class BattleController : UIController<BattleView, BattleModel>
     private async void OnTurnStart(TurnStartEvent turnStartEvent)
     {
         // 更新行动轴显示
-        await UpadteActionBar(turnStartEvent.Context.GetAllBattleEntity());
+        //await UpadteActionBar(turnStartEvent.Context.GetAllBattleEntity());
         if (turnStartEvent.CurrentBattleEntity is PlayerObject)
         {
             // 更新当前操作UI

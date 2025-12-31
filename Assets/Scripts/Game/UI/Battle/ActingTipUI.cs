@@ -54,9 +54,5 @@ public class ActingTipUI : UIBehaviour
         imgActingIcon.transform.localPosition = Mathf.Sin(Time.time * moveSpeed) * moveRange * imgActingIcon.transform.right;
 
         // ÎÄ±¾¶¯»­
-
-
-
-
     }
 }

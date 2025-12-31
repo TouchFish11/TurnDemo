@@ -30,6 +30,10 @@ public class BattleModel : UIModel
         TriggerDataChanged(nameof(activeActTip), (isShow, isMonster));
     }
 
+    /// <summary>
+    /// 更新行动栏
+    /// </summary>
+    /// <param name="actionGridUIs"></param>
     public void UpdateAcitonbar(IEnumerable<ActionGridUI> actionGridUIs)
     {
         foreach (ActionGridUI actionGridUI in actions)
@@ -40,6 +44,15 @@ public class BattleModel : UIModel
 
         actions.AddRange(actionGridUIs);
         TriggerDataChanged(nameof(actions), actions);
+    }
+
+    /// <summary>
+    /// 获取所有的行动格子
+    /// </summary>
+    /// <returns></returns>
+    public List<ActionGridUI> GetActionGridUIs()
+    {
+        return actions;
     }
 
     public void UpdateOperator(IEnumerable<SkillKeyUI> skillKeyUIs)

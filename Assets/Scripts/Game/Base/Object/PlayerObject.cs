@@ -49,10 +49,5 @@ namespace Game
 
             CastSkill(triggerSkillEvent.SkillId);
         }
-
-        public override int GetSpeed()
-        {
-            return 100;
-        }
     }
 }

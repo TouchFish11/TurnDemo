@@ -9,11 +9,9 @@ using UnityEngine;
 /// </summary>
 public interface ITargetSelectManager
 {
-    void ActiveSelectTarget(int skillId);
-    void CancelTargetSelectionChanged(Action<(IBattleEntityObject, List<IBattleEntityObject>)> onTargetSelectChanged);
+    void ActiveSelectTarget();
     IBattleEntityObject GetMainTarget();
     List<IBattleEntityObject> GetTargets();
     void InActiveSelectTarget();
     void Init();
-    void RegisterTargetSelectionChanged(Action<(IBattleEntityObject, List<IBattleEntityObject>)> onTargetSelectChanged);
 }

@@ -44,12 +44,6 @@ namespace Game.Battle
             return isTrue;
         }
 
-        public override int GetSpeed()
-        {
-            // 召唤物不参与行动队列，仅协同（可扩展为参与行动队列）
-            return 0;
-        }
-
         public override void Heal(int value)
         {
             // 召唤物不可回复（可扩展为可回复）

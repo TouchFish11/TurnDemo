@@ -38,7 +38,10 @@ namespace Game
             //}
         }
 
-        public abstract int GetSpeed();
+        public int GetSpeed()
+        {
+            return GetComponent<PropertyComponent>().GetPropertyValue(E_DynamicPropertyType.CurrentSpeed);
+        }
 
         public virtual void Heal(int value)
         {

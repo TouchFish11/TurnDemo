@@ -41,10 +41,5 @@ namespace Game.Battle
             yield return new WaitForSeconds(1.0f);
             CastSkill(skillId);
         }
-
-        public override int GetSpeed()
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

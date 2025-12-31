@@ -63,10 +63,10 @@ namespace Game.Battle
         /// </summary>
         private async Task BattlePreparation()
         {
-            // 初始化行动实体
-            UpdateActEntity();
             // 初始化行动顺序
             InitOrder();
+            // 初始化行动实体
+            UpdateActEntity();
             // 启用当前实体行动
             _currentActEntity.ExecuteAction();
             // 设置为角色行动阶段
@@ -114,25 +114,17 @@ namespace Game.Battle
         /// </summary>
         private void UpdateActEntity()
         {
-            // 先计算当前实体的位置
-            InsertOrder(_currentActEntity);
+            if (_currentActEntity != null)
+            {
+                SortOrder();
+            }
+
             // 再让下一个实体行动
             _currentActEntity = battleEntities[0];
-            //PropertyComponent propertyComponent = _currentActEntity.GetComponent<PropertyComponent>();
-            //// 获取当前行动的角色
-            //if (_currentActEntity == null || propertyComponent.IsDeath || _currentActEntity != battleEntities[0])
-            //{
-            //    _currentActEntity = battleEntities[0];
-            //}
-            //else
-            //{
-            //    battleEntities.RemoveAt(0);
-            //    battleEntities.Add(_currentActEntity);
-            //}
         }
 
         /// <summary>
-        /// 初始化排序
+        /// 初始化顺序
         /// </summary>
         private async void InitOrder()
         {
@@ -161,9 +153,61 @@ namespace Game.Battle
                 }
             });
 
+            battleEntities[0].SetActionValue(0);
+
             // 更新行动轴UI显示
+            // TODO：暂时直接调用界面方法，后续通过事件分发传递
             BattleController battleController = UIManager.Instance.GetView<BattleController>();
             await battleController.UpadteActionBar(battleEntities);
+        }
+
+        /// <summary>
+        /// 排序顺序
+        /// </summary>
+        private async void SortOrder()
+        {
+            // 暂时移除第一个角色，不参与计算
+            battleEntities.Remove(_currentActEntity);
+
+            int toatalSpeed = 0;
+            // 重新计算剩下实体各自的剩余行动值
+            foreach (IBattleEntityObject battleEntityObject in battleEntities)
+            {
+                toatalSpeed += battleEntityObject.GetSpeed();
+            }
+
+            foreach (IBattleEntityObject battleEntityObject in battleEntities)
+            {
+                float oldAV = battleEntityObject.ActionValue;
+                float newAV = (1 - battleEntityObject.GetSpeed() / (float)toatalSpeed) * oldAV;
+                battleEntityObject.SetActionValue(newAV);
+            }
+
+            // 基于行动值初始化行动顺序
+            battleEntities.Sort((c1, c2) =>
+            {
+                // 比较行动值确定行动顺序。行动值低，越先行动
+                if (c1.ActionValue < c2.ActionValue)
+                {
+                    return -1;
+                }
+                else if (c1.ActionValue > c2.ActionValue)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return 0;
+                }
+            });
+
+            InsertOrder(_currentActEntity);
+            battleEntities[0].SetActionValue(0);
+
+            // 更新行动轴UI显示
+            // TODO：暂时直接调用界面方法，后续通过事件分发传递
+           BattleController battleController = UIManager.Instance.GetView<BattleController>();
+           await battleController.UpadteActionBar(battleEntities);
         }
 
         /// <summary>
@@ -172,8 +216,8 @@ namespace Game.Battle
         /// <param name="actEndEntity"></param>
         public async void InsertOrder(IBattleEntityObject actEndEntity)
         {
-            float currentActionValue = CalcActionValue(actEndEntity.GetSpeed());
-            int index = battleEntities.FindIndex(battleEntity => battleEntity.ActionValue > currentActionValue);
+            actEndEntity.SetActionValue(CalcActionValue(actEndEntity.GetSpeed()));
+            int index = battleEntities.FindIndex(battleEntity => battleEntity.ActionValue > actEndEntity.ActionValue);
             if (index != -1)
             {
                 // 找到第一个行动值大于当前角色的索引，插入到该位置前

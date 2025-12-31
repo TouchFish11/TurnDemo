@@ -82,7 +82,7 @@ public class SkillKeyUI : BaseUIBehaviour
     public void DefaultSelect()
     {
         // 激活目标标记
-        TargetSelectManager.Instance.ActiveSelectTarget(skillId);
+        TargetSelectManager.Instance.ActiveSelectTarget();
         togSkillKeyUI.isOn = true;
     }
 
