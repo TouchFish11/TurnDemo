@@ -63,10 +63,16 @@ namespace Game.Battle
         /// </summary>
         private async Task BattlePreparation()
         {
+            // 创建战斗界面
+            BattleController battleController = await ServiceLocator.Instance.Get<IUIManager>().CreateViewAsync<BattleView, BattleModel,BattleController>(E_UILayer.Mid);
+            // 播放入场动画等
+            // ...
             // 初始化行动顺序
             InitOrder();
             // 初始化行动实体
             UpdateActEntity();
+            // 显示战斗UI
+            await battleController.InitBattleUI(_context);
             // 启用当前实体行动
             _currentActEntity.ExecuteAction();
             // 设置为角色行动阶段
@@ -265,15 +271,6 @@ namespace Game.Battle
         public void EnqueueCommand(ISkill skill)
         {
             skillCommands.Enqueue(skill);
-        }
-
-        /// <summary>
-        /// 获取当前行动实体
-        /// </summary>
-        /// <returns></returns>
-        public IBattleEntityObject GetCurrentEntity()
-        {
-            return _currentActEntity;
         }
 
         /// <summary>

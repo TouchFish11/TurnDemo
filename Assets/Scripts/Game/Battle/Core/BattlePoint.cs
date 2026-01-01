@@ -26,11 +26,15 @@ public class BattlePoint : SingletonMono<BattlePoint>
     /// </summary>
     public Camera CurrentActiveCamera => currentCamera;
 
-    public void InitBattlePoint()
+    /// <summary>
+    /// 初始化战斗点
+    /// </summary>
+    /// <returns></returns>
+    public BattlePoint InitBattlePoint()
     {
         // 监听角色回合开始事件
         BattleManager.Instance.GetContext().GetEventBus().AddListener<TurnStartEvent>(OnTurnStartEvent);
-
+        return Instance;
     }
 
     /// <summary>
@@ -85,6 +89,10 @@ public class BattlePoint : SingletonMono<BattlePoint>
         //}
     }
 
+    /// <summary>
+    /// 回合开始事件回调
+    /// </summary>
+    /// <param name="turnStartEvent"></param>
     private void OnTurnStartEvent(TurnStartEvent turnStartEvent)
     {
         ActiveCamera(turnStartEvent.CurrentBattleEntity);

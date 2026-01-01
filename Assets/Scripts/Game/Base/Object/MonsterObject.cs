@@ -30,7 +30,7 @@ namespace Game.Battle
             // 初始化技能列表
             skillIds.AddRange(TextUtility.SplitToIntArr(MonsterInfo.f_skillIds, 2));
             // 添加战斗相关组件
-            AddComponents(TextUtility.SplitToIntArr(MonsterInfo.f_comIds, 2));
+            AddComponents(TextUtility.Split(MonsterInfo.f_comNames, 2));
         }
 
         protected override IEnumerator OnExceuteAction()

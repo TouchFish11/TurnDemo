@@ -5,6 +5,7 @@ namespace Game.Battle
     /// <summary>
     /// 战斗动画组件
     /// </summary>
+    [ComponentId(nameof(BattleAnimationComponent))]
     public class BattleAnimationComponent : BaseAnimationComponent, IBattleComponent
     {
         public IBattleEntityObject BattleEntity { get; private set; }

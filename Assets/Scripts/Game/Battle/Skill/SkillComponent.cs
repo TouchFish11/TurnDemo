@@ -6,8 +6,10 @@ using static UnityEditor.Timeline.TimelinePlaybackControls;
 namespace Game.Battle
 {
     /// <summary>
-    /// 战斗实体技能组件（管理实体技能，提供释放入口）
+    /// 战斗实体技能组件
+    /// 管理实体技能，提供释放入口
     /// </summary>
+    [ComponentId(nameof(SkillComponent))]
     public class SkillComponent : BattleComponent, ISkillComponent
     {
         // 技能列表（配置表加载）  可能这个组件只有技能Id列表就可以了

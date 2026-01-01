@@ -10,6 +10,6 @@ namespace Game.Battle
         /// <summary>
         /// 初始化韧性组件
         /// </summary>
-        void Init(IBattleEntityObject owner, List<E_ElementType> weakPropertys, float initialToughness);
+        void Init(IBattleEntityObject owner, int[] elementTypes, int initialToughness);
     }
 }

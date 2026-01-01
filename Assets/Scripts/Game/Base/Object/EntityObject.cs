@@ -16,9 +16,6 @@ namespace Game
         // 内置组件类型映射
         private readonly Dictionary<Type, Component> typeToComponentMap = new Dictionary<Type, Component>();
 
-        // 组件配置
-        [SerializeField] private ComponentConfig componentConfig;
-
         public GameObject GameObject => this.gameObject;
 
         public EntityProperty EntityProperty { get; protected set; }
@@ -79,9 +76,9 @@ namespace Game
             return component;
         }
 
-        public bool AddComponents(params int[] componentIds)
+        public bool AddComponents(params string[] componentNames)
         {
-            var components = ComponentFactory.AddComponents(this, componentConfig == null ? componentIds : componentConfig.compnentIds);
+            var components = ComponentFactory.AddComponents(this, componentNames);
             foreach (var info in components)
             {
                 if (info.Value is IComponent iComponent)
@@ -93,7 +90,7 @@ namespace Game
                     typeToComponentMap.TryAdd(info.Key, info.Value);
                 }
             }
-            return components.Count == componentIds.Length;
+            return components.Count == componentNames.Length;
         }
     }
 }

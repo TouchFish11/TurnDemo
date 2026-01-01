@@ -30,19 +30,19 @@ public abstract class PropertyComponent : BattleComponent
     /// <param name="dynamicPropertyType"></param>
     /// <param name="damageType"></param>
     /// <param name="newValue"></param>
-    public void SetPropertyValue(E_DynamicPropertyType dynamicPropertyType, E_DamageType damageType, int newValue)
+    public void SetPropertyValue(E_DynamicPropertyType dynamicPropertyType, int newValue)
     {
         switch (dynamicPropertyType)
         {
             case E_DynamicPropertyType.CurrentHp:
                 int currentHpDelta = battleProperty.CurrentHp - newValue;
                 battleProperty.CurrentHp = newValue;
-                battleContext.GetEventBus().TriggerEvent(new OnHpChangedEvent(battleContext, newValue, battleProperty.MaxHp, currentHpDelta, BattleEntity));
+                battleContext.GetEventBus().TriggerEvent(new HpChangedEvent(battleContext, newValue, battleProperty.MaxHp, currentHpDelta, BattleEntity));
                 break;
             case E_DynamicPropertyType.MaxHp:
                 int maxHpDelta = battleProperty.MaxHp - newValue;
                 battleProperty.MaxHp = newValue;
-                battleContext.GetEventBus().TriggerEvent(new OnHpChangedEvent(battleContext, battleProperty.CurrentHp, newValue, maxHpDelta, BattleEntity));
+                battleContext.GetEventBus().TriggerEvent(new HpChangedEvent(battleContext, battleProperty.CurrentHp, newValue, maxHpDelta, BattleEntity));
                 break;
             case E_DynamicPropertyType.TotalAtk:
                 battleProperty.TotalAtk = newValue;

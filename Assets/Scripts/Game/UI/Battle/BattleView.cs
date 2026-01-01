@@ -20,6 +20,7 @@ public class BattleView : UIView
     private Transform operatorArea;
     private Transform playerArea;
     private Transform selectMarkerArea;
+    private Transform monsterStateArea;
 
     private GameObject totalDmgArea;
     private ActingTipUI actingTipUI;
@@ -29,7 +30,15 @@ public class BattleView : UIView
     /// </summary>
     public ToggleGroup SkillKeyGroup { get; private set; }
 
+    /// <summary>
+    /// 目标标记区域
+    /// </summary>
     public Transform SelectMarkerArea => selectMarkerArea;
+
+    /// <summary>
+    /// 怪物状态区域
+    /// </summary>
+    public Transform MonsterStateArea => monsterStateArea;
 
     protected override void Awake()
     {
@@ -46,6 +55,8 @@ public class BattleView : UIView
         operatorArea = this.transform.Find(nameof(operatorArea));
         playerArea = this.transform.Find(nameof(playerArea));
         selectMarkerArea = this.transform.Find(nameof(selectMarkerArea));
+        monsterStateArea = this.transform.Find(nameof(monsterStateArea));
+
         totalDmgArea = this.transform.Find(nameof(totalDmgArea)).gameObject;
         totalDmgArea.SetActive(false);
 

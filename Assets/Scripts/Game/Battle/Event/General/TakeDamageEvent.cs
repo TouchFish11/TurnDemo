@@ -1,13 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 namespace Game.Battle
 {
-    public class OnTakeDamageEvent : BattleEvent
+    /// <summary>
+    ///  ‹…À ¬º˛
+    /// </summary>
+    public class TakeDamageEvent : BattleEvent
     {
         public DamageResult DamageResult {  get; private set; } 
 
-        public OnTakeDamageEvent(IBattleContext context, DamageResult damageResult) : base(context)
+        public TakeDamageEvent(IBattleContext context, DamageResult damageResult) : base(context)
         {
             DamageResult = damageResult;
         }

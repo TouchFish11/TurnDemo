@@ -65,7 +65,7 @@ public class RoleStateUI : BaseUIBehaviour
 
         // 应该是数据驱动
         battleContext = ServiceLocator.Instance.Get<IBattleManager>().GetContext();
-        battleContext.GetEventBus().AddListener<OnHpChangedEvent>(OnHpChanged);
+        battleContext.GetEventBus().AddListener<HpChangedEvent>(OnHpChanged);
         ServiceLocator.Instance.Get<IMonoManager>().AddUpdateListener(OnUpdate);
     }
 
@@ -103,7 +103,7 @@ public class RoleStateUI : BaseUIBehaviour
     /// </summary>
     /// <param name="currentHp"></param>
     /// <param name="maxHp"></param>
-    private void OnHpChanged(OnHpChangedEvent onHpChangedEvent)
+    private void OnHpChanged(HpChangedEvent onHpChangedEvent)
     {
         if (onHpChangedEvent.Target is not PlayerObject || onHpChangedEvent.Target.BattleEntityId != roleId)
         {
@@ -119,7 +119,7 @@ public class RoleStateUI : BaseUIBehaviour
     /// 护盾变化事件回调
     /// </summary>
     /// <param name="onShieldChangedEvent"></param>
-    private void OnShieldChanged(OnShieldChangedEvent onShieldChangedEvent)
+    private void OnShieldChanged(ShieldChangedEvent onShieldChangedEvent)
     {
         UpdateShield(onShieldChangedEvent.CurrentShield, onShieldChangedEvent.MaxShield);
     }

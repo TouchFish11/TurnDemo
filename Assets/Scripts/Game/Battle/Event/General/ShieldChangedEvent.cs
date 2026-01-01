@@ -4,13 +4,16 @@ using UnityEngine;
 
 namespace Game.Battle
 {
-    public class OnShieldChangedEvent : BattleEvent
+    /// <summary>
+    /// 护盾变化事件
+    /// </summary>
+    public class ShieldChangedEvent : BattleEvent
     {
         public int CurrentShield { get; private set; }
         public int MaxShield { get; private set; }
 
 
-        public OnShieldChangedEvent(IBattleContext context, int currentShield, int maxShield) : base(context)
+        public ShieldChangedEvent(IBattleContext context, int currentShield, int maxShield) : base(context)
         {
             CurrentShield = currentShield;
             MaxShield = maxShield;

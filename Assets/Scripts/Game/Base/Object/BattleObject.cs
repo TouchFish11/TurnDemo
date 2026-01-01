@@ -50,17 +50,26 @@ namespace Game
 
         public virtual void TakeDamage(DamageResult damageResult)
         {
-            PropertyComponent propertyComponent = this.GetComponent<PropertyComponent>();
-            BattleProperty battleProperty = propertyComponent.GetProperty<BattleProperty>();
+            // 需要判断能否受伤
+            // ...
 
-            propertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentHp, damageResult.DamageType, battleProperty.CurrentHp - damageResult.FinalDamage);
-            if (battleProperty.CurrentHp <= 0)
+            // 先削减韧性
+            ToughnessComponent toughnessComponent = this.GetComponent<ToughnessComponent>();
+            toughnessComponent.ReduceToughness(damageResult.Source, damageResult.ElementType, damageResult.ToughenValue);
+
+            PropertyComponent propertyComponent = this.GetComponent<PropertyComponent>();
+
+            // 更新当前血量
+            int currentHp = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentHp);
+            propertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentHp, currentHp - damageResult.FinalDamage);
+
+            // 若小于0，则等于0，死亡
+            currentHp = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentHp);
+            if (currentHp <= 0)
             {
-                battleProperty.CurrentHp = 0;
+                propertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentHp, 0);
                 Die();
             }
-
-           // LogManager.Log($"{gameObject.name}剩余HP：{battleProperty.CurrentHp}");
         }
 
         public virtual void Die()

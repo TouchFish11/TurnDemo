@@ -4,7 +4,7 @@ namespace Game.Battle
     /// <summary>
     /// 血量变化事件
     /// </summary>
-    public class OnHpChangedEvent : BattleEvent
+    public class HpChangedEvent : BattleEvent
     {
         public IBattleEntityObject Target { get; private set; }
         public int CurrentHp { get; private set; }
@@ -16,7 +16,7 @@ namespace Game.Battle
         /// </summary>
         public int DeltaHp { get; private set; }
 
-        public OnHpChangedEvent(IBattleContext context, int currentHp, int maxHp, int deltaHp, IBattleEntityObject target) : base(context)
+        public HpChangedEvent(IBattleContext context, int currentHp, int maxHp, int deltaHp, IBattleEntityObject target) : base(context)
         {
             CurrentHp = currentHp;
             MaxHp = maxHp;

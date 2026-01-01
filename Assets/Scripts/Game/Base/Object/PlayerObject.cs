@@ -25,7 +25,7 @@ namespace Game
         {
             base.BattleInit(battleEntityId, context);
             // 添加战斗相关组件
-            AddComponents(TextUtility.SplitToIntArr(RoleInfo.f_comIds, 2));
+            AddComponents(TextUtility.Split(RoleInfo.f_comNames, 2));
             // 监听玩家技能触发事件
             Context.GetEventBus().AddListener<PlayerTriggerSkillEvent>(OnCastSkill);
         }

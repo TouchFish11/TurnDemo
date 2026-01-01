@@ -63,7 +63,7 @@ public class InputComponent : BaseComponent
     /// <summary>
     /// 启用输入系统
     /// </summary>
-    public async void EnableInput()
+    public void EnableInput()
     {
         inputSystem.EnableInput();
     }

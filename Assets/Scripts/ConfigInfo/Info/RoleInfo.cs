@@ -4,7 +4,7 @@ public class RoleInfo
 	public string f_name;
 	public string f_description;
 	public int f_elementType;
-	public string f_comIds;
+	public string f_comNames;
 	public string f_skillIds;
 	public int f_baseHp;
 	public int f_baseDef;

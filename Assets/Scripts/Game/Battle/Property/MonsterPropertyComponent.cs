@@ -6,6 +6,7 @@ using UnityEngine;
 /// <summary>
 /// 怪物属性组件
 /// </summary>
+[ComponentId(nameof(MonsterPropertyComponent))]
 public class MonsterPropertyComponent : PropertyComponent
 {
     public override void BattleInit(IBattleEntityObject battleEntity)

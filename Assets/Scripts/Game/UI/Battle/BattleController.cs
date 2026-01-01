@@ -44,14 +44,14 @@ public class BattleController : UIController<BattleView, BattleModel>
     public async Task InitBattleUI(IBattleContext battleContext)
     {
         await InitPlayerUI(battleContext.GetPlayerObjects());
-        await InitMonsterUI(battleContext.GetMonsterObjects());
         await UpdateBattlePointCount(battleContext.CurentBattlePointCount, battleContext.MaxBattlePointCount);
 
         battleContext.GetEventBus().AddListener<OnBattlePointCountChangedEvent>(OnBattlePointCountChanged);
         battleContext.GetEventBus().AddListener<TurnStartEvent>(OnTurnStart);
         battleContext.GetEventBus().AddListener<TurnEndEvent>(OnTurnEnd);
-        //battleContext.GetEventBus().AddListener<OnHpChangedEvent>(OnHpChanged);
-        battleContext.GetEventBus().AddListener<OnTakeDamageEvent>(OnTakeDamage);
+
+        //battleContext.GetEventBus().AddListener<HpChangedEvent>(OnHpChanged);
+        battleContext.GetEventBus().AddListener<TakeDamageEvent>(OnTakeDamage);
         battleContext.GetEventBus().AddListener<PlayerTriggerSkillEvent>(UpdateActTip);
         battleContext.GetEventBus().AddListener<SelectTargetEvent>(OnTargetSelectionChanged);
     }
@@ -81,16 +81,25 @@ public class BattleController : UIController<BattleView, BattleModel>
 
     /// <summary>
     /// 初始化怪物UI
+    /// 依赖玩家相机初始化完毕
     /// </summary>
     /// <param name="battleEntities"></param>
     /// <returns></returns>
     private async Task InitMonsterUI(IEnumerable<IBattleEntityObject> battleEntities)
     {
+        List<NormalMonsterStateUI> normalMonsterStateUIs = new List<NormalMonsterStateUI>(); 
         // 怪物血量UI
-        foreach (IBattleEntityObject entityObject in battleEntities)
+        foreach (IBattleEntityObject battleEntity in battleEntities)
         {
-
+            NormalMonsterStateUI monsterStateUI = await ObjectBuilder.GetOrCreateInstance<NormalMonsterStateUI>(E_AssetBundleType.UI, ResKeyCollection.MonsterStateUI, null);
+            if (UIManager.WorldToLocalPointInRectangle(BattlePoint.Instance.CurrentActiveCamera, UIManager.Instance.UICamera, view.MonsterStateArea, monsterStateUI.gameObject, battleEntity.GameObject.transform.position, Vector2.up * 250))
+            {
+                monsterStateUI.Init(battleEntity);
+                normalMonsterStateUIs.Add(monsterStateUI);
+            }
         }
+
+        model.UpdateNormalMonsterState(normalMonsterStateUIs);
     }
 
     /// <summary>
@@ -234,8 +243,8 @@ public class BattleController : UIController<BattleView, BattleModel>
     /// <param name="turnStartEvent"></param>
     private async void OnTurnStart(TurnStartEvent turnStartEvent)
     {
-        // 更新行动轴显示
-        //await UpadteActionBar(turnStartEvent.Context.GetAllBattleEntity());
+        // 玩家相机位置不同，需要每回合开始时更新怪物UI位置
+        await InitMonsterUI(turnStartEvent.Context.GetMonsterObjects());
         if (turnStartEvent.CurrentBattleEntity is PlayerObject)
         {
             // 更新当前操作UI
@@ -265,7 +274,7 @@ public class BattleController : UIController<BattleView, BattleModel>
     /// 受到伤害回调事件
     /// </summary>
     /// <param name="onTakeDamageEvent"></param>
-    private async void OnTakeDamage(OnTakeDamageEvent onTakeDamageEvent)
+    private async void OnTakeDamage(TakeDamageEvent onTakeDamageEvent)
     {
         DamageResult damageResult = onTakeDamageEvent.DamageResult;
         if (damageResult.Target is not MonsterObject)
@@ -290,7 +299,7 @@ public class BattleController : UIController<BattleView, BattleModel>
     /// 血量变化回调事件
     /// </summary>
     /// <param name="onHpChangedEvent"></param>
-    private async void OnHpChanged(OnHpChangedEvent onHpChangedEvent)
+    private async void OnHpChanged(HpChangedEvent onHpChangedEvent)
     {
         // 显示伤害/治疗文本
         //DamageTextUI damageTextUI = await ObjectBuilder.GetOrCreateInstance<DamageTextUI>(E_AssetBundleType.UI, ResKeyCollection.DamageTextUI, null);

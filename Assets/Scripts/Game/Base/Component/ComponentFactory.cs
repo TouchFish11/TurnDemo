@@ -3,6 +3,7 @@ using Game;
 using Game.Battle;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 /// <summary>
@@ -10,57 +11,40 @@ using UnityEngine;
 /// </summary>
 public class ComponentFactory
 {
+    // 组件名称到组件类型的映射
+    private static readonly Dictionary<string, Type> _nameToComponentTypeMap = new Dictionary<string, Type>();
+
+    static ComponentFactory()
+    {
+        // 扫描当前程序集所有继承IComponent和Component的子类
+        foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
+        {
+            if ((type.IsSubclassOf(typeof(IComponent)) || type.IsSubclassOf(typeof(Component))) && !type.IsAbstract)
+            {
+                // 获取特性
+                ComponentIdAttribute attr = type.GetCustomAttribute<ComponentIdAttribute>();
+                if (attr != null && !_nameToComponentTypeMap.ContainsKey(attr.ComponentName))
+                {
+                    _nameToComponentTypeMap.Add(attr.ComponentName, type);
+                }
+            }
+        }
+    }
+
     /// <summary>
     /// 批量添加组件
     /// </summary>
     /// <param name="entityObject"></param>
     /// <param name="componentIds"></param>
     /// <returns></returns>
-    public static IDictionary<Type, Component> AddComponents(IEntityObject entityObject, IEnumerable<int> componentIds)
+    public static IDictionary<Type, Component> AddComponents(IEntityObject entityObject, IEnumerable<string> componentIds)
     {
         IDictionary<Type, Component> components = new Dictionary<Type, Component>();
 
-        foreach (int id in componentIds)
+        foreach (string name in componentIds)
         {
-            // 根据id创建不同的组件
-            switch (id)
-            {
-                // 动画组件
-                case 1:
-                    AddComponent<BattleAnimationComponent>(entityObject);
-                    break;
-                // 技能组件
-                case 2:
-                    AddComponent<SkillComponent>(entityObject);
-                    break;
-                //// 玩家角色组件
-                //case 3:
-                //    AddComponent<PlayerObject>(entityObject);
-                //    break;
-                //// 怪物角色组件
-                //case 4:
-                //    AddComponent<MonsterObject>(entityObject);
-                //    break;
-                // 网络移动组件
-                case 5:
-                    //AddComponent<NetMoveComponent>(entityObject);
-                    break;
-                // 本地移动组件
-                case 6:
-                    //AddComponent<LocalMoveComponent>(entityObject);
-                    break;
-                // 玩家属性组件
-                case 7:
-                    AddComponent<PlayerPropertyComponent>(entityObject);
-                    break;
-                // 怪物属性组件
-                case 8:
-                    AddComponent<MonsterPropertyComponent>(entityObject);
-                    break;
-                default:
-                    LogManager.LogError($"未知的组件ID: {id}");
-                    break;
-            }
+            (Type type, Component component) = AddComponent(name, entityObject);
+            components.Add(type, component);
         }
         return components;
     }
@@ -68,16 +52,43 @@ public class ComponentFactory
     /// <summary>
     /// 添加单个组件
     /// </summary>
+    /// <param name="componentName"></param>
+    /// <param name="entityObject"></param>
+    public static (Type, Component) AddComponent(string componentName, IEntityObject entityObject)
+    {
+        if (_nameToComponentTypeMap.TryGetValue(componentName, out Type componentType))
+        {
+            Component component = entityObject.GameObject.AddComponent(componentType);
+            if (component is IComponent iComponent)
+            {
+                iComponent.Init(entityObject);
+            }
+            return (componentType, component);
+        }
+
+        LogManager.LogError($"未注册的组件：{componentName}");
+        return (null, null);
+    }
+
+    /// <summary>
+    /// 添加单个组件
+    /// </summary>
     /// <typeparam name="T"></typeparam>
-    /// <param name="character"></param>
+    /// <param name="entityObject"></param>
     /// <returns></returns>
     public static T AddComponent<T>(IEntityObject entityObject) where T : Component
     {
-        T component = entityObject.GameObject.AddComponent<T>();
-        if (component is IComponent ic)
+        if (_nameToComponentTypeMap.TryGetValue(typeof(T).Name, out Type type))
         {
-            ic.Init(entityObject);
+            Component component = entityObject.GameObject.AddComponent(type);
+            if (component is IComponent ic)
+            {
+                ic.Init(entityObject);
+            }
+            return component as T;
         }
-        return component;
+
+        LogManager.LogError($"{nameof(AddComponent)}未找到{typeof(T).Name}类型的组件");
+        return null;
     }
 }

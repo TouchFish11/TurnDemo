@@ -27,7 +27,6 @@ namespace Game.Battle
         /// </summary>
         public async Task StartBattle(/* 战斗角色选择，怪物选择，战斗场景选择（可选）， */)
         {
-            BattleController battleController = await UIManager.Instance.CreateViewAsync<BattleView, BattleModel,BattleController>(E_UILayer.Mid);
             // 初始化战斗上下文
             context = new BattleContext();
             // 初始化战斗
@@ -35,17 +34,15 @@ namespace Game.Battle
             // 初始化目标选择管理器
             ServiceLocator.Instance.Get<ITargetSelectManager>().Init();
             // 获取场景上的战斗点对象，初始化战斗点对象
-            battlePoint = BattlePoint.Instance;
-            battlePoint.InitBattlePoint();
-            // 更新战斗UI、播放入场动画等
-            await battleController.InitBattleUI(context);
-            // 监听回合开始事件
-
+            battlePoint = BattlePoint.Instance.InitBattlePoint();
             // 启动回合
             MonoManager.Instance.StartCoroutine(context.GetTurnManager().BattleLoop());
         }
 
-
+        /// <summary>
+        /// 获取上下文
+        /// </summary>
+        /// <returns></returns>
         public IBattleContext GetContext()
         {
             return context;

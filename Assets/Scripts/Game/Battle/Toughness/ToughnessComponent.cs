@@ -1,26 +1,77 @@
 using Framework;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 namespace Game.Battle
 {
     /// <summary>
-    /// 角色韧性组件（管理目标的韧性系统）
+    /// 韧性组件
+    /// 管理目标的韧性系统
     /// </summary>
+    [ComponentId(nameof(ToughnessComponent))]
     public class ToughnessComponent : BattleComponent, IToughnessComponent
     {
         // 当前韧性状态
         private Toughness _toughness;
 
-        public void Init(IBattleEntityObject owner, List<E_ElementType> weakPropertys, float initialToughness)
+        void IToughnessComponent.Init(IBattleEntityObject owner, int[] elementTypes , int initialToughness)
         {
+            List<E_ElementType> weakPropertys = new List<E_ElementType>(elementTypes.Length);
+            foreach (var type in elementTypes)
+            {
+                weakPropertys.Add(type.ToElementType());
+            }
             _toughness = new Toughness(weakPropertys, initialToughness);
         }
 
         public override void BattleInit(IBattleEntityObject battleEntity)
         {
             base.BattleInit(battleEntity);
+
+            MonsterInfo monsterInfo = battleEntity.GetComponent<MonsterObject>().MonsterInfo;
+            (this as IToughnessComponent).Init(battleEntity, TextUtility.SplitToIntArr(monsterInfo.f_weaknesses, 2), monsterInfo.f_baseToughness);
+
             // 订阅“技能释放事件”（监听所有技能释放，计算韧性）
             BattleEntity.Context.GetEventBus().AddListener<SkillCastEvent>(OnSkillCastHandler);
+        }
+
+        /// <summary>
+        /// 削减韧性
+        /// </summary>
+        /// <param name="reducer"></param>
+        /// <param name="propertyType"></param>
+        /// <param name="value"></param>
+        public void ReduceToughness(IBattleEntityObject reducer, E_ElementType propertyType, int value)
+        {
+            // 能否削减韧性
+            if (!CanReduceToughness(propertyType))
+            {
+                return;
+            }
+
+            _toughness.ReduceToughness(value);
+            // 触发韧性削减事件
+            this.BattleEntity.Context.GetEventBus().TriggerEvent(new ToughnessChangedEvent(this.BattleEntity.Context, this.BattleEntity, _toughness.CurrentToughnessValue, _toughness.MaxToughnessVaue));
+            // 判断是否破韧
+            if (IsToughnessBroken())
+            {
+                this.BattleEntity.Context.GetEventBus().TriggerEvent(new ToughnessBrokenEvent(this.BattleEntity.Context, reducer, this.BattleEntity));
+            }
+        }
+
+        /// <summary>
+        /// 能否削减韧性
+        /// </summary>
+        /// <param name="propertyType"></param>
+        /// <returns></returns>
+        private bool CanReduceToughness(E_ElementType propertyType)
+        {
+            // TODO：判断逻辑抽象为接口，便于拓展
+            if (_toughness.WeakPropertys.Contains(propertyType))
+            {
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
@@ -53,5 +104,21 @@ namespace Game.Battle
         /// </summary>
         /// <returns></returns>
         public bool IsToughnessBroken() => _toughness.IsBroken;
+
+        /// <summary>
+        /// 最大韧性值
+        /// </summary>
+        public int CurrentToughnessValue => _toughness.CurrentToughnessValue;
+
+        /// <summary>
+        /// 当前韧性值
+        /// </summary>
+        public int MaxToughnessVaue => _toughness.MaxToughnessVaue;
+
+        /// <summary>
+        /// 弱点属性列表
+        /// </summary>
+        public List<E_ElementType> WeakPropertys => _toughness.WeakPropertys;
+
     }
 }

@@ -14,7 +14,7 @@ public abstract class UIModel : IUIModel
     public event Action<string, object> OnDataChanged;
 
     /// <summary>
-    /// 触发数据变更（子类调用）
+    /// 触发数据变更
     /// </summary>
     /// <param name="key"></param>
     /// <param name="value"></param>

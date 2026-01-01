@@ -37,7 +37,7 @@ public class DamageCalcManager : SingletonBase<DamageCalcManager>, IDamageCalcMa
         {
             //计算每次最终伤害
             strategy.CalcDamage(source, target, skill, out damageResult);
-            source.Context.GetEventBus().TriggerEvent(new OnTakeDamageEvent(source.Context, damageResult));
+            source.Context.GetEventBus().TriggerEvent(new TakeDamageEvent(source.Context, damageResult));
         }
         else
         {

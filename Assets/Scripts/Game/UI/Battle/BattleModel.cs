@@ -1,5 +1,6 @@
 using Framework;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -13,6 +14,8 @@ public class BattleModel : UIModel
     private readonly List<SkillKeyUI> skillKeyUIs = new List<SkillKeyUI>();
     // 角色状态UI列表
     private readonly List<RoleStateUI> roleStateUIs = new List<RoleStateUI>();
+    // 普通怪物状态UI列表
+    private readonly List<NormalMonsterStateUI> normalMonsterStateUIs = new List<NormalMonsterStateUI>();
     // 战技点UI列表
     private readonly List<BattlePointUI> battlePointUIs = new List<BattlePointUI>();
     // 选择标记UI列表
@@ -28,6 +31,17 @@ public class BattleModel : UIModel
     {
         activeActTip = isShow;
         TriggerDataChanged(nameof(activeActTip), (isShow, isMonster));
+    }
+
+    public void UpdateNormalMonsterState(IEnumerable<NormalMonsterStateUI> normalMonsterStateUIs)
+    {
+        foreach (NormalMonsterStateUI monsterStateUI in this.normalMonsterStateUIs)
+        {
+            PoolManager.Instance.PushObj(monsterStateUI.gameObject);
+        }
+        this.normalMonsterStateUIs.Clear();
+
+        this.normalMonsterStateUIs.AddRange(normalMonsterStateUIs);
     }
 
     /// <summary>

@@ -42,7 +42,7 @@ public interface IEntityObject
     /// <summary>
     /// 批量添加组件
     /// </summary>
-    /// <param name="componentIds"></param>
+    /// <param name="componentNames"></param>
     /// <returns></returns>
-    bool AddComponents(params int[] componentIds);
+    bool AddComponents(params string[] componentNames);
 }

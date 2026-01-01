@@ -21,7 +21,7 @@ namespace Framework
 		public static string SkillInfo => "SkillInfo";
 		public static string TaskConditionInfo => "TaskConditionInfo";
 		public static string TaskInfo => "TaskInfo";
-		public static string PlayerActionAssets => "PlayerActionAssets";
+		public static string MainActionMap => "MainActionMap";
 		public static string ItemGrid => "ItemGrid";
 		public static string Ground => "Ground";
 		public static string MergedMesh => "MergedMesh";
@@ -48,6 +48,8 @@ namespace Framework
 		public static string SelectMarkerUI => "SelectMarkerUI";
 		public static string ActionGridUI => "ActionGridUI";
 		public static string BuffGridUI => "BuffGridUI";
+		public static string MonsterStateUI => "MonsterStateUI";
+		public static string WeaknessUI => "WeaknessUI";
 		public static string BattlePointUI => "BattlePointUI";
 		public static string RoleStateUI => "RoleStateUI";
 		public static string SkillKeyUI => "SkillKeyUI";

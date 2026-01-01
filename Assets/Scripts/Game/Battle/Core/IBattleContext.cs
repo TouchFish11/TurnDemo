@@ -6,11 +6,6 @@ namespace Game.Battle
     public interface IBattleContext
     {
         /// <summary>
-        /// 当前战斗实体
-        /// </summary>
-        IBattleEntityObject CurrentBattleEntity { get; }
-
-        /// <summary>
         /// 当前战技点数
         /// </summary>
         int CurentBattlePointCount { get; }

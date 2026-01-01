@@ -13,4 +13,5 @@ public class SkillInfo
 	public int f_damageModel;
 	public int f_targetType;
 	public int f_animationType;
+	public int f_toughenValue;
 }

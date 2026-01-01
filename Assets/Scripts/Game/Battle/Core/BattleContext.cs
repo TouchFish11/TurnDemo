@@ -21,8 +21,6 @@ namespace Game.Battle
         // 最大战技点数
         private int maxBattlePointCount = 5;
 
-        public IBattleEntityObject CurrentBattleEntity => _turnManager.GetCurrentEntity();
-
         public int CurentBattlePointCount => currentBattlePointCount;
 
         public int MaxBattlePointCount => maxBattlePointCount;

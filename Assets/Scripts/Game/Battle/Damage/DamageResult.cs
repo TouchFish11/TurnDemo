@@ -8,25 +8,42 @@ using UnityEngine;
 /// </summary>
 public readonly struct DamageResult
 {
-    // 伤害来源
+    /// <summary>
+    /// 伤害来源
+    /// </summary>
     public IBattleEntityObject Source { get; }
 
-    //目标
+    /// <summary>
+    /// 目标
+    /// </summary>
     public IBattleEntityObject Target { get; }
 
-    //最终伤害
+    /// <summary>
+    /// 最终伤害
+    /// </summary>
     public int FinalDamage { get; }
 
-    //伤害属性
+    /// <summary>
+    /// 伤害属性
+    /// </summary>
     public E_ElementType ElementType { get; }
 
-    //伤害类型
+    /// <summary>
+    /// 伤害类型
+    /// </summary>
     public E_DamageType DamageType { get; }
 
-    // 是否暴击
+    /// <summary>
+    /// 是否暴击
+    /// </summary>
     public bool IsCrit { get; }
 
-    public DamageResult(IBattleEntityObject source, IBattleEntityObject target, int finalDamage, E_ElementType elementType, E_DamageType damageType, bool isCrit)
+    /// <summary>
+    /// 削韧量
+    /// </summary>
+    public int ToughenValue { get; }
+
+    public DamageResult(IBattleEntityObject source, IBattleEntityObject target, int finalDamage, E_ElementType elementType, E_DamageType damageType, bool isCrit, int toughenValue)
     {
         Source = source;
         Target = target;
@@ -34,5 +51,6 @@ public readonly struct DamageResult
         ElementType = elementType;
         DamageType = damageType;
         IsCrit = isCrit;
+        ToughenValue = toughenValue;
     }
 }
