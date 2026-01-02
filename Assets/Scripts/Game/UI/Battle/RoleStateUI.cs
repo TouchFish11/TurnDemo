@@ -23,11 +23,7 @@ public class RoleStateUI : BaseUIBehaviour
     private ScrollRect svBuffBox;
     private TextMeshProUGUI txtBlood;
 
-    // 血量相关
-    private int maxHp;
-    private int currentHp;
-    private float currentFadeHp;
-    private readonly float fadeFactor = 2f;    // 血量渐变因子
+    private readonly float fadeSpeed = 1f;    // 血量渐变因子
 
     // 能量相关
     private int currentEnergy;
@@ -47,7 +43,6 @@ public class RoleStateUI : BaseUIBehaviour
     private IBattleContext battleContext;
     // 战斗实体接口
     private IBattleEntityObject battleEntity;
-
 
     protected override void Awake()
     {
@@ -79,9 +74,10 @@ public class RoleStateUI : BaseUIBehaviour
         RoleInfo roleInfo = BinaryDataManager.Instance.GetConfig<RoleInfoContainer>(E_ConfigLoadType.Editor).dataDic[playerProperty.Id];
         // 设置图标
         // imgIcon.sprite = await AssetBundleManager.Instance.LoadAssetAsync<Sprite>(E_AssetBundleType.Texture, ResKeyCollection.WhiteImage);
+        PropertyComponent propertyComponent = this.battleEntity.GetComponent<PropertyComponent>();
         // 设置血量
-        maxHp = currentHp = (int)(currentFadeHp = playerProperty.BaseHp);
-        UpdateHp(currentHp, maxHp);
+        imgHp.fillAmount = imgFade.fillAmount = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentHp) / (float)propertyComponent.GetPropertyValue(E_DynamicPropertyType.MaxHp);
+        txtBlood.text = $"{propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentHp)}/{(float)propertyComponent.GetPropertyValue(E_DynamicPropertyType.MaxHp)}";
         // 设置能量
         maxEnergy = playerProperty.BaseEnergy;
         currentEnergy = 0;  // 暂时默认为0
@@ -109,10 +105,8 @@ public class RoleStateUI : BaseUIBehaviour
         {
             return;
         }
-
-        LogManager.Log($"受伤的实体ID：{onHpChangedEvent.Target.BattleEntityId}，角色ID：{roleId}");
-
-        UpdateHp(onHpChangedEvent.CurrentHp, onHpChangedEvent.MaxHp);
+        imgHp.fillAmount = onHpChangedEvent.CurrentHp / (float)onHpChangedEvent.MaxHp;
+        txtBlood.text = $"{onHpChangedEvent.CurrentHp}/{onHpChangedEvent.MaxHp}";
     }
 
     /// <summary>
@@ -122,19 +116,6 @@ public class RoleStateUI : BaseUIBehaviour
     private void OnShieldChanged(ShieldChangedEvent onShieldChangedEvent)
     {
         UpdateShield(onShieldChangedEvent.CurrentShield, onShieldChangedEvent.MaxShield);
-    }
-
-    /// <summary>
-    /// 更新血量
-    /// </summary>
-    /// <param name="currentHp"></param>
-    /// <param name="maxHp"></param>
-    private void UpdateHp(int currentHp, int maxHp)
-    {
-        this.currentHp = currentHp;
-        this.maxHp = maxHp;
-        imgHp.fillAmount = currentHp / maxHp;
-        txtBlood.text = $"{currentHp}/{maxHp}";
     }
 
     /// <summary>
@@ -187,14 +168,13 @@ public class RoleStateUI : BaseUIBehaviour
     /// </summary>
     private void FadeBllood()
     {
-        if(currentFadeHp > currentHp)
+        if (imgFade.fillAmount > imgHp.fillAmount)
         {
-            currentFadeHp -= fadeFactor * Time.deltaTime;
-            if(currentFadeHp < currentHp)
+            imgFade.fillAmount -= Time.deltaTime * fadeSpeed;
+            if (imgFade.fillAmount < imgHp.fillAmount)
             {
-                currentFadeHp = currentHp;
+                imgFade.fillAmount = imgHp.fillAmount;
             }
-            imgFade.fillAmount = currentFadeHp / maxHp;
         }
     }
 

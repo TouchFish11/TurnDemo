@@ -16,10 +16,16 @@ namespace Game.Battle
         /// </summary>
         public IBattleEntityObject Target { get; }
 
-        public ToughnessBrokenEvent(IBattleContext context, IBattleEntityObject breaker, IBattleEntityObject target) : base(context)
+        /// <summary>
+        /// 造成击破的技能信息
+        /// </summary>
+        public SkillInfo SkillInfo { get; }
+
+        public ToughnessBrokenEvent(IBattleContext context, IBattleEntityObject breaker, IBattleEntityObject target, SkillInfo skillInfo) : base(context)
         {
             Breaker = breaker;
             Target = target;
+            SkillInfo = skillInfo;
         }
     }
 }

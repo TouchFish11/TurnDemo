@@ -12,5 +12,5 @@ public interface IDamageStrategy
     /// <param name="target">防御者</param>
     /// <param name="skillInfo">额外数据</param>
     /// <returns></returns>
-    void CalcDamage(IBattleEntityObject source, IBattleEntityObject target, ISkill skill, out DamageResult damageResult);
+    void CalcDamage(IBattleEntityObject source, IBattleEntityObject target, SkillInfo skillInfo, out DamageResult damageResult);
 }

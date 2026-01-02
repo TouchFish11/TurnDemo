@@ -29,13 +29,6 @@ namespace Game
             Context = context;
             // 缓存战斗实体ID
             BattleEntityId = battleEntityId;
-
-            //// 敌人角色额外加载韧性组件（示例：弱点属性=物理，初始韧性=200）
-            //if (name.Contains("敌人"))
-            //{
-            //    ToughnessComponent toughnessComponent = this.AddComponent<ToughnessComponent>();
-            //    toughnessComponent.Init(this, new() { E_ElementType.Physical }, 200);
-            //}
         }
 
         public int GetSpeed()
@@ -48,14 +41,12 @@ namespace Game
 
         }
 
-        public virtual void TakeDamage(DamageResult damageResult)
+        public void TakeDamage(DamageResult damageResult)
         {
             // 需要判断能否受伤
             // ...
 
-            // 先削减韧性
-            ToughnessComponent toughnessComponent = this.GetComponent<ToughnessComponent>();
-            toughnessComponent.ReduceToughness(damageResult.Source, damageResult.ElementType, damageResult.ToughenValue);
+            OnPreTakeDamage(damageResult);
 
             PropertyComponent propertyComponent = this.GetComponent<PropertyComponent>();
 
@@ -71,6 +62,11 @@ namespace Game
                 Die();
             }
         }
+
+        /// <summary>
+        /// 在受伤之前触发
+        /// </summary>
+        protected abstract void OnPreTakeDamage(DamageResult damageResult);
 
         public virtual void Die()
         {

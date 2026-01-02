@@ -8,6 +8,6 @@ using UnityEngine;
 /// </summary>
 public interface IDamageCalcManager
 {
-    void CalcDamage(IBattleEntityObject source, IBattleEntityObject target, ISkill skill, out DamageResult damageResult);
+    void CalcSkillDamage(IBattleEntityObject source, IBattleEntityObject target, SkillInfo skillInfo, out DamageResult damageResult);
     void ClearDamage();
 }

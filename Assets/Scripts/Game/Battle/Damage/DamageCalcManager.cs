@@ -1,6 +1,7 @@
 using Framework;
 using Game.Battle;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 /// <summary>
@@ -20,24 +21,55 @@ public class DamageCalcManager : SingletonBase<DamageCalcManager>, IDamageCalcMa
         _strategyDic.Add(E_DamageType.Dot, new DotDamageStrategy());
         _strategyDic.Add(E_DamageType.Break, new  BreakDamageStrategy());
         _strategyDic.Add(E_DamageType.True, new TrueDamageStrategy());
+
+        // 监听需要计算伤害的事件
+        ServiceLocator.Instance.Get<IBattleManager>().GetContext().GetEventBus().AddListener<ToughnessBrokenEvent>(OnToughnessBrokenEvent);
     }
 
     /// <summary>
-    /// 计算伤害
+    /// 计算技能伤害
     /// </summary>
     /// <param name="source">攻击者</param>
     /// <param name="target">目标</param>
     /// <param name="damageType">伤害类型</param>
     /// <param name="skill">技能对象</param>
     /// <returns>最终伤害</returns>
-    public void CalcDamage(IBattleEntityObject source, IBattleEntityObject target, ISkill skill, out DamageResult damageResult)
+    public void CalcSkillDamage(IBattleEntityObject source, IBattleEntityObject target,SkillInfo skillInfo, out DamageResult damageResult)
     {
-        E_DamageType damageType = skill.SkillInfo.f_damageType.ToDamageType();
+        E_DamageType damageType = skillInfo.f_damageType.ToDamageType();
         if (_strategyDic.TryGetValue(damageType, out IDamageStrategy strategy))
         {
             //计算每次最终伤害
-            strategy.CalcDamage(source, target, skill, out damageResult);
-            source.Context.GetEventBus().TriggerEvent(new TakeDamageEvent(source.Context, damageResult));
+            strategy.CalcDamage(source, target, skillInfo, out damageResult);
+            // 分发应用伤害事件（战斗界面监听显示伤害文本）
+            source.Context.GetEventBus().TriggerEvent(new ApplyDamageEvent(source.Context, damageResult));
+        }
+        else
+        {
+            damageResult = default;
+            LogManager.LogError("未实现对应的伤害策略");
+        }
+    }
+
+    /// <summary>
+    /// 击破事件回调
+    /// 计算击破伤害
+    /// </summary>
+    /// <param name="toughnessBrokenEvent"></param>
+    private void OnToughnessBrokenEvent(ToughnessBrokenEvent toughnessBrokenEvent)
+    {
+        CalcBrokenDamage(toughnessBrokenEvent.Breaker, toughnessBrokenEvent.Target, toughnessBrokenEvent.SkillInfo, out DamageResult result);
+        toughnessBrokenEvent.Target.TakeDamage(result);
+    }
+
+    private void CalcBrokenDamage(IBattleEntityObject source, IBattleEntityObject target, SkillInfo skillInfo, out DamageResult damageResult)
+    {
+        if (_strategyDic.TryGetValue(E_DamageType.Break, out IDamageStrategy strategy))
+        {
+            //计算每次最终伤害
+            strategy.CalcDamage(source, target, skillInfo, out damageResult);
+            // 分发应用伤害事件（战斗界面监听显示伤害文本）
+            source.Context.GetEventBus().TriggerEvent(new ApplyDamageEvent(source.Context, damageResult));
         }
         else
         {
@@ -61,7 +93,7 @@ public class DamageCalcManager : SingletonBase<DamageCalcManager>, IDamageCalcMa
     //    //    UIMgr.Instance.GetPanel<BattlePanel>((panel) =>
     //    //    {
     //    //        //计算最终伤害
-    //    //        int tempDmg = dot.CalcDamage();
+    //    //        int tempDmg = dot.CalcSkillDamage();
     //    //        target.ProcessDamage(new DamageResult());
     //    //        //分发事件
     //    //        //EventCenter.Instance.EventTrigger(E_EventType.OnApplyDamage, new ApplyDamageEvent(attacker, target, tempDmg));

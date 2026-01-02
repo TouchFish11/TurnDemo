@@ -55,6 +55,16 @@ public class BattlePoint : SingletonMono<BattlePoint>
         return monsterTrans;
     }
 
+    public Transform GetPlayerTransByIndex(int index)
+    {
+        return playerTrans[index];
+    }
+
+    public Transform GetMonsterTransByIndex(int index)
+    {
+        return monsterTrans[index];
+    }
+
     /// <summary>
     /// 获取怪物点中心
     /// </summary>

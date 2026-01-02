@@ -30,7 +30,7 @@ namespace Game.Battle
         /// <param name="selectSkillEvent"></param>
         private void OnSelectSkillEvent(SelectSkillEvent selectSkillEvent)
         {
-            if (selectSkillEvent.BattleEntity != this.BattleEntity)
+            if (selectSkillEvent.Caster != this.BattleEntity)
             {
                 return;
             }

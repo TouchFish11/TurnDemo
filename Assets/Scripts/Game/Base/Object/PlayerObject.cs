@@ -36,6 +36,11 @@ namespace Game
             yield return new WaitWhile(() => CanAct);
         }
 
+        protected override void OnPreTakeDamage(DamageResult damageResult)
+        {
+            /*暂时不需要实现*/
+        }
+
         /// <summary>
         /// 释放技能
         /// </summary>

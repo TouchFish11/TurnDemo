@@ -1,7 +1,9 @@
 using Framework;
+using Game;
 using Game.Battle;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 /// <summary>
 /// 目标选择管理器
@@ -9,6 +11,8 @@ using System.Collections.Generic;
 /// </summary>
 public class TargetSelectManager : SingletonBase<TargetSelectManager>, ITargetSelectManager
 {
+    // 反射查找缓存的类型到目标选择策略映射
+    private readonly static Dictionary<Type, ITargetSelectStrategy> typeToSelectStrategiesMap = new Dictionary<Type, ITargetSelectStrategy>();
     // 目标列表（包含主目标）
     private readonly List<IBattleEntityObject> _selectedTargets = new List<IBattleEntityObject>();
     // 主目标
@@ -17,25 +21,22 @@ public class TargetSelectManager : SingletonBase<TargetSelectManager>, ITargetSe
     private SkillInfo skillInfo;
     // 战斗上下文接口
     private IBattleContext battleContext;
+    // 施法者
+    private IBattleEntityObject caster;
+    // 当前目标选择策略
+    private ITargetSelectStrategy currentSelectStrategy;
 
-    private TargetSelectManager()
+    static TargetSelectManager()
     {
-
+        ScanAllTargetSelectStrategy();
     }
 
-    /// <summary>
-    /// 初始化管理器
-    /// </summary>
-    public void Init()
+    private TargetSelectManager()
     {
         battleContext = ServiceLocator.Instance.Get<IBattleManager>().GetContext();
         battleContext.GetEventBus().AddListener<SelectSkillEvent>(OnSelectSkillEvent);
     }
 
-    /// <summary>
-    /// 激活目标选择
-    /// </summary>
-    /// <param name="skillId"></param>
     public void ActiveSelectTarget()
     {
         BattleInputHandler.Instance.OnLeftDrag += SelectPreviousMainTarget;
@@ -43,14 +44,23 @@ public class TargetSelectManager : SingletonBase<TargetSelectManager>, ITargetSe
         BattleInputHandler.Instance.OnSelectedObject += SelectClickMainTarget;
     }
 
-    /// <summary>
-    /// 失活目标选择
-    /// </summary>
     public void InActiveSelectTarget()
     {
         BattleInputHandler.Instance.OnLeftDrag -= SelectPreviousMainTarget;
         BattleInputHandler.Instance.OnRightDrag -= SelectNextMainTarget;
         BattleInputHandler.Instance.OnSelectedObject -= SelectClickMainTarget;
+    }
+
+    public void SetSelectTargetStrategy<T>() where T : class, ITargetSelectStrategy
+    {
+        if (typeToSelectStrategiesMap.TryGetValue(typeof(T), out ITargetSelectStrategy strategy))
+        {
+            currentSelectStrategy = strategy;
+            return;
+        }
+
+        currentSelectStrategy = typeToSelectStrategiesMap[typeof(MonsterBaseTargetSelectStrategy)];
+        LogManager.LogError($"未找到目标选择策略：{typeof(T)}，已默认使用：{nameof(MonsterBaseTargetSelectStrategy)}");
     }
 
     /// <summary>
@@ -59,36 +69,40 @@ public class TargetSelectManager : SingletonBase<TargetSelectManager>, ITargetSe
     /// <param name="selectSkillEvent"></param>
     private void OnSelectSkillEvent(SelectSkillEvent selectSkillEvent)
     {
+        // TODO：暂时这样处理，之后考虑如何兼容SetSelectTargetStrategy方法的设置，而不会被回调覆盖
+        if (selectSkillEvent.Caster is PlayerObject)
+        {
+            SetSelectTargetStrategy<PlayerBaseTargetSelectStrategy>();
+        }
+        else if(selectSkillEvent.Caster is MonsterObject)
+        {
+            SetSelectTargetStrategy<MonsterBaseTargetSelectStrategy>();
+        }
+
         // 当选择的技能改变时，也要触发目标选择UI的改变
         this.skillInfo = BinaryDataManager.Instance.GetConfig<SkillInfoContainer>(E_ConfigLoadType.Editor).dataDic[selectSkillEvent.SkillId];
+        SelectMainTarget(selectSkillEvent.Context, selectSkillEvent.Caster, skillInfo);
+    }
 
+    /// <summary>
+    /// 选择主目标
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="caster"></param>
+    /// <param name="skillInfo"></param>
+    private void SelectMainTarget(IBattleContext context, IBattleEntityObject caster, SkillInfo skillInfo)
+    {
         // 若当前目标为空 或 当前选中的目标已经死亡 或 强制重新选择主目标 都需要重新选择目标；
-        if (_mainTarget == null || _mainTarget.GetComponent<PropertyComponent>().IsDeath)
+        if (_mainTarget == null || _mainTarget.GetComponent<PropertyComponent>().IsDeath || this.caster == null || this.caster != caster)
         {
+            // 缓存施法者
+            this.caster = caster;
             // 根据规则选择主目标
-            _mainTarget = BattleUtil.GetMainTarget(this.skillInfo, BattleManager.Instance.GetContext());
+            _mainTarget = currentSelectStrategy.SelectMainTarget(context, caster, skillInfo);
             LogManager.Log($"主目标：{_mainTarget}");
         }
 
         UpdateTargets();
-    }
-
-    /// <summary>
-    /// 获取主目标
-    /// </summary>
-    /// <returns></returns>
-    public IBattleEntityObject GetMainTarget()
-    {
-        return _mainTarget;
-    }
-
-    /// <summary>
-    /// 获取目标列表（包含主目标）
-    /// </summary>
-    /// <returns></returns>
-    public List<IBattleEntityObject> GetTargets()
-    {
-        return _selectedTargets;
     }
 
     public void UpdateTargets()
@@ -98,6 +112,17 @@ public class TargetSelectManager : SingletonBase<TargetSelectManager>, ITargetSe
         _selectedTargets.AddRange(BattleUtil.GetRangeTargets(E_CharacterType.PlayerCharacter, _mainTarget, skillInfo.f_skillRangeType));
         // 分发目标选择变化事件，更新目标标记UI、行动轴UI
         battleContext.GetEventBus().TriggerEvent<SelectTargetEvent>(new SelectTargetEvent(battleContext, _mainTarget, _selectedTargets));
+    }
+
+    public IBattleEntityObject GetMainTarget()
+    {
+        return _mainTarget;
+    }
+
+
+    public List<IBattleEntityObject> GetTargets()
+    {
+        return _selectedTargets;
     }
 
     /// <summary>
@@ -134,13 +159,13 @@ public class TargetSelectManager : SingletonBase<TargetSelectManager>, ITargetSe
         List<IBattleEntityObject> targets = new List<IBattleEntityObject>(targetType == E_SkillTargetType.Friend ? BattleManager.Instance.GetContext().GetPlayerObjects() :
      BattleManager.Instance.GetContext().GetMonsterObjects());
 
-        //只有最后一个目标，不用处理
+        // 只有最后一个目标，不用处理
         if (targets.Count < 1)
             return;
 
-        //获取主目标所在列表的位置
+        // 获取主目标所在列表的位置
         int mainIndex = targets.IndexOf(_mainTarget);
-        //检查是否有下一个目标
+        // 检查是否有下一个目标
         if (mainIndex - 1 >= 0)
         {
             //有，切换主目标
@@ -159,5 +184,25 @@ public class TargetSelectManager : SingletonBase<TargetSelectManager>, ITargetSe
         _mainTarget = mainTarget;
         //更新目标
         UpdateTargets();
+    }
+
+    /// <summary>
+    /// 扫描所有的目标选择策略类
+    /// </summary>
+    private static void ScanAllTargetSelectStrategy()
+    {
+        foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
+        {
+            TargetSelectStrategyAttribute attribute = type.GetCustomAttribute<TargetSelectStrategyAttribute>(); 
+            if (attribute == null)
+            {
+                continue;
+            }
+
+            if (typeof(ITargetSelectStrategy).IsAssignableFrom(type))
+            {
+                typeToSelectStrategiesMap.Add(type, Activator.CreateInstance(type) as ITargetSelectStrategy);
+            }
+        }
     }
 }

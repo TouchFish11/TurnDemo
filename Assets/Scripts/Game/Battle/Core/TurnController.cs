@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Game.Battle
 {
@@ -127,6 +128,40 @@ namespace Game.Battle
 
             // 再让下一个实体行动
             _currentActEntity = battleEntities[0];
+            // 更新实体看向
+            UpdateEntityLookAt(_currentActEntity);
+        }
+
+        /// <summary>
+        /// 更新实体看向
+        /// </summary>
+        /// <param name="target"></param>
+        private void UpdateEntityLookAt(IBattleEntityObject target)
+        {
+            if (target is PlayerObject)
+            {
+                // 当前玩家看向怪物中心
+                Vector3 center = BattlePoint.Instance.GetMonsterPointCenter().position;
+                Vector3 newCenter = new Vector3(center.x, 0, center.z);
+
+                Transform playerTrans = BattlePoint.Instance.GetPlayerTransByIndex(_context.GetPlayerObjectIndex(target));
+
+                Vector3 playerPos = playerTrans.position;
+                Vector3 newPlayerPos = new Vector3(playerPos.x, 0, playerPos.z);
+                playerTrans.rotation = Quaternion.LookRotation(newCenter - newPlayerPos);
+
+                // 所有怪物看向当前玩家
+                IEnumerable<Transform> monsterTrans = BattlePoint.Instance.GetMonsterTransforms();
+                foreach (var trans in monsterTrans)
+                {
+                    Vector3 transPos = trans.position;
+                    Vector3 newtransPos = new Vector3(transPos.x, 0, transPos.z);
+                    trans.rotation = Quaternion.LookRotation(newPlayerPos - newtransPos);
+                }
+            }
+
+            // 假设是单体攻击，怪物攻击哪个玩家，就激活哪个玩家的摄像机
+
         }
 
         /// <summary>

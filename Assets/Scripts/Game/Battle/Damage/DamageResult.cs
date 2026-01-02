@@ -39,11 +39,11 @@ public readonly struct DamageResult
     public bool IsCrit { get; }
 
     /// <summary>
-    /// 削韧量
+    /// 技能信息
     /// </summary>
-    public int ToughenValue { get; }
+    public SkillInfo SkillInfo { get; }
 
-    public DamageResult(IBattleEntityObject source, IBattleEntityObject target, int finalDamage, E_ElementType elementType, E_DamageType damageType, bool isCrit, int toughenValue)
+    public DamageResult(IBattleEntityObject source, IBattleEntityObject target, int finalDamage, E_ElementType elementType, E_DamageType damageType, bool isCrit, SkillInfo skillInfo)
     {
         Source = source;
         Target = target;
@@ -51,6 +51,6 @@ public readonly struct DamageResult
         ElementType = elementType;
         DamageType = damageType;
         IsCrit = isCrit;
-        ToughenValue = toughenValue;
+        SkillInfo = skillInfo;
     }
 }

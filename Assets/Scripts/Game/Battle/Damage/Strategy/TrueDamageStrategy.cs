@@ -7,7 +7,7 @@ using Game.Battle;
 /// </summary>
 public class TrueDamageStrategy : IDamageStrategy
 {
-    public void CalcDamage(IBattleEntityObject source, IBattleEntityObject target, ISkill skill, out DamageResult damageResult)
+    public void CalcDamage(IBattleEntityObject source, IBattleEntityObject target, SkillInfo skillInfo, out DamageResult damageResult)
     {
         LogManager.Log("真实伤害策略执行");
         damageResult = new DamageResult();

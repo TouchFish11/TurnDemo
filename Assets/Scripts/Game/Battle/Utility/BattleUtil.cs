@@ -20,7 +20,6 @@ public enum E_CharacterType
 /// </summary>
 public class BattleUtil
 {
-
     /// <summary>
     /// 获取技能范围所有目标
     /// </summary>
@@ -95,12 +94,22 @@ public class BattleUtil
     /// <param name="skillInfo"></param>
     /// <param name="caster"></param>
     /// <returns></returns>
-    public static IBattleEntityObject GetMainTarget(SkillInfo skillInfo, IBattleContext context)
+    public static IBattleEntityObject GetMainTarget(SkillInfo skillInfo, IBattleContext context, IBattleEntityObject caster)
     {
         // 获取技能目标类型
         E_SkillTargetType targetType = (E_SkillTargetType)skillInfo.f_targetType;
         // 根据技能目标类型获取所有敌方/友方实体
-        List<IBattleEntityObject> targets = new List<IBattleEntityObject>(targetType == E_SkillTargetType.Enemy ? context.GetMonsterObjects() : context.GetPlayerObjects());
+
+        List<IBattleEntityObject> targets = null;
+        if (caster is PlayerObject)
+        {
+            targets = new List<IBattleEntityObject>(targetType == E_SkillTargetType.Enemy ? context.GetMonsterObjects() : context.GetPlayerObjects());
+        }
+        else if(caster is MonsterObject)
+        {
+            targets = new List<IBattleEntityObject>(targetType == E_SkillTargetType.Enemy ? context.GetPlayerObjects() : context.GetMonsterObjects());
+        }
+
         IBattleEntityObject currentMainTarget = null;
         // 若当前目标为空且当前选中的目标已经死亡，则需要重新选择目标；否则就默认选中上次选中的目标
         while (currentMainTarget == null || currentMainTarget.GetComponent<PropertyComponent>().IsDeath)

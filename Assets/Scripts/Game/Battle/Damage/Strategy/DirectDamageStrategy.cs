@@ -21,9 +21,9 @@ public class DirectDamageStrategy : IDamageStrategy
     /// <param name="defender">防御者</param>
     /// <param name="skill">额外数据</param>
     /// <returns></returns>
-    public void CalcDamage(IBattleEntityObject attacker, IBattleEntityObject defender, ISkill skill, out DamageResult damageResult)
+    public void CalcDamage(IBattleEntityObject attacker, IBattleEntityObject defender, SkillInfo skillInfo, out DamageResult damageResult)
     {
-        if (attacker == null || defender == null || skill == null)
+        if (attacker == null || defender == null)
         {
             LogManager.LogError("直伤计算策略参数为null");
         }
@@ -44,7 +44,7 @@ public class DirectDamageStrategy : IDamageStrategy
         //finalDamage = CalcResistanceZone(finalDamage);
         //return finalDamage;
 
-        damageResult = new DamageResult(attacker, defender, Random.Range(50, 100), skill.SkillInfo.f_elementType.ToElementType(), skill.SkillInfo.f_damageType.ToDamageType(), true, skill.SkillInfo.f_toughenValue);
+        damageResult = new DamageResult(attacker, defender, Random.Range(50, 100), skillInfo.f_elementType.ToElementType(), skillInfo.f_damageType.ToDamageType(), true, skillInfo);
     }
 
     ///// <summary>

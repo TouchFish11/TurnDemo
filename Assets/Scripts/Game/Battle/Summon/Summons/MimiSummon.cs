@@ -58,5 +58,10 @@ namespace Game.Battle
         {
             throw new System.NotImplementedException();
         }
+
+        protected override void OnPreTakeDamage(DamageResult damageResult)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

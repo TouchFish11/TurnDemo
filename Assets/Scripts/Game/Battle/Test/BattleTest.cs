@@ -23,17 +23,9 @@ public class BattleTest : MonoBehaviour
         await ServiceLocator.Instance.Get<IBinaryDataManager>().LoadConfig();
         // 初始化UI管理器
         await ServiceLocator.Instance.Get<IUIManager>().InitUIManagerAsync();
-        // 初始化战斗相关管理器
-        InitBattle();
+        // 初始化战斗管理器
+        ServiceLocator.Instance.Register<IBattleManager>(BattleManager.Instance);
         // 开始战斗
         await ServiceLocator.Instance.Get<IBattleManager>().StartBattle();
-    }
-
-    private void InitBattle()
-    {
-        ServiceLocator.Instance.Register<IBattleManager>(BattleManager.Instance);
-        ServiceLocator.Instance.Register<IDamageCalcManager>(DamageCalcManager.Instance);
-        ServiceLocator.Instance.Register<ISkillManager>(SkillManager.Instance);
-        ServiceLocator.Instance.Register<ITargetSelectManager>(TargetSelectManager.Instance);
     }
 }

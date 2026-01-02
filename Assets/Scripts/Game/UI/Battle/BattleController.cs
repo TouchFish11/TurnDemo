@@ -51,7 +51,7 @@ public class BattleController : UIController<BattleView, BattleModel>
         battleContext.GetEventBus().AddListener<TurnEndEvent>(OnTurnEnd);
 
         //battleContext.GetEventBus().AddListener<HpChangedEvent>(OnHpChanged);
-        battleContext.GetEventBus().AddListener<TakeDamageEvent>(OnTakeDamage);
+        battleContext.GetEventBus().AddListener<ApplyDamageEvent>(OnTakeDamage);
         battleContext.GetEventBus().AddListener<PlayerTriggerSkillEvent>(UpdateActTip);
         battleContext.GetEventBus().AddListener<SelectTargetEvent>(OnTargetSelectionChanged);
     }
@@ -274,7 +274,7 @@ public class BattleController : UIController<BattleView, BattleModel>
     /// 受到伤害回调事件
     /// </summary>
     /// <param name="onTakeDamageEvent"></param>
-    private async void OnTakeDamage(TakeDamageEvent onTakeDamageEvent)
+    private async void OnTakeDamage(ApplyDamageEvent onTakeDamageEvent)
     {
         DamageResult damageResult = onTakeDamageEvent.DamageResult;
         if (damageResult.Target is not MonsterObject)
@@ -287,8 +287,31 @@ public class BattleController : UIController<BattleView, BattleModel>
         //坐标转换，初始化
         if (UIManager.WorldToLocalPointInRectangle(BattlePoint.Instance.CurrentActiveCamera, UIManager.Instance.UICamera, view.transform, damageTextUI.gameObject, damageResult.Target.GameObject.transform.position, Vector2.up * 50 + dmgTextOffset))
         {
-            string critText = damageResult.IsCrit ? "暴击" : "";
-            damageTextUI.InitDamageText(((int)damageResult.ElementType).ToElementTypeColor(), critText, damageResult.FinalDamage);
+            string dmgTypeText = string.Empty;
+
+            if (damageResult.DamageType == E_DamageType.Direct)
+            {
+                dmgTypeText = damageResult.IsCrit ? "暴击" : "";
+            }
+            else
+            {
+                switch (damageResult.DamageType)
+                {
+                    case E_DamageType.True:
+                        dmgTypeText = "真伤";
+                        break;
+                    case E_DamageType.Break:
+                        dmgTypeText = "击破";
+                        break;
+                    case E_DamageType.SuperBreak:
+                        dmgTypeText = "超击破";
+                        break;
+                    case E_DamageType.Dot:
+                        dmgTypeText = "持续伤害";
+                        break;
+                }
+            }
+            damageTextUI.InitDamageText(((int)damageResult.ElementType).ToElementTypeColor(), dmgTypeText, damageResult.FinalDamage);
         }
 
         // 更新累计伤害

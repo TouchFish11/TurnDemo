@@ -10,14 +10,20 @@ namespace Game.Battle
     /// </summary>
     public class SelectSkillEvent : BattleEvent
     {
+        /// <summary>
+        /// 技能ID
+        /// </summary>
         public int SkillId { get; private set; }
 
-        public IBattleEntityObject BattleEntity { get; private set; }
+        /// <summary>
+        /// 施法者
+        /// </summary>
+        public IBattleEntityObject Caster { get; private set; }
 
-        public SelectSkillEvent(IBattleContext context, int skillId, IBattleEntityObject battleEntity) : base(context)
+        public SelectSkillEvent(IBattleContext context, int skillId, IBattleEntityObject caster) : base(context)
         {
             SkillId = skillId;
-            BattleEntity = battleEntity;
+            Caster = caster;
         }
     }
 }

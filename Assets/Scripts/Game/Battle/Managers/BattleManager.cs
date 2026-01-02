@@ -29,14 +29,23 @@ namespace Game.Battle
         {
             // 初始化战斗上下文
             context = new BattleContext();
+            // 初始化战斗相关管理器
+            InitBattle();
             // 初始化战斗
             await context.InitBattle();
-            // 初始化目标选择管理器
-            ServiceLocator.Instance.Get<ITargetSelectManager>().Init();
             // 获取场景上的战斗点对象，初始化战斗点对象
             battlePoint = BattlePoint.Instance.InitBattlePoint();
             // 启动回合
             MonoManager.Instance.StartCoroutine(context.GetTurnManager().BattleLoop());
+        }
+
+        private void InitBattle()
+        {
+            // 依赖战斗上下文
+            ServiceLocator.Instance.Register<ITargetSelectManager>(TargetSelectManager.Instance);
+            // 被玩家创建时依赖，所以要先于玩家创建
+            ServiceLocator.Instance.Register<IDamageCalcManager>(DamageCalcManager.Instance);
+            ServiceLocator.Instance.Register<ISkillManager>(SkillManager.Instance);
         }
 
         /// <summary>

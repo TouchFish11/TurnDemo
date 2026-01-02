@@ -66,7 +66,7 @@ public abstract class Skill : ISkill
     {
         for (int i = 0; i < count; i++)
         {
-            DamageCalcManager.CalcDamage(Caster, battleEntity, this, out DamageResult result);
+            DamageCalcManager.CalcSkillDamage(Caster, battleEntity, this.SkillInfo, out DamageResult result);
             battleEntity.TakeDamage(result);
         }
     }

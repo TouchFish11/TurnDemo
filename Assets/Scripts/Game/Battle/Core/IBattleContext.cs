@@ -61,5 +61,7 @@ namespace Game.Battle
 
         void ConsumeSkillPoint(int cost);
         void ExpandSkillPoint(int cost);
+        int GetPlayerObjectIndex(IBattleEntityObject battleEntity);
+        int GetMonsterObjectIndex(IBattleEntityObject battleEntity);
     }
 }

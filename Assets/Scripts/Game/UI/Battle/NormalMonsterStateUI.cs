@@ -133,7 +133,6 @@ public class NormalMonsterStateUI : BaseUIBehaviour
         FadeBllood();
     }
 
-
     /// <summary>
     /// ÑªÁ¿½¥±ä
     /// </summary>

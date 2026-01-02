@@ -148,6 +148,18 @@ namespace Game.Battle
             return monsterBattleEntityObjects;
         }
 
+        public int GetPlayerObjectIndex(IBattleEntityObject battleEntity)
+        {
+            List<IBattleEntityObject> players = new List<IBattleEntityObject>(GetPlayerObjects());
+            return players.IndexOf(battleEntity);
+        }
+
+        public int GetMonsterObjectIndex(IBattleEntityObject battleEntity)
+        {
+            List<IBattleEntityObject> monsters = new List<IBattleEntityObject>(GetMonsterObjects());
+            return monsters.IndexOf(battleEntity);
+        }
+
         public TurnController GetTurnManager()
         {
             return _turnManager;

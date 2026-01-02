@@ -33,10 +33,20 @@ namespace Game.Battle
             AddComponents(TextUtility.Split(MonsterInfo.f_comNames, 2));
         }
 
+        protected override void OnPreTakeDamage(DamageResult damageResult)
+        {
+            // 削减韧性
+            // 先削减韧性
+            ToughnessComponent toughnessComponent = this.GetComponent<ToughnessComponent>();
+            toughnessComponent.ReduceToughness(damageResult.Source, damageResult.ElementType, damageResult.SkillInfo);
+        }
+
         protected override IEnumerator OnExceuteAction()
         {
             // 怪物AI逻辑，随机选择一个技能释放
             int skillId = skillIds[Random.Range(0, skillIds.Count)];
+            // 触发技能选择事件，更新目标管理器的缓存目标内容，释放技能时能获取到这些内容
+            Context.GetEventBus().TriggerEvent(new SelectSkillEvent(Context, skillId, this));
             // 模拟怪物行动的延迟
             yield return new WaitForSeconds(1.0f);
             CastSkill(skillId);

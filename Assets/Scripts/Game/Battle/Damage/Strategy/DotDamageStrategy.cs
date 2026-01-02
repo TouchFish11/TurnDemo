@@ -6,7 +6,7 @@ using Game.Battle;
 /// </summary>
 public class DotDamageStrategy : IDamageStrategy
 {
-    public void CalcDamage(IBattleEntityObject source, IBattleEntityObject target, ISkill skill, out DamageResult damageResult)
+    public void CalcDamage(IBattleEntityObject source, IBattleEntityObject target, SkillInfo skillInfo, out DamageResult damageResult)
     {
         damageResult = new DamageResult();
     }

@@ -6,9 +6,9 @@ using Game.Battle;
 /// </summary>
 public class BreakDamageStrategy : IDamageStrategy
 {
-    public void CalcDamage(IBattleEntityObject attacker, IBattleEntityObject defender, ISkill skill, out DamageResult damageResult)
+    public void CalcDamage(IBattleEntityObject attacker, IBattleEntityObject defender, SkillInfo skillInfo, out DamageResult damageResult)
     {
         LogManager.Log("»÷ÆÆÉËº¦´¦ÀíÂß¼­Ö´ÐÐ");
-        damageResult = new DamageResult();
+        damageResult = new DamageResult(attacker, defender, 100, skillInfo.f_elementType.ToElementType(), E_DamageType.Break, false, skillInfo);
     }
 }
