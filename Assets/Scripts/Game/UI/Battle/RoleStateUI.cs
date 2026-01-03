@@ -25,10 +25,6 @@ public class RoleStateUI : BaseUIBehaviour
 
     private readonly float fadeSpeed = 1f;    // 血量渐变因子
 
-    // 能量相关
-    private int currentEnergy;
-    private int maxEnergy;
-
     // 护盾相关
     private int currentShield;
     private int maxShield;
@@ -60,7 +56,10 @@ public class RoleStateUI : BaseUIBehaviour
 
         // 应该是数据驱动
         battleContext = ServiceLocator.Instance.Get<IBattleManager>().GetContext();
+
         battleContext.GetEventBus().AddListener<HpChangedEvent>(OnHpChanged);
+        battleContext.GetEventBus().AddListener<EnergyChangedEvent>(OnEnergyChangedEvent);
+
         ServiceLocator.Instance.Get<IMonoManager>().AddUpdateListener(OnUpdate);
     }
 
@@ -71,27 +70,30 @@ public class RoleStateUI : BaseUIBehaviour
     public async void Init(RoleProperty playerProperty, int ultimateSkillId, IBattleEntityObject battleEntity)
     {
         this.battleEntity = battleEntity;
-        RoleInfo roleInfo = BinaryDataManager.Instance.GetConfig<RoleInfoContainer>(E_ConfigLoadType.Editor).dataDic[playerProperty.Id];
-        // 设置图标
-        // imgIcon.sprite = await AssetBundleManager.Instance.LoadAssetAsync<Sprite>(E_AssetBundleType.Texture, ResKeyCollection.WhiteImage);
-        PropertyComponent propertyComponent = this.battleEntity.GetComponent<PropertyComponent>();
-        // 设置血量
-        imgHp.fillAmount = imgFade.fillAmount = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentHp) / (float)propertyComponent.GetPropertyValue(E_DynamicPropertyType.MaxHp);
-        txtBlood.text = $"{propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentHp)}/{(float)propertyComponent.GetPropertyValue(E_DynamicPropertyType.MaxHp)}";
-        // 设置能量
-        maxEnergy = playerProperty.BaseEnergy;
-        currentEnergy = 0;  // 暂时默认为0
-        imgEnergy.color = roleInfo.f_elementType.ToElementTypeColor();
-        UpdateEnergy(currentEnergy, maxEnergy);
-        // 设置buff列表
-        UpdateBuff();
-        // 设置护盾量
-        currentShield = maxShield = 0;
-        UpdateShield(currentShield, maxShield);
         // 记录终结技ID
         this.ultimateSkillId = ultimateSkillId;
         // 记录角色ID
         roleId = playerProperty.Id;
+
+        RoleInfo roleInfo = BinaryDataManager.Instance.GetConfig<RoleInfoContainer>(E_ConfigLoadType.Editor).dataDic[playerProperty.Id];
+        // 设置图标
+        // imgIcon.sprite = await AssetBundleManager.Instance.LoadAssetAsync<Sprite>(E_AssetBundleType.Texture, ResKeyCollection.WhiteImage);
+        PropertyComponent propertyComponent = this.battleEntity.GetComponent<PropertyComponent>();
+
+        // 设置血量
+        imgHp.fillAmount = imgFade.fillAmount = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentHp) / (float)propertyComponent.GetPropertyValue(E_DynamicPropertyType.MaxHp);
+        txtBlood.text = $"{propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentHp)}/{(float)propertyComponent.GetPropertyValue(E_DynamicPropertyType.MaxHp)}";
+
+        // 设置能量
+        imgEnergy.color = roleInfo.f_elementType.ToElementTypeColor();
+        imgEnergy.fillAmount = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentEnergy) / (float)propertyComponent.GetPropertyValue(E_DynamicPropertyType.BaseEnergy);
+
+        // 设置buff列表
+        UpdateBuff();
+
+        // 设置护盾量
+        currentShield = maxShield = 0;
+        UpdateShield(currentShield, maxShield);
     }
 
     /// <summary>
@@ -110,22 +112,25 @@ public class RoleStateUI : BaseUIBehaviour
     }
 
     /// <summary>
+    /// 能量变化事件回调
+    /// </summary>
+    /// <param name="energyChangedEvent"></param>
+    private void OnEnergyChangedEvent(EnergyChangedEvent energyChangedEvent)
+    {
+        if (energyChangedEvent.Target != this.battleEntity)
+        {
+            return;
+        }
+        imgEnergy.fillAmount = energyChangedEvent.CurrentEnergy / (float)energyChangedEvent.MaxEnergy;
+    }
+
+    /// <summary>
     /// 护盾变化事件回调
     /// </summary>
     /// <param name="onShieldChangedEvent"></param>
     private void OnShieldChanged(ShieldChangedEvent onShieldChangedEvent)
     {
         UpdateShield(onShieldChangedEvent.CurrentShield, onShieldChangedEvent.MaxShield);
-    }
-
-    /// <summary>
-    /// 更新能量
-    /// </summary>
-    /// <param name="currentEnergy"></param>
-    /// <param name="maxEnergy"></param>
-    public void UpdateEnergy(int currentEnergy, int maxEnergy)
-    {
-        imgEnergy.fillAmount = currentEnergy / (float)maxEnergy;
     }
 
     /// <summary>
@@ -146,13 +151,12 @@ public class RoleStateUI : BaseUIBehaviour
 
     }
 
-
     protected override void OnButtonClick(string btnName)
     {
         switch (btnName)
         {
             case "btnSkill":
-                battleContext.GetEventBus().TriggerEvent(new PlayerTriggerSkillEvent(battleContext, ultimateSkillId, battleEntity));
+                battleContext.GetEventBus().TriggerEvent(new PlayerTriggerUltimateSkillEvent(battleContext, battleEntity, ultimateSkillId));
                 break;
         }
     }

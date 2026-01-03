@@ -13,5 +13,7 @@ namespace Game.Battle
         CurrentSpeed,
         TotalCrit,
         TotalCritDmg,
+        CurrentEnergy,
+        BaseEnergy,
     }
 }

@@ -14,7 +14,7 @@ public abstract class PropertyComponent : BattleComponent
     // 战斗属性
     protected BattleProperty battleProperty;
     // 战斗上下文
-    private IBattleContext battleContext;
+    protected IBattleContext battleContext;
 
     public bool IsDeath { get; protected set; }
 
@@ -30,7 +30,7 @@ public abstract class PropertyComponent : BattleComponent
     /// <param name="dynamicPropertyType"></param>
     /// <param name="damageType"></param>
     /// <param name="newValue"></param>
-    public void SetPropertyValue(E_DynamicPropertyType dynamicPropertyType, int newValue)
+    public virtual void SetPropertyValue(E_DynamicPropertyType dynamicPropertyType, int newValue)
     {
         switch (dynamicPropertyType)
         {
@@ -70,7 +70,7 @@ public abstract class PropertyComponent : BattleComponent
     /// </summary>
     /// <param name="dynamicPropertyType"></param>
     /// <returns></returns>
-    public int GetPropertyValue(E_DynamicPropertyType dynamicPropertyType)
+    public virtual int GetPropertyValue(E_DynamicPropertyType dynamicPropertyType)
     {
         switch (dynamicPropertyType)
         {

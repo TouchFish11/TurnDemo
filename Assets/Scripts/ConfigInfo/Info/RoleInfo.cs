@@ -11,4 +11,5 @@ public class RoleInfo
 	public int f_baseAtk;
 	public int f_baseSpeed;
 	public int f_maxEnergy;
+	public float f_dmgTextYOffset;
 }

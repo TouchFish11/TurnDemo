@@ -12,6 +12,8 @@ public class BattleModel : UIModel
     private readonly List<ActionGridUI> actions = new List<ActionGridUI>();
     // 技能按键UI列表
     private readonly List<SkillKeyUI> skillKeyUIs = new List<SkillKeyUI>();
+    // 保留的技能按键UI列表
+    //private readonly List<SkillKeyUI> saveSkillKeyUIs = new List<SkillKeyUI>();
     // 角色状态UI列表
     private readonly List<RoleStateUI> roleStateUIs = new List<RoleStateUI>();
     // 普通怪物状态UI列表
@@ -73,14 +75,38 @@ public class BattleModel : UIModel
     {
         foreach (SkillKeyUI skillKeyUI in this.skillKeyUIs)
         {
-            // 使用对象池复用，会出现状态残留问题
             PoolManager.Instance.PushObj(skillKeyUI.gameObject);
-            //GameObject.Destroy(skillKeyUI.gameObject);
         }
         this.skillKeyUIs.Clear();
 
         this.skillKeyUIs.AddRange(skillKeyUIs);
         TriggerDataChanged(nameof(this.skillKeyUIs), skillKeyUIs);
+    }
+
+    /// <summary>
+    /// 保存当前操作UI
+    /// </summary>
+    public void SaveCurrentOperator()
+    {
+        //saveSkillKeyUIs.AddRange(skillKeyUIs);
+        //this.skillKeyUIs.Clear();
+        //// 暂时失活
+        //foreach (SkillKeyUI skillKeyUI in this.saveSkillKeyUIs)
+        //{
+        //    skillKeyUI.gameObject.SetActive(false);
+        //}
+    }
+
+    /// <summary>
+    /// 恢复上次操作UI
+    /// </summary>
+    public void RecoverFrontOperator()
+    {
+        //foreach (SkillKeyUI skillKeyUI in this.saveSkillKeyUIs)
+        //{
+        //    skillKeyUI.gameObject.SetActive(true);
+        //}
+        //saveSkillKeyUIs.Clear();
     }
 
     public void UpdateBattlePointCount(int current, IEnumerable<BattlePointUI> battlePointUIs)

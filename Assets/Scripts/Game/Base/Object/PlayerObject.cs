@@ -28,6 +28,8 @@ namespace Game
             AddComponents(TextUtility.Split(RoleInfo.f_comNames, 2));
             // 监听玩家技能触发事件
             Context.GetEventBus().AddListener<PlayerTriggerSkillEvent>(OnCastSkill);
+            // 监听玩家终结技触发事件
+            Context.GetEventBus().AddListener<PlayerTriggerUltimateSkillEvent>(OnCastUltimateSkill);
         }
 
         protected override IEnumerator OnExceuteAction()
@@ -47,12 +49,21 @@ namespace Game
         /// <param name="triggerSkillEvent"></param>
         protected virtual void OnCastSkill(PlayerTriggerSkillEvent triggerSkillEvent)
         {
-            if ((Object)triggerSkillEvent.BattleEntity != this)
+            if ((Object)triggerSkillEvent.Caster != this)
             {
                 return;
             }
 
             CastSkill(triggerSkillEvent.SkillId);
+        }
+
+        /// <summary>
+        /// 释放终结技
+        /// </summary>
+        /// <param name="playerTriggerUltimateSkillEvent"></param>
+        protected virtual void OnCastUltimateSkill(PlayerTriggerUltimateSkillEvent playerTriggerUltimateSkillEvent)
+        {
+            this.GetComponent<PlayerSkillComponent>().CastUltimateSkill(playerTriggerUltimateSkillEvent.SkillId);
         }
     }
 }

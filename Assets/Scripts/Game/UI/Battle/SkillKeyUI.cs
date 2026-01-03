@@ -47,6 +47,8 @@ public class SkillKeyUI : BaseUIBehaviour
     private IBattleContext battleContext;
     // 战斗实体接口
     private IBattleEntityObject battleEntity;
+    // 当前技能类型
+    private E_SkillType _SkillType;
 
     protected override void Awake()
     {
@@ -69,7 +71,9 @@ public class SkillKeyUI : BaseUIBehaviour
         this.battleEntity = battleEntity;
         txtSkillTip.text = skillInfo.f_skillRangeType.ToSkillRangeTypeText();
 
-        if(skillInfo.f_skillRangeType.ToSkillType() == E_SkillType.NormalAttack)
+        // TODO：暂时直接判断，后续抽象
+        _SkillType = (E_SkillType)skillInfo.f_skillRangeType;
+        if (_SkillType == E_SkillType.NormalAttack || _SkillType == E_SkillType.UltimateSkill)
         {
             // 自身技能默认选中
             DefaultSelect();
@@ -117,10 +121,16 @@ public class SkillKeyUI : BaseUIBehaviour
 
     private void OnClick(BaseEventData baseEventData)
     {
-        if (triggerPhase == E_TriggerPhase.Trigger)
+        if (triggerPhase == E_TriggerPhase.Trigger && _SkillType != E_SkillType.UltimateSkill)
         {
             // 执行触发技能事件
             battleContext.GetEventBus().TriggerEvent(new PlayerTriggerSkillEvent(battleContext, skillId, battleEntity));
+        }
+        else
+        {
+            // 释放终结技
+            // TODO：暂时直接调用，后续优化
+            battleEntity.GetComponent<PlayerSkillComponent>().ReleaseUltimate();
         }
     }
 

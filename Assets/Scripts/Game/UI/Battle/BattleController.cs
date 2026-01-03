@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 /// <summary>
@@ -52,7 +53,8 @@ public class BattleController : UIController<BattleView, BattleModel>
 
         //battleContext.GetEventBus().AddListener<HpChangedEvent>(OnHpChanged);
         battleContext.GetEventBus().AddListener<ApplyDamageEvent>(OnTakeDamage);
-        battleContext.GetEventBus().AddListener<PlayerTriggerSkillEvent>(UpdateActTip);
+        battleContext.GetEventBus().AddListener<PlayerTriggerSkillEvent>(OnPlayerTriggerSkill);
+        battleContext.GetEventBus().AddListener<ShowUltimateUIEvent>(OnShowUltimateUIEvent);
         battleContext.GetEventBus().AddListener<SelectTargetEvent>(OnTargetSelectionChanged);
     }
 
@@ -103,14 +105,39 @@ public class BattleController : UIController<BattleView, BattleModel>
     }
 
     /// <summary>
-    /// 更新行动提示UI
+    /// 玩家触发技能事件回调
     /// </summary>
-    private void UpdateActTip(PlayerTriggerSkillEvent playerTriggerSkillEvent)
+    /// <param name="playerTriggerSkillEvent"></param>
+    private void OnPlayerTriggerSkill(PlayerTriggerSkillEvent playerTriggerSkillEvent)
     {
         // 隐藏玩家操作UI
         model.UpdateOperator(new List<SkillKeyUI>());
         // 显示行动提示UI
         model.SetActTipActive(true, false);
+    }
+
+    /// <summary>
+    /// 显示终结技界面事件回调
+    /// </summary>
+    /// <param name="showUltimateUIEvent"></param>
+    private async void OnShowUltimateUIEvent(ShowUltimateUIEvent showUltimateUIEvent)
+    {
+        // 更新操作UI前，需要保留当前玩家角色非终结技UI状态，若终结技就不用保留
+        //model.SaveCurrentOperator();
+
+        // 更新玩家操作UI
+        List<SkillKeyUI> skillKeyUIs = new List<SkillKeyUI>();
+        SkillKeyUI skillKeyUI = await ObjectBuilder.GetOrCreateInstance<SkillKeyUI>(E_AssetBundleType.UI, ResKeyCollection.SkillKeyUI, null);
+        skillKeyUI.Init(showUltimateUIEvent.Skill.SkillInfo, (showUltimateUIEvent.Caster as PlayerObject).RoleInfo, view.SkillKeyGroup, showUltimateUIEvent.Caster);
+        skillKeyUIs.Add(skillKeyUI);
+        model.UpdateOperator(skillKeyUIs);
+        // 隐藏行动提示UI
+        model.SetActTipActive(false, false);
+    }
+
+    public void RecoverFrontOptUI()
+    {
+        //model.RecoverFrontOperator();
     }
 
     /// <summary>
@@ -274,46 +301,16 @@ public class BattleController : UIController<BattleView, BattleModel>
     /// 受到伤害回调事件
     /// </summary>
     /// <param name="onTakeDamageEvent"></param>
-    private async void OnTakeDamage(ApplyDamageEvent onTakeDamageEvent)
+    private async void OnTakeDamage(ApplyDamageEvent applyDamageEvent)
     {
-        DamageResult damageResult = onTakeDamageEvent.DamageResult;
-        if (damageResult.Target is not MonsterObject)
-        {
-            return;
-        }
-
+        DamageResult damageResult = applyDamageEvent.DamageResult;
         DamageTextUI damageTextUI = await ObjectBuilder.GetOrCreateInstance<DamageTextUI>(E_AssetBundleType.UI, ResKeyCollection.DamageTextUI, null);
-        Vector2 dmgTextOffset = new Vector2(UnityEngine.Random.Range(damageTextXOffsetRange.x, damageTextXOffsetRange.y), UnityEngine.Random.Range(damageTextYOffsetRange.x, damageTextYOffsetRange.y));
-        //坐标转换，初始化
-        if (UIManager.WorldToLocalPointInRectangle(BattlePoint.Instance.CurrentActiveCamera, UIManager.Instance.UICamera, view.transform, damageTextUI.gameObject, damageResult.Target.GameObject.transform.position, Vector2.up * 50 + dmgTextOffset))
+        Vector2 dmgTextOffset = this.GetDamageTextUIPos(damageResult.Target, damageTextXOffsetRange, damageTextYOffsetRange);
+        // 坐标转换，初始化
+        if (UIManager.WorldToLocalPointInRectangle(BattlePoint.Instance.CurrentActiveCamera, UIManager.Instance.UICamera, view.transform, damageTextUI.gameObject, damageResult.Target.GameObject.transform.position, dmgTextOffset))
         {
-            string dmgTypeText = string.Empty;
-
-            if (damageResult.DamageType == E_DamageType.Direct)
-            {
-                dmgTypeText = damageResult.IsCrit ? "暴击" : "";
-            }
-            else
-            {
-                switch (damageResult.DamageType)
-                {
-                    case E_DamageType.True:
-                        dmgTypeText = "真伤";
-                        break;
-                    case E_DamageType.Break:
-                        dmgTypeText = "击破";
-                        break;
-                    case E_DamageType.SuperBreak:
-                        dmgTypeText = "超击破";
-                        break;
-                    case E_DamageType.Dot:
-                        dmgTypeText = "持续伤害";
-                        break;
-                }
-            }
-            damageTextUI.InitDamageText(((int)damageResult.ElementType).ToElementTypeColor(), dmgTypeText, damageResult.FinalDamage);
+            damageTextUI.InitDamageText(((int)damageResult.ElementType).ToElementTypeColor(), this.GetDamgeTypeText(damageResult), damageResult.FinalDamage);
         }
-
         // 更新累计伤害
         model.UpdateCumulativeDamage(true, damageResult.FinalDamage);
     }

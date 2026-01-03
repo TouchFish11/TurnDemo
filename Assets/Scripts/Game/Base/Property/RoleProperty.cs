@@ -26,6 +26,7 @@ public class RoleProperty : BattleProperty
         baseAtk = roleInfo.f_baseAtk;
         baseDef = roleInfo.f_baseDef;
         baseSpeed = roleInfo.f_baseSpeed;
+        baseEnergy = roleInfo.f_maxEnergy;
 
         currentHp = maxHp = baseHp;
         currentSpeed = baseSpeed;

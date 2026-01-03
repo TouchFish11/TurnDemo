@@ -1,4 +1,5 @@
 using Framework;
+using Game;
 using Game.Battle;
 using System.Collections;
 using System.Collections.Generic;
@@ -44,18 +45,47 @@ public abstract class Skill : ISkill
         context.ConsumeSkillPoint(SkillInfo.f_costBP);
         // TODO：暂时直接触发对应动画，之后根据具体技能的时机触发
         context.GetEventBus().TriggerEvent(new SkillCastEvent(context, this, 0));
+        // 恢复能量
+        PlayerPropertyComponent playerPropertyComponent = Caster.GetComponent<PlayerPropertyComponent>();
+        if (playerPropertyComponent != null)
+        {
+            int newValue = playerPropertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentEnergy);
+            Caster.GetComponent<PropertyComponent>().SetPropertyValue(E_DynamicPropertyType.CurrentEnergy, newValue + SkillInfo.f_recoveryEnergy);
+        }
 
         yield return OnCast(context);
 
-
         yield return new WaitForSeconds(waitTime);
+
+        yield return OnPostCast();
 
         // 暂时写这里
         // 减少行动次数
         this.Caster.SubActCount();
     }
 
+    /// <summary>
+    /// 技能释放时
+    /// 处理动画、特性相关内容
+    /// </summary>
+    /// <param name="context"></param>
+    /// <returns></returns>
     protected abstract IEnumerator OnCast(IBattleContext context);
+
+    /// <summary>
+    /// 技能释放后
+    /// 用于玩家终结技结束后恢复UI
+    /// </summary>
+    /// <returns></returns>
+    protected virtual IEnumerator OnPostCast()
+    {
+        // TODO：如何处理？？？
+        if (Caster is PlayerObject && (E_SkillType)SkillInfo.f_SkillType == E_SkillType.UltimateSkill)
+        {
+            ServiceLocator.Instance.Get<IUIManager>().GetView<BattleController>().RecoverFrontOptUI();
+        }
+        yield break;
+    }
 
     /// <summary>
     /// 测试
