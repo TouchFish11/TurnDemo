@@ -28,7 +28,21 @@ public class BattleModel : UIModel
 
     // 行动提示状态
     private bool activeActTip;
+    // 终结技立绘显示状态
+    private bool activePaiting;
 
+    public void SetUltimatePaitingActive(bool isShow, Sprite icon, string tip)
+    {
+        activePaiting = isShow;
+        TriggerDataChanged(nameof(activePaiting), (activePaiting, icon, tip));
+    }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="isShow"></param>
+    /// <param name="isMonster"></param>
     public void SetActTipActive(bool isShow, bool isMonster)
     {
         activeActTip = isShow;
@@ -81,32 +95,6 @@ public class BattleModel : UIModel
 
         this.skillKeyUIs.AddRange(skillKeyUIs);
         TriggerDataChanged(nameof(this.skillKeyUIs), skillKeyUIs);
-    }
-
-    /// <summary>
-    /// 保存当前操作UI
-    /// </summary>
-    public void SaveCurrentOperator()
-    {
-        //saveSkillKeyUIs.AddRange(skillKeyUIs);
-        //this.skillKeyUIs.Clear();
-        //// 暂时失活
-        //foreach (SkillKeyUI skillKeyUI in this.saveSkillKeyUIs)
-        //{
-        //    skillKeyUI.gameObject.SetActive(false);
-        //}
-    }
-
-    /// <summary>
-    /// 恢复上次操作UI
-    /// </summary>
-    public void RecoverFrontOperator()
-    {
-        //foreach (SkillKeyUI skillKeyUI in this.saveSkillKeyUIs)
-        //{
-        //    skillKeyUI.gameObject.SetActive(true);
-        //}
-        //saveSkillKeyUIs.Clear();
     }
 
     public void UpdateBattlePointCount(int current, IEnumerable<BattlePointUI> battlePointUIs)

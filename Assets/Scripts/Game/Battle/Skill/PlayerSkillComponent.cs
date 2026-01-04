@@ -4,6 +4,7 @@ using Game.Battle;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 /// <summary>
 /// 玩家角色技能组件
@@ -11,7 +12,7 @@ using UnityEngine;
 [ComponentId(nameof(PlayerSkillComponent))]
 public class PlayerSkillComponent : SkillComponent
 {
-    private bool isRelease;
+    public override bool IsRelease { get; protected set; }
 
     public override void BattleInit(IBattleEntityObject battleEntity)
     {
@@ -22,36 +23,10 @@ public class PlayerSkillComponent : SkillComponent
 
     /// <summary>
     /// 释放终结技
+    /// 暂时使用
     /// </summary>
-    /// <param name="skillId"></param>
-    public void CastUltimateSkill(int skillId)
-    {
-        if (skills.TryGetValue(skillId, out var skill))
-        {
-            if (CanCast(skill))
-            {
-                isRelease = false;
-                // 更新界面UI显示
-                this.BattleEntity.Context.GetEventBus().TriggerEvent(new ShowUltimateUIEvent(this.BattleEntity.Context, skill, this.BattleEntity));
-                // 等待输入
-                StartCoroutine(WaitForRelease(skill));
-            }
-        }
-    }
-
-    /// <summary>
-    /// 等待释放
-    /// </summary>
-    /// <returns></returns>
-    private IEnumerator WaitForRelease(ISkill skill)
-    {
-        yield return new WaitUntil(() => isRelease);
-        // 释放终结技
-        CastSkill(skill);
-    }
-
     public void ReleaseUltimate()
     {
-        isRelease = true;
+        IsRelease = true;
     }
 }

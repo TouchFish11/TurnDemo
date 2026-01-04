@@ -9,6 +9,8 @@ using UnityEngine;
 [ComponentId(nameof(MonsterSkillComponent))]
 public class MonsterSkillComponent : SkillComponent
 {
+    public override bool IsRelease { get; protected set; }
+
     public override void BattleInit(IBattleEntityObject battleEntity)
     {
         base.BattleInit(battleEntity);

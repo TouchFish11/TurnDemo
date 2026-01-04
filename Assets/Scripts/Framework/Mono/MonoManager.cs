@@ -1,3 +1,5 @@
+using System.Collections;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace Framework
@@ -19,6 +21,15 @@ namespace Framework
         /// 后期更新事件
         /// </summary>
         private event UnityAction LateUpdateEvent;
+
+        /// <summary>
+        /// 开启协程
+        /// </summary>
+        /// <param name="coroutine"></param>
+        public new Coroutine StartCoroutine(IEnumerator coroutine)
+        {
+            return base.StartCoroutine(coroutine);
+        }
 
         /// <summary>
         /// 添加物理帧更新监听函数

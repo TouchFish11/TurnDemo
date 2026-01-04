@@ -44,8 +44,12 @@ public abstract class Skill : ISkill
         // 处理战技点
         context.ConsumeSkillPoint(SkillInfo.f_costBP);
         // TODO：暂时直接触发对应动画，之后根据具体技能的时机触发
-        context.GetEventBus().TriggerEvent(new SkillCastEvent(context, this, 0));
-        // 恢复能量
+        if ((E_SkillType)SkillInfo.f_SkillType != E_SkillType.UltimateSkill)
+        {
+            context.GetEventBus().TriggerEvent(new SkillCastEvent(context, this, 0));
+        }
+
+        // TODO：暂时直接恢复能量，后续优化为造成伤害时恢复能量
         PlayerPropertyComponent playerPropertyComponent = Caster.GetComponent<PlayerPropertyComponent>();
         if (playerPropertyComponent != null)
         {
@@ -55,13 +59,17 @@ public abstract class Skill : ISkill
 
         yield return OnCast(context);
 
+        // 等待时间，优化战斗表现
         yield return new WaitForSeconds(waitTime);
 
         yield return OnPostCast();
 
-        // 暂时写这里
-        // 减少行动次数
-        this.Caster.SubActCount();
+        // TODO：暂时这样判断，后续优化
+        if ((E_SkillType)SkillInfo.f_SkillType != E_SkillType.UltimateSkill)
+        {
+            // 减少行动次数
+            this.Caster.SubActCount();
+        }
     }
 
     /// <summary>
@@ -74,16 +82,12 @@ public abstract class Skill : ISkill
 
     /// <summary>
     /// 技能释放后
-    /// 用于玩家终结技结束后恢复UI
     /// </summary>
     /// <returns></returns>
     protected virtual IEnumerator OnPostCast()
     {
-        // TODO：如何处理？？？
-        if (Caster is PlayerObject && (E_SkillType)SkillInfo.f_SkillType == E_SkillType.UltimateSkill)
-        {
-            ServiceLocator.Instance.Get<IUIManager>().GetView<BattleController>().RecoverFrontOptUI();
-        }
+        // TODO：暂时直接情况战斗界面显示的伤害总文本
+        ServiceLocator.Instance.Get<IUIManager>().GetView<BattleController>().ClearDamageTextUI();
         yield break;
     }
 

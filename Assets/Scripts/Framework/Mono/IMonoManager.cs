@@ -14,4 +14,5 @@ public interface IMonoManager
     void RemoveFixedUpdateListener(UnityAction fixedUpdateFun);
     void RemoveLateUpdateListener(UnityAction lateUpdateFun);
     void RemoveUpdateListener(UnityAction updateFun);
+    Coroutine StartCoroutine(IEnumerator coroutine);
 }

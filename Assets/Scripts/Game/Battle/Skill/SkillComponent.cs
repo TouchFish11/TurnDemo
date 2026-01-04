@@ -18,6 +18,8 @@ namespace Game.Battle
         // 技能工厂接口
         protected ISkillFactory skillFactory;
 
+        public abstract bool IsRelease { get; protected set; }
+
         /// <summary>
         /// 初始化技能列表
         /// </summary>
@@ -58,6 +60,7 @@ namespace Game.Battle
                     return;
                 }
 
+                IsRelease = false;
                 // 发送技能命令到回合队列
                 SkillManager.Instance.AddSkillCommand(skill, this.BattleEntity);
             }

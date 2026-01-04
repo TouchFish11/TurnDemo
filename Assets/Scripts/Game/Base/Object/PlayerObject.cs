@@ -63,7 +63,12 @@ namespace Game
         /// <param name="playerTriggerUltimateSkillEvent"></param>
         protected virtual void OnCastUltimateSkill(PlayerTriggerUltimateSkillEvent playerTriggerUltimateSkillEvent)
         {
-            this.GetComponent<PlayerSkillComponent>().CastUltimateSkill(playerTriggerUltimateSkillEvent.SkillId);
+            if ((Object)playerTriggerUltimateSkillEvent.Caster != this)
+            {
+                return;
+            }
+
+            this.GetComponent<PlayerSkillComponent>().CastSkill(playerTriggerUltimateSkillEvent.SkillId);
         }
     }
 }

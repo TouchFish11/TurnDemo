@@ -5,11 +5,14 @@ namespace Game
     /// <summary>
     /// 非战斗动画组件
     /// </summary>
-    public class NormalAnimationComponent : BaseAnimationComponent
+    public class NormalAnimationComponent : AnimationComponent
     {
+        public override int LayerIndex { get; protected set; }
+
         public override void Init(IEntityObject entityObject)
         {
             base.Init(entityObject);
+            LayerIndex = animator.GetLayerIndex("Base Layer");
             this.EntityObject.GetComponent<InputComponent>().OnKeyInputChanged += OnMove;
             this.EntityObject.GetComponent<InputComponent>().OnMouseLeftClick += OnAttack;
         }

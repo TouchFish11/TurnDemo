@@ -6,6 +6,9 @@ namespace Game.Battle
     /// </summary>
     public interface ISkillComponent
     {
-
+        /// <summary>
+        ///  «∑Ò Õ∑≈
+        /// </summary>
+        bool IsRelease { get; }
     }
 }

@@ -33,6 +33,8 @@ public class BattleController : UIController<BattleView, BattleModel>
     private Vector2 damageTextXOffsetRange = new Vector2(-40, 40);
     private Vector2 damageTextYOffsetRange = new Vector2(-10, 10);
 
+    private IBattleEntityObject currentActObject;
+
     public BattleController(BattleView view, BattleModel model) : base(view, model)
     {
 
@@ -55,6 +57,7 @@ public class BattleController : UIController<BattleView, BattleModel>
         battleContext.GetEventBus().AddListener<ApplyDamageEvent>(OnTakeDamage);
         battleContext.GetEventBus().AddListener<PlayerTriggerSkillEvent>(OnPlayerTriggerSkill);
         battleContext.GetEventBus().AddListener<ShowUltimateUIEvent>(OnShowUltimateUIEvent);
+        battleContext.GetEventBus().AddListener<UltimateReleaseOverEvent>(OnUltimateReleaseOverEvent);
         battleContext.GetEventBus().AddListener<SelectTargetEvent>(OnTargetSelectionChanged);
     }
 
@@ -122,22 +125,33 @@ public class BattleController : UIController<BattleView, BattleModel>
     /// <param name="showUltimateUIEvent"></param>
     private async void OnShowUltimateUIEvent(ShowUltimateUIEvent showUltimateUIEvent)
     {
-        // 更新操作UI前，需要保留当前玩家角色非终结技UI状态，若终结技就不用保留
-        //model.SaveCurrentOperator();
-
-        // 更新玩家操作UI
-        List<SkillKeyUI> skillKeyUIs = new List<SkillKeyUI>();
-        SkillKeyUI skillKeyUI = await ObjectBuilder.GetOrCreateInstance<SkillKeyUI>(E_AssetBundleType.UI, ResKeyCollection.SkillKeyUI, null);
-        skillKeyUI.Init(showUltimateUIEvent.Skill.SkillInfo, (showUltimateUIEvent.Caster as PlayerObject).RoleInfo, view.SkillKeyGroup, showUltimateUIEvent.Caster);
-        skillKeyUIs.Add(skillKeyUI);
-        model.UpdateOperator(skillKeyUIs);
-        // 隐藏行动提示UI
-        model.SetActTipActive(false, false);
+        ServiceLocator.Instance.Get<IMonoManager>().StartCoroutine(WaitForPaitingOver(showUltimateUIEvent.Skill.SkillInfo));
+        // 更新终结技UI显示
+        UpdateOperator(showUltimateUIEvent.Caster, SkillKeyUIDataProviderFactory.GetProvider<UltimateSkillKeyUIDataProvider>());
     }
 
-    public void RecoverFrontOptUI()
+    private IEnumerator WaitForPaitingOver(SkillInfo skillInfo)
     {
-        //model.RecoverFrontOperator();
+        // 显示角色立绘
+        model.SetUltimatePaitingActive(true, null, skillInfo.f_name);
+        // 显示一秒后隐藏
+        yield return new WaitForSeconds(1f);
+        model.SetUltimatePaitingActive(false, null, string.Empty);
+    }
+
+    /// <summary>
+    /// 终结技释放结束事件回调
+    /// 用于恢复当前行动角色操作UI
+    /// </summary>
+    /// <param name="ultimateReleaseOverEvent"></param>
+    private void OnUltimateReleaseOverEvent(UltimateReleaseOverEvent ultimateReleaseOverEvent)
+    {
+        if (currentActObject is not PlayerObject)
+        {
+            return;
+        }
+
+        UpdateOperator(currentActObject, SkillKeyUIDataProviderFactory.GetProvider<BaseSkillKeyUIDataProvider>());
     }
 
     /// <summary>
@@ -159,34 +173,26 @@ public class BattleController : UIController<BattleView, BattleModel>
     }
 
     /// <summary>
-    /// 更新当前玩家操作UI
+    /// 更新指定玩家操作UI
     /// </summary>
     /// <param name="currentObject"></param>
-    private async void UpdateOperator(IBattleEntityObject currentObject)
+    private async void UpdateOperator(IBattleEntityObject currentObject, ISkillKeyUIDataProvider dataProvider)
     {
-        if (currentObject is PlayerObject playerObject)
+        // 隐藏行动提示
+        model.SetActTipActive(false, false);
+
+        List<SkillKeyUI> skillKeyUIs = new List<SkillKeyUI>();
+        SkillKeyUIData skillKeyUIData = dataProvider.GetData(currentObject);
+        var infos = skillKeyUIData.SkillInfos;
+        foreach (SkillInfo info in infos)
         {
-            // 隐藏行动提示
-            model.SetActTipActive(false, false);
-
-            List<ISkill> skills = new List<ISkill>(currentObject.GetComponent<SkillComponent>().GetSkills());
-            List<SkillKeyUI> skillKeyUIs = new List<SkillKeyUI>();
-            // 遍历技能
-            foreach (ISkill skill in skills)
-            {
-                if (skill.SkillInfo.f_SkillType.ToSkillType() == E_SkillType.UltimateSkill)
-                {
-                    continue;
-                }
-
-                // 当前玩家操作UI
-                SkillKeyUI skillKeyUI = await ObjectBuilder.GetOrCreateInstance<SkillKeyUI>(E_AssetBundleType.UI, ResKeyCollection.SkillKeyUI, null);
-                skillKeyUI.Init(skill.SkillInfo, playerObject.RoleInfo, view.SkillKeyGroup, currentObject);
-                skillKeyUIs.Add(skillKeyUI);
-            }
-
-            model.UpdateOperator(skillKeyUIs);
+            // 玩家操作UI
+            SkillKeyUI skillKeyUI = await ObjectBuilder.GetOrCreateInstance<SkillKeyUI>(E_AssetBundleType.UI, ResKeyCollection.SkillKeyUI, null);
+            skillKeyUI.Init(info, view.SkillKeyGroup, currentObject);
+            skillKeyUIs.Add(skillKeyUI);
         }
+
+        model.UpdateOperator(skillKeyUIs);
     }
 
     /// <summary>
@@ -270,18 +276,26 @@ public class BattleController : UIController<BattleView, BattleModel>
     /// <param name="turnStartEvent"></param>
     private async void OnTurnStart(TurnStartEvent turnStartEvent)
     {
+        // 记录当前行动角色
+        currentActObject = turnStartEvent.CurrentBattleEntity;
+
         // 玩家相机位置不同，需要每回合开始时更新怪物UI位置
         await InitMonsterUI(turnStartEvent.Context.GetMonsterObjects());
         if (turnStartEvent.CurrentBattleEntity is PlayerObject)
         {
             // 更新当前操作UI
-            UpdateOperator(turnStartEvent.CurrentBattleEntity);
+            UpdateOperator(turnStartEvent.CurrentBattleEntity, SkillKeyUIDataProviderFactory.GetProvider<BaseSkillKeyUIDataProvider>());
         }
         else if(turnStartEvent.CurrentBattleEntity is MonsterObject)
         {
             // 显示怪物行动提示
             model.SetActTipActive(true, true);
         }
+    }
+
+    public void ClearDamageTextUI()
+    {
+        model.UpdateCumulativeDamage(false, 0);
     }
 
     /// <summary>

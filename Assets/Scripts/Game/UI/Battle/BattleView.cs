@@ -25,6 +25,10 @@ public class BattleView : UIView
     private GameObject totalDmgArea;
     private ActingTipUI actingTipUI;
 
+    private GameObject paintingDisplayArea;
+    private Image imgIcon;
+    private TextMeshProUGUI txtUltimateTip;
+
     /// <summary>
     /// ¼¼ÄÜ¼ü×é
     /// </summary>
@@ -65,6 +69,11 @@ public class BattleView : UIView
         actingTipUI.gameObject.SetActive(false);
 
         SkillKeyGroup = binder.GetControl<ToggleGroup>(nameof(operatorArea));
+
+        imgIcon = binder.GetControl<Image>(nameof(imgIcon));
+        txtUltimateTip = binder.GetControl<TextMeshProUGUI>(nameof(txtUltimateTip));
+        paintingDisplayArea = this.transform.Find(nameof(paintingDisplayArea)).gameObject;
+        paintingDisplayArea.SetActive(false);
     }
 
 
@@ -104,7 +113,22 @@ public class BattleView : UIView
                     actingTipUI.UpdateTipText(isMonster);
                 }
                 break;
+            case "activePaiting":
+                (bool isDisplay, Sprite icon, string tip) = ((bool, Sprite, string))value;
+
+                paintingDisplayArea.SetActive(isDisplay);
+                if(isDisplay)
+                {
+                    UpdateUltimateShow(icon, tip);
+                }
+                break;
         }
+    }
+
+    private void UpdateUltimateShow(Sprite icon, string tip)
+    {
+        imgIcon.sprite = icon;
+        txtUltimateTip.text = tip;
     }
 
     /// <summary>
