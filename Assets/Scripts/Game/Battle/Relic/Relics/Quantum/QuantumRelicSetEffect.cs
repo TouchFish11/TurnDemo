@@ -18,7 +18,7 @@ namespace Game.Battle
 
         IEntityObject IComponent.EntityObject { get; }
 
-        private float _additionalDamageRatio = 0.5f; // 追加伤害倍率（配置表读取）
+        // private float _additionalDamageRatio = 0.5f; // 追加伤害倍率（配置表读取）
 
         void IComponent.Init(IEntityObject entityObject) { }
 

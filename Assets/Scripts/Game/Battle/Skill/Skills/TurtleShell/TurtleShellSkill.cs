@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class TurtleShellSkill : Skill
 {
-    public TurtleShellSkill(int skillId) : base(skillId)
+    public TurtleShellSkill(int skillId, ISkillCastPostHandler postHandler) : base(skillId, postHandler)
     {
 
     }
@@ -14,6 +14,9 @@ public class TurtleShellSkill : Skill
     protected override IEnumerator OnCast(IBattleContext context)
     {
         LogManager.Log($"{Caster.GameObject.name}释放技能：{SkillInfo.f_name}");
+
+        // 播放动画
+        context.GetEventBus().TriggerEvent(new SkillCastEvent(context, this, 0));
 
         foreach (IBattleEntityObject battleEntity in AllTargets)
         {

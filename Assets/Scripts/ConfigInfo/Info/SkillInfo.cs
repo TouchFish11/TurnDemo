@@ -14,4 +14,5 @@ public class SkillInfo
 	public int f_targetType;
 	public int f_animationType;
 	public int f_toughenValue;
+	public int f_priority;
 }

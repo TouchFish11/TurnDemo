@@ -15,7 +15,7 @@ public class TurtleShellSkillFactory : SkillFactory
         switch (skillId)
         {
             case 102:
-                return new TurtleShellSkill(skillId);
+                return new TurtleShellSkill(skillId, GetSkillCastPostHandler<BaseSkillCastPostHandler>());
             default:
                 LogManager.Log($"Î´ÕÒµ½¼¼ÄÜID£¬ skillId = {skillId}");
                 return null;

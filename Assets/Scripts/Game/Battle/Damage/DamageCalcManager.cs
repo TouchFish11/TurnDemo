@@ -1,18 +1,14 @@
 using Framework;
 using Game.Battle;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
-using UnityEngine;
 
 /// <summary>
 /// 伤害计算管理器
 /// </summary>
 public class DamageCalcManager : SingletonBase<DamageCalcManager>, IDamageCalcManager
 {
-    //策略字典
+    // 策略字典
     private readonly Dictionary<E_DamageType, IDamageStrategy> _strategyDic = new Dictionary<E_DamageType, IDamageStrategy>();
-    //当前总伤害
-    private int _currentTotalDamage;
 
     private DamageCalcManager()
     {
@@ -108,15 +104,4 @@ public class DamageCalcManager : SingletonBase<DamageCalcManager>, IDamageCalcMa
     //    //    DebugMgr.LogError("未实现对应的策略");
     //    //}
     //}
-
-    /// <summary>
-    /// 清除伤害缓存
-    /// </summary>
-    public void ClearDamage()
-    {
-        // 重置伤害累计
-        _currentTotalDamage = 0;
-        //隐藏伤害显示
-        //UIMgr.Instance.GetPanel<BattlePanel>((panel) => { panel.UpdateCumulativeDamageText(false); });
-    }
 }

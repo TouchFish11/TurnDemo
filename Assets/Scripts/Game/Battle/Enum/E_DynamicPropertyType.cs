@@ -15,5 +15,6 @@ namespace Game.Battle
         TotalCritDmg,
         CurrentEnergy,
         BaseEnergy,
+        CurrentShield,
     }
 }

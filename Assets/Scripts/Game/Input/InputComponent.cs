@@ -14,8 +14,6 @@ public class InputComponent : BaseComponent
 {
     private IInputSystem inputSystem;
 
-    private bool isVisableMouse;
-
     /// <summary>
     /// 键盘输入改变事件
     /// </summary>
@@ -113,7 +111,6 @@ public class InputComponent : BaseComponent
                 if (context.phase == InputActionPhase.Started)
                 {
                     EventCenter.Instance.TriggerEvent(E_EventType.E_MouseVisible, nameof(Keyboard.current.leftAltKey));
-                    isVisableMouse = true;
                 }
                 else if(context.phase == InputActionPhase.Canceled)
                 {

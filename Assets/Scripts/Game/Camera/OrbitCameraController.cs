@@ -188,7 +188,7 @@ public class OrbitCameraController : SingletonMono<OrbitCameraController>, IOrbi
 
     private void OnDestroy()
     {
-        //ServiceLocator.Instance.Get<IDialogueManager>().OnDialogueStart -= OnDialogueStart;
-        //ServiceLocator.Instance.Get<IDialogueManager>().OnDialogueEnd -= OnDialogueEnd;
+        //ServiceLocator.Instance.GetFirst<IDialogueManager>().OnDialogueStart -= OnDialogueStart;
+        //ServiceLocator.Instance.GetFirst<IDialogueManager>().OnDialogueEnd -= OnDialogueEnd;
     }
 }

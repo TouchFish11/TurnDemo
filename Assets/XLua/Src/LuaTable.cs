@@ -190,7 +190,7 @@ namespace XLua
 #endif
         }
 
-        [Obsolete("use no boxing version: GetInPath/SetInPath Get/Set instead!")]
+        [Obsolete("use no boxing version: GetInPath/SetInPath GetFirst/Set instead!")]
         public object this[string field]
         {
             get
@@ -203,7 +203,7 @@ namespace XLua
             }
         }
 
-        [Obsolete("use no boxing version: GetInPath/SetInPath Get/Set instead!")]
+        [Obsolete("use no boxing version: GetInPath/SetInPath GetFirst/Set instead!")]
         public object this[object field]
         {
             get
@@ -312,7 +312,7 @@ namespace XLua
             LuaAPI.lua_settop(L, oldTop);
         }
 
-        [Obsolete("use no boxing version: Get<TKey, TValue> !")]
+        [Obsolete("use no boxing version: GetFirst<TKey, TValue> !")]
         public T Get<T>(object key)
         {
             T ret;

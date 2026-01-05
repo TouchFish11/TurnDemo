@@ -249,6 +249,7 @@ namespace Framework
             _isLogRunning = false;
             //–¥»Î £”‡»’÷æ
             SaveRemainLog();
+            await Task.CompletedTask;
         }
 
         /// <summary>

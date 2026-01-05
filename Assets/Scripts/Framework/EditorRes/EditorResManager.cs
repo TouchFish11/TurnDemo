@@ -98,7 +98,7 @@ namespace Framework
             }
             return res;
 #else
-            LogMgr.LogError("发布模式不允许使用编辑器下的资源加载方法");
+            LogManager.LogError("发布模式不允许使用编辑器下的资源加载方法");
             return null;
 #endif
         }

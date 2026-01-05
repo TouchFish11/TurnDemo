@@ -45,8 +45,10 @@ namespace Framework
 		public static string BackView => "BackView";
 		public static string BattleView => "BattleView";
 		public static string DamageTextUI => "DamageTextUI";
+		public static string HealTextUI => "HealTextUI";
 		public static string SelectMarkerUI => "SelectMarkerUI";
 		public static string ActionGridUI => "ActionGridUI";
+		public static string WaitingActUI => "WaitingActUI";
 		public static string BuffGridUI => "BuffGridUI";
 		public static string MonsterStateUI => "MonsterStateUI";
 		public static string WeaknessUI => "WeaknessUI";

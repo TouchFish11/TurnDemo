@@ -10,6 +10,7 @@ public class BattleView : UIView
 {
     private ScrollRect svActionbar;
     private ScrollRect svPoint;
+    private ScrollRect svWaitQueueArea;
 
     private TextMeshProUGUI txtCount;
     private TextMeshProUGUI txtDmg;
@@ -50,7 +51,8 @@ public class BattleView : UIView
 
         svActionbar = binder.GetControl<ScrollRect>(nameof(svActionbar));
         svPoint = binder.GetControl<ScrollRect>(nameof(svPoint));
-
+        svWaitQueueArea = binder.GetControl<ScrollRect>(nameof(svWaitQueueArea));
+        
         txtCount = binder.GetControl<TextMeshProUGUI>(nameof(txtCount));
         txtDmg = binder.GetControl<TextMeshProUGUI>(nameof(txtDmg));
         txtActingTip = binder.GetControl<TextMeshProUGUI>(nameof(txtActingTip));
@@ -122,6 +124,18 @@ public class BattleView : UIView
                     UpdateUltimateShow(icon, tip);
                 }
                 break;
+            case "waitingActUIs":
+                UpdateWaitingCommmand(value as List<WaitingActUI>);
+                break;
+        }
+    }
+
+    public void UpdateWaitingCommmand(List<WaitingActUI> waitingActUIs)
+    {
+        svWaitQueueArea.content.DetachChildren();
+        foreach (WaitingActUI waitingActUI in waitingActUIs)
+        {
+            waitingActUI.transform.SetParent(svWaitQueueArea.content, false);
         }
     }
 

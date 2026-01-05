@@ -111,7 +111,7 @@ public class TargetSelectManager : SingletonBase<TargetSelectManager>, ITargetSe
         _selectedTargets.Clear();
         _selectedTargets.AddRange(BattleUtil.GetRangeTargets(E_CharacterType.PlayerCharacter, _mainTarget, skillInfo.f_skillRangeType));
         // 分发目标选择变化事件，更新目标标记UI、行动轴UI
-        battleContext.GetEventBus().TriggerEvent<SelectTargetEvent>(new SelectTargetEvent(battleContext, _mainTarget, _selectedTargets));
+        battleContext.GetEventBus().TriggerEvent(new SelectTargetEvent(battleContext, _mainTarget, _selectedTargets));
     }
 
     public IBattleEntityObject GetMainTarget()

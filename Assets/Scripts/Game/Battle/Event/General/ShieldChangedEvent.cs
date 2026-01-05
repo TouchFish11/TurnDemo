@@ -9,14 +9,27 @@ namespace Game.Battle
     /// </summary>
     public class ShieldChangedEvent : BattleEvent
     {
-        public int CurrentShield { get; private set; }
-        public int MaxShield { get; private set; }
+        public IBattleEntityObject Target { get; }
+
+        public int CurrentShield { get; }
+
+        /// <summary>
+        /// 护盾变化值
+        /// 原始 - 新值。正数为减少，负数为增加
+        /// </summary>
+        public int DeltaShield { get; }
+
+        /// <summary>
+        /// 护盾基准值
+        /// </summary>
+        public int ReferenceShield { get; } = 10000;
 
 
-        public ShieldChangedEvent(IBattleContext context, int currentShield, int maxShield) : base(context)
+        public ShieldChangedEvent(IBattleContext context, int currentShield, IBattleEntityObject target, int deltaShield) : base(context)
         {
             CurrentShield = currentShield;
-            MaxShield = maxShield;
+            Target = target;
+            DeltaShield = deltaShield;
         }
     }
 }

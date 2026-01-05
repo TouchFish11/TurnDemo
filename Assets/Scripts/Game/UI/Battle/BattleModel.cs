@@ -12,8 +12,6 @@ public class BattleModel : UIModel
     private readonly List<ActionGridUI> actions = new List<ActionGridUI>();
     // 技能按键UI列表
     private readonly List<SkillKeyUI> skillKeyUIs = new List<SkillKeyUI>();
-    // 保留的技能按键UI列表
-    //private readonly List<SkillKeyUI> saveSkillKeyUIs = new List<SkillKeyUI>();
     // 角色状态UI列表
     private readonly List<RoleStateUI> roleStateUIs = new List<RoleStateUI>();
     // 普通怪物状态UI列表
@@ -22,6 +20,8 @@ public class BattleModel : UIModel
     private readonly List<BattlePointUI> battlePointUIs = new List<BattlePointUI>();
     // 选择标记UI列表
     private readonly List<SelectMarkerUI> selectMarkerUIs = new List<SelectMarkerUI>();
+    // 选择标记UI列表
+    private readonly List<WaitingActUI> waitingActUIs = new List<WaitingActUI>();
 
     // 当前累计伤害
     private long currentCalcDamage;
@@ -37,6 +37,10 @@ public class BattleModel : UIModel
         TriggerDataChanged(nameof(activePaiting), (activePaiting, icon, tip));
     }
 
+    public void UpdateWaitingCommmand(List<WaitingActUI> waitingActUIs)
+    {
+        TriggerDataChanged(nameof(waitingActUIs), waitingActUIs);
+    }
 
     /// <summary>
     /// 

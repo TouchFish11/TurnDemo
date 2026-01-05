@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class HertaBattleSkill : Skill
 {
-    public HertaBattleSkill(int skillId) : base(skillId)
+    public HertaBattleSkill(int skillId, ISkillCastPostHandler postHandler) : base(skillId, postHandler)
     {
 
     }
@@ -14,9 +14,13 @@ public class HertaBattleSkill : Skill
     {
         LogManager.Log($"{Caster.GameObject.name}释放技能：{SkillInfo.f_name}");
 
+        // 播放动画
+        context.GetEventBus().TriggerEvent(new SkillCastEvent(context, this, 0));
+
         foreach (IBattleEntityObject battleEntity in AllTargets)
         {
-            MulTest(battleEntity, 5);
+            MulTest(battleEntity, 2);
+            RecoverEnergy();
         }
 
         yield break;

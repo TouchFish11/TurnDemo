@@ -26,6 +26,7 @@ public abstract class BattleProperty : EntityProperty
     protected int currentSpeed;     // 当前速度
     protected int totalCrit;    // 总暴击率
     protected int totalCritDmg;     // 总暴击伤害
+    protected int currentShield;    // 当前护盾量
 
     public override void InitProperty(int id)
     {
@@ -46,4 +47,5 @@ public abstract class BattleProperty : EntityProperty
     public int CurrentSpeed { get => currentSpeed; set => currentSpeed = value; }
     public int TotalCrit { get => totalCrit; set => totalCrit = value; }
     public int TotalCritDmg { get => totalCritDmg; set => totalCritDmg = Mathf.Clamp(value, default, value); }
+    public int CurrentShield { get => currentShield; set => currentShield = Mathf.Clamp(value, default, value); }
 }

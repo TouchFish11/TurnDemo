@@ -43,6 +43,6 @@ public class RoleProperty : BattleProperty
 
 
 
-    public int CurrentEnergy { get => currentEnergy; set => currentEnergy = value; }
+    public int CurrentEnergy { get => currentEnergy; set => currentEnergy = Mathf.Clamp(value, default, baseEnergy); }
 
 }

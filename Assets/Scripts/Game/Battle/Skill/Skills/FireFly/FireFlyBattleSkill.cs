@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class FireFlyBattleSkill : Skill
 {
-    public FireFlyBattleSkill(int skillId) : base(skillId)
+    public FireFlyBattleSkill(int skillId, ISkillCastPostHandler postHandler) : base(skillId, postHandler)
     {
 
     }
@@ -15,9 +15,14 @@ public class FireFlyBattleSkill : Skill
     {
         LogManager.Log($"{Caster.GameObject.name}释放技能：{SkillInfo.f_name}");
 
+        // 播放动画
+        context.GetEventBus().TriggerEvent(new SkillCastEvent(context, this, 0));
+
         foreach (IBattleEntityObject battleEntity in AllTargets)
         {
-            MulTest(battleEntity, 2);
+            MulTest(battleEntity, 1);
+
+            RecoverEnergy();
         }
 
         yield break;

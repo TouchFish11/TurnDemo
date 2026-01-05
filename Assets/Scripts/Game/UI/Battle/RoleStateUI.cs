@@ -29,6 +29,9 @@ public class RoleStateUI : BaseUIBehaviour
     private int currentShield;
     private int maxShield;
 
+    // 能量相关
+    private float nonFullAhpha = 0.35f;
+
     // 技能相关
     private int ultimateSkillId;    // 终结技技能ID
 
@@ -58,6 +61,7 @@ public class RoleStateUI : BaseUIBehaviour
         battleContext = ServiceLocator.Instance.Get<IBattleManager>().GetContext();
 
         battleContext.GetEventBus().AddListener<HpChangedEvent>(OnHpChanged);
+        battleContext.GetEventBus().AddListener<ShieldChangedEvent>(OnShieldChanged);
         battleContext.GetEventBus().AddListener<EnergyChangedEvent>(OnEnergyChangedEvent);
 
         ServiceLocator.Instance.Get<IMonoManager>().AddUpdateListener(OnUpdate);
@@ -67,7 +71,7 @@ public class RoleStateUI : BaseUIBehaviour
     /// 初始化
     /// </summary>
     /// <param name="ultimateSkillId"></param>
-    public async void Init(RoleProperty playerProperty, int ultimateSkillId, IBattleEntityObject battleEntity)
+    public void Init(RoleProperty playerProperty, Sprite icon, int ultimateSkillId, IBattleEntityObject battleEntity)
     {
         this.battleEntity = battleEntity;
         // 记录终结技ID
@@ -77,7 +81,7 @@ public class RoleStateUI : BaseUIBehaviour
 
         RoleInfo roleInfo = BinaryDataManager.Instance.GetConfig<RoleInfoContainer>(E_ConfigLoadType.Editor).dataDic[playerProperty.Id];
         // 设置图标
-        // imgIcon.sprite = await AssetBundleManager.Instance.LoadAssetAsync<Sprite>(E_AssetBundleType.Texture, ResKeyCollection.WhiteImage);
+        imgIcon.sprite = icon;
         PropertyComponent propertyComponent = this.battleEntity.GetComponent<PropertyComponent>();
 
         // 设置血量
@@ -86,7 +90,10 @@ public class RoleStateUI : BaseUIBehaviour
 
         // 设置能量
         imgEnergy.color = roleInfo.f_elementType.ToElementTypeColor();
-        imgEnergy.fillAmount = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentEnergy) / (float)propertyComponent.GetPropertyValue(E_DynamicPropertyType.BaseEnergy);
+        int currentEnergy = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentEnergy);
+        int baseEnergy = propertyComponent.GetPropertyValue(E_DynamicPropertyType.BaseEnergy);
+        imgEnergy.fillAmount = currentEnergy / (float)baseEnergy;
+        imgEnergy.color = new Color(imgEnergy.color.r, imgEnergy.color.g, imgEnergy.color.b, currentEnergy == baseEnergy ? 1 : nonFullAhpha);
 
         // 设置buff列表
         UpdateBuff();
@@ -122,6 +129,7 @@ public class RoleStateUI : BaseUIBehaviour
             return;
         }
         imgEnergy.fillAmount = energyChangedEvent.CurrentEnergy / (float)energyChangedEvent.MaxEnergy;
+        imgEnergy.color = new Color(imgEnergy.color.r, imgEnergy.color.g, imgEnergy.color.b, energyChangedEvent.CurrentEnergy == energyChangedEvent.MaxEnergy ? 1 : nonFullAhpha);
     }
 
     /// <summary>
@@ -130,7 +138,11 @@ public class RoleStateUI : BaseUIBehaviour
     /// <param name="onShieldChangedEvent"></param>
     private void OnShieldChanged(ShieldChangedEvent onShieldChangedEvent)
     {
-        UpdateShield(onShieldChangedEvent.CurrentShield, onShieldChangedEvent.MaxShield);
+        if (onShieldChangedEvent.Target != this.battleEntity)
+        {
+            return;
+        }
+        UpdateShield(onShieldChangedEvent.CurrentShield, onShieldChangedEvent.ReferenceShield);
     }
 
     /// <summary>

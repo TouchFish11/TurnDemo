@@ -12,11 +12,11 @@ namespace Game.Battle
             switch (skillId)
             {
                 case 10:
-                    return new FireFlyNormalSkill(skillId);
+                    return new FireFlyNormalSkill(skillId, GetSkillCastPostHandler<BaseSkillCastPostHandler>());
                 case 11:
-                    return new FireFlyBattleSkill(skillId);
+                    return new FireFlyBattleSkill(skillId, GetSkillCastPostHandler<BaseSkillCastPostHandler>());
                 case 12:
-                    return new FireFlyUltimateSkill(skillId);
+                    return new FireFlyUltimateSkill(skillId, GetSkillCastPostHandler<BaseUltimateSkillCastPostHandler>());
                 default:
                     LogManager.Log($"Î´ÕÒµ½¼¼ÄÜID£¬ skillId = {skillId}");
                     return null;

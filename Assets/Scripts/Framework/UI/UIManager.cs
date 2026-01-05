@@ -146,40 +146,31 @@ namespace Framework
             where TView : UIView where TModel : UIModel, new() where TController : UIController<TView, TModel>
         {
 #if EDITOR_TEST_AB || !UNITY_EDITOR
-            // 自定义存储名称
-            string cacheName = $"{typeof(TView).Name}";
-            // 存在缓存
-            if (_panelDic.ContainsKey(cacheName))
-            {
-                PanelInfo<TView, TModel, TController> cacheInfo = _panelDic[cacheName] as PanelInfo<TView, TModel, TController>;
-                // 返回缓存的面板
-                return cacheInfo.UIController;
-            }
-
+            //自定义存储名称
+            string assetName = $"{typeof(TView).Name}";
             // 不存在工厂
             if (!_typeToCtrlFactoryMap.TryGetValue(typeof(TController), out var iFactory))
             {
+                LogManager.LogWarning($"未初始化{typeof(TController)}控制器工厂");
                 return null;
             }
 
             // 存在工厂
             var factory = iFactory as UIControllerFactory<TView, TModel, TController>;
-            // 加载面板资源
-            GameObject panelObj = await AssetBundleManager.Instance.LoadAssetAsync<GameObject>(E_AssetBundleType.UI, typeof(TView).Name);
-            // 实例化面板对象、设置面板父对象
-            GameObject panelInstanceObj = GameObject.Instantiate(panelObj, GetLayer(layer), false);
-            // 获取面板脚本
-            TView view = panelInstanceObj.GetComponent<TView>();
+            // 获取面板
+            TView view = await ObjectBuilder.GetOrCreateInstance<TView>(E_AssetBundleType.UI, assetName, GetLayer(layer));
             // 调用显示函数
             view.Show();
             // 创建数据
             TModel model = factory.CreateModel();
             // 创建控制器
             TController controller = factory.CreateController(view, model);
+            // 等待控制器初始化
+            await controller.Init();
             // 初始化面板信息
             PanelInfo<TView, TModel, TController> newInfo = new PanelInfo<TView, TModel, TController>(view, model, controller);
             // 存储面板信息
-            _panelDic.Add(cacheName, newInfo);
+            _panels.Push(newInfo);
             return controller;
 #else
             //自定义存储名称

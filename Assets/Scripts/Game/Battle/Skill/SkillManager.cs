@@ -38,7 +38,7 @@ public class SkillManager : SingletonBase<SkillManager>, ISkillManager
         // 初始化技能
         skill.Init(caster, mainTaget, selectedTargets);
         // 放入指令
-        ServiceLocator.Instance.Get<IBattleManager>().GetContext().GetTurnManager().EnqueueCommand(skill);
+        ServiceLocator.Instance.Get<IBattleManager>().GetContext().GetTurnManager().InsertCommand(skill);
     }
 
     /// <summary>

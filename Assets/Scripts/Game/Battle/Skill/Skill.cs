@@ -12,64 +12,52 @@ public abstract class Skill : ISkill
 {
     public SkillInfo SkillInfo { get; private set; }
 
-    public float DamageCoefficient { get; }
-
     public IBattleEntityObject Caster { get; private set; }
 
     public IBattleEntityObject MainTarget { get; private set; }
 
     public List<IBattleEntityObject> AllTargets { get; private set; }
 
-    public IDamageCalcManager DamageCalcManager { get; set; }
+    public IDamageCalcManager DamageCalcManager { get; private set; }
 
-    private float waitTime = 1f;
+    public IPropertyComponent PropertyComponent { get; private set; }
 
-    protected Skill(int skillId)
+    public ISkillCastPostHandler SkillCastPostHandler { get; private set; }
+
+    private readonly float waitTime = 1f;
+
+    protected Skill(int skillId, ISkillCastPostHandler postHandler)
     {
         SkillInfo = BinaryDataManager.Instance.GetConfig<SkillInfoContainer>(E_ConfigLoadType.Editor).dataDic[skillId];
         DamageCalcManager = ServiceLocator.Instance.Get<IDamageCalcManager>();
+        SkillCastPostHandler = postHandler;
     }
 
-    public void Init(IBattleEntityObject caster, IBattleEntityObject mainTarget, List<IBattleEntityObject> allTargets)
+    public virtual void Init(IBattleEntityObject caster, IBattleEntityObject mainTarget, List<IBattleEntityObject> allTargets)
     {
         Caster = caster;
         MainTarget = mainTarget;
         AllTargets = allTargets;
+
+        PropertyComponent = Caster.GetComponent<PropertyComponent>();
     }
 
     // 一定是通过技能对象实例来驱动角色释放技能行为的
     public IEnumerator Cast(IBattleContext context)
     {
         // 通用处理逻辑
+
         // 处理战技点
         context.ConsumeSkillPoint(SkillInfo.f_costBP);
-        // TODO：暂时直接触发对应动画，之后根据具体技能的时机触发
-        if ((E_SkillType)SkillInfo.f_SkillType != E_SkillType.UltimateSkill)
-        {
-            context.GetEventBus().TriggerEvent(new SkillCastEvent(context, this, 0));
-        }
 
-        // TODO：暂时直接恢复能量，后续优化为造成伤害时恢复能量
-        PlayerPropertyComponent playerPropertyComponent = Caster.GetComponent<PlayerPropertyComponent>();
-        if (playerPropertyComponent != null)
-        {
-            int newValue = playerPropertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentEnergy);
-            Caster.GetComponent<PropertyComponent>().SetPropertyValue(E_DynamicPropertyType.CurrentEnergy, newValue + SkillInfo.f_recoveryEnergy);
-        }
-
+        // 处理动画相关内容
         yield return OnCast(context);
 
         // 等待时间，优化战斗表现
         yield return new WaitForSeconds(waitTime);
 
+        // 释放结束后处理
         yield return OnPostCast();
-
-        // TODO：暂时这样判断，后续优化
-        if ((E_SkillType)SkillInfo.f_SkillType != E_SkillType.UltimateSkill)
-        {
-            // 减少行动次数
-            this.Caster.SubActCount();
-        }
     }
 
     /// <summary>
@@ -86,9 +74,18 @@ public abstract class Skill : ISkill
     /// <returns></returns>
     protected virtual IEnumerator OnPostCast()
     {
-        // TODO：暂时直接情况战斗界面显示的伤害总文本
-        ServiceLocator.Instance.Get<IUIManager>().GetView<BattleController>().ClearDamageTextUI();
-        yield break;
+        // TODO：暂时直接清空战斗界面显示的伤害总文本
+        ServiceLocator.Instance.Get<IUIManager>().GetView<BattleController>().GetBattleUI().ClearDamageTextUI();
+        yield return SkillCastPostHandler.OnHnadle(this);
+    }
+
+    /// <summary>
+    /// 技能释放攻击后恢复能量
+    /// </summary>
+    protected virtual void RecoverEnergy()
+    {
+        int newValue = PropertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentEnergy);
+        PropertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentEnergy, newValue + SkillInfo.f_recoveryEnergy);
     }
 
     /// <summary>

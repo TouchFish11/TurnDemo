@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class HertaNormalSkill : Skill
 {
-    public HertaNormalSkill(int skillId) : base(skillId)
+    public HertaNormalSkill(int skillId, ISkillCastPostHandler postHandler) : base(skillId, postHandler)
     {
 
     }
@@ -15,9 +15,13 @@ public class HertaNormalSkill : Skill
     {
         LogManager.Log($"{Caster.GameObject.name}释放技能：{SkillInfo.f_name}");
 
+        // 播放动画
+        context.GetEventBus().TriggerEvent(new SkillCastEvent(context, this, 0));
+
         foreach (IBattleEntityObject battleEntity in AllTargets)
         {
             MulTest(battleEntity, 1);
+            RecoverEnergy();
         }
 
         yield break;

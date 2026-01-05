@@ -7,7 +7,7 @@ using UnityEngine;
 /// 属性组件
 /// 管理战斗实体的各种属性
 /// </summary>
-public abstract class PropertyComponent : BattleComponent
+public abstract class PropertyComponent : BattleComponent, IPropertyComponent
 {
     // 属性类型到加成数值（百分比）映射
     private readonly Dictionary<E_PropertyBonusType, int> _bonusToValueMap = new Dictionary<E_PropertyBonusType, int>();
@@ -61,6 +61,11 @@ public abstract class PropertyComponent : BattleComponent
                 break;
             case E_DynamicPropertyType.TotalCritDmg:
                 battleProperty.TotalCritDmg = newValue;
+                break;
+            case E_DynamicPropertyType.CurrentShield:
+                int currentShieldDelta = battleProperty.CurrentShield - newValue;
+                battleProperty.CurrentShield = newValue;
+                battleContext.GetEventBus().TriggerEvent(new ShieldChangedEvent(battleContext, battleProperty.CurrentShield, this.BattleEntity, currentShieldDelta));
                 break;
         }
     }

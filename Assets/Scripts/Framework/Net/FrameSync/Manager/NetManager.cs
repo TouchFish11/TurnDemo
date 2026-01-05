@@ -133,7 +133,7 @@ namespace Net.FrameSync
         private async Task OnAppQuit()
         {
             RequestCloseConnect();
-            MonoManager.Instance.RemoveUpdateListener(OnUpdate);
+            await Task.CompletedTask;
         }
     }
 }

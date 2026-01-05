@@ -13,18 +13,27 @@ namespace Game.Battle
         /// </summary>
         SkillInfo SkillInfo { get; }
 
+        /// <summary>
+        /// 施法者
+        /// </summary>
         IBattleEntityObject Caster { get; }
 
+        /// <summary>
+        /// 主目标
+        /// </summary>
         IBattleEntityObject MainTarget { get; }
 
+        /// <summary>
+        /// 所有目标
+        /// </summary>
         List<IBattleEntityObject> AllTargets { get; }
 
-        IDamageCalcManager DamageCalcManager { get; }
-
         /// <summary>
-        /// 伤害系数（配置表读取）
+        /// 伤害计算管理器接口
         /// </summary>
-        float DamageCoefficient { get; }
+        IDamageCalcManager DamageCalcManager { get; }
+        ISkillCastPostHandler SkillCastPostHandler { get; }
+        IPropertyComponent PropertyComponent { get; }
 
         /// <summary>
         /// 初始化技能

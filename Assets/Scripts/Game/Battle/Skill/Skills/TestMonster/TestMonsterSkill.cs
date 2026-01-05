@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class TestMonsterSkill : Skill
 {
-    public TestMonsterSkill(int skillId) : base(skillId)
+    public TestMonsterSkill(int skillId, ISkillCastPostHandler postHandler) : base(skillId, postHandler)
     {
 
     }
@@ -13,6 +13,9 @@ public class TestMonsterSkill : Skill
     protected override IEnumerator OnCast(IBattleContext context)
     {
         LogManager.Log($"{Caster.GameObject.name}释放技能：{SkillInfo.f_name}");
+
+        // 播放动画
+        context.GetEventBus().TriggerEvent(new SkillCastEvent(context, this, 0));
 
         foreach (IBattleEntityObject battleEntity in AllTargets)
         {

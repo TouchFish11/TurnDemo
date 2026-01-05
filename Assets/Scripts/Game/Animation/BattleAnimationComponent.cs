@@ -24,30 +24,16 @@ namespace Game.Battle
             BattleEntity = battleEntity;
             battleEntity.Context.GetEventBus().AddListener<SelectSkillEvent>(OnSelectSkillEvent);
             battleEntity.Context.GetEventBus().AddListener<SkillCastEvent>(OnSkillCastEvent);
-            battleEntity.Context.GetEventBus().AddListener<PlayerTriggerUltimateSkillEvent>(OnPlayerTriggerUltimateSkillEvent);
         }
 
         /// <summary>
-        /// 玩家终结技触发事件回调
-        /// 播放终结技pose动作
+        /// 设置终结技姿势
         /// </summary>
-        /// <param name="playerTriggerUltimateSkillEvent"></param>
-        private void OnPlayerTriggerUltimateSkillEvent(PlayerTriggerUltimateSkillEvent playerTriggerUltimateSkillEvent)
+        public void SetUltimatePose()
         {
-            if (playerTriggerUltimateSkillEvent.Caster != this.BattleEntity)
-            {
-                return;
-            }
-
             // 先重置状态，因为攻击状态都是从PreNormalAttack状态开始转换的，而默认状态是null状态
             SetAnimationState(E_AnimationType.PreNormalAttack);
-            // 根据技能信息获取动画类型
-            SkillInfo skillInfo = BinaryDataManager.Instance.GetConfig<SkillInfoContainer>(E_ConfigLoadType.Editor).dataDic[playerTriggerUltimateSkillEvent.SkillId];
-            E_SkillType skillType = (E_SkillType)skillInfo.f_SkillType;
-            if (skillType == E_SkillType.UltimateSkill)
-            {
-                SetAnimationState(E_AnimationType.PreUltimateAttack);
-            }
+            SetAnimationState(E_AnimationType.PreUltimateAttack);
         }
 
         /// <summary>

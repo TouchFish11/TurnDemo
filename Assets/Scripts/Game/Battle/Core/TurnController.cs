@@ -17,8 +17,8 @@ namespace Game.Battle
         private readonly IBattleContext _context;
         // 战斗实体列表
         private List<IBattleEntityObject> battleEntities;
-        // 技能命令队列
-        private readonly Queue<ISkill> skillCommands = new Queue<ISkill>();
+        // 战斗指令控制器
+        private BattleCommandsController commandsController;
         // 当前行动实体
         private IBattleEntityObject _currentActEntity;
         //当前战斗阶段
@@ -36,6 +36,7 @@ namespace Game.Battle
         public TurnController(IBattleContext context)
         {
             _context = context;
+            commandsController = new BattleCommandsController(context);
         }
 
         /// <summary>
@@ -68,12 +69,12 @@ namespace Game.Battle
             BattleController battleController = await ServiceLocator.Instance.Get<IUIManager>().CreateViewAsync<BattleView, BattleModel,BattleController>(E_UILayer.Mid);
             // 播放入场动画等
             // ...
+            // 显示战斗UI
+            await battleController.InitBattleUI(_context);
             // 初始化行动顺序
             InitOrder();
             // 初始化行动实体
             UpdateActEntity();
-            // 显示战斗UI
-            await battleController.InitBattleUI(_context);
             // 启用当前实体行动
             _currentActEntity.ExecuteAction();
             // 设置为角色行动阶段
@@ -90,19 +91,8 @@ namespace Game.Battle
 
             while (true)
             {
-                // 存在命令，执行
-                while (skillCommands.Count > 0)
-                {
-                    // 执行技能命令
-                    yield return skillCommands.Dequeue().Cast(_context);
-
-                    // 检查战斗是否结束
-                    if (CheckBattleOver())
-                    {
-                        yield break;
-                    }
-                }
-
+                // 执行命令
+                yield return commandsController.ExcuteCommand();
                 // 当前实体正在行动，等待其行动结束
                 if (!_currentActEntity.CanAct)
                 {
@@ -136,7 +126,7 @@ namespace Game.Battle
         /// 更新实体看向
         /// </summary>
         /// <param name="target"></param>
-        private void UpdateEntityLookAt(IBattleEntityObject target)
+        public void UpdateEntityLookAt(IBattleEntityObject target)
         {
             if (target is PlayerObject)
             {
@@ -159,9 +149,12 @@ namespace Game.Battle
                     trans.rotation = Quaternion.LookRotation(newPlayerPos - newtransPos);
                 }
             }
+            else if (target is MonsterObject)
+            {
+                // 假设是单体攻击，怪物攻击哪个玩家，就激活哪个玩家的摄像机
 
-            // 假设是单体攻击，怪物攻击哪个玩家，就激活哪个玩家的摄像机
 
+            }
         }
 
         /// <summary>
@@ -196,10 +189,8 @@ namespace Game.Battle
 
             battleEntities[0].SetActionValue(0);
 
-            // 更新行动轴UI显示
-            // TODO：暂时直接调用界面方法，后续通过事件分发传递
-            BattleController battleController = UIManager.Instance.GetView<BattleController>();
-            await battleController.UpadteActionBar(battleEntities);
+            // 事件分发传递，更新行动轴UI显示
+            _context.GetEventBus().TriggerEvent(new ActionBarSortPostEvent(_context, battleEntities));
         }
 
         /// <summary>
@@ -245,17 +236,15 @@ namespace Game.Battle
             InsertOrder(_currentActEntity);
             battleEntities[0].SetActionValue(0);
 
-            // 更新行动轴UI显示
-            // TODO：暂时直接调用界面方法，后续通过事件分发传递
-           BattleController battleController = UIManager.Instance.GetView<BattleController>();
-           await battleController.UpadteActionBar(battleEntities);
+            // 事件分发传递，更新行动轴UI显示
+            _context.GetEventBus().TriggerEvent(new ActionBarSortPostEvent(_context, battleEntities));
         }
 
         /// <summary>
         /// 插入队列
         /// </summary>
         /// <param name="actEndEntity"></param>
-        public async void InsertOrder(IBattleEntityObject actEndEntity)
+        public void InsertOrder(IBattleEntityObject actEndEntity)
         {
             actEndEntity.SetActionValue(CalcActionValue(actEndEntity.GetSpeed()));
             int index = battleEntities.FindIndex(battleEntity => battleEntity.ActionValue > actEndEntity.ActionValue);
@@ -286,7 +275,7 @@ namespace Game.Battle
         /// 检查战斗是否结束
         /// </summary>
         /// <returns></returns>
-        private bool CheckBattleOver()
+        public bool CheckBattleOver()
         {
             // 每次执行完命令后，检查战斗是否结束
             if (_battlePhase != E_BattlePhase.BattleOver)
@@ -303,9 +292,13 @@ namespace Game.Battle
             }
         }
 
-        public void EnqueueCommand(ISkill skill)
+        /// <summary>
+        /// 插入命令
+        /// </summary>
+        /// <param name="skill"></param>
+        public void InsertCommand(ISkill skill)
         {
-            skillCommands.Enqueue(skill);
+            commandsController.InsertCommand(skill);
         }
 
         /// <summary>
@@ -317,7 +310,7 @@ namespace Game.Battle
             BattleController battleController = UIManager.Instance.GetView<BattleController>();
             // 切换为正常倍速
             TimerManager.Instance.SetTimeRate(E_TimeRate.Normal);
-            battleController.BattleOver();
+            battleController.GetBattleUI().BattleOver();
 
             //切换场景
             SceneManager.Instance.LoadSceneAsync(ResKeyCollection.MainScene, UnityEngine.SceneManagement.LoadSceneMode.Single, (progress) =>

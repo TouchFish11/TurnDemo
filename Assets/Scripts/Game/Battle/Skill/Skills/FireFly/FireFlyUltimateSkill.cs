@@ -9,13 +9,23 @@ public class FireFlyUltimateSkill : UltimateSkill
     // 测试：终结三段造成伤害时机
     private float[] dmgTimes = new float[] { 0.03f, 0.06f, 0.1f };
 
-    public FireFlyUltimateSkill(int skillId) : base(skillId)
+    public FireFlyUltimateSkill(int skillId, ISkillCastPostHandler postHandler) : base(skillId, postHandler)
     {
 
     }
 
+    protected override void OnPreUltimateCast(IBattleContext context)
+    {
+        base.OnPreUltimateCast(context);
+
+        // 播放预备动画：玩家终结技pose、终结技动画
+        Caster.GetComponent<BattleAnimationComponent>().SetUltimatePose();
+    }
+
     protected override IEnumerator OnUltimateCast(IBattleContext context)
     {
+        context.GetEventBus().TriggerEvent(new SkillCastEvent(context, this, 0));
+
         BattleAnimationComponent animationComponent = Caster.GetComponent<BattleAnimationComponent>();
         int index = 0;
         while (index < dmgTimes.Length)
@@ -28,6 +38,8 @@ public class FireFlyUltimateSkill : UltimateSkill
                     DamageCalcManager.CalcSkillDamage(Caster, battleEntity, this.SkillInfo, out DamageResult result);
                     battleEntity.TakeDamage(result);
                 }
+
+                RecoverEnergy();
                 LogManager.Log($"【终结技】：{Caster.GameObject.name}释放技能：{SkillInfo.f_name}，第{index + 1}段");
                 index++;
             }

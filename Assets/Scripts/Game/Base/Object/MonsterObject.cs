@@ -36,7 +36,6 @@ namespace Game.Battle
         protected override void OnPreTakeDamage(DamageResult damageResult)
         {
             // œ˜ºı»Õ–‘
-            // œ»œ˜ºı»Õ–‘
             ToughnessComponent toughnessComponent = this.GetComponent<ToughnessComponent>();
             toughnessComponent.ReduceToughness(damageResult.Source, damageResult.ElementType, damageResult.SkillInfo);
         }

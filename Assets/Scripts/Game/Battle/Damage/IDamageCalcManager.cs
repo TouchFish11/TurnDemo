@@ -9,5 +9,4 @@ using UnityEngine;
 public interface IDamageCalcManager
 {
     void CalcSkillDamage(IBattleEntityObject source, IBattleEntityObject target, SkillInfo skillInfo, out DamageResult damageResult);
-    void ClearDamage();
 }
