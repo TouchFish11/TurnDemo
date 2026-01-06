@@ -9,9 +9,11 @@ namespace Game.Battle
     /// </summary>
     public class UltimateReleaseOverEvent : BattleEvent
     {
-        public UltimateReleaseOverEvent(IBattleContext context) : base(context)
-        {
+        public IBattleEntityObject CurrentActEntity { get; }
 
+        public UltimateReleaseOverEvent(IBattleContext context, IBattleEntityObject currentEntity) : base(context)
+        {
+            CurrentActEntity = currentEntity;
         }
     }
 }

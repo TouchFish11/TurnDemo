@@ -9,6 +9,8 @@ public class HertaUltimateSkill : UltimateSkill
     // 测试：终结三段造成伤害时机
     private float[] dmgTimes = new float[] { 0.03f, 0.06f, 0.1f };
 
+    protected override int DmgCount { get; set; } = 3;
+
     public HertaUltimateSkill(int skillId, ISkillCastPostHandler postHandler) : base(skillId, postHandler)
     {
 

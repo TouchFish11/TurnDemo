@@ -1,6 +1,8 @@
+using Game;
 using Game.Battle;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 /// <summary>
 /// 战斗指令控制器
@@ -68,8 +70,8 @@ public class BattleCommandsController
             _skillCommands.Add(skill);
             // 按优先级排序命令
             SortCommand();
-            // 触发指令排队事件
-            _context.GetEventBus().TriggerEvent(new CommandWaitEvent(_context, _skillCommands));
+            // 指令排队，更新UI显示
+            BattleUIScheduler.Instance.UpdateWaitingCommmand(GetRoleIcon());
         }
     }
 
@@ -79,8 +81,8 @@ public class BattleCommandsController
     public void RemoveFirst()
     {
         _skillCommands.RemoveAt(0);
-        // 触发指令排队事件
-        _context.GetEventBus().TriggerEvent(new CommandWaitEvent(_context, _skillCommands));
+        // 指令排队，更新UI显示
+        BattleUIScheduler.Instance.UpdateWaitingCommmand(GetRoleIcon());
     }
 
     /// <summary>
@@ -104,5 +106,28 @@ public class BattleCommandsController
                 return 0;
             }
         });
+    }
+
+
+    public List<string> GetRoleIcon()
+    {
+        List<string> strs = new List<string>(_skillCommands.Count);
+
+        foreach (ISkill skill in _skillCommands)
+        {
+            string icon = string.Empty;
+            if (skill.Caster is PlayerObject playerObject)
+            {
+                icon = playerObject.RoleInfo.f_name;
+            }
+            else if(skill.Caster is MonsterObject monsterObject)
+            {
+                icon = monsterObject.MonsterInfo.f_name;
+            }
+
+            strs.Add(icon);
+        }
+
+        return strs;
     }
 }

@@ -35,7 +35,6 @@ public class BattlePoint : SingletonMono<BattlePoint>
     {
         // 监听角色回合开始事件
         BattleManager.Instance.GetContext().GetEventBus().AddListener<TurnStartEvent>(OnTurnStartEvent);
-        BattleManager.Instance.GetContext().GetEventBus().AddListener<SelectTargetEvent>(OnSelectTargetEvent);
         return Instance;
     }
 
@@ -82,9 +81,6 @@ public class BattlePoint : SingletonMono<BattlePoint>
     {
         if (battleEntity is PlayerObject)
         {
-            // TODO：暂时写在这里，看向攻击的玩家，后续优化调用逻辑
-            battleEntity.Context.GetTurnManager().UpdateEntityLookAt(battleEntity);
-
             Transform[] transforms = battleEntity.GameObject.GetComponentsInParent<Transform>();
             // transforms[1]是获取父对象位置，而GetComponentsInParent会包含自己的位置
             int index = playerTrans.IndexOf(transforms[1]);
@@ -107,20 +103,5 @@ public class BattlePoint : SingletonMono<BattlePoint>
     private void OnTurnStartEvent(TurnStartEvent turnStartEvent)
     {
         ActiveCamera(turnStartEvent.CurrentBattleEntity);
-    }
-
-    /// <summary>
-    /// 选择目标事件回调
-    /// 怪物攻击玩家激活被攻击玩家的相机
-    /// </summary>
-    /// <param name="selectTargetEvent"></param>
-    private void OnSelectTargetEvent(SelectTargetEvent selectTargetEvent)
-    {
-        if (selectTargetEvent.MainTarget is not PlayerObject)
-        {
-            return;
-        }
-
-        ActiveCamera(selectTargetEvent.MainTarget);
     }
 }

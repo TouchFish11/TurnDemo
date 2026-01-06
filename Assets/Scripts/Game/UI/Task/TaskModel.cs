@@ -121,7 +121,7 @@ namespace Game.UI
             int[] rewardIds = TextUtility.SplitToIntArr(currentTaskInfo.f_taskRewrardIds, 2);
             foreach (int id in rewardIds)
             {
-                ItemGrid itemGrid = await ObjectBuilder.GetOrCreateInstance<ItemGrid>(E_AssetBundleType.UI, ResKeyCollection.ItemGrid, null);
+                ItemGrid itemGrid = await ObjectBuilder.GetObject<ItemGrid>(E_AssetBundleType.UI, ResKeyCollection.ItemGrid, null);
                 itemGrid.Init();
                 rewardItems.Add(itemGrid);
             }

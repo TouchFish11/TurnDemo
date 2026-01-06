@@ -27,11 +27,13 @@ public class BattleUIManager
     /// </summary>
     public async void ShowDamageText(DamageResult damageResult)
     {
-        DamageTextUI damageTextUI = await ObjectBuilder.GetOrCreateInstance<DamageTextUI>(E_AssetBundleType.UI, ResKeyCollection.DamageTextUI, null);
+        DamageTextUI damageTextUI = await ObjectBuilder.GetObject<DamageTextUI>(E_AssetBundleType.UI, ResKeyCollection.DamageTextUI, null);
+        // 获取伤害文本显示的位置
         Vector2 dmgTextOffset = GetDamageTextUIPos(damageResult.Target, damageTextXOffsetRange, damageTextYOffsetRange);
-        // 坐标转换，初始化
+        // 世界转UI坐标
         if (UIManager.WorldToLocalPointInRectangle(BattlePoint.Instance.CurrentActiveCamera, UIManager.Instance.UICamera, _view.transform, damageTextUI.gameObject, damageResult.Target.GameObject.transform.position, dmgTextOffset))
         {
+            // 初始化
             damageTextUI.InitDamageText(((int)damageResult.ElementType).ToElementTypeColor(), GetDamgeTypeText(damageResult), damageResult.FinalDamage);
         }
         // 更新累计伤害
@@ -45,7 +47,7 @@ public class BattleUIManager
     /// <param name="deltaHp"></param>
     public async void ShowHealText(IBattleEntityObject target, int deltaHp)
     {
-        DamageTextUI damageTextUI = await ObjectBuilder.GetOrCreateInstance<DamageTextUI>(E_AssetBundleType.UI, ResKeyCollection.HealTextUI, null);
+        DamageTextUI damageTextUI = await ObjectBuilder.GetObject<DamageTextUI>(E_AssetBundleType.UI, ResKeyCollection.HealTextUI, null);
         Vector2 dmgTextOffset = GetDamageTextUIPos(target, damageTextXOffsetRange, damageTextYOffsetRange);
         // 坐标转换，初始化
         if (UIManager.WorldToLocalPointInRectangle(BattlePoint.Instance.CurrentActiveCamera, UIManager.Instance.UICamera, _view.transform, damageTextUI.gameObject, target.GameObject.transform.position, dmgTextOffset))
@@ -68,13 +70,14 @@ public class BattleUIManager
     /// 更新等待命令UI
     /// </summary>
     /// <param name="waitingSkills"></param>
-    public async void UpdateWaitingCommmand(List<ISkill> waitingSkills)
+    public async void UpdateWaitingCommmand(List<string> iconPaths)
     {
         List<WaitingActUI> waitingActUIs = new List<WaitingActUI>();
-        foreach (var item in waitingSkills)
+        foreach (string iconPath in iconPaths)
         {
-            WaitingActUI waitingActUI = await ObjectBuilder.GetOrCreateInstance<WaitingActUI>(E_AssetBundleType.UI, ResKeyCollection.WaitingActUI, null);
-            waitingActUI.Init(null);
+            WaitingActUI waitingActUI = await ObjectBuilder.GetObject<WaitingActUI>(E_AssetBundleType.UI, ResKeyCollection.WaitingActUI, null);
+            Sprite icon = await AssetBundleManager.Instance.LoadAssetAsync<Sprite>(E_AssetBundleType.Texture, iconPath);
+            waitingActUI.Init(icon);
             waitingActUIs.Add(waitingActUI);
         }
         _model.UpdateWaitingCommmand(waitingActUIs);
@@ -100,7 +103,7 @@ public class BattleUIManager
         bool isFirst = true;
         foreach (IBattleEntityObject battleEntity in battleEntities)
         {
-            ActionGridUI actionGridUI = await ObjectBuilder.GetOrCreateInstance<ActionGridUI>(E_AssetBundleType.UI, ResKeyCollection.ActionGridUI, null);
+            ActionGridUI actionGridUI = await ObjectBuilder.GetObject<ActionGridUI>(E_AssetBundleType.UI, ResKeyCollection.ActionGridUI, null);
             //Sprite icon = await AssetBundleManager.Instance.LoadAssetAsync<Sprite>(E_AssetBundleType.UI, "");
             actionGridUI.Init(null, battleEntity.ActionValue, battleEntity, isFirst);
             actionGridUIs.Add(actionGridUI);
@@ -136,7 +139,7 @@ public class BattleUIManager
         List<BattlePointUI> battlePointUIs = new List<BattlePointUI>();
         for (int i = 0; i < max; i++)
         {
-            BattlePointUI battlePointUI = await ObjectBuilder.GetOrCreateInstance<BattlePointUI>(E_AssetBundleType.UI, ResKeyCollection.BattlePointUI, null);
+            BattlePointUI battlePointUI = await ObjectBuilder.GetObject<BattlePointUI>(E_AssetBundleType.UI, ResKeyCollection.BattlePointUI, null);
             battlePointUI.SetActivePoint(i < current);
             battlePointUIs.Add(battlePointUI);
         }
@@ -158,7 +161,7 @@ public class BattleUIManager
         foreach (SkillInfo info in infos)
         {
             // 玩家操作UI
-            SkillKeyUI skillKeyUI = await ObjectBuilder.GetOrCreateInstance<SkillKeyUI>(E_AssetBundleType.UI, ResKeyCollection.SkillKeyUI, null);
+            SkillKeyUI skillKeyUI = await ObjectBuilder.GetObject<SkillKeyUI>(E_AssetBundleType.UI, ResKeyCollection.SkillKeyUI, null);
             skillKeyUI.Init(info, _view.SkillKeyGroup, currentObject);
             skillKeyUIs.Add(skillKeyUI);
         }
@@ -167,19 +170,44 @@ public class BattleUIManager
     }
 
     /// <summary>
+    /// 显示角色立绘
+    /// 触发终结技后显示
+    /// 内部通过一个协程处理
+    /// </summary>
+    /// <param name="skillInfo"></param>
+    /// <returns></returns>
+    public void ShowPaiting(SkillInfo skillInfo)
+    {
+        ServiceLocator.Instance.Get<IMonoManager>().StartCoroutine(ShowPaiting_Cor(skillInfo));
+
+        // 显示角色立绘本地协程函数
+        IEnumerator ShowPaiting_Cor(SkillInfo skillInfo)
+        {
+            // 显示角色立绘
+            SetUltimatePaitingActive(true, null, skillInfo.f_name);
+            // 显示一秒后隐藏
+            yield return new WaitForSeconds(1f);
+            SetUltimatePaitingActive(false, null, string.Empty);
+        }
+    }
+
+    /// <summary>
     /// 更新目标标记
     /// </summary>
-    /// <param name="selectedTargets"></param>
+    /// <param name="selectedTargets">传null为隐藏</param>
     public async Task UpdateTargetMarker(List<IBattleEntityObject> selectedTargets)
     {
         List<SelectMarkerUI> selectMarkerUIs = new List<SelectMarkerUI>();
-        foreach (IBattleEntityObject battleEntity in selectedTargets)
+        if (selectedTargets != null)
         {
-            SelectMarkerUI selectMarkerUI = await ObjectBuilder.GetOrCreateInstance<SelectMarkerUI>(E_AssetBundleType.UI, ResKeyCollection.SelectMarkerUI, null);
-            if (UIManager.WorldToLocalPointInRectangle(BattlePoint.Instance.CurrentActiveCamera, UIManager.Instance.UICamera, _view.SelectMarkerArea, selectMarkerUI.gameObject, battleEntity.GameObject.transform.position, Vector2.up * 50))
+            foreach (IBattleEntityObject battleEntity in selectedTargets)
             {
-                selectMarkerUI.InitSelectMarker((battleEntity is PlayerObject) ? E_SkillTargetType.Friend : E_SkillTargetType.Enemy);
-                selectMarkerUIs.Add(selectMarkerUI);
+                SelectMarkerUI selectMarkerUI = await ObjectBuilder.GetObject<SelectMarkerUI>(E_AssetBundleType.UI, ResKeyCollection.SelectMarkerUI, null);
+                if (UIManager.WorldToLocalPointInRectangle(BattlePoint.Instance.CurrentActiveCamera, UIManager.Instance.UICamera, _view.SelectMarkerArea, selectMarkerUI.gameObject, battleEntity.GameObject.transform.position, Vector2.up * 50))
+                {
+                    selectMarkerUI.InitSelectMarker((battleEntity is PlayerObject) ? E_SkillTargetType.Friend : E_SkillTargetType.Enemy);
+                    selectMarkerUIs.Add(selectMarkerUI);
+                }
             }
         }
         _model.UpdateSelectMarker(selectMarkerUIs);
@@ -225,7 +253,7 @@ public class BattleUIManager
     }
 
 
-    public void ClearDamageTextUI()
+    public void ClearActiveDamageTextUI()
     {
         _model.UpdateCumulativeDamage(false, 0);
     }

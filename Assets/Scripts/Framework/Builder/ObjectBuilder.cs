@@ -22,7 +22,7 @@ namespace Framework
         /// <param name="parent"></param>
         /// <param name="worldPosStay"></param>
         /// <returns></returns>
-        public static async Task<T> GetOrCreateInstance<T>(E_AssetBundleType assetBundleType, string assetName, Transform parent, bool worldPosStay = false) where T : Component
+        public static async Task<T> GetObject<T>(E_AssetBundleType assetBundleType, string assetName, Transform parent, bool worldPosStay = false) where T : Component
         {
             GameObject cacheObj = await PoolManager.Instance.GetAssetBundleObjAsync(assetBundleType, assetName);
             cacheObj.transform.SetParent(parent, worldPosStay);

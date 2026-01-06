@@ -118,6 +118,8 @@ namespace Game.Battle
 
             // 再让下一个实体行动
             _currentActEntity = battleEntities[0];
+            // 更新当前实体
+            _context.SetCurrentEntity(_currentActEntity);
             // 更新实体看向
             UpdateEntityLookAt(_currentActEntity);
         }
@@ -160,7 +162,7 @@ namespace Game.Battle
         /// <summary>
         /// 初始化顺序
         /// </summary>
-        private async void InitOrder()
+        private void InitOrder()
         {
             // 初始化所有角色的行动值
             foreach (IBattleEntityObject battleEntityObject in battleEntities)
@@ -196,7 +198,7 @@ namespace Game.Battle
         /// <summary>
         /// 排序顺序
         /// </summary>
-        private async void SortOrder()
+        private void SortOrder()
         {
             // 暂时移除第一个角色，不参与计算
             battleEntities.Remove(_currentActEntity);

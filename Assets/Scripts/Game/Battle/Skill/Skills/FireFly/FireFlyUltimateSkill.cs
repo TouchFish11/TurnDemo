@@ -14,6 +14,8 @@ public class FireFlyUltimateSkill : UltimateSkill
 
     }
 
+    protected override int DmgCount { get; set; } = 3;
+
     protected override void OnPreUltimateCast(IBattleContext context)
     {
         base.OnPreUltimateCast(context);

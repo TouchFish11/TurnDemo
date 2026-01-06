@@ -10,6 +10,8 @@ namespace Game.Battle
     /// </summary>
     public class WeakPointAttackSkill : Skill
     {
+        protected override int DmgCount { get; set; } = 1;
+            
         public WeakPointAttackSkill(int skillId, ISkillCastPostHandler postHandler) : base(skillId, postHandler)
         {
 

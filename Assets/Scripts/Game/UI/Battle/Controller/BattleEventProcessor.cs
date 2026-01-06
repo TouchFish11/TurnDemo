@@ -13,8 +13,6 @@ public class BattleEventProcessor
     private BattleUIManager _uiManager;
     private BattleUIInitializer _uiInitializer;
 
-    private IBattleEntityObject currentActObject;
-
     public BattleEventProcessor(BattleController battleController, BattleUIManager uiManager, BattleUIInitializer uiInitializer)
     {
         _battleController = battleController;
@@ -29,31 +27,27 @@ public class BattleEventProcessor
     {
         eventBus.AddListener<TurnStartEvent>(OnTurnStart);
         eventBus.AddListener<TurnEndEvent>(OnTurnEnd);
-        eventBus.AddListener<CommandWaitEvent>(OnCommandWaitEvent);
         eventBus.AddListener<OnBattlePointCountChangedEvent>(OnBattlePointCountChanged);
         eventBus.AddListener<SelectTargetEvent>(OnTargetSelectionChanged);
         eventBus.AddListener<HpChangedEvent>(OnHpChanged);
         eventBus.AddListener<ShieldChangedEvent>(OnShieldChanged);
         eventBus.AddListener<ApplyDamageEvent>(OnTakeDamage);
         eventBus.AddListener<PlayerTriggerSkillEvent>(OnPlayerTriggerSkill);
-        eventBus.AddListener<ShowUltimateUIEvent>(OnShowUltimateUIEvent);
         eventBus.AddListener<UltimateReleaseOverEvent>(OnUltimateReleaseOverEvent);
         eventBus.AddListener<ActionBarSortPostEvent>(OnActionBarSortPostEvent);
     }
 
     /// <summary>
     /// 回合开始事件监听
+    /// 更新玩家/怪物UI
     /// </summary>
     /// <param name="turnStartEvent"></param>
     private async void OnTurnStart(TurnStartEvent turnStartEvent)
     {
-        // 记录当前行动角色
-        currentActObject = turnStartEvent.CurrentBattleEntity;
-
-        if (currentActObject is MonsterObject)
+        if (turnStartEvent.CurrentBattleEntity is MonsterObject)
         {
             // TODO：暂时写在这里，隐藏怪物UI，后续优化调用逻辑
-            await _uiInitializer.InitMonsterUI(new IBattleEntityObject[0]);
+            await _uiInitializer.InitMonsterUI(null);
         }
         else
         {
@@ -78,8 +72,7 @@ public class BattleEventProcessor
     /// <param name="turnEndEvent"></param>
     private void OnTurnEnd(TurnEndEvent turnEndEvent)
     {
-        // TODO：不是回合结束，而是造成伤害的指令结束后清空
-        _uiManager.UpdateCumulativeDamage(false, 0);
+
     }
 
     /// <summary>
@@ -92,45 +85,14 @@ public class BattleEventProcessor
     }
 
     /// <summary>
-    /// 命令等待事件
-    /// 更新命令排队UI
-    /// </summary>
-    /// <param name="commandWaitEvent"></param>
-    private async void OnCommandWaitEvent(CommandWaitEvent commandWaitEvent)
-    {
-        _uiManager.UpdateWaitingCommmand(commandWaitEvent.WaitingSkills);
-    }
-
-    /// <summary>
     /// 受到伤害事件回调
     /// 显示伤害文本
     /// </summary>
     /// <param name="applyDamageEvent"></param>
-    private async void OnTakeDamage(ApplyDamageEvent applyDamageEvent)
+    private void OnTakeDamage(ApplyDamageEvent applyDamageEvent)
     {
         _uiManager.ShowDamageText(applyDamageEvent.DamageResult);
     }
-
-    /// <summary>
-    /// 显示终结技界面事件回调
-    /// </summary>
-    /// <param name="showUltimateUIEvent"></param>
-    private void OnShowUltimateUIEvent(ShowUltimateUIEvent showUltimateUIEvent)
-    {
-        ServiceLocator.Instance.Get<IMonoManager>().StartCoroutine(WaitForPaitingOver(showUltimateUIEvent.Skill.SkillInfo));
-        // 更新终结技UI显示
-        _uiManager.UpdateOperator(showUltimateUIEvent.Caster, SkillKeyUIDataProviderFactory.GetProvider<UltimateSkillKeyUIDataProvider>());
-    }
-
-    private IEnumerator WaitForPaitingOver(SkillInfo skillInfo)
-    {
-        // 显示角色立绘
-        _uiManager.SetUltimatePaitingActive(true, null, skillInfo.f_name);
-        // 显示一秒后隐藏
-        yield return new WaitForSeconds(1f);
-        _uiManager.SetUltimatePaitingActive(false, null, string.Empty);
-    }
-
 
     /// <summary>
     /// 玩家触发技能事件回调
@@ -146,7 +108,7 @@ public class BattleEventProcessor
     /// 显示恢复文本
     /// </summary>
     /// <param name="hpChangedEvent"></param>
-    private async void OnHpChanged(HpChangedEvent hpChangedEvent)
+    private void OnHpChanged(HpChangedEvent hpChangedEvent)
     {
         if (hpChangedEvent.DeltaHp < 0)
         {
@@ -180,12 +142,12 @@ public class BattleEventProcessor
     /// <param name="ultimateReleaseOverEvent"></param>
     private void OnUltimateReleaseOverEvent(UltimateReleaseOverEvent ultimateReleaseOverEvent)
     {
-        if (currentActObject is not PlayerObject)
+        if (ultimateReleaseOverEvent.CurrentActEntity is not PlayerObject)
         {
             return;
         }
 
-        _uiManager.UpdateOperator(currentActObject, SkillKeyUIDataProviderFactory.GetProvider<BaseSkillKeyUIDataProvider>());
+        _uiManager.UpdateOperator(ultimateReleaseOverEvent.CurrentActEntity, SkillKeyUIDataProviderFactory.GetProvider<BaseSkillKeyUIDataProvider>());
     }
 
     /// <summary>

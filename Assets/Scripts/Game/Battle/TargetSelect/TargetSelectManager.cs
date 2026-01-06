@@ -63,6 +63,13 @@ public class TargetSelectManager : SingletonBase<TargetSelectManager>, ITargetSe
         LogManager.LogError($"未找到目标选择策略：{typeof(T)}，已默认使用：{nameof(MonsterBaseTargetSelectStrategy)}");
     }
 
+    public void ReSelectTarget(IBattleContext context, IBattleEntityObject caster, SkillInfo skillInfo)
+    {
+        // 当选择的技能改变时，也要触发目标选择UI的改变
+        SelectMainTarget(context, caster, skillInfo);
+        UpdateTargets();
+    }
+
     /// <summary>
     /// 选择技能事件回调
     /// </summary>
@@ -82,6 +89,7 @@ public class TargetSelectManager : SingletonBase<TargetSelectManager>, ITargetSe
         // 当选择的技能改变时，也要触发目标选择UI的改变
         this.skillInfo = BinaryDataManager.Instance.GetConfig<SkillInfoContainer>(E_ConfigLoadType.Editor).dataDic[selectSkillEvent.SkillId];
         SelectMainTarget(selectSkillEvent.Context, selectSkillEvent.Caster, skillInfo);
+        UpdateTargets();
     }
 
     /// <summary>
@@ -101,11 +109,13 @@ public class TargetSelectManager : SingletonBase<TargetSelectManager>, ITargetSe
             _mainTarget = currentSelectStrategy.SelectMainTarget(context, caster, skillInfo);
             LogManager.Log($"主目标：{_mainTarget}");
         }
-
-        UpdateTargets();
     }
 
-    public void UpdateTargets()
+    /// <summary>
+    /// 更新所有目标
+    /// 触发选择目标事件
+    /// </summary>
+    private void UpdateTargets()
     {
         // 记录选择的所有目标
         _selectedTargets.Clear();

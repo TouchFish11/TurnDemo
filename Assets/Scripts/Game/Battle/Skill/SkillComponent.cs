@@ -136,5 +136,22 @@ namespace Game.Battle
         {
             return skills.Values;
         }
+
+        /// <summary>
+        /// 获取普攻技能
+        /// TODO：后续优化到工具类/拓展方法中
+        /// </summary>
+        /// <returns></returns>
+        public ISkill GetNormalAttackSkill()
+        {
+            foreach (ISkill skill in skills.Values)
+            {
+                if ((E_SkillType)skill.SkillInfo.f_SkillType == E_SkillType.NormalAttack)
+                {
+                    return skill;
+                }
+            }
+            return null;
+        }
     }
 }

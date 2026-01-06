@@ -185,7 +185,7 @@ namespace Framework
             // 存在工厂
             var factory = iFactory as UIControllerFactory<TView, TModel, TController>;
             // 获取面板
-            TView view = await ObjectBuilder.GetOrCreateInstance<TView>(E_AssetBundleType.UI, assetName, GetLayer(layer));
+            TView view = await ObjectBuilder.GetObject<TView>(E_AssetBundleType.UI, assetName, GetLayer(layer));
             // 调用显示函数
             view.Show();
             // 创建数据

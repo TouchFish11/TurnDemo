@@ -52,7 +52,7 @@ namespace Game.Battle
 
         private async void CreateCamera()
         {
-            OrbitCameraController orbitCameraController = await ObjectBuilder.GetOrCreateInstance<OrbitCameraController>(E_AssetBundleType.Camera, ResKeyCollection.MainCamera, null);
+            OrbitCameraController orbitCameraController = await ObjectBuilder.GetObject<OrbitCameraController>(E_AssetBundleType.Camera, ResKeyCollection.MainCamera, null);
         }
     }
 }

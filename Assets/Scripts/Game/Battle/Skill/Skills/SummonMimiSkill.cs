@@ -5,6 +5,8 @@ namespace Game.Battle
 {
     public class SummonMimiSkill : Skill
     {
+        protected override int DmgCount { get; set; } = 1;
+
         public SummonMimiSkill(int skillId, ISkillCastPostHandler postHandler) : base(skillId, postHandler)
         {
 

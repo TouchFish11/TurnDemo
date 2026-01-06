@@ -36,8 +36,7 @@ namespace Game.Battle
         protected override void OnPreTakeDamage(DamageResult damageResult)
         {
             // 削减韧性
-            ToughnessComponent toughnessComponent = this.GetComponent<ToughnessComponent>();
-            toughnessComponent.ReduceToughness(damageResult.Source, damageResult.ElementType, damageResult.SkillInfo);
+            this.GetComponent<ToughnessComponent>().ReduceToughness(damageResult.Source, damageResult.ElementType, damageResult.SkillInfo);
         }
 
         protected override IEnumerator OnExceuteAction()
@@ -46,8 +45,11 @@ namespace Game.Battle
             int skillId = skillIds[Random.Range(0, skillIds.Count)];
             // 触发技能选择事件，更新目标管理器的缓存目标内容，释放技能时能获取到这些内容
             Context.GetEventBus().TriggerEvent(new SelectSkillEvent(Context, skillId, this));
+            // 更新相关UI
+            var target = ServiceLocator.Instance.Get<ITargetSelectManager>().GetMainTarget();
+            BattleUIScheduler.Instance.UpdateCameraAndHideMarkerAndMonsterUI(Context, target);
             // 模拟怪物行动的延迟
-            yield return new WaitForSeconds(1.0f);
+            yield return new WaitForSeconds(0.5f);
             CastSkill(skillId);
         }
     }

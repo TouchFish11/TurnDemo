@@ -2,6 +2,7 @@ using Framework;
 using Game.Battle;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
@@ -41,7 +42,8 @@ public abstract class UltimateSkill : Skill
     protected virtual void OnPreUltimateCast(IBattleContext context)
     {
         // 更新界面UI显示
-        context.GetEventBus().TriggerEvent(new ShowUltimateUIEvent(context, this, Caster));
+        BattleUIScheduler.Instance.ShowUltimatePaiting(Caster, SkillInfo);
+        BattleUIScheduler.Instance.UpdateCameraAndMarkerAndMonsterUI(context, Caster, SkillInfo);
         // TODO：暂时清空能量，更新能量显示
         PropertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentEnergy, 0);
     }

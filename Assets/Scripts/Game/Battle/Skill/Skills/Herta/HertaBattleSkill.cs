@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class HertaBattleSkill : Skill
 {
+    protected override int DmgCount { get; set; } = 1;
+
     public HertaBattleSkill(int skillId, ISkillCastPostHandler postHandler) : base(skillId, postHandler)
     {
 
@@ -19,7 +21,7 @@ public class HertaBattleSkill : Skill
 
         foreach (IBattleEntityObject battleEntity in AllTargets)
         {
-            MulTest(battleEntity, 2);
+            MulTest(battleEntity, DmgCount);
             RecoverEnergy();
         }
 

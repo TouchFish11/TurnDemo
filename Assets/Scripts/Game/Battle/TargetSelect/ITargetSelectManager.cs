@@ -36,4 +36,12 @@ public interface ITargetSelectManager
     /// </summary>
     /// <typeparam name="T"></typeparam>
     void SetSelectTargetStrategy<T>() where T : class, ITargetSelectStrategy;
+
+    /// <summary>
+    /// 重新选择目标
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="caster"></param>
+    /// <param name="skillInfo"></param>
+    void ReSelectTarget(IBattleContext context, IBattleEntityObject caster, SkillInfo skillInfo);
 }

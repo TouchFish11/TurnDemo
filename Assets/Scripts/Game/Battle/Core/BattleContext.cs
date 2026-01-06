@@ -25,6 +25,9 @@ namespace Game.Battle
 
         public int MaxBattlePointCount => maxBattlePointCount;
 
+        private IBattleEntityObject _currentEntity;
+
+
         public BattleContext()
         {
             eventBus = new BattleEventBus();
@@ -55,6 +58,10 @@ namespace Game.Battle
             maxBattlePointCount = Mathf.Max(default, maxBattlePointCount - cost);
             eventBus.TriggerEvent(new OnBattlePointCountChangedEvent(this, currentBattlePointCount, maxBattlePointCount));
         }
+
+        public IBattleEntityObject GetCurrentEntity() => _currentEntity;
+
+        public void SetCurrentEntity(IBattleEntityObject battleEntity) => _currentEntity = battleEntity; 
 
         /// <summary>
         /// 创建战斗实体对象

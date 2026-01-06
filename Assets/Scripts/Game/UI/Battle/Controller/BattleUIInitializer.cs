@@ -27,7 +27,7 @@ public class BattleUIInitializer
         // 玩家角色显示UI
         foreach (IBattleEntityObject battleEntity in battleEntities)
         {
-            RoleStateUI roleStateUI = await ObjectBuilder.GetOrCreateInstance<RoleStateUI>(E_AssetBundleType.UI, ResKeyCollection.RoleStateUI, null);
+            RoleStateUI roleStateUI = await ObjectBuilder.GetObject<RoleStateUI>(E_AssetBundleType.UI, ResKeyCollection.RoleStateUI, null);
             int skillId = battleEntity.GetComponent<SkillComponent>().GetUltimateSkill();
             if (skillId != -1)
             {
@@ -44,22 +44,24 @@ public class BattleUIInitializer
     /// 初始化怪物UI
     /// 依赖玩家相机初始化完毕
     /// </summary>
-    /// <param name="battleEntities"></param>
+    /// <param name="battleEntities">传null为隐藏</param>
     /// <returns></returns>
     public async Task InitMonsterUI(IEnumerable<IBattleEntityObject> battleEntities)
     {
         List<NormalMonsterStateUI> normalMonsterStateUIs = new List<NormalMonsterStateUI>();
-        // 怪物血量UI
-        foreach (IBattleEntityObject battleEntity in battleEntities)
+        if (battleEntities != null)
         {
-            NormalMonsterStateUI monsterStateUI = await ObjectBuilder.GetOrCreateInstance<NormalMonsterStateUI>(E_AssetBundleType.UI, ResKeyCollection.MonsterStateUI, null);
-            if (UIManager.WorldToLocalPointInRectangle(BattlePoint.Instance.CurrentActiveCamera, UIManager.Instance.UICamera, _view.MonsterStateArea, monsterStateUI.gameObject, battleEntity.GameObject.transform.position, Vector2.up * 250))
+            // 怪物血量UI
+            foreach (IBattleEntityObject battleEntity in battleEntities)
             {
-                monsterStateUI.Init(battleEntity);
-                normalMonsterStateUIs.Add(monsterStateUI);
+                NormalMonsterStateUI monsterStateUI = await ObjectBuilder.GetObject<NormalMonsterStateUI>(E_AssetBundleType.UI, ResKeyCollection.MonsterStateUI, null);
+                if (UIManager.WorldToLocalPointInRectangle(BattlePoint.Instance.CurrentActiveCamera, UIManager.Instance.UICamera, _view.MonsterStateArea, monsterStateUI.gameObject, battleEntity.GameObject.transform.position, Vector2.up * 250))
+                {
+                    monsterStateUI.Init(battleEntity);
+                    normalMonsterStateUIs.Add(monsterStateUI);
+                }
             }
         }
-
         _model.UpdateNormalMonsterState(normalMonsterStateUIs);
     }
 }

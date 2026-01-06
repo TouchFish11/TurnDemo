@@ -41,11 +41,24 @@ namespace Game
 
         }
 
+        /// <summary>
+        /// 能否受伤
+        /// </summary>
+        /// <returns></returns>
+        protected bool CanTakeDamage()
+        {
+            return true;
+        }
+
         public void TakeDamage(DamageResult damageResult)
         {
-            // 需要判断能否受伤
-            // ...
+            // 判断能否受伤
+            if (!CanTakeDamage())
+            {
+                return;
+            }
 
+            // 受到伤害前执行
             OnPreTakeDamage(damageResult);
 
             PropertyComponent propertyComponent = this.GetComponent<PropertyComponent>();

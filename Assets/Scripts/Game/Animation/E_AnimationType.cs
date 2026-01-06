@@ -19,4 +19,5 @@ public enum E_AnimationType : byte
     Hit,
     Death,
     Rebirth,
+    Attack,
 }

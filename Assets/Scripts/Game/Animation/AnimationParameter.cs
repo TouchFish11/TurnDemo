@@ -56,4 +56,9 @@ public class AnimationParameter
     /// 重生触发hash
     /// </summary>
     public int RebirthTriggerHash { get; } = Animator.StringToHash("RebirthTrigger");
+
+    /// <summary>
+    /// 攻击触发hash
+    /// </summary>
+    public int AttackTirggerHash { get; } = Animator.StringToHash("AttackTirgger");
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Game.Battle
 {
     /// <summary>
-    /// 显示终结UI事件
+    /// 显示终结技立绘UI事件
     /// </summary>
     public class ShowUltimateUIEvent : BattleEvent
     {

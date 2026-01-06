@@ -4,6 +4,7 @@ namespace Game.Battle
 {
     /// <summary>
     /// 技能释放事件
+    /// 目前用于播放动画
     /// </summary>
     public class SkillCastEvent : BattleEvent
     {

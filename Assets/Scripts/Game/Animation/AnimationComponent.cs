@@ -20,6 +20,11 @@ public abstract class AnimationComponent : BaseComponent
     /// </summary>
     public abstract int LayerIndex { get; protected set; }
 
+    /// <summary>
+    /// 动画参数
+    /// </summary>
+    public AnimationParameter AnimationParameter => animationArg;
+
     public override void Init(IEntityObject entityObject)
     {
         animationArg = new AnimationParameter();
@@ -74,11 +79,20 @@ public abstract class AnimationComponent : BaseComponent
             case E_AnimationType.Rebirth:
                 animator.SetTrigger(animationArg.RebirthTriggerHash);
                 break;
+            case E_AnimationType.Attack:
+                animator.SetTrigger(animationArg.AttackTirggerHash);
+                break;
             default:
                 break;
         }
         currentAnimationType = animationType;
     }
+    
+    /// <summary>
+    /// 获取Animator
+    /// </summary>
+    /// <returns></returns>
+    public Animator GetAnimator() => animator;
 
     /// <summary>
     /// 获取当前动画状态信息

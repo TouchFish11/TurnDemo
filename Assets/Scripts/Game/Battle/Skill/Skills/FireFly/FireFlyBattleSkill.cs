@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class FireFlyBattleSkill : Skill
 {
+    protected override int DmgCount { get; set; } = 1;
+
     public FireFlyBattleSkill(int skillId, ISkillCastPostHandler postHandler) : base(skillId, postHandler)
     {
 

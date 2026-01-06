@@ -24,13 +24,21 @@ public abstract class Skill : ISkill
 
     public ISkillCastPostHandler SkillCastPostHandler { get; private set; }
 
-    private readonly float waitTime = 1f;
+    private readonly float waitTime = 0.85f;
+
+    /// <summary>
+    /// 伤害次数
+    /// </summary>
+    protected abstract int DmgCount { get; set; }
+    // 当前伤害次数
+    protected int currentDmgCount;
 
     protected Skill(int skillId, ISkillCastPostHandler postHandler)
     {
         SkillInfo = BinaryDataManager.Instance.GetConfig<SkillInfoContainer>(E_ConfigLoadType.Editor).dataDic[skillId];
         DamageCalcManager = ServiceLocator.Instance.Get<IDamageCalcManager>();
         SkillCastPostHandler = postHandler;
+        currentDmgCount = DmgCount;
     }
 
     public virtual void Init(IBattleEntityObject caster, IBattleEntityObject mainTarget, List<IBattleEntityObject> allTargets)
@@ -74,8 +82,17 @@ public abstract class Skill : ISkill
     /// <returns></returns>
     protected virtual IEnumerator OnPostCast()
     {
-        // TODO：暂时直接清空战斗界面显示的伤害总文本
-        ServiceLocator.Instance.Get<IUIManager>().GetView<BattleController>().GetBattleUI().ClearDamageTextUI();
+        // 重置状态
+        currentDmgCount = DmgCount;
+
+        // TODO：考虑移动到SkillCastPostHandler中
+        /* ----------------- */
+        // 清空战斗界面显示的伤害总文本
+        BattleUIScheduler.Instance.ClearActiveDamageTextUI();
+        // 清空总伤害累计显示UI
+        BattleUIScheduler.Instance.UpdateCumulativeDamage(false, 0);
+        /* ----------------- */
+
         yield return SkillCastPostHandler.OnHnadle(this);
     }
 

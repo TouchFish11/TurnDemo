@@ -27,7 +27,7 @@ public class InteractLogic : MainLogic
         List<InteractUI> interactUIs = new List<InteractUI>(interactables.Count);
         foreach (IInteractable interactable in interactables)
         {
-            InteractUI interactUI = await ObjectBuilder.GetOrCreateInstance<InteractUI>(E_AssetBundleType.UI, ResKeyCollection.InteractUI, null);
+            InteractUI interactUI = await ObjectBuilder.GetObject<InteractUI>(E_AssetBundleType.UI, ResKeyCollection.InteractUI, null);
             // 初始化文本
             interactUI.Init(interactable.NpcInfo.f_speakerName);
             interactUIs.Add(interactUI);

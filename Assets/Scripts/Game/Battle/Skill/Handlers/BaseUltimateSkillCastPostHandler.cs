@@ -10,11 +10,15 @@ public class BaseUltimateSkillCastPostHandler : ISkillCastPostHandler
 {
     public IEnumerator OnHnadle(ISkill skill)
     {
+        IBattleContext context = skill.Caster.Context;
+        IBattleEntityObject currentEntity = context.GetCurrentEntity();
         // 判断当前玩家是否还有行动次数
-        if (skill.Caster.CanAct)
+        if (currentEntity.CanAct)
         {
+            SkillInfo currentEntitySkillInfo = currentEntity.GetComponent<SkillComponent>().GetNormalAttackSkill().SkillInfo;
             // 用于玩家终结技结束后恢复UI
-            skill.Caster.Context.GetEventBus().TriggerEvent(new UltimateReleaseOverEvent(skill.Caster.Context));
+            context.GetEventBus().TriggerEvent(new UltimateReleaseOverEvent(context, currentEntity));
+            BattleUIScheduler.Instance.UpdateCameraAndMarkerAndMonsterUI(context, currentEntity, currentEntitySkillInfo);
         }
         yield break;
     }

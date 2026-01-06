@@ -63,5 +63,7 @@ namespace Game.Battle
         void ExpandSkillPoint(int cost);
         int GetPlayerObjectIndex(IBattleEntityObject battleEntity);
         int GetMonsterObjectIndex(IBattleEntityObject battleEntity);
+        IBattleEntityObject GetCurrentEntity();
+        void SetCurrentEntity(IBattleEntityObject battleEntity);
     }
 }

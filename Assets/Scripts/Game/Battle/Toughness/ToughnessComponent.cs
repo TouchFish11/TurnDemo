@@ -1,9 +1,6 @@
 using Framework;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 namespace Game.Battle
 {
@@ -42,9 +39,6 @@ namespace Game.Battle
             _toughnessReduceStrategies.Add(ToughnessStrategyFactory.GetReduceStrategy<DefaultToughnessReduceStrategy>());
             // 添加默认削减韧性计算策略
             _toughnessCalcStrategies.Add(ToughnessStrategyFactory.GetCalcStrategy<DefaultToughnessCalcStrategy>());
-
-            // 订阅“技能释放事件”（监听所有技能释放，计算韧性）
-            //Caster.Context.GetEventBus().AddListener<SkillCastEvent>(OnSkillCastHandler);
         }
 
         /// <summary>
@@ -214,31 +208,6 @@ namespace Game.Battle
             }
 
             return totalValue;
-        }
-
-        /// <summary>
-        /// 事件回调：技能释放后，计算韧性伤害
-        /// </summary>
-        /// <param name="evt"></param>
-        private void OnSkillCastHandler(SkillCastEvent skillCastEvent)
-        {
-            // 只处理当前组件所属角色的韧性（避免处理其他角色）
-            if (!skillCastEvent.Contain(BattleEntity))
-            {
-                return;
-            }
-
-            // 技能对韧性造成削减（调用韧性API）
-            //_toughness.ReduceToughness(skillCastEvent.PropertyType, 25);
-
-            // 若韧性为0且未触发过破盾（防止重复触发）
-            if (_toughness.IsBroken)
-            {
-                LogManager.Log($"\n{BattleEntity.GameObject.name}被击破！");
-
-                // 广播“破盾事件”（通知其他模块“目标已破盾”）
-               // Caster.Context.GetEventBus().TriggerEvent(new ToughnessBrokenEvent(skillCastEvent.Context, skillCastEvent.Skill.Caster, Caster));
-            }
         }
 
         /// <summary>

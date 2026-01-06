@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class TestMonsterSkill : Skill
 {
+    protected override int DmgCount { get; set; } = 1;
+
     public TestMonsterSkill(int skillId, ISkillCastPostHandler postHandler) : base(skillId, postHandler)
     {
 
