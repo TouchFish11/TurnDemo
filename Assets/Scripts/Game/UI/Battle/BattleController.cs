@@ -21,6 +21,7 @@ public class BattleControllerFactory : UIControllerFactory<BattleView, BattleMod
 /// <summary>
 /// 战斗界面控制器
 /// </summary>
+[UIControllerFactory(typeof(BattleControllerFactory))]
 public class BattleController : UIController<BattleView, BattleModel>
 {
     // 依赖注入各子模块

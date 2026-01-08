@@ -26,6 +26,7 @@ namespace Game.UI
     /// <summary>
     /// 任务界面控制器
     /// </summary>
+    [UIControllerFactory(typeof(TaskControllerFactory))]
     public class TaskController : UIController<TaskView, TaskModel>
     {
         private TaskDataCollection taskDataCollection;

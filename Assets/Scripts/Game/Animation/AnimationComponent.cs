@@ -1,3 +1,4 @@
+using Framework;
 using Game;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ public abstract class AnimationComponent : BaseComponent
     // 动画参数
     protected AnimationParameter animationArg;
     // 动画类型
-    protected E_AnimationType currentAnimationType = E_AnimationType.None;
+    protected abstract E_AnimationType CurrentAnimationType { get; set; }
 
     /// <summary>
     /// 动画层级索引
@@ -35,64 +36,19 @@ public abstract class AnimationComponent : BaseComponent
     /// 设置动画类型
     /// </summary>
     /// <param name="animationType"></param>
-    public void SetAnimationState(E_AnimationType animationType)
-    {
-        if (currentAnimationType == animationType)
-        {
-            return;
-        }
+    public abstract void SetAnimationState(E_AnimationType animationType);
 
-        switch (animationType)
-        {
-            case E_AnimationType.None:
-                break;
-            case E_AnimationType.Idle:
-                animator.SetBool(animationArg.IsRunHash, false);
-                break;
-            case E_AnimationType.Run:
-                animator.SetBool(animationArg.IsRunHash, true);
-                break;
-            case E_AnimationType.PreNormalAttack:
-                animator.SetTrigger(animationArg.PreNormalAttackTriggerHash);
-                break;
-            case E_AnimationType.NormalAttack:
-                animator.SetTrigger(animationArg.NormalAtkTirggerHash);
-                break;
-            case E_AnimationType.PreBattleAttack:
-                animator.SetTrigger(animationArg.PreBattleAttackTriggerHash);
-                break;
-            case E_AnimationType.BattleAttack:
-                animator.SetTrigger(animationArg.BattleAtkTriggerHash);
-                break;
-            case E_AnimationType.PreUltimateAttack:
-                animator.SetTrigger(animationArg.PreUltimateAttackTriggerHash);
-                break;
-            case E_AnimationType.UltimateAttack:
-                animator.SetTrigger(animationArg.UltimateAtkTriggerHash);
-                break;
-            case E_AnimationType.Hit:
-                animator.SetTrigger(animationArg.HitTriggerHash);
-                break;
-            case E_AnimationType.Death:
-                animator.SetTrigger(animationArg.DeathTriggerHash);
-                break;
-            case E_AnimationType.Rebirth:
-                animator.SetTrigger(animationArg.RebirthTriggerHash);
-                break;
-            case E_AnimationType.Attack:
-                animator.SetTrigger(animationArg.AttackTirggerHash);
-                break;
-            default:
-                break;
-        }
-        currentAnimationType = animationType;
-    }
-    
     /// <summary>
     /// 获取Animator
     /// </summary>
     /// <returns></returns>
     public Animator GetAnimator() => animator;
+
+    /// <summary>
+    /// 获取动画参数
+    /// </summary>
+    /// <returns></returns>
+    public AnimationParameter GetParameter() => animationArg;
 
     /// <summary>
     /// 获取当前动画状态信息

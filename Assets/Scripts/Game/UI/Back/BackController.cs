@@ -22,6 +22,7 @@ public class BackControllerFactory : UIControllerFactory<BackView, BackModel, Ba
 /// <summary>
 /// ±³¾°½çÃæ¿ØÖÆÆ÷
 /// </summary>
+[UIControllerFactory(typeof(BackControllerFactory))]
 public class BackController : UIController<BackView, BackModel>
 {
     public BackController(BackView view, BackModel model) : base(view, model)

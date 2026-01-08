@@ -23,6 +23,7 @@ public class BeginControllerFactory : UIControllerFactory<BeginView, BeginModel,
 /// <summary>
 /// 开始界面控制器
 /// </summary>
+[UIControllerFactory(typeof(BeginControllerFactory))]
 public class BeginController : UIController<BeginView, BeginModel>
 {
     public BeginController(BeginView view, BeginModel model) : base(view, model)

@@ -22,6 +22,12 @@ public class BattleUIManager
         _model = model;
     }
 
+    public async void ShowBattleMessage(string msg)
+    {
+        BattleMessageUI battleMessageUI = await ObjectBuilder.GetObject<BattleMessageUI>(E_AssetBundleType.UI, ResKeyCollection.BattleMessageUI, _view.BattleMsgArea);
+        battleMessageUI.InitMessage(Color.red, msg);
+    }
+
     /// <summary>
     /// œ‘ æ…À∫¶Œƒ±æ
     /// </summary>

@@ -32,7 +32,7 @@ public class BattleEventProcessor
         eventBus.AddListener<HpChangedEvent>(OnHpChanged);
         eventBus.AddListener<ShieldChangedEvent>(OnShieldChanged);
         eventBus.AddListener<ApplyDamageEvent>(OnTakeDamage);
-        eventBus.AddListener<PlayerTriggerSkillEvent>(OnPlayerTriggerSkill);
+        eventBus.AddListener<PlayerReleaseSkillEvent>(OnPlayerReleaseSkillEvent);
         eventBus.AddListener<UltimateReleaseOverEvent>(OnUltimateReleaseOverEvent);
         eventBus.AddListener<ActionBarSortPostEvent>(OnActionBarSortPostEvent);
     }
@@ -95,10 +95,10 @@ public class BattleEventProcessor
     }
 
     /// <summary>
-    /// 玩家触发技能事件回调
+    /// 玩家释放技能事件回调
     /// </summary>
     /// <param name="playerTriggerSkillEvent"></param>
-    private void OnPlayerTriggerSkill(PlayerTriggerSkillEvent playerTriggerSkillEvent)
+    private void OnPlayerReleaseSkillEvent(PlayerReleaseSkillEvent playerReleaseSkillEvent)
     {
         _uiManager.HideOperator(false);
     }

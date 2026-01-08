@@ -23,6 +23,7 @@ public class DialogueControllerFactory : UIControllerFactory<DialogueView, Dialo
 /// <summary>
 /// 对话界面控制器
 /// </summary>
+[UIControllerFactory(typeof(DialogueControllerFactory))]
 public class DialogueController : UIController<DialogueView, DialogueModel>
 {
     private static readonly WaitForSeconds _waitForSeconds0_25 = new WaitForSeconds(0.25f);

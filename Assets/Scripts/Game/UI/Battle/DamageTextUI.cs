@@ -83,16 +83,16 @@ public class DamageTextUI : BaseUIBehaviour
 
         currentTime += Time.deltaTime;
         if (currentTime >= destroyTime)
-            {
+        {
             currentTime = 0;
-                PoolManager.Instance.PushObj(this.gameObject);
-            }
-
-            // 文本缩放
-            this.damageTextMover.localScale = Vector3.Lerp(this.damageTextMover.localScale, endScale, Time.deltaTime * scaleFactor);
-            //文本运动
-            this.damageTextMover.Translate(Time.deltaTime * upMoveSpeed * Vector3.up);
+            PoolManager.Instance.PushObj(this.gameObject);
         }
+
+        // 文本缩放
+        this.damageTextMover.localScale = Vector3.Lerp(this.damageTextMover.localScale, endScale, Time.deltaTime * scaleFactor);
+        //文本运动
+        this.damageTextMover.Translate(Time.deltaTime * upMoveSpeed * Vector3.up);
+    }
 
     protected override void OnDisable()
     {

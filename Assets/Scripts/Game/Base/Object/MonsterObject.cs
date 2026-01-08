@@ -48,9 +48,9 @@ namespace Game.Battle
             // 更新相关UI
             var target = ServiceLocator.Instance.Get<ITargetSelectManager>().GetMainTarget();
             BattleUIScheduler.Instance.UpdateCameraAndHideMarkerAndMonsterUI(Context, target);
-            // 模拟怪物行动的延迟
-            yield return new WaitForSeconds(0.5f);
             CastSkill(skillId);
+
+            yield break;
         }
     }
 }

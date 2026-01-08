@@ -53,19 +53,31 @@ public abstract class Skill : ISkill
     // 一定是通过技能对象实例来驱动角色释放技能行为的
     public IEnumerator Cast(IBattleContext context)
     {
-        // 通用处理逻辑
-
-        // 处理战技点
-        context.ConsumeSkillPoint(SkillInfo.f_costBP);
-
+        // 技能释放前
+        OnPreCast(context);
         // 处理动画相关内容
         yield return OnCast(context);
-
         // 等待时间，优化战斗表现
         yield return new WaitForSeconds(waitTime);
-
         // 释放结束后处理
         yield return OnPostCast();
+    }
+
+    /// <summary>
+    /// 技能释放前
+    /// 执行通用逻辑，可重写覆盖（不调用）基类方法
+    /// </summary>
+    /// <param name="context"></param>
+    protected virtual void OnPreCast(IBattleContext context)
+    {
+        /// TODO：暂时这样判断
+        if (Caster is PlayerObject)
+        {
+            // 处理战技点
+            context.ConsumeSkillPoint(SkillInfo.f_costBP);
+            // 隐藏UI
+            context.GetEventBus().TriggerEvent(new PlayerReleaseSkillEvent(context));
+        }
     }
 
     /// <summary>

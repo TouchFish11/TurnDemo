@@ -21,6 +21,7 @@ public class LoginControllerFactory : UIControllerFactory<LoginView, LoginModel,
 /// <summary>
 /// µÇÂ¼½çÃæ¿ØÖÆÆ÷
 /// </summary>
+[UIControllerFactory(typeof(LoginControllerFactory))]
 public class LoginController : UIController<LoginView, LoginModel>
 {
     private ILoginService _loginService;

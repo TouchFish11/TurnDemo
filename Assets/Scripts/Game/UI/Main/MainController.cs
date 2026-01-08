@@ -28,6 +28,7 @@ public class MainControllerFactory : UIControllerFactory<MainView, MainModel, Ma
 /// <summary>
 /// 主界面控制器
 /// </summary>
+[UIControllerFactory(typeof(MainControllerFactory))]
 public class MainController : UIController<MainView, MainModel>
 {
     private readonly Dictionary<Type, MainLogic> mainLogics = new Dictionary<Type, MainLogic>();

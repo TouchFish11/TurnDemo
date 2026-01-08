@@ -10,6 +10,7 @@ namespace Game.Battle
     {
         public IBattleEntityObject BattleEntity { get; private set; }
         public override int LayerIndex { get; protected set; }
+        protected override E_AnimationType CurrentAnimationType { get; set; }
 
         public override void Init(IEntityObject entityObject)
         {
@@ -24,6 +25,56 @@ namespace Game.Battle
             BattleEntity = battleEntity;
             battleEntity.Context.GetEventBus().AddListener<SelectSkillEvent>(OnSelectSkillEvent);
             battleEntity.Context.GetEventBus().AddListener<SkillCastEvent>(OnSkillCastEvent);
+
+            CurrentAnimationType = (battleEntity is PlayerObject) ? E_AnimationType.PreNormalAttack : E_AnimationType.None;
+
+        }
+
+        public override void SetAnimationState(E_AnimationType animationType)
+        {
+            if (CurrentAnimationType == animationType)
+            {
+                return;
+            }
+
+            switch (animationType)
+            {
+                case E_AnimationType.None:
+                    break;
+                case E_AnimationType.PreNormalAttack:
+                    animator.SetTrigger(animationArg.PreNormalAttackTriggerHash);
+                    break;
+                case E_AnimationType.NormalAttack:
+                    animator.SetTrigger(animationArg.NormalAtkTirggerHash);
+                    break;
+                case E_AnimationType.PreBattleAttack:
+                    animator.SetTrigger(animationArg.PreBattleAttackTriggerHash);
+                    break;
+                case E_AnimationType.BattleAttack:
+                    animator.SetTrigger(animationArg.BattleAtkTriggerHash);
+                    break;
+                case E_AnimationType.PreUltimateAttack:
+                    animator.SetTrigger(animationArg.PreUltimateAttackTriggerHash);
+                    break;
+                case E_AnimationType.UltimateAttack:
+                    animator.SetTrigger(animationArg.UltimateAtkTriggerHash);
+                    break;
+                case E_AnimationType.Hit:
+                    animator.SetTrigger(animationArg.HitTriggerHash);
+                    break;
+                case E_AnimationType.Death:
+                    animator.SetTrigger(animationArg.DeathTriggerHash);
+                    break;
+                case E_AnimationType.Rebirth:
+                    animator.SetTrigger(animationArg.RebirthTriggerHash);
+                    break;
+                case E_AnimationType.Attack:
+                    animator.SetTrigger(animationArg.AttackTirggerHash);
+                    break;
+                default:
+                    break;
+            }
+            CurrentAnimationType = animationType;
         }
 
         /// <summary>
@@ -31,9 +82,24 @@ namespace Game.Battle
         /// </summary>
         public void SetUltimatePose()
         {
-            // 先重置状态，因为攻击状态都是从PreNormalAttack状态开始转换的，而默认状态是null状态
-            SetAnimationState(E_AnimationType.PreNormalAttack);
             SetAnimationState(E_AnimationType.PreUltimateAttack);
+        }
+
+        /// <summary>
+        /// 重置动画类型状态
+        /// </summary>
+        public void ResetAnimationType()
+        {
+            if (this.BattleEntity is PlayerObject)
+            {
+                CurrentAnimationType = E_AnimationType.PreNormalAttack;
+            }
+            else
+            {
+                CurrentAnimationType = E_AnimationType.None;
+            }
+
+            LogManager.Log($"重置状态，{CurrentAnimationType}");
         }
 
         /// <summary>
@@ -49,11 +115,10 @@ namespace Game.Battle
 
             // 根据技能信息获取动画类型
             SkillInfo skillInfo = BinaryDataManager.Instance.GetConfig<SkillInfoContainer>(E_ConfigLoadType.Editor).dataDic[selectSkillEvent.SkillId];
-
             switch ((E_SkillType)skillInfo.f_SkillType)
             {
                 case E_SkillType.Monster:
-                    SetAnimationState(E_AnimationType.PreNormalAttack);
+                    SetAnimationState(E_AnimationType.Attack);
                     break;
                 case E_SkillType.NormalAttack:
                     SetAnimationState(E_AnimationType.PreNormalAttack);
@@ -91,5 +156,7 @@ namespace Game.Battle
             base.Destroy();
             BattleEntity = null;
         }
+
+
     }
 }

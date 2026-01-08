@@ -43,6 +43,7 @@ namespace Framework
 		public static string xArrowheadInwards128 => "xArrowheadInwards128";
 		public static string Canvas => "Canvas";
 		public static string BackView => "BackView";
+		public static string BattleMessageUI => "BattleMessageUI";
 		public static string BattleView => "BattleView";
 		public static string DamageTextUI => "DamageTextUI";
 		public static string HealTextUI => "HealTextUI";
@@ -59,6 +60,8 @@ namespace Framework
 		public static string DialogueOptUI => "DialogueOptUI";
 		public static string DialogueReviewUI => "DialogueReviewUI";
 		public static string DialogueView => "DialogueView";
+		public static string GlobalMessageView => "GlobalMessageView";
+		public static string MessageUI => "MessageUI";
 		public static string InteractUI => "InteractUI";
 		public static string BattleLoadingView => "BattleLoadingView";
 		public static string LoginView => "LoginView";

@@ -7,7 +7,6 @@ using UnityEngine;
 
 public class HertaNormalSkill : Skill
 {
-    private float dis = 2f;
     private float dmgTime = 0.24f + 0.04f;
 
     private string rollState = "Roll";

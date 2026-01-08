@@ -1,6 +1,7 @@
 using Game.UI;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -101,6 +102,9 @@ namespace Framework
 
             await Task.CompletedTask;
 #endif
+
+            // 显示全局消息界面
+            await CreateViewAsync<GlobalMessageView, GlobalMessageModel, GlobalMessageController>(E_UILayer.Bot);
         }
 
         /// <summary>
@@ -108,15 +112,20 @@ namespace Framework
         /// </summary>
         void IUIManager.RegisterControllerFactory()
         {
-            _typeToCtrlFactoryMap.Add(typeof(LoginController), new LoginControllerFactory());
-            _typeToCtrlFactoryMap.Add(typeof(BackController), new BackControllerFactory());
-            _typeToCtrlFactoryMap.Add(typeof(BeginController), new BeginControllerFactory());
-            _typeToCtrlFactoryMap.Add(typeof(VideoController), new VideoControllerFactory());
-            _typeToCtrlFactoryMap.Add(typeof(MainController), new MainControllerFactory());
-            _typeToCtrlFactoryMap.Add(typeof(DialogueController), new DialogueControllerFactory());
-            _typeToCtrlFactoryMap.Add(typeof(TaskController), new TaskControllerFactory());
-            _typeToCtrlFactoryMap.Add(typeof(BattleLoadingController), new BattleLoadingControllerFactory());
-            _typeToCtrlFactoryMap.Add(typeof(BattleController), new BattleControllerFactory());
+            // 反射查找注册缓存
+            foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
+            {
+                UIControllerFactoryAttribute attribute = type.GetCustomAttribute<UIControllerFactoryAttribute>();
+                if (attribute == null)
+                {
+                    continue;
+                }
+
+                if (typeof(IUIControllerFactory).IsAssignableFrom(attribute.ControllerFactory))
+                {
+                    _typeToCtrlFactoryMap.Add(type, Activator.CreateInstance(attribute.ControllerFactory) as IUIControllerFactory);
+                }
+            }
         }
 
         /// <summary>

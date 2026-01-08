@@ -17,6 +17,11 @@ namespace Framework
         E_Net_OnPostConnect,
 
         /// <summary>
+        /// 全局消息_string
+        /// </summary>
+        E_GlobalMsg,
+
+        /// <summary>
         /// 鼠标可见
         /// </summary>
         E_MouseVisible,
@@ -35,6 +40,8 @@ namespace Framework
         /// 关闭界面事件
         /// </summary>
         E_CloseView,
+
+
 
         #endregion
 

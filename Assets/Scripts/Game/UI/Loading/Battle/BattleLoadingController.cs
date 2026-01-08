@@ -1,5 +1,6 @@
 using Framework;
 using Game.Battle;
+using Game.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -21,6 +22,7 @@ public class BattleLoadingControllerFactory : UIControllerFactory<BattleLoadingV
 /// <summary>
 /// 战斗加载界面控制器
 /// </summary>
+[UIControllerFactory(typeof(BattleLoadingControllerFactory))]
 public class BattleLoadingController : UIController<BattleLoadingView, BattleLoadingModel>
 {
     public BattleLoadingController(BattleLoadingView view, BattleLoadingModel model) : base(view, model)

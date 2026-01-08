@@ -122,6 +122,7 @@ public class SkillKeyUI : BaseUIBehaviour
     {
         if (triggerPhase == E_TriggerPhase.Trigger && _SkillType != E_SkillType.UltimateSkill)
         {
+            triggerPhase = E_TriggerPhase.Selected;
             // 执行触发技能事件
             battleContext.GetEventBus().TriggerEvent(new PlayerTriggerSkillEvent(battleContext, skillId, battleEntity));
         }

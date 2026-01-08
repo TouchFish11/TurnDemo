@@ -7,7 +7,6 @@ using UnityEngine;
 
 public class FireFlyNormalSkill : Skill
 {
-    private float dis = 2f;
     private float dmgTime = 0.24f + 0.04f;
 
     protected override int DmgCount { get; set; } = 1;

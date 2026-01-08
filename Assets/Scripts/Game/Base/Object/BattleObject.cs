@@ -60,9 +60,25 @@ namespace Game
 
             // 受到伤害前执行
             OnPreTakeDamage(damageResult);
+            // 受到伤害
+            OnTakeDamage(damageResult);
+        }
+
+        /// <summary>
+        /// 在受伤之前触发
+        /// </summary>
+        protected abstract void OnPreTakeDamage(DamageResult damageResult);
+
+        /// <summary>
+        /// 受到伤害
+        /// </summary>
+        /// <param name="damageResult"></param>
+        protected virtual void OnTakeDamage(DamageResult damageResult)
+        {
+            // 播放受击动画
+            this.GetComponent<BattleAnimationComponent>().SetAnimationState(E_AnimationType.Hit);
 
             PropertyComponent propertyComponent = this.GetComponent<PropertyComponent>();
-
             // 更新当前血量
             int currentHp = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentHp);
             propertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentHp, currentHp - damageResult.FinalDamage);
@@ -76,11 +92,6 @@ namespace Game
             }
         }
 
-        /// <summary>
-        /// 在受伤之前触发
-        /// </summary>
-        protected abstract void OnPreTakeDamage(DamageResult damageResult);
-
         public virtual void Die()
         {
             // TODO：待优化，目前直接失活对象。之后播放死亡动画
@@ -93,7 +104,7 @@ namespace Game
         /// </summary>
         public void ExecuteAction()
         {
-            AddActCount();
+            OnTurnStart();
             MonoManager.Instance.StartCoroutine(OnExceuteAction());
         }
 
@@ -122,7 +133,7 @@ namespace Game
         /// </summary>
         protected virtual void OnTurnStart()
         {
-
+            AddActCount();
         }
 
         /// <summary>
@@ -151,7 +162,6 @@ namespace Game
                 // 执行实体回合开始事件
                 Context.GetEventBus().TriggerEvent(new TurnStartEvent(Context, this));
             }
-           // LogManager.Log($"行动数增加，{gameObject.name}剩余行动次数：{actCount}");
         }
 
         public void SubActCount()
@@ -159,6 +169,7 @@ namespace Game
             actCount = Mathf.Clamp(--actCount, 0, actCount);
             if (actCount <= 0)
             {
+                OnTurnEnd();
                 // 执行实体回合结束事件
                 Context.GetEventBus().TriggerEvent(new TurnEndEvent(Context, this, false));
             }

@@ -8,6 +8,7 @@ namespace Game
     public class NormalAnimationComponent : AnimationComponent
     {
         public override int LayerIndex { get; protected set; }
+        protected override E_AnimationType CurrentAnimationType { get; set; } = E_AnimationType.None;
 
         public override void Init(IEntityObject entityObject)
         {
@@ -15,6 +16,31 @@ namespace Game
             LayerIndex = animator.GetLayerIndex("Base Layer");
             this.EntityObject.GetComponent<InputComponent>().OnKeyInputChanged += OnMove;
             this.EntityObject.GetComponent<InputComponent>().OnMouseLeftClick += OnAttack;
+        }
+
+        public override void SetAnimationState(E_AnimationType animationType)
+        {
+            if (CurrentAnimationType == animationType)
+            {
+                return;
+            }
+
+            switch (animationType)
+            {
+                case E_AnimationType.None:
+
+                    break;
+                case E_AnimationType.Idle:
+
+                    break;
+                case E_AnimationType.Run:
+
+                    break;
+                case E_AnimationType.NormalAttack:
+
+                    break;
+            }
+            CurrentAnimationType = animationType;
         }
 
         /// <summary>
@@ -33,5 +59,7 @@ namespace Game
         {
             SetAnimationState(E_AnimationType.NormalAttack);
         }
+
+
     }
 }

@@ -24,6 +24,7 @@ public class VideoControllerFactory : UIControllerFactory<VideoView, VideoModel,
 /// <summary>
 /// 视频界面控制器
 /// </summary>
+[UIControllerFactory(typeof(VideoControllerFactory))]
 public class VideoController : UIController<VideoView, VideoModel>
 {
     public VideoController(VideoView view, VideoModel model) : base(view, model)
