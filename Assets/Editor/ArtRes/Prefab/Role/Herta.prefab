@@ -1082,7 +1082,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a717dfae6d688324cacc24232cb93127, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  componentConfig: {fileID: 0}
 --- !u!1 &2613578921829654700
 GameObject:
   m_ObjectHideFlags: 0
@@ -2002,6 +2001,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3195606589522412434}
   - component: {fileID: 5306630210144203072}
+  - component: {fileID: 3023136730148805674}
   m_Layer: 6
   m_Name: HertaModel
   m_TagString: Untagged
@@ -2039,7 +2039,7 @@ Animator:
   m_GameObject: {fileID: 7595142887923274600}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 0308cf4e83cf517488b60af58b290fe0, type: 3}
-  m_Controller: {fileID: 22100000, guid: b116dc0a449681d43968f3f8af33914f, type: 2}
+  m_Controller: {fileID: 9100000, guid: 67d4b7001ee5c0e4e8cd45eef832a7cf, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -2050,6 +2050,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3023136730148805674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7595142887923274600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1517df3647e8bd249923fe0376fc96b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7754518626856251105
 GameObject:
   m_ObjectHideFlags: 0

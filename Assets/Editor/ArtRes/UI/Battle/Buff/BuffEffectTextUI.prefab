@@ -171,7 +171,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u529F\u52CB"
+  m_text: "Buff\u540D\u79F0"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ee14cfdc5dc09f74caf1993390ae7f78, type: 2}
   m_sharedMaterial: {fileID: 7779526194046544063, guid: ee14cfdc5dc09f74caf1993390ae7f78, type: 2}

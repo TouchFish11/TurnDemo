@@ -7,7 +7,7 @@ namespace Game.Battle
     {
         protected override int DmgCount { get; set; } = 1;
 
-        public SummonMimiSkill(int skillId, ISkillCastPostHandler postHandler) : base(skillId, postHandler)
+        public SummonMimiSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler) : base(caster, skillId, postHandler)
         {
 
         }

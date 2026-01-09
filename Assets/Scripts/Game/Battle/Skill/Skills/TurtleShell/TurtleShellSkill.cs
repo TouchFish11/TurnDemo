@@ -6,9 +6,10 @@ using UnityEngine;
 
 public class TurtleShellSkill : Skill
 {
-    private float moveSpeed = 15f;
-    private float dis = 2f;
-    private float dmgTime = 0.08f;
+    private static WaitForSeconds _waitForSeconds0_8 = new WaitForSeconds(0.8f);
+
+    private readonly float moveSpeed = 15f;
+    private readonly float dis = 2f;
 
     /// <summary>
     /// 攻击
@@ -17,15 +18,27 @@ public class TurtleShellSkill : Skill
     public int Attack { get; } = Animator.StringToHash("Attack");
     protected override int DmgCount { get; set; } = 1;
 
-    public TurtleShellSkill(int skillId, ISkillCastPostHandler postHandler) : base(skillId, postHandler)
+    public TurtleShellSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler) : base(caster, skillId, postHandler)
     {
+        Caster.GetComponentInChildren<AnimationTrigger>().OnAttack += OnAttack;
+    }
 
+    private void OnAttack(int skillId)
+    {
+        if (skillId != SkillInfo.f_id)
+        {
+            return;
+        }
+
+        foreach (IBattleEntityObject battleEntity in AllTargets)
+        {
+            DamageCalcManager.CalcSkillDamage(Caster, battleEntity, this.SkillInfo, out DamageResult result);
+            battleEntity.TakeDamage(result);
+        }
     }
 
     protected override IEnumerator OnCast(IBattleContext context)
     {
-        LogManager.Log($"{Caster.GameObject.name}释放技能：{SkillInfo.f_name}");
-
         Vector3 targetPos = MainTarget.GameObject.transform.position;
         while (Vector3.Distance(Caster.GameObject.transform.position, targetPos) > dis)
         {
@@ -36,29 +49,15 @@ public class TurtleShellSkill : Skill
 
         // 播放动画
         context.GetEventBus().TriggerEvent(new SkillCastEvent(context, this, 0));
+
         BattleAnimationComponent animationComponent = Caster.GetComponent<BattleAnimationComponent>();
         // 等待动画切换为攻击动画
         yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo().shortNameHash == Attack);
-
-        AnimatorStateInfo stateInfo = animationComponent.GetCurrentAnimatorStateInfo();
-        while (stateInfo.normalizedTime < stateInfo.length && currentDmgCount >= 1)
-        {
-            stateInfo = animationComponent.GetCurrentAnimatorStateInfo();
-            if (stateInfo.normalizedTime >= dmgTime)
-            {
-                foreach (IBattleEntityObject battleEntity in AllTargets)
-                {
-                    DamageCalcManager.CalcSkillDamage(Caster, battleEntity, this.SkillInfo, out DamageResult result);
-                    battleEntity.TakeDamage(result);
-                    --currentDmgCount;
-                }
-            }
-
-            yield return null;
-        }
+        // 等待动画结束
+        yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo().normalizedTime >= 0.9f);
 
         // 优化表现
-        yield return new WaitForSeconds(0.8f);
+        yield return _waitForSeconds0_8;
 
         // 回到起始位置
         targetPos = BattlePoint.Instance.GetMonsterTransByIndex(context.GetMonsterObjectIndex(Caster)).position;

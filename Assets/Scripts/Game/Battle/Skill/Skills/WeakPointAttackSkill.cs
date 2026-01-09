@@ -12,7 +12,7 @@ namespace Game.Battle
     {
         protected override int DmgCount { get; set; } = 1;
             
-        public WeakPointAttackSkill(int skillId, ISkillCastPostHandler postHandler) : base(skillId, postHandler)
+        public WeakPointAttackSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler) : base(caster, skillId, postHandler)
         {
 
         }

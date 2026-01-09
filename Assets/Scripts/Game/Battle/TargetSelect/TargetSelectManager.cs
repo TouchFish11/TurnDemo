@@ -107,7 +107,7 @@ public class TargetSelectManager : SingletonBase<TargetSelectManager>, ITargetSe
             this.caster = caster;
             // 根据规则选择主目标
             _mainTarget = currentSelectStrategy.SelectMainTarget(context, caster, skillInfo);
-            LogManager.Log($"主目标：{_mainTarget}");
+            //LogManager.Log($"主目标：{_mainTarget}");
         }
     }
 

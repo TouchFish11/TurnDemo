@@ -10,12 +10,12 @@ using UnityEngine;
 /// </summary>
 public class TurtleShellSkillFactory : SkillFactory
 {
-    public override ISkill CreateSkill(int skillId)
+    public override ISkill CreateSkill(IBattleEntityObject caster, int skillId)
     {
         switch (skillId)
         {
             case 102:
-                return new TurtleShellSkill(skillId, GetSkillCastPostHandler<BaseSkillCastPostHandler>());
+                return new TurtleShellSkill(caster, skillId, GetSkillCastPostHandler<BaseSkillCastPostHandler>());
             default:
                 LogManager.Log($"Î´ÕÒµ½¼¼ÄÜID£¬ skillId = {skillId}");
                 return null;

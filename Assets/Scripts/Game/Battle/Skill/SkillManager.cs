@@ -29,14 +29,12 @@ public class SkillManager : SingletonBase<SkillManager>, ISkillManager
     /// </summary>
     public void AddSkillCommand(ISkill skill, IBattleEntityObject entityObject)
     {
-        // 获取技能释放对象  待优化：应为触发技能的实体对象，而不一定是当前回合实体
-        IBattleEntityObject caster = entityObject;
         // 通过目标选择管理器获取技能主目标
         IBattleEntityObject mainTaget = ServiceLocator.Instance.Get<ITargetSelectManager>().GetMainTarget();
         // 通过目标选择管理器获取技能所有目标
         List<IBattleEntityObject> selectedTargets = ServiceLocator.Instance.Get<ITargetSelectManager>().GetTargets();
         // 初始化技能
-        skill.Init(caster, mainTaget, selectedTargets);
+        skill.Init(mainTaget, selectedTargets);
         // 放入指令
         ServiceLocator.Instance.Get<IBattleManager>().GetContext().GetTurnManager().InsertCommand(skill);
     }

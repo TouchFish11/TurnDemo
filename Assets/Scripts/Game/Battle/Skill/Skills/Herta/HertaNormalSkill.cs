@@ -7,16 +7,32 @@ using UnityEngine;
 
 public class HertaNormalSkill : Skill
 {
-    private float dmgTime = 0.24f + 0.04f;
+    private static WaitForSeconds _waitForSeconds0_35 = new WaitForSeconds(0.35f);
 
-    private string rollState = "Roll";
-    private string attackState = "Attack";
+    private readonly string rollState = "Roll";
+    private readonly string attackState = "Attack";
 
     protected override int DmgCount { get; set; } = 1;
 
-    public HertaNormalSkill(int skillId, ISkillCastPostHandler postHandler) : base(skillId, postHandler)
+    public HertaNormalSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler) : base(caster, skillId, postHandler)
     {
+        Caster.GetComponentInChildren<AnimationTrigger>().OnAttack += OnAttack;
+    }
 
+    private void OnAttack(int skillId)
+    {
+        if (skillId != SkillInfo.f_id)
+        {
+            return;
+        }
+
+        foreach (IBattleEntityObject battleEntity in AllTargets)
+        {
+            DamageCalcManager.CalcSkillDamage(Caster, battleEntity, this.SkillInfo, out DamageResult result);
+            battleEntity.TakeDamage(result);
+            RecoverEnergy();
+            --currentDmgCount;
+        }
     }
 
     protected override IEnumerator OnCast(IBattleContext context)
@@ -41,25 +57,10 @@ public class HertaNormalSkill : Skill
         // 等待动画切换为普攻动画
         yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo().IsName(attackState));
 
-        AnimatorStateInfo stateInfo = animationComponent.GetCurrentAnimatorStateInfo();
-        while (stateInfo.normalizedTime < stateInfo.length)
-        {
-            stateInfo = animationComponent.GetCurrentAnimatorStateInfo();
-            if (stateInfo.normalizedTime >= dmgTime && currentDmgCount >= 1)
-            {
-                foreach (IBattleEntityObject battleEntity in AllTargets)
-                {
-                    DamageCalcManager.CalcSkillDamage(Caster, battleEntity, this.SkillInfo, out DamageResult result);
-                    battleEntity.TakeDamage(result);
-                    RecoverEnergy();
-                    --currentDmgCount;
-                }
-            }
+        // 等待动画结束
+        yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo().normalizedTime >= 0.9f);
 
-            yield return null;
-        }
-
-        yield return new WaitForSeconds(0.35f);
+        yield return _waitForSeconds0_35;
 
         // 回到起始位置
         animator.transform.localPosition = Vector3.zero;

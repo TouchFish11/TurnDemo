@@ -13,12 +13,12 @@ public interface ISkillFactory
     /// </summary>
     /// <param name="skillId"></param>
     /// <returns></returns>
-    ISkill CreateSkill(int skillId);
+    ISkill CreateSkill(IBattleEntityObject caster, int skillId);
     
     /// <summary>
     /// 批量创建技能实例
     /// </summary>
     /// <param name="skillIds"></param>
     /// <returns></returns>
-    IEnumerable<ISkill> CreateSkills(params int[] skillIds);
+    IEnumerable<ISkill> CreateSkills(IBattleEntityObject caster, params int[] skillIds);
 }

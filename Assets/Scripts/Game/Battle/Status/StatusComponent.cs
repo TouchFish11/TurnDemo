@@ -4,7 +4,8 @@ using System.Collections.Generic;
 namespace Game.Battle
 {
     /// <summary>
-    /// 状态管理组件（角色的状态容器，负责管理所有状态）
+    /// 状态管理组件
+    /// 角色的状态容器，负责管理所有状态
     /// </summary>
     public class StatusComponent : BattleComponent, IStatusComponent
     {
@@ -45,11 +46,15 @@ namespace Game.Battle
         }
 
         /// <summary>
-        /// 对外提供API：添加状态（其他模块通过此API添加状态，而非直接操作列表）
+        /// 对外提供API：添加状态
         /// </summary>
         /// <param name="status"></param>
         public void AddStatus(IStatus status)
         {
+
+
+
+
             _statuses.Add(status);
             LogManager.Log($"{BattleEntity.GameObject.name}获得状态：{status.GetType().Name}");
         }

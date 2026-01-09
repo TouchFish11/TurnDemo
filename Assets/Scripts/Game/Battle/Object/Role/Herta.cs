@@ -9,16 +9,16 @@ using UnityEngine;
 /// </summary>
 public class HertaSkillFactory : SkillFactory
 {
-    public override ISkill CreateSkill(int skillId)
+    public override ISkill CreateSkill(IBattleEntityObject caster, int skillId)
     {
         switch (skillId)
         {
             case 20:
-                return new HertaNormalSkill(skillId, GetSkillCastPostHandler<BaseSkillCastPostHandler>());
+                return new HertaNormalSkill(caster, skillId, GetSkillCastPostHandler<BaseSkillCastPostHandler>());
             case 21:
-                return new HertaBattleSkill(skillId, GetSkillCastPostHandler<BaseSkillCastPostHandler>());
+                return new HertaBattleSkill(caster, skillId, GetSkillCastPostHandler<BaseSkillCastPostHandler>());
             case 22:
-                return new HertaUltimateSkill(skillId, GetSkillCastPostHandler<BaseUltimateSkillCastPostHandler>());
+                return new HertaUltimateSkill(caster, skillId, GetSkillCastPostHandler<BaseUltimateSkillCastPostHandler>());
             default:
                 return null;
         }

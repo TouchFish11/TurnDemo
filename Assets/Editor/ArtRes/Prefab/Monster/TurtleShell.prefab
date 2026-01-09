@@ -173,7 +173,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc6750d2079cf8c4b8102e03f69a9c12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  componentConfig: {fileID: 0}
 --- !u!65 &1549914689538611630
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -205,6 +204,7 @@ GameObject:
   m_Component:
   - component: {fileID: 918246367833428249}
   - component: {fileID: 6674926625030128700}
+  - component: {fileID: 8187239376867546666}
   m_Layer: 7
   m_Name: TurtleShellModel
   m_TagString: Untagged
@@ -239,7 +239,7 @@ Animator:
   m_GameObject: {fileID: 3190074845036211744}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 599b2dc9e6c44a8ebc02ddea1f18d215, type: 3}
-  m_Controller: {fileID: 22100000, guid: 77842b86ed19fc5449aafd783e3eaf9b, type: 2}
+  m_Controller: {fileID: 9100000, guid: 8891134a3286c8f4eabafaaa3bf79fcf, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -250,6 +250,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8187239376867546666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3190074845036211744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1517df3647e8bd249923fe0376fc96b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3350194718456900991
 GameObject:
   m_ObjectHideFlags: 0

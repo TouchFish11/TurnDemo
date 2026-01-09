@@ -27,7 +27,7 @@ namespace Game.Battle
             this.skillFactory = skillFactory;
             // TODO：通过技能工厂加载技能（配置表读取角色技能ID列表）
             int[] skillIds = TextUtility.SplitToIntArr(f_skillIds, 2);
-            var skills = skillFactory.CreateSkills(skillIds);
+            var skills = skillFactory.CreateSkills(this.BattleEntity, skillIds);
 
             foreach (ISkill skill in skills)
             {

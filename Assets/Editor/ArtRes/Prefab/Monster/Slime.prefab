@@ -429,7 +429,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ed1a797fce4d0f43810ec268adc64b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  componentConfig: {fileID: 0}
 --- !u!65 &6255624501681295193
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -492,6 +491,7 @@ GameObject:
   m_Component:
   - component: {fileID: 629413798285070904}
   - component: {fileID: 7327744176988142782}
+  - component: {fileID: 8867683382350920672}
   m_Layer: 7
   m_Name: SlimeModel
   m_TagString: Untagged
@@ -537,3 +537,15 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8867683382350920672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8631900144888114847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1517df3647e8bd249923fe0376fc96b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

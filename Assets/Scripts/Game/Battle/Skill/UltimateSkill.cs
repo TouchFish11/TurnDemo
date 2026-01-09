@@ -12,14 +12,14 @@ public abstract class UltimateSkill : Skill
 {
     private ISkillComponent skillComponent;
 
-    public UltimateSkill(int skillId, ISkillCastPostHandler postHandler) : base(skillId, postHandler)
+    public UltimateSkill(IBattleEntityObject caster,int skillId, ISkillCastPostHandler postHandler) : base(caster, skillId, postHandler)
     {
 
     }
 
-    public override void Init(IBattleEntityObject caster, IBattleEntityObject mainTarget, List<IBattleEntityObject> allTargets)
+    public override void Init(IBattleEntityObject mainTarget, List<IBattleEntityObject> allTargets)
     {
-        base.Init(caster, mainTarget, allTargets);
+        base.Init(mainTarget, allTargets);
         skillComponent = Caster.GetComponent<SkillComponent>();
     }
 

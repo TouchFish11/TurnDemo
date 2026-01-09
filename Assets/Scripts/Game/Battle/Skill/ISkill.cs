@@ -36,17 +36,18 @@ namespace Game.Battle
         IPropertyComponent PropertyComponent { get; }
 
         /// <summary>
-        /// 初始化技能
-        /// </summary>
-        /// <param name="skillId"></param>
-        void Init(IBattleEntityObject caster, IBattleEntityObject mainTarget, List<IBattleEntityObject> allTargets);
-
-        /// <summary>
         /// 释放技能
         /// </summary>
         /// <param name="context"></param>
         /// <param name="caster"></param>
         /// <param name="targets"></param>
-        IEnumerator Cast(IBattleContext context); 
+        IEnumerator Cast(IBattleContext context);
+
+        /// <summary>
+        /// 初始化技能
+        /// </summary>
+        /// <param name="mainTarget"></param>
+        /// <param name="allTargets"></param>
+        void Init(IBattleEntityObject mainTarget, List<IBattleEntityObject> allTargets);
     }
 }

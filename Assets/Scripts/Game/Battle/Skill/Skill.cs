@@ -33,17 +33,17 @@ public abstract class Skill : ISkill
     // 当前伤害次数
     protected int currentDmgCount;
 
-    protected Skill(int skillId, ISkillCastPostHandler postHandler)
+    protected Skill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler)
     {
+        Caster = caster;
         SkillInfo = BinaryDataManager.Instance.GetConfig<SkillInfoContainer>(E_ConfigLoadType.Editor).dataDic[skillId];
         DamageCalcManager = ServiceLocator.Instance.Get<IDamageCalcManager>();
         SkillCastPostHandler = postHandler;
         currentDmgCount = DmgCount;
     }
 
-    public virtual void Init(IBattleEntityObject caster, IBattleEntityObject mainTarget, List<IBattleEntityObject> allTargets)
+    public virtual void Init(IBattleEntityObject mainTarget, List<IBattleEntityObject> allTargets)
     {
-        Caster = caster;
         MainTarget = mainTarget;
         AllTargets = allTargets;
 

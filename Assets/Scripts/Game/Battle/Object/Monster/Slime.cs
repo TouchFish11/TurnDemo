@@ -9,12 +9,12 @@ using UnityEngine;
 /// </summary>
 public class SlimeSkillFactory : SkillFactory
 {
-    public override ISkill CreateSkill(int skillId)
+    public override ISkill CreateSkill(IBattleEntityObject caster, int skillId)
     {
         switch (skillId)
         {
             case 101:
-                return new SlimeSkill(skillId, GetSkillCastPostHandler<BaseSkillCastPostHandler>());
+                return new SlimeSkill(caster, skillId, GetSkillCastPostHandler<BaseSkillCastPostHandler>());
             default:
                 LogManager.Log($"Î´ÕÒµ½¼¼ÄÜID£¬ skillId = {skillId}");
                 return null;

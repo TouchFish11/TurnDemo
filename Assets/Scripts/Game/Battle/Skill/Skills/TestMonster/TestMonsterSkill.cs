@@ -7,7 +7,7 @@ public class TestMonsterSkill : Skill
 {
     protected override int DmgCount { get; set; } = 1;
 
-    public TestMonsterSkill(int skillId, ISkillCastPostHandler postHandler) : base(skillId, postHandler)
+    public TestMonsterSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler) : base(caster, skillId, postHandler)
     {
 
     }

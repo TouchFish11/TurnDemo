@@ -23,12 +23,12 @@ public abstract class SkillFactory : ISkillFactory
     /// </summary>
     /// <param name="skillIds"></param>
     /// <returns></returns>
-    public IEnumerable<ISkill> CreateSkills(params int[] skillIds)
+    public IEnumerable<ISkill> CreateSkills(IBattleEntityObject caster, params int[] skillIds)
     {
         List<ISkill> skills = new List<ISkill>();
         foreach (int skillId in skillIds)
         {
-            skills.Add(CreateSkill(skillId));
+            skills.Add(CreateSkill(caster, skillId));
         }
         return skills;
     }
@@ -38,7 +38,7 @@ public abstract class SkillFactory : ISkillFactory
     /// </summary>
     /// <param name="skillId"></param>
     /// <returns></returns>
-    public abstract ISkill CreateSkill(int skillId);
+    public abstract ISkill CreateSkill(IBattleEntityObject caster, int skillId);
 
     /// <summary>
     /// 获取技能释放后处理器

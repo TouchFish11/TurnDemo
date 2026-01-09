@@ -3,21 +3,19 @@ using Framework;
 namespace Game.Battle
 {
     /// <summary>
-    /// 具体状态：持续回血状态（实现接口，封装自身逻辑）
+    /// 持续回血状态
     /// </summary>
-    public class ContinuousHealStatus : IStatus
+    public class ContinuousHealStatus : Status
     {
-        public bool IsValid { get; private set; } = true;
-
         // 剩余持续回合
         private int _remainingTurns;
         // 回血比例（配置表读取）
         private float _healRatio;
 
-        public ContinuousHealStatus(int remainingTurns, float healRatio)
+        public ContinuousHealStatus()
         {
-            _remainingTurns = remainingTurns;
-            _healRatio = healRatio;
+            StatusFactory statusFactory = new StatusFactory();
+            statusFactory.GetValue<ContinuousHealStatus>();
         }
 
         public void OnTurnStart(IBattleEntityObject owner, IBattleContext context)
@@ -43,6 +41,16 @@ namespace Game.Battle
         public void OnTurnEnd(IBattleEntityObject owner, IBattleContext context)
         {
             /* 本状态无需回合结束逻辑 */
+        }
+
+        protected override void OnAdd()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        protected override void OnRemove()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

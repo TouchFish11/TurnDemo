@@ -1101,6 +1101,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4416261960836306432}
   - component: {fileID: 2648198466366175379}
+  - component: {fileID: 1993760163542847426}
   m_Layer: 6
   m_Name: FireFlyModel
   m_TagString: Untagged
@@ -1138,7 +1139,7 @@ Animator:
   m_GameObject: {fileID: 3187776261393134911}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 0308cf4e83cf517488b60af58b290fe0, type: 3}
-  m_Controller: {fileID: 22100000, guid: 6a3f4c340067250409f0897a6ae5f3b8, type: 2}
+  m_Controller: {fileID: 9100000, guid: 2ddf9bb176536ba4e94bf6fa395a46b3, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -1149,6 +1150,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1993760163542847426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3187776261393134911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1517df3647e8bd249923fe0376fc96b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3365803578222397979
 GameObject:
   m_ObjectHideFlags: 0
@@ -1480,7 +1493,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a12bec5593a8a44ebd3d6aeeebae39a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  componentConfig: {fileID: 0}
 --- !u!143 &909731041652709985
 CharacterController:
   m_ObjectHideFlags: 0

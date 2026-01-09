@@ -98,8 +98,6 @@ namespace Game.Battle
             {
                 CurrentAnimationType = E_AnimationType.None;
             }
-
-            LogManager.Log($"÷ÿ÷√◊¥Ã¨£¨{CurrentAnimationType}");
         }
 
         /// <summary>
