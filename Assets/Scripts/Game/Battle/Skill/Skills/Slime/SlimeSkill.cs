@@ -10,7 +10,7 @@ public class SlimeSkill : Skill
     private static WaitForSeconds _waitForSeconds0_3 = new WaitForSeconds(0.3f);
 
     private readonly float moveSpeed = 15f;
-    private readonly float dis = 2f;
+    private readonly float dis = 1f;
 
     /// <summary>
     /// 攻击
@@ -27,6 +27,12 @@ public class SlimeSkill : Skill
     private void OnAttack(int skillId)
     {
         if (skillId != SkillInfo.f_id)
+        {
+            return;
+        }
+
+        // TODO：暂时这样处理
+        if (currentDmgCount < 1)
         {
             return;
         }
@@ -51,6 +57,7 @@ public class SlimeSkill : Skill
 
         // 播放动画
         context.GetEventBus().TriggerEvent(new SkillCastEvent(context, this, 0));
+
         BattleAnimationComponent animationComponent = Caster.GetComponent<BattleAnimationComponent>();
         // 等待动画切换为攻击动画
         yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo().IsName(Attack) && animationComponent.GetCurrentAnimatorStateInfo().normalizedTime >= 0.9f);

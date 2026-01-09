@@ -1,5 +1,6 @@
 using Framework;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -30,6 +31,16 @@ public class BattleModel : UIModel
     private bool activeActTip;
     // 终结技立绘显示状态
     private bool activePaiting;
+
+    /// <summary>
+    /// 通过ID获取角色状态UI
+    /// </summary>
+    /// <param name="roleId"></param>
+    /// <returns>未找到返回null</returns>
+    public RoleStateUI GetRoleStateUIById(int roleId)
+    {
+        return roleStateUIs.FirstOrDefault(r => r.RoleId == roleId);
+    }
 
     public void SetUltimatePaitingActive(bool isShow, Sprite icon, string tip)
     {

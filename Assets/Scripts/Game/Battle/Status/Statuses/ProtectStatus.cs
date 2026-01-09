@@ -12,6 +12,11 @@ public class ProtectStatus : Status
 
     }
 
+    protected override void OnPineChanged()
+    {
+        bonusData.DefBuildBonus += 20;
+    }
+
     protected override void OnRemove()
     {
 

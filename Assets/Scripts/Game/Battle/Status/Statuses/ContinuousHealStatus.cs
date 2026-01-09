@@ -14,8 +14,7 @@ namespace Game.Battle
 
         public ContinuousHealStatus()
         {
-            StatusFactory statusFactory = new StatusFactory();
-            statusFactory.GetValue<ContinuousHealStatus>();
+
         }
 
         public void OnTurnStart(IBattleEntityObject owner, IBattleContext context)
@@ -49,6 +48,11 @@ namespace Game.Battle
         }
 
         protected override void OnRemove()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        protected override void OnPineChanged()
         {
             throw new System.NotImplementedException();
         }

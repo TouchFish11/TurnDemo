@@ -6,9 +6,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Buff效果文本
+/// 状态效果文本
 /// </summary>
-public class BuffEffectTextUI : BaseUIBehaviour
+public class StatusEffectTextUI : BaseUIBehaviour
 {
     private Image imgIcon;
     private TextMeshProUGUI txtBuffName;

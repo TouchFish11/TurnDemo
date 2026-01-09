@@ -1,15 +1,11 @@
 using Framework;
 using Game.Battle;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
-using UnityEngine;
 
 /// <summary>
 /// 状态工厂
 /// 用于统一获取状态对象
 /// </summary>
+[FactoryType]
 public class StatusFactory : IFactory
 {
     void IFactory.InitFactory()
@@ -22,10 +18,13 @@ public class StatusFactory : IFactory
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public T GetValue<T>() where T : class, IPoolData, new()
+    public T GetStatus<T>(IBattleEntityObject sorucer, IBattleEntityObject owner, int statusId) where T : class, IPoolData, IStatus, new()
     {
         // 缓存池获取
-        return PoolManager.Instance.GetData<T>();
+        T status = PoolManager.Instance.GetData<T>();
+        // 初始化状态
+        status.InitStatus(sorucer, owner, statusId);
+        return status;
     }
 
     T IFactory.GetValue<T>() where T : class

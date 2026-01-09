@@ -24,6 +24,8 @@ public abstract class Skill : ISkill
 
     public ISkillCastPostHandler SkillCastPostHandler { get; private set; }
 
+    // buffIdÊý×é
+    protected int[] statusIds;
     private readonly float waitTime = 0.85f;
 
     /// <summary>
@@ -40,6 +42,7 @@ public abstract class Skill : ISkill
         DamageCalcManager = ServiceLocator.Instance.Get<IDamageCalcManager>();
         SkillCastPostHandler = postHandler;
         currentDmgCount = DmgCount;
+        statusIds = TextUtility.SplitToIntArr(SkillInfo.f_statusId, 2);
     }
 
     public virtual void Init(IBattleEntityObject mainTarget, List<IBattleEntityObject> allTargets)

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Framework
@@ -19,8 +17,8 @@ namespace Framework
         /// </summary>
         public async Task Init()
         {
-            // 初始化配置组件
-            LogManager.Log($"{typeof(ComponentFactory)}：当前程序集组件初始化完成");
+            // 初始化工厂
+            ServiceLocator.Instance.Get<IFactoryManager>().InitFactorys();
             // 激活处理器
             ServiceLocator.Instance.Get<IQuitHandler>().ActiveHandler();
             // 初始化AB包资源

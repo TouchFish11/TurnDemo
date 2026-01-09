@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class FireFlyNormalSkill : Skill
 {
@@ -26,12 +27,21 @@ public class FireFlyNormalSkill : Skill
             return;
         }
 
-        foreach (IBattleEntityObject battleEntity in AllTargets)
+        foreach (IBattleEntityObject target in AllTargets)
         {
-            DamageCalcManager.CalcSkillDamage(Caster, battleEntity, this.SkillInfo, out DamageResult result);
-            battleEntity.TakeDamage(result);
+            DamageCalcManager.CalcSkillDamage(Caster, target, this.SkillInfo, out DamageResult result);
+            // 处理伤害
+            target.TakeDamage(result);
+            // 恢复能量
             RecoverEnergy();
             --currentDmgCount;
+        }
+
+        // 添加Buff
+        foreach (int id in statusIds)
+        {
+            IStatus status = ServiceLocator.Instance.Get<IFactoryManager>().GetFactory<StatusFactory>().GetStatus<ProtectStatus>(Caster, Caster, id);
+            Caster.GetComponent<StatusComponent>().AddStatus(status);
         }
     }
 

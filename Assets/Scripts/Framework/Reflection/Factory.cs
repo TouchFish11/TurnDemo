@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace Framework
 {
     /// <summary>
-    /// 工厂
+    /// 工厂基类
     /// </summary>
     /// <typeparam name="TValue"></typeparam>
     /// <typeparam name="TAttribute"></typeparam>
@@ -15,7 +14,7 @@ namespace Framework
 
         public void InitFactory()
         {
-            ScanAllIType();
+            FactoryUtility.ScanAllType<TValue, TAttribute>(typeToIStatusMap);
         }
 
         public virtual T GetValue<T>() where T : class
@@ -26,26 +25,6 @@ namespace Framework
             }
 
             return default;
-        }
-
-        /// <summary>
-        /// 扫描指定类型
-        /// </summary>
-        protected virtual void ScanAllIType()
-        {
-            foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
-            {
-                TAttribute attribute = type.GetCustomAttribute<TAttribute>();
-                if (attribute == null)
-                {
-                    continue;
-                }
-
-                if (typeof(TValue).IsAssignableFrom(type))
-                {
-                    typeToIStatusMap.Add(type, Activator.CreateInstance(type) as TValue);
-                }
-            }
         }
     }
 }

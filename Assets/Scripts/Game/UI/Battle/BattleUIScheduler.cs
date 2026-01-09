@@ -92,4 +92,9 @@ public class BattleUIScheduler : SingletonAutoMono<BattleUIScheduler>
         // 清理标记
         await ServiceLocator.Instance.Get<IUIManager>().GetView<BattleController>().GetBattleUI().UpdateTargetMarker(null);
     }
+
+    /// <summary>
+    /// 战斗界面控制器
+    /// </summary>
+    //public BattleController BattleController => battleController;
 }

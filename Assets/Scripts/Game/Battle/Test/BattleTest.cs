@@ -19,6 +19,9 @@ public class BattleTest : MonoBehaviour
 
         // 初始化服务定位器
         ServiceLocator.Instance.InitService();
+
+        // 初始化工厂
+        ServiceLocator.Instance.Get<IFactoryManager>().InitFactorys();
         // 初始化配置
         await ServiceLocator.Instance.Get<IBinaryDataManager>().LoadConfig();
         // 初始化UI管理器

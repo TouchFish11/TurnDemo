@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
-/// 战斗UI管理器
+/// 战斗界面UI管理器
 /// </summary>
 public class BattleUIManager
 {
@@ -258,7 +258,23 @@ public class BattleUIManager
         }
     }
 
+    /// <summary>
+    /// 更新状态栏
+    /// </summary>
+    /// <param name="currentBattleEntity"></param>
+    public void UpdateStatuebar(IBattleEntityObject currentBattleEntity)
+    {
+        RoleStateUI roleStateUI = _model.GetRoleStateUIById(currentBattleEntity.BattleEntityId);
+        if (roleStateUI != null)
+        {
+            roleStateUI.UpdateStatus();
+        }
+    }
 
+
+    /// <summary>
+    /// 清理活跃的伤害文本UI
+    /// </summary>
     public void ClearActiveDamageTextUI()
     {
         _model.UpdateCumulativeDamage(false, 0);

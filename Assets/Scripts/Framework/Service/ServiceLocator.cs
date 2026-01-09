@@ -1,9 +1,5 @@
-using Game.Battle;
-using Net.FrameSync;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Framework
 {
@@ -46,6 +42,7 @@ namespace Framework
             Register<ITimerManager>(TimerManager.Instance);
             Register<IUIManager>(UIManager.Instance);
             Register<IVideoManager>(VideoManager.Instance);
+            Register<IFactoryManager>(FactoryManager.Instance);
 
             // 非框架（主界面）
             Register<IDialogueManager>(DialogueManager.Instance);
@@ -62,7 +59,7 @@ namespace Framework
             var type = typeof(T);
             if (_typeToServerMap.ContainsKey(type))
             {
-                LogManager.Log($"{type.Name}已存在，覆盖旧实例");
+                LogManager.LogError($"{type.Name}已存在，覆盖旧实例");
             }
             _typeToServerMap[type] = service;
         }

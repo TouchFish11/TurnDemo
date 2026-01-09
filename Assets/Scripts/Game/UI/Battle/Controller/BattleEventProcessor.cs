@@ -1,12 +1,9 @@
-using Framework;
 using Game;
 using Game.Battle;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Unity.VisualScripting;
-using UnityEngine;
 
+/// <summary>
+/// 战斗界面事件处理器
+/// </summary>
 public class BattleEventProcessor
 {
     private BattleController _battleController;
@@ -35,11 +32,13 @@ public class BattleEventProcessor
         eventBus.AddListener<PlayerReleaseSkillEvent>(OnPlayerReleaseSkillEvent);
         eventBus.AddListener<UltimateReleaseOverEvent>(OnUltimateReleaseOverEvent);
         eventBus.AddListener<ActionBarSortPostEvent>(OnActionBarSortPostEvent);
+        eventBus.AddListener<TurnStartStatusChangedEvent>(OnTurnStartStatusChangedEvent);
     }
 
     /// <summary>
     /// 回合开始事件监听
     /// 更新玩家/怪物UI
+    /// TODO：可优化为通过外部传入逻辑类来实现逻辑
     /// </summary>
     /// <param name="turnStartEvent"></param>
     private async void OnTurnStart(TurnStartEvent turnStartEvent)
@@ -73,6 +72,16 @@ public class BattleEventProcessor
     private void OnTurnEnd(TurnEndEvent turnEndEvent)
     {
 
+    }
+
+    /// <summary>
+    /// 回合开始状态变化事件回调
+    /// </summary>
+    /// <param name="turnStartStatusChangedEvent"></param>
+    private void OnTurnStartStatusChangedEvent(TurnStartStatusChangedEvent turnStartStatusChangedEvent)
+    {
+        // 更新指定玩家状态栏
+        _uiManager.UpdateStatuebar(turnStartStatusChangedEvent.CurrentBattleEntity);
     }
 
     /// <summary>

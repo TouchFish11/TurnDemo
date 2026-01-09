@@ -1,8 +1,8 @@
 using Framework;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
+/// <summary>
+/// 状态属性
+/// </summary>
 public class StatusProperty
 {
     /// <summary>
@@ -24,9 +24,27 @@ public class StatusProperty
     /// <summary>
     /// 剩余回合
     /// </summary>
-    public int RemainingRound { get => remainingRound; set => remainingRound = value; }
+    public int RemainingRound { get => remainingRound; }
     /// <summary>
     /// 当前层数
     /// </summary>
-    public int CurrentPine { get => currentPine; set => currentPine = value; }
+    public int CurrentPine { get => currentPine; }
+
+    /// <summary>
+    /// 设置剩余回合数
+    /// </summary>
+    /// <param name="remainingRound"></param>
+    public void SetRemainingRound(int remainingRound)
+    {
+        this.remainingRound = remainingRound;
+    }
+
+    /// <summary>
+    /// 设置当前层数
+    /// </summary>
+    /// <param name="currentPine"></param>
+    public void SetCurrentPine(int currentPine)
+    {
+        this.currentPine = currentPine;
+    }
 }

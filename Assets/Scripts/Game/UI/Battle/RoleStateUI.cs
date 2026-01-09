@@ -4,6 +4,7 @@ using Game.Battle;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -38,10 +39,18 @@ public class RoleStateUI : BaseUIBehaviour
     // 角色相关
     private int roleId;
 
+    /// <summary>
+    /// 关联角色ID
+    /// </summary>
+    public int RoleId => roleId;
+
     // 战斗上下文接口
     private IBattleContext battleContext;
     // 战斗实体接口
     private IBattleEntityObject battleEntity;
+
+    // 状态UI列表
+    private readonly List<StatusGridUI> statusGridUIs = new List<StatusGridUI>();
 
     protected override void Awake()
     {
@@ -55,14 +64,13 @@ public class RoleStateUI : BaseUIBehaviour
         svBuffBox = binder.GetControl<ScrollRect>(nameof(svBuffBox));
         txtBlood = binder.GetControl<TextMeshProUGUI>(nameof(txtBlood));
 
-        // 监听战斗相关事件
-
-        // 应该是数据驱动
         battleContext = ServiceLocator.Instance.Get<IBattleManager>().GetContext();
 
+        // 监听战斗相关事件
         battleContext.GetEventBus().AddListener<HpChangedEvent>(OnHpChanged);
         battleContext.GetEventBus().AddListener<ShieldChangedEvent>(OnShieldChanged);
         battleContext.GetEventBus().AddListener<EnergyChangedEvent>(OnEnergyChangedEvent);
+        battleContext.GetEventBus().AddListener<StatusAddedEvent>(OnStatusAddedEvent);
 
         ServiceLocator.Instance.Get<IMonoManager>().AddUpdateListener(OnUpdate);
     }
@@ -96,7 +104,7 @@ public class RoleStateUI : BaseUIBehaviour
         imgEnergy.color = new Color(imgEnergy.color.r, imgEnergy.color.g, imgEnergy.color.b, currentEnergy == baseEnergy ? 1 : nonFullAhpha);
 
         // 设置buff列表
-        UpdateBuff();
+        UpdateStatus();
 
         // 设置护盾量
         currentShield = maxShield = 0;
@@ -142,6 +150,7 @@ public class RoleStateUI : BaseUIBehaviour
         {
             return;
         }
+
         UpdateShield(onShieldChangedEvent.CurrentShield, onShieldChangedEvent.ReferenceShield);
     }
 
@@ -150,17 +159,77 @@ public class RoleStateUI : BaseUIBehaviour
     /// </summary>
     /// <param name="currentShield"></param>
     /// <param name="maxShield"></param>
-    public void UpdateShield(int currentShield, int maxShield)
+    private void UpdateShield(int currentShield, int maxShield)
     {
         imgShield.fillAmount = maxShield == 0 ? 0 : currentShield / (float)maxShield;
     }
 
     /// <summary>
-    /// 更新Buff
+    /// 新增状态事件回调
     /// </summary>
-    public void UpdateBuff()
+    private void OnStatusAddedEvent(StatusAddedEvent statusAddedEvent)
     {
+        IStatus status = statusAddedEvent.NewStatus;
 
+        // 层数变化，不用处理
+        switch ((E_ConflictType)status.StatusProperty.StatusInfo.f_conflictType)
+        {
+            case E_ConflictType.Add:
+                OnConflict_Add(status);
+                break;
+            case E_ConflictType.Lonel:
+                OnConflict_Lonel(status);
+                break;
+            case E_ConflictType.Cover:
+                OnConflict_Cover(status);
+                break;
+        }
+    }
+
+    private async void OnConflict_Add(IStatus status)
+    {
+        // 判断是否有该ID的状态
+        bool hasStatus = statusGridUIs.Any(s => s.GetStatusId() == status.StatusProperty.StatusInfo.f_id);
+        if (!hasStatus)
+        {
+            StatusGridUI statusGridUI = await ObjectBuilder.GetObject<StatusGridUI>(E_AssetBundleType.UI, ResKeyCollection.StatusGridUI, svBuffBox.content);
+            statusGridUI.Init(status);
+            statusGridUIs.Add(statusGridUI);
+        }
+    }
+
+    private async void OnConflict_Lonel(IStatus newStatus)
+    {
+        StatusGridUI statusGridUI = await ObjectBuilder.GetObject<StatusGridUI>(E_AssetBundleType.UI, ResKeyCollection.StatusGridUI, svBuffBox.content);
+        statusGridUI.Init(newStatus);
+        statusGridUIs.Add(statusGridUI);
+    }
+
+    private async void OnConflict_Cover(IStatus newStatus)
+    {
+        StatusGridUI statusGrid = statusGridUIs.FirstOrDefault(s => s.GetStatusId() == newStatus.StatusProperty.StatusInfo.f_id);
+        // 放入缓存池
+        PoolManager.Instance.PushObj(statusGrid.gameObject);
+        // 创建新格子
+        StatusGridUI statusGridUI = await ObjectBuilder.GetObject<StatusGridUI>(E_AssetBundleType.UI, ResKeyCollection.StatusGridUI, svBuffBox.content);
+        statusGridUI.Init(newStatus);
+        statusGridUIs.Add(statusGridUI);
+    }
+
+    /// <summary>
+    /// 更新状态
+    /// 回合开始更新
+    /// </summary>
+    public void UpdateStatus()
+    {
+        foreach (var statusGrid in statusGridUIs)
+        {
+            if (!statusGrid.IsValid)
+            {
+                // 移除无效的状态
+                PoolManager.Instance.PushObj(statusGrid.gameObject);
+            }
+        }
     }
 
     protected override void OnButtonClick(string btnName)

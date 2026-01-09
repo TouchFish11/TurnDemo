@@ -9,7 +9,7 @@ namespace Game.Battle
         /// <summary>
         /// 状态是否有效
         /// </summary>
-        bool IsValid { get; }
+        bool IsValid { get; set; }
 
         /// <summary>
         /// 来源
@@ -22,30 +22,42 @@ namespace Game.Battle
         IBattleEntityObject Owner { get; }
 
         /// <summary>
-        /// 状态信息
+        /// 状态属性
         /// </summary>
-        StatusInfo StatusInfo { get; }
+        StatusProperty StatusProperty { get; }
+
+        /// <summary>
+        /// 状态加成数据
+        /// </summary>
+        StatusBonusData BonusData { get; }
 
         /// <summary>
         /// 回合开始时的生效逻辑
         /// </summary>
         /// <param name="owner"></param>
         /// <param name="context"></param>
-        void OnTurnStart(IBattleEntityObject owner, IBattleContext context);
+        void TurnStart(IBattleEntityObject owner, IBattleContext context);
 
         /// <summary>
         /// 回合结束时的生效逻辑
         /// </summary>
         /// <param name="owner"></param>
         /// <param name="context"></param>
-        void OnTurnEnd(IBattleEntityObject owner, IBattleContext context);
+        void TurnEnd(IBattleEntityObject owner, IBattleContext context);
 
         /// <summary>
         /// 初始化状态
         /// </summary>
         /// <param name="sorucer"></param>
         /// <param name="owner"></param>
-        /// <param name="statusInfo"></param>
-        void InitStatus(IBattleEntityObject sorucer, IBattleEntityObject owner, StatusInfo statusInfo);
+        /// <param name="statusId"></param>
+        void InitStatus(IBattleEntityObject sorucer, IBattleEntityObject owner, int statusId);
+
+        /// <summary>
+        /// 改变层数
+        /// 用于外部修改状态层数
+        /// </summary>
+        /// <param name="deltaPine"></param>
+        void ChangePine(int deltaPine);
     }
 }

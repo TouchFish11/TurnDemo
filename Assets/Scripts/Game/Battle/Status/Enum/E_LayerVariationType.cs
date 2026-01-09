@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 状态类型
+/// Buff层数变化
 /// </summary>
-public enum E_StatusType : byte
+public enum E_LayerVariationType : byte
 {
     /// <summary>
-    /// 正面效果
+    /// 降低层数
     /// </summary>
-    Positive = 1,
+    Sub,
     /// <summary>
-    /// 负面效果
+    /// 移除所有
     /// </summary>
-    Negative,
+    Remove,
 }

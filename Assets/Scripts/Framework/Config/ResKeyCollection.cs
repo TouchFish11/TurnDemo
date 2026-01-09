@@ -5,7 +5,16 @@ namespace Framework
 	/// <summary>
 	public class ResKeyCollection
 	{
+		public static string Slime_Attack_Anim => "Slime_Attack_Anim";
+		public static string TurtleShell_Attack_Anim => "TurtleShell_Attack_Anim";
+		public static string FireFly_Attack_Anim => "FireFly_Attack_Anim";
+		public static string FireFly_BattleAttack_Anim => "FireFly_BattleAttack_Anim";
+		public static string FireFly_Ultimate_Anim => "FireFly_Ultimate_Anim";
+		public static string Herta_Attack_Anim => "Herta_Attack_Anim";
+		public static string Herta_BattleAttack_Anim => "Herta_BattleAttack_Anim";
+		public static string Herta_Ultimate_Anim => "Herta_Ultimate_Anim";
 		public static string PlayerController => "PlayerController";
+		public static string BaseMonster => "BaseMonster";
 		public static string SlimeAnimtor => "SlimeAnimtor";
 		public static string TurtleShellAnimtor => "TurtleShellAnimtor";
 		public static string BaseRole => "BaseRole";
@@ -19,6 +28,7 @@ namespace Framework
 		public static string NpcInfo => "NpcInfo";
 		public static string RoleInfo => "RoleInfo";
 		public static string SkillInfo => "SkillInfo";
+		public static string StatusInfo => "StatusInfo";
 		public static string TaskConditionInfo => "TaskConditionInfo";
 		public static string TaskInfo => "TaskInfo";
 		public static string MainActionMap => "MainActionMap";
@@ -46,14 +56,15 @@ namespace Framework
 		public static string BattleMessageUI => "BattleMessageUI";
 		public static string BattleView => "BattleView";
 		public static string DamageTextUI => "DamageTextUI";
-		public static string HealTextUI => "HealTextUI";
 		public static string SelectMarkerUI => "SelectMarkerUI";
 		public static string ActionGridUI => "ActionGridUI";
 		public static string WaitingActUI => "WaitingActUI";
-		public static string BuffGridUI => "BuffGridUI";
+		public static string StatusEffectTextUI => "StatusEffectTextUI";
+		public static string StatusGridUI => "StatusGridUI";
 		public static string MonsterStateUI => "MonsterStateUI";
 		public static string WeaknessUI => "WeaknessUI";
 		public static string BattlePointUI => "BattlePointUI";
+		public static string HealTextUI => "HealTextUI";
 		public static string RoleStateUI => "RoleStateUI";
 		public static string SkillKeyUI => "SkillKeyUI";
 		public static string BeginView => "BeginView";

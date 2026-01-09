@@ -1,9 +1,12 @@
 using Framework;
 using Game.Battle;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+
+/// <summary>
+/// 战斗界面初始化器
+/// </summary>
 
 public class BattleUIInitializer
 {

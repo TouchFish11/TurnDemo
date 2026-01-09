@@ -9,7 +9,7 @@ public class TurtleShellSkill : Skill
     private static WaitForSeconds _waitForSeconds0_8 = new WaitForSeconds(0.8f);
 
     private readonly float moveSpeed = 15f;
-    private readonly float dis = 2f;
+    private readonly float dis = 1f;
 
     /// <summary>
     /// 攻击
@@ -26,6 +26,12 @@ public class TurtleShellSkill : Skill
     private void OnAttack(int skillId)
     {
         if (skillId != SkillInfo.f_id)
+        {
+            return;
+        }
+
+        // TODO：暂时这样处理
+        if (currentDmgCount < 1)
         {
             return;
         }
@@ -52,7 +58,7 @@ public class TurtleShellSkill : Skill
 
         BattleAnimationComponent animationComponent = Caster.GetComponent<BattleAnimationComponent>();
         // 等待动画切换为攻击动画
-        yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo().shortNameHash == Attack);
+        yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo().IsName("Attack"));
         // 等待动画结束
         yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo().normalizedTime >= 0.9f);
 
