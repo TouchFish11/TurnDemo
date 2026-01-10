@@ -17,7 +17,22 @@ namespace Game.Battle
 
         }
 
-        public void OnTurnStart(IBattleEntityObject owner, IBattleContext context)
+        protected override void OnAdd()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        protected override void OnRemove()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        protected override void OnPineChanged()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        protected override void OnTurnStart(IBattleEntityObject owner, IBattleContext context)
         {
             if (!IsValid)
             {
@@ -35,26 +50,6 @@ namespace Game.Battle
             {
                 IsValid = false;
             }
-        }
-
-        public void OnTurnEnd(IBattleEntityObject owner, IBattleContext context)
-        {
-            /* 本状态无需回合结束逻辑 */
-        }
-
-        protected override void OnAdd()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        protected override void OnRemove()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        protected override void OnPineChanged()
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

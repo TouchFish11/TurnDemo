@@ -86,6 +86,31 @@ namespace Framework
         }
 
         /// <summary>
+        /// 分割字符串后转float数组
+        /// </summary>
+        /// <param name="str">只含单种分割符的字符串</param>
+        /// <param name="type">拆分字符类型：1-; 2-, 3-% 4-: 5-空格 6-| 7-_ </param>
+        /// <returns></returns>
+        public static float[] SplitTofloatArr(string str, int type)
+        {
+            string[] newStr = Split(str, type);
+            if (newStr.Length == 0)
+            {
+                LogManager.LogWarning("进行转换的字符串数组长度为0");
+                return new float[0];
+            }
+
+            //把字符串数组转为int数组
+            return Array.ConvertAll(newStr, (str) =>
+            {
+                if (float.TryParse(str, out float value))
+                    return value;
+                LogManager.LogWarning("字符串转换失败，已用默认值代替");
+                return default;
+            });
+        }
+
+        /// <summary>
         /// 分割多个分隔符的字符串后转int数组
         /// </summary>
         /// <param name="str">包含多个分割符的字符串</param>

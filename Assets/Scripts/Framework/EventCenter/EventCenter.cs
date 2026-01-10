@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Generic;
-using UnityEngine.Events;
 
 namespace Framework
 {
@@ -9,139 +9,77 @@ namespace Framework
     public class EventCenter : SingletonBase<EventCenter>, IEventCenter
     {
         // 存储事件的字典
-        private readonly Dictionary<E_EventType, BaseEventInfo> _eventDic = new Dictionary<E_EventType, BaseEventInfo>();
+        private readonly Dictionary<Type, List<BaseEventInfo>> _typeToEventInfoMap = new Dictionary<Type, List<BaseEventInfo>>();
         // 事件队列
-        private readonly Queue<E_EventType> _eventQueue = new Queue<E_EventType>();
-        // 携带信息的事件队列
-        private readonly Queue<(E_EventType, object)> _eventQueueT = new Queue<(E_EventType, object)>();
-        // 每帧最大分发事件数
-        private const byte EventTriggerMaxNumPerFrame = 20 / 2;
+        private readonly Queue<DelayEventInfo> _delayEventQueue = new Queue<DelayEventInfo>();
         // 当前触发事件数
         private byte _currentTriggeredEventCount;
+
+        /// <summary>
+        /// 每帧最大分发事件数
+        /// </summary>
+        private const byte EventTriggerMaxNumPerFrame = 10;
 
         private EventCenter()
         {
             MonoManager.Instance.AddUpdateListener(OnUpdate);
         }
 
-        /// <summary>
-        /// 触发事件
-        /// </summary>
-        /// <param name="eventType"></param>
-        public void TriggerEvent(E_EventType eventType)
+        public void TriggerEvent<TEvent>(TEvent evt) where TEvent : IEvent
         {
-            if (_eventDic.ContainsKey(eventType))
+            if (_typeToEventInfoMap.TryGetValue(typeof(TEvent), out var eventInfos))
             {
-                (_eventDic[eventType] as EventInfo)?.Invoke();
+                foreach (var eventInfo in eventInfos)
+                {
+                    (eventInfo as EventInfo<TEvent>)?.Invoke(evt);
+                }
             }
         }
 
-        /// <summary>
-        /// 触发事件
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="eventType">事件类型</param>
-        /// <param name="info">事件参数</param>
-        public void TriggerEvent<T>(E_EventType eventType, T info)
+        public void DelayTriggerEvent<TEvent>(Action<TEvent> callBack, TEvent evt, Func<TEvent, bool> filter = null) where TEvent : IEvent
         {
-            if (_eventDic.ContainsKey(eventType))
+            _delayEventQueue.Enqueue(new DelayEventInfo() 
+            { 
+                TriggerCallback = () => callBack?.Invoke(evt), 
+                Filter = () => filter.Invoke(evt)
+            });
+        }
+
+        public void SubscribeEvent<TEvent>(Action<TEvent> callBack, Func<TEvent, bool> filter = null) where TEvent : IEvent
+        {
+            Type eventType = typeof(TEvent);
+            EventInfo<TEvent> eventInfo = new EventInfo<TEvent>(callBack, filter);
+            if (_typeToEventInfoMap.ContainsKey(eventType))
             {
-                (_eventDic[eventType] as EventInfo<T>)?.Invoke(info);
-            }
-        }
-
-        /// <summary>
-        /// 延迟触发事件
-        /// </summary>
-        /// <param name="eventType"></param>
-        public void DelayTriggerEvent(E_EventType eventType)
-        {
-            _eventQueue.Enqueue(eventType);
-        }
-
-        /// <summary>
-        /// 延迟触发事件
-        /// </summary>
-        /// <param name="eventType"></param>
-        /// <param name="info"></param>
-        public void DelayTriggerEvent(E_EventType eventType, object info)
-        {
-            _eventQueueT.Enqueue((eventType, info));
-        }
-
-        /// <summary>
-        /// 添加事件监听
-        /// </summary>
-        /// <param name="eventType"></param>
-        /// <param name="callBack"></param>
-        public void AddEventListener(E_EventType eventType, UnityAction callBack)
-        {
-            if (_eventDic.ContainsKey(eventType))
-            {
-                (_eventDic[eventType] as EventInfo).EventCallBack += callBack;
+                _typeToEventInfoMap[eventType].Add(eventInfo);
             }
             else
             {
-                EventInfo eventInfo = new EventInfo(callBack);
-                _eventDic.Add(eventType, eventInfo);
+                _typeToEventInfoMap.Add(eventType, new List<BaseEventInfo>() { eventInfo });
             }
         }
 
-        /// <summary>
-        /// 添加事件监听
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="eventType"></param>
-        /// <param name="callBack"></param>
-        public void AddEventListener<T>(E_EventType eventType, UnityAction<T> callBack)
+        public void UnsubscribeEvent<TEvent>(Action<TEvent> callBack) where TEvent : IEvent
         {
-            if (_eventDic.ContainsKey(eventType))
+            if (_typeToEventInfoMap.TryGetValue(typeof(TEvent), out var eventInfos))
             {
-                (_eventDic[eventType] as EventInfo<T>).EventCallBack += callBack;
-            }
-            else
-            {
-                EventInfo<T> eventInfo = new EventInfo<T>(callBack);
-                _eventDic.Add(eventType, eventInfo);
+                for (int i = eventInfos.Count - 1; i >= 0; i--)
+                {
+                    if ((eventInfos[i] as EventInfo<TEvent>).CallBack == callBack)
+                    {
+                        eventInfos.RemoveAt(i);
+                        break;
+                    }
+                }
             }
         }
 
-        /// <summary>
-        /// 移除事件监听
-        /// </summary>
-        /// <param name="eventType"></param>
-        /// <param name="callBack"></param>
-        public void RemoveEventListener(E_EventType eventType, UnityAction callBack)
+        public void RemoveEventsFrom<TEvent>() where TEvent : IEvent
         {
-            if (_eventDic.ContainsKey(eventType))
+            Type eventType = typeof(TEvent);
+            if (_typeToEventInfoMap.ContainsKey(eventType))
             {
-                (_eventDic[eventType] as EventInfo).EventCallBack -= callBack;
-            }
-        }
-
-        /// <summary>
-        /// 移除事件监听
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="eventType"></param>
-        /// <param name="callBack"></param>
-        public void RemoveEventListener<T>(E_EventType eventType, UnityAction<T> callBack)
-        {
-            if (_eventDic.ContainsKey(eventType))
-            {
-                (_eventDic[eventType] as EventInfo<T>).EventCallBack -= callBack;
-            }
-        }
-
-        /// <summary>
-        /// 移除指定类型所有事件
-        /// </summary>
-        /// <param name="eventType"></param>
-        public void RemoveEventsFrom(E_EventType eventType)
-        {
-            if( _eventDic.ContainsKey(eventType))
-            {
-                _eventDic.Remove(eventType);
+                _typeToEventInfoMap.Remove(eventType);
             }
         }
 
@@ -150,7 +88,7 @@ namespace Framework
         /// </summary>
         private void OnUpdate()
         {
-            while(_eventQueue.Count > 0 || _eventQueueT.Count > 0)
+            while(_delayEventQueue.Count > 0)
             {
                 if (_currentTriggeredEventCount >= EventTriggerMaxNumPerFrame)
                 {
@@ -158,22 +96,15 @@ namespace Framework
                     return;
                 }
 
-                //分发无参数事件
-                TriggerEvent(_eventQueue.Dequeue());
-                //分发有参数的事件
-                TriggerEvent(_eventQueueT.Dequeue().Item1, _eventQueueT.Dequeue().Item2);
+                _delayEventQueue.Dequeue().Invoke();
                 ++_currentTriggeredEventCount;
             }
         }
 
-        /// <summary>
-        /// 清空所有事件
-        /// </summary>
         public void Clear()
         {
-            _eventDic.Clear();
-            _eventQueue.Clear();
-            _eventQueueT.Clear();
+            _typeToEventInfoMap.Clear();
+            _delayEventQueue.Clear();
         }
     }
 }

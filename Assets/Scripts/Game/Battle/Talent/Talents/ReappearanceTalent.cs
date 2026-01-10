@@ -26,9 +26,9 @@ namespace Game.Battle
             {
                 return false;
             }
-
+            return true;
             // 触发条件：1. 是角色自身行动结束事件 2. 本回合击杀敌人(如何判断敌人是自己击败的) 3. 未触发过
-            return turnEndEvt.CurrentCharacter == owner && turnEndEvt.HasKilledEnemy && !_hasTriggeredThisTurn;
+            //return turnEndEvt.CurrentBattleEntity == owner && turnEndEvt.HasKilledEnemy && !_hasTriggeredThisTurn;
         }
 
         public void Execute(BattleEvent battleEvent, IBattleEntityObject owner)

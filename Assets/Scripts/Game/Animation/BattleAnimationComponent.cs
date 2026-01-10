@@ -106,7 +106,8 @@ namespace Game.Battle
         /// <param name="selectSkillEvent"></param>
         private void OnSelectSkillEvent(SelectSkillEvent selectSkillEvent)
         {
-            if (selectSkillEvent.Caster != this.BattleEntity)
+            // TODO：暂时这样处理怪物逻辑，怪物选择技能不需要改变动画播放
+            if (selectSkillEvent.Caster != this.BattleEntity || selectSkillEvent.Caster is MonsterObject)
             {
                 return;
             }

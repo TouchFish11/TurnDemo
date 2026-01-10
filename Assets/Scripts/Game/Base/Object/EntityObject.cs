@@ -25,10 +25,7 @@ namespace Game
 
         }
 
-        public virtual void BaseInit(int id)
-        {
-
-        }
+        public abstract void BaseInit(int id);
 
         public new TComponent GetComponent<TComponent>() where TComponent : Component
         {

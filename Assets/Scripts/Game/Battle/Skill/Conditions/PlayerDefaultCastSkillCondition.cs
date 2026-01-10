@@ -26,7 +26,7 @@ public class PlayerDefaultCastSkillCondition : ICastSkillCondition
                 else
                 {
                     // 显示提示框UI
-                    ServiceLocator.Instance.Get<IEventCenter>().TriggerEvent(E_EventType.E_GlobalMsg, "战机点不足，无法释放");
+                    ServiceLocator.Instance.Get<IEventCenter>().TriggerEvent(new GlobalMessageEvent("战机点不足，无法释放"));
                     return false;
                 }
             case E_SkillType.UltimateSkill:
@@ -40,7 +40,7 @@ public class PlayerDefaultCastSkillCondition : ICastSkillCondition
                 else
                 {
                     // 提示玩家能量不足
-                    ServiceLocator.Instance.Get<IEventCenter>().TriggerEvent(E_EventType.E_GlobalMsg, "能量不足，无法释放终结技");
+                    ServiceLocator.Instance.Get<IEventCenter>().TriggerEvent(new GlobalMessageEvent("能量不足，无法释放终结技"));
                     return false;
                 }
             case E_SkillType.EnhancedNormalAttack:

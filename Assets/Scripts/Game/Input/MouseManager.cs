@@ -18,34 +18,33 @@ public class MouseManager : SingletonAutoMono<MouseManager>, IMouseManager
 
     private void Awake()
     {
-        EventCenter.Instance.AddEventListener<string>(E_EventType.E_OpenView, RequestMouseVisible);
-        EventCenter.Instance.AddEventListener<string>(E_EventType.E_CloseView, ReleaseMouseVisible);
+        EventCenter.Instance.SubscribeEvent<OpenViewEvent>(OnOpenViewEvent);
+        EventCenter.Instance.SubscribeEvent<CloseViewEvent>(OnCloseViewEvent);
 
-        EventCenter.Instance.AddEventListener<string>(E_EventType.E_MouseVisible, RequestMouseVisible);
-        EventCenter.Instance.AddEventListener<string>(E_EventType.E_MouseInvisible, ReleaseMouseVisible);
+        EventCenter.Instance.SubscribeEvent<MouseVisibleChangedEvent>(OnMouseVisibleChangedEvent);
     }
 
     /// <summary>
     /// 申请显示并解锁鼠标
     /// </summary>
-    /// <param name="sorce"></param>
-    public void RequestMouseVisible(string sorce)
+    /// <param name="source"></param>
+    private void RequestMouseVisible(string source)
     {
-        if (!CanVisible(sorce))
+        if (!CanVisible(source))
         {
             return;
         }
 
         if (mouseVisibleSources.TryPeek(out string value))
         {
-            if (value == sorce)
+            if (value == source)
             {
                 return;
             }
         }
 
-        LogManager.Log($"{sorce}：请求鼠标可见");
-        mouseVisibleSources.Push(sorce);
+        LogManager.Log($"{source}：请求鼠标可见");
+        mouseVisibleSources.Push(source);
         UpdateMouseState();
     }
 
@@ -53,7 +52,7 @@ public class MouseManager : SingletonAutoMono<MouseManager>, IMouseManager
     /// 释放鼠标显示状态
     /// </summary>
     /// <param name="sorce"></param>
-    public void ReleaseMouseVisible(string sorce)
+    private void ReleaseMouseVisible(string sorce)
     {
         if (mouseVisibleSources.TryPeek(out string value))
         {
@@ -65,6 +64,28 @@ public class MouseManager : SingletonAutoMono<MouseManager>, IMouseManager
             LogManager.Log($"{sorce}：释放鼠标可见");
             mouseVisibleSources.Pop();
             UpdateMouseState();
+        }
+    }
+
+    private void OnOpenViewEvent(OpenViewEvent openViewEvent)
+    {
+        RequestMouseVisible(openViewEvent.ControllerName);
+    }
+
+    private void OnCloseViewEvent(CloseViewEvent closeViewEvent)
+    {
+        ReleaseMouseVisible(closeViewEvent.ControllerName);
+    }
+
+    private void OnMouseVisibleChangedEvent(MouseVisibleChangedEvent mouseVisibleChangedEvent)
+    {
+        if (mouseVisibleChangedEvent.IsVisible)
+        {
+            RequestMouseVisible(mouseVisibleChangedEvent.SourceName);
+        }
+        else
+        {
+            ReleaseMouseVisible(mouseVisibleChangedEvent.SourceName);
         }
     }
 
@@ -115,8 +136,8 @@ public class MouseManager : SingletonAutoMono<MouseManager>, IMouseManager
 
     protected override void OnDestroy()
     {
-        //EventCenter.Instance.RemoveEventListener<IUIController>(E_EventType.E_OpenView, OnOpenView);
-        //EventCenter.Instance.RemoveEventListener<IUIController>(E_EventType.E_CloseView, OnCloseView);
+        //EventCenter.Instance.UnsubscribeEvent<IUIController>(E_EventType.E_OpenView, OnOpenView);
+        //EventCenter.Instance.UnsubscribeEvent<IUIController>(E_EventType.E_CloseView, OnCloseView);
         base.OnDestroy();
     }
 

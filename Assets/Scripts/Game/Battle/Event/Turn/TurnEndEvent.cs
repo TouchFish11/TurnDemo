@@ -9,17 +9,11 @@ namespace Game.Battle
         /// <summary>
         /// 刚结束行动的实体
         /// </summary>
-        public IBattleEntityObject CurrentCharacter { get; }
+        public IBattleEntityObject CurrentBattleEntity { get; }
 
-        /// <summary>
-        /// 是否在本回合击杀敌人
-        /// </summary>
-        public bool HasKilledEnemy { get; }
-
-        public TurnEndEvent(IBattleContext context, IBattleEntityObject currentChar, bool hasKilled) : base(context)
+        public TurnEndEvent(IBattleContext context, IBattleEntityObject currentChar) : base(context)
         {
-            CurrentCharacter = currentChar;
-            HasKilledEnemy = hasKilled;
+            CurrentBattleEntity = currentChar;
         }
     }
 }

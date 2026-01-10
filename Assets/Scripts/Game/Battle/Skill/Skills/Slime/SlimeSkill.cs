@@ -21,22 +21,11 @@ public class SlimeSkill : Skill
 
     public SlimeSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler) : base(caster, skillId, postHandler)
     {
-        Caster.GetComponentInChildren<AnimationTrigger>().OnAttack += OnAttack;
+
     }
 
-    private void OnAttack(int skillId)
+    private void OnAttack(float time)
     {
-        if (skillId != SkillInfo.f_id)
-        {
-            return;
-        }
-
-        // TODO：暂时这样处理
-        if (currentDmgCount < 1)
-        {
-            return;
-        }
-
         foreach (IBattleEntityObject battleEntity in AllTargets)
         {
             DamageCalcManager.CalcSkillDamage(Caster, battleEntity, this.SkillInfo, out DamageResult result);
@@ -55,15 +44,11 @@ public class SlimeSkill : Skill
             yield return null;
         }
 
-        // 播放动画
-        context.GetEventBus().TriggerEvent(new SkillCastEvent(context, this, 0));
-
-        BattleAnimationComponent animationComponent = Caster.GetComponent<BattleAnimationComponent>();
-        // 等待动画切换为攻击动画
-        yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo().IsName(Attack) && animationComponent.GetCurrentAnimatorStateInfo().normalizedTime >= 0.9f);
+        LogManager.Log($"开始触发攻击，距离：{Vector3.Distance(Caster.GameObject.transform.position, targetPos)}");
+        yield return AnimationPlayManager.Instance.PlayAnimation(Caster, (E_AnimationType)SkillInfo.f_animationType, Attack, OnAttack, TextUtility.SplitTofloatArr(SkillInfo.f_dmgTimes, 2));
 
         // 优化表现
-        yield return _waitForSeconds0_3;
+        yield return _waitForSeconds0_3; 
 
         // 回到起始位置
         targetPos = BattlePoint.Instance.GetMonsterTransByIndex(context.GetMonsterObjectIndex(Caster)).position;

@@ -54,12 +54,10 @@ public abstract class Status : IStatus, IPoolData
 
     public virtual void TurnStart(IBattleEntityObject owner, IBattleContext context)
     {
-        // TODO：结算层数，暂时-1，后续通过配置处理
-        ChangePine(-1);
-        // 结算效果
         OnTurnStart(owner, context);
-        // 判断剩余回合数是否为0
-        if (StatusProperty.RemainingRound <= 0)
+
+        // 判断剩余回合数、层数是否有效
+        if (StatusProperty.RemainingRound <= 0 || StatusProperty.CurrentPine <= 0)
         {
             IsValid = false;
         }
@@ -67,7 +65,7 @@ public abstract class Status : IStatus, IPoolData
 
     public virtual void TurnEnd(IBattleEntityObject owner, IBattleContext context)
     {
-
+        OnTurnEnd(owner, context);
     }
 
     /// <summary>
@@ -89,13 +87,15 @@ public abstract class Status : IStatus, IPoolData
 
     /// <summary>
     /// 回合开始逻辑
+    /// 结算回合、层数。不同状态有不同的结算规则，需自定义
     /// </summary>
     /// <param name="owner"></param>
     /// <param name="context"></param>
-    protected virtual void OnTurnStart(IBattleEntityObject owner, IBattleContext context) { }
+    protected abstract void OnTurnStart(IBattleEntityObject owner, IBattleContext context);
 
     /// <summary>
     /// 回合结束逻辑
+    /// 须在回合结束时处理的特殊逻辑，可在这里自定义
     /// </summary>
     /// <param name="owner"></param>
     /// <param name="context"></param>

@@ -21,37 +21,68 @@ namespace Game.Battle
             base.BattleInit(battleEntity);
 
             statusTotalBonus = new StatusTotalBonusData();
-            // 订阅“回合开始事件”（核心：模块主动订阅，无需核心流程修改）
+            // 订阅回合开始事件
             battleEntity.Context.GetEventBus().AddListener<TurnStartEvent>(OnTurnStart);
+            // 订阅回合结束事件
+            battleEntity.Context.GetEventBus().AddListener<TurnEndEvent>(OnTurnEnd);
         }
 
         /// <summary>
         /// 回合开始事件回调
         /// </summary>
-        /// <param name="evt"></param>
+        /// <param name="turnStartEvent"></param>
         private void OnTurnStart(TurnStartEvent turnStartEvent)
         {
-            // 只处理当前行动角色的状态
-            if (turnStartEvent.CurrentBattleEntity != BattleEntity)
+            OnTurnChanged(turnStartEvent);
+        }
+
+        /// <summary>
+        /// 回合结束事件回调
+        /// </summary>
+        /// <param name="turnEndEvent"></param>
+        private void OnTurnEnd(TurnEndEvent turnEndEvent)
+        {
+            OnTurnChanged(turnEndEvent);
+        }
+
+        /// <summary>
+        /// 回合变化逻辑
+        /// </summary>
+        /// <param name="battleEvent"></param>
+        private void OnTurnChanged(BattleEvent battleEvent)
+        {
+            if (battleEvent.Context.GetCurrentEntity() != this.BattleEntity)
             {
                 return;
             }
 
-            // 遍历所有有效状态，调用其TurnStart
-            foreach (IStatus status in _statuses)
+            if (battleEvent is TurnStartEvent turnStartEvent)
             {
-                if (status.IsValid)
+                // 遍历所有有效状态，调用其TurnStart
+                foreach (IStatus status in _statuses)
                 {
-                    status.TurnStart(BattleEntity, turnStartEvent.Context);
+                    if (status.IsValid)
+                    {
+                        status.TurnStart(BattleEntity, turnStartEvent.Context);
+                    }
+                }
+            }
+            else if(battleEvent is TurnEndEvent turnEndEvent)
+            {
+                // 遍历所有有效状态，调用其TurnEnd
+                foreach (IStatus status in _statuses)
+                {
+                    if (status.IsValid)
+                    {
+                        status.TurnEnd(BattleEntity, turnEndEvent.Context);
+                    }
                 }
             }
 
             // 移除失效状态
             _statuses.RemoveAll(s => !s.IsValid);
-
             // 更新状态加成
             UpdateStatusBonus();
-
             // 更新角色UI状态栏
             this.BattleEntity.Context.GetEventBus().TriggerEvent(new TurnStartStatusChangedEvent(this.BattleEntity.Context, this.BattleEntity));
         }
@@ -78,6 +109,8 @@ namespace Game.Battle
 
             // 更新状态加成
             UpdateStatusBonus();
+            // 触发事件，更新状态浮动文本UI
+            this.BattleEntity.Context.GetEventBus().TriggerEvent(new StatusAddedEvent(this.BattleEntity.Context, status));
         }
 
         /// <summary>
@@ -116,8 +149,6 @@ namespace Game.Battle
             {
                 newStatus.IsValid = true;
                 _statuses.Add(newStatus);
-                // 触发事件，更新状态浮动文本UI
-                this.BattleEntity.Context.GetEventBus().TriggerEvent(new StatusAddedEvent(this.BattleEntity.Context, newStatus));
             }
         }
 
@@ -129,8 +160,6 @@ namespace Game.Battle
         {
             newStatus.IsValid = true;
             _statuses.Add(newStatus);
-            // 触发事件，更新状态浮动文本UI
-            this.BattleEntity.Context.GetEventBus().TriggerEvent(new StatusAddedEvent(this.BattleEntity.Context, newStatus));
         }
 
         /// <summary>
@@ -146,8 +175,6 @@ namespace Game.Battle
                 _statuses.Remove(status);
                 newStatus.IsValid = true;
                 _statuses.Add(newStatus);
-                // 触发事件，更新状态浮动文本UI
-                this.BattleEntity.Context.GetEventBus().TriggerEvent(new StatusAddedEvent(this.BattleEntity.Context, newStatus));
             }
         }
     }

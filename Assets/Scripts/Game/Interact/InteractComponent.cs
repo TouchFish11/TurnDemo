@@ -56,7 +56,7 @@ public class InteractComponent : BaseComponent
     public void AddInteract(IInteractable interactable)
     {
         interactables.Add(interactable);
-        EventCenter.Instance.TriggerEvent(E_EventType.E_OnInteract, interactables);
+        EventCenter.Instance.TriggerEvent(new InteractEvent(interactables));
     }
 
     /// <summary>
@@ -66,7 +66,7 @@ public class InteractComponent : BaseComponent
     public void RemoveInteract(IInteractable interactable)
     {
         interactables.Remove(interactable);
-        EventCenter.Instance.TriggerEvent(E_EventType.E_OnInteract, interactables);
+        EventCenter.Instance.TriggerEvent(new InteractEvent(interactables));
     }
 
     /// <summary>

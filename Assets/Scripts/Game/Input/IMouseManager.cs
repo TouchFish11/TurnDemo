@@ -5,7 +5,4 @@
 public interface IMouseManager
 {
     bool Visible { get; }
-
-    void ReleaseMouseVisible(string sorce);
-    void RequestMouseVisible(string sorce);
 }

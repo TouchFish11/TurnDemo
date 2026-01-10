@@ -25,7 +25,7 @@ public class StatusEffectTextUI : BaseUIBehaviour
     // 当前时间
     private float currentTime;
 
-    protected override void Awake()
+protected override void Awake()
     {
         base.Awake();
 
@@ -33,13 +33,13 @@ public class StatusEffectTextUI : BaseUIBehaviour
         txtBuffName = binder.GetControl<TextMeshProUGUI>(nameof(txtBuffName));
         mover = this.transform.Find(nameof(mover));
 
-        originMoverPos = mover.position;
+        originMoverPos = mover.localPosition;
         ServiceLocator.Instance.Get<IMonoManager>().AddUpdateListener(OnUpadte);
     }
 
     protected override void OnEnable()
     {
-        mover.position = originMoverPos;
+        mover.localPosition = originMoverPos;
     }
 
     /// <summary>
@@ -66,7 +66,6 @@ public class StatusEffectTextUI : BaseUIBehaviour
             currentTime = 0;
             PoolManager.Instance.PushObj(this.gameObject);
         }
-
         //文本运动
         this.mover.Translate(Time.deltaTime * upMoveSpeed * Vector3.up);
     }

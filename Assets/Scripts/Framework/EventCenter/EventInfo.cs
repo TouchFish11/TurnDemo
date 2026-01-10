@@ -1,54 +1,35 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace Framework
 {
     /// <summary>
-    /// 不携带参数的事件信息类
+    /// 事件信息类
     /// </summary>
-    public class EventInfo : BaseEventInfo
+    /// <typeparam name="TEvent"></typeparam>
+    public class EventInfo<TEvent> : BaseEventInfo where TEvent : IEvent
     {
-        /// <summary>
-        /// 事件回调
-        /// </summary>
-        public event UnityAction EventCallBack;
+        public Action<TEvent> CallBack { get; }
+        public Func<TEvent, bool> Filter { get; }
 
-        public EventInfo(UnityAction EventCallBack)
+        public EventInfo(Action<TEvent> callBack, Func<TEvent, bool> filter)
         {
-            this.EventCallBack += EventCallBack;
-        }
-
-        /// <summary>
-        /// 调用
-        /// </summary>
-        public void Invoke()
-        {
-            EventCallBack?.Invoke();
-        }
-    }
-
-    /// <summary>
-    /// 携带参数的事件信息类
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class EventInfo<T> : BaseEventInfo
-    {
-        /// <summary>
-        /// 事件回调
-        /// </summary>
-        public event UnityAction<T> EventCallBack;
-
-        public EventInfo(UnityAction<T> EventCallBack)
-        {
-            this.EventCallBack += EventCallBack;
+            this.CallBack = callBack;
+            this.Filter = filter;
         }
 
         /// <summary>
         /// 调用
         /// </summary>
         /// <param name="info">传递信息</param>
-        public void Invoke(T info)
+        public void Invoke(TEvent info)
         {
-            EventCallBack?.Invoke(info);
+            if (Filter.Invoke(info))
+            {
+                CallBack?.Invoke(info);
+            }
         }
     }
 }

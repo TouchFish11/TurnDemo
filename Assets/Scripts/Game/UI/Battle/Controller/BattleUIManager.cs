@@ -271,6 +271,20 @@ public class BattleUIManager
         }
     }
 
+    /// <summary>
+    /// 显示状态文本效果
+    /// </summary>
+    /// <param name="newStatus"></param>
+    public async void ShowStatusText(IStatus newStatus)
+    {
+        StatusEffectTextUI statusEffectTextUI = await ObjectBuilder.GetObject<StatusEffectTextUI>(E_AssetBundleType.UI, ResKeyCollection.StatusEffectTextUI, null);
+        if (UIManager.WorldToLocalPointInRectangle(BattlePoint.Instance.CurrentActiveCamera, ServiceLocator.Instance.Get<IUIManager>().UICamera,
+            _view.BuffTextArea, statusEffectTextUI.gameObject, newStatus.Owner.SubGameObject.transform.position, Vector2.up * 120))
+        {
+            statusEffectTextUI.InitText(null, newStatus.StatusProperty.StatusInfo.f_name);
+        }
+    }
+
 
     /// <summary>
     /// 清理活跃的伤害文本UI

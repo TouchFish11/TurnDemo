@@ -1,3 +1,4 @@
+using Framework;
 using Game;
 using Game.Battle;
 
@@ -33,6 +34,7 @@ public class BattleEventProcessor
         eventBus.AddListener<UltimateReleaseOverEvent>(OnUltimateReleaseOverEvent);
         eventBus.AddListener<ActionBarSortPostEvent>(OnActionBarSortPostEvent);
         eventBus.AddListener<TurnStartStatusChangedEvent>(OnTurnStartStatusChangedEvent);
+        eventBus.AddListener<StatusAddedEvent>(OnStatusAddedEvent);
     }
 
     /// <summary>
@@ -82,6 +84,16 @@ public class BattleEventProcessor
     {
         // 更新指定玩家状态栏
         _uiManager.UpdateStatuebar(turnStartStatusChangedEvent.CurrentBattleEntity);
+    }
+
+    /// <summary>
+    /// 状态添加事件回调
+    /// 显示状态浮动文本效果
+    /// </summary>
+    /// <param name="statusAddedEvent"></param>
+    private async void OnStatusAddedEvent(StatusAddedEvent statusAddedEvent)
+    {
+        _uiManager.ShowStatusText(statusAddedEvent.NewStatus);
     }
 
     /// <summary>

@@ -295,6 +295,7 @@ GameObject:
   - component: {fileID: 6770660568060221139}
   - component: {fileID: 5104132283067691236}
   - component: {fileID: 3386502627003978480}
+  - component: {fileID: 5481409714764247723}
   m_Layer: 5
   m_Name: StatusGridUI
   m_TagString: Untagged
@@ -362,3 +363,15 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5481409714764247723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4544022162985387676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c53eb834b339e774c8a5fad57cb29b95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

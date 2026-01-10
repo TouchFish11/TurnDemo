@@ -22,7 +22,7 @@ public class AnimationTrigger : MonoBehaviour
     {
         // 新增：打印帧号+当前动画进度+是否在Attack状态
         AnimatorStateInfo stateInfo = GetComponent<Animator>().GetCurrentAnimatorStateInfo(1);
-        LogManager.Log($"{gameObject.name}：触发攻击：ID为{skillId} | 帧号：{Time.frameCount} | NormalizedTime：{stateInfo.normalizedTime:F2} | 是否Attack状态：{stateInfo.IsName("Attack")}");
+        //LogManager.Log($"{gameObject.name}：触发攻击：ID为{skillId} | 帧号：{Time.frameCount} | NormalizedTime：{stateInfo.normalizedTime:F2} | 是否Attack状态：{stateInfo.IsName("Attack")}");
         OnAttack?.Invoke(skillId);
     }
 }

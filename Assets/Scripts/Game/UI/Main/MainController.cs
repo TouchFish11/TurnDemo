@@ -42,7 +42,7 @@ public class MainController : UIController<MainView, MainModel>
     protected override async Task OnInit()
     {
         // 交互逻辑监听
-        EventCenter.Instance.AddEventListener<List<IInteractable>>(E_EventType.E_OnInteract, mainLogics[typeof(InteractLogic)].As<InteractLogic>().CreateInteract);
+        EventCenter.Instance.SubscribeEvent<List<IInteractable>>(E_EventType.E_OnInteract, mainLogics[typeof(InteractLogic)].As<InteractLogic>().CreateInteract);
         // 对话事件监听
         ServiceLocator.Instance.Get<IDialogueManager>().OnDialogueStart += InActive;
         ServiceLocator.Instance.Get<IDialogueManager>().OnDialogueEnd += Active;
@@ -93,6 +93,6 @@ public class MainController : UIController<MainView, MainModel>
     public override void Destroy()
     {
         base.Destroy();
-        EventCenter.Instance.RemoveEventListener<List<IInteractable>>(E_EventType.E_OnInteract, mainLogics[typeof(InteractLogic)].As<InteractLogic>().CreateInteract);
+        EventCenter.Instance.UnsubscribeEvent<List<IInteractable>>(E_EventType.E_OnInteract, mainLogics[typeof(InteractLogic)].As<InteractLogic>().CreateInteract);
     }
 }

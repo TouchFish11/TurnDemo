@@ -9,6 +9,9 @@ using UnityEngine;
 /// </summary>
 public interface IUIManager
 {
+    Canvas Canvas { get; }
+    Camera UICamera { get; }
+
     Task<TController> CreateViewAsync<TView, TModel, TController>(E_UILayer layer)
         where TView : UIView
         where TModel : UIModel, new()

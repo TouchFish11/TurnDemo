@@ -28,6 +28,8 @@ public class BattleView : UIView
     /// </summary>
     public Transform BattleMsgArea { get; private set; }
 
+    public Transform BuffTextArea { get; private set; }
+
 
     private GameObject totalDmgArea;
     private ActingTipUI actingTipUI;
@@ -69,7 +71,8 @@ public class BattleView : UIView
         selectMarkerArea = this.transform.Find(nameof(selectMarkerArea));
         monsterStateArea = this.transform.Find(nameof(monsterStateArea));
         BattleMsgArea = this.transform.Find(nameof(BattleMsgArea));
-
+        BuffTextArea = this.transform.Find(nameof(BuffTextArea));
+        
         totalDmgArea = this.transform.Find(nameof(totalDmgArea)).gameObject;
         totalDmgArea.SetActive(false);
 

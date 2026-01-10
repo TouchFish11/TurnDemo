@@ -18,8 +18,16 @@ namespace Game
 
         public int BattleEntityId { get; private set; }
 
+        public GameObject SubGameObject { get; private set; }
+
         // 行动次数
         protected int actCount;
+
+        public override void BaseInit(int id)
+        {
+            // 获取第一个子对象，通常带有Animator
+            SubGameObject = this.GetComponentsInChildren<Transform>()[1].gameObject;
+        }
 
         public virtual void BattleInit(int battleEntityId, IBattleContext context)
         {
@@ -171,7 +179,7 @@ namespace Game
             {
                 OnTurnEnd();
                 // 执行实体回合结束事件
-                Context.GetEventBus().TriggerEvent(new TurnEndEvent(Context, this, false));
+                Context.GetEventBus().TriggerEvent(new TurnEndEvent(Context, this));
             }
         }
     }

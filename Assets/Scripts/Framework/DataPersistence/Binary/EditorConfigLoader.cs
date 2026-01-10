@@ -20,6 +20,7 @@ public class EditorConfigLoader : ConfigLoader
         await LoadTableAsync<RoleInfoContainer, RoleInfo>();
         await LoadTableAsync<MonsterInfoContainer, MonsterInfo>();
         await LoadTableAsync<SkillInfoContainer, SkillInfo>();
+        await LoadTableAsync<StatusInfoContainer, StatusInfo>();
     }
 
     /// <summary>

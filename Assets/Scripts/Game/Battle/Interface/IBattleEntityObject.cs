@@ -1,4 +1,6 @@
 
+using UnityEngine;
+
 namespace Game.Battle
 {
     /// <summary>
@@ -6,6 +8,12 @@ namespace Game.Battle
     /// </summary>
     public interface IBattleEntityObject : IEntityObject
     {
+        /// <summary>
+        /// 子游戏对象
+        /// 返回该脚本依附对象的第一个子对象
+        /// </summary>
+        GameObject SubGameObject { get; }
+
         /// <summary>
         /// 战斗实体ID
         /// </summary>

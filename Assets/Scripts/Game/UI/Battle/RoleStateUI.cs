@@ -169,6 +169,11 @@ public class RoleStateUI : BaseUIBehaviour
     /// </summary>
     private void OnStatusAddedEvent(StatusAddedEvent statusAddedEvent)
     {
+        if (statusAddedEvent.NewStatus.Owner != this.battleEntity)
+        {
+            return;
+        }
+
         IStatus status = statusAddedEvent.NewStatus;
 
         // 层数变化，不用处理
@@ -222,12 +227,13 @@ public class RoleStateUI : BaseUIBehaviour
     /// </summary>
     public void UpdateStatus()
     {
-        foreach (var statusGrid in statusGridUIs)
+        for (int i = statusGridUIs.Count - 1; i >= 0; i--)
         {
-            if (!statusGrid.IsValid)
+            if (!statusGridUIs[i].IsValid)
             {
                 // 移除无效的状态
-                PoolManager.Instance.PushObj(statusGrid.gameObject);
+                PoolManager.Instance.PushObj(statusGridUIs[i].gameObject);
+                statusGridUIs.RemoveAt(i);
             }
         }
     }
