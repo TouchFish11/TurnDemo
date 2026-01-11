@@ -16,7 +16,7 @@ public class StatusProperty
 
     public StatusProperty(int statusId)
     {
-        StatusInfo = ServiceLocator.Instance.Get<IBinaryDataManager>().GetConfig<StatusInfoContainer>(E_ConfigLoadType.Editor).dataDic[statusId];
+        StatusInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<StatusInfoContainer>(E_ConfigLoadType.Editor).dataDic[statusId];
         currentPine = StatusInfo.f_startPine;
         remainingRound = StatusInfo.f_durationRound;
     }

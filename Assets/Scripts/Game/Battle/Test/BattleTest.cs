@@ -18,17 +18,17 @@ public class BattleTest : MonoBehaviour
         light.transform.rotation = Quaternion.Euler(-5, -30, 0);
 
         // 初始化服务定位器
-        ServiceLocator.Instance.InitService();
+        ServiceLocator.InitService();
 
         // 初始化工厂
-        ServiceLocator.Instance.Get<IFactoryManager>().InitFactorys();
+        ServiceLocator.Get<IFactoryManager>().InitFactorys();
         // 初始化配置
-        await ServiceLocator.Instance.Get<IBinaryDataManager>().LoadConfig();
+        await ServiceLocator.Get<IBinaryDataManager>().LoadConfig();
         // 初始化UI管理器
-        await ServiceLocator.Instance.Get<IUIManager>().InitUIManagerAsync();
+        await ServiceLocator.Get<IUIManager>().InitUIManagerAsync();
         // 初始化战斗管理器
-        ServiceLocator.Instance.Register<IBattleManager>(BattleManager.Instance);
+        ServiceLocator.Register<IBattleManager>(BattleManager.Instance);
         // 开始战斗
-        await ServiceLocator.Instance.Get<IBattleManager>().StartBattle();
+        await ServiceLocator.Get<IBattleManager>().StartBattle();
     }
 }

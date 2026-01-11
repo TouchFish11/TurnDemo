@@ -670,7 +670,7 @@ namespace XLua
                             try
                             {
                                 prop.SetValue(obj, GetCaster(prop.ElementType)(L, n + 1,
-                                    target == null || prop.ElementType.IsPrimitive() || prop.ElementType == typeof(string) ? null : prop.GetValue(obj, null)), null);
+                                    target == null || prop.ElementType.IsPrimitive() || prop.ElementType == typeof(string) ? null : prop.GetTypeInstance(obj, null)), null);
                             }
                             catch (Exception e)
                             {

@@ -58,7 +58,7 @@ public class ActionGridUI : BaseUIBehaviour
         images = flashing.GetComponentsInChildren<Image>();
         flashing.SetActive(false);
 
-        ServiceLocator.Instance.Get<IMonoManager>().AddUpdateListener(OnUpdate);
+        ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
     }
 
     /// <summary>

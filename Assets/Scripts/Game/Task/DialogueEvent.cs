@@ -1,19 +1,6 @@
 using Framework;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-public class DialogueEvent : IEvent
+public class DialogueEvent : Event
 {
-    public int NpcId { get; }
-
-    public DialogueEvent(int npcId)
-    {
-        NpcId = npcId;
-    }
-
-    void IEvent.ResetEvent()
-    {
-
-    }
+    public int NpcId { get; set; }
 }

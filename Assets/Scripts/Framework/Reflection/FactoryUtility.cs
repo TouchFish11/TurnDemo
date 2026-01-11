@@ -1,4 +1,5 @@
 using Game;
+using Game.Battle;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -14,19 +15,33 @@ namespace Framework
         /// <summary>
         /// 扫描指定类型
         /// </summary>
-        public static void ScanAllType<TValue, TAttribute>(Dictionary<Type, TValue> dic) where TValue : class where TAttribute : Attribute
+        public static void ScanAllType<TValue>(Dictionary<Type, TValue> dic) where TValue : class
         {
             foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
             {
-                TAttribute attribute = type.GetCustomAttribute<TAttribute>();
+                if (typeof(TValue).IsAssignableFrom(type) && !type.IsAbstract)
+                {
+                    dic.Add(type, Activator.CreateInstance(type) as TValue);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 扫描指定类型
+        /// </summary>
+        public static void ScanAllStatu(Dictionary<int, Type> dic)
+        {
+            foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
+            {
+                StatusTypeIdAttribute attribute = type.GetCustomAttribute<StatusTypeIdAttribute>();
                 if (attribute == null)
                 {
                     continue;
                 }
 
-                if (typeof(TValue).IsAssignableFrom(type))
+                if (typeof(IStatus).IsAssignableFrom(type) && !type.IsAbstract)
                 {
-                    dic.Add(type, Activator.CreateInstance(type) as TValue);
+                    dic.Add(attribute.StatusId, type);
                 }
             }
         }
@@ -36,19 +51,12 @@ namespace Framework
         /// 扫描所有指定工厂
         /// </summary>
         /// <typeparam name="TValue"></typeparam>
-        /// <typeparam name="TAttribute"></typeparam>
         /// <param name="dic"></param>
-        public static void ScanFactorys<TValue, TAttribute>(Dictionary<Type, TValue> dic) where TValue : class, IFactory where TAttribute : Attribute
+        public static void ScanFactorys<TValue>(Dictionary<Type, TValue> dic) where TValue : class, IFactory
         {
             foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
             {
-                TAttribute attribute = type.GetCustomAttribute<TAttribute>();
-                if (attribute == null)
-                {
-                    continue;
-                }
-
-                if (typeof(TValue).IsAssignableFrom(type))
+                if (typeof(TValue).IsAssignableFrom(type) && !type.IsAbstract)
                 {
                     TValue factory = Activator.CreateInstance(type) as TValue;
                     factory.InitFactory();

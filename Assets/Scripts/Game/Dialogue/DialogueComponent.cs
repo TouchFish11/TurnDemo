@@ -9,9 +9,9 @@ public class DialogueComponent : BaseComponent, IDialable
     public override void Init(IEntityObject entityObject)
     {
         // 监听对话结束事件
-        ServiceLocator.Instance.Get<IDialogueManager>().OnDialogueEnd += (this as IDialable).OnDialogueEnd;
+        ServiceLocator.Get<IDialogueManager>().OnDialogueEnd += (this as IDialable).OnDialogueEnd;
         // 监听对话开始事件
-        ServiceLocator.Instance.Get<IDialogueManager>().OnDialogueStart += (this as IDialable).OnDialogueStart;
+        ServiceLocator.Get<IDialogueManager>().OnDialogueStart += (this as IDialable).OnDialogueStart;
     }
 
     void IDialable.OnDialogueStart()
@@ -35,9 +35,9 @@ public class DialogueComponent : BaseComponent, IDialable
     public override void Destroy()
     {
         // 取消监听对话开始事件
-        ServiceLocator.Instance.Get<IDialogueManager>().OnDialogueStart -= (this as IDialable).OnDialogueStart;
+        ServiceLocator.Get<IDialogueManager>().OnDialogueStart -= (this as IDialable).OnDialogueStart;
         // 取消监听对话结束事件
-        ServiceLocator.Instance.Get<IDialogueManager>().OnDialogueEnd -= (this as IDialable).OnDialogueEnd;
+        ServiceLocator.Get<IDialogueManager>().OnDialogueEnd -= (this as IDialable).OnDialogueEnd;
 
         base.Destroy();
     }

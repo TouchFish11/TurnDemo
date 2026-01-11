@@ -7,23 +7,23 @@ namespace Framework
     /// 工厂基类
     /// </summary>
     /// <typeparam name="TValue">接口类型</typeparam>
-    /// <typeparam name="TAttribute">特性类型</typeparam>
-    public abstract class Factory<TValue, TAttribute> : IFactory where TValue : class where TAttribute : Attribute
+    public abstract class Factory<TValue> : IFactory where TValue : class
     {
-        protected readonly Dictionary<Type, TValue> typeToIStatusMap = new Dictionary<Type, TValue>();
+        protected static readonly Dictionary<Type, TValue> typeToITypeMap = new Dictionary<Type, TValue>();
 
         public void InitFactory()
         {
-            FactoryUtility.ScanAllType<TValue, TAttribute>(typeToIStatusMap);
+            FactoryUtility.ScanAllType(typeToITypeMap);
         }
 
-        public virtual T GetValue<T>() where T : class
+        public virtual T GetTypeInstance<T>() where T : class
         {
-            if (typeToIStatusMap.TryGetValue(typeof(T), out var value))
+            if (typeToITypeMap.TryGetValue(typeof(T), out var value))
             {
                 return value as T;
             }
 
+            LogManager.LogError($"未找到类型实例：{typeof(T)}");
             return default;
         }
     }

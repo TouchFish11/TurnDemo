@@ -22,7 +22,7 @@ public class InteractComponent : BaseComponent
     public override void Init(IEntityObject entityObject)
     {
         // 对话结束事件监听
-        ServiceLocator.Instance.Get<IDialogueManager>().OnDialogueEnd += QuitInteract;
+        ServiceLocator.Get<IDialogueManager>().OnDialogueEnd += QuitInteract;
         // 交互触发事件监听
         this.EntityObject.GetComponent<InputComponent>().OnIniteract += OnIniteract;
     }
@@ -56,7 +56,7 @@ public class InteractComponent : BaseComponent
     public void AddInteract(IInteractable interactable)
     {
         interactables.Add(interactable);
-        EventCenter.Instance.TriggerEvent(new InteractEvent(interactables));
+        EventCenter.Instance.TriggerEvent(new InteractEvent() { Interactables = interactables });
     }
 
     /// <summary>
@@ -66,7 +66,7 @@ public class InteractComponent : BaseComponent
     public void RemoveInteract(IInteractable interactable)
     {
         interactables.Remove(interactable);
-        EventCenter.Instance.TriggerEvent(new InteractEvent(interactables));
+        EventCenter.Instance.TriggerEvent(new InteractEvent() { Interactables = interactables });
     }
 
     /// <summary>

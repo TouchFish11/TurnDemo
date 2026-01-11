@@ -11,8 +11,6 @@ using System.Reflection;
 /// </summary>
 public class TargetSelectManager : SingletonBase<TargetSelectManager>, ITargetSelectManager
 {
-    // 反射查找缓存的类型到目标选择策略映射
-    private readonly static Dictionary<Type, ITargetSelectStrategy> typeToSelectStrategiesMap = new Dictionary<Type, ITargetSelectStrategy>();
     // 目标列表（包含主目标）
     private readonly List<IBattleEntityObject> _selectedTargets = new List<IBattleEntityObject>();
     // 主目标
@@ -25,15 +23,9 @@ public class TargetSelectManager : SingletonBase<TargetSelectManager>, ITargetSe
     private IBattleEntityObject caster;
     // 当前目标选择策略
     private ITargetSelectStrategy currentSelectStrategy;
-
-    static TargetSelectManager()
-    {
-        ScanAllTargetSelectStrategy();
-    }
-
     private TargetSelectManager()
     {
-        battleContext = ServiceLocator.Instance.Get<IBattleManager>().GetContext();
+        battleContext = ServiceLocator.Get<IBattleManager>().GetContext();
         battleContext.GetEventBus().AddListener<SelectSkillEvent>(OnSelectSkillEvent);
     }
 
@@ -53,14 +45,7 @@ public class TargetSelectManager : SingletonBase<TargetSelectManager>, ITargetSe
 
     public void SetSelectTargetStrategy<T>() where T : class, ITargetSelectStrategy
     {
-        if (typeToSelectStrategiesMap.TryGetValue(typeof(T), out ITargetSelectStrategy strategy))
-        {
-            currentSelectStrategy = strategy;
-            return;
-        }
-
-        currentSelectStrategy = typeToSelectStrategiesMap[typeof(MonsterBaseTargetSelectStrategy)];
-        LogManager.LogError($"未找到目标选择策略：{typeof(T)}，已默认使用：{nameof(MonsterBaseTargetSelectStrategy)}");
+        currentSelectStrategy = IFactory.GetTypeInstance<TargetSelectStrategyFactory, T>();
     }
 
     public void ReSelectTarget(IBattleContext context, IBattleEntityObject caster, SkillInfo skillInfo)
@@ -194,25 +179,5 @@ public class TargetSelectManager : SingletonBase<TargetSelectManager>, ITargetSe
         _mainTarget = mainTarget;
         //更新目标
         UpdateTargets();
-    }
-
-    /// <summary>
-    /// 扫描所有的目标选择策略类
-    /// </summary>
-    private static void ScanAllTargetSelectStrategy()
-    {
-        foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
-        {
-            TargetSelectStrategyAttribute attribute = type.GetCustomAttribute<TargetSelectStrategyAttribute>(); 
-            if (attribute == null)
-            {
-                continue;
-            }
-
-            if (typeof(ITargetSelectStrategy).IsAssignableFrom(type))
-            {
-                typeToSelectStrategiesMap.Add(type, Activator.CreateInstance(type) as ITargetSelectStrategy);
-            }
-        }
     }
 }

@@ -14,7 +14,9 @@ public class SlimeSkillFactory : SkillFactory
         switch (skillId)
         {
             case 101:
-                return new SlimeSkill(caster, skillId, GetSkillCastPostHandler<BaseSkillCastPostHandler>());
+                return new SlimeSkill(caster, skillId,
+                                      IFactory.GetTypeInstance<SkillCastPostHandlerFactory, BaseSkillCastPostHandler>(),
+                                      IFactory.GetTypeInstance<StatusAddStrategyFactory, SlimeSkillStatusStrategy>());
             default:
                 LogManager.Log($"Î´ÕÒµ½¼¼ÄÜID£¬ skillId = {skillId}");
                 return null;

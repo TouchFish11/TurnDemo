@@ -1,11 +1,9 @@
 using Game.Battle;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 /// <summary>
 /// ╠сссп╖╧Ш
 /// </summary>
+[StatusTypeId(10001)]
 public class ProtectStatus : Status
 {
     protected override void OnAdd()

@@ -34,7 +34,7 @@ protected override void Awake()
         mover = this.transform.Find(nameof(mover));
 
         originMoverPos = mover.localPosition;
-        ServiceLocator.Instance.Get<IMonoManager>().AddUpdateListener(OnUpadte);
+        ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpadte);
     }
 
     protected override void OnEnable()

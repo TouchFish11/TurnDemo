@@ -1,17 +1,20 @@
-using Framework;
 using Game.Battle;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// FireFly终结技
+/// </summary>
 public class FireFlyUltimateSkill : UltimateSkill
 {
+    private static WaitForSeconds _waitForSeconds0_25 = new WaitForSeconds(0.25f);
     private readonly string ultimateAttackState = "UltimateAttack";
 
     protected override int DmgCount { get; set; } = 3;
 
-    public FireFlyUltimateSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler) : base(caster, skillId, postHandler)
+    private bool isAddStatus;
+
+    public FireFlyUltimateSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
     {
         Caster.GetComponentInChildren<AnimationTrigger>().OnAttack += OnAttack;
     }
@@ -29,9 +32,13 @@ public class FireFlyUltimateSkill : UltimateSkill
             DamageCalcManager.CalcSkillDamage(Caster, battleEntity, this.SkillInfo, out DamageResult result);
             battleEntity.TakeDamage(result);
             RecoverEnergy();
-            --currentDmgCount;
-            LogManager.Log($"【终结技】：{Caster.GameObject.name}释放技能：{SkillInfo.f_name}，第{index + 1}段");
             ++index;
+        }
+
+        if (!isAddStatus)
+        {
+            StatusAddStrategy?.ToAdd(Caster, AllTargets, statusIds);
+            isAddStatus = true;
         }
     }
 
@@ -45,7 +52,11 @@ public class FireFlyUltimateSkill : UltimateSkill
 
     protected override IEnumerator OnUltimateCast(IBattleContext context)
     {
-        LogManager.Log($"{Caster.GameObject.name}释放技能：{SkillInfo.f_name}");
+        // 传送到主目标身前
+        Vector3 targetPos = MainTarget.GameObject.transform.position;
+        Caster.GameObject.transform.position = targetPos - Vector3.forward;
+
+        yield return _waitForSeconds0_25;
 
         context.GetEventBus().TriggerEvent(new SkillCastEvent(context, this, 0));
         BattleAnimationComponent animationComponent = Caster.GetComponent<BattleAnimationComponent>();
@@ -53,5 +64,17 @@ public class FireFlyUltimateSkill : UltimateSkill
         yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo().IsName(ultimateAttackState));
         // 等待动画结束
         yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo().normalizedTime >= 0.9f);
+
+        // 回到起始位置
+        targetPos = BattlePoint.Instance.GetPlayerTransByIndex(Caster.EntityPosIndex).position;
+        Caster.GameObject.transform.position = targetPos;
+
+        yield return _waitForSeconds0_25;
+    }
+
+    protected override IEnumerator OnPostCast()
+    {
+        isAddStatus = false;
+        return base.OnPostCast();
     }
 }

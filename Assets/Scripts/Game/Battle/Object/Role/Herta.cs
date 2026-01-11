@@ -1,8 +1,6 @@
+using Framework;
 using Game;
 using Game.Battle;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 /// <summary>
 /// Herta技能工厂类
@@ -14,11 +12,11 @@ public class HertaSkillFactory : SkillFactory
         switch (skillId)
         {
             case 20:
-                return new HertaNormalSkill(caster, skillId, GetSkillCastPostHandler<BaseSkillCastPostHandler>());
+                return new HertaNormalSkill(caster, skillId, IFactory.GetTypeInstance<SkillCastPostHandlerFactory, BaseSkillCastPostHandler>(), null);
             case 21:
-                return new HertaBattleSkill(caster, skillId, GetSkillCastPostHandler<BaseSkillCastPostHandler>());
+                return new HertaBattleSkill(caster, skillId, IFactory.GetTypeInstance<SkillCastPostHandlerFactory, BaseSkillCastPostHandler>(), null);
             case 22:
-                return new HertaUltimateSkill(caster, skillId, GetSkillCastPostHandler<BaseUltimateSkillCastPostHandler>());
+                return new HertaUltimateSkill(caster, skillId, IFactory.GetTypeInstance<SkillCastPostHandlerFactory, BaseUltimateSkillCastPostHandler>(), null);
             default:
                 return null;
         }

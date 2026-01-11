@@ -1,16 +1,17 @@
-using Framework;
 using Game.Battle;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Herta终结技
+/// </summary>
 public class HertaUltimateSkill : UltimateSkill
 {
     private readonly string ultimateAttackState = "UltimateAttack";
 
     protected override int DmgCount { get; set; } = 3;
 
-    public HertaUltimateSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler) : base(caster, skillId, postHandler)
+    public HertaUltimateSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
     {
         Caster.GetComponentInChildren<AnimationTrigger>().OnAttack += OnAttack;
     }
@@ -28,8 +29,6 @@ public class HertaUltimateSkill : UltimateSkill
             DamageCalcManager.CalcSkillDamage(Caster, battleEntity, this.SkillInfo, out DamageResult result);
             battleEntity.TakeDamage(result);
             RecoverEnergy();
-            --currentDmgCount;
-            LogManager.Log($"【终结技】：{Caster.GameObject.name}释放技能：{SkillInfo.f_name}，第{index + 1}段");
             ++index;
         }
     }
@@ -44,8 +43,6 @@ public class HertaUltimateSkill : UltimateSkill
 
     protected override IEnumerator OnUltimateCast(IBattleContext context)
     {
-        LogManager.Log($"{Caster.GameObject.name}释放技能：{SkillInfo.f_name}");
-
         context.GetEventBus().TriggerEvent(new SkillCastEvent(context, this, 0));
         BattleAnimationComponent animationComponent = Caster.GetComponent<BattleAnimationComponent>();
         // 等待动画切换为战技动画

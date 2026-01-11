@@ -19,7 +19,13 @@ namespace Game.Battle
         /// 获取所有战斗的实体
         /// </summary>
         /// <returns></returns>
-        IEnumerable<IBattleEntityObject> GetAllBattleEntity();
+        List<IBattleEntityObject> GetAllBattleEntity();
+
+        /// <summary>
+        /// 获取首个战斗实体
+        /// </summary>
+        /// <returns></returns>
+        IBattleEntityObject GetFirstBattleEntity();
 
         /// <summary>
         /// 获取所有玩家角色实体
@@ -61,7 +67,19 @@ namespace Game.Battle
 
         void ConsumeSkillPoint(int cost);
         void ExpandSkillPoint(int cost);
+
+        /// <summary>
+        /// 获取玩家角色在行动轴的位置
+        /// </summary>
+        /// <param name="battleEntity"></param>
+        /// <returns></returns>
         int GetPlayerObjectIndex(IBattleEntityObject battleEntity);
+
+        /// <summary>
+        /// 获取怪物在行动轴的位置
+        /// </summary>
+        /// <param name="battleEntity"></param>
+        /// <returns></returns>
         int GetMonsterObjectIndex(IBattleEntityObject battleEntity);
         IBattleEntityObject GetCurrentEntity();
         void SetCurrentEntity(IBattleEntityObject battleEntity);

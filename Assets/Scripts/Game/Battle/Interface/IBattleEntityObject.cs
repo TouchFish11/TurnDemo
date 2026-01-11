@@ -20,6 +20,11 @@ namespace Game.Battle
         int BattleEntityId { get; }
 
         /// <summary>
+        /// 实体位置索引
+        /// </summary>
+        int EntityPosIndex { get; }
+
+        /// <summary>
         /// 能否行动
         /// </summary>
         bool CanAct { get; }

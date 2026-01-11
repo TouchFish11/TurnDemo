@@ -27,7 +27,7 @@ namespace Framework
         /// </summary>
         public void Init()
         {
-            ServiceLocator.Instance.Get<IQuitHandler>().OnAppQuit += OnApplicationQuit;
+            ServiceLocator.Get<IQuitHandler>().OnAppQuit += OnApplicationQuit;
 
             _updateContext?.ResetData();
             InitLocalPath();

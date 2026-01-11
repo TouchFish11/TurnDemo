@@ -1,11 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using Framework;
 
 /// <summary>
-/// 战斗事件基类
+/// 战斗事件
 /// </summary>
-public abstract class BattleEvent
+public abstract class BattleEvent : IEvent
 {
+    void IEvent.ResetEvent()
+    {
 
+    }
 }

@@ -19,7 +19,7 @@ public class DamageCalcManager : SingletonBase<DamageCalcManager>, IDamageCalcMa
         _strategyDic.Add(E_DamageType.True, new TrueDamageStrategy());
 
         // 监听需要计算伤害的事件
-        ServiceLocator.Instance.Get<IBattleManager>().GetContext().GetEventBus().AddListener<ToughnessBrokenEvent>(OnToughnessBrokenEvent);
+        ServiceLocator.Get<IBattleManager>().GetContext().GetEventBus().AddListener<ToughnessBrokenEvent>(OnToughnessBrokenEvent);
     }
 
     /// <summary>

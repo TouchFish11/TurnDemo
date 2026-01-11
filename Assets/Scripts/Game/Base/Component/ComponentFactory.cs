@@ -8,18 +8,17 @@ namespace Game
     /// <summary>
     /// 组件工厂
     /// </summary>
-    [FactoryType]
     public class ComponentFactory : IFactory
     {
         // 组件名称到组件类型的映射
         private static readonly Dictionary<string, Type> _nameToComponentTypeMap = new Dictionary<string, Type>();
 
-        public void InitFactory()
+        void IFactory.InitFactory()
         {
             FactoryUtility.ScanComponents(_nameToComponentTypeMap);
         }
 
-        T IFactory.GetValue<T>() where T : class
+        T IFactory.GetTypeInstance<T>()
         {
             return null;
         }

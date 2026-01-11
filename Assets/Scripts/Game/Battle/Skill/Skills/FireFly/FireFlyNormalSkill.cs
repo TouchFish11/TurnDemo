@@ -1,11 +1,11 @@
 using Framework;
 using Game.Battle;
 using System.Collections;
-using System.Collections.Generic;
-using System.Net;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
+/// <summary>
+/// FireFly∆’π•
+/// </summary>
 public class FireFlyNormalSkill : Skill
 {
     private static WaitForSeconds _waitForSeconds0_35 = new WaitForSeconds(0.35f);
@@ -15,7 +15,7 @@ public class FireFlyNormalSkill : Skill
 
     protected override int DmgCount { get; set; } = 1;
 
-    public FireFlyNormalSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler) : base(caster, skillId, postHandler)
+    public FireFlyNormalSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
     {
         Caster.GetComponentInChildren<AnimationTrigger>().OnAttack += OnAttack;
     }
@@ -36,13 +36,7 @@ public class FireFlyNormalSkill : Skill
             RecoverEnergy();
             --currentDmgCount;
         }
-
-        // ÃÌº”Buff
-        foreach (int id in statusIds)
-        {
-            IStatus status = ServiceLocator.Instance.Get<IFactoryManager>().GetFactory<StatusFactory>().GetStatus<ProtectStatus>(Caster, Caster, id);
-            Caster.GetComponent<StatusComponent>().AddStatus(status);
-        }
+        StatusAddStrategy?.ToAdd(Caster, AllTargets, statusIds);
     }
 
     protected override IEnumerator OnCast(IBattleContext context)

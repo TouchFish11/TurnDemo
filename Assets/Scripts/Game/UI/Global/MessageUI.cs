@@ -21,7 +21,7 @@ public class MessageUI : BaseUIBehaviour
         base.Awake();
 
         txtMsg = binder.GetControl<TextMeshProUGUI>(nameof(txtMsg));
-        ServiceLocator.Instance.Get<IMonoManager>().AddUpdateListener(OnUpdate);
+        ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
     }
 
     protected override void OnEnable()

@@ -42,10 +42,10 @@ namespace Game.Battle
         private void InitBattle()
         {
             // 依赖战斗上下文
-            ServiceLocator.Instance.Register<ITargetSelectManager>(TargetSelectManager.Instance);
+            ServiceLocator.Register<ITargetSelectManager>(TargetSelectManager.Instance);
             // 被玩家创建时依赖，所以要先于玩家创建
-            ServiceLocator.Instance.Register<IDamageCalcManager>(DamageCalcManager.Instance);
-            ServiceLocator.Instance.Register<ISkillManager>(SkillManager.Instance);
+            ServiceLocator.Register<IDamageCalcManager>(DamageCalcManager.Instance);
+            ServiceLocator.Register<ISkillManager>(SkillManager.Instance);
         }
 
         /// <summary>

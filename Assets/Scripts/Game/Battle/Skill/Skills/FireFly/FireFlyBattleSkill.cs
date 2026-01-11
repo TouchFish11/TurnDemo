@@ -1,16 +1,19 @@
 using Framework;
 using Game.Battle;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using static Unity.VisualScripting.Member;
 
+/// <summary>
+/// FireFly战技
+/// </summary>
 public class FireFlyBattleSkill : Skill
 {
     private readonly string battleAttackState = "BattleAttack";
 
     protected override int DmgCount { get; set; } = 1;
 
-    public FireFlyBattleSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler) : base(caster, skillId, postHandler)
+    public FireFlyBattleSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
     {
         Caster.GetComponentInChildren<AnimationTrigger>().OnAttack += OnAttack;
     }
@@ -29,11 +32,17 @@ public class FireFlyBattleSkill : Skill
             RecoverEnergy();
             --currentDmgCount;
         }
+
+        foreach (int id in statusIds)
+        {
+            IStatus status = ServiceLocator.Get<IFactoryManager>().GetFactory<StatusFactory>().GetStatus(id);
+            status.InitStatus(Caster, Caster, id);
+            Caster.GetComponent<StatusComponent>().AddStatus(status);
+        }
     }
 
     protected override IEnumerator OnCast(IBattleContext context)
     {
-        LogManager.Log($"{Caster.GameObject.name}释放技能：{SkillInfo.f_name}");
         // 播放动画
         context.GetEventBus().TriggerEvent(new SkillCastEvent(context, this, 0));
         BattleAnimationComponent animationComponent = Caster.GetComponent<BattleAnimationComponent>();

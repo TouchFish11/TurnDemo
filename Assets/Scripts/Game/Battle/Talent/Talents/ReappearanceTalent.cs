@@ -13,7 +13,7 @@ namespace Game.Battle
         public IBattleEntityObject Owner { get; }
 
         // 本回合是否已触发（防止多次触发）
-        private bool _hasTriggeredThisTurn = false; 
+        //private bool _hasTriggeredThisTurn = false; 
 
         public ReappearanceTalent(IBattleEntityObject owner)
         {
@@ -38,15 +38,15 @@ namespace Game.Battle
             LogManager.Log($"{owner.GameObject.name}获得额外行动回合！");
 
             // 核心逻辑：修改行动队列，将角色插入队首（调用核心层API，而非直接操作）(修改:应该是获得额外回合,而不是插入队首)
-            turnEndEvt.Context.GetTurnManager().InsertToActionHead(owner);
-            _hasTriggeredThisTurn = true; // 标记本回合已触发
+            // turnEndEvt.Context.GetTurnManager().InsertToActionHead(owner);
+            //_hasTriggeredThisTurn = true; // 标记本回合已触发
         }
 
         public void OnTurnStartHandler(TurnStartEvent turnStartEvent)
         {
             if (turnStartEvent.CurrentBattleEntity == Owner)
             {
-                _hasTriggeredThisTurn = false;
+                //_hasTriggeredThisTurn = false;
             }
         }
 

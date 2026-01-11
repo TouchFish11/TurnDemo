@@ -3,17 +3,7 @@ using Framework;
 /// <summary>
 /// 全局消息事件
 /// </summary>
-public class GlobalMessageEvent : IEvent
+public class GlobalMessageEvent : Event
 {
-    public string Message { get; }
-
-    public GlobalMessageEvent(string message)
-    {
-        Message = message;
-    }
-
-    void IEvent.ResetEvent()
-    {
-
-    }
+    public string Message { get; set; }
 }

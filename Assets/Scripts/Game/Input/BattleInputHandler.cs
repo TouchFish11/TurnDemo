@@ -38,7 +38,7 @@ public class BattleInputHandler : SingletonAutoMono<BattleInputHandler>
     private void Awake()
     {
         MonoManager.Instance.AddUpdateListener(OnUpdate);
-        ServiceLocator.Instance.Get<IBattleManager>().GetContext().GetEventBus().AddListener<SelectSkillEvent>(OnSelectSkillEvent);
+        ServiceLocator.Get<IBattleManager>().GetContext().GetEventBus().AddListener<SelectSkillEvent>(OnSelectSkillEvent);
     }
 
     private void OnSelectSkillEvent(SelectSkillEvent selectSkillEvent)

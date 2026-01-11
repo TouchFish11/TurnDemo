@@ -24,7 +24,7 @@ public abstract class UIController<TView, TModel> : IUIController where TView : 
         (this as IUIController).BindModelEvents();
         await OnInit();
 
-        EventCenter.Instance.TriggerEvent(new OpenViewEvent(this.ToString()));
+        EventCenter.Instance.TriggerEvent(new OpenViewEvent() { ControllerName = this.ToString() });
     }
 
     /// <summary>
@@ -103,6 +103,6 @@ public abstract class UIController<TView, TModel> : IUIController where TView : 
         model.OnDataChanged -= (this as IUIController).OnHandleModelDataChanged;
         model.ClearData();
 
-        EventCenter.Instance.TriggerEvent(new CloseViewEvent(this.ToString()));
+        EventCenter.Instance.TriggerEvent(new CloseViewEvent() { ControllerName = this.ToString() });
     }
 }

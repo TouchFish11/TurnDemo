@@ -1,16 +1,17 @@
-using Framework;
 using Game.Battle;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Herta战技
+/// </summary>
 public class HertaBattleSkill : Skill
 {
     private readonly string battleAttackState = "BattleAttack";
 
     protected override int DmgCount { get; set; } = 1;
 
-    public HertaBattleSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler) : base(caster, skillId, postHandler)
+    public HertaBattleSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
     {
         Caster.GetComponentInChildren<AnimationTrigger>().OnAttack += OnAttack;
     }
@@ -33,7 +34,6 @@ public class HertaBattleSkill : Skill
 
     protected override IEnumerator OnCast(IBattleContext context)
     {
-        LogManager.Log($"{Caster.GameObject.name}释放技能：{SkillInfo.f_name}");
         // 播放动画
         context.GetEventBus().TriggerEvent(new SkillCastEvent(context, this, 0));
         BattleAnimationComponent animationComponent = Caster.GetComponent<BattleAnimationComponent>();

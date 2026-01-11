@@ -26,7 +26,7 @@ public class MoveComponent : BaseComponent
 
     public override void Init(IEntityObject entityObject)
     {
-        mainCamera = ServiceLocator.Instance.Get<IOrbitCameraController>();
+        mainCamera = ServiceLocator.Get<IOrbitCameraController>();
         mainCamera.SetTarget(this.transform);
 
         characterController = this.EntityObject.GetComponent<CharacterController>();

@@ -15,8 +15,6 @@ namespace Game.Battle
     {
         // 战斗上下文
         private readonly IBattleContext _context;
-        // 战斗实体列表
-        private List<IBattleEntityObject> battleEntities;
         // 战斗指令控制器
         private BattleCommandsController commandsController;
         // 当前行动实体
@@ -28,6 +26,7 @@ namespace Game.Battle
         /// 基础行动值
         /// </summary>
         private const float BASE_ACTION_VALUE = 10000f;
+
         /// <summary>
         /// 速度修正系数（平衡不同速度区间）
         /// </summary>
@@ -45,7 +44,6 @@ namespace Game.Battle
         /// <param name="battleEntityObjects"></param>
         public void InitActions(IEnumerable<IBattleEntityObject> battleEntityObjects)
         {
-            battleEntities = new List<IBattleEntityObject>(battleEntityObjects);
             _battlePhase = E_BattlePhase.Preparation;
         }
 
@@ -66,7 +64,7 @@ namespace Game.Battle
         private async Task BattlePreparation()
         {
             // 创建战斗界面
-            BattleController battleController = await ServiceLocator.Instance.Get<IUIManager>().CreateViewAsync<BattleView, BattleModel,BattleController>(E_UILayer.Mid);
+            BattleController battleController = await ServiceLocator.Get<IUIManager>().CreateViewAsync<BattleView, BattleModel,BattleController>(E_UILayer.Mid);
             // 播放入场动画等
             // ...
             // 显示战斗UI
@@ -117,7 +115,7 @@ namespace Game.Battle
             }
 
             // 再让下一个实体行动
-            _currentActEntity = battleEntities[0];
+            _currentActEntity = _context.GetAllBattleEntity()[0];
             // 更新当前实体
             _context.SetCurrentEntity(_currentActEntity);
             // 更新实体看向
@@ -136,7 +134,7 @@ namespace Game.Battle
                 Vector3 center = BattlePoint.Instance.GetMonsterPointCenter().position;
                 Vector3 newCenter = new Vector3(center.x, 0, center.z);
 
-                Transform playerTrans = BattlePoint.Instance.GetPlayerTransByIndex(_context.GetPlayerObjectIndex(target));
+                Transform playerTrans = BattlePoint.Instance.GetPlayerTransByIndex(target.EntityPosIndex);
 
                 Vector3 playerPos = playerTrans.position;
                 Vector3 newPlayerPos = new Vector3(playerPos.x, 0, playerPos.z);
@@ -165,14 +163,14 @@ namespace Game.Battle
         private void InitOrder()
         {
             // 初始化所有角色的行动值
-            foreach (IBattleEntityObject battleEntityObject in battleEntities)
+            foreach (IBattleEntityObject battleEntityObject in _context.GetAllBattleEntity())
             {
                 // 初始化行动值
                 battleEntityObject.SetActionValue(CalcActionValue(battleEntityObject.GetSpeed()));
             }
 
             // 基于行动值初始化行动顺序
-            battleEntities.Sort((c1, c2) =>
+            _context.GetAllBattleEntity().Sort((c1, c2) =>
             {
                 // 比较行动值确定行动顺序。行动值低，越先行动
                 if (c1.ActionValue < c2.ActionValue)
@@ -189,10 +187,9 @@ namespace Game.Battle
                 }
             });
 
-            battleEntities[0].SetActionValue(0);
-
+            _context.GetFirstBattleEntity().SetActionValue(0);
             // 事件分发传递，更新行动轴UI显示
-            _context.GetEventBus().TriggerEvent(new ActionBarSortPostEvent(_context, battleEntities));
+            _context.GetEventBus().TriggerEvent(new ActionBarSortPostEvent(_context, _context.GetAllBattleEntity()));
         }
 
         /// <summary>
@@ -201,16 +198,16 @@ namespace Game.Battle
         private void SortOrder()
         {
             // 暂时移除第一个角色，不参与计算
-            battleEntities.Remove(_currentActEntity);
+            _context.GetAllBattleEntity().Remove(_currentActEntity);
 
             int toatalSpeed = 0;
             // 重新计算剩下实体各自的剩余行动值
-            foreach (IBattleEntityObject battleEntityObject in battleEntities)
+            foreach (IBattleEntityObject battleEntityObject in _context.GetAllBattleEntity())
             {
                 toatalSpeed += battleEntityObject.GetSpeed();
             }
 
-            foreach (IBattleEntityObject battleEntityObject in battleEntities)
+            foreach (IBattleEntityObject battleEntityObject in _context.GetAllBattleEntity())
             {
                 float oldAV = battleEntityObject.ActionValue;
                 float newAV = (1 - battleEntityObject.GetSpeed() / (float)toatalSpeed) * oldAV;
@@ -218,7 +215,7 @@ namespace Game.Battle
             }
 
             // 基于行动值初始化行动顺序
-            battleEntities.Sort((c1, c2) =>
+            _context.GetAllBattleEntity().Sort((c1, c2) =>
             {
                 // 比较行动值确定行动顺序。行动值低，越先行动
                 if (c1.ActionValue < c2.ActionValue)
@@ -236,10 +233,10 @@ namespace Game.Battle
             });
 
             InsertOrder(_currentActEntity);
-            battleEntities[0].SetActionValue(0);
+            _context.GetAllBattleEntity()[0].SetActionValue(0);
 
             // 事件分发传递，更新行动轴UI显示
-            _context.GetEventBus().TriggerEvent(new ActionBarSortPostEvent(_context, battleEntities));
+            _context.GetEventBus().TriggerEvent(new ActionBarSortPostEvent(_context, _context.GetAllBattleEntity()));
         }
 
         /// <summary>
@@ -249,16 +246,16 @@ namespace Game.Battle
         public void InsertOrder(IBattleEntityObject actEndEntity)
         {
             actEndEntity.SetActionValue(CalcActionValue(actEndEntity.GetSpeed()));
-            int index = battleEntities.FindIndex(battleEntity => battleEntity.ActionValue > actEndEntity.ActionValue);
+            int index = _context.GetAllBattleEntity().FindIndex(battleEntity => battleEntity.ActionValue > actEndEntity.ActionValue);
             if (index != -1)
             {
                 // 找到第一个行动值大于当前角色的索引，插入到该位置前
-                battleEntities.Insert(index, actEndEntity);
+                _context.GetAllBattleEntity().Insert(index, actEndEntity);
             }
             else
             {
                 // 所有角色行动值都更小，插入末尾
-                battleEntities.Add(actEndEntity);
+                _context.GetAllBattleEntity().Add(actEndEntity);
             }
         }
 
@@ -292,6 +289,16 @@ namespace Game.Battle
                 _battlePhase = E_BattlePhase.BattleOver;
                 return true;
             }
+        }
+
+        /// <summary>
+        /// 移除实体
+        /// </summary>
+        public void RemoveEntity(IBattleEntityObject battleEntity)
+        {
+            _context.GetAllBattleEntity().Remove(battleEntity);
+            // 事件分发传递，更新行动轴UI显示
+            _context.GetEventBus().TriggerEvent(new ActionBarSortPostEvent(_context, _context.GetAllBattleEntity()));
         }
 
         /// <summary>
@@ -330,37 +337,6 @@ namespace Game.Battle
             await UIManager.Instance.CreateViewAsync<MainView, MainModel, MainController>(E_UILayer.Top);
             // 改变阶段
             _battlePhase = E_BattlePhase.QuitBattle;
-        }
-
-        /// <summary>
-        /// 插入到行动头
-        /// </summary>
-        /// <param name="battleEntity"></param>
-        public void InsertToActionHead(IBattleEntityObject battleEntity)
-        {
-            // _actions.AddFirst(_actions.Find(battleEntity));
-        }
-
-        /// <summary>
-        /// 通过速度排序行动
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
-        private int SortActionBySpeed(IBattleEntityObject a, IBattleEntityObject b)
-        {
-            if (a.GetSpeed() > b.GetSpeed())
-            {
-                return -1;
-            }
-            else if (a.GetSpeed() < b.GetSpeed())
-            {
-                return 1;
-            }
-            else
-            {
-                return 0;
-            }
         }
     }
 }

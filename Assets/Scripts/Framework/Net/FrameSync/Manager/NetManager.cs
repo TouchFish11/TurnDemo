@@ -33,7 +33,7 @@ namespace Net.FrameSync
 
         private void Awake()
         {
-            ServiceLocator.Instance.Get<IQuitHandler>().OnAppQuit += OnAppQuit;
+            ServiceLocator.Get<IQuitHandler>().OnAppQuit += OnAppQuit;
             MonoManager.Instance.AddUpdateListener(OnUpdate);
         }
 

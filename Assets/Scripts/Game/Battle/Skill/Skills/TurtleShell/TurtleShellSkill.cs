@@ -1,4 +1,5 @@
 using Framework;
+using Game;
 using Game.Battle;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ public class TurtleShellSkill : Skill
     public int Attack { get; } = Animator.StringToHash("Attack");
     protected override int DmgCount { get; set; } = 1;
 
-    public TurtleShellSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler) : base(caster, skillId, postHandler)
+    public TurtleShellSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
     {
 
     }
@@ -27,9 +28,11 @@ public class TurtleShellSkill : Skill
     {
         foreach (IBattleEntityObject battleEntity in AllTargets)
         {
+            // 处理伤害
             DamageCalcManager.CalcSkillDamage(Caster, battleEntity, this.SkillInfo, out DamageResult result);
             battleEntity.TakeDamage(result);
-        }
+        }   
+        StatusAddStrategy?.ToAdd(Caster, AllTargets, statusIds);
     }
 
     protected override IEnumerator OnCast(IBattleContext context)
@@ -48,7 +51,7 @@ public class TurtleShellSkill : Skill
         yield return _waitForSeconds0_8;
 
         // 回到起始位置
-        targetPos = BattlePoint.Instance.GetMonsterTransByIndex(context.GetMonsterObjectIndex(Caster)).position;
+        targetPos = BattlePoint.Instance.GetMonsterTransByIndex(Caster.EntityPosIndex).position;
         while (Vector3.Distance(Caster.GameObject.transform.position, targetPos) >= 0.1f)
         {
             Vector3 nowPos = Caster.GameObject.transform.position;

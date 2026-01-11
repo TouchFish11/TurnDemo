@@ -18,19 +18,19 @@ namespace Framework
         public async Task Init()
         {
             // 初始化工厂
-            ServiceLocator.Instance.Get<IFactoryManager>().InitFactorys();
+            ServiceLocator.Get<IFactoryManager>().InitFactorys();
             // 激活处理器
-            ServiceLocator.Instance.Get<IQuitHandler>().ActiveHandler();
+            ServiceLocator.Get<IQuitHandler>().ActiveHandler();
             // 初始化AB包资源
-            await ServiceLocator.Instance.Get<AssetBundleManager>().Init();
+            await ServiceLocator.Get<AssetBundleManager>().Init();
             // 初始化UI管理器
-            await ServiceLocator.Instance.Get<IUIManager>().InitUIManagerAsync();
+            await ServiceLocator.Get<IUIManager>().InitUIManagerAsync();
             // 初始化游戏数据
-            await ServiceLocator.Instance.Get<IGameDataManager>().InitDataAsync();
+            await ServiceLocator.Get<IGameDataManager>().InitDataAsync();
             // 初始化Lua管理器
             // await EnvManager.Instance.InitLuaAsync("Main");
             // 初始化更新器
-            ServiceLocator.Instance.Get<IAssetBundleUpdater>().Init();
+            ServiceLocator.Get<IAssetBundleUpdater>().Init();
         }
     }
 }

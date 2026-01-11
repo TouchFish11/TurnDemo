@@ -56,7 +56,7 @@ public class SkillKeyUI : BaseUIBehaviour
         togSkillKeyUI = binder.GetControl<Toggle>(this.gameObject.name);
         txtSkillTip = binder.GetControl<TextMeshProUGUI>(nameof(txtSkillTip));
         UIManager.AddCustomEventListener(this, EventTriggerType.PointerClick, OnClick);
-        battleContext = ServiceLocator.Instance.Get<IBattleManager>().GetContext();
+        battleContext = ServiceLocator.Get<IBattleManager>().GetContext();
     }
 
     /// <summary>

@@ -1,12 +1,10 @@
 using Game.Battle;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
 /// 怪物基础目标选择策略
 /// </summary>
-[TargetSelectStrategy]
 public class MonsterBaseTargetSelectStrategy : ITargetSelectStrategy
 {
     public IBattleEntityObject SelectMainTarget(IBattleContext context, IBattleEntityObject caster, SkillInfo skillInfo)

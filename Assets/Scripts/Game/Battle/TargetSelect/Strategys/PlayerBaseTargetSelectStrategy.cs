@@ -1,13 +1,10 @@
 using Game;
 using Game.Battle;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 /// <summary>
 /// 玩家基础目标选择策略
 /// </summary>
-[TargetSelectStrategy]
 public class PlayerBaseTargetSelectStrategy : ITargetSelectStrategy
 {
     public IBattleEntityObject SelectMainTarget(IBattleContext context, IBattleEntityObject caster, SkillInfo skillInfo)

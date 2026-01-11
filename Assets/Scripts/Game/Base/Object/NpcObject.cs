@@ -20,14 +20,14 @@ namespace Game
         public void OnInteract(IEntityObject entityObject)
         {
             // 显示对话界面
-            if (!ServiceLocator.Instance.Get<IDialogueManager>().IsDialogueActive)
+            if (!ServiceLocator.Get<IDialogueManager>().IsDialogueActive)
             {
-                ServiceLocator.Instance.Get<IDialogueManager>().StartDialogue(NpcInfo.f_dialogueId);
+                ServiceLocator.Get<IDialogueManager>().StartDialogue(NpcInfo.f_dialogueId);
             }
             else
             {
                 // 已有对话时推进文本
-                ServiceLocator.Instance.Get<IDialogueManager>().NextDialogue();
+                ServiceLocator.Get<IDialogueManager>().NextDialogue();
             }
         }
     }

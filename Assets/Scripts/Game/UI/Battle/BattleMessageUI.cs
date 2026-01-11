@@ -34,7 +34,7 @@ public class BattleMessageUI : BaseUIBehaviour
         msgAlpha = msg.color.a;
         imgIconAlpha = imgIcon.color.a;
 
-        ServiceLocator.Instance.Get<IMonoManager>().AddUpdateListener(OnUpdate);
+        ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
     }
 
     protected override void OnEnable()

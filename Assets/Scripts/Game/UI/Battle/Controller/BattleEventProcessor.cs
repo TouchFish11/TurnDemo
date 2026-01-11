@@ -59,7 +59,7 @@ public class BattleEventProcessor
         if (turnStartEvent.CurrentBattleEntity is PlayerObject)
         {
             // 更新当前操作UI
-            _uiManager.UpdateOperator(turnStartEvent.CurrentBattleEntity, SkillKeyUIDataProviderFactory.GetProvider<BaseSkillKeyUIDataProvider>());
+            _uiManager.UpdateOperator(turnStartEvent.CurrentBattleEntity, IFactory.GetTypeInstance<SkillKeyUIDataProviderFactory, BaseSkillKeyUIDataProvider>());
         }
         else if (turnStartEvent.CurrentBattleEntity is MonsterObject)
         {
@@ -91,7 +91,7 @@ public class BattleEventProcessor
     /// 显示状态浮动文本效果
     /// </summary>
     /// <param name="statusAddedEvent"></param>
-    private async void OnStatusAddedEvent(StatusAddedEvent statusAddedEvent)
+    private void OnStatusAddedEvent(StatusAddedEvent statusAddedEvent)
     {
         _uiManager.ShowStatusText(statusAddedEvent.NewStatus);
     }
@@ -168,7 +168,7 @@ public class BattleEventProcessor
             return;
         }
 
-        _uiManager.UpdateOperator(ultimateReleaseOverEvent.CurrentActEntity, SkillKeyUIDataProviderFactory.GetProvider<BaseSkillKeyUIDataProvider>());
+        _uiManager.UpdateOperator(ultimateReleaseOverEvent.CurrentActEntity, IFactory.GetTypeInstance<SkillKeyUIDataProviderFactory, BaseSkillKeyUIDataProvider>());
     }
 
     /// <summary>

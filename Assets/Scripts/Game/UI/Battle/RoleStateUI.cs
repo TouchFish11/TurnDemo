@@ -39,6 +39,9 @@ public class RoleStateUI : BaseUIBehaviour
     // 角色相关
     private int roleId;
 
+    // 是否触发了终结技，防止重复触发
+    private bool isTriggerUltimate;
+
     /// <summary>
     /// 关联角色ID
     /// </summary>
@@ -64,7 +67,7 @@ public class RoleStateUI : BaseUIBehaviour
         svBuffBox = binder.GetControl<ScrollRect>(nameof(svBuffBox));
         txtBlood = binder.GetControl<TextMeshProUGUI>(nameof(txtBlood));
 
-        battleContext = ServiceLocator.Instance.Get<IBattleManager>().GetContext();
+        battleContext = ServiceLocator.Get<IBattleManager>().GetContext();
 
         // 监听战斗相关事件
         battleContext.GetEventBus().AddListener<HpChangedEvent>(OnHpChanged);
@@ -72,7 +75,7 @@ public class RoleStateUI : BaseUIBehaviour
         battleContext.GetEventBus().AddListener<EnergyChangedEvent>(OnEnergyChangedEvent);
         battleContext.GetEventBus().AddListener<StatusAddedEvent>(OnStatusAddedEvent);
 
-        ServiceLocator.Instance.Get<IMonoManager>().AddUpdateListener(OnUpdate);
+        ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
     }
 
     /// <summary>
@@ -138,6 +141,10 @@ public class RoleStateUI : BaseUIBehaviour
         }
         imgEnergy.fillAmount = energyChangedEvent.CurrentEnergy / (float)energyChangedEvent.MaxEnergy;
         imgEnergy.color = new Color(imgEnergy.color.r, imgEnergy.color.g, imgEnergy.color.b, energyChangedEvent.CurrentEnergy == energyChangedEvent.MaxEnergy ? 1 : nonFullAhpha);
+        if (energyChangedEvent.CurrentEnergy == energyChangedEvent.MaxEnergy)
+        {
+            isTriggerUltimate = false;
+        }
     }
 
     /// <summary>
@@ -243,7 +250,11 @@ public class RoleStateUI : BaseUIBehaviour
         switch (btnName)
         {
             case "btnSkill":
-                battleContext.GetEventBus().TriggerEvent(new PlayerTriggerUltimateSkillEvent(battleContext, battleEntity, ultimateSkillId));
+                if (!isTriggerUltimate)
+                {
+                    battleContext.GetEventBus().TriggerEvent(new PlayerTriggerUltimateSkillEvent(battleContext, battleEntity, ultimateSkillId));
+                    isTriggerUltimate = true;
+                }
                 break;
         }
     }

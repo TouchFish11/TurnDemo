@@ -331,7 +331,7 @@ GameObject:
   m_Component:
   - component: {fileID: 134620857}
   m_Layer: 0
-  m_Name: "\u660E\u5929\uFF1A\u5B8C\u6210\u6218\u6280\uFF08\u91CA\u653E\u5F39\u5C04\u7269\uFF09\u3001\u7EC8\u7ED3\u6280\u6280\u80FD\u52A8\u753B\uFF08\u4F4D\u79FB\uFF09\uFF1B\u6DFB\u52A0\u7279\u6548"
+  m_Name: "\u660E\u5929\uFF1A\u5B9E\u73B0\u6218\u6597\u6B7B\u4EA1\u6D41\u7A0B\uFF08\u6B7B\u4EA1\u52A8\u753B\uFF09\u3001\u5B9E\u73B0\u97E7\u6027\u6761\u6062\u590D\u6548\u679C\u3001\u5B9E\u73B0\u6218\u6597\u7ED3\u675F\u6D41\u7A0B\u3001\u51C6\u5907\u63A5\u5165\u4E3B\u573A\u666F"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1780,9 +1780,9 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 754539784}
-  - {fileID: 2061998100}
   - {fileID: 134620857}
   - {fileID: 2084832752}
+  - {fileID: 2061998100}
   - {fileID: 602332722}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2451,7 +2451,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2061998100}
   m_Layer: 0
-  m_Name: "\u5F85\u5B9A\uFF1A\u6218\u6597\u6D88\u606F\u63D0\u793A\uFF1Bbuff\u3001\u5929\u8D4B\u3001\u76F8\u5173UI"
+  m_Name: "\u5F85\u5B9A\uFF1A\u91CD\u6784MVC\uFF08\u79FB\u9664\u4E8B\u4EF6\u5206\u53D1\uFF0C\u805A\u5408mv\uFF09"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2482,7 +2482,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2084832752}
   m_Layer: 0
-  m_Name: "\u4E4B\u540E\uFF1A\u91CD\u6784MVC\uFF08\u79FB\u9664\u4E8B\u4EF6\u5206\u53D1\uFF0C\u805A\u5408mv\uFF09\u3001\u4F18\u5316\u4E8B\u4EF6\u4E2D\u5FC3\uFF08\u65B0\u589E\u4E8B\u4EF6\u8FC7\u6EE4\uFF09\u3001\u4F18\u5316\u6846\u67B6\u5355\u4F8B\u3001"
+  m_Name: "\u5B8C\u6210\u6218\u6280\uFF08\u91CA\u653E\u5F39\u5C04\u7269\uFF09\u3001\u6DFB\u52A0\u7279\u6548"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

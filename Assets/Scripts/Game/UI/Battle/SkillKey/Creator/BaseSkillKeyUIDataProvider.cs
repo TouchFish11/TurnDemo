@@ -1,14 +1,9 @@
-using Framework;
-using Game;
 using Game.Battle;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 /// <summary>
 /// 基础技能按键UI数据提供器
 /// </summary>
-[SkillKeyUIDataProvider]
 public class BaseSkillKeyUIDataProvider : ISkillKeyUIDataProvider
 {
     public SkillKeyUIData GetData(IBattleEntityObject provider)

@@ -6,15 +6,20 @@ namespace Framework
     /// <summary>
     /// 全局服务定位器
     /// </summary>
-    public class ServiceLocator : SingletonAutoMono<ServiceLocator>
+    public class ServiceLocator
     {
         // 服务类型到服务的映射
-        private readonly Dictionary<Type, object> _typeToServerMap = new Dictionary<Type, object>();
+        private static readonly Dictionary<Type, object> _typeToServerMap = new Dictionary<Type, object>();
+
+        private ServiceLocator()
+        {
+
+        }
 
         /// <summary>
         /// 初始化服务
         /// </summary>
-        public void InitService()
+        public static void InitService()
         {
             // 继承Mono
             Register<IMonoManager>(MonoManager.Instance);
@@ -54,7 +59,7 @@ namespace Framework
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="service"></param>
-        public void Register<T>(T service) where T : class
+        public static void Register<T>(T service) where T : class
         {
             var type = typeof(T);
             if (_typeToServerMap.ContainsKey(type))
@@ -69,7 +74,7 @@ namespace Framework
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public T Get<T>() where T : class
+        public static T Get<T>() where T : class
         {
             var type = typeof(T);
             if (_typeToServerMap.TryGetValue(type, out var service))
@@ -84,7 +89,7 @@ namespace Framework
         /// 注销
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        public void Unregister<T>() where T : class
+        public static void Unregister<T>() where T : class
         {
             var type = typeof(T);
             if (_typeToServerMap.ContainsKey(type))
@@ -96,7 +101,7 @@ namespace Framework
         /// <summary>
         /// 清理
         /// </summary>
-        public void Clear()
+        public static void Clear()
         {
             _typeToServerMap.Clear();
         }

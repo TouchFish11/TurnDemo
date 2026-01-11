@@ -87,6 +87,8 @@ namespace Game.Battle
                 PlayerObject playerObject = await RoleBuilder.CreateRole(roleId, transform);
                 // 注入上下文，供角色内部组件使用
                 playerObject.BattleInit(roleId, this);
+                // 记录角色所在的位置索引
+                playerObject.EntityPosIndex = index;
                 _allBattleEntity.Add(playerObject);
                 index++;
             }
@@ -106,14 +108,13 @@ namespace Game.Battle
                 MonsterObject monsterObject = await MonsterBuilder.CreateMonster(monsterId, transform);
                 // 注入上下文，供角色内部组件使用
                 monsterObject.BattleInit(monsterId, this);
+                // 记录怪物所在的位置索引
+                monsterObject.EntityPosIndex = index;
                 _allBattleEntity.Add(monsterObject);
                 index++;
             }
         }
 
-        /// <summary>
-        /// 战斗结束清理（避免内存泄漏）
-        /// </summary>
         public void CleanupBattle()
         {
             // 销毁所有角色 GameObject（Unity 资源清理）
@@ -124,9 +125,14 @@ namespace Game.Battle
             _allBattleEntity.Clear();
         }
 
-        public IEnumerable<IBattleEntityObject> GetAllBattleEntity()
+        public List<IBattleEntityObject> GetAllBattleEntity()
         {
             return _allBattleEntity;
+        }
+
+        public IBattleEntityObject GetFirstBattleEntity()
+        {
+            return _allBattleEntity[0];
         }
 
         public IEnumerable<IBattleEntityObject> GetPlayerObjects()

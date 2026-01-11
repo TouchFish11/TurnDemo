@@ -37,12 +37,12 @@ public class NormalMonsterStateUI : BaseUIBehaviour
 
         weaknessBar = this.transform.Find(nameof(weaknessBar));
 
-        ServiceLocator.Instance.Get<IMonoManager>().AddUpdateListener(OnUpdate);
+        ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
 
         // ¼àÌýÊÂ¼þ
-        ServiceLocator.Instance.Get<IBattleManager>().GetContext().GetEventBus().AddListener<HpChangedEvent>(OnHpChangedEvent);
-        ServiceLocator.Instance.Get<IBattleManager>().GetContext().GetEventBus().AddListener<ToughnessChangedEvent>(OnToughnessChangedEvent);
-        ServiceLocator.Instance.Get<IBattleManager>().GetContext().GetEventBus().AddListener<ToughnessBrokenEvent>(OnToughnessBrokenEvent);
+        ServiceLocator.Get<IBattleManager>().GetContext().GetEventBus().AddListener<HpChangedEvent>(OnHpChangedEvent);
+        ServiceLocator.Get<IBattleManager>().GetContext().GetEventBus().AddListener<ToughnessChangedEvent>(OnToughnessChangedEvent);
+        ServiceLocator.Get<IBattleManager>().GetContext().GetEventBus().AddListener<ToughnessBrokenEvent>(OnToughnessBrokenEvent);
     }
 
     /// <summary>

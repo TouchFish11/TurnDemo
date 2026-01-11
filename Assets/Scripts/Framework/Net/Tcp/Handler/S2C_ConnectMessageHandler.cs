@@ -29,6 +29,6 @@ public class S2C_ConnectMessageHandler : MessageHandler<S2C_ConnectMessage>
         }
 
         // 连接完成后
-        EventCenter.Instance.TriggerEvent(new PostConnectedEvent(TcpMessage));
+        EventCenter.Instance.TriggerEvent(new PostConnectedEvent() { S2C_ConnectMessage = TcpMessage });
     }
 }

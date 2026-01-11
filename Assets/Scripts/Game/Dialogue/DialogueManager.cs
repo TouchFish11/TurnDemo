@@ -182,7 +182,7 @@ public class DialogueManager : SingletonBase<DialogueManager>, IDialogueManager
         // 隐藏对话UI
         UIManager.Instance.DestroyView();
         // 分发对话结束事件
-        EventCenter.Instance.TriggerEvent(new DialogueEvent(npcInfo.f_id));
+        EventCenter.Instance.TriggerEvent(new DialogueEvent() { NpcId = npcInfo.f_id });
         // 触发“对话结束”事件
         OnDialogueEnd?.Invoke();
         // 清理对话选项UI缓存

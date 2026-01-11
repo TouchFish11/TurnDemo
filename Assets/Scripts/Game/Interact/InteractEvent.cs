@@ -4,17 +4,10 @@ using System.Collections.Generic;
 /// <summary>
 /// 交互事件
 /// </summary>
-public class InteractEvent : IEvent
+public class InteractEvent : Event
 {
-    public List<IInteractable> Interactables { get; }
-
-    public InteractEvent(List<IInteractable> interactables)
-    {
-        Interactables = interactables;
-    }
-
-    void IEvent.ResetEvent()
-    {
-
-    }
+    /// <summary>
+    /// 交互对象列表
+    /// </summary>
+    public List<IInteractable> Interactables { get; set; }
 }

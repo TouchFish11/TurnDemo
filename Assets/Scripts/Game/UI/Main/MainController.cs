@@ -42,10 +42,10 @@ public class MainController : UIController<MainView, MainModel>
     protected override async Task OnInit()
     {
         // 交互逻辑监听
-        EventCenter.Instance.SubscribeEvent<List<IInteractable>>(E_EventType.E_OnInteract, mainLogics[typeof(InteractLogic)].As<InteractLogic>().CreateInteract);
+        EventCenter.Instance.SubscribeEvent<InteractEvent>(OnInteractEvent);
         // 对话事件监听
-        ServiceLocator.Instance.Get<IDialogueManager>().OnDialogueStart += InActive;
-        ServiceLocator.Instance.Get<IDialogueManager>().OnDialogueEnd += Active;
+        ServiceLocator.Get<IDialogueManager>().OnDialogueStart += InActive;
+        ServiceLocator.Get<IDialogueManager>().OnDialogueEnd += Active;
         // 任务事件监听
         TaskManager.Instance.OnUpdateTask += mainLogics[typeof(TaskLogic)].As<TaskLogic>().UpdateTask;
         TaskManager.Instance.OnCancelTask += mainLogics[typeof(TaskLogic)].As<TaskLogic>().CancelTask;
@@ -67,6 +67,11 @@ public class MainController : UIController<MainView, MainModel>
                 await BattleManager.Instance.StartBattle();
                 break;
         }
+    }
+
+    private void OnInteractEvent(InteractEvent interactEvent)
+    {
+        mainLogics[typeof(InteractLogic)].As<InteractLogic>().CreateInteract(interactEvent.Interactables);
     }
 
     private void Active()
@@ -93,6 +98,6 @@ public class MainController : UIController<MainView, MainModel>
     public override void Destroy()
     {
         base.Destroy();
-        EventCenter.Instance.UnsubscribeEvent<List<IInteractable>>(E_EventType.E_OnInteract, mainLogics[typeof(InteractLogic)].As<InteractLogic>().CreateInteract);
+        EventCenter.Instance.UnsubscribeEvent<InteractEvent>(OnInteractEvent);
     }
 }

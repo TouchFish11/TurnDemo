@@ -35,7 +35,7 @@ public class ActingTipUI : UIBehaviour
         this.imgActingIcon = imgActingIcon;
         this.txtActingTip = txtActingTip;
 
-        ServiceLocator.Instance.Get<IMonoManager>().AddUpdateListener(OnUpdate);
+        ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
     }
 
     public void UpdateTipText(bool isMonster)

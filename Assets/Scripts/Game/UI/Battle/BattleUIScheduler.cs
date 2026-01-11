@@ -13,7 +13,7 @@ public class BattleUIScheduler : SingletonAutoMono<BattleUIScheduler>
 
     private void Awake()
     {
-        battleController = ServiceLocator.Instance.Get<IUIManager>().GetView<BattleController>();
+        battleController = ServiceLocator.Get<IUIManager>().GetView<BattleController>();
     }
 
     /// <summary>
@@ -26,7 +26,7 @@ public class BattleUIScheduler : SingletonAutoMono<BattleUIScheduler>
         // 显示角色立绘
         battleController.GetBattleUI().ShowPaiting(skillInfo);
         // 更新终结技UI显示
-        battleController.GetBattleUI().UpdateOperator(caster, SkillKeyUIDataProviderFactory.GetProvider<UltimateSkillKeyUIDataProvider>());
+        battleController.GetBattleUI().UpdateOperator(caster, IFactory.GetTypeInstance<SkillKeyUIDataProviderFactory, UltimateSkillKeyUIDataProvider>());
     }
 
     /// <summary>
@@ -69,9 +69,9 @@ public class BattleUIScheduler : SingletonAutoMono<BattleUIScheduler>
         // 看向攻击的玩家
         battleEntity.Context.GetTurnManager().UpdateEntityLookAt(battleEntity);
         // 更新目标选择
-        ServiceLocator.Instance.Get<ITargetSelectManager>().ReSelectTarget(context, battleEntity, skillInfo);
+        ServiceLocator.Get<ITargetSelectManager>().ReSelectTarget(context, battleEntity, skillInfo);
         // 更新怪物血条位置
-        await ServiceLocator.Instance.Get<IUIManager>().GetView<BattleController>().GetUIInitializer().InitMonsterUI(context.GetMonsterObjects());
+        await ServiceLocator.Get<IUIManager>().GetView<BattleController>().GetUIInitializer().InitMonsterUI(context.GetMonsterObjects());
     }
 
     /// <summary>
@@ -86,11 +86,11 @@ public class BattleUIScheduler : SingletonAutoMono<BattleUIScheduler>
         // 相互看向、看向攻击的玩家
         context.GetTurnManager().UpdateEntityLookAt(target);
         // 隐藏怪物UI
-        await ServiceLocator.Instance.Get<IUIManager>().GetView<BattleController>().GetUIInitializer().InitMonsterUI(null);
+        await ServiceLocator.Get<IUIManager>().GetView<BattleController>().GetUIInitializer().InitMonsterUI(null);
         // 禁用选择
-        ServiceLocator.Instance.Get<ITargetSelectManager>().InActiveSelectTarget();
+        ServiceLocator.Get<ITargetSelectManager>().InActiveSelectTarget();
         // 清理标记
-        await ServiceLocator.Instance.Get<IUIManager>().GetView<BattleController>().GetBattleUI().UpdateTargetMarker(null);
+        await ServiceLocator.Get<IUIManager>().GetView<BattleController>().GetBattleUI().UpdateTargetMarker(null);
     }
 
     /// <summary>

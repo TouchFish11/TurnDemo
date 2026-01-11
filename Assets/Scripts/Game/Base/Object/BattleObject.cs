@@ -20,6 +20,8 @@ namespace Game
 
         public GameObject SubGameObject { get; private set; }
 
+        public int EntityPosIndex { get; set; }
+
         // 行动次数
         protected int actCount;
 
@@ -102,9 +104,10 @@ namespace Game
 
         public virtual void Die()
         {
-            // TODO：待优化，目前直接失活对象。之后播放死亡动画
-            //LogManager.Log($"实体：{this.GameObject.name}死亡");
-            // this.GameObject.SetActive(false);
+            // 从上下文中移除
+            Context.GetTurnManager().RemoveEntity(this);
+            // 之后播放死亡动画
+            this.GetComponent<AnimationComponent>().SetAnimationState(E_AnimationType.Death);
         }
 
         /// <summary>

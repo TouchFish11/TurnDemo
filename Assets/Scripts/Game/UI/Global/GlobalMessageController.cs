@@ -31,8 +31,13 @@ public class GlobalMessageController : UIController<GlobalMessageView, GlobalMes
     protected async override Task OnInit()
     {
         // ¼àÌýÊÂ¼þ
-        EventCenter.Instance.SubscribeEvent<string>(E_EventType.E_GlobalMsg, ShowMessage);
+        EventCenter.Instance.SubscribeEvent<GlobalMessageEvent>(OnGlobalMessageEvent);
         await Task.CompletedTask;
+    }
+
+    private void OnGlobalMessageEvent(GlobalMessageEvent globalMessageEvent)
+    {
+        ShowMessage(globalMessageEvent.Message);
     }
 
     private async void ShowMessage(string msg)
@@ -45,6 +50,6 @@ public class GlobalMessageController : UIController<GlobalMessageView, GlobalMes
     public override void Destroy()
     {
         base.Destroy();
-        EventCenter.Instance.UnsubscribeEvent<string>(E_EventType.E_GlobalMsg, ShowMessage);
+        EventCenter.Instance.UnsubscribeEvent<GlobalMessageEvent>(OnGlobalMessageEvent);
     }
 }

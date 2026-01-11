@@ -17,7 +17,7 @@ namespace Framework
         public EventInfo(Action<TEvent> callBack, Func<TEvent, bool> filter)
         {
             this.CallBack = callBack;
-            this.Filter = filter;
+            this.Filter = filter ?? ((evt) => true);
         }
 
         /// <summary>

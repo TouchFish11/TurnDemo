@@ -46,7 +46,7 @@ namespace Game.Battle
             // 触发技能选择事件，更新目标管理器的缓存目标内容，释放技能时能获取到这些内容
             Context.GetEventBus().TriggerEvent(new SelectSkillEvent(Context, skillId, this));
             // 更新相关UI
-            var target = ServiceLocator.Instance.Get<ITargetSelectManager>().GetMainTarget();
+            var target = ServiceLocator.Get<ITargetSelectManager>().GetMainTarget();
             BattleUIScheduler.Instance.UpdateCameraAndHideMarkerAndMonsterUI(Context, target);
             CastSkill(skillId);
 

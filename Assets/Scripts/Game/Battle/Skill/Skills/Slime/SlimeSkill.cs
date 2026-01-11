@@ -1,10 +1,12 @@
 using Framework;
+using Game;
 using Game.Battle;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 史莱姆技能
+/// </summary>
 public class SlimeSkill : Skill
 {
     private static WaitForSeconds _waitForSeconds0_3 = new WaitForSeconds(0.3f);
@@ -19,19 +21,20 @@ public class SlimeSkill : Skill
     public string Attack { get; } = "Attack";
     protected override int DmgCount { get; set; } = 1;
 
-    public SlimeSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler) : base(caster, skillId, postHandler)
+    public SlimeSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
     {
 
     }
 
     private void OnAttack(float time)
     {
+        // 处理伤害
         foreach (IBattleEntityObject battleEntity in AllTargets)
         {
             DamageCalcManager.CalcSkillDamage(Caster, battleEntity, this.SkillInfo, out DamageResult result);
             battleEntity.TakeDamage(result);
-            --currentDmgCount;
         }
+        StatusAddStrategy?.ToAdd(Caster, AllTargets, statusIds);
     }
 
     protected override IEnumerator OnCast(IBattleContext context)
@@ -44,14 +47,13 @@ public class SlimeSkill : Skill
             yield return null;
         }
 
-        LogManager.Log($"开始触发攻击，距离：{Vector3.Distance(Caster.GameObject.transform.position, targetPos)}");
         yield return AnimationPlayManager.Instance.PlayAnimation(Caster, (E_AnimationType)SkillInfo.f_animationType, Attack, OnAttack, TextUtility.SplitTofloatArr(SkillInfo.f_dmgTimes, 2));
 
         // 优化表现
         yield return _waitForSeconds0_3; 
 
         // 回到起始位置
-        targetPos = BattlePoint.Instance.GetMonsterTransByIndex(context.GetMonsterObjectIndex(Caster)).position;
+        targetPos = BattlePoint.Instance.GetMonsterTransByIndex(Caster.EntityPosIndex).position;
         while (Vector3.Distance(Caster.GameObject.transform.position, targetPos) >= 0.1f)
         {
             Vector3 nowPos = Caster.GameObject.transform.position;

@@ -47,8 +47,8 @@ public class DialogueController : UIController<DialogueView, DialogueModel>
 
     protected override async Task OnInit()
     {
-        ServiceLocator.Instance.Get<IDialogueManager>().OnSingleDialogueStart += OnSingleDialogueStart;
-        ServiceLocator.Instance.Get<IDialogueManager>() .OnSingleDialogueEnd += OnSingleDialogueEnd;
+        ServiceLocator.Get<IDialogueManager>().OnSingleDialogueStart += OnSingleDialogueStart;
+        ServiceLocator.Get<IDialogueManager>() .OnSingleDialogueEnd += OnSingleDialogueEnd;
 
         StoryReviewView storyReviewView = view.GetComponentInChildren<StoryReviewView>();
         storyReviewView.OnSubViewClosed += OnSubViewClosed;
@@ -74,7 +74,7 @@ public class DialogueController : UIController<DialogueView, DialogueModel>
                 // 对话框显示时，才能推进对话
                 if (model.IsActiveBox)
                 {
-                    ServiceLocator.Instance.Get<IDialogueManager>().NextDialogue();
+                    ServiceLocator.Get<IDialogueManager>().NextDialogue();
                 }
                 else
                 {
@@ -157,7 +157,7 @@ public class DialogueController : UIController<DialogueView, DialogueModel>
             DialogueOptUI optUI = await ObjectBuilder.GetObject<DialogueOptUI>(E_AssetBundleType.UI, ResKeyCollection.DialogueOptUI, null);
             // 初始化
             optUI.Init(branchInfo);
-            optUI.OnSelectOpt += ServiceLocator.Instance.Get<IDialogueManager>().OnSelectOpt;
+            optUI.OnSelectOpt += ServiceLocator.Get<IDialogueManager>().OnSelectOpt;
             dialogueOpts.Add(optUI);
         }
         // 设置分支选项

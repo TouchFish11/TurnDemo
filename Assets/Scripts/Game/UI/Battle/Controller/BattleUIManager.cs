@@ -125,7 +125,7 @@ public class BattleUIManager
     public void HideOperator(bool isMonster)
     {
         // 失活目标选择
-        ServiceLocator.Instance.Get<ITargetSelectManager>().InActiveSelectTarget();
+        ServiceLocator.Get<ITargetSelectManager>().InActiveSelectTarget();
         // 清除标记UI
         _model.ClearSelectMarker();
         // 隐藏玩家操作UI
@@ -184,7 +184,7 @@ public class BattleUIManager
     /// <returns></returns>
     public void ShowPaiting(SkillInfo skillInfo)
     {
-        ServiceLocator.Instance.Get<IMonoManager>().StartCoroutine(ShowPaiting_Cor(skillInfo));
+        ServiceLocator.Get<IMonoManager>().StartCoroutine(ShowPaiting_Cor(skillInfo));
 
         // 显示角色立绘本地协程函数
         IEnumerator ShowPaiting_Cor(SkillInfo skillInfo)
@@ -278,7 +278,7 @@ public class BattleUIManager
     public async void ShowStatusText(IStatus newStatus)
     {
         StatusEffectTextUI statusEffectTextUI = await ObjectBuilder.GetObject<StatusEffectTextUI>(E_AssetBundleType.UI, ResKeyCollection.StatusEffectTextUI, null);
-        if (UIManager.WorldToLocalPointInRectangle(BattlePoint.Instance.CurrentActiveCamera, ServiceLocator.Instance.Get<IUIManager>().UICamera,
+        if (UIManager.WorldToLocalPointInRectangle(BattlePoint.Instance.CurrentActiveCamera, ServiceLocator.Get<IUIManager>().UICamera,
             _view.BuffTextArea, statusEffectTextUI.gameObject, newStatus.Owner.SubGameObject.transform.position, Vector2.up * 120))
         {
             statusEffectTextUI.InitText(null, newStatus.StatusProperty.StatusInfo.f_name);

@@ -13,11 +13,11 @@ public class MainTest : MonoBehaviour
     private async void Start()
     {
         // 初始化服务定位器
-        ServiceLocator.Instance.InitService();
+        ServiceLocator.InitService();
         // 初始化UI管理器
-        await ServiceLocator.Instance.Get<IUIManager>().InitUIManagerAsync();
+        await ServiceLocator.Get<IUIManager>().InitUIManagerAsync();
         // 初始化游戏数据
-        await ServiceLocator.Instance.Get<IGameDataManager>().InitDataAsync();
+        await ServiceLocator.Get<IGameDataManager>().InitDataAsync();
         // 测试创建Npc、玩家
         NpcObject villager = await ObjectBuilder.GetOrCreateInstance<NpcObject>(E_AssetBundleType.Prefab, ResKeyCollection.Npc, new Vector3(0, 1, 8.39f), Quaternion.identity);
         villager.BaseInit(1);
@@ -28,7 +28,7 @@ public class MainTest : MonoBehaviour
         FireFly fireFly = await ObjectBuilder.GetOrCreateInstance<FireFly>(E_AssetBundleType.Prefab, ResKeyCollection.FireFly, new Vector3(0, 0, -5.6f), Quaternion.identity);
         fireFly.BaseInit(1);
 
-        MainController mainController = await ServiceLocator.Instance.Get<IUIManager>().CreateViewAsync<MainView, MainModel, MainController>(E_UILayer.Mid);
+        MainController mainController = await ServiceLocator.Get<IUIManager>().CreateViewAsync<MainView, MainModel, MainController>(E_UILayer.Mid);
         FloatingTextManager.Instance.Init();
     }
 }

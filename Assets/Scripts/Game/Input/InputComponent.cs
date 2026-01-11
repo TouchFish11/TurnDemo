@@ -41,9 +41,9 @@ public class InputComponent : BaseComponent
 
     public override async void Init(IEntityObject entityObject)
     {
-        inputSystem = ServiceLocator.Instance.Get<IInputSystem>();
+        inputSystem = ServiceLocator.Get<IInputSystem>();
         await inputSystem.InitPlayerInput(this.EntityObject.GetComponent<PlayerInput>(), OnActionTrigger);
-        ServiceLocator.Instance.Get<IMonoManager>().AddUpdateListener(OnUpdate);
+        ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
     }
 
     // 限制输入
@@ -89,7 +89,7 @@ public class InputComponent : BaseComponent
                     OnKeyInputChanged?.Invoke(Vector3.zero);
                 }
                 break;
-            case "NormalAttack" when !ServiceLocator.Instance.Get<IMouseManager>().Visible:
+            case "NormalAttack" when !ServiceLocator.Get<IMouseManager>().Visible:
                 if (context.phase == InputActionPhase.Started)
                 {
                     OnMouseLeftClick?.Invoke();
@@ -110,12 +110,12 @@ public class InputComponent : BaseComponent
             case "MouseVisible":
                 if (context.phase == InputActionPhase.Started)
                 {
-                    EventCenter.Instance.TriggerEvent(E_EventType.E_MouseVisible, nameof(Keyboard.current.leftAltKey));
+                    EventCenter.Instance.TriggerEvent(new MouseVisibleChangedEvent() { SourceName = nameof(Keyboard.current.leftAltKey), IsVisible = true});
                 }
                 else if(context.phase == InputActionPhase.Canceled)
                 {
                     // FIXME：鼠标可见后，触发鼠标点击，会导致该状态无法进入，无法准确隐藏鼠标
-                    EventCenter.Instance.TriggerEvent(E_EventType.E_MouseInvisible, nameof(Keyboard.current.leftAltKey));
+                    EventCenter.Instance.TriggerEvent(new MouseVisibleChangedEvent() { SourceName = nameof(Keyboard.current.leftAltKey), IsVisible = false });
                 }
                 break;
         }

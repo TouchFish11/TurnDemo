@@ -1,10 +1,10 @@
-using Framework;
 using Game.Battle;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
+/// <summary>
+/// Herta普攻
+/// </summary>
 public class HertaNormalSkill : Skill
 {
     private static WaitForSeconds _waitForSeconds0_35 = new WaitForSeconds(0.35f);
@@ -14,7 +14,7 @@ public class HertaNormalSkill : Skill
 
     protected override int DmgCount { get; set; } = 1;
 
-    public HertaNormalSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler) : base(caster, skillId, postHandler)
+    public HertaNormalSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
     {
         Caster.GetComponentInChildren<AnimationTrigger>().OnAttack += OnAttack;
     }
@@ -37,8 +37,6 @@ public class HertaNormalSkill : Skill
 
     protected override IEnumerator OnCast(IBattleContext context)
     {
-        LogManager.Log($"{Caster.GameObject.name}释放技能：{SkillInfo.f_name}");
-
         // 播放动画
         context.GetEventBus().TriggerEvent(new SkillCastEvent(context, this, 0));
 

@@ -17,7 +17,7 @@ public class FactoryManager : SingletonBase<FactoryManager> , IFactoryManager
 
     public void InitFactorys()
     {
-        FactoryUtility.ScanFactorys<IFactory, FactoryTypeAttribute>(typeToFactoryMap);
+        FactoryUtility.ScanFactorys(typeToFactoryMap);
     }
 
     public TFactory GetFactory<TFactory>() where TFactory : class, IFactory
@@ -27,7 +27,7 @@ public class FactoryManager : SingletonBase<FactoryManager> , IFactoryManager
             return factory as TFactory;
         }
 
-        LogManager.Log($"未找到该工厂类型，{typeof(TFactory)}");
+        LogManager.LogError($"未找到该工厂类型，{typeof(TFactory)}");
         return null;
     }
 }
