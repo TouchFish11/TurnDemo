@@ -26,6 +26,7 @@ public class ActingTipUI : UIBehaviour
     protected override void OnEnable()
     {
         imgActingIcon.transform.position = originTrans;
+        ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
     }
 
     public void Init(Image imgActingIcon, TextMeshProUGUI txtActingTip)
@@ -34,8 +35,6 @@ public class ActingTipUI : UIBehaviour
 
         this.imgActingIcon = imgActingIcon;
         this.txtActingTip = txtActingTip;
-
-        ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
     }
 
     public void UpdateTipText(bool isMonster)
@@ -45,14 +44,14 @@ public class ActingTipUI : UIBehaviour
 
     private void OnUpdate()
     {
-        if (!this.gameObject.activeInHierarchy)
-        {
-            return;
-        }
-
         // 图标动画
         imgActingIcon.transform.localPosition = Mathf.Sin(Time.time * moveSpeed) * moveRange * imgActingIcon.transform.right;
 
         // 文本动画
+    }
+
+    protected override void OnDisable()
+    {
+        ServiceLocator.Get<IMonoManager>().RemoveUpdateListener(OnUpdate);
     }
 }

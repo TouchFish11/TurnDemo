@@ -33,13 +33,12 @@ public class BattleMessageUI : BaseUIBehaviour
 
         msgAlpha = msg.color.a;
         imgIconAlpha = imgIcon.color.a;
-
-        ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
     }
 
     protected override void OnEnable()
     {
         currentDuration = 0;
+        ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
     }
 
     public void InitMessage(Color color, string msg)
@@ -51,15 +50,15 @@ public class BattleMessageUI : BaseUIBehaviour
 
     private void OnUpdate()
     {
-        if (!this.gameObject.activeSelf)
-        {
-            return;
-        }
-
         currentDuration += Time.deltaTime;
         if (currentDuration >= duration)
         {
             PoolManager.Instance.PushObj(this.gameObject);
         }
+    }
+
+    protected override void OnDisable()
+    {
+        ServiceLocator.Get<IMonoManager>().RemoveUpdateListener(OnUpdate);
     }
 }

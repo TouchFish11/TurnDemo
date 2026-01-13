@@ -22,9 +22,6 @@ namespace Game.Battle
 
         }
 
-        /// <summary>
-        /// 启动战斗（外部调用：如主界面按钮点击）
-        /// </summary>
         public async Task StartBattle(/* 战斗角色选择，怪物选择，战斗场景选择（可选）， */)
         {
             // 初始化战斗上下文
@@ -39,6 +36,11 @@ namespace Game.Battle
             MonoManager.Instance.StartCoroutine(context.GetTurnManager().BattleLoop());
         }
 
+        public IBattleContext GetContext()
+        {
+            return context;
+        }
+
         private void InitBattle()
         {
             // 依赖战斗上下文
@@ -46,15 +48,37 @@ namespace Game.Battle
             // 被玩家创建时依赖，所以要先于玩家创建
             ServiceLocator.Register<IDamageCalcManager>(DamageCalcManager.Instance);
             ServiceLocator.Register<ISkillManager>(SkillManager.Instance);
+
+            // 监听退出战斗事件
+            context.GetEventBus().AddListener<QuitBattleEvent>(OnQuitBattleEvent);
         }
 
-        /// <summary>
-        /// 获取上下文
-        /// </summary>
-        /// <returns></returns>
-        public IBattleContext GetContext()
+        private void OnQuitBattleEvent(QuitBattleEvent quitBattleEvent)
         {
-            return context;
+            // 清理战斗
+            context.CleanupBattle();
+            // 显示黑背景
+            ShowBackView();
+        }
+
+        private async void ShowBackView()
+        {
+            BackController backController = await ServiceLocator.Get<IUIManager>().CreateViewAsync<BackView, BackModel, BackController>(E_UILayer.Mid);
+            LogManager.Log($"显示黑背景");
+            //backController.CompletedHide(() =>
+            //{
+            //    //切换场景
+            //    SceneManager.Instance.LoadSceneAsync(ResKeyCollection.MainScene, UnityEngine.SceneManagement.LoadSceneMode.Single, (progress) =>
+            //    {
+            //        LogManager.Log($"加载进度：{progress}");
+            //    }, async () =>
+            //    {
+            //        // 隐藏背景
+            //        ServiceLocator.Get<IUIManager>().DestroyView();
+            //        // 显示主界面
+            //        await ServiceLocator.Get<IUIManager>().CreateViewAsync<MainView, MainModel, MainController>(E_UILayer.Top);
+            //    });
+            //});
         }
     }
 }

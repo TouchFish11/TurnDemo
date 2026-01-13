@@ -75,12 +75,6 @@ public class DamageTextUI : BaseUIBehaviour
 
     private void OnUpdate()
     {
-        // ÎÄ±¾¶¯»­
-        if (!this.gameObject.activeSelf)
-        {
-            return;
-        }
-
         currentTime += Time.deltaTime;
         if (currentTime >= destroyTime)
         {
@@ -96,6 +90,6 @@ public class DamageTextUI : BaseUIBehaviour
 
     protected override void OnDisable()
     {
-        MonoManager.Instance.RemoveUpdateListener(OnUpdate);
+        ServiceLocator.Get<IMonoManager>().RemoveUpdateListener(OnUpdate);
     }
 }

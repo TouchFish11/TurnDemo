@@ -21,12 +21,12 @@ public class MessageUI : BaseUIBehaviour
         base.Awake();
 
         txtMsg = binder.GetControl<TextMeshProUGUI>(nameof(txtMsg));
-        ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
     }
 
     protected override void OnEnable()
     {
         currentDuration = 0;
+        ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
     }
 
     /// <summary>
@@ -50,5 +50,10 @@ public class MessageUI : BaseUIBehaviour
         {
             PoolManager.Instance.PushObj(this.gameObject);
         }
+    }
+
+    protected override void OnDisable()
+    {
+        ServiceLocator.Get<IMonoManager>().RemoveUpdateListener(OnUpdate);
     }
 }

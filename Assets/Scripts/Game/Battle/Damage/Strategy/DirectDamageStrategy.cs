@@ -44,7 +44,7 @@ public class DirectDamageStrategy : IDamageStrategy
         //finalDamage = CalcResistanceZone(finalDamage);
         //return finalDamage;
 
-        damageResult = new DamageResult(attacker, defender, Random.Range(50, 100), skillInfo.f_elementType.ToElementType(), skillInfo.f_damageType.ToDamageType(), true, skillInfo);
+        damageResult = new DamageResult(attacker, defender, Random.Range(10, 20), skillInfo.f_elementType.ToElementType(), skillInfo.f_damageType.ToDamageType(), true, skillInfo);
     }
 
     ///// <summary>

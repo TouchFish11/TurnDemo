@@ -136,6 +136,7 @@ public class BattleInputHandler : SingletonAutoMono<BattleInputHandler>
 
     private void OnDisable()
     {
+        ServiceLocator.Get<IMonoManager>().RemoveUpdateListener(OnUpdate);
         OnSelectedObject = null;
         OnLeftDrag = null;
         OnRightDrag = null;

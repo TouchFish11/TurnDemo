@@ -11,40 +11,40 @@ namespace Game.Battle
     public class BattleContext : IBattleContext
     {
         // 战斗事件总线实例
-        private readonly BattleEventBus eventBus;
-        // 核心数据存储（战斗内需要全局访问的数据），所有角色（玩家、敌人、召唤物）
-        private readonly List<IBattleEntityObject> _allBattleEntity = new List<IBattleEntityObject>();
-        // 回合管理器（核心依赖）
-        private readonly TurnController _turnManager;
+        private BattleEventBus eventBus;
+        // 战斗实体列表
+        private List<IBattleEntityObject> _allBattleEntity = new List<IBattleEntityObject>();
+        // 回合管理器
+        private TurnController _turnManager;
         // 当前战机点数
         private int currentBattlePointCount;
         // 最大战技点数
         private int maxBattlePointCount = 5;
+        // 当前行动实体
+        private IBattleEntityObject _currentEntity;
 
         public int CurentBattlePointCount => currentBattlePointCount;
 
         public int MaxBattlePointCount => maxBattlePointCount;
 
-        private IBattleEntityObject _currentEntity;
-
-
         public BattleContext()
         {
             eventBus = new BattleEventBus();
             // 注入自身（IBattleContext）
-            _turnManager = new TurnController(this);
+            _turnManager = new TurnController(this, new AllMonsterDeadCondition());
             currentBattlePointCount = maxBattlePointCount;
         }
 
         /// <summary>
-        /// 战斗初始化（启动战斗时调用）
+        /// 战斗初始化
+        /// 启动战斗时调用
         /// </summary>
         public async Task InitBattle()
         {
             // 创建战斗对象
             await CreateBattleEntity();
             // 初始化回合管理器
-            _turnManager.InitActions(_allBattleEntity);
+            _turnManager.InitActions();
         }
 
         public void ConsumeSkillPoint(int cost)
@@ -59,10 +59,6 @@ namespace Game.Battle
             eventBus.TriggerEvent(new OnBattlePointCountChangedEvent(this, currentBattlePointCount, maxBattlePointCount));
         }
 
-        public IBattleEntityObject GetCurrentEntity() => _currentEntity;
-
-        public void SetCurrentEntity(IBattleEntityObject battleEntity) => _currentEntity = battleEntity; 
-
         /// <summary>
         /// 创建战斗实体对象
         /// </summary>
@@ -71,6 +67,8 @@ namespace Game.Battle
         /// <returns></returns>
         private async Task CreateBattleEntity(/*object config, int ownerId*/)
         {
+            // TODO：可优化为使用战斗实体创建器来创建怪物、波次
+
             List<Transform> playerTrans = new List<Transform>(BattlePoint.Instance.GetPlayerTransforms());
             // 批量创建玩家角色（从配置+预制体）
             var playerDataDic = BinaryDataManager.Instance.GetConfig<RoleInfoContainer>(E_ConfigLoadType.Editor).dataDic;
@@ -117,70 +115,49 @@ namespace Game.Battle
 
         public void CleanupBattle()
         {
-            // 销毁所有角色 GameObject（Unity 资源清理）
+            // 销毁所有角色 GameObject
             foreach (IBattleEntityObject entity in _allBattleEntity)
             {
                 Object.Destroy(entity.GameObject);
             }
             _allBattleEntity.Clear();
+            _allBattleEntity = null;
+
+            // 清空事件总线
+            eventBus.Clear();
+            eventBus = null;
+
+            // 清空缓存池
+            ServiceLocator.Get<IPoolManager>().Clear();
+
+            _currentEntity = null;
+            _turnManager = null;
         }
 
-        public List<IBattleEntityObject> GetAllBattleEntity()
-        {
-            return _allBattleEntity;
-        }
+        public List<IBattleEntityObject> GetAllBattleEntity() => _allBattleEntity;
 
-        public IBattleEntityObject GetFirstBattleEntity()
-        {
-            return _allBattleEntity[0];
-        }
+        public IBattleEntityObject GetFirstBattleEntity() => _allBattleEntity[0];
 
-        public IEnumerable<IBattleEntityObject> GetPlayerObjects()
-        {
-            List<IBattleEntityObject> playerBattleEntityObjects = new List<IBattleEntityObject>();
-            foreach (IBattleEntityObject battleEntity in _allBattleEntity)
-            {
-                if (battleEntity is PlayerObject player)
-                {
-                    playerBattleEntityObjects.Add(player);
-                }
-            }
-            return playerBattleEntityObjects;
-        }
+        public IEnumerable<IBattleEntityObject> GetLiveEntitys() => _allBattleEntity.FindAll((entity) => !entity.IsDead);
 
-        public IEnumerable<IBattleEntityObject> GetMonsterObjects()
-        {
-            List<IBattleEntityObject> monsterBattleEntityObjects = new List<IBattleEntityObject>();
-            foreach (IBattleEntityObject battleEntity in _allBattleEntity)
-            {
-                if (battleEntity is MonsterObject monster)
-                {
-                    monsterBattleEntityObjects.Add(monster);
-                }
-            }
-            return monsterBattleEntityObjects;
-        }
+        public IEnumerable<IBattleEntityObject> GetDeadEntitys() => _allBattleEntity.FindAll((entity) => entity.IsDead);
 
-        public int GetPlayerObjectIndex(IBattleEntityObject battleEntity)
-        {
-            List<IBattleEntityObject> players = new List<IBattleEntityObject>(GetPlayerObjects());
-            return players.IndexOf(battleEntity);
-        }
+        public List<IBattleEntityObject> GetDeadMonsterEntitys() => GetMonsterObjects().FindAll((monster) => monster.IsDead);
 
-        public int GetMonsterObjectIndex(IBattleEntityObject battleEntity)
-        {
-            List<IBattleEntityObject> monsters = new List<IBattleEntityObject>(GetMonsterObjects());
-            return monsters.IndexOf(battleEntity);
-        }
+        public List<IBattleEntityObject> GetPlayerObjects() => _allBattleEntity.FindAll((entity) => entity is PlayerObject);
 
-        public TurnController GetTurnManager()
-        {
-            return _turnManager;
-        }
+        public List<IBattleEntityObject> GetMonsterObjects() => _allBattleEntity.FindAll((entity) => entity is MonsterObject);
 
-        public BattleEventBus GetEventBus()
-        {
-            return eventBus;
-        }
+        public int GetPlayerObjectIndex(IBattleEntityObject battleEntity) => GetPlayerObjects().IndexOf(battleEntity);
+
+        public int GetMonsterObjectIndex(IBattleEntityObject battleEntity) => GetMonsterObjects().IndexOf(battleEntity);
+
+        public IBattleEntityObject GetCurrentEntity() => _currentEntity;
+
+        public void SetCurrentEntity(IBattleEntityObject battleEntity) => _currentEntity = battleEntity;
+
+        public TurnController GetTurnManager() => _turnManager;
+
+        public BattleEventBus GetEventBus() => eventBus;
     }
 }

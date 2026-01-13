@@ -1,8 +1,6 @@
 using Framework;
 using Game.Battle;
 using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
@@ -14,12 +12,6 @@ public abstract class UltimateSkill : Skill
 
     public UltimateSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
     {
-
-    }
-
-    public override void Init(IBattleEntityObject mainTarget, List<IBattleEntityObject> allTargets)
-    {
-        base.Init(mainTarget, allTargets);
         skillComponent = Caster.GetComponent<SkillComponent>();
     }
 
@@ -29,6 +21,8 @@ public abstract class UltimateSkill : Skill
         OnPreUltimateCast(context);
         // 等待输入
         yield return new WaitUntil(() => skillComponent.IsRelease);
+        // 确定技能作用目标
+        ServiceLocator.Get<ISkillManager>().InitSkillTarget(this);
         // 隐藏UI
         ServiceLocator.Get<IUIManager>().GetView<BattleController>().GetBattleUI().HideOperator(false);
         // 终结技释放
@@ -41,10 +35,11 @@ public abstract class UltimateSkill : Skill
     /// <param name="context"></param>
     protected virtual void OnPreUltimateCast(IBattleContext context)
     {
-        // 更新界面UI显示
+        // 显示立绘
         BattleUIScheduler.Instance.ShowUltimatePaiting(Caster, SkillInfo);
+        // 更新界面UI显示
         BattleUIScheduler.Instance.UpdateCameraAndMarkerAndMonsterUI(context, Caster, SkillInfo);
-        // TODO：暂时清空能量，更新能量显示
+        // 暂时清空能量，更新能量显示
         PropertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentEnergy, 0);
     }
 

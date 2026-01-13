@@ -21,7 +21,7 @@ namespace Framework
 
         /// <summary>
         /// 获取类型实例
-        /// 获取类型实例的唯一方法
+        /// 获取复用类型实例方法，需注意该实例会被复用，若不想复用则新增方法获取，并通过具体工厂类型获取
         /// </summary>
         /// <typeparam name="TFactory"></typeparam>
         /// <typeparam name="TInstance"></typeparam>

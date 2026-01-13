@@ -64,9 +64,9 @@ public class BattleUIScheduler : SingletonAutoMono<BattleUIScheduler>
     /// <param name="skillInfo"></param>
     public async void UpdateCameraAndMarkerAndMonsterUI(IBattleContext context, IBattleEntityObject battleEntity, SkillInfo skillInfo)
     {
-        // 激活玩家相机
+        // 激活玩家相机，传入的必须是玩家对象
         BattlePoint.Instance.ActiveCamera(battleEntity);
-        // 看向攻击的玩家
+        // 相机看向释放攻击的玩家
         battleEntity.Context.GetTurnManager().UpdateEntityLookAt(battleEntity);
         // 更新目标选择
         ServiceLocator.Get<ITargetSelectManager>().ReSelectTarget(context, battleEntity, skillInfo);
@@ -87,14 +87,11 @@ public class BattleUIScheduler : SingletonAutoMono<BattleUIScheduler>
         context.GetTurnManager().UpdateEntityLookAt(target);
         // 隐藏怪物UI
         await ServiceLocator.Get<IUIManager>().GetView<BattleController>().GetUIInitializer().InitMonsterUI(null);
+        // 更新行动提示
+        battleController.GetBattleUI().HideOperator(true);
         // 禁用选择
-        ServiceLocator.Get<ITargetSelectManager>().InActiveSelectTarget();
+        //ServiceLocator.Get<ITargetSelectManager>().InActiveSelectTarget();
         // 清理标记
-        await ServiceLocator.Get<IUIManager>().GetView<BattleController>().GetBattleUI().UpdateTargetMarker(null);
+        //await ServiceLocator.Get<IUIManager>().GetView<BattleController>().GetBattleUI().UpdateTargetMarker(null);
     }
-
-    /// <summary>
-    /// 战斗界面控制器
-    /// </summary>
-    //public BattleController BattleController => battleController;
 }

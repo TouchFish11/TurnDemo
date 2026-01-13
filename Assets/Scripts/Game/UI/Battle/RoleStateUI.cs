@@ -74,7 +74,10 @@ public class RoleStateUI : BaseUIBehaviour
         battleContext.GetEventBus().AddListener<ShieldChangedEvent>(OnShieldChanged);
         battleContext.GetEventBus().AddListener<EnergyChangedEvent>(OnEnergyChangedEvent);
         battleContext.GetEventBus().AddListener<StatusAddedEvent>(OnStatusAddedEvent);
+    }
 
+    protected override void OnEnable()
+    {
         ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
     }
 
@@ -280,4 +283,8 @@ public class RoleStateUI : BaseUIBehaviour
         }
     }
 
+    protected override void OnDisable()
+    {
+        ServiceLocator.Get<IMonoManager>().RemoveUpdateListener(OnUpdate);
+    }
 }

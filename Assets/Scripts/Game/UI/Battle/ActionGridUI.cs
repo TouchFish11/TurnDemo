@@ -57,7 +57,10 @@ public class ActionGridUI : BaseUIBehaviour
         flashing = this.transform.Find(nameof(flashing)).gameObject;
         images = flashing.GetComponentsInChildren<Image>();
         flashing.SetActive(false);
+    }
 
+    protected override void OnEnable()
+    {
         ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
     }
 
@@ -151,6 +154,11 @@ public class ActionGridUI : BaseUIBehaviour
         {
             image.color = color;
         }
+    }
+
+    protected override void OnDisable()
+    {
+        ServiceLocator.Get<IMonoManager>().RemoveUpdateListener(OnUpdate);
     }
 
     /// <summary>

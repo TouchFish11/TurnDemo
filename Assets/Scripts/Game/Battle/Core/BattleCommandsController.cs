@@ -3,20 +3,21 @@ using Game.Battle;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Experimental.GraphView;
 
 /// <summary>
 /// 战斗指令控制器
 /// </summary>
 public class BattleCommandsController
 {
-    // 技能命令队列
-    private readonly List<ISkill> _skillCommands = new List<ISkill>();
+    // 战斗命令列表
+    private readonly List<ICommand> _battleCommands = new List<ICommand>();
     // 战斗上下文
     private readonly IBattleContext _context;
     // 当前执行的命令
-    private ISkill _skill; 
+    private ICommand _command; 
 
-    public int Count => _skillCommands.Count;
+    public int Count => _battleCommands.Count;
 
     public BattleCommandsController(IBattleContext context)
     {
@@ -26,12 +27,15 @@ public class BattleCommandsController
     public IEnumerator ExcuteCommand()
     {
         // 存在命令，执行
-        while (_skill != null || _skillCommands.Count > 0)
+        while (_command != null || _battleCommands.Count > 0)
         {
             GetFirst();
             // 执行技能命令
-            yield return _skill.Cast(_context);
-            _skill = null;
+            yield return _command.Excute(_context);
+            _command = null;
+
+            // 执行完命令后，移除死亡的实体
+            _context.GetTurnManager().RemoveDeadMonster();
 
             // 检查战斗是否结束
             if (_context.GetTurnManager().CheckBattleOver())
@@ -47,9 +51,9 @@ public class BattleCommandsController
     /// <returns></returns>
     public void GetFirst()
     {
-        if (_skillCommands.Count > 0)
+        if (_battleCommands.Count > 0)
         {
-            _skill = _skillCommands[0];
+            _command = _battleCommands[0];
             RemoveFirst();
         }
     }
@@ -57,17 +61,17 @@ public class BattleCommandsController
     /// <summary>
     /// 插入指令
     /// </summary>
-    /// <param name="skill"></param>
-    public void InsertCommand(ISkill skill)
+    /// <param name="command"></param>
+    public void InsertCommand(ICommand command)
     {
-        if (_skill == null)
+        if (_command == null)
         {
-            _skill = skill;
+            _command = command;
             return;
         }
         else
         {
-            _skillCommands.Add(skill);
+            _battleCommands.Add(command);
             // 按优先级排序命令
             SortCommand();
             // 指令排队，更新UI显示
@@ -80,7 +84,7 @@ public class BattleCommandsController
     /// </summary>
     public void RemoveFirst()
     {
-        _skillCommands.RemoveAt(0);
+        _battleCommands.RemoveAt(0);
         // 指令排队，更新UI显示
         BattleUIScheduler.Instance.UpdateWaitingCommmand(GetRoleIcon());
     }
@@ -91,13 +95,13 @@ public class BattleCommandsController
     /// </summary>
     private void SortCommand()
     {
-        _skillCommands.Sort((c1, c2) =>
+        _battleCommands.Sort((c1, c2) =>
         {
-            if (c1.SkillInfo.f_priority > c2.SkillInfo.f_priority)
+            if (c1.Priority > c2.Priority)
             {
                 return -1;
             }
-            else if (c1.SkillInfo.f_priority < c2.SkillInfo.f_priority)
+            else if (c1.Priority < c2.Priority)
             {
                 return 1;
             }
@@ -108,23 +112,31 @@ public class BattleCommandsController
         });
     }
 
-
+    // 暂时这样处理
     public List<string> GetRoleIcon()
     {
-        List<string> strs = new List<string>(_skillCommands.Count);
-
-        foreach (ISkill skill in _skillCommands)
+        List<string> strs = new List<string>(_battleCommands.Count);
+        foreach (ICommand command in _battleCommands)
         {
             string icon = string.Empty;
-            if (skill.Caster is PlayerObject playerObject)
-            {
-                icon = playerObject.RoleInfo.f_name;
-            }
-            else if(skill.Caster is MonsterObject monsterObject)
-            {
-                icon = monsterObject.MonsterInfo.f_name;
-            }
 
+            // 技能命令获取角色/怪物图标
+            if (command is SkillCommand skillCommand)
+            {
+                if (skillCommand.Skill.Caster is PlayerObject playerObject)
+                {
+                    icon = playerObject.RoleInfo.f_name;
+                }
+                else if (skillCommand.Skill.Caster is MonsterObject monsterObject)
+                {
+                    icon = monsterObject.MonsterInfo.f_name;
+                }
+            }
+            // 其它命令获取其它图标即可
+            else
+            {
+
+            }
             strs.Add(icon);
         }
 

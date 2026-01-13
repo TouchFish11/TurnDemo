@@ -84,9 +84,6 @@ public class SelectMarkerUI : BaseUIBehaviour
 
     protected override void OnDisable()
     {
-        if (MonoManager.IsLIve)
-        {
-            MonoManager.Instance.RemoveUpdateListener(OnUpdate);
-        }
+        ServiceLocator.Get<IMonoManager>().RemoveUpdateListener(OnUpdate);
     }
 }

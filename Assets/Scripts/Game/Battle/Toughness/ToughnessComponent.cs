@@ -158,15 +158,27 @@ namespace Game.Battle
             // 计算剩余韧性值
             int current = Mathf.Max(0, _toughness.CurrentToughnessValue - finalReduceValue);
             // 更新韧性
-            _toughness.SetToughnessValue(current, _toughness.MaxToughnessVaue);
+            SetToughnessValue(current, _toughness.MaxToughnessVaue);
 
-            // 触发韧性削减事件
+            // 触发韧性变化事件
             this.BattleEntity.Context.GetEventBus().TriggerEvent(new ToughnessChangedEvent(this.BattleEntity.Context, this.BattleEntity, _toughness.CurrentToughnessValue, _toughness.MaxToughnessVaue));
             // 判断是否被击破
             if (IsToughnessBroken())
             {
                 this.BattleEntity.Context.GetEventBus().TriggerEvent(new ToughnessBrokenEvent(this.BattleEntity.Context, reducer, this.BattleEntity, skillInfo));
             }
+        }
+
+        /// <summary>
+        /// 设置韧性值
+        /// </summary>
+        /// <param name="current"></param>
+        /// <param name="max"></param>
+        public void SetToughnessValue(int current, int max)
+        {
+            _toughness.SetToughnessValue(current, max);
+            // 触发韧性变化事件
+            this.BattleEntity.Context.GetEventBus().TriggerEvent(new ToughnessChangedEvent(this.BattleEntity.Context, this.BattleEntity, _toughness.CurrentToughnessValue, _toughness.MaxToughnessVaue));
         }
 
         /// <summary>
@@ -211,7 +223,7 @@ namespace Game.Battle
         }
 
         /// <summary>
-        /// 获取当前韧性状态
+        /// 是否处于击破状态
         /// </summary>
         /// <returns></returns>
         public bool IsToughnessBroken() => _toughness.IsBroken;

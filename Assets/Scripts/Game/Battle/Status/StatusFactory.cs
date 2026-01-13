@@ -28,7 +28,6 @@ public class StatusFactory : IFactory
     {
         if (idToTypeMap.TryGetValue(statusId, out Type statusType))
         {
-            // ª∫¥Ê≥ÿªÒ»°
             return Activator.CreateInstance(statusType) as IStatus;
         }
 

@@ -1,10 +1,8 @@
 using Framework;
 using Game;
 using Game.Battle;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 /// <summary>
 /// 战斗点
@@ -79,6 +77,8 @@ public class BattlePoint : SingletonMono<BattlePoint>
     /// <param name="battleEntity"></param>
     public void ActiveCamera(IBattleEntityObject battleEntity)
     {
+        battleEntity.Context.GetTurnManager().UpdateMonsterEntityPoses();
+
         if (battleEntity is PlayerObject)
         {
             Transform[] transforms = battleEntity.GameObject.GetComponentsInParent<Transform>();
@@ -92,6 +92,10 @@ public class BattlePoint : SingletonMono<BattlePoint>
                 }
                 currentCamera = roleCameras[index];
                 currentCamera.gameObject.SetActive(true);
+            }
+            else
+            {
+                LogManager.LogError($"[BattlePoint]：未找到位置");
             }
         }
     }

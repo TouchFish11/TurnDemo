@@ -25,6 +25,11 @@ namespace Game.Battle
         int EntityPosIndex { get; }
 
         /// <summary>
+        /// 是否死亡
+        /// </summary>
+        bool IsDead { get; }
+
+        /// <summary>
         /// 能否行动
         /// </summary>
         bool CanAct { get; }
@@ -66,13 +71,7 @@ namespace Game.Battle
         /// </summary>
         /// <returns></returns>
         void ExecuteAction();
-        
-        /// <summary>
-        /// 释放技能
-        /// </summary>
-        /// <param name="skillId"></param>
-        //void CastSkill(int skillId);
-
+       
         /// <summary>
         /// 获取速度
         /// </summary>
@@ -90,11 +89,6 @@ namespace Game.Battle
         /// </summary>
         /// <param name="value"></param>
         void TakeDamage(DamageResult damageResult);
-
-        /// <summary>
-        /// 死亡
-        /// </summary>
-        void Die();
 
         /// <summary>
         /// 增加行动次数

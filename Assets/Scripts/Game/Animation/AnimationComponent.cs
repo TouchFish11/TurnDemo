@@ -56,6 +56,11 @@ public abstract class AnimationComponent : BaseComponent
     /// <returns></returns>
     public AnimatorStateInfo GetCurrentAnimatorStateInfo()
     {
+        if (animator == null)
+        {
+            return default;
+        }
+
         return animator.GetCurrentAnimatorStateInfo(LayerIndex);
     }
 

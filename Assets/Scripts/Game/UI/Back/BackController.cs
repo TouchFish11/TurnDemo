@@ -1,3 +1,5 @@
+using Framework;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -28,5 +30,11 @@ public class BackController : UIController<BackView, BackModel>
     public BackController(BackView view, BackModel model) : base(view, model)
     {
 
+    }
+
+    public void CompletedHide(Action action)
+    {
+        action?.Invoke();
+        ServiceLocator.Get<IUIManager>().DestroyView();
     }
 }

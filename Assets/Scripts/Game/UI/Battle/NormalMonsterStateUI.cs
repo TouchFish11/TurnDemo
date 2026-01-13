@@ -37,12 +37,15 @@ public class NormalMonsterStateUI : BaseUIBehaviour
 
         weaknessBar = this.transform.Find(nameof(weaknessBar));
 
-        ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
-
         // ¼àÌýÊÂ¼þ
         ServiceLocator.Get<IBattleManager>().GetContext().GetEventBus().AddListener<HpChangedEvent>(OnHpChangedEvent);
         ServiceLocator.Get<IBattleManager>().GetContext().GetEventBus().AddListener<ToughnessChangedEvent>(OnToughnessChangedEvent);
         ServiceLocator.Get<IBattleManager>().GetContext().GetEventBus().AddListener<ToughnessBrokenEvent>(OnToughnessBrokenEvent);
+    }
+
+    protected override void OnEnable()
+    {
+        ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
     }
 
     /// <summary>
@@ -146,5 +149,10 @@ public class NormalMonsterStateUI : BaseUIBehaviour
                 imgFade.fillAmount = imgHp.fillAmount;
             }
         }
+    }
+
+    protected override void OnDisable()
+    {
+        ServiceLocator.Get<IMonoManager>().RemoveUpdateListener(OnUpdate);
     }
 }

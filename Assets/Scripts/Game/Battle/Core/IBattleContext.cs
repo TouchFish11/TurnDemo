@@ -31,13 +31,13 @@ namespace Game.Battle
         /// 获取所有玩家角色实体
         /// </summary>
         /// <returns></returns>
-        IEnumerable<IBattleEntityObject> GetPlayerObjects();
+        List<IBattleEntityObject> GetPlayerObjects();
 
         /// <summary>
         /// 获取所有怪物角色实体
         /// </summary>
         /// <returns></returns>
-        IEnumerable<IBattleEntityObject> GetMonsterObjects();
+        List<IBattleEntityObject> GetMonsterObjects();
 
         /// <summary>
         /// 获取回合管理器
@@ -65,7 +65,16 @@ namespace Game.Battle
         /// <returns></returns>
         BattleEventBus GetEventBus();
 
+        /// <summary>
+        /// 消耗战机点
+        /// </summary>
+        /// <param name="cost"></param>
         void ConsumeSkillPoint(int cost);
+
+        /// <summary>
+        /// 拓展最大战机点
+        /// </summary>
+        /// <param name="cost"></param>
         void ExpandSkillPoint(int cost);
 
         /// <summary>
@@ -81,7 +90,35 @@ namespace Game.Battle
         /// <param name="battleEntity"></param>
         /// <returns></returns>
         int GetMonsterObjectIndex(IBattleEntityObject battleEntity);
+
+        /// <summary>
+        /// 获取当前行动实体
+        /// </summary>
+        /// <returns></returns>
         IBattleEntityObject GetCurrentEntity();
+
+        /// <summary>
+        /// 设置当前行动实体
+        /// </summary>
+        /// <param name="battleEntity"></param>
         void SetCurrentEntity(IBattleEntityObject battleEntity);
+
+        /// <summary>
+        /// 获取所有存活的实体
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<IBattleEntityObject> GetLiveEntitys();
+
+        /// <summary>
+        /// 获取所有死亡实体
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<IBattleEntityObject> GetDeadEntitys();
+
+        /// <summary>
+        /// 获取所有死亡的怪物
+        /// </summary>
+        /// <returns></returns>
+        List<IBattleEntityObject> GetDeadMonsterEntitys();
     }
 }

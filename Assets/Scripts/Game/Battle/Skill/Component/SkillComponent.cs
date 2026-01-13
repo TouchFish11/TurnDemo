@@ -36,16 +36,6 @@ namespace Game.Battle
         }
 
         /// <summary>
-        /// 释放技能
-        /// </summary>
-        /// <param name="skill"></param>
-        public void CastSkill(ISkill skill)
-        {
-            // 发送技能命令到回合队列
-            SkillManager.Instance.AddSkillCommand(skill, this.BattleEntity);
-        }
-
-        /// <summary>
         /// 释放指定ID的技能
         /// </summary>
         /// <param name="skillId"></param>
@@ -59,8 +49,18 @@ namespace Game.Battle
                 }
 
                 IsRelease = false;
-                // 发送技能命令到回合队列
-                SkillManager.Instance.AddSkillCommand(skill, this.BattleEntity);
+
+                // TODO：暂时这样写，后续优化技能判断逻辑
+                if ((E_SkillType)skill.SkillInfo.f_SkillType == E_SkillType.UltimateSkill)
+                {
+                    // 发送技能命令到回合队列
+                    SkillManager.Instance.AddUltimateSkillCommand(skill);
+                }
+                else
+                {
+                    // 发送技能命令到回合队列
+                    SkillManager.Instance.AddSkillCommand(skill);
+                }
             }
             else
             {

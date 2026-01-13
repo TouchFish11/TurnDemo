@@ -35,6 +35,7 @@ public class BattleEventProcessor
         eventBus.AddListener<ActionBarSortPostEvent>(OnActionBarSortPostEvent);
         eventBus.AddListener<TurnStartStatusChangedEvent>(OnTurnStartStatusChangedEvent);
         eventBus.AddListener<StatusAddedEvent>(OnStatusAddedEvent);
+        eventBus.AddListener<BattleOverEvent>(OnBattleOverEvent);
     }
 
     /// <summary>
@@ -45,16 +46,21 @@ public class BattleEventProcessor
     /// <param name="turnStartEvent"></param>
     private async void OnTurnStart(TurnStartEvent turnStartEvent)
     {
-        if (turnStartEvent.CurrentBattleEntity is MonsterObject)
-        {
-            // TODO：暂时写在这里，隐藏怪物UI，后续优化调用逻辑
-            await _uiInitializer.InitMonsterUI(null);
-        }
-        else
-        {
-            // 玩家相机位置不同，需要每回合开始时更新怪物UI位置
-            await _uiInitializer.InitMonsterUI(turnStartEvent.Context.GetMonsterObjects());
-        }
+        //if (turnStartEvent.CurrentBattleEntity is MonsterObject)
+        //{
+        //    // TODO：暂时写在这里，隐藏怪物UI，后续优化调用逻辑
+
+        //    // 怪物攻击时才去隐藏怪物UI
+
+        //}
+        //else
+        //{
+        //    // 玩家相机位置不同，需要每回合开始时更新怪物UI位置
+        //    await _uiInitializer.InitMonsterUI(turnStartEvent.Context.GetMonsterObjects());
+        //}
+
+        // 显示怪物UI
+        await _uiInitializer.InitMonsterUI(turnStartEvent.Context.GetMonsterObjects());
 
         if (turnStartEvent.CurrentBattleEntity is PlayerObject)
         {
@@ -189,11 +195,19 @@ public class BattleEventProcessor
     }
 
     /// <summary>
-    /// 战技点变化事件
+    /// 战技点变化事件回调
     /// </summary>
     /// <param name="battlePointCountChanged"></param>
     private async void OnBattlePointCountChanged(OnBattlePointCountChangedEvent battlePointCountChanged)
     {
         await _uiManager.UpdateBattlePointCount(battlePointCountChanged.CurentBattlePointCount, battlePointCountChanged.MaxBattlePointCount);
+    }
+
+    /// <summary>
+    /// 战斗结束事件回调
+    /// </summary>
+    private void OnBattleOverEvent(BattleOverEvent battleOverEvent)
+    {
+        _uiManager.ShowBattleOver();
     }
 }

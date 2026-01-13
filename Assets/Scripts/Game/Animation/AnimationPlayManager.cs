@@ -47,5 +47,27 @@ namespace Game
             }
         }
 
+        /// <summary>
+        /// 等待动画播放结束
+        /// </summary>
+        /// <param name="battleAnimationComponent"></param>
+        /// <param name="animationType"></param>
+        /// <param name="callBack"></param>
+        public void WaitForAnimOver(BattleAnimationComponent battleAnimationComponent, E_AnimationType animationType, Action callBack = null)
+        {
+            battleAnimationComponent.StartCoroutine(WaitForAnimOver_Cor(battleAnimationComponent, animationType, callBack));
+        }
+
+        public IEnumerator WaitForAnimOver_Cor(BattleAnimationComponent battleAnimationComponent, E_AnimationType animationType, Action callBack)
+        {
+            battleAnimationComponent.SetAnimationState(animationType);
+            // 等待动画切换为指定动画
+            yield return new WaitUntil(() => battleAnimationComponent.GetCurrentAnimatorStateInfo().IsName(animationType.ToString()));
+
+            // 等待动画播放完毕
+            yield return new WaitUntil(() => battleAnimationComponent.GetCurrentAnimatorStateInfo().normalizedTime >= 0.9);
+
+            callBack?.Invoke();
+        }
     }
 }

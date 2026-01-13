@@ -53,6 +53,11 @@ public class BattleView : UIView
     /// </summary>
     public Transform MonsterStateArea => monsterStateArea;
 
+    /// <summary>
+    /// ’Ω∂∑Ω· ¯«¯”Ú
+    /// </summary>
+    public Transform BattleOverArea { get; private set; }
+
     protected override void Awake()
     {
         base.Awake();
@@ -72,7 +77,10 @@ public class BattleView : UIView
         monsterStateArea = this.transform.Find(nameof(monsterStateArea));
         BattleMsgArea = this.transform.Find(nameof(BattleMsgArea));
         BuffTextArea = this.transform.Find(nameof(BuffTextArea));
-        
+
+        BattleOverArea = this.transform.Find(nameof(BattleOverArea));
+        BattleOverArea.gameObject.SetActive(false);
+
         totalDmgArea = this.transform.Find(nameof(totalDmgArea)).gameObject;
         totalDmgArea.SetActive(false);
 
@@ -84,6 +92,7 @@ public class BattleView : UIView
 
         imgIcon = binder.GetControl<Image>(nameof(imgIcon));
         txtUltimateTip = binder.GetControl<TextMeshProUGUI>(nameof(txtUltimateTip));
+
         paintingDisplayArea = this.transform.Find(nameof(paintingDisplayArea)).gameObject;
         paintingDisplayArea.SetActive(false);
     }

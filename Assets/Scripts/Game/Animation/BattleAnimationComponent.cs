@@ -1,4 +1,5 @@
 using Framework;
+using System;
 
 namespace Game.Battle
 {
@@ -130,10 +131,6 @@ namespace Game.Battle
                 case E_SkillType.EnhancedCombatSkill:
                     break;
             }
-
-            //LogManager.Log($"改变动画:{(E_SkillType)skillInfo.f_SkillType}");
-
-            // NOTE：技能释放结束后，自动切换为待机状态;
         }
 
         /// <summary>
@@ -155,7 +152,5 @@ namespace Game.Battle
             base.Destroy();
             BattleEntity = null;
         }
-
-
     }
 }

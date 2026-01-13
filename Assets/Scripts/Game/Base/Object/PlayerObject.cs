@@ -58,7 +58,7 @@ namespace Game
         }
 
         /// <summary>
-        /// 释放终结技
+        /// 玩家终结技触发事件回调
         /// </summary>
         /// <param name="playerTriggerUltimateSkillEvent"></param>
         protected virtual void OnCastUltimateSkill(PlayerTriggerUltimateSkillEvent playerTriggerUltimateSkillEvent)
@@ -69,6 +69,14 @@ namespace Game
             }
 
             this.GetComponent<PlayerSkillComponent>().CastSkill(playerTriggerUltimateSkillEvent.SkillId);
+        }
+
+        protected override void Die()
+        {
+            base.Die();
+
+            // 玩家播放死亡动画
+            AnimationPlayManager.Instance.WaitForAnimOver(this.GetComponent<BattleAnimationComponent>(), E_AnimationType.Death, null);
         }
     }
 }

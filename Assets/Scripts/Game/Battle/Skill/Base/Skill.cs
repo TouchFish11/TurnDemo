@@ -49,14 +49,13 @@ public abstract class Skill : ISkill
         currentDmgCount = DmgCount;
         statusIds = TextUtility.SplitToIntArr(SkillInfo.f_statusId, 2);
         StatusAddStrategy = statusAddStrategy;
+        PropertyComponent = Caster.GetComponent<PropertyComponent>();
     }
 
     public virtual void Init(IBattleEntityObject mainTarget, List<IBattleEntityObject> allTargets)
     {
         MainTarget = mainTarget;
         AllTargets = allTargets;
-
-        PropertyComponent = Caster.GetComponent<PropertyComponent>();
     }
 
     // 一定是通过技能对象实例来驱动角色释放技能行为的

@@ -22,6 +22,8 @@ namespace Game
 
         public int EntityPosIndex { get; set; }
 
+        public bool IsDead { get; protected set; }
+
         // 行动次数
         protected int actCount;
 
@@ -102,12 +104,13 @@ namespace Game
             }
         }
 
-        public virtual void Die()
+        /// <summary>
+        /// 死亡
+        /// </summary>
+        protected virtual void Die()
         {
-            // 从上下文中移除
-            Context.GetTurnManager().RemoveEntity(this);
-            // 之后播放死亡动画
-            this.GetComponent<AnimationComponent>().SetAnimationState(E_AnimationType.Death);
+            // 改变标识
+            IsDead = true;
         }
 
         /// <summary>
@@ -116,7 +119,10 @@ namespace Game
         public void ExecuteAction()
         {
             OnTurnStart();
-            MonoManager.Instance.StartCoroutine(OnExceuteAction());
+            if (CanAct)
+            {
+                ServiceLocator.Get<IMonoManager>().StartCoroutine(OnExceuteAction());
+            }
         }
 
         /// <summary>
@@ -144,6 +150,8 @@ namespace Game
         /// </summary>
         protected virtual void OnTurnStart()
         {
+            // 执行实体回合开始事件
+            Context.GetEventBus().TriggerEvent(new TurnStartEvent(Context, this));
             AddActCount();
         }
 
@@ -168,11 +176,6 @@ namespace Game
         public void AddActCount()
         {
             ++actCount;
-            if (actCount > 0)
-            {
-                // 执行实体回合开始事件
-                Context.GetEventBus().TriggerEvent(new TurnStartEvent(Context, this));
-            }
         }
 
         public void SubActCount()

@@ -1,6 +1,4 @@
 using Framework;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,7 +23,7 @@ public class StatusEffectTextUI : BaseUIBehaviour
     // 当前时间
     private float currentTime;
 
-protected override void Awake()
+    protected override void Awake()
     {
         base.Awake();
 
@@ -34,12 +32,13 @@ protected override void Awake()
         mover = this.transform.Find(nameof(mover));
 
         originMoverPos = mover.localPosition;
-        ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpadte);
+
     }
 
     protected override void OnEnable()
     {
         mover.localPosition = originMoverPos;
+        ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpadte);
     }
 
     /// <summary>
@@ -55,11 +54,6 @@ protected override void Awake()
 
     private void OnUpadte()
     {
-        if (!this.gameObject.activeSelf)
-        {
-            return;
-        }
-
         currentTime += Time.deltaTime;
         if (currentTime >= destroyTime)
         {
@@ -68,5 +62,10 @@ protected override void Awake()
         }
         //文本运动
         this.mover.Translate(Time.deltaTime * upMoveSpeed * Vector3.up);
+    }
+
+    protected override void OnDisable()
+    {
+        ServiceLocator.Get<IMonoManager>().RemoveUpdateListener(OnUpadte);
     }
 }

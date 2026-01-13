@@ -158,6 +158,11 @@ namespace Framework
         /// </summary>
         public void Clear()
         {
+            foreach (PoolObj poolObj in _poolObjDic.Values)
+            {
+                poolObj.Clear();
+            }
+
             _poolRootObj = null;
             _poolObjDic.Clear();
             _poolDataDic.Clear();

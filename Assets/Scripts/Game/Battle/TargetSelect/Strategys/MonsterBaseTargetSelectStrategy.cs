@@ -1,5 +1,4 @@
 using Game.Battle;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -10,8 +9,8 @@ public class MonsterBaseTargetSelectStrategy : ITargetSelectStrategy
     public IBattleEntityObject SelectMainTarget(IBattleContext context, IBattleEntityObject caster, SkillInfo skillInfo)
     {
         // Ëæ»úÑ¡Ôñ
-        List<IBattleEntityObject> players = new List<IBattleEntityObject>(context.GetPlayerObjects());
-        int index = Random.Range(0, players.Count);
-        return players[index];
+        int count = context.GetPlayerObjects().Count;
+        int index = Random.Range(0, count);
+        return context.GetPlayerObjects()[index];
     }
 }

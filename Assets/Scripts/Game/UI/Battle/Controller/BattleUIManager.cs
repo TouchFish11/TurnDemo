@@ -3,6 +3,7 @@ using Game;
 using Game.Battle;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -22,6 +23,36 @@ public class BattleUIManager
         _model = model;
     }
 
+    /// <summary>
+    /// 显示战斗结束UI
+    /// </summary>
+    public void ShowBattleOver()
+    {
+        ServiceLocator.Get<IMonoManager>().StartCoroutine(ShowBattleOver_Cor());
+
+        IEnumerator ShowBattleOver_Cor()
+        {
+            _view.BattleOverArea.gameObject.SetActive(true);
+
+            yield return new WaitForSeconds(2.5f);
+
+            _view.BattleOverArea.gameObject.SetActive(false);
+
+            yield return new WaitForSeconds(0.5f);
+
+            // 隐藏战斗界面
+            ServiceLocator.Get<IUIManager>().DestroyView();
+
+            // 触发退出战斗事件
+            IBattleContext context = ServiceLocator.Get<IBattleManager>().GetContext();
+            context.GetEventBus().TriggerEvent(new QuitBattleEvent(context));
+        }
+    }
+
+    /// <summary>
+    /// 显示战斗消息提示
+    /// </summary>
+    /// <param name="msg"></param>
     public async void ShowBattleMessage(string msg)
     {
         BattleMessageUI battleMessageUI = await ObjectBuilder.GetObject<BattleMessageUI>(E_AssetBundleType.UI, ResKeyCollection.BattleMessageUI, _view.BattleMsgArea);
@@ -124,7 +155,7 @@ public class BattleUIManager
     /// </summary>
     public void HideOperator(bool isMonster)
     {
-        // 失活目标选择
+        // 禁用目标选择
         ServiceLocator.Get<ITargetSelectManager>().InActiveSelectTarget();
         // 清除标记UI
         _model.ClearSelectMarker();
@@ -173,6 +204,11 @@ public class BattleUIManager
         }
 
         _model.UpdateOperator(skillKeyUIs);
+    }
+
+    public void SetActTipActive()
+    {
+
     }
 
     /// <summary>
@@ -285,18 +321,12 @@ public class BattleUIManager
         }
     }
 
-
     /// <summary>
     /// 清理活跃的伤害文本UI
     /// </summary>
     public void ClearActiveDamageTextUI()
     {
         _model.UpdateCumulativeDamage(false, 0);
-    }
-
-    public void BattleOver()
-    {
-
     }
 
     /// <summary>

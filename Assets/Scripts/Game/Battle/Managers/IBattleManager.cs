@@ -9,6 +9,15 @@ using UnityEngine;
 /// </summary>
 public interface IBattleManager
 {
+    /// <summary>
+    /// 获取上下文
+    /// </summary>
+    /// <returns></returns>
     IBattleContext GetContext();
+
+    /// <summary>
+    /// 启动战斗
+    /// 外部调用
+    /// </summary>
     Task StartBattle();
 }

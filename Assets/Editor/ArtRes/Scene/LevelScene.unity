@@ -249,6 +249,10 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 6967820766616558239, guid: c86b6361ddef5d449a29f3d684cc094b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -331,7 +335,7 @@ GameObject:
   m_Component:
   - component: {fileID: 134620857}
   m_Layer: 0
-  m_Name: "\u660E\u5929\uFF1A\u5B9E\u73B0\u6218\u6597\u6B7B\u4EA1\u6D41\u7A0B\uFF08\u6B7B\u4EA1\u52A8\u753B\uFF09\u3001\u5B9E\u73B0\u97E7\u6027\u6761\u6062\u590D\u6548\u679C\u3001\u5B9E\u73B0\u6218\u6597\u7ED3\u675F\u6D41\u7A0B\u3001\u51C6\u5907\u63A5\u5165\u4E3B\u573A\u666F"
+  m_Name: "\u660E\u5929\uFF1A\u51C6\u5907\u63A5\u5165\u4E3B\u573A\u666F"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1781,6 +1785,7 @@ Transform:
   m_Children:
   - {fileID: 754539784}
   - {fileID: 134620857}
+  - {fileID: 1422240664}
   - {fileID: 2084832752}
   - {fileID: 2061998100}
   - {fileID: 602332722}
@@ -1894,6 +1899,37 @@ PrefabInstance:
       addedObject: {fileID: 79853406}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7df46167f66641644862d5fd9469830d, type: 3}
+--- !u!1 &1422240663
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1422240664}
+  m_Layer: 0
+  m_Name: "\u660E\u5929\uFF1A\u5904\u7406Bug\uFF1A\u91CA\u653E\u7EC8\u7ED3\u6280\u540E\u5904\u7406\u5668\u6709Bug\u3001\u602A\u7269\u6B7B\u4EA1\u52A8\u753B\u672A\u64AD\u653E\u5C31\u76F4\u63A5\u9500\u6BC1bug"
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1422240664
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1422240663}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1219883914}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1425885646
 GameObject:
   m_ObjectHideFlags: 0
@@ -2451,7 +2487,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2061998100}
   m_Layer: 0
-  m_Name: "\u5F85\u5B9A\uFF1A\u91CD\u6784MVC\uFF08\u79FB\u9664\u4E8B\u4EF6\u5206\u53D1\uFF0C\u805A\u5408mv\uFF09"
+  m_Name: "\u5F85\u5B9A\uFF1A\u91CD\u6784MVC\uFF08\u79FB\u9664\u4E8B\u4EF6\u5206\u53D1\uFF0C\u805A\u5408mv\uFF09\u3001\u5B9E\u73B0\u53CD\u5C04\u81EA\u52A8\u6CE8\u5165\u63A7\u4EF6"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

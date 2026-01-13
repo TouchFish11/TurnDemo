@@ -21,7 +21,7 @@ public class BattleModel : UIModel
     private readonly List<BattlePointUI> battlePointUIs = new List<BattlePointUI>();
     // 选择标记UI列表
     private readonly List<SelectMarkerUI> selectMarkerUIs = new List<SelectMarkerUI>();
-    // 选择标记UI列表
+    // 等待行动对象列表
     private readonly List<WaitingActUI> waitingActUIs = new List<WaitingActUI>();
 
     // 当前累计伤害
@@ -50,6 +50,13 @@ public class BattleModel : UIModel
 
     public void UpdateWaitingCommmand(List<WaitingActUI> waitingActUIs)
     {
+        foreach (WaitingActUI waitingActUI in this.waitingActUIs)
+        {
+            PoolManager.Instance.PushObj(waitingActUI.gameObject);
+        }
+        this.waitingActUIs.Clear();
+        this.waitingActUIs.AddRange(waitingActUIs);
+
         TriggerDataChanged(nameof(waitingActUIs), waitingActUIs);
     }
 

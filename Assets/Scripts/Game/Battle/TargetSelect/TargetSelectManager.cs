@@ -23,6 +23,7 @@ public class TargetSelectManager : SingletonBase<TargetSelectManager>, ITargetSe
     private IBattleEntityObject caster;
     // 当前目标选择策略
     private ITargetSelectStrategy currentSelectStrategy;
+
     private TargetSelectManager()
     {
         battleContext = ServiceLocator.Get<IBattleManager>().GetContext();
