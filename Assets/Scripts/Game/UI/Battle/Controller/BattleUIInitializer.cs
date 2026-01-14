@@ -30,8 +30,8 @@ public class BattleUIInitializer
         // 玩家角色显示UI
         foreach (IBattleEntityObject battleEntity in battleEntities)
         {
-            RoleStateUI roleStateUI = await ObjectBuilder.GetObject<RoleStateUI>(E_AssetBundleType.UI, ResKeyCollection.RoleStateUI, null);
-            int skillId = battleEntity.GetComponent<SkillComponent>().GetUltimateSkill();
+            RoleStateUI roleStateUI = await ObjectBuilder.GetObject<RoleStateUI>(E_AssetBundleType.UI, ResKeyCollection.RoleStateUI, _view.PlayerArea);
+            int skillId = battleEntity.GetComponent<SkillComponent>().GetSkills().Find((skill) => skill.SkillInfo.f_SkillType == (byte)E_SkillType.UltimateSkill).SkillInfo.f_id;
             if (skillId != -1)
             {
                 Sprite icon = await AssetBundleManager.Instance.LoadAssetAsync<Sprite>(E_AssetBundleType.Texture, ResKeyCollection.WhiteImage);
@@ -49,7 +49,7 @@ public class BattleUIInitializer
     /// </summary>
     /// <param name="battleEntities">传null为隐藏</param>
     /// <returns></returns>
-    public async Task InitMonsterUI(IEnumerable<IBattleEntityObject> battleEntities)
+    public async void InitMonsterUI(IEnumerable<IBattleEntityObject> battleEntities)
     {
         List<NormalMonsterStateUI> normalMonsterStateUIs = new List<NormalMonsterStateUI>();
         if (battleEntities != null)

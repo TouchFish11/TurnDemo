@@ -2,8 +2,6 @@ using Game;
 using Game.Battle;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEditor.Experimental.GraphView;
 
 /// <summary>
 /// 战斗指令控制器
@@ -15,7 +13,9 @@ public class BattleCommandsController
     // 战斗上下文
     private readonly IBattleContext _context;
     // 当前执行的命令
-    private ICommand _command; 
+    private ICommand _command;
+    // 是否退出
+    private bool _isQuit;
 
     public int Count => _battleCommands.Count;
 
@@ -26,23 +26,27 @@ public class BattleCommandsController
 
     public IEnumerator ExcuteCommand()
     {
-        // 存在命令，执行
-        while (_command != null || _battleCommands.Count > 0)
+        // 存在命令且没有结束，则执行
+        while ((_command != null || _battleCommands.Count > 0) && !_isQuit)
         {
             GetFirst();
             // 执行技能命令
             yield return _command.Excute(_context);
             _command = null;
-
-            // 执行完命令后，移除死亡的实体
-            _context.GetTurnManager().RemoveDeadMonster();
-
-            // 检查战斗是否结束
-            if (_context.GetTurnManager().CheckBattleOver())
-            {
-                yield break;
-            }
+            // 命令执行后逻辑
+            yield return OnPostCommandExcute();
         }
+    }
+
+    /// <summary>
+    /// 命令执行后
+    /// </summary>
+    private IEnumerator OnPostCommandExcute()
+    {
+        // 执行完命令后，移除死亡的实体
+        yield return _context.GetTurnManager().RemoveDeadMonster();
+        // 检查战斗是否结束
+        _isQuit = _context.GetTurnManager().CheckBattleOver();
     }
 
     /// <summary>
@@ -75,7 +79,7 @@ public class BattleCommandsController
             // 按优先级排序命令
             SortCommand();
             // 指令排队，更新UI显示
-            BattleUIScheduler.Instance.UpdateWaitingCommmand(GetRoleIcon());
+            BattleUIScheduler.Instance.BattleController.GetBattleUI().UpdateWaitingCommmand(GetRoleIcon());
         }
     }
 
@@ -86,7 +90,7 @@ public class BattleCommandsController
     {
         _battleCommands.RemoveAt(0);
         // 指令排队，更新UI显示
-        BattleUIScheduler.Instance.UpdateWaitingCommmand(GetRoleIcon());
+        BattleUIScheduler.Instance.BattleController.GetBattleUI().UpdateWaitingCommmand(GetRoleIcon());
     }
 
     /// <summary>

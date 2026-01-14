@@ -1,6 +1,4 @@
 using Framework;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,10 +8,9 @@ using UnityEngine.UI;
 /// </summary>
 public class BattleMessageUI : BaseUIBehaviour
 {
-    private TextMeshProUGUI txtMsg;
-
-    private Image msg;
-    private Image imgIcon;
+    [Inject] private TextMeshProUGUI txtMsg;
+    [Inject] private Image msg;
+    [Inject] private Image imgIcon;
 
     // Í¸Ã÷¶È
     private float msgAlpha;
@@ -26,10 +23,6 @@ public class BattleMessageUI : BaseUIBehaviour
     protected override void Awake()
     {
         base.Awake();
-
-        txtMsg = binder.GetControl<TextMeshProUGUI>(nameof(txtMsg));
-        msg = binder.GetControl<Image>(nameof(msg));
-        imgIcon = binder.GetControl<Image>(nameof(imgIcon));
 
         msgAlpha = msg.color.a;
         imgIconAlpha = imgIcon.color.a;

@@ -16,9 +16,6 @@ public class BattleInputHandler : SingletonAutoMono<BattleInputHandler>
     private bool _isDragging;
     // 滑动阈值
     private const float DragThreshold = 100f;
-    // 是否启用
-    //private bool _isEnable;
-
     // 当前选择的技能ID
     private int skillId;
 

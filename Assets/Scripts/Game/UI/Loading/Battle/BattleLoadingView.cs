@@ -1,21 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
+using Framework;
 using TMPro;
-using UnityEngine;
 using UnityEngine.UI;
 
 public class BattleLoadingView : UIView
 {
-    private Slider sliderLoading;
-    private TextMeshProUGUI txtLoading;
-
-    protected override void Awake()
-    {
-        base.Awake();
-
-        sliderLoading = binder.GetControl<Slider>(nameof(sliderLoading));
-        txtLoading = binder.GetControl<TextMeshProUGUI>(nameof(txtLoading));
-    }
+    [Inject] private Slider sliderLoading;
+    [Inject] private TextMeshProUGUI txtLoading;
 
     public override void UpdateView(string key, object value)
     {

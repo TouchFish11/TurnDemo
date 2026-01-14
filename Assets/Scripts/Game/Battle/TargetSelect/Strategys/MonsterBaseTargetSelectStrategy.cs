@@ -6,11 +6,14 @@ using UnityEngine;
 /// </summary>
 public class MonsterBaseTargetSelectStrategy : ITargetSelectStrategy
 {
+    public int Priority => 0;
+
     public IBattleEntityObject SelectMainTarget(IBattleContext context, IBattleEntityObject caster, SkillInfo skillInfo)
     {
         // Ëæ»úÑ¡Ôñ
-        int count = context.GetPlayerObjects().Count;
+        var players = context.GetLivePlayerObjects();
+        int count = players.Count;
         int index = Random.Range(0, count);
-        return context.GetPlayerObjects()[index];
+        return players[index];
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -80,6 +81,26 @@ public class UIComponentBinder
             {
                 if (uiList[i].GetType() == typeof(T))
                     return uiList[i] as T;
+            }
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// »ñÈ¡¿Ø¼þ
+    /// </summary>
+    /// <param name="controlName"></param>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    public object GetControl(string controlName, Type type)
+    {
+        if (controlDic.ContainsKey(controlName))
+        {
+            List<UIBehaviour> uiList = controlDic[controlName];
+            for (int i = 0; i < uiList.Count; i++)
+            {
+                if (uiList[i].GetType() == type)
+                    return uiList[i];
             }
         }
         return null;

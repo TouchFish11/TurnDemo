@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using Framework;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,17 +7,9 @@ using UnityEngine.UI;
 /// </summary>
 public class GlobalMessageView : UIView
 {
-    private ScrollRect svMsg;
+    [Inject] private ScrollRect svMsg;
 
     public Transform MessageContainer => svMsg.content;
-
-    protected override void Awake()
-    {
-        base.Awake();
-
-        svMsg = binder.GetControl<ScrollRect>(nameof(svMsg));
-    }
-
 
     public override void UpdateView(string key, object value)
     {

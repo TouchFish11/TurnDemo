@@ -1,11 +1,8 @@
 using Framework;
 using Game;
 using Game.Battle;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,59 +13,44 @@ using UnityEngine.UI;
 public class RoleStateUI : BaseUIBehaviour
 {
     // UI控件相关
-    private Image imgIcon;
-    private Image imgFade;
-    private Image imgHp;
-    private Image imgEnergy;
-    private Image imgShield;
-    private ScrollRect svBuffBox;
-    private TextMeshProUGUI txtBlood;
+    [Inject] private Image imgIcon;
+    [Inject] private Image imgFade;
+    [Inject] private Image imgHp;
+    [Inject] private Image imgEnergy;
+    [Inject] private Image imgShield;
+    [Inject] private ScrollRect svBuffBox;
+    [Inject] private TextMeshProUGUI txtBlood;
 
-    private readonly float fadeSpeed = 1f;    // 血量渐变因子
-
+    // 血量渐变因子
+    private readonly float fadeSpeed = 1f;    
     // 护盾相关
     private int currentShield;
     private int maxShield;
-
     // 能量相关
     private float nonFullAhpha = 0.35f;
-
-    // 技能相关
-    private int ultimateSkillId;    // 终结技技能ID
-
+    // 终结技技能ID
+    private int ultimateSkillId;    
     // 角色相关
     private int roleId;
-
     // 是否触发了终结技，防止重复触发
     private bool isTriggerUltimate;
+    // 战斗上下文接口
+    private IBattleContext battleContext;
+    // 战斗实体接口
+    private IBattleEntityObject battleEntity;
+    // 状态UI列表
+    private readonly List<StatusGridUI> statusGridUIs = new List<StatusGridUI>();
 
     /// <summary>
     /// 关联角色ID
     /// </summary>
     public int RoleId => roleId;
 
-    // 战斗上下文接口
-    private IBattleContext battleContext;
-    // 战斗实体接口
-    private IBattleEntityObject battleEntity;
-
-    // 状态UI列表
-    private readonly List<StatusGridUI> statusGridUIs = new List<StatusGridUI>();
-
     protected override void Awake()
     {
         base.Awake();
 
-        imgIcon = binder.GetControl<Image>(nameof(imgIcon));
-        imgFade = binder.GetControl<Image>(nameof(imgFade));
-        imgHp = binder.GetControl<Image>(nameof(imgHp));
-        imgEnergy = binder.GetControl<Image>(nameof(imgEnergy));
-        imgShield = binder.GetControl<Image>(nameof(imgShield));
-        svBuffBox = binder.GetControl<ScrollRect>(nameof(svBuffBox));
-        txtBlood = binder.GetControl<TextMeshProUGUI>(nameof(txtBlood));
-
         battleContext = ServiceLocator.Get<IBattleManager>().GetContext();
-
         // 监听战斗相关事件
         battleContext.GetEventBus().AddListener<HpChangedEvent>(OnHpChanged);
         battleContext.GetEventBus().AddListener<ShieldChangedEvent>(OnShieldChanged);

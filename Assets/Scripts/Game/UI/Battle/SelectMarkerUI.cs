@@ -1,6 +1,4 @@
 using Framework;
-using Game.Battle;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,8 +8,6 @@ using UnityEngine.UI;
 /// </summary>
 public class SelectMarkerUI : BaseUIBehaviour
 {
-    // 图像UI列表
-    private readonly List<Image> images = new List<Image>();
     //标记偏移
     [SerializeField] private Vector2 markerOffset;
     //标记旋转速度
@@ -21,12 +17,12 @@ public class SelectMarkerUI : BaseUIBehaviour
     //标记脉冲缩放
     [SerializeField] private float markerPulseScale;
 
+    // 图像UI列表
+    private readonly List<Image> images = new List<Image>();
     // 起始旋转
     private Quaternion originQuaterion;
-    private Vector3 originScale;
-
     // 起始缩放
-
+    private Vector3 originScale;
     // 标记颜色相关
     private Color enermyRed = Color.red;
     private Color friendBlue = Color.blue;

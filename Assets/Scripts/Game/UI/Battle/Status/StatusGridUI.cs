@@ -1,6 +1,5 @@
+using Framework;
 using Game.Battle;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,21 +9,16 @@ using UnityEngine.UI;
 /// </summary>
 public class StatusGridUI : BaseUIBehaviour
 {
-    private Image imgIcon;
-    private Image imgBuffOrDeBuff;
-    private TextMeshProUGUI txtPine;
+    [Inject] private Image imgIcon;
+    [Inject] private Image imgBuffOrDeBuff;
+    [Inject] private TextMeshProUGUI txtPine;
 
     private IStatus status;
-
     private int currentPine;
 
-    protected override void Awake()
+    protected override void OnEnable()
     {
-        base.Awake();
-
-        imgIcon = binder.GetControl<Image>(nameof(imgIcon));
-        imgBuffOrDeBuff = binder.GetControl<Image>(nameof(imgBuffOrDeBuff));
-        txtPine = binder.GetControl<TextMeshProUGUI>(nameof(txtPine));
+        ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
     }
 
     /// <summary>
@@ -53,7 +47,7 @@ public class StatusGridUI : BaseUIBehaviour
         }
     }
 
-    private void Update()
+    private void OnUpdate()
     {
         if (currentPine == status.StatusProperty.CurrentPine)
         {
@@ -62,6 +56,11 @@ public class StatusGridUI : BaseUIBehaviour
 
         txtPine.text = status.StatusProperty.CurrentPine.ToString();
         this.currentPine = status.StatusProperty.CurrentPine;
+    }
+
+    protected override void OnDisable()
+    {
+        ServiceLocator.Get<IMonoManager>().RemoveUpdateListener(OnUpdate);
     }
 
     public int GetStatusId() => status.StatusProperty.StatusInfo.f_id;

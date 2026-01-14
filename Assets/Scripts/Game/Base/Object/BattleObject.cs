@@ -22,7 +22,7 @@ namespace Game
 
         public int EntityPosIndex { get; set; }
 
-        public bool IsDead { get; protected set; }
+        public bool IsDead => GetComponent<PropertyComponent>().GetPropertyValue(E_DynamicPropertyType.CurrentHp) <= 0;
 
         // 行动次数
         protected int actCount;
@@ -100,18 +100,13 @@ namespace Game
             if (currentHp <= 0)
             {
                 propertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentHp, 0);
-                Die();
             }
         }
 
         /// <summary>
         /// 死亡
         /// </summary>
-        protected virtual void Die()
-        {
-            // 改变标识
-            IsDead = true;
-        }
+        public abstract IEnumerator Die();
 
         /// <summary>
         /// 执行行动

@@ -1,7 +1,5 @@
 using Framework;
 using Game.Battle;
-using System;
-using System.Collections.Generic;
 
 /// <summary>
 /// 战斗UI调度器
@@ -17,81 +15,57 @@ public class BattleUIScheduler : SingletonAutoMono<BattleUIScheduler>
     }
 
     /// <summary>
-    /// 显示终结技角色立绘
+    /// 终结技触发时UI变化
+    /// 显示终结技角色立绘、隐藏行动提示
     /// </summary>
     /// <param name="caster"></param>
     /// <param name="skillInfo"></param>
-    public void ShowUltimatePaiting(IBattleEntityObject caster, SkillInfo skillInfo)
+    public void UltimateTriggerChangeUI(IBattleEntityObject caster, SkillInfo skillInfo)
     {
         // 显示角色立绘
         battleController.GetBattleUI().ShowPaiting(skillInfo);
+        // 隐藏行动提示
+        battleController.GetBattleUI().SetActTipActive(BattleUIManager.E_ActTipType.Hide);
         // 更新终结技UI显示
         battleController.GetBattleUI().UpdateOperator(caster, IFactory.GetTypeInstance<SkillKeyUIDataProviderFactory, UltimateSkillKeyUIDataProvider>());
-    }
-
-    /// <summary>
-    /// 更新命令排队显示
-    /// </summary>
-    /// <param name="iconPaths"></param>
-    public void UpdateWaitingCommmand(List<string> iconPaths)
-    {
-        battleController.GetBattleUI().UpdateWaitingCommmand(iconPaths);
-    }
-
-    /// <summary>
-    /// 更新累计伤害UI
-    /// </summary>
-    /// <param name="isShow"></param>
-    /// <param name="dmg"></param>
-    public void UpdateCumulativeDamage(bool isShow, int dmg)
-    {
-        battleController.GetBattleUI().UpdateCumulativeDamage(isShow, dmg);
-    }
-
-    /// <summary>
-    /// 清理活跃的伤害文本
-    /// </summary>
-    public void ClearActiveDamageTextUI()
-    {
-        battleController.GetBattleUI().ClearActiveDamageTextUI();
-    }
-
-    /// <summary>
-    /// 更新相机和标记和怪物UI
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="battleEntity"></param>
-    /// <param name="skillInfo"></param>
-    public async void UpdateCameraAndMarkerAndMonsterUI(IBattleContext context, IBattleEntityObject battleEntity, SkillInfo skillInfo)
-    {
-        // 激活玩家相机，传入的必须是玩家对象
-        BattlePoint.Instance.ActiveCamera(battleEntity);
-        // 相机看向释放攻击的玩家
-        battleEntity.Context.GetTurnManager().UpdateEntityLookAt(battleEntity);
-        // 更新目标选择
-        ServiceLocator.Get<ITargetSelectManager>().ReSelectTarget(context, battleEntity, skillInfo);
         // 更新怪物血条位置
-        await ServiceLocator.Get<IUIManager>().GetView<BattleController>().GetUIInitializer().InitMonsterUI(context.GetMonsterObjects());
+        battleController.GetUIInitializer().InitMonsterUI(caster.Context.GetMonsterObjects());
     }
 
     /// <summary>
     /// 更新相机和隐藏标记、怪物UI
+    /// 怪物行动前调用
     /// </summary>
     /// <param name="context"></param>
     /// <param name="target"></param>
-    public async void UpdateCameraAndHideMarkerAndMonsterUI(IBattleContext context, IBattleEntityObject target)
+    public void UpdateCameraAndHideMarkerAndMonsterUI(IBattleContext context, IBattleEntityObject target)
     {
-        // 激活相机
+        // 激活被攻击的玩家相机
         BattlePoint.Instance.ActiveCamera(target);
         // 相互看向、看向攻击的玩家
         context.GetTurnManager().UpdateEntityLookAt(target);
         // 隐藏怪物UI
-        await ServiceLocator.Get<IUIManager>().GetView<BattleController>().GetUIInitializer().InitMonsterUI(null);
-        // 更新行动提示
-        battleController.GetBattleUI().HideOperator(true);
-        // 禁用选择
-        //ServiceLocator.Get<ITargetSelectManager>().InActiveSelectTarget();
-        // 清理标记
-        //await ServiceLocator.Get<IUIManager>().GetView<BattleController>().GetBattleUI().UpdateTargetMarker(null);
+        ServiceLocator.Get<IUIManager>().GetView<BattleController>().GetUIInitializer().InitMonsterUI(null);
+        // 禁用目标选择
+        ServiceLocator.Get<ITargetSelectManager>().InActiveSelectTarget();
+        // 清除标记UI
+        battleController.GetBattleUI().ClearSelectMarker();
+        // 隐藏玩家UI
+        battleController.GetBattleUI().SetOperator(null);
+        // 设置为怪物行动提示
+        battleController.GetBattleUI().SetActTipActive(BattleUIManager.E_ActTipType.Monster);
     }
+
+    /// <summary>
+    /// 终结技释放时
+    /// </summary>
+    public void UltimateCasting()
+    {
+        // 清除标记UI
+        battleController.GetBattleUI().ClearSelectMarker();
+        battleController.GetBattleUI().SetOperator(null);
+        battleController.GetBattleUI().SetActTipActive(BattleUIManager.E_ActTipType.Hide);
+    }
+
+    public BattleController BattleController => battleController;
 }

@@ -7,7 +7,7 @@ using UnityEngine;
 /// <summary>
 /// Ê·À³Ä·¼¼ÄÜ
 /// </summary>
-public class SlimeSkill : Skill
+public class SlimeSkill : MonsterSkill
 {
     private static WaitForSeconds _waitForSeconds0_3 = new WaitForSeconds(0.3f);
 

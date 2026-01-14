@@ -1,5 +1,4 @@
 using Framework;
-using Game;
 using Game.Battle;
 using System.Collections;
 using System.Collections.Generic;
@@ -26,6 +25,8 @@ public abstract class Skill : ISkill
 
     public IStatusAddStrategy StatusAddStrategy { get; private set; }
 
+    public ITargetSelectStrategy TargetSelectStrategy { get; private set; }
+
     // buffId数组
     protected int[] statusIds;
     private readonly float waitTime = 0.85f;
@@ -34,8 +35,6 @@ public abstract class Skill : ISkill
     /// 伤害次数
     /// </summary>
     protected abstract int DmgCount { get; set; }
-
-
 
     // 当前伤害次数
     protected int currentDmgCount;
@@ -58,7 +57,25 @@ public abstract class Skill : ISkill
         AllTargets = allTargets;
     }
 
-    // 一定是通过技能对象实例来驱动角色释放技能行为的
+    public void SetTargetSelectStrategy(ITargetSelectStrategy targetSelectStrategy)
+    {
+        TargetSelectStrategy = targetSelectStrategy;
+    }
+
+    /// <summary>
+    /// 技能释放前
+    /// 进行目标选择、初始化技能目标
+    /// 先调用父类虚方法
+    /// </summary>
+    /// <param name="context"></param>
+    protected virtual void OnPreCast(IBattleContext context)
+    {
+        // 选择目标
+        ServiceLocator.Get<ITargetSelectManager>().SelectTarget(context, Caster, SkillInfo, TargetSelectStrategy);
+        // 初始化技能目标
+        ServiceLocator.Get<ISkillManager>().InitSkillTarget(this);
+    }
+
     public IEnumerator Cast(IBattleContext context)
     {
         // 技能释放前
@@ -69,23 +86,6 @@ public abstract class Skill : ISkill
         yield return new WaitForSeconds(waitTime);
         // 释放结束后处理
         yield return OnPostCast();
-    }
-
-    /// <summary>
-    /// 技能释放前
-    /// 执行通用逻辑，可重写覆盖（不调用）基类方法
-    /// </summary>
-    /// <param name="context"></param>
-    protected virtual void OnPreCast(IBattleContext context)
-    {
-        /// TODO：暂时这样判断
-        if (Caster is PlayerObject)
-        {
-            // 处理战技点
-            context.ConsumeSkillPoint(SkillInfo.f_costBP);
-            // 隐藏UI
-            context.GetEventBus().TriggerEvent(new PlayerReleaseSkillEvent(context));
-        }
     }
 
     /// <summary>
@@ -106,36 +106,21 @@ public abstract class Skill : ISkill
         currentDmgCount = DmgCount;
 
         // TODO：考虑移动到SkillCastPostHandler中
-        /* ----------------- */
         // 清空战斗界面显示的伤害总文本
-        BattleUIScheduler.Instance.ClearActiveDamageTextUI();
+        BattleUIScheduler.Instance.BattleController.GetBattleUI().ClearActiveDamageTextUI();
         // 清空总伤害累计显示UI
-        BattleUIScheduler.Instance.UpdateCumulativeDamage(false, 0);
-        /* ----------------- */
+        BattleUIScheduler.Instance.BattleController.GetBattleUI().UpdateCumulativeDamage(false, 0);
 
         yield return SkillCastPostHandler.OnHnadle(this);
     }
 
     /// <summary>
     /// 技能释放攻击后恢复能量
+    /// 子类调用，在造成伤害的时候恢复能量
     /// </summary>
     protected virtual void RecoverEnergy()
     {
         int newValue = PropertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentEnergy);
         PropertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentEnergy, newValue + SkillInfo.f_recoveryEnergy);
-    }
-
-    /// <summary>
-    /// 测试
-    /// </summary>
-    /// <param name="battleEntity"></param>
-    /// <param name="count"></param>
-    public void MulTest(IBattleEntityObject battleEntity, int count)
-    {
-        for (int i = 0; i < count; i++)
-        {
-            DamageCalcManager.CalcSkillDamage(Caster, battleEntity, this.SkillInfo, out DamageResult result);
-            battleEntity.TakeDamage(result);
-        }
     }
 }

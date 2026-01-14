@@ -9,19 +9,18 @@ using UnityEngine.UI;
 /// </summary>
 public class ActionGridUI : BaseUIBehaviour
 {
-    private Image imgSelect;
-    private Image imgIcon;
-    private TextMeshProUGUI txtActionValue;
-    private GameObject flashing;
+    [Inject] private Image imgSelect;
+    [Inject] private Image imgIcon;
+    [Inject] private TextMeshProUGUI txtActionValue;
+    [Inject] private RectTransform Flashing { get; set; }
 
+    private RectTransform imgSelectRect;
     // 图片数组
     private Image[] images;
     // 当前透明度
     private float currentAlpha = 1f;
     // 当前计时
     private float time;
-    // 改用RectTransform而非Transform
-    private RectTransform imgSelectRect;
     // 缓存初始预设位置
     private Vector3 initLocalPos; 
     // 战斗实体
@@ -45,18 +44,14 @@ public class ActionGridUI : BaseUIBehaviour
     protected override void Awake()
     {
         base.Awake();
-        imgSelect = binder.GetControl<Image>(nameof(imgSelect));
-        // 获取RectTransform
-        imgSelectRect = imgSelect.GetComponent<RectTransform>();
-        // 缓存预制体设置的初始位置
-        initLocalPos = imgSelectRect.localPosition;
-        imgSelect.gameObject.SetActive(false);
 
-        imgIcon = binder.GetControl<Image>(nameof(imgIcon));
-        txtActionValue = binder.GetControl<TextMeshProUGUI>(nameof(txtActionValue));
-        flashing = this.transform.Find(nameof(flashing)).gameObject;
-        images = flashing.GetComponentsInChildren<Image>();
-        flashing.SetActive(false);
+        // 缓存预制体设置的初始位置
+        imgSelectRect = imgSelect.rectTransform;
+        initLocalPos = imgSelectRect.localPosition;
+
+        imgSelect.gameObject.SetActive(false);
+        images = Flashing.GetComponentsInChildren<Image>();
+        Flashing.gameObject.SetActive(false);
     }
 
     protected override void OnEnable()
@@ -116,7 +111,7 @@ public class ActionGridUI : BaseUIBehaviour
     private void SetFlashing()
     {
         time = 0;
-        flashing.SetActive(isSelect);
+        Flashing.gameObject.SetActive(isSelect);
         foreach (var image in images)
         {
             image.color = Color.white;

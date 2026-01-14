@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// 终结技技能
 /// </summary>
-public abstract class UltimateSkill : Skill
+public abstract class UltimateSkill : PlayerSkill
 {
     private ISkillComponent skillComponent;
 
@@ -23,8 +23,10 @@ public abstract class UltimateSkill : Skill
         yield return new WaitUntil(() => skillComponent.IsRelease);
         // 确定技能作用目标
         ServiceLocator.Get<ISkillManager>().InitSkillTarget(this);
-        // 隐藏UI
-        ServiceLocator.Get<IUIManager>().GetView<BattleController>().GetBattleUI().HideOperator(false);
+        // 禁用目标选择
+        ServiceLocator.Get<ITargetSelectManager>().InActiveSelectTarget();
+        // 隐藏相关UI内容
+        BattleUIScheduler.Instance.UltimateCasting();
         // 终结技释放
         yield return OnUltimateCast(context);
     }
@@ -35,10 +37,16 @@ public abstract class UltimateSkill : Skill
     /// <param name="context"></param>
     protected virtual void OnPreUltimateCast(IBattleContext context)
     {
-        // 显示立绘
-        BattleUIScheduler.Instance.ShowUltimatePaiting(Caster, SkillInfo);
-        // 更新界面UI显示
-        BattleUIScheduler.Instance.UpdateCameraAndMarkerAndMonsterUI(context, Caster, SkillInfo);
+        // 激活玩家相机
+        BattlePoint.Instance.ActiveCamera(Caster);
+        // 更新看向
+        context.GetTurnManager().UpdateEntityLookAt(Caster);
+        // 激活目标选择
+        ServiceLocator.Get<ITargetSelectManager>().ActiveSelectTarget();
+        // 主动更新目标选择
+        ServiceLocator.Get<ITargetSelectManager>().SelectTarget(context, Caster, SkillInfo, IFactory.GetTypeInstance<TargetSelectStrategyFactory, PlayerBaseTargetSelectStrategy>());
+        // 更新终结技相关UI显示
+        BattleUIScheduler.Instance.UltimateTriggerChangeUI(Caster, SkillInfo);
         // 暂时清空能量，更新能量显示
         PropertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentEnergy, 0);
     }

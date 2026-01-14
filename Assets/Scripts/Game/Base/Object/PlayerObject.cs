@@ -71,12 +71,11 @@ namespace Game
             this.GetComponent<PlayerSkillComponent>().CastSkill(playerTriggerUltimateSkillEvent.SkillId);
         }
 
-        protected override void Die()
+        public override IEnumerator Die()
         {
-            base.Die();
-
             // ÕÊº“≤•∑≈À¿Õˆ∂Øª≠
-            AnimationPlayManager.Instance.WaitForAnimOver(this.GetComponent<BattleAnimationComponent>(), E_AnimationType.Death, null);
+            AnimationPlayManager.Instance.PlayAnimationOver(this.GetComponent<BattleAnimationComponent>(), E_AnimationType.Death, null);
+            yield break;
         }
     }
 }

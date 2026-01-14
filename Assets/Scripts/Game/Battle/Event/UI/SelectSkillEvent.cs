@@ -20,10 +20,13 @@ namespace Game.Battle
         /// </summary>
         public IBattleEntityObject Caster { get; private set; }
 
-        public SelectSkillEvent(IBattleContext context, int skillId, IBattleEntityObject caster) : base(context)
+        public ITargetSelectStrategy TargetSelectStrategy { get; }
+
+        public SelectSkillEvent(IBattleContext context, int skillId, IBattleEntityObject caster, ITargetSelectStrategy targetSelectStrategy) : base(context)
         {
             SkillId = skillId;
             Caster = caster;
+            TargetSelectStrategy = targetSelectStrategy;
         }
     }
 }

@@ -384,7 +384,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7348237960507140015}
   m_Layer: 5
-  m_Name: selectMarkerArea
+  m_Name: SelectMarkerArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -630,7 +630,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3413992152133500025}
   m_Layer: 5
-  m_Name: monsterStateArea
+  m_Name: MonsterStateArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1039,18 +1039,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3022034805143376616}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7375799814154633474}
-  m_Father: {fileID: 3014319626000440773}
+  m_Father: {fileID: 3402032527778207975}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -281.43, y: -112.149994}
-  m_SizeDelta: {x: -1099.1, y: 77.656}
+  m_AnchoredPosition: {x: -0.00024414062, y: -38.828957}
+  m_SizeDelta: {x: 0.00012207031, y: 77.656}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5356337933142008840
 CanvasRenderer:
@@ -1241,7 +1241,7 @@ GameObject:
   - component: {fileID: 1342082114438881873}
   - component: {fileID: 5890256608976198920}
   m_Layer: 5
-  m_Name: actingTipArea
+  m_Name: ActingTipArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1294,7 +1294,7 @@ GameObject:
   - component: {fileID: 6206309132236011820}
   - component: {fileID: 6478767890407014031}
   m_Layer: 5
-  m_Name: battlePoint
+  m_Name: BattlePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1821,8 +1821,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 3402032527778207975}
   - {fileID: 6066877282855094342}
-  - {fileID: 4715545302150040845}
   - {fileID: 8548138247954230558}
   - {fileID: 4702276963357742447}
   - {fileID: 8559457194419132631}
@@ -2201,7 +2201,7 @@ GameObject:
   - component: {fileID: 7222963179146745327}
   - component: {fileID: 7505252916538791621}
   m_Layer: 5
-  m_Name: operatorArea
+  m_Name: OperatorArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2441,7 +2441,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1811720050653680937}
   m_Layer: 5
-  m_Name: damageTextBox
+  m_Name: DamageTextBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2479,7 +2479,7 @@ GameObject:
   - component: {fileID: 3858918075035599352}
   - component: {fileID: 8114223737382138709}
   m_Layer: 5
-  m_Name: playerArea
+  m_Name: PlayerArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2578,7 +2578,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7818517631065989571}
   m_Layer: 5
-  m_Name: paintingDisplayArea
+  m_Name: PaintingDisplayArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2799,7 +2799,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6066877282855094342}
   m_Layer: 5
-  m_Name: actionBarArea
+  m_Name: ActionBarArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2901,6 +2901,42 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &7797032086173391454
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3402032527778207975}
+  m_Layer: 5
+  m_Name: WaitQueueArea
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &3402032527778207975
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7797032086173391454}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4715545302150040845}
+  m_Father: {fileID: 3014319626000440773}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 678.5703, y: 427.85}
+  m_SizeDelta: {x: 820.9, y: 77.658}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8284144162904623255
 GameObject:
   m_ObjectHideFlags: 0
@@ -3099,7 +3135,7 @@ GameObject:
   - component: {fileID: 7458394365342230107}
   - component: {fileID: 8882014806153244477}
   m_Layer: 5
-  m_Name: totalDmgArea
+  m_Name: TotalDmgArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

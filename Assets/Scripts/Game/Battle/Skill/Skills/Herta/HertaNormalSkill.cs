@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Herta∆’π•
 /// </summary>
-public class HertaNormalSkill : Skill
+public class HertaNormalSkill : PlayerSkill
 {
     private static WaitForSeconds _waitForSeconds0_35 = new WaitForSeconds(0.35f);
 

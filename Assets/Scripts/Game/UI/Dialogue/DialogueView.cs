@@ -1,4 +1,4 @@
-using System.Collections;
+using Framework;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -9,33 +9,24 @@ using UnityEngine.UI;
 /// </summary>
 public class DialogueView : UIView
 {
-    private TextMeshProUGUI txtSpeakerName;
-    private TextMeshProUGUI txtTip;
-    private TextMeshProUGUI txtDialogue;
-    private Text txtAuto;
+    [Inject] private ScrollRect svReview;
+    [Inject] private TextMeshProUGUI txtSpeakerName;
+    [Inject] private TextMeshProUGUI txtTip;
+    [Inject] private TextMeshProUGUI txtDialogue;
+    [Inject] private Text txtAuto;
     // 对话框
-    private Transform dialogueBox;
+    [Inject] private RectTransform dialogueBox;
     // 选项框
-    private Transform dialogueOptBox;
+    [Inject] private RectTransform dialogueOptBox;
     // 剧情回顾子界面
-    private Transform storyReviewSubView;
+    [Inject] private RectTransform storyReviewSubView;
     // 剧情回顾子界面容器
-    private Transform storyReviewContent;
+    private RectTransform storyReviewContent;
 
     protected override void Awake()
     {
         base.Awake();
-
-        txtSpeakerName = binder.GetControl<TextMeshProUGUI>(nameof(txtSpeakerName));
-        txtTip = binder.GetControl<TextMeshProUGUI>(nameof(txtTip));
-        txtDialogue = binder.GetControl<TextMeshProUGUI>(nameof(txtDialogue));
-        txtAuto = binder.GetControl<Text>(nameof(txtAuto));
-
-        dialogueOptBox = binder.GetControl<VerticalLayoutGroup>(nameof(dialogueOptBox)).transform;
-        dialogueBox = this.transform.Find(nameof(dialogueBox));
-
-        storyReviewSubView = this.GetComponentInChildren<StoryReviewView>().transform;
-        storyReviewContent = binder.GetControl<ScrollRect>("svReview").content;
+        storyReviewContent = svReview.content;
     }
 
     public override void UpdateView(string key, object value)

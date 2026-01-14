@@ -47,13 +47,17 @@ namespace Game.Battle
         /// 状态添加策略
         /// </summary>
         IStatusAddStrategy StatusAddStrategy { get; }
+        
+        /// <summary>
+        /// 目标选择策略
+        /// </summary>
+        ITargetSelectStrategy TargetSelectStrategy { get; }
 
         /// <summary>
         /// 释放技能
+        /// 通过技能对象实例来驱动角色释放技能行为的
         /// </summary>
         /// <param name="context"></param>
-        /// <param name="caster"></param>
-        /// <param name="targets"></param>
         IEnumerator Cast(IBattleContext context);
 
         /// <summary>
@@ -62,5 +66,11 @@ namespace Game.Battle
         /// <param name="mainTarget"></param>
         /// <param name="allTargets"></param>
         void Init(IBattleEntityObject mainTarget, List<IBattleEntityObject> allTargets);
+
+        /// <summary>
+        /// 设置目标选择策略
+        /// </summary>
+        /// <param name="targetSelectStrategy"></param>
+        void SetTargetSelectStrategy(ITargetSelectStrategy targetSelectStrategy);
     }
 }

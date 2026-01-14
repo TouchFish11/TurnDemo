@@ -1,7 +1,4 @@
 using Framework;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -10,10 +7,10 @@ using UnityEngine;
 /// </summary>
 public class DamageTextUI : BaseUIBehaviour
 {
-    private TextMeshProUGUI txtDamageTip;
-    private TextMeshProUGUI txtDamageNum;
+    [Inject] private TextMeshProUGUI txtDamageTip;
+    [Inject] private TextMeshProUGUI txtDamageNum;
 
-    private Transform damageTextMover;
+    [Inject] private RectTransform damageTextMover;
 
     // 上移速度
     [SerializeField] private float upMoveSpeed = 2.5f;
@@ -35,14 +32,6 @@ public class DamageTextUI : BaseUIBehaviour
     // 当前透明度
     private float currentAlpha;
 
-    protected override void Awake()
-    {
-        base.Awake();
-
-        txtDamageTip = binder.GetControl<TextMeshProUGUI>(nameof(txtDamageTip));
-        txtDamageNum = binder.GetControl<TextMeshProUGUI>(nameof(txtDamageNum));
-        damageTextMover = this.transform.Find(nameof(damageTextMover));
-    }
 
     protected override void OnEnable()
     {

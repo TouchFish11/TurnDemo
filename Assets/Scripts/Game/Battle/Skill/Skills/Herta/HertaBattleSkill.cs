@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Herta’Ωºº
 /// </summary>
-public class HertaBattleSkill : Skill
+public class HertaBattleSkill : PlayerSkill
 {
     private readonly string battleAttackState = "BattleAttack";
 

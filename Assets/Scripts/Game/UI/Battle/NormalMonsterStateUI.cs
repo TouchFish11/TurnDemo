@@ -1,8 +1,6 @@
 using Framework;
 using Game.Battle;
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,31 +9,28 @@ using UnityEngine.UI;
 /// </summary>
 public class NormalMonsterStateUI : BaseUIBehaviour
 {
-    // 血量相关
-    private Image imgFade;  // 渐变血条
-    private Image imgHp;    // 血条
-    [SerializeField] private float fadeSpeed;    // 渐变速度
+    // 渐变血条
+    [Inject] private Image imgFade;
+    // 血条                                
+    [Inject] private Image imgHp;
+    // 韧性条
+    [Inject] private Image imgToughness;
+    // 弱点栏
+    [Inject] private RectTransform weaknessBar;
 
-    // 韧性相关
-    private Image imgToughness; // 韧性条
+    // 渐变速度
+    [SerializeField] private float fadeSpeed;
 
-    // 弱点相关
-    private Transform weaknessBar;  // 弱点栏
-    private readonly List<Image> weakneses = new List<Image>();  // 弱点图标列表
-
+    // 弱点图标列表
+    private readonly List<Image> weakneses = new List<Image>();  
     // 战斗实体接口
     private IBattleEntityObject battleEntity;
+
+    public IBattleEntityObject BattleEntity => battleEntity;
 
     protected override void Awake()
     {
         base.Awake();
-
-        imgFade = binder.GetControl<Image>(nameof(imgFade));
-        imgHp = binder.GetControl<Image>(nameof(imgHp));
-
-        imgToughness = binder.GetControl<Image>(nameof(imgToughness));
-
-        weaknessBar = this.transform.Find(nameof(weaknessBar));
 
         // 监听事件
         ServiceLocator.Get<IBattleManager>().GetContext().GetEventBus().AddListener<HpChangedEvent>(OnHpChangedEvent);

@@ -1,4 +1,5 @@
 
+using System.Collections;
 using UnityEngine;
 
 namespace Game.Battle
@@ -99,5 +100,11 @@ namespace Game.Battle
         /// 减少行动次数
         /// </summary>
         void SubActCount();
+
+        /// <summary>
+        /// 死亡
+        /// 实体死亡逻辑
+        /// </summary>
+        IEnumerator Die();
     }
 }

@@ -2,10 +2,9 @@ using Framework;
 using Game;
 using Game.Battle;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class TurtleShellSkill : Skill
+public class TurtleShellSkill : MonsterSkill
 {
     private static WaitForSeconds _waitForSeconds0_8 = new WaitForSeconds(0.8f);
 
@@ -45,7 +44,7 @@ public class TurtleShellSkill : Skill
             yield return null;
         }
 
-        yield return AnimationPlayManager.Instance.PlayAnimation(Caster, (E_AnimationType)SkillInfo.f_animationType, "Attack", OnAttack, TextUtility.SplitTofloatArr(SkillInfo.f_dmgTimes, 2));
+        yield return AnimationPlayManager.Instance.PlayAnimation(Caster, (E_AnimationType)SkillInfo.f_animationType, nameof(Attack), OnAttack, TextUtility.SplitTofloatArr(SkillInfo.f_dmgTimes, 2));
 
         // 优化表现
         yield return _waitForSeconds0_8;

@@ -19,10 +19,6 @@ public class TestMonsterSkill : Skill
         // ²¥·Å¶¯»­
         context.GetEventBus().TriggerEvent(new SkillCastEvent(context, this, 0));
 
-        foreach (IBattleEntityObject battleEntity in AllTargets)
-        {
-            MulTest(battleEntity, 1);
-        }
 
         yield break;
     }

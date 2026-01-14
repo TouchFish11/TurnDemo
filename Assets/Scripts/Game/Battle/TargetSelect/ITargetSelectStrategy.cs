@@ -1,13 +1,16 @@
 using Game.Battle;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 /// <summary>
 /// 目标选择策略接口
 /// </summary>
 public interface ITargetSelectStrategy
 {
+    /// <summary>
+    /// 优先级
+    /// 越高越先执行
+    /// </summary>
+    public int Priority { get; }
+
     /// <summary>
     /// 选择主目标
     /// </summary>

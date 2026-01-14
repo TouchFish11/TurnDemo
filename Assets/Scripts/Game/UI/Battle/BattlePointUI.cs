@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.EventSystems;
+using Framework;
 using UnityEngine.UI;
 
 /// <summary>
@@ -9,13 +6,7 @@ using UnityEngine.UI;
 /// </summary>
 public class BattlePointUI : BaseUIBehaviour
 {
-    private Image imgHas;
-
-    protected override void Awake()
-    {
-        base.Awake();
-        imgHas = binder.GetControl<Image>(nameof(imgHas));
-    }
+    [Inject] private Image imgHas;
 
     /// <summary>
     /// 设置点活动状态

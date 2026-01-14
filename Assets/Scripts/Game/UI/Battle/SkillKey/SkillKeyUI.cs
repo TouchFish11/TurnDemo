@@ -1,8 +1,5 @@
 using Framework;
 using Game.Battle;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -32,15 +29,13 @@ public class SkillKeyUI : BaseUIBehaviour
         Trigger,
     }
 
-    private Toggle togSkillKeyUI;
-    private TextMeshProUGUI txtSkillTip;
+    [Inject] private TextMeshProUGUI txtSkillTip;
 
+    private Toggle togSkillKeyUI;
     // 选择时的缩放比例
     private readonly Vector3 SelectedScale = Vector3.one * 1.3f;
     // 技能ID
     private int skillId;
-    //// 角色信息
-    //private RoleInfo roleInfo;
     // 能否触发技能
     private E_TriggerPhase triggerPhase = E_TriggerPhase.NonSeleceted;
     // 战斗上下文接口
@@ -53,8 +48,10 @@ public class SkillKeyUI : BaseUIBehaviour
     protected override void Awake()
     {
         base.Awake();
+
+        // Toggle和脚本在同一个对象上，由于是通过名字查找，所以无法处理同名字段
         togSkillKeyUI = binder.GetControl<Toggle>(this.gameObject.name);
-        txtSkillTip = binder.GetControl<TextMeshProUGUI>(nameof(txtSkillTip));
+
         UIManager.AddCustomEventListener(this, EventTriggerType.PointerClick, OnClick);
         battleContext = ServiceLocator.Get<IBattleManager>().GetContext();
     }
@@ -71,7 +68,7 @@ public class SkillKeyUI : BaseUIBehaviour
         txtSkillTip.text = skillInfo.f_skillRangeType.ToSkillRangeTypeText();
 
         // TODO：暂时直接判断，后续抽象
-        _SkillType = (E_SkillType)skillInfo.f_skillRangeType;
+        _SkillType = (E_SkillType)skillInfo.f_SkillType;
         if (_SkillType == E_SkillType.NormalAttack || _SkillType == E_SkillType.UltimateSkill)
         {
             // 自身技能默认选中
@@ -84,8 +81,6 @@ public class SkillKeyUI : BaseUIBehaviour
     /// </summary>
     public void DefaultSelect()
     {
-        // 激活目标标记
-        TargetSelectManager.Instance.ActiveSelectTarget();
         togSkillKeyUI.isOn = true;
     }
 
@@ -107,7 +102,7 @@ public class SkillKeyUI : BaseUIBehaviour
                 // 选中：放大+标记为Selected
                 this.transform.localScale = SelectedScale;
                 triggerPhase = E_TriggerPhase.Selected;
-                battleContext.GetEventBus().TriggerEvent(new SelectSkillEvent(battleContext, skillId, battleEntity));
+                battleContext.GetEventBus().TriggerEvent(new SelectSkillEvent(battleContext, skillId, battleEntity, IFactory.GetTypeInstance<TargetSelectStrategyFactory, PlayerBaseTargetSelectStrategy>()));
             }
         }
         else

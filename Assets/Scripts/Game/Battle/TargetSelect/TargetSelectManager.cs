@@ -44,38 +44,42 @@ public class TargetSelectManager : SingletonBase<TargetSelectManager>, ITargetSe
         BattleInputHandler.Instance.OnSelectedObject -= SelectClickMainTarget;
     }
 
-    public void SetSelectTargetStrategy<T>() where T : class, ITargetSelectStrategy
+    /// <summary>
+    /// 选择目标
+    /// 调用用会更新目标管理器缓存，之后可获取最新目标
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="caster"></param>
+    /// <param name="skillInfo"></param>
+    /// <param name="targetSelectStrategy"></param>
+    public void SelectTarget(IBattleContext context, IBattleEntityObject caster, SkillInfo skillInfo, ITargetSelectStrategy targetSelectStrategy)
     {
-        currentSelectStrategy = IFactory.GetTypeInstance<TargetSelectStrategyFactory, T>();
-    }
-
-    public void ReSelectTarget(IBattleContext context, IBattleEntityObject caster, SkillInfo skillInfo)
-    {
+        currentSelectStrategy = targetSelectStrategy;
         // 当选择的技能改变时，也要触发目标选择UI的改变
         SelectMainTarget(context, caster, skillInfo);
         UpdateTargets();
     }
 
+    public IBattleEntityObject GetMainTarget()
+    {
+        return _mainTarget;
+    }
+
+    public List<IBattleEntityObject> GetTargets()
+    {
+        return _selectedTargets;
+    }
+
     /// <summary>
     /// 选择技能事件回调
+    /// 玩家切换技能时被调用
     /// </summary>
     /// <param name="selectSkillEvent"></param>
     private void OnSelectSkillEvent(SelectSkillEvent selectSkillEvent)
     {
-        // TODO：暂时这样处理，之后考虑如何兼容SetSelectTargetStrategy方法的设置，而不会被回调覆盖
-        if (selectSkillEvent.Caster is PlayerObject)
-        {
-            SetSelectTargetStrategy<PlayerBaseTargetSelectStrategy>();
-        }
-        else if(selectSkillEvent.Caster is MonsterObject)
-        {
-            SetSelectTargetStrategy<MonsterBaseTargetSelectStrategy>();
-        }
-
         // 当选择的技能改变时，也要触发目标选择UI的改变
         this.skillInfo = BinaryDataManager.Instance.GetConfig<SkillInfoContainer>(E_ConfigLoadType.Editor).dataDic[selectSkillEvent.SkillId];
-        SelectMainTarget(selectSkillEvent.Context, selectSkillEvent.Caster, skillInfo);
-        UpdateTargets();
+        SelectTarget(selectSkillEvent.Context, selectSkillEvent.Caster, skillInfo, selectSkillEvent.TargetSelectStrategy);
     }
 
     /// <summary>
@@ -93,7 +97,6 @@ public class TargetSelectManager : SingletonBase<TargetSelectManager>, ITargetSe
             this.caster = caster;
             // 根据规则选择主目标
             _mainTarget = currentSelectStrategy.SelectMainTarget(context, caster, skillInfo);
-            //LogManager.Log($"主目标：{_mainTarget}");
         }
     }
 
@@ -108,17 +111,6 @@ public class TargetSelectManager : SingletonBase<TargetSelectManager>, ITargetSe
         _selectedTargets.AddRange(BattleUtil.GetRangeTargets(E_CharacterType.PlayerCharacter, _mainTarget, skillInfo.f_skillRangeType));
         // 分发目标选择变化事件，更新目标标记UI、行动轴UI
         battleContext.GetEventBus().TriggerEvent(new SelectTargetEvent(battleContext, _mainTarget, _selectedTargets));
-    }
-
-    public IBattleEntityObject GetMainTarget()
-    {
-        return _mainTarget;
-    }
-
-
-    public List<IBattleEntityObject> GetTargets()
-    {
-        return _selectedTargets;
     }
 
     /// <summary>

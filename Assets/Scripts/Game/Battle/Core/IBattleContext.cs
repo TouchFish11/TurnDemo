@@ -34,6 +34,12 @@ namespace Game.Battle
         List<IBattleEntityObject> GetPlayerObjects();
 
         /// <summary>
+        /// 获取存活的玩家角色实体
+        /// </summary>
+        /// <returns></returns>
+        List<IBattleEntityObject> GetLivePlayerObjects();
+
+        /// <summary>
         /// 获取所有怪物角色实体
         /// </summary>
         /// <returns></returns>
@@ -120,5 +126,11 @@ namespace Game.Battle
         /// </summary>
         /// <returns></returns>
         List<IBattleEntityObject> GetDeadMonsterEntitys();
+
+        /// <summary>
+        /// 获取所有存活的怪物实体
+        /// </summary>
+        /// <returns></returns>
+        List<IBattleEntityObject> GetLiveMonsterObjects();
     }
 }

@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using Framework;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,14 +7,7 @@ using UnityEngine.UI;
 /// </summary>
 public class WaitingActUI : BaseUIBehaviour
 {
-    private Image imgIcon;
-
-    protected override void Awake()
-    {
-        base.Awake();
-
-        imgIcon = binder.GetControl<Image>(nameof(imgIcon));
-    }
+    [Inject] private Image imgIcon;
 
     public void Init(Sprite icon)
     {

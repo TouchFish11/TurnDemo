@@ -3,7 +3,6 @@ using Game;
 using Game.Battle;
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -12,10 +11,34 @@ using UnityEngine;
 /// </summary>
 public class BattleUIManager
 {
+    /// <summary>
+    /// 行动提示类型
+    /// 用于战斗界面右下角显示
+    /// </summary>
+    public enum E_ActTipType : byte
+    {
+        /// <summary>
+        /// 隐藏
+        /// </summary>
+        Hide,
+        /// <summary>
+        /// 玩家行动
+        /// </summary>
+        Player,
+        /// <summary>
+        /// 怪物行动
+        /// </summary>
+        Monster,
+    }
+
     private BattleView _view;
     private BattleModel _model;
     private Vector2 damageTextXOffsetRange = new Vector2(-40, 40);
     private Vector2 damageTextYOffsetRange = new Vector2(-10, 10);
+
+    // 战斗结束UI相关
+    private static WaitForSeconds _waitForSeconds0_5 = new WaitForSeconds(0.5f);
+    private static WaitForSeconds _waitForSeconds2_5 = new WaitForSeconds(2.5f);
 
     public BattleUIManager(BattleView view, BattleModel model)
     {
@@ -24,9 +47,18 @@ public class BattleUIManager
     }
 
     /// <summary>
+    /// 隐藏普通怪物状态UI
+    /// </summary>
+    /// <param name="deadMonster"></param>
+    public void HideNormalMonsterStateUI(IBattleEntityObject deadMonster)
+    {
+        _model.HideNormalMonsterStateUI(deadMonster);
+    }
+
+    /// <summary>
     /// 显示战斗结束UI
     /// </summary>
-    public void ShowBattleOver()
+    public void ShowBattleOver(IBattleContext context)
     {
         ServiceLocator.Get<IMonoManager>().StartCoroutine(ShowBattleOver_Cor());
 
@@ -34,17 +66,13 @@ public class BattleUIManager
         {
             _view.BattleOverArea.gameObject.SetActive(true);
 
-            yield return new WaitForSeconds(2.5f);
+            yield return _waitForSeconds2_5;
 
             _view.BattleOverArea.gameObject.SetActive(false);
 
-            yield return new WaitForSeconds(0.5f);
-
-            // 隐藏战斗界面
-            ServiceLocator.Get<IUIManager>().DestroyView();
+            yield return _waitForSeconds0_5;
 
             // 触发退出战斗事件
-            IBattleContext context = ServiceLocator.Get<IBattleManager>().GetContext();
             context.GetEventBus().TriggerEvent(new QuitBattleEvent(context));
         }
     }
@@ -74,7 +102,7 @@ public class BattleUIManager
             damageTextUI.InitDamageText(((int)damageResult.ElementType).ToElementTypeColor(), GetDamgeTypeText(damageResult), damageResult.FinalDamage);
         }
         // 更新累计伤害
-        _model.UpdateCumulativeDamage(true, damageResult.FinalDamage);
+        UpdateCumulativeDamage(true, damageResult.FinalDamage);
     }
 
     /// <summary>
@@ -100,115 +128,26 @@ public class BattleUIManager
     /// <param name="dmg"></param>
     public void UpdateCumulativeDamage(bool isShow, int dmg)
     {
-        _model.UpdateCumulativeDamage(isShow, dmg);
+        _view.TotalDmgArea.gameObject.SetActive(isShow);
+        _view.UpdateTotalDmg(_model.SetCumulativeDamage(dmg, !isShow));
     }
 
     /// <summary>
     /// 更新等待命令UI
     /// </summary>
-    /// <param name="waitingSkills"></param>
+    /// <param name="iconPaths">命令要显示的图标路径列表</param>
     public async void UpdateWaitingCommmand(List<string> iconPaths)
     {
         List<WaitingActUI> waitingActUIs = new List<WaitingActUI>();
         foreach (string iconPath in iconPaths)
         {
-            WaitingActUI waitingActUI = await ObjectBuilder.GetObject<WaitingActUI>(E_AssetBundleType.UI, ResKeyCollection.WaitingActUI, null);
+            WaitingActUI waitingActUI = await ObjectBuilder.GetObject<WaitingActUI>(E_AssetBundleType.UI, ResKeyCollection.WaitingActUI, _view.WaitQueueContent);
             Sprite icon = await AssetBundleManager.Instance.LoadAssetAsync<Sprite>(E_AssetBundleType.Texture, iconPath);
             waitingActUI.Init(icon);
             waitingActUIs.Add(waitingActUI);
         }
+
         _model.UpdateWaitingCommmand(waitingActUIs);
-    }
-
-    /// <summary>
-    /// 设置终结技立绘显示状态
-    /// </summary>
-    /// <param name="isShow"></param>
-    /// <param name="icon"></param>
-    /// <param name="tip"></param>
-    public void SetUltimatePaitingActive(bool isShow, Sprite icon, string tip)
-    {
-        _model.SetUltimatePaitingActive(isShow, icon, tip);
-    }
-
-    /// <summary>
-    /// 更新行动条
-    /// </summary>
-    public async Task UpdateActionBar(IEnumerable<IBattleEntityObject> battleEntities)
-    {
-        List<ActionGridUI> actionGridUIs = new List<ActionGridUI>();
-        bool isFirst = true;
-        foreach (IBattleEntityObject battleEntity in battleEntities)
-        {
-            ActionGridUI actionGridUI = await ObjectBuilder.GetObject<ActionGridUI>(E_AssetBundleType.UI, ResKeyCollection.ActionGridUI, null);
-            //Sprite icon = await AssetBundleManager.Instance.LoadAssetAsync<Sprite>(E_AssetBundleType.UI, "");
-            actionGridUI.Init(null, battleEntity.ActionValue, battleEntity, isFirst);
-            actionGridUIs.Add(actionGridUI);
-            isFirst = false;
-        }
-        _model.UpdateAcitonbar(actionGridUIs);
-    }
-
-    /// <summary>
-    /// 隐藏相关操作
-    /// 更新行动提示、失活目标选择、隐藏玩家操作
-    /// </summary>
-    public void HideOperator(bool isMonster)
-    {
-        // 禁用目标选择
-        ServiceLocator.Get<ITargetSelectManager>().InActiveSelectTarget();
-        // 清除标记UI
-        _model.ClearSelectMarker();
-        // 隐藏玩家操作UI
-        _model.UpdateOperator(new List<SkillKeyUI>());
-        // 显示行动提示UI
-        _model.SetActTipActive(true, isMonster);
-    }
-
-    /// <summary>
-    /// 更新战技点数
-    /// </summary>
-    /// <param name="current"></param>
-    /// <param name="max"></param>
-    /// <returns></returns>
-    public async Task UpdateBattlePointCount(int current, int max)
-    {
-        List<BattlePointUI> battlePointUIs = new List<BattlePointUI>();
-        for (int i = 0; i < max; i++)
-        {
-            BattlePointUI battlePointUI = await ObjectBuilder.GetObject<BattlePointUI>(E_AssetBundleType.UI, ResKeyCollection.BattlePointUI, null);
-            battlePointUI.SetActivePoint(i < current);
-            battlePointUIs.Add(battlePointUI);
-        }
-
-        _model.UpdateBattlePointCount(current, battlePointUIs);
-    }
-
-    /// <summary>
-    /// 更新指定玩家操作UI
-    /// </summary>
-    /// <param name="currentObject"></param>
-    public async void UpdateOperator(IBattleEntityObject currentObject, ISkillKeyUIDataProvider dataProvider)
-    {
-        // 隐藏行动提示
-        _model.SetActTipActive(false, false);
-        List<SkillKeyUI> skillKeyUIs = new List<SkillKeyUI>();
-        SkillKeyUIData skillKeyUIData = dataProvider.GetData(currentObject);
-        var infos = skillKeyUIData.SkillInfos;
-        foreach (SkillInfo info in infos)
-        {
-            // 玩家操作UI
-            SkillKeyUI skillKeyUI = await ObjectBuilder.GetObject<SkillKeyUI>(E_AssetBundleType.UI, ResKeyCollection.SkillKeyUI, null);
-            skillKeyUI.Init(info, _view.SkillKeyGroup, currentObject);
-            skillKeyUIs.Add(skillKeyUI);
-        }
-
-        _model.UpdateOperator(skillKeyUIs);
-    }
-
-    public void SetActTipActive()
-    {
-
     }
 
     /// <summary>
@@ -226,37 +165,142 @@ public class BattleUIManager
         IEnumerator ShowPaiting_Cor(SkillInfo skillInfo)
         {
             // 显示角色立绘
-            SetUltimatePaitingActive(true, null, skillInfo.f_name);
+            _view.UpdateUltimateShow(true, null, skillInfo.f_name);
             // 显示一秒后隐藏
             yield return new WaitForSeconds(1f);
-            SetUltimatePaitingActive(false, null, string.Empty);
+            _view.UpdateUltimateShow(false, null, string.Empty);
         }
     }
 
     /// <summary>
-    /// 更新目标标记
+    /// 更新行动条UI
+    /// 更新行动条里的行动格子UI
     /// </summary>
-    /// <param name="selectedTargets">传null为隐藏</param>
-    public async Task UpdateTargetMarker(List<IBattleEntityObject> selectedTargets)
+    public async void UpdateActionBar(IEnumerable<IBattleEntityObject> battleEntities)
     {
-        List<SelectMarkerUI> selectMarkerUIs = new List<SelectMarkerUI>();
-        if (selectedTargets != null)
+        List<ActionGridUI> actionGridUIs = new List<ActionGridUI>();
+        // 第一个格子需要放大处理
+        bool isFirst = true;
+        foreach (IBattleEntityObject battleEntity in battleEntities)
         {
-            foreach (IBattleEntityObject battleEntity in selectedTargets)
+            ActionGridUI actionGridUI = await ObjectBuilder.GetObject<ActionGridUI>(E_AssetBundleType.UI, ResKeyCollection.ActionGridUI, _view.ActionBarContent);
+            //Sprite icon = await AssetBundleManager.Instance.LoadAssetAsync<Sprite>(E_AssetBundleType.UI, "");
+            actionGridUI.Init(null, battleEntity.ActionValue, battleEntity, isFirst);
+            actionGridUIs.Add(actionGridUI);
+            isFirst = false;
+        }
+        _model.UpdateAcitonbar(actionGridUIs);
+    }
+
+    /// <summary>
+    /// 清除目标标记
+    /// </summary>
+    public void ClearSelectMarker()
+    {
+        // 清除激活的标记UI
+        _model.ClearSelectMarker();
+    }
+
+    /// <summary>
+    /// 设置操作UI
+    /// 传null为隐藏
+    /// </summary>
+    /// <param name="skillKeyUIs"></param>
+    public void SetOperator(List<SkillKeyUI> skillKeyUIs)
+    {
+        if (skillKeyUIs == null)
+        {
+            _model.ClearOperator();
+            return;
+        }
+        // 设置操作UI
+        _model.SetOperator(skillKeyUIs);
+    }
+
+    /// <summary>
+    /// 设置行动提示激活状态
+    /// 需要先SetOperator隐藏按键UI
+    /// </summary>
+    /// <param name="actTipType"></param>
+    public void SetActTipActive(E_ActTipType actTipType)
+    {
+        bool isActive = actTipType != E_ActTipType.Hide;
+        _view.ActingTipUI.gameObject.SetActive(isActive);
+        if (isActive)
+        {
+            _view.ActingTipUI.UpdateTipText(actTipType == E_ActTipType.Monster);
+        }
+    }
+
+    /// <summary>
+    /// 更新战技点数
+    /// </summary>
+    /// <param name="current"></param>
+    /// <param name="max"></param>
+    /// <returns></returns>
+    public async Task UpdateBattlePointCount(int current, int max)
+    {
+        List<BattlePointUI> battlePointUIs = new List<BattlePointUI>();
+        for (int i = 0; i < max; i++)
+        {
+            BattlePointUI battlePointUI = await ObjectBuilder.GetObject<BattlePointUI>(E_AssetBundleType.UI, ResKeyCollection.BattlePointUI, _view.PointContent);
+            battlePointUI.SetActivePoint(i < current);
+            battlePointUIs.Add(battlePointUI);
+        }
+        // 更新UI数据
+        _model.UpdateBattlePointCount(current, battlePointUIs);
+        _view.UpdateBattlePointCount(current);
+    }
+
+    /// <summary>
+    /// 更新指定玩家操作UI
+    /// 更新操作前需要调用SetActTipActive隐藏行动提示
+    /// </summary>
+    /// <param name="currentObject"></param>
+    /// <param name="dataProvider"></param>
+    public async void UpdateOperator(IBattleEntityObject currentObject, ISkillKeyUIDataProvider dataProvider)
+    {
+        List<SkillKeyUI> skillKeyUIs = new List<SkillKeyUI>();
+        SkillKeyUIData skillKeyUIData = dataProvider.GetData(currentObject);
+        var infos = skillKeyUIData.SkillInfos;
+        foreach (SkillInfo info in infos)
+        {
+            SkillKeyUI skillKeyUI = await ObjectBuilder.GetObject<SkillKeyUI>(E_AssetBundleType.UI, ResKeyCollection.SkillKeyUI, _view.OperatorArea);
+            skillKeyUI.Init(info, _view.SkillKeyGroup, currentObject);
+            skillKeyUIs.Add(skillKeyUI);
+        }
+        SetOperator(skillKeyUIs);
+    }
+
+    /// <summary>
+    /// 更新目标标记
+    /// 传null为隐藏
+    /// </summary>
+    /// <param name="selectedTargets"></param>
+    public async void UpdateTargetMarker(List<IBattleEntityObject> selectedTargets)
+    {
+        if (selectedTargets == null)
+        {
+            _model.ClearSelectMarker();
+            return;
+        }
+
+        List<SelectMarkerUI> selectMarkerUIs = new List<SelectMarkerUI>();
+        foreach (IBattleEntityObject battleEntity in selectedTargets)
+        {
+            // 不用设置父对象，在坐标转换时会自动设置
+            SelectMarkerUI selectMarkerUI = await ObjectBuilder.GetObject<SelectMarkerUI>(E_AssetBundleType.UI, ResKeyCollection.SelectMarkerUI, null);
+            if (UIManager.WorldToLocalPointInRectangle(BattlePoint.Instance.CurrentActiveCamera, UIManager.Instance.UICamera, _view.SelectMarkerArea, selectMarkerUI.gameObject, battleEntity.GameObject.transform.position, Vector2.up * 50))
             {
-                SelectMarkerUI selectMarkerUI = await ObjectBuilder.GetObject<SelectMarkerUI>(E_AssetBundleType.UI, ResKeyCollection.SelectMarkerUI, null);
-                if (UIManager.WorldToLocalPointInRectangle(BattlePoint.Instance.CurrentActiveCamera, UIManager.Instance.UICamera, _view.SelectMarkerArea, selectMarkerUI.gameObject, battleEntity.GameObject.transform.position, Vector2.up * 50))
-                {
-                    selectMarkerUI.InitSelectMarker((battleEntity is PlayerObject) ? E_SkillTargetType.Friend : E_SkillTargetType.Enemy);
-                    selectMarkerUIs.Add(selectMarkerUI);
-                }
+                selectMarkerUI.InitSelectMarker((battleEntity is PlayerObject) ? E_SkillTargetType.Friend : E_SkillTargetType.Enemy);
+                selectMarkerUIs.Add(selectMarkerUI);
             }
         }
         _model.UpdateSelectMarker(selectMarkerUIs);
     }
 
     /// <summary>
-    /// 更新行动格子高亮
+    /// 更新选中目标的行动格子高亮
     /// </summary>
     /// <param name="selectedTargets"></param>
     /// <returns></returns>
@@ -295,11 +339,12 @@ public class BattleUIManager
     }
 
     /// <summary>
-    /// 更新状态栏
+    /// 更新玩家状态栏
     /// </summary>
     /// <param name="currentBattleEntity"></param>
-    public void UpdateStatuebar(IBattleEntityObject currentBattleEntity)
+    public void UpdatePlayerStatuebar(IBattleEntityObject currentBattleEntity)
     {
+        // 获取指定角色的状态UI
         RoleStateUI roleStateUI = _model.GetRoleStateUIById(currentBattleEntity.BattleEntityId);
         if (roleStateUI != null)
         {
@@ -309,13 +354,15 @@ public class BattleUIManager
 
     /// <summary>
     /// 显示状态文本效果
+    /// 实体被添加状态时显示状态飘字效果提示
     /// </summary>
     /// <param name="newStatus"></param>
     public async void ShowStatusText(IStatus newStatus)
     {
+        // 不用设置父对象，坐标转换中会设置
         StatusEffectTextUI statusEffectTextUI = await ObjectBuilder.GetObject<StatusEffectTextUI>(E_AssetBundleType.UI, ResKeyCollection.StatusEffectTextUI, null);
         if (UIManager.WorldToLocalPointInRectangle(BattlePoint.Instance.CurrentActiveCamera, ServiceLocator.Get<IUIManager>().UICamera,
-            _view.BuffTextArea, statusEffectTextUI.gameObject, newStatus.Owner.SubGameObject.transform.position, Vector2.up * 120))
+            _view.BuffTextArea, statusEffectTextUI.gameObject, newStatus.Owner.SubGameObject.transform.position, Vector2.up * 160))
         {
             statusEffectTextUI.InitText(null, newStatus.StatusProperty.StatusInfo.f_name);
         }
@@ -326,7 +373,8 @@ public class BattleUIManager
     /// </summary>
     public void ClearActiveDamageTextUI()
     {
-        _model.UpdateCumulativeDamage(false, 0);
+        _view.TotalDmgArea.gameObject.SetActive(false);
+        _view.UpdateTotalDmg(_model.SetCumulativeDamage(0, true));
     }
 
     /// <summary>
@@ -352,7 +400,6 @@ public class BattleUIManager
                 pos = Vector2.up * player.RoleInfo.f_dmgTextYOffset + dmgTextOffset;
                 break;
         }
-
         return pos;
     }
 

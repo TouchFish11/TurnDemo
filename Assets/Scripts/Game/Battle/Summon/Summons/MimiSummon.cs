@@ -63,5 +63,10 @@ namespace Game.Battle
         {
             throw new System.NotImplementedException();
         }
+
+        public override IEnumerator Die()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

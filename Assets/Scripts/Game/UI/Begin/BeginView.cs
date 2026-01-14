@@ -1,8 +1,4 @@
 using Framework;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,14 +7,13 @@ using UnityEngine.UI;
 /// </summary>
 public class BeginView : UIView
 {
-    private GameObject progress;
+    [Inject] private RectTransform progress;
 
     protected override void Awake()
     {
         base.Awake();
 
-        progress = this.transform.Find(nameof(progress)).gameObject;
-        progress.SetActive(false);
+        progress.gameObject.SetActive(false);
     }
 
     public override void UpdateView(string key, object value)
@@ -51,6 +46,6 @@ public class BeginView : UIView
     /// </summary>
     private void ShowProgress(bool isShow)
     {
-        progress.SetActive(isShow);
+        progress.gameObject.SetActive(isShow);
     }
 }

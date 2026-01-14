@@ -1,3 +1,4 @@
+using Framework;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,22 +7,10 @@ using UnityEngine.UI;
 /// </summary>
 public class LoginView : UIView
 {
-    private InputField inputAccount;
-    private InputField inputPassword;
-    private Button btnLogin;
-    private GameObject loginBox;
-
-    protected override void Awake()
-    {
-        base.Awake();
-
-        inputAccount = binder.GetControl<InputField>(nameof(inputAccount));
-        inputPassword = binder.GetControl<InputField>(nameof(inputPassword));
-        btnLogin = binder.GetControl<Button>(nameof(btnLogin));
-
-        loginBox = this.transform.Find(nameof(loginBox)).gameObject;
-    }
-
+    [Inject] private InputField inputAccount;
+    [Inject] private InputField inputPassword;
+    [Inject] private Button btnLogin;
+    [Inject] private RectTransform loginBox;
 
     /// <summary>
     /// 更新界面（接收 Controller 指令）
@@ -42,7 +31,7 @@ public class LoginView : UIView
                 btnLogin.interactable = (bool)value;
                 break;
             case "isActiveLoginBox":
-                loginBox.SetActive((bool)value);
+                loginBox.gameObject.SetActive((bool)value);
                 break;
         }
     }

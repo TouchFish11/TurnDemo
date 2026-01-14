@@ -1,8 +1,7 @@
 using Framework;
+using Game.Battle;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
-using UnityEngine;
 
 /// <summary>
 /// 战斗界面数据
@@ -23,17 +22,23 @@ public class BattleModel : UIModel
     private readonly List<SelectMarkerUI> selectMarkerUIs = new List<SelectMarkerUI>();
     // 等待行动对象列表
     private readonly List<WaitingActUI> waitingActUIs = new List<WaitingActUI>();
-
     // 当前累计伤害
     private long currentCalcDamage;
 
-    // 行动提示状态
-    private bool activeActTip;
-    // 终结技立绘显示状态
-    private bool activePaiting;
+    /// <summary>
+    /// 隐藏普通怪物状态UI
+    /// </summary>
+    /// <param name="deadMonster"></param>
+    public void HideNormalMonsterStateUI(IBattleEntityObject deadMonster)
+    {
+        NormalMonsterStateUI normalMonsterStateUI = normalMonsterStateUIs.Find((m) => m.BattleEntity == deadMonster);
+        normalMonsterStateUIs.Remove(normalMonsterStateUI);
+        PoolManager.Instance.PushObj(normalMonsterStateUI.gameObject);
+    }
 
     /// <summary>
     /// 通过ID获取角色状态UI
+    /// 使用Linq查询
     /// </summary>
     /// <param name="roleId"></param>
     /// <returns>未找到返回null</returns>
@@ -42,12 +47,10 @@ public class BattleModel : UIModel
         return roleStateUIs.FirstOrDefault(r => r.RoleId == roleId);
     }
 
-    public void SetUltimatePaitingActive(bool isShow, Sprite icon, string tip)
-    {
-        activePaiting = isShow;
-        TriggerDataChanged(nameof(activePaiting), (activePaiting, icon, tip));
-    }
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="waitingActUIs"></param>
     public void UpdateWaitingCommmand(List<WaitingActUI> waitingActUIs)
     {
         foreach (WaitingActUI waitingActUI in this.waitingActUIs)
@@ -56,21 +59,12 @@ public class BattleModel : UIModel
         }
         this.waitingActUIs.Clear();
         this.waitingActUIs.AddRange(waitingActUIs);
-
-        TriggerDataChanged(nameof(waitingActUIs), waitingActUIs);
     }
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="isShow"></param>
-    /// <param name="isMonster"></param>
-    public void SetActTipActive(bool isShow, bool isMonster)
-    {
-        activeActTip = isShow;
-        TriggerDataChanged(nameof(activeActTip), (isShow, isMonster));
-    }
-
+    /// <param name="normalMonsterStateUIs"></param>
     public void UpdateNormalMonsterState(IEnumerable<NormalMonsterStateUI> normalMonsterStateUIs)
     {
         foreach (NormalMonsterStateUI monsterStateUI in this.normalMonsterStateUIs)
@@ -93,9 +87,7 @@ public class BattleModel : UIModel
             PoolManager.Instance.PushObj(actionGridUI.gameObject);
         }
         actions.Clear();
-
         actions.AddRange(actionGridUIs);
-        TriggerDataChanged(nameof(actions), actions);
     }
 
     /// <summary>
@@ -107,18 +99,38 @@ public class BattleModel : UIModel
         return actions;
     }
 
-    public void UpdateOperator(IEnumerable<SkillKeyUI> skillKeyUIs)
+    /// <summary>
+    /// 设置操作UI
+    /// </summary>
+    /// <param name="skillKeyUIs"></param>
+    public void SetOperator(List<SkillKeyUI> skillKeyUIs)
+    {
+        foreach (SkillKeyUI skillKeyUI in this.skillKeyUIs)
+        {
+            PoolManager.Instance.PushObj(skillKeyUI.gameObject);
+        }
+
+        this.skillKeyUIs.Clear();
+        this.skillKeyUIs.AddRange(skillKeyUIs);
+    }
+
+    /// <summary>
+    /// 清除操作UI
+    /// </summary>
+    public void ClearOperator()
     {
         foreach (SkillKeyUI skillKeyUI in this.skillKeyUIs)
         {
             PoolManager.Instance.PushObj(skillKeyUI.gameObject);
         }
         this.skillKeyUIs.Clear();
-
-        this.skillKeyUIs.AddRange(skillKeyUIs);
-        TriggerDataChanged(nameof(this.skillKeyUIs), skillKeyUIs);
     }
 
+    /// <summary>
+    /// 更新战技点数
+    /// </summary>
+    /// <param name="current"></param>
+    /// <param name="battlePointUIs"></param>
     public void UpdateBattlePointCount(int current, IEnumerable<BattlePointUI> battlePointUIs)
     {
         foreach (BattlePointUI battlePointUI in this.battlePointUIs)
@@ -126,11 +138,22 @@ public class BattleModel : UIModel
             PoolManager.Instance.PushObj(battlePointUI.gameObject);
         }
         this.battlePointUIs.Clear();
-
         this.battlePointUIs.AddRange(battlePointUIs);
-        TriggerDataChanged("battlePointCount", (current, this.battlePointUIs));
     }
 
+    /// <summary>
+    /// 更新选择标记
+    /// </summary>
+    /// <param name="selectMarkerUIs"></param>
+    public void UpdateSelectMarker(List<SelectMarkerUI> selectMarkerUIs)
+    {
+        ClearSelectMarker();
+        this.selectMarkerUIs.AddRange(selectMarkerUIs);
+    }
+
+    /// <summary>
+    /// 清除标记
+    /// </summary>
     public void ClearSelectMarker()
     {
         foreach (SelectMarkerUI selectMarkerUI in this.selectMarkerUIs)
@@ -140,23 +163,24 @@ public class BattleModel : UIModel
         this.selectMarkerUIs.Clear();
     }
 
-    public void UpdateSelectMarker(List<SelectMarkerUI> selectMarkerUIs)
-    {
-        ClearSelectMarker();
-
-        this.selectMarkerUIs.AddRange(selectMarkerUIs);
-        TriggerDataChanged(nameof(this.selectMarkerUIs), selectMarkerUIs);
-    }
-
+    /// <summary>
+    /// 初始化角色状态UI
+    /// </summary>
+    /// <param name="roleStateUIs"></param>
     public void InitRoleStateUI(IEnumerable<RoleStateUI> roleStateUIs)
     {
         this.roleStateUIs.AddRange(roleStateUIs);
-        TriggerDataChanged(nameof(this.roleStateUIs), roleStateUIs);
     }
 
-    public void UpdateCumulativeDamage(bool isShow, int dmg)
+    /// <summary>
+    /// 设置累计伤害文本
+    /// </summary>
+    /// <param name="dmg"></param>
+    /// <param name="isClear"></param>
+    /// <returns></returns>
+    public long SetCumulativeDamage(int dmg, bool isClear)
     {
-        if (isShow)
+        if (!isClear)
         {
             currentCalcDamage += dmg;
         }
@@ -164,6 +188,7 @@ public class BattleModel : UIModel
         {
             currentCalcDamage = 0;
         }
-        TriggerDataChanged(nameof(currentCalcDamage), (isShow, currentCalcDamage));
+
+        return currentCalcDamage;
     }
 }

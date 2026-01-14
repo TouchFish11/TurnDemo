@@ -24,25 +24,8 @@ namespace Game.Battle
             skill.Init(mainTaget, selectedTargets);
         }
 
-        /// <summary>
-        /// TODO：终结技不需要走这个方法，直接放入命令即可，然后在执行命令的时候去选择目标才对
-        /// 添加技能命令到回合队列
-        /// </summary>
+
         public void AddSkillCommand(ISkill skill)
-        {
-            InitSkillTarget(skill);
-            // 封装技能
-            SkillCommand skillCommand = ServiceLocator.Get<IFactoryManager>().GetFactory<CommandFactory>().GetSkillCommand(skill);
-            // 放入指令
-            ServiceLocator.Get<IBattleManager>().GetContext().GetTurnManager().InsertCommand(skillCommand);
-        }
-
-
-        /// <summary>
-        /// 添加终结技技能命令到回合队列
-        /// </summary>
-        /// <param name="skill"></param>
-        public void AddUltimateSkillCommand(ISkill skill)
         {
             // 封装技能
             SkillCommand skillCommand = ServiceLocator.Get<IFactoryManager>().GetFactory<CommandFactory>().GetSkillCommand(skill);

@@ -1,6 +1,7 @@
 using Framework;
 using Game;
 using Game.Battle;
+using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 /// <summary>
 /// 战斗界面事件处理器
@@ -31,11 +32,11 @@ public class BattleEventProcessor
         eventBus.AddListener<ShieldChangedEvent>(OnShieldChanged);
         eventBus.AddListener<ApplyDamageEvent>(OnTakeDamage);
         eventBus.AddListener<PlayerReleaseSkillEvent>(OnPlayerReleaseSkillEvent);
-        eventBus.AddListener<UltimateReleaseOverEvent>(OnUltimateReleaseOverEvent);
         eventBus.AddListener<ActionBarSortPostEvent>(OnActionBarSortPostEvent);
         eventBus.AddListener<TurnStartStatusChangedEvent>(OnTurnStartStatusChangedEvent);
         eventBus.AddListener<StatusAddedEvent>(OnStatusAddedEvent);
         eventBus.AddListener<BattleOverEvent>(OnBattleOverEvent);
+        eventBus.AddListener<MonsterDeadEvent>(OnMonsterDeadEvent);
     }
 
     /// <summary>
@@ -44,7 +45,7 @@ public class BattleEventProcessor
     /// TODO：可优化为通过外部传入逻辑类来实现逻辑
     /// </summary>
     /// <param name="turnStartEvent"></param>
-    private async void OnTurnStart(TurnStartEvent turnStartEvent)
+    private void OnTurnStart(TurnStartEvent turnStartEvent)
     {
         //if (turnStartEvent.CurrentBattleEntity is MonsterObject)
         //{
@@ -60,16 +61,27 @@ public class BattleEventProcessor
         //}
 
         // 显示怪物UI
-        await _uiInitializer.InitMonsterUI(turnStartEvent.Context.GetMonsterObjects());
+        _uiInitializer.InitMonsterUI(turnStartEvent.Context.GetMonsterObjects());
 
         if (turnStartEvent.CurrentBattleEntity is PlayerObject)
         {
+            // 启用目标选择
+            TargetSelectManager.Instance.ActiveSelectTarget();
+            // 隐藏行动提示
+            _uiManager.SetActTipActive(BattleUIManager.E_ActTipType.Hide);
             // 更新当前操作UI
             _uiManager.UpdateOperator(turnStartEvent.CurrentBattleEntity, IFactory.GetTypeInstance<SkillKeyUIDataProviderFactory, BaseSkillKeyUIDataProvider>());
         }
         else if (turnStartEvent.CurrentBattleEntity is MonsterObject)
         {
-            _uiManager.HideOperator(true);
+            // 禁用目标选择
+            ServiceLocator.Get<ITargetSelectManager>().InActiveSelectTarget();
+            // 清除UI
+            _uiManager.ClearSelectMarker();
+            // 隐藏玩家UI
+            _uiManager.SetOperator(null);
+            // 更新玩家行动提示
+            _uiManager.SetActTipActive(BattleUIManager.E_ActTipType.Monster);
         }
     }
 
@@ -89,7 +101,16 @@ public class BattleEventProcessor
     private void OnTurnStartStatusChangedEvent(TurnStartStatusChangedEvent turnStartStatusChangedEvent)
     {
         // 更新指定玩家状态栏
-        _uiManager.UpdateStatuebar(turnStartStatusChangedEvent.CurrentBattleEntity);
+        _uiManager.UpdatePlayerStatuebar(turnStartStatusChangedEvent.CurrentBattleEntity);
+    }
+
+    /// <summary>
+    /// 怪物死亡事件回调
+    /// </summary>
+    /// <param name="monsterDeadEvent"></param>
+    private void OnMonsterDeadEvent(MonsterDeadEvent monsterDeadEvent)
+    {
+        _uiManager.HideNormalMonsterStateUI(monsterDeadEvent.DeadMonster);
     }
 
     /// <summary>
@@ -106,9 +127,9 @@ public class BattleEventProcessor
     /// 行动轴排序后事件回调
     /// </summary>
     /// <param name="actionBarSortPostEvent"></param>
-    private async void OnActionBarSortPostEvent(ActionBarSortPostEvent actionBarSortPostEvent)
+    private void OnActionBarSortPostEvent(ActionBarSortPostEvent actionBarSortPostEvent)
     {
-        await _uiManager.UpdateActionBar(actionBarSortPostEvent.battleEntities);
+        _uiManager.UpdateActionBar(actionBarSortPostEvent.battleEntities);
     }
 
     /// <summary>
@@ -124,10 +145,17 @@ public class BattleEventProcessor
     /// <summary>
     /// 玩家释放技能事件回调
     /// </summary>
-    /// <param name="playerTriggerSkillEvent"></param>
+    /// <param name="playerReleaseSkillEvent"></param>
     private void OnPlayerReleaseSkillEvent(PlayerReleaseSkillEvent playerReleaseSkillEvent)
     {
-        _uiManager.HideOperator(false);
+        // 禁用目标选择
+        ServiceLocator.Get<ITargetSelectManager>().InActiveSelectTarget();
+        // 清除标记UI
+        _uiManager.ClearSelectMarker();
+        // 隐藏玩家UI
+        _uiManager.SetOperator(null);
+        // 更新玩家行动提示
+        _uiManager.SetActTipActive(BattleUIManager.E_ActTipType.Player);
     }
 
     /// <summary>
@@ -163,25 +191,10 @@ public class BattleEventProcessor
     }
 
     /// <summary>
-    /// 终结技释放结束事件回调
-    /// 用于恢复当前行动角色操作UI
-    /// </summary>
-    /// <param name="ultimateReleaseOverEvent"></param>
-    private void OnUltimateReleaseOverEvent(UltimateReleaseOverEvent ultimateReleaseOverEvent)
-    {
-        if (ultimateReleaseOverEvent.CurrentActEntity is not PlayerObject)
-        {
-            return;
-        }
-
-        _uiManager.UpdateOperator(ultimateReleaseOverEvent.CurrentActEntity, IFactory.GetTypeInstance<SkillKeyUIDataProviderFactory, BaseSkillKeyUIDataProvider>());
-    }
-
-    /// <summary>
     /// 目标选择变化事件回调
     /// </summary>
     /// <param name="selectTargetEvent"></param>
-    private async void OnTargetSelectionChanged(SelectTargetEvent selectTargetEvent)
+    private void OnTargetSelectionChanged(SelectTargetEvent selectTargetEvent)
     {
         if (selectTargetEvent.MainTarget is PlayerObject)
         {
@@ -189,7 +202,7 @@ public class BattleEventProcessor
         }
 
         // 更新目标标记UI显示
-        await _uiManager.UpdateTargetMarker(selectTargetEvent.SelectedTargets);
+        _uiManager.UpdateTargetMarker(selectTargetEvent.SelectedTargets);
         // 更新行动轴目标高亮显示
         _uiManager.UpdateActionGridHighlight(selectTargetEvent.SelectedTargets);
     }
@@ -205,9 +218,10 @@ public class BattleEventProcessor
 
     /// <summary>
     /// 战斗结束事件回调
+    /// 显示战斗结束UI
     /// </summary>
     private void OnBattleOverEvent(BattleOverEvent battleOverEvent)
     {
-        _uiManager.ShowBattleOver();
+        _uiManager.ShowBattleOver(battleOverEvent.Context);
     }
 }

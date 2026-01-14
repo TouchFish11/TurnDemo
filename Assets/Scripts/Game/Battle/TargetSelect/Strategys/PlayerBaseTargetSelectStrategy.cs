@@ -7,20 +7,21 @@ using System.Collections.Generic;
 /// </summary>
 public class PlayerBaseTargetSelectStrategy : ITargetSelectStrategy
 {
+    public int Priority => 0;
+
     public IBattleEntityObject SelectMainTarget(IBattleContext context, IBattleEntityObject caster, SkillInfo skillInfo)
     {
         // 获取技能目标类型
         E_SkillTargetType targetType = (E_SkillTargetType)skillInfo.f_targetType;
         // 根据技能目标类型获取所有敌方/友方实体
-
         List<IBattleEntityObject> targets = null;
         if (caster is PlayerObject)
         {
-            targets = new List<IBattleEntityObject>(targetType == E_SkillTargetType.Enemy ? context.GetMonsterObjects() : context.GetPlayerObjects());
+            targets = new List<IBattleEntityObject>(targetType == E_SkillTargetType.Enemy ? context.GetLiveMonsterObjects() : context.GetLivePlayerObjects());
         }
         else if (caster is MonsterObject)
         {
-            targets = new List<IBattleEntityObject>(targetType == E_SkillTargetType.Enemy ? context.GetPlayerObjects() : context.GetMonsterObjects());
+            targets = new List<IBattleEntityObject>(targetType == E_SkillTargetType.Enemy ? context.GetLivePlayerObjects() : context.GetLiveMonsterObjects());
         }
 
         IBattleEntityObject currentMainTarget = null;

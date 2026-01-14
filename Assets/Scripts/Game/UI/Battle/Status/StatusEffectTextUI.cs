@@ -8,10 +8,9 @@ using UnityEngine.UI;
 /// </summary>
 public class StatusEffectTextUI : BaseUIBehaviour
 {
-    private Image imgIcon;
-    private TextMeshProUGUI txtBuffName;
-
-    private Transform mover;
+    [Inject] private Image imgIcon;
+    [Inject] private TextMeshProUGUI txtBuffName;
+    [Inject] private RectTransform mover;
 
     // …œ“∆ÀŸ∂»
     [SerializeField] private float upMoveSpeed = 2.5f;
@@ -27,12 +26,7 @@ public class StatusEffectTextUI : BaseUIBehaviour
     {
         base.Awake();
 
-        imgIcon = binder.GetControl<Image>(nameof(imgIcon));
-        txtBuffName = binder.GetControl<TextMeshProUGUI>(nameof(txtBuffName));
-        mover = this.transform.Find(nameof(mover));
-
         originMoverPos = mover.localPosition;
-
     }
 
     protected override void OnEnable()

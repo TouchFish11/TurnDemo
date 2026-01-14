@@ -89,5 +89,15 @@ namespace Game
             }
             return components.Count == componentNames.Length;
         }
+
+        protected virtual void OnDisable()
+        {
+            
+        }
+
+        protected virtual void OnDestroy()
+        {
+            
+        }
     }
 }

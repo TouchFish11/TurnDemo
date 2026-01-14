@@ -53,8 +53,15 @@ namespace Game.Battle
             context.GetEventBus().AddListener<QuitBattleEvent>(OnQuitBattleEvent);
         }
 
+        /// <summary>
+        /// 退出战斗事件回调
+        /// 隐藏战斗界面、清理战斗相关数据、显示黑背景过渡
+        /// </summary>
+        /// <param name="quitBattleEvent"></param>
         private void OnQuitBattleEvent(QuitBattleEvent quitBattleEvent)
         {
+            // 隐藏战斗界面
+            ServiceLocator.Get<IUIManager>().DestroyView();
             // 清理战斗
             context.CleanupBattle();
             // 显示黑背景
@@ -64,7 +71,6 @@ namespace Game.Battle
         private async void ShowBackView()
         {
             BackController backController = await ServiceLocator.Get<IUIManager>().CreateViewAsync<BackView, BackModel, BackController>(E_UILayer.Mid);
-            LogManager.Log($"显示黑背景");
             //backController.CompletedHide(() =>
             //{
             //    //切换场景

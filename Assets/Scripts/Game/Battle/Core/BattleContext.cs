@@ -146,7 +146,11 @@ namespace Game.Battle
 
         public List<IBattleEntityObject> GetPlayerObjects() => _allBattleEntity.FindAll((entity) => entity is PlayerObject);
 
+        public List<IBattleEntityObject> GetLivePlayerObjects() => GetPlayerObjects().FindAll((player) => !player.IsDead);
+
         public List<IBattleEntityObject> GetMonsterObjects() => _allBattleEntity.FindAll((entity) => entity is MonsterObject);
+
+        public List<IBattleEntityObject> GetLiveMonsterObjects() => GetMonsterObjects().FindAll((monster) => !monster.IsDead);
 
         public int GetPlayerObjectIndex(IBattleEntityObject battleEntity) => GetPlayerObjects().IndexOf(battleEntity);
 

@@ -12,8 +12,10 @@ public class PlayerSkillComponent : SkillComponent
     public override void BattleInit(IBattleEntityObject battleEntity)
     {
         base.BattleInit(battleEntity);
-
+        // 初始化技能释放条件
         AddCastCondition(IFactory.GetTypeInstance<CastSkillConditionFactory, PlayerDefaultCastSkillCondition>());
+        // 初始化策略列表
+        AddTargetSelectStrategy(IFactory.GetTypeInstance<TargetSelectStrategyFactory, PlayerBaseTargetSelectStrategy>());
     }
 
     /// <summary>

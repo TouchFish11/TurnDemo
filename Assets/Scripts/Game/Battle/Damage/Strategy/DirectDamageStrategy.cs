@@ -44,7 +44,10 @@ public class DirectDamageStrategy : IDamageStrategy
         //finalDamage = CalcResistanceZone(finalDamage);
         //return finalDamage;
 
-        damageResult = new DamageResult(attacker, defender, Random.Range(10, 20), skillInfo.f_elementType.ToElementType(), skillInfo.f_damageType.ToDamageType(), true, skillInfo);
+        int critValue = attacker.GetComponent<PropertyComponent>().GetPropertyValue(E_DynamicPropertyType.TotalCrit);
+        float critRate = critValue / 100f;
+        bool isCrit = Random.Range(0, 1) < critRate;
+        damageResult = new DamageResult(attacker, defender, Random.Range(30, 70), skillInfo.f_elementType.ToElementType(), skillInfo.f_damageType.ToDamageType(), isCrit, skillInfo);
     }
 
     ///// <summary>

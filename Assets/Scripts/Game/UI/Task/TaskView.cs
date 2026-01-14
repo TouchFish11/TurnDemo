@@ -1,4 +1,3 @@
-
 using Framework;
 using System.Collections.Generic;
 using TMPro;
@@ -12,37 +11,16 @@ namespace Game.UI
     /// </summary>
     public class TaskView : UIView
     {
-        private ScrollRect svTask;
-        private TextMeshProUGUI txtTaskName;
-        private TextMeshProUGUI txtTaskDescription;
-        private Transform detailView;
-        private Transform rewardBox;
-
-        private ToggleGroup toggleGroup;
-
-        private GameObject hasTaskView;
-        private GameObject noTaskView;
-
-        private Button btnAcceptTask;
-        private TextMeshProUGUI txtAccceptInfo;
-
-        protected override void Awake()
-        {
-            base.Awake();
-
-            svTask = binder.GetControl<ScrollRect>(nameof(svTask));
-            toggleGroup = svTask.content.GetComponent<ToggleGroup>();
-            txtTaskName = binder.GetControl<TextMeshProUGUI>(nameof(txtTaskName));
-            txtTaskDescription = binder.GetControl<TextMeshProUGUI>(nameof(txtTaskDescription));
-
-            detailView = this.transform.Find(nameof(detailView));
-            hasTaskView = detailView.transform.Find(nameof(hasTaskView)).gameObject;
-            noTaskView = detailView.transform.Find(nameof(noTaskView)).gameObject;
-            rewardBox = this.transform.Find(nameof(detailView)).Find(nameof(hasTaskView)).Find(nameof(rewardBox));
-
-            btnAcceptTask = binder.GetControl<Button>(nameof(btnAcceptTask));
-            txtAccceptInfo = binder.GetControl<TextMeshProUGUI>(nameof(txtAccceptInfo));
-        }
+        [Inject] private ScrollRect svTask;
+        [Inject] private Button btnAcceptTask;
+        [Inject] private ToggleGroup toggleGroup;
+        [Inject] private TextMeshProUGUI txtTaskName;
+        [Inject] private TextMeshProUGUI txtTaskDescription;
+        [Inject] private TextMeshProUGUI txtAccceptInfo;
+        [Inject] private RectTransform detailView;
+        [Inject] private RectTransform rewardBox;
+        [Inject] private RectTransform hasTaskView;
+        [Inject] private RectTransform noTaskView;
 
         public override void UpdateView(string key, object value)
         {
@@ -64,8 +42,8 @@ namespace Game.UI
                     break;
                 case "hasTasks":
                     bool hasTasks = (bool)value;
-                    hasTaskView.SetActive(hasTasks);
-                    noTaskView.SetActive(!hasTasks);
+                    hasTaskView.gameObject.SetActive(hasTasks);
+                    noTaskView.gameObject.SetActive(!hasTasks);
                     break;
                 case "isFollowingTask":
                     bool isFollowingTask = (bool)value;

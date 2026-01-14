@@ -13,6 +13,9 @@ namespace Game.Battle
         protected readonly Dictionary<int, ISkill> skills = new Dictionary<int, ISkill>();
         // 技能释放条件列表
         protected List<ICastSkillCondition> castSkillConditions = new List<ICastSkillCondition>();
+        // 技能目标选择策略列表
+        protected List<ITargetSelectStrategy> targetSelectStrategies = new List<ITargetSelectStrategy>();
+
         // 技能工厂接口
         protected ISkillFactory skillFactory;
 
@@ -25,7 +28,7 @@ namespace Game.Battle
         public void InitSkills(string f_skillIds, ISkillFactory skillFactory)
         {
             this.skillFactory = skillFactory;
-            // TODO：通过技能工厂加载技能（配置表读取角色技能ID列表）
+            // 通过技能工厂加载技能（配置表读取角色技能ID列表）
             int[] skillIds = TextUtility.SplitToIntArr(f_skillIds, 2);
             var skills = skillFactory.CreateSkills(this.BattleEntity, skillIds);
 
@@ -50,17 +53,9 @@ namespace Game.Battle
 
                 IsRelease = false;
 
-                // TODO：暂时这样写，后续优化技能判断逻辑
-                if ((E_SkillType)skill.SkillInfo.f_SkillType == E_SkillType.UltimateSkill)
-                {
-                    // 发送技能命令到回合队列
-                    SkillManager.Instance.AddUltimateSkillCommand(skill);
-                }
-                else
-                {
-                    // 发送技能命令到回合队列
-                    SkillManager.Instance.AddSkillCommand(skill);
-                }
+                // 发送技能命令到回合队列
+                skill.SetTargetSelectStrategy(targetSelectStrategies[0]);
+                SkillManager.Instance.AddSkillCommand(skill);
             }
             else
             {
@@ -120,6 +115,44 @@ namespace Game.Battle
         }
 
         /// <summary>
+        /// 添加目标选择策略
+        /// </summary>
+        /// <param name="targetSelectStrategy"></param>
+        public void AddTargetSelectStrategy(ITargetSelectStrategy targetSelectStrategy)
+        {
+            targetSelectStrategies.Add(targetSelectStrategy);
+            SortTargetStratgy();
+        }
+
+        /// <summary>
+        /// 移除目标选择策略
+        /// </summary>
+        /// <param name="targetSelectStrategy"></param>
+        public void RemoveTargetSelectStrategy(ITargetSelectStrategy targetSelectStrategy)
+        {
+            targetSelectStrategies.Remove(targetSelectStrategy);
+            SortTargetStratgy();
+        }
+
+        /// <summary>
+        /// 排序目标选择策略
+        /// </summary>
+        private void SortTargetStratgy()
+        {
+            targetSelectStrategies.Sort((s1, s2) =>
+            {
+                if (s1.Priority > s2.Priority)
+                {
+                    return -1;
+                }
+                else
+                {
+                    return 1;
+                }
+            });
+        }
+
+        /// <summary>
         /// 获取所有的技能ID
         /// </summary>
         /// <returns></returns>
@@ -132,26 +165,9 @@ namespace Game.Battle
         /// 获取所有的技能
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<ISkill> GetSkills()
+        public List<ISkill> GetSkills()
         {
-            return skills.Values;
-        }
-
-        /// <summary>
-        /// 获取普攻技能
-        /// TODO：后续优化到工具类/拓展方法中
-        /// </summary>
-        /// <returns></returns>
-        public ISkill GetNormalAttackSkill()
-        {
-            foreach (ISkill skill in skills.Values)
-            {
-                if ((E_SkillType)skill.SkillInfo.f_SkillType == E_SkillType.NormalAttack)
-                {
-                    return skill;
-                }
-            }
-            return null;
+            return new List<ISkill>(skills.Values);
         }
     }
 }

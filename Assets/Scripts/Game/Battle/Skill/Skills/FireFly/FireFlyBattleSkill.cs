@@ -2,12 +2,11 @@ using Framework;
 using Game.Battle;
 using System.Collections;
 using UnityEngine;
-using static Unity.VisualScripting.Member;
 
 /// <summary>
 /// FireFly’Ωºº
 /// </summary>
-public class FireFlyBattleSkill : Skill
+public class FireFlyBattleSkill : PlayerSkill
 {
     private readonly string battleAttackState = "BattleAttack";
 

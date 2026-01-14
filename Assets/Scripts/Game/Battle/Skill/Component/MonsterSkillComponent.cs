@@ -1,8 +1,5 @@
 using Framework;
 using Game.Battle;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 /// <summary>
 /// 怪物技能组件
@@ -17,5 +14,7 @@ public class MonsterSkillComponent : SkillComponent
         base.BattleInit(battleEntity);
 
         AddCastCondition(IFactory.GetTypeInstance<CastSkillConditionFactory, MonsterDefaultCastSkillCondition>());
+        // 初始化策略列表
+        AddTargetSelectStrategy(IFactory.GetTypeInstance<TargetSelectStrategyFactory, MonsterBaseTargetSelectStrategy>());
     }
 }

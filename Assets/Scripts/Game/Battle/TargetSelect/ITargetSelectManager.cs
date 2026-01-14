@@ -32,16 +32,10 @@ public interface ITargetSelectManager
     List<IBattleEntityObject> GetTargets();
 
     /// <summary>
-    /// 设置选择目标策略
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    void SetSelectTargetStrategy<T>() where T : class, ITargetSelectStrategy;
-
-    /// <summary>
-    /// 重新选择目标
+    /// 选择目标
     /// </summary>
     /// <param name="context"></param>
     /// <param name="caster"></param>
     /// <param name="skillInfo"></param>
-    void ReSelectTarget(IBattleContext context, IBattleEntityObject caster, SkillInfo skillInfo);
+    void SelectTarget(IBattleContext context, IBattleEntityObject caster, SkillInfo skillInfo, ITargetSelectStrategy targetSelectStrategy);
 }

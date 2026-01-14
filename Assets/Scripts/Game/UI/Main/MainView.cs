@@ -1,9 +1,7 @@
 using Framework;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 /// <summary>
@@ -11,20 +9,10 @@ using UnityEngine.UI;
 /// </summary>
 public class MainView : UIView
 {
-    private ScrollRect svInteract;
-    private GameObject taskPart;
-    private TextMeshProUGUI txtTaskTitle;
-    private TextMeshProUGUI txtTaskDescription;
-
-    protected override void Awake()
-    {
-        base.Awake();
-
-        svInteract = binder.GetControl<ScrollRect>(nameof(svInteract));
-        taskPart = this.transform.Find(nameof(taskPart)).gameObject;
-        txtTaskTitle = binder.GetControl<TextMeshProUGUI>(nameof(txtTaskTitle));
-        txtTaskDescription = binder.GetControl<TextMeshProUGUI>(nameof(txtTaskDescription));
-    }
+    [Inject] private ScrollRect svInteract;
+    [Inject] private RectTransform taskPart;
+    [Inject] private TextMeshProUGUI txtTaskTitle;
+    [Inject] private TextMeshProUGUI txtTaskDescription;
 
     public override void UpdateView(string key, object value)
     {
@@ -34,7 +22,7 @@ public class MainView : UIView
                 UpdateInteract(value);
                 break;
             case "isActiveTaskbar":
-                taskPart.SetActive((bool)value);
+                taskPart.gameObject.SetActive((bool)value);
                 break;
             case "UpdateTask":
                 UpdateTask(value);

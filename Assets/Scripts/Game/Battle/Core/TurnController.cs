@@ -321,13 +321,16 @@ namespace Game.Battle
         /// <summary>
         /// 移除死亡怪物实体
         /// </summary>
-        public void RemoveDeadMonster()
+        public IEnumerator RemoveDeadMonster()
         {
             var deadMonsters = _context.GetDeadMonsterEntitys();
             foreach (var deadMonster in deadMonsters)
             {
+                yield return deadMonster.Die();
                 _context.GetAllBattleEntity().Remove(deadMonster);
                 GameObject.Destroy(deadMonster.GameObject);
+                // 显示销毁特效
+                // ,,,
             }
 
             // 事件分发传递，更新行动轴UI显示

@@ -1,7 +1,4 @@
 using Game.Battle;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 /// <summary>
 /// ÉËº¦½á¹û

@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// FireFly∆’π•
 /// </summary>
-public class FireFlyNormalSkill : Skill
+public class FireFlyNormalSkill : PlayerSkill
 {
     private static WaitForSeconds _waitForSeconds0_35 = new WaitForSeconds(0.35f);
 

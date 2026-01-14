@@ -14,24 +14,26 @@ public class BaseUltimateSkillCastPostHandler : ISkillCastPostHandler
         IBattleContext context = skill.Caster.Context;
         IBattleEntityObject currentEntity = context.GetCurrentEntity();
 
-        if (currentEntity is MonsterObject)
+        if (currentEntity is not PlayerObject)
         {
-            // 更新为怪物行动提示
-
-            // 切换
-
             yield break;
         }
-        else
+
+        // 判断当前玩家是否还有行动次数
+        if (currentEntity.CanAct)
         {
-            // 判断当前玩家是否还有行动次数
-            if (currentEntity.CanAct)
-            {
-                SkillInfo currentEntitySkillInfo = currentEntity.GetComponent<SkillComponent>().GetNormalAttackSkill().SkillInfo;
-                // 用于玩家终结技结束后恢复UI
-                context.GetEventBus().TriggerEvent(new UltimateReleaseOverEvent(context, currentEntity));
-                BattleUIScheduler.Instance.UpdateCameraAndMarkerAndMonsterUI(context, currentEntity, currentEntitySkillInfo);
-            }
+            SkillInfo currentEntitySkillInfo = currentEntity.GetComponent<SkillComponent>().GetSkills().Find((skill) => skill.SkillInfo.f_SkillType == (int)E_SkillType.NormalAttack).SkillInfo;
+            // 玩家终结技结束后恢复UI
+            ServiceLocator.Get<IUIManager>().GetView<BattleController>().GetBattleUI().SetActTipActive(BattleUIManager.E_ActTipType.Hide);
+            ServiceLocator.Get<IUIManager>().GetView<BattleController>().GetBattleUI().UpdateOperator(currentEntity, IFactory.GetTypeInstance<SkillKeyUIDataProviderFactory, BaseSkillKeyUIDataProvider>());
+            // 激活玩家相机，传入的必须是玩家对象
+            BattlePoint.Instance.ActiveCamera(currentEntity);
+            // 更新看向
+            context.GetTurnManager().UpdateEntityLookAt(currentEntity);
+            // 更新目标选择
+            ServiceLocator.Get<ITargetSelectManager>().SelectTarget(context, currentEntity, currentEntitySkillInfo, IFactory.GetTypeInstance<TargetSelectStrategyFactory, PlayerBaseTargetSelectStrategy>());
+            // 更新怪物血条位置
+            ServiceLocator.Get<IUIManager>().GetView<BattleController>().GetUIInitializer().InitMonsterUI(context.GetMonsterObjects());
         }
     }
 }
