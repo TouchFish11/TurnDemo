@@ -2,19 +2,20 @@ using Framework;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Game.Battle.Core;
 
 namespace Game.Battle
 {
     /// <summary>
-    /// Õ½¶·¹ÜÀíÆ÷
+    /// Õ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     public class BattleManager : SingletonBase<BattleManager>, IBattleManager
     {
-        // µÐÈËÊýÁ¿
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         private int _monsterNum;
-        // Õ½¶·ÉÏÏÂÎÄ
+        // Õ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         private IBattleContext context;
-        // ÊµÌåÕ½¶·µã
+        // Êµï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½
         private BattlePoint battlePoint; 
 
         private BattleManager()
@@ -22,17 +23,17 @@ namespace Game.Battle
 
         }
 
-        public async Task StartBattle(/* Õ½¶·½ÇÉ«Ñ¡Ôñ£¬¹ÖÎïÑ¡Ôñ£¬Õ½¶·³¡¾°Ñ¡Ôñ£¨¿ÉÑ¡£©£¬ */)
+        public async Task StartBattle(/* Õ½ï¿½ï¿½ï¿½ï¿½É«Ñ¡ï¿½ñ£¬¹ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ñ£¨¿ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ */)
         {
-            // ³õÊ¼»¯Õ½¶·ÉÏÏÂÎÄ
+            // ï¿½ï¿½Ê¼ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             context = new BattleContext();
-            // ³õÊ¼»¯Õ½¶·Ïà¹Ø¹ÜÀíÆ÷
+            // ï¿½ï¿½Ê¼ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½Ø¹ï¿½ï¿½ï¿½ï¿½ï¿½
             InitBattle();
-            // ³õÊ¼»¯Õ½¶·
+            // ï¿½ï¿½Ê¼ï¿½ï¿½Õ½ï¿½ï¿½
             await context.InitBattle();
-            // »ñÈ¡³¡¾°ÉÏµÄÕ½¶·µã¶ÔÏó£¬³õÊ¼»¯Õ½¶·µã¶ÔÏó
+            // ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½Õ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ó£¬³ï¿½Ê¼ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             battlePoint = BattlePoint.Instance.InitBattlePoint();
-            // Æô¶¯»ØºÏ
+            // ï¿½ï¿½ï¿½ï¿½ï¿½Øºï¿½
             MonoManager.Instance.StartCoroutine(context.GetTurnManager().BattleLoop());
         }
 
@@ -43,28 +44,28 @@ namespace Game.Battle
 
         private void InitBattle()
         {
-            // ÒÀÀµÕ½¶·ÉÏÏÂÎÄ
+            // ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             ServiceLocator.Register<ITargetSelectManager>(TargetSelectManager.Instance);
-            // ±»Íæ¼Ò´´½¨Ê±ÒÀÀµ£¬ËùÒÔÒªÏÈÓÚÍæ¼Ò´´½¨
+            // ï¿½ï¿½ï¿½ï¿½Ò´ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò´ï¿½ï¿½ï¿½
             ServiceLocator.Register<IDamageCalcManager>(DamageCalcManager.Instance);
             ServiceLocator.Register<ISkillManager>(SkillManager.Instance);
 
-            // ¼àÌýÍË³öÕ½¶·ÊÂ¼þ
+            // ï¿½ï¿½ï¿½ï¿½ï¿½Ë³ï¿½Õ½ï¿½ï¿½ï¿½Â¼ï¿½
             context.GetEventBus().AddListener<QuitBattleEvent>(OnQuitBattleEvent);
         }
 
         /// <summary>
-        /// ÍË³öÕ½¶·ÊÂ¼þ»Øµ÷
-        /// Òþ²ØÕ½¶·½çÃæ¡¢ÇåÀíÕ½¶·Ïà¹ØÊý¾Ý¡¢ÏÔÊ¾ºÚ±³¾°¹ý¶É
+        /// ï¿½Ë³ï¿½Õ½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½Øµï¿½
+        /// ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½ï¿½æ¡¢ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¡ï¿½ï¿½ï¿½Ê¾ï¿½Ú±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         /// </summary>
         /// <param name="quitBattleEvent"></param>
         private void OnQuitBattleEvent(QuitBattleEvent quitBattleEvent)
         {
-            // Òþ²ØÕ½¶·½çÃæ
+            // ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             ServiceLocator.Get<IUIManager>().DestroyView();
-            // ÇåÀíÕ½¶·
+            // ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½
             context.CleanupBattle();
-            // ÏÔÊ¾ºÚ±³¾°
+            // ï¿½ï¿½Ê¾ï¿½Ú±ï¿½ï¿½ï¿½
             ShowBackView();
         }
 
@@ -73,15 +74,15 @@ namespace Game.Battle
             BackController backController = await ServiceLocator.Get<IUIManager>().CreateViewAsync<BackView, BackModel, BackController>(E_UILayer.Mid);
             //backController.CompletedHide(() =>
             //{
-            //    //ÇÐ»»³¡¾°
+            //    //ï¿½Ð»ï¿½ï¿½ï¿½ï¿½ï¿½
             //    SceneManager.Instance.LoadSceneAsync(ResKeyCollection.MainScene, UnityEngine.SceneManagement.LoadSceneMode.Single, (progress) =>
             //    {
-            //        LogManager.Log($"¼ÓÔØ½ø¶È£º{progress}");
+            //        LogManager.Log($"ï¿½ï¿½ï¿½Ø½ï¿½ï¿½È£ï¿½{progress}");
             //    }, async () =>
             //    {
-            //        // Òþ²Ø±³¾°
+            //        // ï¿½ï¿½ï¿½Ø±ï¿½ï¿½ï¿½
             //        ServiceLocator.Get<IUIManager>().DestroyView();
-            //        // ÏÔÊ¾Ö÷½çÃæ
+            //        // ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             //        await ServiceLocator.Get<IUIManager>().CreateViewAsync<MainView, MainModel, MainController>(E_UILayer.Top);
             //    });
             //});

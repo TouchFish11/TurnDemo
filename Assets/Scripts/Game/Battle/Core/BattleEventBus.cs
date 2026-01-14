@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Game.Battle
+namespace Game.Battle.Core
 {
     public abstract class BaseBattleEventInfo
     {
@@ -20,46 +20,46 @@ namespace Game.Battle
 
 
     /// <summary>
-    /// ս���¼�����
-    /// �ֲ��¼����ߣ�����ս�������и�ģ�����¼�ͨ��
+    /// 战斗事件总线
+    /// 局部事件总线，负责战斗流程中各模块间的事件通信
     /// </summary>
     public class BattleEventBus : IBattleEventBus
     {
-        // �洢���¼����͡�ս���¼���Ϣ����ӳ�䣨�������ǽ����¼��Ļص�������
-        private readonly Dictionary<Type, BaseBattleEventInfo> _typeToEventInfoMap = new Dictionary<Type, BaseBattleEventInfo>();
+        // 存储“事件类型→战斗事件信息”的映射（订阅者是接收事件的回调方法）
+        private readonly Dictionary<Type, BaseBattleEventInfo> _typeToEventInfoMap = new();
 
         public void AddListener<TEvent>(Action<TEvent> callback) where TEvent : BattleEvent
         {
-            Type eventType = typeof(TEvent);
-            if (!_typeToEventInfoMap.TryGetValue(eventType, out BaseBattleEventInfo eventInfo))
+            var eventType = typeof(TEvent);
+            if (!_typeToEventInfoMap.TryGetValue(eventType, out var eventInfo))
             {
                 eventInfo = new BattleEventInfo<TEvent>();
-                (eventInfo as BattleEventInfo<TEvent>).OnBattleEvent += callback;
+                ((BattleEventInfo<TEvent>)eventInfo).OnBattleEvent += callback;
                 _typeToEventInfoMap.Add(eventType, eventInfo);
             }
             else
             {
-                (eventInfo as BattleEventInfo<TEvent>).OnBattleEvent += callback;
+                ((BattleEventInfo<TEvent>)eventInfo).OnBattleEvent += callback;
             }
         }
 
         public void TriggerEvent<TEvent>(TEvent battleEvent) where TEvent : BattleEvent
         {
-            Type eventType = typeof(TEvent);
-            if (_typeToEventInfoMap.TryGetValue(eventType, out BaseBattleEventInfo eventInfo))
+            var eventType = typeof(TEvent);
+            if (_typeToEventInfoMap.TryGetValue(eventType, out var eventInfo))
             {
-                // �������ж����ߵĻص�
+                // 触发所有订阅者的回调
                 (eventInfo as BattleEventInfo<TEvent>)?.Invoke(battleEvent);
             }
         }
 
         public void RemoveListener<TEvent>(Action<TEvent> callback) where TEvent : BattleEvent
         {
-            Type eventType = typeof(TEvent);
-            if (_typeToEventInfoMap.TryGetValue(eventType, out BaseBattleEventInfo eventInfo))
+            var eventType = typeof(TEvent);
+            if (_typeToEventInfoMap.TryGetValue(eventType, out var eventInfo))
             {
-                // �Ƴ�ָ�������ߵĻص�
-                (eventInfo as BattleEventInfo<TEvent>).OnBattleEvent -= callback;
+                // 移除指定订阅者的回调
+                ((BattleEventInfo<TEvent>)eventInfo).OnBattleEvent -= callback;
             }
         }
 

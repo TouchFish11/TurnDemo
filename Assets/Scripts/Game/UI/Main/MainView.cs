@@ -14,6 +14,7 @@ public class MainView : UIView
     [Inject] private TextMeshProUGUI txtTaskTitle;
     [Inject] private TextMeshProUGUI txtTaskDescription;
 
+    [System.Obsolete]
     public override void UpdateView(string key, object value)
     {
         switch (key)

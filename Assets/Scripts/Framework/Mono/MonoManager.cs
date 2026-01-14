@@ -1,111 +1,124 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using Framework.Mono.MonoFunction;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace Framework
 {
     /// <summary>
-    /// 公共Mono管理器
+    /// Mono锟斤拷锟斤拷锟斤拷
     /// </summary>
     public class MonoManager : SingletonAutoMono<MonoManager>, IMonoManager
     {
-        /// <summary>
-        /// 物理帧更新事件
-        /// </summary>
-        private event UnityAction FixedUpdateEvent;
-        /// <summary>
-        /// 帧更新事件
-        /// </summary>
-        private event UnityAction UpdateEvent;
-        /// <summary>
-        /// 后期更新事件
-        /// </summary>
-        private event UnityAction LateUpdateEvent;
+        private List<IAwakable> awakables = new List<IAwakable>();
+        private List<IEnable> enables = new List<IEnable>();
+        private List<IStartable> startables = new List<IStartable>();
+        private List<IDisable> disables = new List<IDisable>();
+        private List<IDestroyable> destroyables = new List<IDestroyable>();
 
-        /// <summary>
-        /// 开启协程
-        /// </summary>
-        /// <param name="coroutine"></param>
+        // 锟斤拷锟斤拷帧锟斤拷锟斤拷锟叫憋拷
+        private List<Action> fixedUpdates = new List<Action>();
+        // 帧锟斤拷锟斤拷锟叫憋拷
+        private List<Action> updates = new List<Action>();
+        // 锟斤拷锟节革拷锟斤拷锟叫憋拷
+        private List<Action> lateUpdates = new List<Action>();
+
+        private void Awake()
+        {
+            for (int i = 0; i < awakables.Count; ++i)
+            {
+                awakables[i].Awake();
+            }
+        }
+
+        private void OnEnable()
+        {
+            
+        }
+
+        private void Start()
+        {
+            
+        }
+
         public new Coroutine StartCoroutine(IEnumerator coroutine)
         {
             return base.StartCoroutine(coroutine);
         }
 
-        /// <summary>
-        /// 添加物理帧更新监听函数
-        /// </summary>
-        /// <param name="fixedUpdateFun">物理帧更新监听函数</param>
-        public void AddFixedUpdateListener(UnityAction fixedUpdateFun)
+        public void AddFixedUpdateListener(Action fixedUpdateFun)
         {
-            this.FixedUpdateEvent += fixedUpdateFun;
+            fixedUpdates.Add(fixedUpdateFun);
         }
 
-        /// <summary>
-        /// 添加帧更新监听函数
-        /// </summary>
-        /// <param name="updateFun">帧更新监听函数</param>
-        public void AddUpdateListener(UnityAction updateFun)
+        public void AddUpdateListener(Action updateFun)
         {
-            this.UpdateEvent += updateFun;
+            updates.Add(updateFun);
         }
 
-        /// <summary>
-        /// 添加后期帧更新监听函数
-        /// </summary>
-        /// <param name="lateUpdateFun">后期帧更新监听函数</param>
-        public void AddLateUpdateListener(UnityAction lateUpdateFun)
+        public void AddLateUpdateListener(Action lateUpdateFun)
         {
-            this.LateUpdateEvent += lateUpdateFun;
+            lateUpdates.Add(lateUpdateFun);
         }
 
-        /// <summary>
-        /// 移除物理帧更新监听函数
-        /// </summary>
-        /// <param name="fixedUpdateFun">物理帧更新监听函数</param>
-        public void RemoveFixedUpdateListener(UnityAction fixedUpdateFun)
+        public void RemoveFixedUpdateListener(Action fixedUpdateFun)
         {
-            this.FixedUpdateEvent -= fixedUpdateFun;
+            fixedUpdates.Remove(fixedUpdateFun);
         }
 
-        /// <summary>
-        /// 移除帧更新监听函数
-        /// </summary>
-        /// <param name="updateFun">帧更新监听函数</param>
-        public void RemoveUpdateListener(UnityAction updateFun)
+        public void RemoveUpdateListener(Action updateFun)
         {
-            this.UpdateEvent -= updateFun;
+            updates.Remove(updateFun);
         }
 
-        /// <summary>
-        /// 移除后期帧更新监听函数
-        /// </summary>
-        /// <param name="lateUpdateFun">后期帧更新监听函数</param>
-        public void RemoveLateUpdateListener(UnityAction lateUpdateFun)
+
+        public void RemoveLateUpdateListener(Action lateUpdateFun)
         {
-            this.LateUpdateEvent -= lateUpdateFun;
+            lateUpdates.Remove(lateUpdateFun);
         }
 
         private void FixedUpdate()
         {
-            FixedUpdateEvent?.Invoke();
+            for (int i = 0; i < fixedUpdates.Count; ++i)
+            {
+                fixedUpdates[i]?.Invoke();
+            }
         }
 
         private void Update()
         {
-            UpdateEvent?.Invoke();
+            for (int i = 0; i < updates.Count; ++i)
+            {
+                updates[i]?.Invoke();
+            }
         }
 
         private void LateUpdate()
         {
-            LateUpdateEvent?.Invoke();
+            for (int i = 0; i < lateUpdates.Count; ++i)
+            {
+                lateUpdates[i]?.Invoke();
+            }
+        }
+
+        private void OnDisable()
+        {
+            
         }
 
         protected override void OnDestroy()
         {
-            FixedUpdateEvent = null;
-            UpdateEvent = null;
-            LateUpdateEvent = null;
+            awakables.Clear();
 
+            fixedUpdates.Clear();
+            updates.Clear();
+            lateUpdates.Clear();
+
+            awakables = null;
+            fixedUpdates = null;
+            updates = null;
+            lateUpdates = null;
             base.OnDestroy();
         }
     }

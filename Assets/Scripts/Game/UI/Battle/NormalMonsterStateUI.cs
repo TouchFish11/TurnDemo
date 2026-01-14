@@ -15,8 +15,11 @@ public class NormalMonsterStateUI : BaseUIBehaviour
     [Inject] private Image imgHp;
     // 韧性条
     [Inject] private Image imgToughness;
-    // 弱点栏
-    [Inject] private RectTransform weaknessBar;
+
+    /// <summary>
+    /// 弱点栏
+    /// </summary>
+    [Inject(1)] private RectTransform WeaknessBar { get; set; }
 
     // 渐变速度
     [SerializeField] private float fadeSpeed;
@@ -71,7 +74,7 @@ public class NormalMonsterStateUI : BaseUIBehaviour
         // 初始化弱点
         foreach (E_ElementType elementType in toughnessComponent.WeakPropertys)
         {
-            GameObject weaknessIconObj = await ObjectBuilder.GetOrCreateInstance(E_AssetBundleType.UI, ResKeyCollection.WeaknessUI, weaknessBar);
+            GameObject weaknessIconObj = await ObjectBuilder.GetOrCreateInstance(E_AssetBundleType.UI, ResKeyCollection.WeaknessUI, WeaknessBar);
             Image weaknessIcon = weaknessIconObj.GetComponent<Image>();
             weaknessIcon.color = ((int)elementType).ToElementTypeColor();
             weakneses.Add(weaknessIcon);

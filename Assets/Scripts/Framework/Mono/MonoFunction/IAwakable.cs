@@ -1,0 +1,11 @@
+
+namespace Framework.Mono.MonoFunction
+{
+    /// <summary>
+    /// Awake接口
+    /// </summary>
+    public interface IAwakable
+    {
+        void Awake();
+    }
+}

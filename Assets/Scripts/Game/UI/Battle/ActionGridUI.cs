@@ -12,7 +12,7 @@ public class ActionGridUI : BaseUIBehaviour
     [Inject] private Image imgSelect;
     [Inject] private Image imgIcon;
     [Inject] private TextMeshProUGUI txtActionValue;
-    [Inject] private RectTransform Flashing { get; set; }
+    [Inject(1)] private RectTransform Flashing { get; set; }
 
     private RectTransform imgSelectRect;
     // Í¼Æ¬Êý×é

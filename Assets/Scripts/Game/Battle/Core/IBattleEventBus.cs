@@ -1,33 +1,35 @@
-
 using System;
 
-/// <summary>
-/// Õ½¶·ÊÂ¼þ×ÜÏß½Ó¿Ú
-/// </summary>
-public interface IBattleEventBus
+namespace Game.Battle.Core
 {
     /// <summary>
-    /// Ìí¼ÓÊÂ¼þ£¨Ä£¿éÍ¨¹ý´Ë·½·¨×¢²á×Ô¼ºÒª¼àÌýµÄÊÂ¼þ£©
+    /// Õ½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ß½Ó¿ï¿½
     /// </summary>
-    /// <typeparam name="TEvent"></typeparam>
-    /// <param name="callback"></param>
-    void AddListener<TEvent>(Action<TEvent> callback) where TEvent : Game.Battle.BattleEvent;
+    public interface IBattleEventBus
+    {
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½Ä£ï¿½ï¿½Í¨ï¿½ï¿½ï¿½Ë·ï¿½ï¿½ï¿½×¢ï¿½ï¿½ï¿½Ô¼ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½
+        /// </summary>
+        /// <typeparam name="TEvent"></typeparam>
+        /// <param name="callback"></param>
+        void AddListener<TEvent>(Action<TEvent> callback) where TEvent : Game.Battle.BattleEvent;
 
-    /// <summary>
-    /// ´¥·¢ÊÂ¼þ£¨ºËÐÄÁ÷³ÌÍ¨¹ý´Ë·½·¨Í¨ÖªËùÓÐ¶©ÔÄÕß£©
-    /// </summary>
-    /// <param name="battleEvent"></param>
-    void TriggerEvent<TEvent>(TEvent battleEvent) where TEvent : Game.Battle.BattleEvent;
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ï¿½Ë·ï¿½ï¿½ï¿½Í¨Öªï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ß£ï¿½
+        /// </summary>
+        /// <param name="battleEvent"></param>
+        void TriggerEvent<TEvent>(TEvent battleEvent) where TEvent : Game.Battle.BattleEvent;
 
-    /// <summary>
-    /// ÒÆ³ýÊÂ¼þ
-    /// </summary>
-    /// <typeparam name="TEvent"></typeparam>
-    /// <param name="callback"></param>
-    void RemoveListener<TEvent>(Action<TEvent> callback) where TEvent : Game.Battle.BattleEvent;
+        /// <summary>
+        /// ï¿½Æ³ï¿½ï¿½Â¼ï¿½
+        /// </summary>
+        /// <typeparam name="TEvent"></typeparam>
+        /// <param name="callback"></param>
+        void RemoveListener<TEvent>(Action<TEvent> callback) where TEvent : Game.Battle.BattleEvent;
 
-    /// <summary>
-    /// ÇåÀí×ÜÏß
-    /// </summary>
-    void Clear();
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        /// </summary>
+        void Clear();
+    }
 }

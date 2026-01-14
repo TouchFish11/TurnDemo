@@ -11,6 +11,7 @@ public class GlobalMessageView : UIView
 
     public Transform MessageContainer => svMsg.content;
 
+    [System.Obsolete]
     public override void UpdateView(string key, object value)
     {
 

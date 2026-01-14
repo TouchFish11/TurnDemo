@@ -331,7 +331,7 @@ GameObject:
   m_Component:
   - component: {fileID: 134620857}
   m_Layer: 0
-  m_Name: "\u660E\u5929\uFF1A\u4FEEBug\uFF1A\u5F31\u70B9\u6CA1\u653E\u597D\uFF0C\u6218\u6597\u754C\u9762\u5C5E\u6027\u6CA1\u627E\u5B8C"
+  m_Name: "\u660E\u5929\uFF1A\u5B8C\u6210\u6218\u6280\uFF08\u91CA\u653E\u5F39\u5C04\u7269\uFF09\u3001\u6DFB\u52A0\u7279\u6548"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1617,7 +1617,7 @@ Camera:
   m_Depth: -2
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 /// </summary>
 public class BeginView : UIView
 {
-    [Inject] private RectTransform progress;
+    [Inject(1)] private RectTransform progress;
 
     protected override void Awake()
     {
@@ -16,6 +16,7 @@ public class BeginView : UIView
         progress.gameObject.SetActive(false);
     }
 
+    [System.Obsolete]
     public override void UpdateView(string key, object value)
     {
         switch (key)

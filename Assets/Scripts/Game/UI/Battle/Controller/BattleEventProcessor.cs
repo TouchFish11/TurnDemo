@@ -1,10 +1,11 @@
 using Framework;
 using Game;
 using Game.Battle;
+using Game.Battle.Core;
 using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 /// <summary>
-/// Õ½¶·½çÃæÊÂ¼þ´¦ÀíÆ÷
+/// Õ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 /// </summary>
 public class BattleEventProcessor
 {
@@ -20,7 +21,7 @@ public class BattleEventProcessor
     }
 
     /// <summary>
-    /// Í³Ò»×¢²áËùÓÐÕ½¶·ÊÂ¼þ
+    /// Í³Ò»×¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½Â¼ï¿½
     /// </summary>
     public void RegisterBattleEvents(IBattleEventBus eventBus)
     {
@@ -40,53 +41,53 @@ public class BattleEventProcessor
     }
 
     /// <summary>
-    /// »ØºÏ¿ªÊ¼ÊÂ¼þ¼àÌý
-    /// ¸üÐÂÍæ¼Ò/¹ÖÎïUI
-    /// TODO£º¿ÉÓÅ»¯ÎªÍ¨¹ýÍâ²¿´«ÈëÂß¼­ÀàÀ´ÊµÏÖÂß¼­
+    /// ï¿½ØºÏ¿ï¿½Ê¼ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½UI
+    /// TODOï¿½ï¿½ï¿½ï¿½ï¿½Å»ï¿½ÎªÍ¨ï¿½ï¿½ï¿½â²¿ï¿½ï¿½ï¿½ï¿½ï¿½ß¼ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ß¼ï¿½
     /// </summary>
     /// <param name="turnStartEvent"></param>
     private void OnTurnStart(TurnStartEvent turnStartEvent)
     {
         //if (turnStartEvent.CurrentBattleEntity is MonsterObject)
         //{
-        //    // TODO£ºÔÝÊ±Ð´ÔÚÕâÀï£¬Òþ²Ø¹ÖÎïUI£¬ºóÐøÓÅ»¯µ÷ÓÃÂß¼­
+        //    // TODOï¿½ï¿½ï¿½ï¿½Ê±Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï£¬ï¿½ï¿½ï¿½Ø¹ï¿½ï¿½ï¿½UIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß¼ï¿½
 
-        //    // ¹ÖÎï¹¥»÷Ê±²ÅÈ¥Òþ²Ø¹ÖÎïUI
+        //    // ï¿½ï¿½ï¿½ï¹¥ï¿½ï¿½Ê±ï¿½ï¿½È¥ï¿½ï¿½ï¿½Ø¹ï¿½ï¿½ï¿½UI
 
         //}
         //else
         //{
-        //    // Íæ¼ÒÏà»úÎ»ÖÃ²»Í¬£¬ÐèÒªÃ¿»ØºÏ¿ªÊ¼Ê±¸üÐÂ¹ÖÎïUIÎ»ÖÃ
+        //    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½Ã²ï¿½Í¬ï¿½ï¿½ï¿½ï¿½ÒªÃ¿ï¿½ØºÏ¿ï¿½Ê¼Ê±ï¿½ï¿½ï¿½Â¹ï¿½ï¿½ï¿½UIÎ»ï¿½ï¿½
         //    await _uiInitializer.InitMonsterUI(turnStartEvent.Context.GetMonsterObjects());
         //}
 
-        // ÏÔÊ¾¹ÖÎïUI
+        // ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½UI
         _uiInitializer.InitMonsterUI(turnStartEvent.Context.GetMonsterObjects());
 
         if (turnStartEvent.CurrentBattleEntity is PlayerObject)
         {
-            // ÆôÓÃÄ¿±êÑ¡Ôñ
+            // ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½Ñ¡ï¿½ï¿½
             TargetSelectManager.Instance.ActiveSelectTarget();
-            // Òþ²ØÐÐ¶¯ÌáÊ¾
+            // ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½Ê¾
             _uiManager.SetActTipActive(BattleUIManager.E_ActTipType.Hide);
-            // ¸üÐÂµ±Ç°²Ù×÷UI
+            // ï¿½ï¿½ï¿½Âµï¿½Ç°ï¿½ï¿½ï¿½ï¿½UI
             _uiManager.UpdateOperator(turnStartEvent.CurrentBattleEntity, IFactory.GetTypeInstance<SkillKeyUIDataProviderFactory, BaseSkillKeyUIDataProvider>());
         }
         else if (turnStartEvent.CurrentBattleEntity is MonsterObject)
         {
-            // ½ûÓÃÄ¿±êÑ¡Ôñ
+            // ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½Ñ¡ï¿½ï¿½
             ServiceLocator.Get<ITargetSelectManager>().InActiveSelectTarget();
-            // Çå³ýUI
+            // ï¿½ï¿½ï¿½UI
             _uiManager.ClearSelectMarker();
-            // Òþ²ØÍæ¼ÒUI
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½UI
             _uiManager.SetOperator(null);
-            // ¸üÐÂÍæ¼ÒÐÐ¶¯ÌáÊ¾
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½Ê¾
             _uiManager.SetActTipActive(BattleUIManager.E_ActTipType.Monster);
         }
     }
 
     /// <summary>
-    /// »ØºÏ½áÊøÊÂ¼þ¼àÌý
+    /// ï¿½ØºÏ½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     /// <param name="turnEndEvent"></param>
     private void OnTurnEnd(TurnEndEvent turnEndEvent)
@@ -95,17 +96,17 @@ public class BattleEventProcessor
     }
 
     /// <summary>
-    /// »ØºÏ¿ªÊ¼×´Ì¬±ä»¯ÊÂ¼þ»Øµ÷
+    /// ï¿½ØºÏ¿ï¿½Ê¼×´Ì¬ï¿½ä»¯ï¿½Â¼ï¿½ï¿½Øµï¿½
     /// </summary>
     /// <param name="turnStartStatusChangedEvent"></param>
     private void OnTurnStartStatusChangedEvent(TurnStartStatusChangedEvent turnStartStatusChangedEvent)
     {
-        // ¸üÐÂÖ¸¶¨Íæ¼Ò×´Ì¬À¸
+        // ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½
         _uiManager.UpdatePlayerStatuebar(turnStartStatusChangedEvent.CurrentBattleEntity);
     }
 
     /// <summary>
-    /// ¹ÖÎïËÀÍöÊÂ¼þ»Øµ÷
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½Øµï¿½
     /// </summary>
     /// <param name="monsterDeadEvent"></param>
     private void OnMonsterDeadEvent(MonsterDeadEvent monsterDeadEvent)
@@ -114,8 +115,8 @@ public class BattleEventProcessor
     }
 
     /// <summary>
-    /// ×´Ì¬Ìí¼ÓÊÂ¼þ»Øµ÷
-    /// ÏÔÊ¾×´Ì¬¸¡¶¯ÎÄ±¾Ð§¹û
+    /// ×´Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½Øµï¿½
+    /// ï¿½ï¿½Ê¾×´Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½Ð§ï¿½ï¿½
     /// </summary>
     /// <param name="statusAddedEvent"></param>
     private void OnStatusAddedEvent(StatusAddedEvent statusAddedEvent)
@@ -124,7 +125,7 @@ public class BattleEventProcessor
     }
 
     /// <summary>
-    /// ÐÐ¶¯ÖáÅÅÐòºóÊÂ¼þ»Øµ÷
+    /// ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½Øµï¿½
     /// </summary>
     /// <param name="actionBarSortPostEvent"></param>
     private void OnActionBarSortPostEvent(ActionBarSortPostEvent actionBarSortPostEvent)
@@ -133,8 +134,8 @@ public class BattleEventProcessor
     }
 
     /// <summary>
-    /// ÊÜµ½ÉËº¦ÊÂ¼þ»Øµ÷
-    /// ÏÔÊ¾ÉËº¦ÎÄ±¾
+    /// ï¿½Üµï¿½ï¿½Ëºï¿½ï¿½Â¼ï¿½ï¿½Øµï¿½
+    /// ï¿½ï¿½Ê¾ï¿½Ëºï¿½ï¿½Ä±ï¿½
     /// </summary>
     /// <param name="applyDamageEvent"></param>
     private void OnTakeDamage(ApplyDamageEvent applyDamageEvent)
@@ -143,24 +144,24 @@ public class BattleEventProcessor
     }
 
     /// <summary>
-    /// Íæ¼ÒÊÍ·Å¼¼ÄÜÊÂ¼þ»Øµ÷
+    /// ï¿½ï¿½ï¿½ï¿½Í·Å¼ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½Øµï¿½
     /// </summary>
     /// <param name="playerReleaseSkillEvent"></param>
     private void OnPlayerReleaseSkillEvent(PlayerReleaseSkillEvent playerReleaseSkillEvent)
     {
-        // ½ûÓÃÄ¿±êÑ¡Ôñ
+        // ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½Ñ¡ï¿½ï¿½
         ServiceLocator.Get<ITargetSelectManager>().InActiveSelectTarget();
-        // Çå³ý±ê¼ÇUI
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½UI
         _uiManager.ClearSelectMarker();
-        // Òþ²ØÍæ¼ÒUI
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½UI
         _uiManager.SetOperator(null);
-        // ¸üÐÂÍæ¼ÒÐÐ¶¯ÌáÊ¾
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½Ê¾
         _uiManager.SetActTipActive(BattleUIManager.E_ActTipType.Player);
     }
 
     /// <summary>
-    /// ÑªÁ¿±ä»¯»Øµ÷ÊÂ¼þ
-    /// ÏÔÊ¾»Ö¸´ÎÄ±¾
+    /// Ñªï¿½ï¿½ï¿½ä»¯ï¿½Øµï¿½ï¿½Â¼ï¿½
+    /// ï¿½ï¿½Ê¾ï¿½Ö¸ï¿½ï¿½Ä±ï¿½
     /// </summary>
     /// <param name="hpChangedEvent"></param>
     private void OnHpChanged(HpChangedEvent hpChangedEvent)
@@ -172,26 +173,26 @@ public class BattleEventProcessor
     }
 
     /// <summary>
-    /// »¤¶Ü±ä»¯ÊÂ¼þ»Øµ÷
-    /// ÏÔÊ¾»¤¶Ü±ä»¯ÎÄ±¾
+    /// ï¿½ï¿½ï¿½Ü±ä»¯ï¿½Â¼ï¿½ï¿½Øµï¿½
+    /// ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½Ü±ä»¯ï¿½Ä±ï¿½
     /// </summary>
     /// <param name="onShieldChangedEvent"></param>
     private void OnShieldChanged(ShieldChangedEvent onShieldChangedEvent)
     {
         if (onShieldChangedEvent.DeltaShield < 0)
         {
-            // »¤¶ÜÔö¼ÓÏÔÊ¾
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾
 
         }
         else
         {
-            // »¤¶Ü¼õÉÙÏÔÊ¾
+            // ï¿½ï¿½ï¿½Ü¼ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾
 
         }
     }
 
     /// <summary>
-    /// Ä¿±êÑ¡Ôñ±ä»¯ÊÂ¼þ»Øµ÷
+    /// Ä¿ï¿½ï¿½Ñ¡ï¿½ï¿½ä»¯ï¿½Â¼ï¿½ï¿½Øµï¿½
     /// </summary>
     /// <param name="selectTargetEvent"></param>
     private void OnTargetSelectionChanged(SelectTargetEvent selectTargetEvent)
@@ -201,14 +202,14 @@ public class BattleEventProcessor
             return;
         }
 
-        // ¸üÐÂÄ¿±ê±ê¼ÇUIÏÔÊ¾
+        // ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½UIï¿½ï¿½Ê¾
         _uiManager.UpdateTargetMarker(selectTargetEvent.SelectedTargets);
-        // ¸üÐÂÐÐ¶¯ÖáÄ¿±ê¸ßÁÁÏÔÊ¾
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾
         _uiManager.UpdateActionGridHighlight(selectTargetEvent.SelectedTargets);
     }
 
     /// <summary>
-    /// Õ½¼¼µã±ä»¯ÊÂ¼þ»Øµ÷
+    /// Õ½ï¿½ï¿½ï¿½ï¿½ä»¯ï¿½Â¼ï¿½ï¿½Øµï¿½
     /// </summary>
     /// <param name="battlePointCountChanged"></param>
     private async void OnBattlePointCountChanged(OnBattlePointCountChangedEvent battlePointCountChanged)
@@ -217,8 +218,8 @@ public class BattleEventProcessor
     }
 
     /// <summary>
-    /// Õ½¶·½áÊøÊÂ¼þ»Øµ÷
-    /// ÏÔÊ¾Õ½¶·½áÊøUI
+    /// Õ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½Øµï¿½
+    /// ï¿½ï¿½Ê¾Õ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½UI
     /// </summary>
     private void OnBattleOverEvent(BattleOverEvent battleOverEvent)
     {

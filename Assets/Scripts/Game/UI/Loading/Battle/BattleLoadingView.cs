@@ -7,6 +7,7 @@ public class BattleLoadingView : UIView
     [Inject] private Slider sliderLoading;
     [Inject] private TextMeshProUGUI txtLoading;
 
+    [System.Obsolete]
     public override void UpdateView(string key, object value)
     {
         switch (key)

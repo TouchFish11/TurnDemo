@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
-/// Õ½¶·½çÃæ¿ØÖÆÆ÷¹¤³§
+/// æˆ˜æ–—ç•Œé¢æ§åˆ¶å™¨å·¥å‚
 /// </summary>
 public class BattleControllerFactory : UIControllerFactory<BattleView, BattleModel, BattleController>
 {
@@ -19,12 +19,12 @@ public class BattleControllerFactory : UIControllerFactory<BattleView, BattleMod
 }
 
 /// <summary>
-/// Õ½¶·½çÃæ¿ØÖÆÆ÷
+/// æˆ˜æ–—ç•Œé¢æ§åˆ¶å™¨
 /// </summary>
 [UIControllerFactory(typeof(BattleControllerFactory))]
 public class BattleController : UIController<BattleView, BattleModel>
 {
-    // ÒÀÀµ×¢Èë¸÷×ÓÄ£¿é
+    // ä¾èµ–æ³¨å…¥å„å­æ¨¡å—
     private BattleUIInitializer _uiInitializer;
     private BattleEventProcessor _eventProcessor;
     private BattleUIManager _uiManager;
@@ -43,7 +43,7 @@ public class BattleController : UIController<BattleView, BattleModel>
     }
 
     /// <summary>
-    /// ³õÊ¼»¯Õ½¶·UI
+    /// åˆå§‹åŒ–æˆ˜æ–—UI
     /// </summary>
     /// <param name="battleEntities"></param>
     public async Task InitBattleUI(IBattleContext battleContext)

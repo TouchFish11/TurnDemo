@@ -17,11 +17,13 @@ namespace Game.UI
         [Inject] private TextMeshProUGUI txtTaskName;
         [Inject] private TextMeshProUGUI txtTaskDescription;
         [Inject] private TextMeshProUGUI txtAccceptInfo;
-        [Inject] private RectTransform detailView;
-        [Inject] private RectTransform rewardBox;
-        [Inject] private RectTransform hasTaskView;
-        [Inject] private RectTransform noTaskView;
 
+        [Inject(1)] private RectTransform detailView;
+        [Inject(1)] private RectTransform rewardBox;
+        [Inject(1)] private RectTransform hasTaskView;
+        [Inject(1)] private RectTransform noTaskView;
+
+        [System.Obsolete]
         public override void UpdateView(string key, object value)
         {
             switch (key)

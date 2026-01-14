@@ -23,52 +23,47 @@ public class BattleView : UIView
     /// <summary>
     /// 操作区域
     /// </summary>
-    [Inject] public RectTransform OperatorArea { get; private set; }
+    [Inject(1)] public RectTransform OperatorArea { get; private set; }
 
     /// <summary>
     /// 玩家状态区域
     /// </summary>
-    [Inject] public RectTransform PlayerArea { get; private set; }
+    [Inject(1)] public RectTransform PlayerArea { get; private set; }
 
     /// <summary>
     /// 目标标记区域
     /// </summary>
-    [Inject] public RectTransform SelectMarkerArea { get; private set; }
+    [Inject(1)] public RectTransform SelectMarkerArea { get; private set; }
 
     /// <summary>
     /// 怪物状态区域
     /// </summary>
-    [Inject] public RectTransform MonsterStateArea { get; private set; }
+    [Inject(1)] public RectTransform MonsterStateArea { get; private set; }
 
     /// <summary>
     /// 战斗结束区域
     /// </summary>
-    [Inject] public RectTransform BattleOverArea { get; private set; }
+    [Inject(1)] public RectTransform BattleOverArea { get; private set; }
 
     /// <summary>
     /// 状态文本区域
     /// </summary>
-    [Inject] public RectTransform BuffTextArea { get; private set; }
+    [Inject(1)] public RectTransform BuffTextArea { get; private set; }
 
     /// <summary>
     /// 战斗消息区域
     /// </summary>
-    [Inject] public RectTransform BattleMsgArea { get; private set; }
+    [Inject(1)] public RectTransform BattleMsgArea { get; private set; }
 
     /// <summary>
     /// 总伤害区域
     /// </summary>
-    [Inject] public RectTransform TotalDmgArea { get; private set; }
+    [Inject(1)] public RectTransform TotalDmgArea { get; private set; }
 
     /// <summary>
     /// 立绘显示区域
     /// </summary>
-    [Inject] public RectTransform PaintingDisplayArea { get; private set; }
-
-    /// <summary>
-    /// 技能键组
-    /// </summary>
-    [Inject] public ToggleGroup SkillKeyGroup { get; private set; }
+    [Inject(1)] public RectTransform PaintingDisplayArea { get; private set; }
 
     /// <summary>
     /// 行动栏内容
@@ -86,6 +81,11 @@ public class BattleView : UIView
     public Transform WaitQueueContent => svWaitQueueArea.content;
 
     /// <summary>
+    /// 技能键组
+    /// </summary>
+    public ToggleGroup SkillKeyGroup => binder.GetControl<ToggleGroup>(nameof(OperatorArea));
+
+    /// <summary>
     /// 行动提示UI对象
     /// </summary>
     public ActingTipUI ActingTipUI => actingTipUI;
@@ -94,14 +94,6 @@ public class BattleView : UIView
     {
         base.Awake();
 
-        //operatorArea = this.transform.Find(nameof(operatorArea));
-        //playerArea = this.transform.Find(nameof(playerArea));
-        //selectMarkerArea = this.transform.Find(nameof(selectMarkerArea));
-        //monsterStateArea = this.transform.Find(nameof(monsterStateArea));
-        //BattleMsgArea = this.transform.Find(nameof(BattleMsgArea));
-        //BuffTextArea = this.transform.Find(nameof(BuffTextArea));
-        //BattleOverArea = this.transform.Find(nameof(BattleOverArea));
-
         BattleOverArea.gameObject.SetActive(false);
         TotalDmgArea.gameObject.SetActive(false);
         PaintingDisplayArea.gameObject.SetActive(false);
@@ -109,21 +101,6 @@ public class BattleView : UIView
         actingTipUI = this.GetComponentInChildren<ActingTipUI>();
         actingTipUI.Init(imgActingIcon, txtActingTip);
         actingTipUI.gameObject.SetActive(false);
-    }
-
-    public override void UpdateView(string key, object value)
-    {
-        switch (key)
-        {
-            case "activeActTip":
-                (bool isActive, bool isMonster) = ((bool, bool))value;
-                actingTipUI.gameObject.SetActive(isActive);
-                if (isActive)
-                {
-                    actingTipUI.UpdateTipText(isMonster);
-                }
-                break;
-        }
     }
 
     /// <summary>
@@ -157,5 +134,11 @@ public class BattleView : UIView
     public void UpdateBattlePointCount(int current)
     {
         txtCount.text = current.ToString();
+    }
+
+    [System.Obsolete]
+    public override void UpdateView(string key, object value)
+    {
+
     }
 }

@@ -212,7 +212,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3460275887045426763}
   m_Layer: 5
-  m_Name: toughnessBar
+  m_Name: ToughnessBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -253,7 +253,7 @@ GameObject:
   - component: {fileID: 3501813396634135589}
   - component: {fileID: 1158835858758962169}
   m_Layer: 5
-  m_Name: weaknessBar
+  m_Name: WeaknessBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -516,7 +516,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1453299798484088094}
   m_Layer: 5
-  m_Name: booldBar
+  m_Name: BooldBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

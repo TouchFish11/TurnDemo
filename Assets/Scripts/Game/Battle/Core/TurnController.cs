@@ -9,31 +9,29 @@ using UnityEngine;
 namespace Game.Battle
 {
     /// <summary>
-    /// »ØºÏ¿ØÖÆÆ÷
-    /// ¿ØÖÆÕ½¶·Ñ­»·
+    /// å›åˆæ§åˆ¶å™¨
+    /// æ§åˆ¶æˆ˜æ–—å¾ªç¯
     /// </summary>
     public class TurnController
     {
-        // Õ½¶·ÉÏÏÂÎÄ
+        // æˆ˜æ–—ä¸Šä¸‹æ–‡
         private readonly IBattleContext _context;
-        // Õ½¶·Ö¸Áî¿ØÖÆÆ÷
+        // æˆ˜æ–—æŒ‡ä»¤æ§åˆ¶å™¨
         private readonly BattleCommandsController commandsController;
-        // µ±Ç°ĞĞ¶¯ÊµÌå
+        // å½“å‰è¡ŒåŠ¨å®ä½“
         private IBattleEntityObject _currentActEntity;
-        // µ±Ç°Õ½¶·½×¶Î
-        private E_BattlePhase _battlePhase = E_BattlePhase.None;
-        // µ±Ç°Õ½¶·½áÊøÌõ¼ş
+        // å½“å‰æˆ˜æ–—ç»“æŸæ¡ä»¶
         private IBattleOverCondition battleOverCondition;
-        // µ±Ç°¹ÖÎïÊıÁ¿
+        // å½“å‰æ€ªç‰©æ•°é‡
         private int currentMonsterCount;
 
         /// <summary>
-        /// »ù´¡ĞĞ¶¯Öµ
+        /// åŸºç¡€è¡ŒåŠ¨å€¼
         /// </summary>
         private const float BASE_ACTION_VALUE = 10000f;
 
         /// <summary>
-        /// ËÙ¶ÈĞŞÕıÏµÊı£¨Æ½ºâ²»Í¬ËÙ¶ÈÇø¼ä£©
+        /// é€Ÿåº¦ä¿®æ­£ç³»æ•°ï¼ˆå¹³è¡¡ä¸åŒé€Ÿåº¦åŒºé—´ï¼‰
         /// </summary>
         private const float SPEED_CORRECTION = 1.0f;
 
@@ -45,17 +43,7 @@ namespace Game.Battle
         }
 
         /// <summary>
-        /// ³õÊ¼»¯ĞĞ¶¯
-        /// </summary>
-        /// <param name="battleEntityObjects"></param>
-        public void InitActions()
-        {
-            _battlePhase = E_BattlePhase.Preparation;
-            currentMonsterCount = _context.GetMonsterObjects().Count;
-        }
-
-        /// <summary>
-        /// Õ½¶·Ñ­»·
+        /// æˆ˜æ–—å¾ªç¯
         /// </summary>
         /// <returns></returns>
         public IEnumerator BattleLoop()
@@ -66,50 +54,46 @@ namespace Game.Battle
         }
 
         /// <summary>
-        /// Õ½¶·×¼±¸
+        /// æˆ˜æ–—å‡†å¤‡
         /// </summary>
         private async Task BattlePreparation()
         {
-            // ´´½¨Õ½¶·½çÃæ
+            currentMonsterCount = _context.GetMonsterObjects().Count;
+            // åˆ›å»ºæˆ˜æ–—ç•Œé¢
             BattleController battleController = await ServiceLocator.Get<IUIManager>().CreateViewAsync<BattleView, BattleModel,BattleController>(E_UILayer.Mid);
-            // ²¥·ÅÈë³¡¶¯»­µÈ
+            // æ’­æ”¾å…¥åœºåŠ¨ç”»ç­‰
             // ...
-            // ÏÔÊ¾Õ½¶·UI
+            // æ˜¾ç¤ºæˆ˜æ–—UI
             await battleController.InitBattleUI(_context);
-            // ³õÊ¼»¯ĞĞ¶¯Ë³Ğò
+            // åˆå§‹åŒ–è¡ŒåŠ¨é¡ºåº
             InitOrder();
-            // ³õÊ¼»¯ĞĞ¶¯ÊµÌå
+            // åˆå§‹åŒ–è¡ŒåŠ¨å®ä½“
             UpdateActEntity();
-            // ÆôÓÃµ±Ç°ÊµÌåĞĞ¶¯
+            // å¯ç”¨å½“å‰å®ä½“è¡ŒåŠ¨
             _currentActEntity.ExecuteAction();
-            // ÉèÖÃÎª½ÇÉ«ĞĞ¶¯½×¶Î
-            _battlePhase = E_BattlePhase.EntityTurn;
         }
 
         /// <summary>
-        /// ÊµÌåĞĞ¶¯»ØºÏ
+        /// å®ä½“è¡ŒåŠ¨å›åˆ
         /// </summary>
         private IEnumerator ActEntityTurn()
         {
-            // µÈ´ıÕ½¶·½áÊø
-            _battlePhase = E_BattlePhase.WaitingBattleOver;
             while (true)
             {
-                // Ö´ĞĞÃüÁî
+                // æ‰§è¡Œå‘½ä»¤
                 yield return commandsController.ExcuteCommand();
-                // ¼ì²éÕ½¶·ÊÇ·ñ½áÊø
+                // æ£€æŸ¥æˆ˜æ–—æ˜¯å¦ç»“æŸ
                 if (CheckBattleOver())
                 {
-                    LogManager.Log($"Õ½¶·½áÊø£¬ÍË³öÑ­»·");
                     yield break;
                 }
 
-                // µ±Ç°ÊµÌåÕıÔÚĞĞ¶¯£¬µÈ´ıÆäĞĞ¶¯½áÊø
+                // å½“å‰å®ä½“æ­£åœ¨è¡ŒåŠ¨ï¼Œç­‰å¾…å…¶è¡ŒåŠ¨ç»“æŸ
                 if (!_currentActEntity.CanAct)
                 {
-                    // ¸üĞÂµ±Ç°ĞĞ¶¯ÊµÌå
+                    // æ›´æ–°å½“å‰è¡ŒåŠ¨å®ä½“
                     UpdateActEntity();
-                    // ÆôÓÃµ±Ç°ÊµÌåĞĞ¶¯
+                    // å¯ç”¨å½“å‰å®ä½“è¡ŒåŠ¨
                     _currentActEntity.ExecuteAction();
                 }
 
@@ -118,7 +102,7 @@ namespace Game.Battle
         }
 
         /// <summary>
-        /// ¸üĞÂµ±Ç°ĞĞ¶¯ÊµÌå
+        /// æ›´æ–°å½“å‰è¡ŒåŠ¨å®ä½“
         /// </summary>
         private void UpdateActEntity()
         {
@@ -127,23 +111,23 @@ namespace Game.Battle
                 SortOrder();
             }
 
-            // ÔÙÈÃÏÂÒ»¸öÊµÌåĞĞ¶¯
+            // å†è®©ä¸‹ä¸€ä¸ªå®ä½“è¡ŒåŠ¨
             _currentActEntity = _context.GetAllBattleEntity()[0];
-            // ¸üĞÂµ±Ç°ÊµÌå
+            // æ›´æ–°å½“å‰å®ä½“
             _context.SetCurrentEntity(_currentActEntity);
-            // ¸üĞÂÊµÌå¿´Ïò
+            // æ›´æ–°å®ä½“çœ‹å‘
             UpdateEntityLookAt(_currentActEntity);
         }
 
         /// <summary>
-        /// ¸üĞÂÊµÌå¿´Ïò
+        /// æ›´æ–°å®ä½“çœ‹å‘
         /// </summary>
         /// <param name="target"></param>
         public void UpdateEntityLookAt(IBattleEntityObject target)
         {
             if (target is PlayerObject)
             {
-                // µ±Ç°Íæ¼Ò¿´Ïò´æ»î¹ÖÎïÖĞĞÄ
+                // å½“å‰ç©å®¶çœ‹å‘å­˜æ´»æ€ªç‰©ä¸­å¿ƒ
                 Vector3 center = GetLiveMonstersCenter();
                 Transform playerTrans = BattlePoint.Instance.GetPlayerTransByIndex(target.EntityPosIndex);
 
@@ -151,7 +135,7 @@ namespace Game.Battle
                 Vector3 newPlayerPos = new Vector3(playerPos.x, 0, playerPos.z);
                 playerTrans.rotation = Quaternion.LookRotation(center - newPlayerPos);
 
-                // ËùÓĞ¹ÖÎï¿´Ïòµ±Ç°Íæ¼Ò
+                // æ‰€æœ‰æ€ªç‰©çœ‹å‘å½“å‰ç©å®¶
                 IEnumerable<Transform> monsterTrans = BattlePoint.Instance.GetMonsterTransforms();
                 foreach (var trans in monsterTrans)
                 {
@@ -162,13 +146,13 @@ namespace Game.Battle
             }
             else if (target is MonsterObject)
             {
-                // ¼ÙÉèÊÇµ¥Ìå¹¥»÷£¬¹ÖÎï¹¥»÷ÄÄ¸öÍæ¼Ò£¬¾Í¼¤»îÄÄ¸öÍæ¼ÒµÄÉãÏñ»ú
+                // å‡è®¾æ˜¯å•ä½“æ”»å‡»ï¼Œæ€ªç‰©æ”»å‡»å“ªä¸ªç©å®¶ï¼Œå°±æ¿€æ´»å“ªä¸ªç©å®¶çš„æ‘„åƒæœº
 
 
             }
         }
 
-        // »ñÈ¡´æ»î¹ÖÎïÖĞĞÄ
+        // è·å–å­˜æ´»æ€ªç‰©ä¸­å¿ƒ
         private Vector3 GetLiveMonstersCenter()
         {
             List<IBattleEntityObject> monsters = new List<IBattleEntityObject>(_context.GetMonsterObjects());
@@ -185,21 +169,21 @@ namespace Game.Battle
         }
 
         /// <summary>
-        /// ³õÊ¼»¯Ë³Ğò
+        /// åˆå§‹åŒ–é¡ºåº
         /// </summary>
         private void InitOrder()
         {
-            // ³õÊ¼»¯ËùÓĞ½ÇÉ«µÄĞĞ¶¯Öµ
+            // åˆå§‹åŒ–æ‰€æœ‰è§’è‰²çš„è¡ŒåŠ¨å€¼
             foreach (IBattleEntityObject battleEntityObject in _context.GetAllBattleEntity())
             {
-                // ³õÊ¼»¯ĞĞ¶¯Öµ
+                // åˆå§‹åŒ–è¡ŒåŠ¨å€¼
                 battleEntityObject.SetActionValue(CalcActionValue(battleEntityObject.GetSpeed()));
             }
 
-            // »ùÓÚĞĞ¶¯Öµ³õÊ¼»¯ĞĞ¶¯Ë³Ğò
+            // åŸºäºè¡ŒåŠ¨å€¼åˆå§‹åŒ–è¡ŒåŠ¨é¡ºåº
             _context.GetAllBattleEntity().Sort((c1, c2) =>
             {
-                // ±È½ÏĞĞ¶¯ÖµÈ·¶¨ĞĞ¶¯Ë³Ğò¡£ĞĞ¶¯ÖµµÍ£¬Ô½ÏÈĞĞ¶¯
+                // æ¯”è¾ƒè¡ŒåŠ¨å€¼ç¡®å®šè¡ŒåŠ¨é¡ºåºã€‚è¡ŒåŠ¨å€¼ä½ï¼Œè¶Šå…ˆè¡ŒåŠ¨
                 if (c1.ActionValue < c2.ActionValue)
                 {
                     return -1;
@@ -215,20 +199,20 @@ namespace Game.Battle
             });
 
             _context.GetFirstBattleEntity().SetActionValue(0);
-            // ÊÂ¼ş·Ö·¢´«µİ£¬¸üĞÂĞĞ¶¯ÖáUIÏÔÊ¾
+            // äº‹ä»¶åˆ†å‘ä¼ é€’ï¼Œæ›´æ–°è¡ŒåŠ¨è½´UIæ˜¾ç¤º
             _context.GetEventBus().TriggerEvent(new ActionBarSortPostEvent(_context, _context.GetLiveEntitys()));
         }
 
         /// <summary>
-        /// ÅÅĞòË³Ğò
+        /// æ’åºé¡ºåº
         /// </summary>
         private void SortOrder()
         {
-            // ÔİÊ±ÒÆ³ıµÚÒ»¸ö½ÇÉ«£¬²»²ÎÓë¼ÆËã
+            // æš‚æ—¶ç§»é™¤ç¬¬ä¸€ä¸ªè§’è‰²ï¼Œä¸å‚ä¸è®¡ç®—
             _context.GetAllBattleEntity().Remove(_currentActEntity);
 
             int toatalSpeed = 0;
-            // ÖØĞÂ¼ÆËãÊ£ÏÂÊµÌå¸÷×ÔµÄÊ£ÓàĞĞ¶¯Öµ
+            // é‡æ–°è®¡ç®—å‰©ä¸‹å®ä½“å„è‡ªçš„å‰©ä½™è¡ŒåŠ¨å€¼
             foreach (IBattleEntityObject battleEntityObject in _context.GetLiveEntitys())
             {
                 toatalSpeed += battleEntityObject.GetSpeed();
@@ -241,10 +225,10 @@ namespace Game.Battle
                 battleEntityObject.SetActionValue(newAV);
             }
 
-            // »ùÓÚĞĞ¶¯Öµ³õÊ¼»¯ĞĞ¶¯Ë³Ğò
+            // åŸºäºè¡ŒåŠ¨å€¼åˆå§‹åŒ–è¡ŒåŠ¨é¡ºåº
             _context.GetAllBattleEntity().Sort((c1, c2) =>
             {
-                // ±È½ÏĞĞ¶¯ÖµÈ·¶¨ĞĞ¶¯Ë³Ğò¡£ĞĞ¶¯ÖµµÍ£¬Ô½ÏÈĞĞ¶¯
+                // æ¯”è¾ƒè¡ŒåŠ¨å€¼ç¡®å®šè¡ŒåŠ¨é¡ºåºã€‚è¡ŒåŠ¨å€¼ä½ï¼Œè¶Šå…ˆè¡ŒåŠ¨
                 if (c1.ActionValue < c2.ActionValue)
                 {
                     return -1;
@@ -262,12 +246,12 @@ namespace Game.Battle
             InsertOrder(_currentActEntity);
             _context.GetAllBattleEntity()[0].SetActionValue(0);
 
-            // ÊÂ¼ş·Ö·¢´«µİ£¬¸üĞÂĞĞ¶¯ÖáUIÏÔÊ¾
+            // äº‹ä»¶åˆ†å‘ä¼ é€’ï¼Œæ›´æ–°è¡ŒåŠ¨è½´UIæ˜¾ç¤º
             _context.GetEventBus().TriggerEvent(new ActionBarSortPostEvent(_context, _context.GetLiveEntitys()));
         }
 
         /// <summary>
-        /// ²åÈë¶ÓÁĞ
+        /// æ’å…¥é˜Ÿåˆ—
         /// </summary>
         /// <param name="actEndEntity"></param>
         public void InsertOrder(IBattleEntityObject actEndEntity)
@@ -276,50 +260,39 @@ namespace Game.Battle
             int index = _context.GetAllBattleEntity().FindIndex(battleEntity => battleEntity.ActionValue > actEndEntity.ActionValue);
             if (index != -1)
             {
-                // ÕÒµ½µÚÒ»¸öĞĞ¶¯Öµ´óÓÚµ±Ç°½ÇÉ«µÄË÷Òı£¬²åÈëµ½¸ÃÎ»ÖÃÇ°
+                // æ‰¾åˆ°ç¬¬ä¸€ä¸ªè¡ŒåŠ¨å€¼å¤§äºå½“å‰è§’è‰²çš„ç´¢å¼•ï¼Œæ’å…¥åˆ°è¯¥ä½ç½®å‰
                 _context.GetAllBattleEntity().Insert(index, actEndEntity);
             }
             else
             {
-                // ËùÓĞ½ÇÉ«ĞĞ¶¯Öµ¶¼¸üĞ¡£¬²åÈëÄ©Î²
+                // æ‰€æœ‰è§’è‰²è¡ŒåŠ¨å€¼éƒ½æ›´å°ï¼Œæ’å…¥æœ«å°¾
                 _context.GetAllBattleEntity().Add(actEndEntity);
             }
         }
 
         /// <summary>
-        /// ¼ÆËãĞĞ¶¯Öµ
+        /// è®¡ç®—è¡ŒåŠ¨å€¼
         /// </summary>
         /// <param name="speed"></param>
         /// <returns></returns>
         private float CalcActionValue(float speed)
         {
-            // ¼ÆËãĞĞ¶¯Öµ£¬»ù×¼ĞĞ¶¯Öµ / ËÙ¶È * ĞŞÕıÏµÊı
+            // è®¡ç®—è¡ŒåŠ¨å€¼ï¼ŒåŸºå‡†è¡ŒåŠ¨å€¼ / é€Ÿåº¦ * ä¿®æ­£ç³»æ•°
             return BASE_ACTION_VALUE / speed * SPEED_CORRECTION;
         }
 
         /// <summary>
-        /// ¼ì²éÕ½¶·ÊÇ·ñ½áÊø
+        /// æ£€æŸ¥æˆ˜æ–—æ˜¯å¦ç»“æŸ
         /// </summary>
         /// <returns></returns>
         public bool CheckBattleOver()
         {
-            // Ã¿´ÎÖ´ĞĞÍêÃüÁîºó£¬¼ì²éÕ½¶·ÊÇ·ñ½áÊø
-            if (battleOverCondition.CheckOver(_context))
-            {
-                // Õ½¶·½áÊø£¬ÍË³öÑ­»·
-                _battlePhase = E_BattlePhase.BattleOver;
-                return true;
-            }
-            else
-            {
-                // ¸Ä±ä½×¶Î
-                _battlePhase = E_BattlePhase.EntityTurn;
-                return false;
-            }
+            // æ¯æ¬¡æ‰§è¡Œå®Œå‘½ä»¤åï¼Œæ£€æŸ¥æˆ˜æ–—æ˜¯å¦ç»“æŸ
+            return battleOverCondition.CheckOver(_context);
         }
 
         /// <summary>
-        /// ÒÆ³ıËÀÍö¹ÖÎïÊµÌå
+        /// ç§»é™¤æ­»äº¡æ€ªç‰©å®ä½“
         /// </summary>
         public IEnumerator RemoveDeadMonster()
         {
@@ -329,17 +302,17 @@ namespace Game.Battle
                 yield return deadMonster.Die();
                 _context.GetAllBattleEntity().Remove(deadMonster);
                 GameObject.Destroy(deadMonster.GameObject);
-                // ÏÔÊ¾Ïú»ÙÌØĞ§
+                // æ˜¾ç¤ºé”€æ¯ç‰¹æ•ˆ
                 // ,,,
             }
 
-            // ÊÂ¼ş·Ö·¢´«µİ£¬¸üĞÂĞĞ¶¯ÖáUIÏÔÊ¾
+            // äº‹ä»¶åˆ†å‘ä¼ é€’ï¼Œæ›´æ–°è¡ŒåŠ¨è½´UIæ˜¾ç¤º
             _context.GetEventBus().TriggerEvent(new ActionBarSortPostEvent(_context, _context.GetLiveEntitys()));
         }
 
         /// <summary>
-        /// ¸üĞÂ¹ÖÎïÊµÌåÎ»ÖÃ
-        /// ÇĞ»»Ïà»úÊ±¸üĞÂ
+        /// æ›´æ–°æ€ªç‰©å®ä½“ä½ç½®
+        /// åˆ‡æ¢ç›¸æœºæ—¶æ›´æ–°
         /// </summary>
         public void UpdateMonsterEntityPoses()
         {
@@ -365,30 +338,30 @@ namespace Game.Battle
             });
             for (int i = 0; i < monsters.Count; i++)
             {
-                // ¸üĞÂÎ»ÖÃË÷Òı
+                // æ›´æ–°ä½ç½®ç´¢å¼•
                 (monsters[i] as MonsterObject).EntityPosIndex = i;
-                // ÉèÖÃ¸¸¶ÔÏó
+                // è®¾ç½®çˆ¶å¯¹è±¡
                 monsters[i].GameObject.transform.SetParent(monsterTrans[i], false);
             }
 
-            //// ÒÆ¶¯¶ÔÆëÊ£ÏÂµÄ¹ÖÎïÎ»ÖÃ
+            //// ç§»åŠ¨å¯¹é½å‰©ä¸‹çš„æ€ªç‰©ä½ç½®
             //int index = battleEntity.EntityPosIndex;
             //if (index == 0 || index == monsterTrans.Count - 1)
             //{
-            //    // ²»ÓÃ´¦Àí
+            //    // ä¸ç”¨å¤„ç†
             //}
             //else if (index == 1)
             //{
-            //    // »ñÈ¡0Ë÷Òı¹ÖÎï
+            //    // è·å–0ç´¢å¼•æ€ªç‰©
             //    IBattleEntityObject target = GetMonsterByIndex(0);
-            //    // ÒÆ¶¯×î×ó²àµÄ¹ÖÎïµ½1µÄÎ»ÖÃ
+            //    // ç§»åŠ¨æœ€å·¦ä¾§çš„æ€ªç‰©åˆ°1çš„ä½ç½®
             //    target.GameObject.transform.SetParent(BattlePoint.Instance.GetMonsterTransByIndex(index), false);
             //}
             //else if (index == monsterTrans.Count - 2)
             //{
-            //    // »ñÈ¡×îºóË÷Òı¹ÖÎï
+            //    // è·å–æœ€åç´¢å¼•æ€ªç‰©
             //    IBattleEntityObject target = GetMonsterByIndex(monsterTrans.Count - 1);
-            //    // ÒÆ¶¯×îÓÒ²àµÄ¹ÖÎïµ½Ö¸¶¨µÄÎ»ÖÃ
+            //    // ç§»åŠ¨æœ€å³ä¾§çš„æ€ªç‰©åˆ°æŒ‡å®šçš„ä½ç½®
             //    target.GameObject.transform.SetParent(BattlePoint.Instance.GetMonsterTransByIndex(index), false);
             //}
             //else if (index == monsterTrans.Count / 2)
@@ -415,7 +388,7 @@ namespace Game.Battle
         }
 
         /// <summary>
-        /// ²åÈëÃüÁî
+        /// æ’å…¥å‘½ä»¤
         /// </summary>
         /// <param name="skill"></param>
         public void InsertCommand(ICommand command)
@@ -424,13 +397,13 @@ namespace Game.Battle
         }
 
         /// <summary>
-        /// Õ½¶·½áÊø
+        /// æˆ˜æ–—ç»“æŸ
         /// </summary>
         private void BattleOver()
         {
-            // ÇĞ»»ÎªÕı³£±¶ËÙ
+            // åˆ‡æ¢ä¸ºæ­£å¸¸å€é€Ÿ
             TimerManager.Instance.SetTimeRate(E_TimeRate.Normal);
-            // ´¥·¢Õ½¶·½áÊøÊÂ¼ş
+            // è§¦å‘æˆ˜æ–—ç»“æŸäº‹ä»¶
             _context.GetEventBus().TriggerEvent(new BattleOverEvent(_context));
         }
     }

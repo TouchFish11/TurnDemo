@@ -1,7 +1,6 @@
 using Framework;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace Game.Battle
@@ -78,8 +77,7 @@ namespace Game.Battle
 
         protected override void OnDisable()
         {
-            base.OnDestroy();
-
+            base.OnDisable();
             // ÒÆ³ý×´Ì¬UI
             Context.GetEventBus().TriggerEvent(new MonsterDeadEvent(Context, this));
         }

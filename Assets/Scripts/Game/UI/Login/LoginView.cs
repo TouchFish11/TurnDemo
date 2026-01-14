@@ -10,13 +10,15 @@ public class LoginView : UIView
     [Inject] private InputField inputAccount;
     [Inject] private InputField inputPassword;
     [Inject] private Button btnLogin;
-    [Inject] private RectTransform loginBox;
+
+    [Inject(1)] private RectTransform loginBox;
 
     /// <summary>
     /// 更新界面（接收 Controller 指令）
     /// </summary>
     /// <param name="key"></param>
     /// <param name="value"></param>
+    [System.Obsolete]
     public override void UpdateView(string key, object value)
     {
         switch (key)

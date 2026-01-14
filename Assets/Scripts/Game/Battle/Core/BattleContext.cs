@@ -1,98 +1,91 @@
-using Framework;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Framework;
 using UnityEngine;
 
-namespace Game.Battle
+namespace Game.Battle.Core
 {
     /// <summary>
-    /// Õ½¶·ÉÏÏÂÎÄ
+    /// æˆ˜æ–—ä¸Šä¸‹æ–‡
     /// </summary>
     public class BattleContext : IBattleContext
     {
-        // Õ½¶·ÊÂ¼ş×ÜÏßÊµÀı
-        private BattleEventBus eventBus;
-        // Õ½¶·ÊµÌåÁĞ±í
+        // æˆ˜æ–—äº‹ä»¶æ€»çº¿å®ä¾‹
+        private BattleEventBus _eventBus;
+        // æˆ˜æ–—å®ä½“åˆ—è¡¨
         private List<IBattleEntityObject> _allBattleEntity = new List<IBattleEntityObject>();
-        // »ØºÏ¹ÜÀíÆ÷
+        // å›åˆç®¡ç†å™¨
         private TurnController _turnManager;
-        // µ±Ç°Õ½»úµãÊı
-        private int currentBattlePointCount;
-        // ×î´óÕ½¼¼µãÊı
-        private int maxBattlePointCount = 5;
-        // µ±Ç°ĞĞ¶¯ÊµÌå
+        // å½“å‰è¡ŒåŠ¨å®ä½“
         private IBattleEntityObject _currentEntity;
 
-        public int CurentBattlePointCount => currentBattlePointCount;
+        /// å½“å‰æˆ˜æœºç‚¹æ•°
+        public int CurentBattlePointCount { get; private set; }
 
-        public int MaxBattlePointCount => maxBattlePointCount;
+        /// æœ€å¤§æˆ˜æŠ€ç‚¹æ•°
+        public int MaxBattlePointCount { get; private set; } = 5;
 
         public BattleContext()
         {
-            eventBus = new BattleEventBus();
-            // ×¢Èë×ÔÉí£¨IBattleContext£©
+            _eventBus = new BattleEventBus();
+            // æ³¨å…¥è‡ªèº«ï¼ˆIBattleContextï¼‰
             _turnManager = new TurnController(this, new AllMonsterDeadCondition());
-            currentBattlePointCount = maxBattlePointCount;
+            CurentBattlePointCount = MaxBattlePointCount;
         }
 
         /// <summary>
-        /// Õ½¶·³õÊ¼»¯
-        /// Æô¶¯Õ½¶·Ê±µ÷ÓÃ
+        /// æˆ˜æ–—åˆå§‹åŒ–
+        /// å¯åŠ¨æˆ˜æ–—æ—¶è°ƒç”¨
         /// </summary>
         public async Task InitBattle()
         {
-            // ´´½¨Õ½¶·¶ÔÏó
+            // åˆ›å»ºæˆ˜æ–—å¯¹è±¡
             await CreateBattleEntity();
-            // ³õÊ¼»¯»ØºÏ¹ÜÀíÆ÷
-            _turnManager.InitActions();
         }
 
         public void ConsumeSkillPoint(int cost)
         {
-            currentBattlePointCount = Mathf.Clamp(currentBattlePointCount - cost, default, maxBattlePointCount);
-            eventBus.TriggerEvent(new OnBattlePointCountChangedEvent(this, currentBattlePointCount, maxBattlePointCount));
+            CurentBattlePointCount = Mathf.Clamp(CurentBattlePointCount - cost, 0, MaxBattlePointCount);
+            _eventBus.TriggerEvent(new OnBattlePointCountChangedEvent(this, CurentBattlePointCount, MaxBattlePointCount));
         }
 
         public void ExpandSkillPoint(int cost)
         {
-            maxBattlePointCount = Mathf.Max(default, maxBattlePointCount - cost);
-            eventBus.TriggerEvent(new OnBattlePointCountChangedEvent(this, currentBattlePointCount, maxBattlePointCount));
+            MaxBattlePointCount = Mathf.Max(default, MaxBattlePointCount - cost);
+            _eventBus.TriggerEvent(new OnBattlePointCountChangedEvent(this, CurentBattlePointCount, MaxBattlePointCount));
         }
 
         /// <summary>
-        /// ´´½¨Õ½¶·ÊµÌå¶ÔÏó
+        /// åˆ›å»ºæˆ˜æ–—å®ä½“å¯¹è±¡
         /// </summary>
-        /// <param name="config"></param>
-        /// <param name="ownerId"></param>
         /// <returns></returns>
         private async Task CreateBattleEntity(/*object config, int ownerId*/)
         {
-            // TODO£º¿ÉÓÅ»¯ÎªÊ¹ÓÃÕ½¶·ÊµÌå´´½¨Æ÷À´´´½¨¹ÖÎï¡¢²¨´Î
-
-            List<Transform> playerTrans = new List<Transform>(BattlePoint.Instance.GetPlayerTransforms());
-            // ÅúÁ¿´´½¨Íæ¼Ò½ÇÉ«£¨´ÓÅäÖÃ+Ô¤ÖÆÌå£©
+            // TODOï¼šå¯ä¼˜åŒ–ä¸ºä½¿ç”¨æˆ˜æ–—å®ä½“åˆ›å»ºå™¨æ¥åˆ›å»ºæ€ªç‰©ã€æ³¢æ¬¡
+            var playerTrans = new List<Transform>(BattlePoint.Instance.GetPlayerTransforms());
+            // æ‰¹é‡åˆ›å»ºç©å®¶è§’è‰²ï¼ˆä»é…ç½®+é¢„åˆ¶ä½“ï¼‰
             var playerDataDic = BinaryDataManager.Instance.GetConfig<RoleInfoContainer>(E_ConfigLoadType.Editor).dataDic;
-            int index = 0;
-            foreach (int roleId in playerDataDic.Keys)
+            var index = 0;
+            foreach (var roleId in playerDataDic.Keys)
             {
                 if (index == playerTrans.Count)
                 {
                     break;
                 }
 
-                Transform transform = playerTrans[index];
+                var transform = playerTrans[index];
 
-                PlayerObject playerObject = await RoleBuilder.CreateRole(roleId, transform);
-                // ×¢ÈëÉÏÏÂÎÄ£¬¹©½ÇÉ«ÄÚ²¿×é¼şÊ¹ÓÃ
+                var playerObject = await RoleBuilder.CreateRole(roleId, transform);
+                // æ³¨å…¥ä¸Šä¸‹æ–‡ï¼Œä¾›è§’è‰²å†…éƒ¨ç»„ä»¶ä½¿ç”¨
                 playerObject.BattleInit(roleId, this);
-                // ¼ÇÂ¼½ÇÉ«ËùÔÚµÄÎ»ÖÃË÷Òı
+                // è®°å½•è§’è‰²æ‰€åœ¨çš„ä½ç½®ç´¢å¼•
                 playerObject.EntityPosIndex = index;
                 _allBattleEntity.Add(playerObject);
                 index++;
             }
 
-            // ÅúÁ¿´´½¨¹ÖÎï½ÇÉ«£¨´ÓÅäÖÃ+Ô¤ÖÆÌå£©
-            List<Transform> monsterTrans = new List<Transform>(BattlePoint.Instance.GetMonsterTransforms());
+            // æ‰¹é‡åˆ›å»ºæ€ªç‰©è§’è‰²ï¼ˆä»é…ç½®+é¢„åˆ¶ä½“ï¼‰
+            var monsterTrans = new List<Transform>(BattlePoint.Instance.GetMonsterTransforms());
             var monsterDataDic = BinaryDataManager.Instance.GetConfig<MonsterInfoContainer>(E_ConfigLoadType.Editor).dataDic;
             index = 0;
             foreach (int monsterId in monsterDataDic.Keys)
@@ -102,11 +95,11 @@ namespace Game.Battle
                     break;
                 }
 
-                Transform transform = monsterTrans[index];
-                MonsterObject monsterObject = await MonsterBuilder.CreateMonster(monsterId, transform);
-                // ×¢ÈëÉÏÏÂÎÄ£¬¹©½ÇÉ«ÄÚ²¿×é¼şÊ¹ÓÃ
+                var transform = monsterTrans[index];
+                var monsterObject = await MonsterBuilder.CreateMonster(monsterId, transform);
+                // æ³¨å…¥ä¸Šä¸‹æ–‡ï¼Œä¾›è§’è‰²å†…éƒ¨ç»„ä»¶ä½¿ç”¨
                 monsterObject.BattleInit(monsterId, this);
-                // ¼ÇÂ¼¹ÖÎïËùÔÚµÄÎ»ÖÃË÷Òı
+                // è®°å½•æ€ªç‰©æ‰€åœ¨çš„ä½ç½®ç´¢å¼•
                 monsterObject.EntityPosIndex = index;
                 _allBattleEntity.Add(monsterObject);
                 index++;
@@ -115,19 +108,19 @@ namespace Game.Battle
 
         public void CleanupBattle()
         {
-            // Ïú»ÙËùÓĞ½ÇÉ« GameObject
-            foreach (IBattleEntityObject entity in _allBattleEntity)
+            // é”€æ¯æ‰€æœ‰è§’è‰² GameObject
+            foreach (var entity in _allBattleEntity)
             {
                 Object.Destroy(entity.GameObject);
             }
             _allBattleEntity.Clear();
             _allBattleEntity = null;
 
-            // Çå¿ÕÊÂ¼ş×ÜÏß
-            eventBus.Clear();
-            eventBus = null;
+            // æ¸…ç©ºäº‹ä»¶æ€»çº¿
+            _eventBus.Clear();
+            _eventBus = null;
 
-            // Çå¿Õ»º´æ³Ø
+            // æ¸…ç©ºç¼“å­˜æ± 
             ServiceLocator.Get<IPoolManager>().Clear();
 
             _currentEntity = null;
@@ -162,6 +155,6 @@ namespace Game.Battle
 
         public TurnController GetTurnManager() => _turnManager;
 
-        public BattleEventBus GetEventBus() => eventBus;
+        public BattleEventBus GetEventBus() => _eventBus;
     }
 }

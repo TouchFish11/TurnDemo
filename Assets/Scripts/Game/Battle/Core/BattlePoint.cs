@@ -5,39 +5,39 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Õ½¶·µã
+/// Õ½ï¿½ï¿½ï¿½ï¿½
 /// </summary>
 public class BattlePoint : SingletonMono<BattlePoint>
 {
-    // Íæ¼ÒÎ»ÖÃÁÐ±í
+    // ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½Ð±ï¿½
     [SerializeField] private List<Transform> playerTrans;
-    // ¹ÖÎïÎ»ÖÃÁÐ±í
+    // ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½Ð±ï¿½
     [SerializeField] private List<Transform> monsterTrans;
-    // ¹ÖÎïÎ»ÖÃÖÐÐÄµã
+    // ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½
     [SerializeField] private Transform monsterPointCenter;
-    // ½ÇÉ«Ïà»úÁÐ±í
+    // ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
     [SerializeField] private List<Camera> roleCameras;
-    // µ±Ç°¼¤»îµÄÏà»ú
-    private Camera currentCamera;
+    // ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    private Camera _currentCamera;
 
     /// <summary>
-    /// ¼¤»îµÄÏà»ú
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
-    public Camera CurrentActiveCamera => currentCamera;
+    public Camera CurrentActiveCamera => _currentCamera;
 
     /// <summary>
-    /// ³õÊ¼»¯Õ½¶·µã
+    /// ï¿½ï¿½Ê¼ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     /// <returns></returns>
     public BattlePoint InitBattlePoint()
     {
-        // ¼àÌý½ÇÉ«»ØºÏ¿ªÊ¼ÊÂ¼þ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ØºÏ¿ï¿½Ê¼ï¿½Â¼ï¿½
         BattleManager.Instance.GetContext().GetEventBus().AddListener<TurnStartEvent>(OnTurnStartEvent);
         return Instance;
     }
 
     /// <summary>
-    /// »ñÈ¡ËùÓÐµÄ½ÇÉ«Î»ÖÃµã
+    /// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ÐµÄ½ï¿½É«Î»ï¿½Ãµï¿½
     /// </summary>
     /// <returns></returns>
     public IEnumerable<Transform> GetPlayerTransforms()
@@ -46,7 +46,7 @@ public class BattlePoint : SingletonMono<BattlePoint>
     }
 
     /// <summary>
-    /// »ñÈ¡ËùÓÐµÄ¹ÖÎïÎ»ÖÃµã
+    /// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ÐµÄ¹ï¿½ï¿½ï¿½Î»ï¿½Ãµï¿½
     /// </summary>
     /// <returns></returns>
     public IEnumerable<Transform> GetMonsterTransforms()
@@ -65,14 +65,14 @@ public class BattlePoint : SingletonMono<BattlePoint>
     }
 
     /// <summary>
-    /// »ñÈ¡¹ÖÎïµãÖÐÐÄ
+    /// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     /// <returns></returns>
     public Transform GetMonsterPointCenter() => monsterPointCenter;
 
     /// <summary>
-    /// ¼¤»îÖ¸¶¨Íæ¼Ò½ÇÉ«Ïà»ú
-    /// Íæ¼ÒÐÐ¶¯Ê±¼¤»îÖ¸¶¨Ïà»ú¡¢¹ÖÎï¹¥»÷Íæ¼Ò¼¤»î±»¹¥»÷Íæ¼ÒµÄÏà»ú
+    /// ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½Ò½ï¿½É«ï¿½ï¿½ï¿½
+    /// ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¹¥ï¿½ï¿½ï¿½ï¿½Ò¼ï¿½ï¿½î±»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òµï¿½ï¿½ï¿½ï¿½
     /// </summary>
     /// <param name="battleEntity"></param>
     public void ActiveCamera(IBattleEntityObject battleEntity)
@@ -82,26 +82,26 @@ public class BattlePoint : SingletonMono<BattlePoint>
         if (battleEntity is PlayerObject)
         {
             Transform[] transforms = battleEntity.GameObject.GetComponentsInParent<Transform>();
-            // transforms[1]ÊÇ»ñÈ¡¸¸¶ÔÏóÎ»ÖÃ£¬¶øGetComponentsInParent»á°üº¬×Ô¼ºµÄÎ»ÖÃ
+            // transforms[1]ï¿½Ç»ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½Ã£ï¿½ï¿½ï¿½GetComponentsInParentï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½Î»ï¿½ï¿½
             int index = playerTrans.IndexOf(transforms[1]);
             if (index != -1)
             {
-                if (currentCamera != null)
+                if (_currentCamera != null)
                 {
-                    currentCamera.gameObject.SetActive(false);
+                    _currentCamera.gameObject.SetActive(false);
                 }
-                currentCamera = roleCameras[index];
-                currentCamera.gameObject.SetActive(true);
+                _currentCamera = roleCameras[index];
+                _currentCamera.gameObject.SetActive(true);
             }
             else
             {
-                LogManager.LogError($"[BattlePoint]£ºÎ´ÕÒµ½Î»ÖÃ");
+                LogManager.LogError($"[BattlePoint]ï¿½ï¿½Î´ï¿½Òµï¿½Î»ï¿½ï¿½");
             }
         }
     }
 
     /// <summary>
-    /// »ØºÏ¿ªÊ¼ÊÂ¼þ»Øµ÷
+    /// ï¿½ØºÏ¿ï¿½Ê¼ï¿½Â¼ï¿½ï¿½Øµï¿½
     /// </summary>
     /// <param name="turnStartEvent"></param>
     private void OnTurnStartEvent(TurnStartEvent turnStartEvent)

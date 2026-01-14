@@ -14,12 +14,14 @@ public class DialogueView : UIView
     [Inject] private TextMeshProUGUI txtTip;
     [Inject] private TextMeshProUGUI txtDialogue;
     [Inject] private Text txtAuto;
+
     // 对话框
-    [Inject] private RectTransform dialogueBox;
+    [Inject(1)] private RectTransform dialogueBox;
     // 选项框
-    [Inject] private RectTransform dialogueOptBox;
+    [Inject(1)] private RectTransform dialogueOptBox;
     // 剧情回顾子界面
-    [Inject] private RectTransform storyReviewSubView;
+    [Inject(1)] private RectTransform storyReviewSubView;
+
     // 剧情回顾子界面容器
     private RectTransform storyReviewContent;
 
@@ -29,6 +31,7 @@ public class DialogueView : UIView
         storyReviewContent = svReview.content;
     }
 
+    [System.Obsolete]
     public override void UpdateView(string key, object value)
     {
         switch (key)

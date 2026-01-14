@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -68,6 +69,7 @@ namespace Framework
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
+        [Obsolete("建议不使用事件回调，而是通过C中直接获取V的控件来设置内容")]
         public abstract void UpdateView(string key, object value);
 
         /// <summary>

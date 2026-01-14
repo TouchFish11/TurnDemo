@@ -10,7 +10,8 @@ public class StatusEffectTextUI : BaseUIBehaviour
 {
     [Inject] private Image imgIcon;
     [Inject] private TextMeshProUGUI txtBuffName;
-    [Inject] private RectTransform mover;
+
+    [Inject(1)] private RectTransform Mover { get; set; }
 
     // 上移速度
     [SerializeField] private float upMoveSpeed = 2.5f;
@@ -26,12 +27,12 @@ public class StatusEffectTextUI : BaseUIBehaviour
     {
         base.Awake();
 
-        originMoverPos = mover.localPosition;
+        originMoverPos = Mover.localPosition;
     }
 
     protected override void OnEnable()
     {
-        mover.localPosition = originMoverPos;
+        Mover.localPosition = originMoverPos;
         ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpadte);
     }
 
@@ -55,7 +56,7 @@ public class StatusEffectTextUI : BaseUIBehaviour
             PoolManager.Instance.PushObj(this.gameObject);
         }
         //文本运动
-        this.mover.Translate(Time.deltaTime * upMoveSpeed * Vector3.up);
+        this.Mover.Translate(Time.deltaTime * upMoveSpeed * Vector3.up);
     }
 
     protected override void OnDisable()

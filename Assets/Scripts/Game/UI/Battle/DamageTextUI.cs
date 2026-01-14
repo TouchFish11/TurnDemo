@@ -10,7 +10,7 @@ public class DamageTextUI : BaseUIBehaviour
     [Inject] private TextMeshProUGUI txtDamageTip;
     [Inject] private TextMeshProUGUI txtDamageNum;
 
-    [Inject] private RectTransform damageTextMover;
+    [Inject(1)] private RectTransform DamageTextMover { get; set; }
 
     // 上移速度
     [SerializeField] private float upMoveSpeed = 2.5f;
@@ -36,8 +36,8 @@ public class DamageTextUI : BaseUIBehaviour
     protected override void OnEnable()
     {
         MonoManager.Instance.AddUpdateListener(OnUpdate);
-        (damageTextMover.transform as RectTransform).anchoredPosition = Vector3.zero;
-        damageTextMover.localScale = StartScale;
+        (DamageTextMover.transform as RectTransform).anchoredPosition = Vector3.zero;
+        DamageTextMover.localScale = StartScale;
         currentTime = 0;
         currentAlpha = originAlpha;
         txtDamageTip.color = originColor;
@@ -72,9 +72,9 @@ public class DamageTextUI : BaseUIBehaviour
         }
 
         // 文本缩放
-        this.damageTextMover.localScale = Vector3.Lerp(this.damageTextMover.localScale, endScale, Time.deltaTime * scaleFactor);
+        this.DamageTextMover.localScale = Vector3.Lerp(this.DamageTextMover.localScale, endScale, Time.deltaTime * scaleFactor);
         //文本运动
-        this.damageTextMover.Translate(Time.deltaTime * upMoveSpeed * Vector3.up);
+        this.DamageTextMover.Translate(Time.deltaTime * upMoveSpeed * Vector3.up);
     }
 
     protected override void OnDisable()

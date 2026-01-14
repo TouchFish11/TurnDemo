@@ -35,7 +35,7 @@ namespace Framework
         /// 由运行时的平台决定，支持PC、Android、IOS
         /// 不同平台需实现不同的返回名称，否则返回null
         /// </remarks>
-        private string AbMainName
+        private static string AbMainName
         {
             get
             {

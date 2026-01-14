@@ -56,36 +56,33 @@ namespace Framework
         /// </summary>
         private void ScanTransformInstance()
         {
-            Dictionary<string, PropertyInfo> dic = new Dictionary<string, PropertyInfo>();
+            Dictionary<string, MemberInfo> dic = new Dictionary<string, MemberInfo>();
             Type type = this.GetType();
-            PropertyInfo[] propertyInfos = type.GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-            foreach (PropertyInfo propertyInfo in propertyInfos)
+            MemberInfo[] memberInfos = type.GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            foreach (MemberInfo memberInfo in memberInfos)
             {
-                InjectAttribute attribute = propertyInfo.GetCustomAttribute<InjectAttribute>();
-                if (attribute == null)
+                InjectAttribute attribute = memberInfo.GetCustomAttribute<InjectAttribute>();
+                if (attribute == null || attribute.RectTransformFlag == default)
                 {
                     continue;
                 }
 
-                dic.Add(propertyInfo.Name, propertyInfo);
+                dic.Add(memberInfo.Name, memberInfo);
             }
 
-            FindTransforms(this.transform as RectTransform, dic);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="root"></param>
-        /// <param name="dic"></param>
-        private void FindTransforms(RectTransform root, Dictionary<string, PropertyInfo> dic)
-        {
-            List<RectTransform> rectTransforms = new List<RectTransform>(root.GetComponentsInChildren<RectTransform>());
+            List<RectTransform> rectTransforms = new List<RectTransform>(this.GetComponentsInChildren<RectTransform>());
             foreach (RectTransform transform in rectTransforms)
             {
                 if (dic.TryGetValue(transform.name, out var info))
                 {
-                    info.SetValue(this, transform);
+                    if (info is FieldInfo fieldInfo)
+                    {
+                        fieldInfo.SetValue(this, transform);
+                    }
+                    else if (info is PropertyInfo propertyInfo)
+                    {
+                        propertyInfo.SetValue(this, transform);
+                    }
                 }
             }
         }

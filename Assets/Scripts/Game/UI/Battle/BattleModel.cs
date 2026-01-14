@@ -33,7 +33,7 @@ public class BattleModel : UIModel
     {
         NormalMonsterStateUI normalMonsterStateUI = normalMonsterStateUIs.Find((m) => m.BattleEntity == deadMonster);
         normalMonsterStateUIs.Remove(normalMonsterStateUI);
-        PoolManager.Instance.PushObj(normalMonsterStateUI.gameObject);
+        ServiceLocator.Get<IPoolManager>().PushObj(normalMonsterStateUI.gameObject);
     }
 
     /// <summary>
@@ -48,28 +48,28 @@ public class BattleModel : UIModel
     }
 
     /// <summary>
-    /// 
+    /// 更新等待命令UI
     /// </summary>
     /// <param name="waitingActUIs"></param>
     public void UpdateWaitingCommmand(List<WaitingActUI> waitingActUIs)
     {
         foreach (WaitingActUI waitingActUI in this.waitingActUIs)
         {
-            PoolManager.Instance.PushObj(waitingActUI.gameObject);
+            ServiceLocator.Get<IPoolManager>().PushObj(waitingActUI.gameObject);
         }
         this.waitingActUIs.Clear();
         this.waitingActUIs.AddRange(waitingActUIs);
     }
 
     /// <summary>
-    /// 
+    /// 更新普通怪物状态UI
     /// </summary>
     /// <param name="normalMonsterStateUIs"></param>
     public void UpdateNormalMonsterState(IEnumerable<NormalMonsterStateUI> normalMonsterStateUIs)
     {
         foreach (NormalMonsterStateUI monsterStateUI in this.normalMonsterStateUIs)
         {
-            PoolManager.Instance.PushObj(monsterStateUI.gameObject);
+            ServiceLocator.Get<IPoolManager>().PushObj(monsterStateUI.gameObject);
         }
         this.normalMonsterStateUIs.Clear();
 
@@ -84,7 +84,7 @@ public class BattleModel : UIModel
     {
         foreach (ActionGridUI actionGridUI in actions)
         {
-            PoolManager.Instance.PushObj(actionGridUI.gameObject);
+            ServiceLocator.Get<IPoolManager>().PushObj(actionGridUI.gameObject);
         }
         actions.Clear();
         actions.AddRange(actionGridUIs);
@@ -107,7 +107,7 @@ public class BattleModel : UIModel
     {
         foreach (SkillKeyUI skillKeyUI in this.skillKeyUIs)
         {
-            PoolManager.Instance.PushObj(skillKeyUI.gameObject);
+            ServiceLocator.Get<IPoolManager>().PushObj(skillKeyUI.gameObject);
         }
 
         this.skillKeyUIs.Clear();
@@ -121,7 +121,7 @@ public class BattleModel : UIModel
     {
         foreach (SkillKeyUI skillKeyUI in this.skillKeyUIs)
         {
-            PoolManager.Instance.PushObj(skillKeyUI.gameObject);
+            ServiceLocator.Get<IPoolManager>().PushObj(skillKeyUI.gameObject);
         }
         this.skillKeyUIs.Clear();
     }
@@ -135,7 +135,7 @@ public class BattleModel : UIModel
     {
         foreach (BattlePointUI battlePointUI in this.battlePointUIs)
         {
-            PoolManager.Instance.PushObj(battlePointUI.gameObject);
+            ServiceLocator.Get<IPoolManager>().PushObj(battlePointUI.gameObject);
         }
         this.battlePointUIs.Clear();
         this.battlePointUIs.AddRange(battlePointUIs);
@@ -158,7 +158,7 @@ public class BattleModel : UIModel
     {
         foreach (SelectMarkerUI selectMarkerUI in this.selectMarkerUIs)
         {
-            PoolManager.Instance.PushObj(selectMarkerUI.gameObject);
+            ServiceLocator.Get<IPoolManager>().PushObj(selectMarkerUI.gameObject);
         }
         this.selectMarkerUIs.Clear();
     }
