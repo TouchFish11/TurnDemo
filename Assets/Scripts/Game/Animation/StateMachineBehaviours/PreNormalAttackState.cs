@@ -15,7 +15,9 @@ public class PreNormalAttackState : StateMachineBehaviour
         IBattleEntityObject battleEntity = animator.GetComponentInParent<IBattleEntityObject>();
         if (battleEntity is PlayerObject && stateInfo.IsName("PreNormalAttack"))
         {
-            battleEntity.GetComponent<BattleAnimationComponent>().ResetAnimationType();
+            var animationComponent = battleEntity.GetComponent<BattleAnimationComponent>();
+            animationComponent.ResetAnimationType();
+            //animator.ResetTrigger(animationComponent.GetParameter().PreNormalAttackTriggerHash);
         }
     }
 }

@@ -19733,6 +19733,7 @@ GameObject:
   - component: {fileID: 1348377000152763536}
   - component: {fileID: 8339079901638580342}
   - component: {fileID: 6628833660116816884}
+  - component: {fileID: 7210651130126621172}
   m_Layer: 0
   m_Name: VFX_HertaNormalSKill
   m_TagString: Untagged
@@ -24633,6 +24634,18 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &7210651130126621172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8109522772454796688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50376b98351e9c94cb4ef939b242c1da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8705840381400669292
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,7 +8,7 @@ namespace Game
     /// <summary>
     /// ’Ω∂∑∂‘œÛ
     /// </summary>
-    public abstract class BattleObject : EntityObject, IBattleEntityObject
+    public abstract class BattleObject : EntityObject, IBattleEntityObject, IDamagable
     {
         public IBattleContext Context { get; protected set; }
 

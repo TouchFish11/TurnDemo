@@ -66,6 +66,7 @@ namespace Game.Battle
         /// <param name="mainTarget"></param>
         /// <param name="allTargets"></param>
         void Init(IBattleEntityObject mainTarget, List<IBattleEntityObject> allTargets);
+        void RecoverEnergy();
 
         /// <summary>
         /// 设置目标选择策略

@@ -80,5 +80,31 @@ namespace Framework
 		public static string TaskItem => "TaskItem";
 		public static string TaskTypeContainer => "TaskTypeContainer";
 		public static string TaskView => "TaskView";
+		public static string VFX_Environment_Rain => "VFX_Environment_Rain";
+		public static string VFX_StatusEffect => "VFX_StatusEffect";
+		public static string VFX_SupportSkill_01 => "VFX_SupportSkill_01";
+		public static string VFX_SupportSkill_02 => "VFX_SupportSkill_02";
+		public static string VFX_BlueHit => "VFX_BlueHit";
+		public static string VFX_Dot_Blue01 => "VFX_Dot_Blue01";
+		public static string VFX_Dot_Blue02 => "VFX_Dot_Blue02";
+		public static string VFX_Dot_Blue03 => "VFX_Dot_Blue03";
+		public static string VFX_Dot_Green01 => "VFX_Dot_Green01";
+		public static string VFX_Dot_Green02 => "VFX_Dot_Green02";
+		public static string VFX_Heal => "VFX_Heal";
+		public static string VFX_Shield => "VFX_Shield";
+		public static string VFX_BossDead => "VFX_BossDead";
+		public static string VFX_FireFlyBattleSkill => "VFX_FireFlyBattleSkill";
+		public static string VFX_FireFlyNormalSkill => "VFX_FireFlyNormalSkill";
+		public static string VFX_FireFlyUltimatePose => "VFX_FireFlyUltimatePose";
+		public static string VFX_FireFlyUltimateSkill => "VFX_FireFlyUltimateSkill";
+		public static string VFX_NormalSkill_Wave => "VFX_NormalSkill_Wave";
+		public static string VFX_HeartUltimatePose => "VFX_HeartUltimatePose";
+		public static string VFX_HeartUltimateSkill => "VFX_HeartUltimateSkill";
+		public static string VFX_HertaBattleSKill => "VFX_HertaBattleSKill";
+		public static string VFX_HertaNormalSKill => "VFX_HertaNormalSKill";
+		public static string VFX_HertaSkill => "VFX_HertaSkill";
+		public static string VFX_Unknow01 => "VFX_Unknow01";
+		public static string VFX_Unknow03 => "VFX_Unknow03";
+		public static string VFX_Unkow02 => "VFX_Unkow02";
 	}
 }

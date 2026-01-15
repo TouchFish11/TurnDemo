@@ -89,9 +89,9 @@ namespace Framework
                     //剩余总时间小于等于0，执行总时间结束回调
                     if (timer.NowTime <= 0)
                     {
+                        timer.OverInvoke();
                         //计时完毕，放入待移除列表
                         _delTimerIDList.Add(timer.Id);
-                        timer.OverInvoke();
                     }
                 }
 

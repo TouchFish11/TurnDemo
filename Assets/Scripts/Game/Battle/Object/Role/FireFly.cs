@@ -1,4 +1,5 @@
 using Framework;
+using UnityEngine;
 
 namespace Game.Battle
 {
@@ -29,6 +30,8 @@ namespace Game.Battle
     /// </summary>
     public class FireFly : PlayerObject
     {
+        [SerializeField] private Transform vfxTrans;
+
         public override void BaseInit(int id)
         {
             base.BaseInit(id);
@@ -54,5 +57,7 @@ namespace Game.Battle
         {
             OrbitCameraController orbitCameraController = await ObjectBuilder.GetObject<OrbitCameraController>(E_AssetBundleType.Camera, ResKeyCollection.MainCamera, null);
         }
+
+        public Transform VFXTrans => vfxTrans;
     }
 }

@@ -31,21 +31,12 @@ public abstract class Skill : ISkill
     protected int[] statusIds;
     private readonly float waitTime = 0.85f;
 
-    /// <summary>
-    /// 伤害次数
-    /// </summary>
-    protected abstract int DmgCount { get; set; }
-
-    // 当前伤害次数
-    protected int currentDmgCount;
-
     protected Skill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy)
     {
         Caster = caster;
         SkillInfo = BinaryDataManager.Instance.GetConfig<SkillInfoContainer>(E_ConfigLoadType.Editor).dataDic[skillId];
         DamageCalcManager = ServiceLocator.Get<IDamageCalcManager>();
         SkillCastPostHandler = postHandler;
-        currentDmgCount = DmgCount;
         statusIds = TextUtility.SplitToIntArr(SkillInfo.f_statusId, 2);
         StatusAddStrategy = statusAddStrategy;
         PropertyComponent = Caster.GetComponent<PropertyComponent>();
@@ -102,9 +93,6 @@ public abstract class Skill : ISkill
     /// <returns></returns>
     protected virtual IEnumerator OnPostCast()
     {
-        // 重置状态
-        currentDmgCount = DmgCount;
-
         // TODO：考虑移动到SkillCastPostHandler中
         // 清空战斗界面显示的伤害总文本
         BattleUIScheduler.Instance.BattleController.GetBattleUI().ClearActiveDamageTextUI();
@@ -118,7 +106,7 @@ public abstract class Skill : ISkill
     /// 技能释放攻击后恢复能量
     /// 子类调用，在造成伤害的时候恢复能量
     /// </summary>
-    protected virtual void RecoverEnergy()
+    public virtual void RecoverEnergy()
     {
         int newValue = PropertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentEnergy);
         PropertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentEnergy, newValue + SkillInfo.f_recoveryEnergy);

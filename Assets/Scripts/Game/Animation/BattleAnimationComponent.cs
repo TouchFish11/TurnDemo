@@ -10,15 +10,12 @@ namespace Game.Battle
     public class BattleAnimationComponent : AnimationComponent, IBattleComponent
     {
         public IBattleEntityObject BattleEntity { get; private set; }
-        public override int LayerIndex { get; protected set; }
         protected override E_AnimationType CurrentAnimationType { get; set; }
 
         public override void Init(IEntityObject entityObject)
         {
             base.Init(entityObject);
             BattleInit(entityObject as IBattleEntityObject);
-            LayerIndex = animator.GetLayerIndex("Battle Layer");
-            animator.SetLayerWeight(LayerIndex, 1);
         }
 
         public virtual void BattleInit(IBattleEntityObject battleEntity)
@@ -33,7 +30,8 @@ namespace Game.Battle
 
         public override void SetAnimationState(E_AnimationType animationType)
         {
-            if (CurrentAnimationType == animationType)
+            // TODO：暂时这样处理，后续优化
+            if (animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex(Battle_Layer_Name)).IsName("PreNormalAttack") && animationType == E_AnimationType.PreNormalAttack)
             {
                 return;
             }

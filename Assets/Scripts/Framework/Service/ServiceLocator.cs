@@ -48,6 +48,7 @@ namespace Framework
             Register<IUIManager>(UIManager.Instance);
             Register<IVideoManager>(VideoManager.Instance);
             Register<IFactoryManager>(FactoryManager.Instance);
+            Register<IVFXManager>(VFXManager.Instance);
 
             // 非框架（主界面）
             Register<IDialogueManager>(DialogueManager.Instance);

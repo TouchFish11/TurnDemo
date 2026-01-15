@@ -1,3 +1,4 @@
+using Framework;
 using Game.Battle;
 using System.Collections;
 using UnityEngine;
@@ -8,28 +9,17 @@ using UnityEngine;
 public class HertaBattleSkill : PlayerSkill
 {
     private readonly string battleAttackState = "BattleAttack";
-
-    protected override int DmgCount { get; set; } = 1;
+    private ProjectileData projectileData;
 
     public HertaBattleSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
     {
-        Caster.GetComponentInChildren<AnimationTrigger>().OnAttack += OnAttack;
+
     }
 
-    private void OnAttack(int skillId)
+    protected override void OnPreCast(IBattleContext context)
     {
-        if (skillId != SkillInfo.f_id)
-        {
-            return;
-        }
-
-        foreach (IBattleEntityObject battleEntity in AllTargets)
-        {
-            DamageCalcManager.CalcSkillDamage(Caster, battleEntity, this.SkillInfo, out DamageResult result);
-            battleEntity.TakeDamage(result);
-            RecoverEnergy();
-            --currentDmgCount;
-        }
+        base.OnPreCast(context);
+        projectileData = new ProjectileData(Caster, MainTarget, AllTargets, this);
     }
 
     protected override IEnumerator OnCast(IBattleContext context)
@@ -38,8 +28,12 @@ public class HertaBattleSkill : PlayerSkill
         context.GetEventBus().TriggerEvent(new SkillCastEvent(context, this, 0));
         BattleAnimationComponent animationComponent = Caster.GetComponent<BattleAnimationComponent>();
         // 等待动画切换为战技动画
-        yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo().IsName(battleAttackState));
+        yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).IsName(battleAttackState));
+        // 生成特效
+        ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_HertaBattleSKill, MainTarget.GameObject.transform.position, Quaternion.identity, projectileData);
         // 等待动画结束
-        yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo().normalizedTime >= 0.9f);
+        yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).normalizedTime >= 0.9f);
+        yield return new WaitForSeconds(1.5f);
+
     }
 }

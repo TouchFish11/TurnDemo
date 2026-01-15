@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7276332224842565786}
   - component: {fileID: 6770536460967208145}
   - component: {fileID: 2864485023437115721}
+  - component: {fileID: -8709829432470879344}
   m_Layer: 0
   m_Name: VFX_FireFlyUltimateSkill
   m_TagString: Untagged
@@ -5006,6 +5007,18 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &-8709829432470879344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1648983159606665636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 097e2bd265ee1d84cb47df5abf741ea0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5610108654051362846
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,10 +11,16 @@ namespace Framework
 		TableInfo,
 		InputData,
 		Camera,
+		Video,
 		// 生成类型
+		Animation,
+		Animator,
 		GameData,
+		General,
+		Material,
+		Mesh,
 		Prefab,
 		Texture,
-		Video,
+		VFX,
 	}
 }

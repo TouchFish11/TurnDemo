@@ -1,7 +1,5 @@
 using Framework;
 using Game;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -16,10 +14,10 @@ public abstract class AnimationComponent : BaseComponent
     // 动画类型
     protected abstract E_AnimationType CurrentAnimationType { get; set; }
 
-    /// <summary>
-    /// 动画层级索引
-    /// </summary>
-    public abstract int LayerIndex { get; protected set; }
+    // 定义动画层级名称常量,与Animator窗口中的层级名称一致
+    public const string Base_Layer_Name = "Base Layer";
+    public const string Battle_Layer_Name = "Battle Layer";
+    public const string Skill_Layer_Name = "Skill Layer";
 
     /// <summary>
     /// 动画参数
@@ -54,14 +52,14 @@ public abstract class AnimationComponent : BaseComponent
     /// 获取当前动画状态信息
     /// </summary>
     /// <returns></returns>
-    public AnimatorStateInfo GetCurrentAnimatorStateInfo()
+    public AnimatorStateInfo GetCurrentAnimatorStateInfo(string layerName)
     {
         if (animator == null)
         {
-            return default;
+            LogManager.LogError($"动画控制器为null");
+            return new AnimatorStateInfo();
         }
 
-        return animator.GetCurrentAnimatorStateInfo(LayerIndex);
+        return animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex(layerName));
     }
-
 }

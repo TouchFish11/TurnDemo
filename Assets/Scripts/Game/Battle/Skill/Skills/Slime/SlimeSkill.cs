@@ -19,7 +19,6 @@ public class SlimeSkill : MonsterSkill
     /// 目前是怪物使用
     /// </summary>
     public string Attack { get; } = "Attack";
-    protected override int DmgCount { get; set; } = 1;
 
     public SlimeSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
     {
@@ -47,7 +46,7 @@ public class SlimeSkill : MonsterSkill
             yield return null;
         }
 
-        yield return AnimationPlayManager.Instance.PlayAnimation(Caster, (E_AnimationType)SkillInfo.f_animationType, Attack, OnAttack, TextUtility.SplitTofloatArr(SkillInfo.f_dmgTimes, 2));
+        yield return AnimationPlayManager.Instance.PlayAnimation(Caster, (E_AnimationType)SkillInfo.f_animationType, AnimationComponent.Skill_Layer_Name, Attack, OnAttack, TextUtility.SplitTofloatArr(SkillInfo.f_dmgTimes, 2));
 
         // 优化表现
         yield return _waitForSeconds0_3; 

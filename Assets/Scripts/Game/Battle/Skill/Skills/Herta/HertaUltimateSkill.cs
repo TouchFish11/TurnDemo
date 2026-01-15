@@ -1,3 +1,4 @@
+using Framework;
 using Game.Battle;
 using System.Collections;
 using UnityEngine;
@@ -8,29 +9,12 @@ using UnityEngine;
 public class HertaUltimateSkill : UltimateSkill
 {
     private readonly string ultimateAttackState = "UltimateAttack";
-
-    protected override int DmgCount { get; set; } = 3;
+    // 弹射物数据
+    private ProjectileData projectileData;
 
     public HertaUltimateSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
     {
-        Caster.GetComponentInChildren<AnimationTrigger>().OnAttack += OnAttack;
-    }
 
-    private void OnAttack(int skillId)
-    {
-        if (skillId != SkillInfo.f_id)
-        {
-            return;
-        }
-
-        int index = 0;
-        foreach (IBattleEntityObject battleEntity in AllTargets)
-        {
-            DamageCalcManager.CalcSkillDamage(Caster, battleEntity, this.SkillInfo, out DamageResult result);
-            battleEntity.TakeDamage(result);
-            RecoverEnergy();
-            ++index;
-        }
     }
 
     protected override void OnPreUltimateCast(IBattleContext context)
@@ -38,16 +22,23 @@ public class HertaUltimateSkill : UltimateSkill
         base.OnPreUltimateCast(context);
 
         // 播放预备动画：玩家终结技pose、终结技动画
-        Caster.GetComponent<BattleAnimationComponent>().SetUltimatePose(); 
+        Caster.GetComponent<BattleAnimationComponent>().SetUltimatePose();
+        // 生成特效
+        ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_HeartUltimatePose, Caster.GameObject.transform.position, Quaternion.identity, default);
+        projectileData = new ProjectileData(Caster, MainTarget, AllTargets, this);
     }
 
     protected override IEnumerator OnUltimateCast(IBattleContext context)
     {
+        // 移除Pose特效
+        ServiceLocator.Get<IVFXManager>().RemoveVFX(ResKeyCollection.VFX_HeartUltimatePose);
         context.GetEventBus().TriggerEvent(new SkillCastEvent(context, this, 0));
         BattleAnimationComponent animationComponent = Caster.GetComponent<BattleAnimationComponent>();
-        // 等待动画切换为战技动画
-        yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo().IsName(ultimateAttackState));
+        // 等待动画切换为终结技攻击动画
+        yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).IsName(ultimateAttackState));
+        ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_HeartUltimateSkill, MainTarget.GameObject.transform.position, Quaternion.identity, projectileData);
         // 等待动画结束
-        yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo().normalizedTime >= 0.9f);
+        yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).normalizedTime >= 0.9f);
+        yield return new WaitForSeconds(2.5f);
     }
 }

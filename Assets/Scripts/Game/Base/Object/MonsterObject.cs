@@ -72,7 +72,11 @@ namespace Game.Battle
         public override IEnumerator Die()
         {
             // 怪物播放死亡动画
-            yield return AnimationPlayManager.Instance.WaitForAnimOver(this.GetComponent<BattleAnimationComponent>(), E_AnimationType.Death, null);
+            yield return AnimationPlayManager.Instance.WaitForAnimOver(this.GetComponent<BattleAnimationComponent>(), AnimationComponent.Battle_Layer_Name, E_AnimationType.Death);
+            // 显示销毁特效
+            // 这里测试会报错，待修复
+            //ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_BossDead, this.transform, default);
+            LogManager.Log($"怪物死亡：{this.gameObject.name}");
         }
 
         protected override void OnDisable()

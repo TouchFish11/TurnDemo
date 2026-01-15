@@ -302,8 +302,7 @@ namespace Game.Battle
                 yield return deadMonster.Die();
                 _context.GetAllBattleEntity().Remove(deadMonster);
                 GameObject.Destroy(deadMonster.GameObject);
-                // 显示销毁特效
-                // ,,,
+                LogManager.Log($"已移除怪物：{deadMonster.GameObject.name}");
             }
 
             // 事件分发传递，更新行动轴UI显示

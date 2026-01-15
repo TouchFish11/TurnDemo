@@ -7,13 +7,11 @@ namespace Game
     /// </summary>
     public class NormalAnimationComponent : AnimationComponent
     {
-        public override int LayerIndex { get; protected set; }
         protected override E_AnimationType CurrentAnimationType { get; set; } = E_AnimationType.None;
 
         public override void Init(IEntityObject entityObject)
         {
             base.Init(entityObject);
-            LayerIndex = animator.GetLayerIndex("Base Layer");
             this.EntityObject.GetComponent<InputComponent>().OnKeyInputChanged += OnMove;
             this.EntityObject.GetComponent<InputComponent>().OnMouseLeftClick += OnAttack;
         }

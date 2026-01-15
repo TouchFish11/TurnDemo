@@ -29600,6 +29600,7 @@ GameObject:
   - component: {fileID: 464065501110498580}
   - component: {fileID: 3524705453681853040}
   - component: {fileID: 8929912546786294426}
+  - component: {fileID: 2846147962184947482}
   m_Layer: 0
   m_Name: VFX_HeartUltimateSkill
   m_TagString: Untagged
@@ -34528,3 +34529,15 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &2846147962184947482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7818767623030641830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55bce397dff95a644b777987ab48fdb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

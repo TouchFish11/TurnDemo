@@ -16,7 +16,6 @@ public class TurtleShellSkill : MonsterSkill
     /// 目前是怪物使用
     /// </summary>
     public int Attack { get; } = Animator.StringToHash("Attack");
-    protected override int DmgCount { get; set; } = 1;
 
     public TurtleShellSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
     {
@@ -44,7 +43,7 @@ public class TurtleShellSkill : MonsterSkill
             yield return null;
         }
 
-        yield return AnimationPlayManager.Instance.PlayAnimation(Caster, (E_AnimationType)SkillInfo.f_animationType, nameof(Attack), OnAttack, TextUtility.SplitTofloatArr(SkillInfo.f_dmgTimes, 2));
+        yield return AnimationPlayManager.Instance.PlayAnimation(Caster, (E_AnimationType)SkillInfo.f_animationType, AnimationComponent.Skill_Layer_Name, nameof(Attack), OnAttack, TextUtility.SplitTofloatArr(SkillInfo.f_dmgTimes, 2));
 
         // 优化表现
         yield return _waitForSeconds0_8;

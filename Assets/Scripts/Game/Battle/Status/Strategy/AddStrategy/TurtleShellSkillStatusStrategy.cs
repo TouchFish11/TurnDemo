@@ -1,7 +1,6 @@
 using Framework;
 using Game.Battle;
 using System.Collections.Generic;
-using static UnityEngine.GraphicsBuffer;
 
 /// <summary>
 /// 甲壳虫技能状态添加策略
