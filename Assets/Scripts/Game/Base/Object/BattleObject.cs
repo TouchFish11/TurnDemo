@@ -116,7 +116,7 @@ namespace Game
             OnTurnStart();
             if (CanAct)
             {
-                ServiceLocator.Get<IMonoManager>().StartCoroutine(OnExceuteAction());
+                this.StartCoroutine(OnExceuteAction());
             }
         }
 

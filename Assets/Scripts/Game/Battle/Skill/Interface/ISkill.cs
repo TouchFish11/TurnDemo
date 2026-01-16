@@ -29,11 +29,6 @@ namespace Game.Battle
         List<IBattleEntityObject> AllTargets { get; }
 
         /// <summary>
-        /// 伤害计算管理器
-        /// </summary>
-        IDamageCalcManager DamageCalcManager { get; }
-
-        /// <summary>
         /// 技能释放后处理器
         /// </summary>
         ISkillCastPostHandler SkillCastPostHandler { get; }

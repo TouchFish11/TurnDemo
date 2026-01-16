@@ -1,3 +1,4 @@
+using Framework;
 using Game.Battle;
 using System.Collections;
 using UnityEngine;
@@ -18,6 +19,12 @@ public abstract class InstantProjectile : Projectile
         {
             damageCalcManager.CalcSkillDamage(projectileData.caster, target, projectileData.skill.SkillInfo, out DamageResult result);
             target.TakeDamage(result);
+
+            // Åö×²ÌØÐ§
+            ProjectileTrans projectileTrans = new ProjectileTrans(target.GameObject.transform.position, Quaternion.identity);
+            vFXInfo = new VFXInfo();
+            ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_BlueHit, projectileTrans, default, vFXInfo);
+
             projectileData.skill.RecoverEnergy();
         }
     }

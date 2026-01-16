@@ -12,8 +12,8 @@ public class MonsterBuilder
     {
         return monsterId switch
         {
-            1 => await ObjectBuilder.GetObject<MonsterObject>(E_AssetBundleType.Prefab, ResKeyCollection.Slime, parent, stay),
-            2 => await ObjectBuilder.GetObject<MonsterObject>(E_AssetBundleType.Prefab, ResKeyCollection.TurtleShell, parent, stay),
+            1 => await ObjectBuilder.GetObject<MonsterObject>(E_AssetBundleType.Prefab, ResKeyCollection.Prefab_Slime, parent, stay),
+            2 => await ObjectBuilder.GetObject<MonsterObject>(E_AssetBundleType.Prefab, ResKeyCollection.Prefab_TurtleShell, parent, stay),
             _ => null,
         };
     }

@@ -1,5 +1,7 @@
 using Game.Battle;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Framework
@@ -20,89 +22,135 @@ namespace Framework
         }
     }
 
+    public readonly struct ProjectileTrans
+    {
+        public Transform Parent { get; }
+        public Vector3 WorldPos { get; }
+        public Vector3 LocalPos { get; }
+        public Quaternion Rotation { get; }
+        public bool WorldPositionStays { get; }
+
+        public ProjectileTrans(Transform parent, bool worldPositionStays) : this()
+        {
+            Parent = parent;
+            WorldPositionStays = worldPositionStays;
+        }
+
+        public ProjectileTrans(Vector3 worldPos, Quaternion rotation) : this()
+        {
+            WorldPos = worldPos;
+            Rotation = rotation;
+        }
+
+        public ProjectileTrans(Transform parent, Vector3 localPos, Quaternion rotation, bool worldPositionStays) : this()
+        {
+            Parent = parent;
+            LocalPos = localPos;
+            Rotation = rotation;
+            WorldPositionStays = worldPositionStays;
+        }
+    }
+    
+    /// <summary>
+    /// VFX信息
+    /// </summary>
+    public class VFXInfo : IPoolData
+    {
+        /// <summary>
+        /// 特效粒子系统
+        /// 外部不需要设置，创建完VFX后会自动赋值
+        /// </summary>
+        public ParticleSystem ParticleSystem { get; set; }
+
+        /// <summary>
+        /// 是否停止
+        /// 外部可控制修改,true则移除VFX
+        /// </summary>
+        public bool IsStop { get; set; } = false;
+
+        /// <summary>
+        /// 是否存活
+        /// 外部可获取但不可修改
+        /// </summary>
+        public bool IsAlive { get; set; } = true;
+
+        public void ResetData()
+        {
+            ParticleSystem = null;
+            IsStop = false;
+            IsAlive = true;
+        }
+    }
+
     /// <summary>
     /// 视觉效果管理器
     /// </summary>
     public class VFXManager : SingletonBase<VFXManager>, IVFXManager
     {
-        // 特效对象缓存
-        private Dictionary<string, List<GameObject>> _activeVfxs = new Dictionary<string, List<GameObject>>();
+        // 激活特效列表
+        private List<VFXInfo> _activeVfxs = new List<VFXInfo>();
 
         private VFXManager()
         {
-
+            ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
         }
 
-        public void CreateVFX(string vfxName, Transform parent, ProjectileData data, bool worldPositionStays = false)
+        private void OnUpdate()
         {
-            CreateVFX(vfxName, parent, Vector3.zero, Quaternion.identity, data, worldPositionStays);
+            for (int i = _activeVfxs.Count - 1; i >= 0; i--)
+            {
+                // 标志停止或是播放完毕都要移除
+                if (_activeVfxs[i].IsStop || !_activeVfxs[i].ParticleSystem.IsAlive())
+                {
+                    _activeVfxs[i].IsAlive = false;
+                    _activeVfxs[i].ParticleSystem.Stop();
+                    ServiceLocator.Get<IPoolManager>().PushObj(_activeVfxs[i].ParticleSystem.gameObject);
+                    _activeVfxs.RemoveAt(i);
+                }
+            }
         }
 
-        public void CreateVFX(string vfxName, Vector3 worldPos, Quaternion quaternion, ProjectileData data)
-        {
-            CreateVFX(vfxName, null, worldPos, quaternion, data);
-        }
-
-        public async void CreateVFX(string vfxName, Transform parent, Vector3 localPos, Quaternion quaternion, ProjectileData data, bool worldPositionStays = false)
+        public async void CreateVFX(string vfxName, ProjectileTrans projectileTrans, ProjectileData data, VFXInfo vFXInfo)
         {
             GameObject vfxObj = await ServiceLocator.Get<IPoolManager>().GetAssetBundleObjAsync(E_AssetBundleType.VFX, vfxName);
-            vfxObj.transform.SetParent(parent, worldPositionStays);
-            vfxObj.transform.SetLocalPositionAndRotation(localPos, quaternion);
-
-            if (_activeVfxs.ContainsKey(vfxName))
+            vfxObj.transform.SetParent(projectileTrans.Parent, projectileTrans.WorldPositionStays);
+            if (projectileTrans.Parent != null)
             {
-                _activeVfxs[vfxName].Add(vfxObj);
+                vfxObj.transform.SetLocalPositionAndRotation(projectileTrans.LocalPos, projectileTrans.Rotation);
             }
             else
             {
-                _activeVfxs.Add(vfxName, new List<GameObject>() { vfxObj });
-            }
-
-            // 检测特效是否播放完成
-            if (vfxObj.TryGetComponent<ParticleSystem>(out var ps))
-            {
-                // 等待特效播放完毕
-                float totalDuration = ps.main.duration + ps.main.startLifetime.constantMax;
-                ServiceLocator.Get<ITimerManager>().CreateTimer(false, (int)(totalDuration * 1000), () => RemoveActiveVFX(vfxObj));
+                vfxObj.transform.SetPositionAndRotation(projectileTrans.WorldPos, projectileTrans.Rotation);
             }
 
             // 存在弹射物脚本则初始化
             if (vfxObj.TryGetComponent<Projectile>(out var projectile))
             {
-                projectile.Init(data);
+                projectile.Init(data, vFXInfo);
+            }
+
+            // 检测特效是否是循环特效
+            if (vfxObj.TryGetComponent<ParticleSystem>(out var ps))
+            {
+                vFXInfo.ParticleSystem = ps;
+                _activeVfxs.Add(vFXInfo);
             }
         }
 
-        public void RemoveActiveVFX(GameObject vfxObj)
+        public void RemoveVFX(VFXInfo vFXInfo)
         {
-            LogManager.Log($"VFX被移除：{vfxObj}");
-            if (_activeVfxs.TryGetValue(vfxObj.name, out var vfxObjs))
+            if (_activeVfxs.Contains(vFXInfo))
             {
-                vfxObjs.Remove(vfxObj);
-                ServiceLocator.Get<IPoolManager>().PushObj(vfxObj);
-            }
-        }
-
-        public void RemoveVFX(string vfxName)
-        {
-            if (_activeVfxs.TryGetValue(vfxName, out var vfxObjs))
-            {
-                foreach (var vfxObj in vfxObjs)
-                {
-                    ServiceLocator.Get<IPoolManager>().PushObj(vfxObj);
-                }
-                _activeVfxs.Remove(vfxName);
+                ServiceLocator.Get<IPoolManager>().PushObj(vFXInfo.ParticleSystem.gameObject);
+                _activeVfxs.Remove(vFXInfo);
             }
         }
 
         public void ClearVFXCache()
         {
-            foreach (var vfxObjs in _activeVfxs.Values)
+            foreach (var vFXInfo in _activeVfxs)
             {
-                foreach (var vfxObj in vfxObjs)
-                {
-                    ServiceLocator.Get<IPoolManager>().PushObj(vfxObj);
-                }
+                ServiceLocator.Get<IPoolManager>().PushObj(vFXInfo.ParticleSystem.gameObject);
             }
             _activeVfxs.Clear();
         }

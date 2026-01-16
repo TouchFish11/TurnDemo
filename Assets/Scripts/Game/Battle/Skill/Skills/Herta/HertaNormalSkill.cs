@@ -9,7 +9,6 @@ using UnityEngine;
 public class HertaNormalSkill : PlayerSkill
 {
     private readonly string attackState = "NormalAttack";
-    private ProjectileData projectileData;
 
     public HertaNormalSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
     {
@@ -20,6 +19,8 @@ public class HertaNormalSkill : PlayerSkill
     {
         base.OnPreCast(context);
         projectileData = new ProjectileData(Caster, MainTarget, AllTargets, this);
+        projectileTrans = new ProjectileTrans(MainTarget.GameObject.transform.position, Quaternion.identity);
+        vFXInfo = new VFXInfo();
     }
 
     protected override IEnumerator OnCast(IBattleContext context)
@@ -30,10 +31,8 @@ public class HertaNormalSkill : PlayerSkill
         // 等待动画切换为普攻动画
         yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).IsName(attackState));
         // 生成特效
-
-        ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_HertaNormalSKill, MainTarget.GameObject.transform.position, Quaternion.identity, projectileData);
+        ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_HertaNormalSkill, projectileTrans, projectileData, vFXInfo);
         // 等待动画结束
-        yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).normalizedTime >= 0.9f);
-        yield return new WaitForSeconds(0.35f);
+        yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).normalizedTime >= 0.9f && !vFXInfo.IsAlive);
     }
 }

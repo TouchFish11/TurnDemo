@@ -10,7 +10,6 @@ public class FireFlyUltimateSkill : UltimateSkill
 {
     private static WaitForSeconds _waitForSeconds0_25 = new WaitForSeconds(0.25f);
     private readonly string ultimateAttackState = "UltimateAttack";
-    private ProjectileData projectileData;
 
     public FireFlyUltimateSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
     {
@@ -23,15 +22,18 @@ public class FireFlyUltimateSkill : UltimateSkill
 
         // 播放预备动画：玩家终结技pose、终结技动画
         Caster.GetComponent<BattleAnimationComponent>().SetUltimatePose();
-        // 生成特效
-        ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_FireFlyUltimatePose, Caster.GameObject.transform.position, Quaternion.identity, default);
+
         projectileData = new ProjectileData(Caster, MainTarget, AllTargets, this);
+        projectileTrans = new ProjectileTrans(Caster.GameObject.transform.position, Quaternion.identity);
+        vFXInfo = new VFXInfo();
+        // 生成特效
+        ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_FireFlyUltimatePose, projectileTrans, projectileData, vFXInfo);
     }
 
     protected override IEnumerator OnUltimateCast(IBattleContext context)
     {
         // 移除Pose特效
-        ServiceLocator.Get<IVFXManager>().RemoveVFX(ResKeyCollection.VFX_FireFlyUltimatePose);
+        ServiceLocator.Get<IVFXManager>().RemoveVFX(vFXInfo);
 
         // 传送到主目标身前
         Vector3 targetPos = MainTarget.GameObject.transform.position;
@@ -43,8 +45,11 @@ public class FireFlyUltimateSkill : UltimateSkill
         BattleAnimationComponent animationComponent = Caster.GetComponent<BattleAnimationComponent>();
         // 等待动画切换为终结技动画
         yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).IsName(ultimateAttackState));
+
+        projectileData = new ProjectileData(Caster, MainTarget, AllTargets, this);
+        projectileTrans = new ProjectileTrans(Caster.GameObject.transform.position + Vector3.up * 0.9f, Quaternion.identity);
         // 生成特效
-        ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_FireFlyUltimateSkill, Caster.GameObject.transform.position + Vector3.up * 0.9f, Quaternion.identity, projectileData);
+        ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_FireFlyUltimateSkill, projectileTrans, projectileData, vFXInfo);
         // 等待动画结束
         yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).normalizedTime >= 0.9f);
 

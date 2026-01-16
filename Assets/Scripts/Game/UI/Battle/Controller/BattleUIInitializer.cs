@@ -1,4 +1,5 @@
 using Framework;
+using Game;
 using Game.Battle;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -34,7 +35,8 @@ public class BattleUIInitializer
             int skillId = battleEntity.GetComponent<SkillComponent>().GetSkills().Find((skill) => skill.SkillInfo.f_SkillType == (byte)E_SkillType.UltimateSkill).SkillInfo.f_id;
             if (skillId != -1)
             {
-                Sprite icon = await AssetBundleManager.Instance.LoadAssetAsync<Sprite>(E_AssetBundleType.Texture, ResKeyCollection.WhiteImage);
+                string iconName = (battleEntity as PlayerObject).RoleInfo.f_icon;
+                Sprite icon = await IFactory.GetTypeInstance<AssetLoaderFactory, MockSpriteLoader>().GetSpriteAsync(ResKeyCollection.Atlas_Icon, iconName);
                 roleStateUI.Init(battleEntity.GetComponent<PlayerPropertyComponent>().GetProperty<RoleProperty>(), icon, skillId, battleEntity);
                 roleStateUIs.Add(roleStateUI);
             }

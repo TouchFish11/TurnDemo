@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// Herta角色普攻技能弹射物
 /// </summary>
-public class HertaNormalSKillProjectile : InstantProjectile
+public class HertaNormalSkillProjectile : InstantProjectile
 {
     protected override void OnInit()
     {

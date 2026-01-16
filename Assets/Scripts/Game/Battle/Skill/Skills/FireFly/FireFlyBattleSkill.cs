@@ -9,7 +9,6 @@ using UnityEngine;
 public class FireFlyBattleSkill : PlayerSkill
 {
     private readonly string battleAttackState = "BattleAttack";
-    private ProjectileData projectileData;
 
     public FireFlyBattleSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
     {
@@ -20,6 +19,8 @@ public class FireFlyBattleSkill : PlayerSkill
     {
         base.OnPreCast(context);
         projectileData = new ProjectileData(Caster, MainTarget, AllTargets, this);
+        projectileTrans = new ProjectileTrans(MainTarget.GameObject.transform.position, Quaternion.LookRotation(-Caster.GameObject.transform.right));
+        vFXInfo = new VFXInfo();
     }
 
     protected override IEnumerator OnCast(IBattleContext context)
@@ -30,8 +31,8 @@ public class FireFlyBattleSkill : PlayerSkill
         // 等待动画切换为战技动画
         yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).IsName(battleAttackState));
         // 生成特效
-        ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_FireFlyBattleSkill, MainTarget.GameObject.transform.position, Quaternion.LookRotation(-Caster.GameObject.transform.right), projectileData);
-        // 等待动画结束
-        yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).normalizedTime >= 0.9f);
+        ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_FireFlyBattleSkill, projectileTrans, projectileData, vFXInfo);
+        // 等待动画、特效结束
+        yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).normalizedTime >= 0.9f && !vFXInfo.IsAlive);
     }
 }

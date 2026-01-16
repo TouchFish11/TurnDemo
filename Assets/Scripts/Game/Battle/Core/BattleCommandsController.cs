@@ -33,9 +33,12 @@ public class BattleCommandsController
             // 执行技能命令
             yield return _command.Excute(_context);
             _command = null;
-            // 命令执行后逻辑
+            // 单次命令执行后逻辑
             yield return OnPostCommandExcute();
         }
+
+        // 当前所有命令执行后处理逻辑
+        // ,,,
     }
 
     /// <summary>
@@ -116,7 +119,10 @@ public class BattleCommandsController
         });
     }
 
-    // 暂时这样处理
+    /// <summary>
+    /// 暂时这样处理
+    /// </summary>
+    /// <returns></returns>
     public List<string> GetRoleIcon()
     {
         List<string> strs = new List<string>(_battleCommands.Count);
@@ -129,11 +135,11 @@ public class BattleCommandsController
             {
                 if (skillCommand.Skill.Caster is PlayerObject playerObject)
                 {
-                    icon = playerObject.RoleInfo.f_name;
+                    icon = playerObject.RoleInfo.f_icon;
                 }
                 else if (skillCommand.Skill.Caster is MonsterObject monsterObject)
                 {
-                    icon = monsterObject.MonsterInfo.f_name;
+                    icon = monsterObject.MonsterInfo.f_icon;
                 }
             }
             // 其它命令获取其它图标即可

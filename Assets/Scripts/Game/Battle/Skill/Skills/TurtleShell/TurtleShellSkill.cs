@@ -6,56 +6,49 @@ using UnityEngine;
 
 public class TurtleShellSkill : MonsterSkill
 {
-    private static WaitForSeconds _waitForSeconds0_8 = new WaitForSeconds(0.8f);
-
-    private readonly float moveSpeed = 15f;
-    private readonly float dis = 1f;
-
     /// <summary>
     /// 攻击
     /// 目前是怪物使用
     /// </summary>
-    public int Attack { get; } = Animator.StringToHash("Attack");
+    public string Attack { get; } = "Attack";
 
     public TurtleShellSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
     {
-
+        Caster.GetComponentInChildren<AnimationTrigger>().OnAttack += OnAttack;
     }
 
-    private void OnAttack(float time)
+    private void OnAttack(int skillId)
     {
-        foreach (IBattleEntityObject battleEntity in AllTargets)
+        if (skillId != SkillInfo.f_id)
         {
-            // 处理伤害
-            DamageCalcManager.CalcSkillDamage(Caster, battleEntity, this.SkillInfo, out DamageResult result);
-            battleEntity.TakeDamage(result);
-        }   
+            return;
+        }
+
+        projectileData = new ProjectileData(Caster, MainTarget, AllTargets, this);
+
+        Vector3 mainTarget = MainTarget.GameObject.transform.position;
+        Vector3 realTarget = new Vector3(mainTarget.x, 0, mainTarget.z);
+        Vector3 caster = Caster.GameObject.transform.position;
+        Vector3 realCaster = new Vector3(caster.x, 0, caster.z);
+
+        projectileTrans = new ProjectileTrans(Caster.GameObject.transform.position + Vector3.forward, Quaternion.LookRotation(realTarget - realCaster));
+        // 生成特效
+        ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_MonsterAttackSkill, projectileTrans, projectileData, vFXInfo);
         StatusAddStrategy?.ToAdd(Caster, AllTargets, statusIds);
+    }
+
+    protected override void OnPreCast(IBattleContext context)
+    {
+        base.OnPreCast(context);
+        vFXInfo = new VFXInfo();
     }
 
     protected override IEnumerator OnCast(IBattleContext context)
     {
-        Vector3 targetPos = MainTarget.GameObject.transform.position;
-        while (Vector3.Distance(Caster.GameObject.transform.position, targetPos) > dis)
-        {
-            Vector3 nowPos = Caster.GameObject.transform.position;
-            Caster.GameObject.transform.position = Vector3.MoveTowards(nowPos, targetPos, Time.deltaTime * moveSpeed);
-            yield return null;
-        }
-
-        yield return AnimationPlayManager.Instance.PlayAnimation(Caster, (E_AnimationType)SkillInfo.f_animationType, AnimationComponent.Skill_Layer_Name, nameof(Attack), OnAttack, TextUtility.SplitTofloatArr(SkillInfo.f_dmgTimes, 2));
-
+        yield return new WaitForSeconds(0.1f);
+        yield return AnimationPlayManager.Instance.PlayAnimation(Caster, (E_AnimationType)SkillInfo.f_animationType, AnimationComponent.Skill_Layer_Name, Attack);
+        yield return new WaitUntil(() => !vFXInfo.IsAlive);
         // 优化表现
-        yield return _waitForSeconds0_8;
-
-        // 回到起始位置
-        targetPos = BattlePoint.Instance.GetMonsterTransByIndex(Caster.EntityPosIndex).position;
-        while (Vector3.Distance(Caster.GameObject.transform.position, targetPos) >= 0.1f)
-        {
-            Vector3 nowPos = Caster.GameObject.transform.position;
-            Caster.GameObject.transform.position = Vector3.MoveTowards(nowPos, targetPos, Time.deltaTime * moveSpeed);
-            yield return null;
-        }
-        Caster.GameObject.transform.position = targetPos;
+        yield return new WaitForSeconds(0.8f);
     }
 }

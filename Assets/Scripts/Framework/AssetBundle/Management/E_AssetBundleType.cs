@@ -20,6 +20,7 @@ namespace Framework
 		Material,
 		Mesh,
 		Prefab,
+		SpriteAtlas,
 		Texture,
 		VFX,
 	}

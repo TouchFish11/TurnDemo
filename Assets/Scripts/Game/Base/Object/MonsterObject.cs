@@ -39,6 +39,11 @@ namespace Game.Battle
             this.GetComponent<ToughnessComponent>().ReduceToughness(damageResult.Source, damageResult.ElementType, damageResult.SkillInfo);
         }
 
+        /// <summary>
+        /// 怪物行动协程
+        /// 通过怪物自身对象开启协程，不能用mono管理器开始，因为怪物会被销毁，导致韧性恢复后若死亡，仍会执行后续释放技能逻辑导致报错
+        /// </summary>
+        /// <returns></returns>
         protected override IEnumerator OnExceuteAction()
         {
             // 恢复韧性
@@ -71,12 +76,12 @@ namespace Game.Battle
 
         public override IEnumerator Die()
         {
+            var vFXInfo = new VFXInfo();
+            // 显示死亡特效
+            ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_MonsterDead, new ProjectileTrans(this.transform, false), new ProjectileData(this, null, null, null), vFXInfo);
             // 怪物播放死亡动画
-            yield return AnimationPlayManager.Instance.WaitForAnimOver(this.GetComponent<BattleAnimationComponent>(), AnimationComponent.Battle_Layer_Name, E_AnimationType.Death);
-            // 显示销毁特效
-            // 这里测试会报错，待修复
-            //ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_BossDead, this.transform, default);
-            LogManager.Log($"怪物死亡：{this.gameObject.name}");
+            AnimationPlayManager.Instance.PlayAnimationOver(this.GetComponent<BattleAnimationComponent>(), AnimationComponent.Battle_Layer_Name, E_AnimationType.Death);
+            yield return new WaitUntil(() => !vFXInfo.IsAlive);
         }
 
         protected override void OnDisable()

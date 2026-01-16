@@ -18,32 +18,27 @@ public class FireFlyNormalSkill : PlayerSkill
 
     public FireFlyNormalSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
     {
-        vfxTrans = (Caster as FireFly).VFXTrans;
+        //vfxTrans = (Caster as FireFly).VFXTrans;
 
         Caster.GetComponentInChildren<AnimationTrigger>().OnAttack += OnAttack;
     }
 
     private void OnAttack(int skillId)
     {
-        if (skillId != SkillInfo.f_id)
-        {
-            return;
-        }
+        //if (skillId != SkillInfo.f_id)
+        //{
+        //    return;
+        //}
 
-        // 创建特效、碰撞特效
-        ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_FireFlyNormalSkill, vfxTrans, localVfx, Quaternion.identity, default);
+        //foreach (IBattleEntityObject target in AllTargets)
+        //{
+        //    // 碰撞特效
+        //    projectileTrans = new ProjectileTrans(target.GameObject.transform.position, Quaternion.identity);
+        //    vFXInfo = new VFXInfo();
+        //    ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_BlueHit, projectileTrans, default, vFXInfo);
+        //}
 
-        foreach (IBattleEntityObject target in AllTargets)
-        {
-            DamageCalcManager.CalcSkillDamage(Caster, target, this.SkillInfo, out DamageResult result);
-            // 处理伤害
-            target.TakeDamage(result);
-            // 恢复能量
-            RecoverEnergy();
-            ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_BlueHit, target.GameObject.transform.position, Quaternion.identity, default);
-        }
-
-        StatusAddStrategy?.ToAdd(Caster, AllTargets, statusIds);
+        //StatusAddStrategy?.ToAdd(Caster, AllTargets, statusIds);
     }
 
     protected override IEnumerator OnCast(IBattleContext context)
@@ -56,8 +51,11 @@ public class FireFlyNormalSkill : PlayerSkill
 
         // 等待动画切换为翻滚动画
         yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).IsName(rollState));
+
         // 生成特效
-        ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_NormalSkill_Wave, Caster.GameObject.transform.position, Quaternion.identity, default);
+        projectileTrans = new ProjectileTrans(Caster.GameObject.transform.position, Quaternion.identity);
+        vFXInfo = new VFXInfo();
+        ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_NormalSkill_Wave, projectileTrans, default, vFXInfo);
 
         // 开始匹配目标
         Vector3 matchPos = MainTarget.GameObject.transform.position - Vector3.forward * 1.5f;
@@ -67,10 +65,16 @@ public class FireFlyNormalSkill : PlayerSkill
 
         // 等待动画切换为普攻动画
         yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).IsName(attackState));
-        // 等待动画结束
-        yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).normalizedTime >= 0.9f);
 
-        yield return _waitForSeconds0_35;
+        // 创建特效
+        projectileTrans = new ProjectileTrans(Caster.SubGameObject.transform.position + Vector3.up, Quaternion.Euler(180, 180, 0));
+        projectileData = new ProjectileData(Caster, MainTarget, AllTargets, this);
+        vFXInfo = new VFXInfo();
+        ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_FireFlyNormalSkill, projectileTrans, projectileData, vFXInfo);
+
+        // 等待动画、特效结束
+        yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).normalizedTime >= 0.9f && !vFXInfo.IsAlive);
+        yield return new WaitForSeconds(0.15f);
 
         // 回到起始位置
         animator.transform.localPosition = Vector3.zero;

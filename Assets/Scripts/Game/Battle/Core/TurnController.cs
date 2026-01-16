@@ -26,6 +26,11 @@ namespace Game.Battle
         private int currentMonsterCount;
 
         /// <summary>
+        /// 战斗是否结束
+        /// </summary>
+        public bool IsBattleOver { get; private set; }
+
+        /// <summary>
         /// 基础行动值
         /// </summary>
         private const float BASE_ACTION_VALUE = 10000f;
@@ -83,7 +88,7 @@ namespace Game.Battle
                 // 执行命令
                 yield return commandsController.ExcuteCommand();
                 // 检查战斗是否结束
-                if (CheckBattleOver())
+                if (IsBattleOver)
                 {
                     yield break;
                 }
@@ -288,7 +293,8 @@ namespace Game.Battle
         public bool CheckBattleOver()
         {
             // 每次执行完命令后，检查战斗是否结束
-            return battleOverCondition.CheckOver(_context);
+            IsBattleOver = battleOverCondition.CheckOver(_context);
+            return IsBattleOver;
         }
 
         /// <summary>
@@ -302,7 +308,6 @@ namespace Game.Battle
                 yield return deadMonster.Die();
                 _context.GetAllBattleEntity().Remove(deadMonster);
                 GameObject.Destroy(deadMonster.GameObject);
-                LogManager.Log($"已移除怪物：{deadMonster.GameObject.name}");
             }
 
             // 事件分发传递，更新行动轴UI显示

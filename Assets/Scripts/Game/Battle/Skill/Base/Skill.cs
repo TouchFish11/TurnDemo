@@ -9,6 +9,16 @@ using UnityEngine;
 /// </summary>
 public abstract class Skill : ISkill
 {
+    // 弹射物数据
+    protected ProjectileData projectileData;
+    // 弹射物Transform
+    protected ProjectileTrans projectileTrans;
+    // 特效信息
+    protected VFXInfo vFXInfo;
+    // buffId数组
+    protected int[] statusIds;
+    private readonly float waitTime = 0.85f;
+
     public SkillInfo SkillInfo { get; private set; }
 
     public IBattleEntityObject Caster { get; private set; }
@@ -16,8 +26,6 @@ public abstract class Skill : ISkill
     public IBattleEntityObject MainTarget { get; private set; }
 
     public List<IBattleEntityObject> AllTargets { get; private set; }
-
-    public IDamageCalcManager DamageCalcManager { get; private set; }
 
     public IPropertyComponent PropertyComponent { get; private set; }
 
@@ -27,15 +35,10 @@ public abstract class Skill : ISkill
 
     public ITargetSelectStrategy TargetSelectStrategy { get; private set; }
 
-    // buffId数组
-    protected int[] statusIds;
-    private readonly float waitTime = 0.85f;
-
     protected Skill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy)
     {
         Caster = caster;
         SkillInfo = BinaryDataManager.Instance.GetConfig<SkillInfoContainer>(E_ConfigLoadType.Editor).dataDic[skillId];
-        DamageCalcManager = ServiceLocator.Get<IDamageCalcManager>();
         SkillCastPostHandler = postHandler;
         statusIds = TextUtility.SplitToIntArr(SkillInfo.f_statusId, 2);
         StatusAddStrategy = statusAddStrategy;

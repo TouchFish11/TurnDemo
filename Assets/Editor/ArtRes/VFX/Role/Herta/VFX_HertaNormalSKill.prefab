@@ -19733,9 +19733,9 @@ GameObject:
   - component: {fileID: 1348377000152763536}
   - component: {fileID: 8339079901638580342}
   - component: {fileID: 6628833660116816884}
-  - component: {fileID: 7210651130126621172}
+  - component: {fileID: 1306764726993919681}
   m_Layer: 0
-  m_Name: VFX_HertaNormalSKill
+  m_Name: VFX_HertaNormalSkill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24634,7 +24634,7 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!114 &7210651130126621172
+--- !u!114 &1306764726993919681
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

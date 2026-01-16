@@ -12,4 +12,5 @@ public class RoleInfo
 	public int f_baseSpeed;
 	public int f_maxEnergy;
 	public float f_dmgTextYOffset;
+	public string f_icon;
 }

@@ -23,28 +23,19 @@ namespace Game
         /// <param name="battleEntity"></param>
         /// <param name="animationType"></param>
         /// <param name="animName"></param>
-        /// <param name="callback"></param>
-        /// <param name="normalTimes"></param>
+        /// <param name="overCallBack"></param>
+        /// <param name="maxNormalizedTime"></param>
         /// <returns></returns>
-        public IEnumerator PlayAnimation(IBattleEntityObject battleEntity, E_AnimationType animationType, string layerName, string animName, Action<float> callback, params float[] normalTimes)
+        public IEnumerator PlayAnimation(IBattleEntityObject battleEntity, E_AnimationType animationType, string layerName, string animName, Action overCallBack = null, float maxNormalizedTime = 0.9f)
         {
             BattleAnimationComponent animationComponent = battleEntity.GetComponent<BattleAnimationComponent>();
             animationComponent.SetAnimationState(animationType);
-            // 等待动画切换为攻击动画
+            // 等待动画切换为指定动画
             yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(layerName).IsName(animName));
-
-            int index = 0;
-            while (index < normalTimes.Length)
-            {
-                float currentTime = normalTimes[index];
-                if (animationComponent.GetCurrentAnimatorStateInfo(layerName).normalizedTime >= currentTime)
-                {
-                    callback?.Invoke(currentTime);
-                    index++;
-                }
-
-                yield return null;
-            }
+            // 等待动画播放结束
+            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).normalizedTime >= maxNormalizedTime);
+            // 执行结束回调
+            overCallBack?.Invoke();
         }
 
         /// <summary>
@@ -53,9 +44,9 @@ namespace Game
         /// <param name="battleAnimationComponent"></param>
         /// <param name="animationType"></param>
         /// <param name="callBack"></param>
-        public void PlayAnimationOver(BattleAnimationComponent battleAnimationComponent, string layerName, E_AnimationType animationType)
+        public void PlayAnimationOver(BattleAnimationComponent battleAnimationComponent, string layerName, E_AnimationType animationType, Action playOver = null)
         {
-            battleAnimationComponent.StartCoroutine(WaitForAnimOver(battleAnimationComponent, layerName, animationType));
+            battleAnimationComponent.StartCoroutine(WaitForAnimOver(battleAnimationComponent, layerName, animationType, playOver));
         }
 
         /// <summary>
@@ -65,13 +56,14 @@ namespace Game
         /// <param name="animationType"></param>
         /// <param name="callBack"></param>
         /// <returns></returns>
-        public IEnumerator WaitForAnimOver(BattleAnimationComponent battleAnimationComponent, string layerName, E_AnimationType animationType)
+        public IEnumerator WaitForAnimOver(BattleAnimationComponent battleAnimationComponent, string layerName, E_AnimationType animationType, Action playOver = null)
         {
             battleAnimationComponent.SetAnimationState(animationType);
             // 等待动画切换为指定动画
             yield return new WaitUntil(() => battleAnimationComponent.GetCurrentAnimatorStateInfo(layerName).IsName(animationType.ToString()));
             // 等待动画播放完毕
             yield return new WaitUntil(() => battleAnimationComponent.GetCurrentAnimatorStateInfo(layerName).normalizedTime >= 0.9);
+            playOver?.Invoke();
         }
     }
 }

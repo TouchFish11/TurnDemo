@@ -9789,6 +9789,7 @@ GameObject:
   - component: {fileID: 2395973036000802345}
   - component: {fileID: 2902718742126114236}
   - component: {fileID: 3678637605584896415}
+  - component: {fileID: 8632250670609093361}
   m_Layer: 0
   m_Name: VFX_FireFlyNormalSkill
   m_TagString: Untagged
@@ -9805,7 +9806,7 @@ Transform:
   m_GameObject: {fileID: 8813129615603619819}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.035381794, y: 0.92, z: -0.8751736}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -14667,6 +14668,18 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &8632250670609093361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8813129615603619819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20a28525f89e3cd42879d392e2ee731d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &9158051945026027728
 GameObject:
   m_ObjectHideFlags: 0

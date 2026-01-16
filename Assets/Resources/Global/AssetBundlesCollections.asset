@@ -45,22 +45,22 @@ MonoBehaviour:
       size: 8201
       name: PlayerController.controller
     - assetPath: Assets\Editor\ArtRes\Animator\Monster\BaseMonster.controller
-      size: 13034
+      size: 13384
       name: BaseMonster.controller
     - assetPath: Assets\Editor\ArtRes\Animator\Monster\SlimeAnimtor.controller
-      size: 13377
+      size: 15641
       name: SlimeAnimtor.controller
     - assetPath: Assets\Editor\ArtRes\Animator\Monster\TurtleShellAnimtor.controller
-      size: 13324
+      size: 15654
       name: TurtleShellAnimtor.controller
     - assetPath: Assets\Editor\ArtRes\Animator\Role\BaseRole.controller
-      size: 31613
+      size: 26955
       name: BaseRole.controller
     - assetPath: Assets\Editor\ArtRes\Animator\Role\FireFlyAnimtor.controller
-      size: 31619
+      size: 35313
       name: FireFlyAnimtor.controller
     - assetPath: Assets\Editor\ArtRes\Animator\Role\HertaAnimtor.controller
-      size: 31617
+      size: 33215
       name: HertaAnimtor.controller
   - assetBundleName: camera
     assetInfoList:
@@ -79,13 +79,13 @@ MonoBehaviour:
       size: 468
       name: DialogueInfo.tInfo.txt
     - assetPath: Assets\Editor\ArtRes\GameData\MonsterInfo.bytes
-      size: 371
+      size: 405
       name: MonsterInfo.bytes
     - assetPath: Assets\Editor\ArtRes\GameData\NpcInfo.tInfo.txt
       size: 150
       name: NpcInfo.tInfo.txt
     - assetPath: Assets\Editor\ArtRes\GameData\RoleInfo.bytes
-      size: 360
+      size: 390
       name: RoleInfo.bytes
     - assetPath: Assets\Editor\ArtRes\GameData\SkillInfo.bytes
       size: 1057
@@ -119,58 +119,78 @@ MonoBehaviour:
       name: MergedMesh.asset
   - assetBundleName: prefab
     assetInfoList:
-    - assetPath: Assets\Editor\ArtRes\Prefab\Boss.prefab
-      size: 80393
-      name: Boss.prefab
-    - assetPath: Assets\Editor\ArtRes\Prefab\Dog.prefab
-      size: 80466
-      name: Dog.prefab
-    - assetPath: Assets\Editor\ArtRes\Prefab\FloatingText.prefab
-      size: 11200
-      name: FloatingText.prefab
-    - assetPath: Assets\Editor\ArtRes\Prefab\Npc.prefab
-      size: 4447
-      name: Npc.prefab
-    - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Slime.prefab
-      size: 16608
-      name: Slime.prefab
-    - assetPath: Assets\Editor\ArtRes\Prefab\Monster\TurtleShell.prefab
-      size: 37029
-      name: TurtleShell.prefab
-    - assetPath: Assets\Editor\ArtRes\Prefab\Role\FireFly.prefab
-      size: 91408
-      name: FireFly.prefab
-    - assetPath: Assets\Editor\ArtRes\Prefab\Role\Herta.prefab
-      size: 90745
-      name: Herta.prefab
+    - assetPath: Assets\Editor\ArtRes\Prefab\Prefab_Boss.prefab
+      size: 80400
+      name: Prefab_Boss.prefab
+    - assetPath: Assets\Editor\ArtRes\Prefab\Prefab_Npc.prefab
+      size: 4454
+      name: Prefab_Npc.prefab
+    - assetPath: Assets\Editor\ArtRes\Prefab\Prefab_Player.prefab
+      size: 80476
+      name: Prefab_Player.prefab
+    - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Prefab_Slime.prefab
+      size: 16615
+      name: Prefab_Slime.prefab
+    - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Prefab_TurtleShell.prefab
+      size: 37036
+      name: Prefab_TurtleShell.prefab
+    - assetPath: Assets\Editor\ArtRes\Prefab\Role\Prefab_FireFly.prefab
+      size: 92529
+      name: Prefab_FireFly.prefab
+    - assetPath: Assets\Editor\ArtRes\Prefab\Role\Prefab_Herta.prefab
+      size: 90752
+      name: Prefab_Herta.prefab
+    - assetPath: Assets\Editor\ArtRes\Prefab\UI\UI_3D_FloatingText.prefab
+      size: 11206
+      name: UI_3D_FloatingText.prefab
   - assetBundleName: scene
     assetInfoList:
     - assetPath: Assets\Editor\ArtRes\Scene\BeginScene.unity
       size: 9392
       name: BeginScene.unity
     - assetPath: Assets\Editor\ArtRes\Scene\LevelScene.unity
-      size: 73718
+      size: 72770
       name: LevelScene.unity
     - assetPath: Assets\Editor\ArtRes\Scene\MainScene.unity
       size: 47203
       name: MainScene.unity
-  - assetBundleName: texture
+  - assetBundleName: spriteatlas
     assetInfoList:
-    - assetPath: Assets\Editor\ArtRes\Texture\BrightIcons.png
+    - assetPath: Assets\Editor\ArtRes\SpriteAtlas\Atlas_Generic.spriteatlasv2
+      size: 394
+      name: Atlas_Generic.spriteatlasv2
+    - assetPath: Assets\Editor\ArtRes\SpriteAtlas\Atlas_Icon.spriteatlasv2
+      size: 469
+      name: Atlas_Icon.spriteatlasv2
+    - assetPath: Assets\Editor\ArtRes\SpriteAtlas\BrightIcons.png
       size: 57098
       name: BrightIcons.png
-    - assetPath: Assets\Editor\ArtRes\Texture\CrossCircle4Split128.png
-      size: 1239
-      name: CrossCircle4Split128.png
-    - assetPath: Assets\Editor\ArtRes\Texture\DarkIcons.png
+    - assetPath: Assets\Editor\ArtRes\SpriteAtlas\DarkIcons.png
       size: 74858
       name: DarkIcons.png
-    - assetPath: Assets\Editor\ArtRes\Texture\WhiteImage.png
+  - assetBundleName: texture
+    assetInfoList:
+    - assetPath: Assets\Editor\ArtRes\Texture\Generic\CrossCircle4Split128.png
+      size: 1239
+      name: CrossCircle4Split128.png
+    - assetPath: Assets\Editor\ArtRes\Texture\Generic\WhiteImage.png
       size: 516
       name: WhiteImage.png
-    - assetPath: Assets\Editor\ArtRes\Texture\xArrowheadInwards128.png
+    - assetPath: Assets\Editor\ArtRes\Texture\Generic\xArrowheadInwards128.png
       size: 884
       name: xArrowheadInwards128.png
+    - assetPath: Assets\Editor\ArtRes\Texture\Icon\Monster\Icon_Slime.png
+      size: 48340
+      name: Icon_Slime.png
+    - assetPath: Assets\Editor\ArtRes\Texture\Icon\Monster\Icon_TurtleShell.png
+      size: 53513
+      name: Icon_TurtleShell.png
+    - assetPath: Assets\Editor\ArtRes\Texture\Icon\Role\Icon_FireFly.png
+      size: 52491
+      name: Icon_FireFly.png
+    - assetPath: Assets\Editor\ArtRes\Texture\Icon\Role\Icon_Herta.png
+      size: 58894
+      name: Icon_Herta.png
   - assetBundleName: ui
     assetInfoList:
     - assetPath: Assets\Editor\ArtRes\UI\Canvas.prefab
@@ -192,7 +212,7 @@ MonoBehaviour:
       size: 12759
       name: SelectMarkerUI.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Battle\ActionLine\ActionGridUI.prefab
-      size: 24445
+      size: 24489
       name: ActionGridUI.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Battle\ActionLine\WaitingActUI.prefab
       size: 4792
@@ -265,18 +285,15 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\VFX\General\VFX_Environment_Rain.prefab
       size: 235326
       name: VFX_Environment_Rain.prefab
-    - assetPath: Assets\Editor\ArtRes\VFX\General\VFX_StatusEffect.prefab
-      size: 354478
-      name: VFX_StatusEffect.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\General\VFX_SupportSkill_01.prefab
       size: 707283
       name: VFX_SupportSkill_01.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\General\VFX_SupportSkill_02.prefab
       size: 235384
       name: VFX_SupportSkill_02.prefab
-    - assetPath: Assets\Editor\ArtRes\VFX\General\Hit\VFX_BlueHit.prefab
-      size: 476729
-      name: VFX_BlueHit.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\General\Hit\VFX_MonsterHit.prefab
+      size: 237069
+      name: VFX_MonsterHit.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\General\Status\VFX_Dot_Blue01.prefab
       size: 596048
       name: VFX_Dot_Blue01.prefab
@@ -298,36 +315,42 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\VFX\General\Status\VFX_Shield.prefab
       size: 350819
       name: VFX_Shield.prefab
-    - assetPath: Assets\Editor\ArtRes\VFX\Monster\Boss\VFX_BossDead.prefab
-      size: 235181
-      name: VFX_BossDead.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\Monster\VFX_MonsterAttackSkill.prefab
+      size: 354906
+      name: VFX_MonsterAttackSkill.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\Monster\Boss\VFX_MonsterDead.prefab
+      size: 235603
+      name: VFX_MonsterDead.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\Role\FireFly\VFX_BlueHit.prefab
+      size: 476729
+      name: VFX_BlueHit.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\Role\FireFly\VFX_FireFlyBattleSkill.prefab
-      size: 355398
+      size: 355817
       name: VFX_FireFlyBattleSkill.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\Role\FireFly\VFX_FireFlyNormalSkill.prefab
-      size: 473867
+      size: 474199
       name: VFX_FireFlyNormalSkill.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\Role\FireFly\VFX_FireFlyUltimatePose.prefab
-      size: 117002
+      size: 116999
       name: VFX_FireFlyUltimatePose.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\Role\FireFly\VFX_FireFlyUltimateSkill.prefab
-      size: 363969
+      size: 364388
       name: VFX_FireFlyUltimateSkill.prefab
-    - assetPath: Assets\Editor\ArtRes\VFX\Role\FireFly\VFX_NormalSkill_.prefab
-      size: 236624
-      name: VFX_NormalSkill_.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\Role\FireFly\VFX_NormalSkill_Wave.prefab
+      size: 236628
+      name: VFX_NormalSkill_Wave.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\Role\Herta\VFX_HeartUltimatePose.prefab
       size: 118706
       name: VFX_HeartUltimatePose.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\Role\Herta\VFX_HeartUltimateSkill.prefab
-      size: 838999
+      size: 839421
       name: VFX_HeartUltimateSkill.prefab
-    - assetPath: Assets\Editor\ArtRes\VFX\Role\Herta\VFX_HertaBattleSKill.prefab
-      size: 1439612
-      name: VFX_HertaBattleSKill.prefab
-    - assetPath: Assets\Editor\ArtRes\VFX\Role\Herta\VFX_HertaNormalSKill.prefab
-      size: 716573
-      name: VFX_HertaNormalSKill.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\Role\Herta\VFX_HertaBattleSkill.prefab
+      size: 1440034
+      name: VFX_HertaBattleSkill.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\Role\Herta\VFX_HertaNormalSkill.prefab
+      size: 716995
+      name: VFX_HertaNormalSkill.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\Role\Herta\VFX_HertaSkill.prefab
       size: 1546500
       name: VFX_HertaSkill.prefab

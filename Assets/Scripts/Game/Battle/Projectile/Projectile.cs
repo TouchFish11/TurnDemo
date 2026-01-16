@@ -10,6 +10,7 @@ namespace Game.Battle
     [RequireComponent(typeof(ParticleSystem))]
     public abstract class Projectile : MonoBehaviour
     {
+        protected VFXInfo vFXInfo;
         protected ProjectileData projectileData;
         protected new ParticleSystem particleSystem;
         protected IDamageCalcManager damageCalcManager;
@@ -28,10 +29,11 @@ namespace Game.Battle
         /// <param name="caster"></param>
         /// <param name="mainTarget"></param>
         /// <param name="targets"></param>
-        public virtual void Init(ProjectileData projectileData)
+        public virtual void Init(ProjectileData projectileData, VFXInfo vFXInfo)
         {
+            this.vFXInfo = vFXInfo;
             this.projectileData = projectileData;
-            statusIds = TextUtility.SplitToIntArr(projectileData.skill.SkillInfo.f_statusId, 2);
+            statusIds = projectileData.skill != null ? TextUtility.SplitToIntArr(projectileData.skill.SkillInfo.f_statusId, 2) : new int[0];
             OnInit();
         }
 

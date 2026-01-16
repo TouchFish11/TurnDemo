@@ -142,7 +142,7 @@ public class BattleUIManager
         foreach (string iconPath in iconPaths)
         {
             WaitingActUI waitingActUI = await ObjectBuilder.GetObject<WaitingActUI>(E_AssetBundleType.UI, ResKeyCollection.WaitingActUI, _view.WaitQueueContent);
-            Sprite icon = await AssetBundleManager.Instance.LoadAssetAsync<Sprite>(E_AssetBundleType.Texture, iconPath);
+            Sprite icon = await IFactory.GetTypeInstance<AssetLoaderFactory, MockSpriteLoader>().GetSpriteAsync(ResKeyCollection.Atlas_Icon, iconPath);
             waitingActUI.Init(icon);
             waitingActUIs.Add(waitingActUI);
         }
@@ -184,8 +184,17 @@ public class BattleUIManager
         foreach (IBattleEntityObject battleEntity in battleEntities)
         {
             ActionGridUI actionGridUI = await ObjectBuilder.GetObject<ActionGridUI>(E_AssetBundleType.UI, ResKeyCollection.ActionGridUI, _view.ActionBarContent);
-            //Sprite icon = await AssetBundleManager.Instance.LoadAssetAsync<Sprite>(E_AssetBundleType.UI, "");
-            actionGridUI.Init(null, battleEntity.ActionValue, battleEntity, isFirst);
+            string iconName = string.Empty;
+            if (battleEntity is PlayerObject playerObject)
+            {
+                iconName = playerObject.RoleInfo.f_icon;
+            }
+            else if(battleEntity is MonsterObject monsterObject)
+            {
+                iconName = monsterObject.MonsterInfo.f_icon;
+            }
+            Sprite icon = await IFactory.GetTypeInstance<AssetLoaderFactory, MockSpriteLoader>().GetSpriteAsync(ResKeyCollection.Atlas_Icon, iconName);
+            actionGridUI.Init(icon, battleEntity.ActionValue, battleEntity, isFirst);
             actionGridUIs.Add(actionGridUI);
             isFirst = false;
         }

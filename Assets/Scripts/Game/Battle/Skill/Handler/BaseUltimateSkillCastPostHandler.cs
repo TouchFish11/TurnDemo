@@ -10,16 +10,20 @@ public class BaseUltimateSkillCastPostHandler : ISkillCastPostHandler
 {
     public IEnumerator OnHnadle(ISkill skill)
     {
-        // FIXME：需要修改，因为新增了韧性条恢复逻辑，所以导致释放终结技后的玩家不一定是当前玩家，有可能是恢复韧性条期间的怪物实体，所以这里需要修改
         IBattleContext context = skill.Caster.Context;
         IBattleEntityObject currentEntity = context.GetCurrentEntity();
+
+        if (context.GetTurnManager().IsBattleOver)
+        {
+            yield break;
+        }
 
         if (currentEntity is not PlayerObject)
         {
             yield break;
         }
 
-        // 判断当前玩家是否还有行动次数
+        // 判断当前玩家是否还有行动次数，且战斗未结束
         if (currentEntity.CanAct)
         {
             SkillInfo currentEntitySkillInfo = currentEntity.GetComponent<SkillComponent>().GetSkills().Find((skill) => skill.SkillInfo.f_SkillType == (int)E_SkillType.NormalAttack).SkillInfo;

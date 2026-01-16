@@ -11,8 +11,8 @@ public class RoleBuilder
     {
         return roleId switch
         {
-            1 => await ObjectBuilder.GetObject<PlayerObject>(E_AssetBundleType.Prefab, ResKeyCollection.FireFly, parent, stay),
-            2 => await ObjectBuilder.GetObject<PlayerObject>(E_AssetBundleType.Prefab, ResKeyCollection.Herta, parent, stay),
+            1 => await ObjectBuilder.GetObject<PlayerObject>(E_AssetBundleType.Prefab, ResKeyCollection.Prefab_FireFly, parent, stay),
+            2 => await ObjectBuilder.GetObject<PlayerObject>(E_AssetBundleType.Prefab, ResKeyCollection.Prefab_Herta, parent, stay),
             _ => null,
         };
     }

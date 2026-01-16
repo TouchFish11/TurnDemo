@@ -123,7 +123,7 @@ public class TargetSelectManager : SingletonBase<TargetSelectManager>, ITargetSe
             BattleManager.Instance.GetContext().GetMonsterObjects());
 
         // 只有最后一个目标，不用处理
-        if (targets.Count < 1)
+        if (targets.Count == 1)
             return;
 
         // 获取主目标所在列表的位置
@@ -148,7 +148,7 @@ public class TargetSelectManager : SingletonBase<TargetSelectManager>, ITargetSe
      BattleManager.Instance.GetContext().GetMonsterObjects());
 
         // 只有最后一个目标，不用处理
-        if (targets.Count < 1)
+        if (targets.Count == 1)
             return;
 
         // 获取主目标所在列表的位置

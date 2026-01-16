@@ -49521,7 +49521,7 @@ GameObject:
   - component: {fileID: 7289140855099364922}
   - component: {fileID: 4376685645387039784}
   m_Layer: 0
-  m_Name: VFX_HertaBattleSKill
+  m_Name: VFX_HertaBattleSkill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

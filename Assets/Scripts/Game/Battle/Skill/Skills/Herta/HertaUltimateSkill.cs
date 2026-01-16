@@ -9,8 +9,6 @@ using UnityEngine;
 public class HertaUltimateSkill : UltimateSkill
 {
     private readonly string ultimateAttackState = "UltimateAttack";
-    // 弹射物数据
-    private ProjectileData projectileData;
 
     public HertaUltimateSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
     {
@@ -23,22 +21,26 @@ public class HertaUltimateSkill : UltimateSkill
 
         // 播放预备动画：玩家终结技pose、终结技动画
         Caster.GetComponent<BattleAnimationComponent>().SetUltimatePose();
-        // 生成特效
-        ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_HeartUltimatePose, Caster.GameObject.transform.position, Quaternion.identity, default);
         projectileData = new ProjectileData(Caster, MainTarget, AllTargets, this);
+        projectileTrans = new ProjectileTrans(Caster.GameObject.transform.position, Quaternion.identity);
+        vFXInfo = new VFXInfo();
+        // 生成特效
+        ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_HeartUltimatePose, projectileTrans, projectileData, vFXInfo);
     }
 
     protected override IEnumerator OnUltimateCast(IBattleContext context)
     {
         // 移除Pose特效
-        ServiceLocator.Get<IVFXManager>().RemoveVFX(ResKeyCollection.VFX_HeartUltimatePose);
+        ServiceLocator.Get<IVFXManager>().RemoveVFX(vFXInfo);
         context.GetEventBus().TriggerEvent(new SkillCastEvent(context, this, 0));
         BattleAnimationComponent animationComponent = Caster.GetComponent<BattleAnimationComponent>();
         // 等待动画切换为终结技攻击动画
         yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).IsName(ultimateAttackState));
-        ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_HeartUltimateSkill, MainTarget.GameObject.transform.position, Quaternion.identity, projectileData);
-        // 等待动画结束
-        yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).normalizedTime >= 0.9f);
-        yield return new WaitForSeconds(2.5f);
+
+        projectileData = new ProjectileData(Caster, MainTarget, AllTargets, this);
+        projectileTrans = new ProjectileTrans(MainTarget.GameObject.transform.position, Quaternion.identity);
+        ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_HeartUltimateSkill, projectileTrans, projectileData, vFXInfo);
+        // 等待动画、特效结束
+        yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).normalizedTime >= 0.9f && !vFXInfo.IsAlive);
     }
 }
