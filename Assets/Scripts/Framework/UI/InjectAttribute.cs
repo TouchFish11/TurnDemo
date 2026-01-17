@@ -20,6 +20,11 @@ public class InjectAttribute : Attribute
 
     }
 
+    /// <summary>
+    /// 构造函数
+    /// 用于初始化RectTransform
+    /// </summary>
+    /// <param name="rectTransformFlag">默认为0，0则不作为RectTransform赋值，若为1，则将RectTransform赋值到该字段/属性</param>
     public InjectAttribute(byte rectTransformFlag)
     {
         RectTransformFlag = rectTransformFlag;

@@ -1,5 +1,8 @@
+using Framework.Mock;
+using Game.Battle;
 using System;
 using System.Collections.Generic;
+using UnityEditor.Rendering;
 
 namespace Framework
 {
@@ -36,12 +39,10 @@ namespace Framework
             Register<IGameDataManager>(GameDataManager.Instance);
             Register<IInputSystem>(InputSystem.Instance);
             Register<IJsonManager>(JsonManager.Instance);
-            Register<ILogManager>(LogManager.Instance);
             Register<IMainManager>(MainManager.Instance);
             Register<IMusicManager>(MusicManager.Instance);
             Register<IPoolManager>(PoolManager.Instance);
             Register<IResourcesManager>(ResourcesManager.Instance);
-            Register<ISceneManager>(SceneManager.Instance);
             Register<IScriptableObjectManager>(ScriptableObjectManager.Instance);
             Register<IServerManager>(ServerManager.Instance);
             Register<ITimerManager>(TimerManager.Instance);
@@ -49,10 +50,12 @@ namespace Framework
             Register<IVideoManager>(VideoManager.Instance);
             Register<IFactoryManager>(FactoryManager.Instance);
             Register<IVFXManager>(VFXManager.Instance);
-
+            Register<IFloatingTextManager>(FloatingTextManager.Instance);
+            
             // 非框架（主界面）
             Register<IDialogueManager>(DialogueManager.Instance);
             Register<ITaskManager>(TaskManager.Instance);
+            Register<IPlayerManager>(PlayerManager.Instance);
         }
 
         /// <summary>
@@ -82,9 +85,75 @@ namespace Framework
             {
                 return service as T;
             }
-            LogManager.LogError($"未找到{type.Name}");
+            else
+            {
+                // 懒加载
+                T instance = GetSingletonInstance<T>();
+                Register(instance);
+                return instance;
+            }
+        }
+
+        /// <summary>
+        /// 获取单例实例
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        private static T GetSingletonInstance<T>() where T : class
+        {
+            Type interfaceType = typeof(T);
+
+            // 框架相关
+            if (interfaceType == typeof(ISceneManager))
+            {
+#if !UNITY_EDITOR || EDITOR_TEST_AB
+                return SceneManager.Instance as T;
+#else
+                return MockSceneManager.Instance as T;
+#endif
+            }
+
+            // 战斗相关
+            if (interfaceType == typeof(IBattleManager))
+            {
+#if !UNITY_EDITOR || EDITOR_TEST_AB
+                return BattleManager.Instance as T;
+#else
+                return BattleManager.Instance as T;
+#endif
+            }
+
+            if (interfaceType == typeof(ITargetSelectManager))
+            {
+#if !UNITY_EDITOR || EDITOR_TEST_AB
+                return TargetSelectManager.Instance as T;
+#else
+                return TargetSelectManager.Instance as T;
+#endif
+            }
+
+            if (interfaceType == typeof(IDamageCalcManager))
+            {
+#if !UNITY_EDITOR || EDITOR_TEST_AB
+                return DamageCalcManager.Instance as T;
+#else
+                return DamageCalcManager.Instance as T;
+#endif
+            }
+
+            if (interfaceType == typeof(ISkillManager))
+            {
+#if !UNITY_EDITOR || EDITOR_TEST_AB
+                return SkillManager.Instance as T;
+#else
+                return SkillManager.Instance as T;
+#endif
+            }
+
+            LogManager.LogError($"未实现对应接口的单例实例获取逻辑");
             return null;
         }
+
 
         /// <summary>
         /// 注销

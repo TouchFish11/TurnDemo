@@ -18,27 +18,7 @@ public class FireFlyNormalSkill : PlayerSkill
 
     public FireFlyNormalSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
     {
-        //vfxTrans = (Caster as FireFly).VFXTrans;
 
-        Caster.GetComponentInChildren<AnimationTrigger>().OnAttack += OnAttack;
-    }
-
-    private void OnAttack(int skillId)
-    {
-        //if (skillId != SkillInfo.f_id)
-        //{
-        //    return;
-        //}
-
-        //foreach (IBattleEntityObject target in AllTargets)
-        //{
-        //    // Åö×²ÌØÐ§
-        //    projectileTrans = new ProjectileTrans(target.GameObject.transform.position, Quaternion.identity);
-        //    vFXInfo = new VFXInfo();
-        //    ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_BlueHit, projectileTrans, default, vFXInfo);
-        //}
-
-        //StatusAddStrategy?.ToAdd(Caster, AllTargets, statusIds);
     }
 
     protected override IEnumerator OnCast(IBattleContext context)

@@ -46,10 +46,36 @@ public class BattleCommandsController
     /// </summary>
     private IEnumerator OnPostCommandExcute()
     {
-        // 执行完命令后，移除死亡的实体
-        yield return _context.GetTurnManager().RemoveDeadMonster();
+        yield return RemoveDeadMonster();
         // 检查战斗是否结束
         _isQuit = _context.GetTurnManager().CheckBattleOver();
+        // 未结束则筛过滤无效命令
+        FilterInvalidCommand();
+    }
+
+    /// <summary>
+    /// 执行完命令后，移除死亡的怪物实体
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator RemoveDeadMonster()
+    {
+        return _context.GetTurnManager().RemoveDeadMonster();
+    }
+
+    /// <summary>
+    /// 过滤无效命令
+    /// </summary>
+    private void FilterInvalidCommand()
+    {
+        for (int i = _battleCommands.Count - 1; i >= 0; i--)
+        {
+            if (!_battleCommands[i].IsValid)
+            {
+                _battleCommands.RemoveAt(i);
+            }
+        }
+        // 指令排队，更新UI显示
+        BattleUIScheduler.Instance.BattleController.GetBattleUI().UpdateWaitingCommmand(GetCommandSenders());
     }
 
     /// <summary>
@@ -82,7 +108,7 @@ public class BattleCommandsController
             // 按优先级排序命令
             SortCommand();
             // 指令排队，更新UI显示
-            BattleUIScheduler.Instance.BattleController.GetBattleUI().UpdateWaitingCommmand(GetRoleIcon());
+            BattleUIScheduler.Instance.BattleController.GetBattleUI().UpdateWaitingCommmand(GetCommandSenders());
         }
     }
 
@@ -93,7 +119,7 @@ public class BattleCommandsController
     {
         _battleCommands.RemoveAt(0);
         // 指令排队，更新UI显示
-        BattleUIScheduler.Instance.BattleController.GetBattleUI().UpdateWaitingCommmand(GetRoleIcon());
+        BattleUIScheduler.Instance.BattleController.GetBattleUI().UpdateWaitingCommmand(GetCommandSenders());
     }
 
     /// <summary>
@@ -120,36 +146,16 @@ public class BattleCommandsController
     }
 
     /// <summary>
-    /// 暂时这样处理
+    /// 获取命令发送者列表
     /// </summary>
     /// <returns></returns>
-    public List<string> GetRoleIcon()
+    public List<IBattleEntityObject> GetCommandSenders()
     {
-        List<string> strs = new List<string>(_battleCommands.Count);
+        List<IBattleEntityObject> battleEntities = new List<IBattleEntityObject>(_battleCommands.Count);
         foreach (ICommand command in _battleCommands)
         {
-            string icon = string.Empty;
-
-            // 技能命令获取角色/怪物图标
-            if (command is SkillCommand skillCommand)
-            {
-                if (skillCommand.Skill.Caster is PlayerObject playerObject)
-                {
-                    icon = playerObject.RoleInfo.f_icon;
-                }
-                else if (skillCommand.Skill.Caster is MonsterObject monsterObject)
-                {
-                    icon = monsterObject.MonsterInfo.f_icon;
-                }
-            }
-            // 其它命令获取其它图标即可
-            else
-            {
-
-            }
-            strs.Add(icon);
+            battleEntities.Add(command.Sender);
         }
-
-        return strs;
+        return battleEntities;
     }
 }

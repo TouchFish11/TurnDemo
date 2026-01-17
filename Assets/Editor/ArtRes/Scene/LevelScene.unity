@@ -161,10 +161,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1113400505}
     m_Modifications:
-    - target: {fileID: 1806814934395740062, guid: c86b6361ddef5d449a29f3d684cc094b, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3014319626000440773, guid: c86b6361ddef5d449a29f3d684cc094b, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -249,13 +245,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: BattleView
       objectReference: {fileID: 0}
+    - target: {fileID: 4403554962906805450, guid: c86b6361ddef5d449a29f3d684cc094b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4973464934626992724, guid: c86b6361ddef5d449a29f3d684cc094b, type: 3}
       propertyPath: m_SizeDelta.y
       value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 6967820766616558239, guid: c86b6361ddef5d449a29f3d684cc094b, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -482,7 +478,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &220143794
 Transform:
   m_ObjectHideFlags: 0
@@ -2384,7 +2380,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0.8
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -2442,13 +2438,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1857370572}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.942294, y: -0.056900382, z: 0.25248688, w: 0.21235515}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalRotation: {x: 0.09398765, y: 0.35077232, z: -0.93169683, w: -0.008131522}
+  m_LocalPosition: {x: -9.55, y: 3, z: 4.87}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 154.6, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 139.3, y: 166.2, z: -6.14}
 --- !u!1 &1902984199
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,5 +1,4 @@
 using Framework;
-using UnityEngine;
 
 namespace Game.Battle
 {
@@ -30,34 +29,11 @@ namespace Game.Battle
     /// </summary>
     public class FireFly : PlayerObject
     {
-        [SerializeField] private Transform vfxTrans;
-
-        public override void BaseInit(int id)
-        {
-            base.BaseInit(id);
-
-            // 相机跟随
-            //CreateCamera();
-            //this.AddComponent<InputComponent>();
-            //this.AddComponent<NormalAnimationComponent>();
-            //this.AddComponent<MoveComponent>();
-            //this.AddComponent<InteractComponent>();
-            //this.AddComponent<DialogueComponent>();
-
-        }
-
         public override void BattleInit(int roleId, IBattleContext context)
         {
             base.BattleInit(roleId, context);
             // 初始化技能组件
             this.GetComponent<SkillComponent>().InitSkills(RoleInfo.f_skillIds, new FireFlySkillFactory());
         }
-
-        private async void CreateCamera()
-        {
-            OrbitCameraController orbitCameraController = await ObjectBuilder.GetObject<OrbitCameraController>(E_AssetBundleType.Camera, ResKeyCollection.MainCamera, null);
-        }
-
-        public Transform VFXTrans => vfxTrans;
     }
 }

@@ -80,7 +80,7 @@ namespace Game
                 return component as T;
             }
 
-            LogManager.LogError($"{nameof(AddComponent)}未找到{typeof(T).Name}类型的组件");
+            LogManager.LogError($"{nameof(AddComponent)}未找到[{typeof(T).Name}]类型的组件");
             return null;
         }
     }

@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class MainView : UIView
 {
     [Inject] private ScrollRect svInteract;
-    [Inject] private RectTransform taskPart;
+    [Inject(1)] private RectTransform taskPart;
     [Inject] private TextMeshProUGUI txtTaskTitle;
     [Inject] private TextMeshProUGUI txtTaskDescription;
 

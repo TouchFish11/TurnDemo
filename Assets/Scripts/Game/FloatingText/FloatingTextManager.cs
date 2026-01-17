@@ -7,7 +7,7 @@ using UnityEngine;
 /// <summary>
 /// 浮动文本管理器
 /// </summary>
-public class FloatingTextManager : SingletonAutoMono<FloatingTextManager>
+public class FloatingTextManager : SingletonAutoMono<FloatingTextManager>, IFloatingTextManager
 {
     // Npc对象列表
     private readonly List<NpcObject> npcObjects = new List<NpcObject>();
@@ -21,12 +21,9 @@ public class FloatingTextManager : SingletonAutoMono<FloatingTextManager>
 
     private void Awake()
     {
-        MonoManager.Instance.AddFixedUpdateListener(OnFixedUpdate);
+        ServiceLocator.Get<IMonoManager>().AddFixedUpdateListener(OnFixedUpdate);
     }
 
-    /// <summary>
-    /// 初始化
-    /// </summary>
     public void Init()
     {
         // 测试：通过NPC标签找到场景上所有的NPC
@@ -37,7 +34,7 @@ public class FloatingTextManager : SingletonAutoMono<FloatingTextManager>
         }
 
         // 测试：通过玩家标签查找
-        player = GameObject.FindGameObjectWithTag("PlayerObject").transform;
+        player = ServiceLocator.Get<IPlayerManager>().MainPlayer.GameObject.transform;
     }
 
     private async void OnFixedUpdate()
@@ -74,9 +71,6 @@ public class FloatingTextManager : SingletonAutoMono<FloatingTextManager>
         }
     }
 
-    /// <summary>
-    /// 清空缓存
-    /// </summary>
     public void ClearCache()
     {
         npcObjects.Clear();

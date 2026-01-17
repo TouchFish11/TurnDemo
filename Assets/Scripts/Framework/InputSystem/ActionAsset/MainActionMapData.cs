@@ -24,7 +24,7 @@ namespace Framework
 		public static string NormalAttack => "<Mouse>/leftButton";
 
 		[ActionKeyMapAttribute(Key.F)]
-		public static string Initeract => "<Keyboard>/f";
+		public static string Interact => "<Keyboard>/f";
 
 		[ActionKeyMapAttribute(E_MouseValue.Delta)]
 		public static string MouseMove => "<Mouse>/delta";

@@ -24,7 +24,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Initeract",
+                    "name": "Interact",
                     "type": "Button",
                     "id": "39a3f89c-ba38-49fe-bc7c-5657a512da74",
                     "expectedControlType": "",
@@ -130,11 +130,11 @@
                 {
                     "name": "",
                     "id": "416674d5-c58e-4a6d-9b7e-3687b6e62fdf",
-                    "path": "<Initeract>",
+                    "path": "<Interact>",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Initeract",
+                    "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

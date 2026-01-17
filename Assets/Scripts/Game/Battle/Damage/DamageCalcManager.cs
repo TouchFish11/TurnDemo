@@ -12,14 +12,20 @@ public class DamageCalcManager : SingletonBase<DamageCalcManager>, IDamageCalcMa
 
     private DamageCalcManager()
     {
+
+    }
+
+    public void Init(IBattleContext context)
+    {
+        _strategyDic.Clear();
         // 初始化具体策略
         _strategyDic.Add(E_DamageType.Direct, new DirectDamageStrategy());
         _strategyDic.Add(E_DamageType.Dot, new DotDamageStrategy());
-        _strategyDic.Add(E_DamageType.Break, new  BreakDamageStrategy());
+        _strategyDic.Add(E_DamageType.Break, new BreakDamageStrategy());
         _strategyDic.Add(E_DamageType.True, new TrueDamageStrategy());
 
         // 监听需要计算伤害的事件
-        ServiceLocator.Get<IBattleManager>().GetContext().GetEventBus().AddListener<ToughnessBrokenEvent>(OnToughnessBrokenEvent);
+        context.GetEventBus().AddListener<ToughnessBrokenEvent>(OnToughnessBrokenEvent);
     }
 
     /// <summary>

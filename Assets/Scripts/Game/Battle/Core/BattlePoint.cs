@@ -5,39 +5,37 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// ս����
+/// 战斗点
 /// </summary>
 public class BattlePoint : SingletonMono<BattlePoint>
 {
-    // ���λ���б�
+
     [SerializeField] private List<Transform> playerTrans;
-    // ����λ���б�
+
     [SerializeField] private List<Transform> monsterTrans;
-    // ����λ�����ĵ�
+
     [SerializeField] private Transform monsterPointCenter;
-    // ��ɫ����б�
+
     [SerializeField] private List<Camera> roleCameras;
-    // ��ǰ��������
+    // 当前相机
     private Camera _currentCamera;
 
     /// <summary>
-    /// ��������
+    /// 当前激活相机
     /// </summary>
     public Camera CurrentActiveCamera => _currentCamera;
 
     /// <summary>
-    /// ��ʼ��ս����
+    /// 
     /// </summary>
     /// <returns></returns>
-    public BattlePoint InitBattlePoint()
+    public void InitBattlePoint()
     {
-        // ������ɫ�غϿ�ʼ�¼�
         BattleManager.Instance.GetContext().GetEventBus().AddListener<TurnStartEvent>(OnTurnStartEvent);
-        return Instance;
     }
 
     /// <summary>
-    /// ��ȡ���еĽ�ɫλ�õ�
+    /// 
     /// </summary>
     /// <returns></returns>
     public IEnumerable<Transform> GetPlayerTransforms()
@@ -46,7 +44,7 @@ public class BattlePoint : SingletonMono<BattlePoint>
     }
 
     /// <summary>
-    /// ��ȡ���еĹ���λ�õ�
+    /// 
     /// </summary>
     /// <returns></returns>
     public IEnumerable<Transform> GetMonsterTransforms()
@@ -65,14 +63,7 @@ public class BattlePoint : SingletonMono<BattlePoint>
     }
 
     /// <summary>
-    /// ��ȡ���������
-    /// </summary>
-    /// <returns></returns>
-    public Transform GetMonsterPointCenter() => monsterPointCenter;
-
-    /// <summary>
-    /// ����ָ����ҽ�ɫ���
-    /// ����ж�ʱ����ָ����������﹥����Ҽ��������ҵ����
+    /// 
     /// </summary>
     /// <param name="battleEntity"></param>
     public void ActiveCamera(IBattleEntityObject battleEntity)
@@ -82,7 +73,7 @@ public class BattlePoint : SingletonMono<BattlePoint>
         if (battleEntity is PlayerObject)
         {
             Transform[] transforms = battleEntity.GameObject.GetComponentsInParent<Transform>();
-            // transforms[1]�ǻ�ȡ������λ�ã���GetComponentsInParent������Լ���λ��
+
             int index = playerTrans.IndexOf(transforms[1]);
             if (index != -1)
             {
@@ -95,13 +86,13 @@ public class BattlePoint : SingletonMono<BattlePoint>
             }
             else
             {
-                LogManager.LogError($"[BattlePoint]��δ�ҵ�λ��");
+                LogManager.LogError($"[BattlePoint]");
             }
         }
     }
 
     /// <summary>
-    /// �غϿ�ʼ�¼��ص�
+    /// 
     /// </summary>
     /// <param name="turnStartEvent"></param>
     private void OnTurnStartEvent(TurnStartEvent turnStartEvent)

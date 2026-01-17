@@ -45,4 +45,9 @@ public interface IEntityObject
     /// <param name="componentNames"></param>
     /// <returns></returns>
     bool AddComponents(params string[] componentNames);
+
+    /// <summary>
+    /// Ïú»ÙÊµÌå
+    /// </summary>
+    void DestroyEntity();
 }

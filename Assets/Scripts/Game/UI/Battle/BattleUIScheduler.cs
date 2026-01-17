@@ -1,4 +1,5 @@
 using Framework;
+using Game;
 using Game.Battle;
 
 /// <summary>
@@ -23,7 +24,7 @@ public class BattleUIScheduler : SingletonAutoMono<BattleUIScheduler>
     public void UltimateTriggerChangeUI(IBattleEntityObject caster, SkillInfo skillInfo)
     {
         // 显示角色立绘
-        battleController.GetBattleUI().ShowPaiting(skillInfo);
+        battleController.GetBattleUI().ShowPaiting((caster as PlayerObject).RoleInfo, skillInfo);
         // 隐藏行动提示
         battleController.GetBattleUI().SetActTipActive(BattleUIManager.E_ActTipType.Hide);
         // 更新终结技UI显示

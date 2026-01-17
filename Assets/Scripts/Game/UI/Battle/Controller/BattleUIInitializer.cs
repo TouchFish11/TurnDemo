@@ -35,8 +35,8 @@ public class BattleUIInitializer
             int skillId = battleEntity.GetComponent<SkillComponent>().GetSkills().Find((skill) => skill.SkillInfo.f_SkillType == (byte)E_SkillType.UltimateSkill).SkillInfo.f_id;
             if (skillId != -1)
             {
-                string iconName = (battleEntity as PlayerObject).RoleInfo.f_icon;
-                Sprite icon = await IFactory.GetTypeInstance<AssetLoaderFactory, MockSpriteLoader>().GetSpriteAsync(ResKeyCollection.Atlas_Icon, iconName);
+                string iconName = BattleUIManager.GetIconByEntity(battleEntity);
+                Sprite icon = await ServiceLocator.Get<IFactoryManager>().GetFactory<AssetLoaderFactory>().GetSpriteLoader().GetSpriteAsync(ResKeyCollection.Atlas_Icon, iconName);
                 roleStateUI.Init(battleEntity.GetComponent<PlayerPropertyComponent>().GetProperty<RoleProperty>(), icon, skillId, battleEntity);
                 roleStateUIs.Add(roleStateUI);
             }

@@ -15,8 +15,8 @@ namespace Framework
 		Right,
 		[ActionMapReplaceKeyAttribute("<NormalAttack>")]
 		NormalAttack,
-		[ActionMapReplaceKeyAttribute("<Initeract>")]
-		Initeract,
+		[ActionMapReplaceKeyAttribute("<Interact>")]
+		Interact,
 		[ActionMapReplaceKeyAttribute("<MouseMove>")]
 		MouseMove,
 		[ActionMapReplaceKeyAttribute("<ScrollZoom>")]

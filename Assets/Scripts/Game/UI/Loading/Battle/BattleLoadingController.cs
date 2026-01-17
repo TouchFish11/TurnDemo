@@ -49,6 +49,6 @@ public class BattleLoadingController : UIController<BattleLoadingView, BattleLoa
     /// <param name="progress"></param>
     public void UpdateProgress(float progress)
     {
-        model.Progress = progress;
+        view.UpdateProgress(progress);
     }
 }

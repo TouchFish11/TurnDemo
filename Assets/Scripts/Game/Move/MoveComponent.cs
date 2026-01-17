@@ -5,6 +5,7 @@ using UnityEngine;
 /// <summary>
 /// 移动组件
 /// </summary>
+[ComponentId(nameof(MoveComponent))]
 public class MoveComponent : BaseComponent
 {
     // 移动速度
@@ -26,11 +27,12 @@ public class MoveComponent : BaseComponent
 
     public override void Init(IEntityObject entityObject)
     {
-        mainCamera = ServiceLocator.Get<IOrbitCameraController>();
+        mainCamera = OrbitCameraController.Instance;
         mainCamera.SetTarget(this.transform);
 
         characterController = this.EntityObject.GetComponent<CharacterController>();
         this.EntityObject.GetComponent<InputComponent>().OnKeyInputChanged += OnUpdateInputDir;
+        Enable();
     }
 
     public void Enable()
@@ -66,6 +68,7 @@ public class MoveComponent : BaseComponent
 
     private void Update()
     {
+        LogManager.Log($"能否移动：{canMove}");
         if (!canMove)
         {
             return;

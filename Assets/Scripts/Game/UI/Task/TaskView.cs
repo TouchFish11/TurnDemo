@@ -13,7 +13,7 @@ namespace Game.UI
     {
         [Inject] private ScrollRect svTask;
         [Inject] private Button btnAcceptTask;
-        [Inject] private ToggleGroup toggleGroup;
+        [Inject] private ToggleGroup taskContent;
         [Inject] private TextMeshProUGUI txtTaskName;
         [Inject] private TextMeshProUGUI txtTaskDescription;
         [Inject] private TextMeshProUGUI txtAccceptInfo;
@@ -66,6 +66,6 @@ namespace Game.UI
         /// <summary>
         /// 任务项组
         /// </summary>
-        public ToggleGroup TaskItemGroup => toggleGroup;
+        public ToggleGroup TaskItemGroup => taskContent;
     }
 }

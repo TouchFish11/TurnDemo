@@ -90,12 +90,24 @@ namespace Game
             return components.Count == componentNames.Length;
         }
 
+        public virtual void DestroyEntity()
+        {
+            // 内置组件不用处理，会随对象销毁而销毁
+            // 销毁所有自定义组件
+            foreach (var component in typeToIComponentMap.Values)
+            {
+                component.Destroy();
+            }
+            typeToIComponentMap.Clear();
+
+            EntityProperty = null;
+        }
         protected virtual void OnDisable()
         {
             
         }
 
-        protected virtual void OnDestroy()
+        private void OnDestroy()
         {
             
         }

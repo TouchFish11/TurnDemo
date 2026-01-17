@@ -4,6 +4,7 @@ using Game;
 /// <summary>
 /// 对话组件
 /// </summary>
+[ComponentId(nameof(DialogueComponent))]
 public class DialogueComponent : BaseComponent, IDialable
 {
     public override void Init(IEntityObject entityObject)
@@ -16,8 +17,8 @@ public class DialogueComponent : BaseComponent, IDialable
 
     void IDialable.OnDialogueStart()
     {
-        // 禁用输入
-        this.EntityObject.GetComponent<InputComponent>().DisEnableInput();
+        // 禁用除交互以外的输入
+        this.EntityObject.GetComponent<InputComponent>().LimitInput(nameof(MainActionMapData.Interact));
         // 切换为待机动画
         this.EntityObject.GetComponent<NormalAnimationComponent>().SetAnimationState(E_AnimationType.Idle);
         // 禁用移动
@@ -27,7 +28,7 @@ public class DialogueComponent : BaseComponent, IDialable
     void IDialable.OnDialogueEnd()
     {
         // 启用输入
-        this.EntityObject.GetComponent<InputComponent>().EnableInput();
+        this.EntityObject.GetComponent<InputComponent>().CancelLimitInput(nameof(MainActionMapData.Interact));
         // 启用移动
         this.EntityObject.GetComponent<MoveComponent>().Enable();
     }

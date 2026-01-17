@@ -9,6 +9,7 @@ using UnityEngine.UI;
 /// <summary>
 /// 交互组件
 /// </summary>
+[ComponentId(nameof(InteractComponent))]
 public class InteractComponent : BaseComponent
 {
     // 缓存当前可交互的对象

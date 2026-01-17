@@ -1,6 +1,7 @@
 using Framework;
 using Game;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -10,9 +11,19 @@ using UnityEngine.InputSystem;
 /// 输入组件
 /// </summary>
 [RequireComponent(typeof(PlayerInput))]
+[ComponentId(nameof(InputComponent))]
 public class InputComponent : BaseComponent
 {
     private IInputSystem inputSystem;
+
+    private List<string> actionNmaes = new List<string>();
+
+    /// <summary>
+    /// 是否限制输入
+    /// </summary>
+    private bool IsLimitInput => inputLimitCount != 0;
+    // 允许的输入数量
+    private byte inputLimitCount;
 
     /// <summary>
     /// 键盘输入改变事件
@@ -46,16 +57,26 @@ public class InputComponent : BaseComponent
         ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
     }
 
-    // 限制输入
-    public void LimitInput()
+    /// <summary>
+    /// 限制输入
+    /// </summary>
+    /// <param name="actionName"></param>
+    public void LimitInput(string actionName)
     {
-
+        inputLimitCount++;
+        actionNmaes.Add(actionName);
     }
 
-    // 取消限制输入
-    public void CancelLimitInput()
+    /// <summary>
+    /// 取消限制输入
+    /// </summary>
+    /// <param name="actionName"></param>
+    public void CancelLimitInput(string actionName)
     {
-
+        if (actionNmaes.Remove(actionName))
+        {
+            inputLimitCount--;
+        }
     }
 
     /// <summary>
@@ -76,6 +97,12 @@ public class InputComponent : BaseComponent
 
     private void OnActionTrigger(InputAction.CallbackContext context)
     {
+        // 过滤输入
+        if (IsLimitInput && !ContainInputName(context.action.name))
+        {
+            return;
+        }
+
         switch (context.action.name)
         {
             case "Move":
@@ -90,12 +117,14 @@ public class InputComponent : BaseComponent
                 }
                 break;
             case "NormalAttack" when !ServiceLocator.Get<IMouseManager>().Visible:
-                if (context.phase == InputActionPhase.Started)
+
+                if (context.phase == InputActionPhase.Performed)
                 {
+                    LogManager.Log($"普攻触发");
                     OnMouseLeftClick?.Invoke();
                 }
                 break;
-            case "Initeract":
+            case "Interact":
                 if(context.phase == InputActionPhase.Performed)
                 {
                     OnIniteract?.Invoke();
@@ -122,17 +151,20 @@ public class InputComponent : BaseComponent
     }
 
     /// <summary>
+    /// 是否包含输入的名称
+    /// </summary>
+    /// <param name="actionName"></param>
+    /// <returns></returns>
+    public bool ContainInputName(string actionName)
+    {
+        return actionNmaes.Contains(actionName);
+    }
+
+    /// <summary>
     /// 帧更新
     /// </summary>
     private void OnUpdate()
     {
-        //// 暂时这样写，对话需要F键输入。之后在修改。
-        //// F键交互
-        //if (Keyboard.current.fKey.wasPressedThisFrame)
-        //{
-        //    this.EntityObject.GetComponent<InteractComponent>().OnIniteract();
-        //}
-
         // 鼠标左键点击输入
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {

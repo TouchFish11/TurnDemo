@@ -27,7 +27,6 @@ public abstract class AnimationComponent : BaseComponent
     public override void Init(IEntityObject entityObject)
     {
         animationArg = new AnimationParameter();
-        animator = this.EntityObject.GetComponentInChildren<Animator>();
     }
 
     /// <summary>

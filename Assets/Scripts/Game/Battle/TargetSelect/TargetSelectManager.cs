@@ -26,7 +26,12 @@ public class TargetSelectManager : SingletonBase<TargetSelectManager>, ITargetSe
 
     private TargetSelectManager()
     {
-        battleContext = ServiceLocator.Get<IBattleManager>().GetContext();
+
+    }
+
+    public void Init(IBattleContext battleContext)
+    {
+        this.battleContext = battleContext;
         battleContext.GetEventBus().AddListener<SelectSkillEvent>(OnSelectSkillEvent);
     }
 

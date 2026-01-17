@@ -1,5 +1,6 @@
 using Framework;
 using System;
+using UnityEngine;
 
 namespace Game.Battle
 {
@@ -15,6 +16,7 @@ namespace Game.Battle
         public override void Init(IEntityObject entityObject)
         {
             base.Init(entityObject);
+            animator = this.EntityObject.GetComponentInChildren<Animator>();
             BattleInit(entityObject as IBattleEntityObject);
         }
 

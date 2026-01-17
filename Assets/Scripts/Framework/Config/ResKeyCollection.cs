@@ -35,13 +35,14 @@ namespace Framework
 		public static string ItemGrid => "ItemGrid";
 		public static string Ground => "Ground";
 		public static string MergedMesh => "MergedMesh";
-		public static string Prefab_Boss => "Prefab_Boss";
-		public static string Prefab_Npc => "Prefab_Npc";
 		public static string Prefab_Player => "Prefab_Player";
+		public static string Prefab_Boss => "Prefab_Boss";
 		public static string Prefab_Slime => "Prefab_Slime";
 		public static string Prefab_TurtleShell => "Prefab_TurtleShell";
 		public static string Prefab_FireFly => "Prefab_FireFly";
 		public static string Prefab_Herta => "Prefab_Herta";
+		public static string Prefab_Main_FireFly => "Prefab_Main_FireFly";
+		public static string Prefab_Npc => "Prefab_Npc";
 		public static string UI_3D_FloatingText => "UI_3D_FloatingText";
 		public static string BeginScene => "BeginScene";
 		public static string LevelScene => "LevelScene";

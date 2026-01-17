@@ -38,4 +38,10 @@ public interface ITargetSelectManager
     /// <param name="caster"></param>
     /// <param name="skillInfo"></param>
     void SelectTarget(IBattleContext context, IBattleEntityObject caster, SkillInfo skillInfo, ITargetSelectStrategy targetSelectStrategy);
+
+    /// <summary>
+    /// ≥ı ºªØ
+    /// </summary>
+    /// <param name="battleContext"></param>
+    void Init(IBattleContext battleContext);
 }

@@ -64,7 +64,8 @@ public class MainController : UIController<MainView, MainModel>
                 await UIManager.Instance.CreateViewAsync<TaskView, TaskModel, TaskController>(E_UILayer.Mid);
                 break;
             case "btnBattleTest":
-                await BattleManager.Instance.StartBattle();
+                // ¿ªÊ¼Õ½¶·
+                await ServiceLocator.Get<IBattleManager>().StartBattle();
                 break;
         }
     }

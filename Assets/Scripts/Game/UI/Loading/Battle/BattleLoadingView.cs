@@ -1,6 +1,7 @@
 using Framework;
 using TMPro;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
 public class BattleLoadingView : UIView
 {
@@ -10,14 +11,17 @@ public class BattleLoadingView : UIView
     [System.Obsolete]
     public override void UpdateView(string key, object value)
     {
-        switch (key)
-        {
-            case "progress":
-                sliderLoading.value = (float)value;
-                break;
-            case "txtLoading":
-                txtLoading.text = value.ToString();
-                break;
-        }
+
     }
+
+    /// <summary>
+    /// 更新进度
+    /// </summary>
+    /// <param name="progress"></param>
+    public void UpdateProgress(float progress)
+    {
+        sliderLoading.value = progress;
+    }
+
+
 }

@@ -136,13 +136,14 @@ public class BattleUIManager
     /// 更新等待命令UI
     /// </summary>
     /// <param name="iconPaths">命令要显示的图标路径列表</param>
-    public async void UpdateWaitingCommmand(List<string> iconPaths)
+    public async void UpdateWaitingCommmand(List<IBattleEntityObject> battleEntities)
     {
         List<WaitingActUI> waitingActUIs = new List<WaitingActUI>();
-        foreach (string iconPath in iconPaths)
+        foreach (var battleEntity in battleEntities)
         {
             WaitingActUI waitingActUI = await ObjectBuilder.GetObject<WaitingActUI>(E_AssetBundleType.UI, ResKeyCollection.WaitingActUI, _view.WaitQueueContent);
-            Sprite icon = await IFactory.GetTypeInstance<AssetLoaderFactory, MockSpriteLoader>().GetSpriteAsync(ResKeyCollection.Atlas_Icon, iconPath);
+            string iconName = BattleUIManager.GetIconByEntity(battleEntity);
+            Sprite icon = await ServiceLocator.Get<IFactoryManager>().GetFactory<AssetLoaderFactory>().GetSpriteLoader().GetSpriteAsync(ResKeyCollection.Atlas_Icon, iconName);
             waitingActUI.Init(icon);
             waitingActUIs.Add(waitingActUI);
         }
@@ -157,15 +158,16 @@ public class BattleUIManager
     /// </summary>
     /// <param name="skillInfo"></param>
     /// <returns></returns>
-    public void ShowPaiting(SkillInfo skillInfo)
+    public async void ShowPaiting(RoleInfo roleInfo, SkillInfo skillInfo)
     {
-        ServiceLocator.Get<IMonoManager>().StartCoroutine(ShowPaiting_Cor(skillInfo));
+        Sprite icon = await ServiceLocator.Get<IFactoryManager>().GetFactory<AssetLoaderFactory>().GetSpriteLoader().GetSpriteAsync(ResKeyCollection.Atlas_Icon, roleInfo.f_icon);
+        ServiceLocator.Get<IMonoManager>().StartCoroutine(ShowPaiting_Cor(icon, skillInfo));
 
         // 显示角色立绘本地协程函数
-        IEnumerator ShowPaiting_Cor(SkillInfo skillInfo)
+        IEnumerator ShowPaiting_Cor(Sprite icon, SkillInfo skillInfo)
         {
             // 显示角色立绘
-            _view.UpdateUltimateShow(true, null, skillInfo.f_name);
+            _view.UpdateUltimateShow(true, icon, skillInfo.f_name);
             // 显示一秒后隐藏
             yield return new WaitForSeconds(1f);
             _view.UpdateUltimateShow(false, null, string.Empty);
@@ -184,21 +186,36 @@ public class BattleUIManager
         foreach (IBattleEntityObject battleEntity in battleEntities)
         {
             ActionGridUI actionGridUI = await ObjectBuilder.GetObject<ActionGridUI>(E_AssetBundleType.UI, ResKeyCollection.ActionGridUI, _view.ActionBarContent);
-            string iconName = string.Empty;
-            if (battleEntity is PlayerObject playerObject)
-            {
-                iconName = playerObject.RoleInfo.f_icon;
-            }
-            else if(battleEntity is MonsterObject monsterObject)
-            {
-                iconName = monsterObject.MonsterInfo.f_icon;
-            }
-            Sprite icon = await IFactory.GetTypeInstance<AssetLoaderFactory, MockSpriteLoader>().GetSpriteAsync(ResKeyCollection.Atlas_Icon, iconName);
+            string iconName = GetIconByEntity(battleEntity);
+            Sprite icon = await ServiceLocator.Get<IFactoryManager>().GetFactory<AssetLoaderFactory>().GetSpriteLoader().GetSpriteAsync(ResKeyCollection.Atlas_Icon, iconName);
             actionGridUI.Init(icon, battleEntity.ActionValue, battleEntity, isFirst);
             actionGridUIs.Add(actionGridUI);
             isFirst = false;
         }
         _model.UpdateAcitonbar(actionGridUIs);
+    }
+
+    /// <summary>
+    /// 通过实体获取图标路径
+    /// </summary>
+    /// <param name="battleEntity"></param>
+    /// <returns></returns>
+    public static string GetIconByEntity(IBattleEntityObject battleEntity)
+    {
+        string iconName = string.Empty;
+        if (battleEntity is PlayerObject playerObject)
+        {
+            iconName = playerObject.RoleInfo.f_icon;
+        }
+        else if (battleEntity is MonsterObject monsterObject)
+        {
+            iconName = monsterObject.MonsterInfo.f_icon;
+        }
+        else
+        {
+            LogManager.Log($"未实现该实体类型的获取逻辑：{battleEntity}");
+        }
+        return iconName;
     }
 
     /// <summary>

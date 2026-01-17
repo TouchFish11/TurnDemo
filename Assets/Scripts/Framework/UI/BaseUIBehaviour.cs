@@ -58,7 +58,7 @@ namespace Framework
         {
             Dictionary<string, MemberInfo> dic = new Dictionary<string, MemberInfo>();
             Type type = this.GetType();
-            MemberInfo[] memberInfos = type.GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            MemberInfo[] memberInfos = type.GetMembers(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
             foreach (MemberInfo memberInfo in memberInfos)
             {
                 InjectAttribute attribute = memberInfo.GetCustomAttribute<InjectAttribute>();

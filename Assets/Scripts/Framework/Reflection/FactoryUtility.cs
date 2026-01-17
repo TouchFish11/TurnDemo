@@ -19,7 +19,7 @@ namespace Framework
         {
             foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
             {
-                if (typeof(TValue).IsAssignableFrom(type) && !type.IsAbstract)
+                if (typeof(TValue).IsAssignableFrom(type) && !type.IsAbstract && !type.IsInterface)
                 {
                     dic.Add(type, Activator.CreateInstance(type) as TValue);
                 }

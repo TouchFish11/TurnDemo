@@ -1,4 +1,3 @@
-
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.U2D;
@@ -8,7 +7,7 @@ namespace Framework
     /// <summary>
     /// 精灵加载器
     /// </summary>
-    public class SpriteLoader : IAssetLoader
+    public class SpriteLoader : ISpriteLoader
     {
         /// <summary>
         /// 异步加载精灵图片

@@ -22,9 +22,19 @@ public class FloatingText : MonoBehaviour
     private void Awake()
     {
         mainCamera = Camera.main;
-        MonoManager.Instance.AddUpdateListener(OnUpdate);
     }
 
+    private void OnEnable()
+    {
+        ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
+    }
+
+    /// <summary>
+    /// 初始化
+    /// </summary>
+    /// <param name="target"></param>
+    /// <param name="name"></param>
+    /// <param name="tip"></param>
     public void Init(Transform target, string name, string tip)
     {
         this.followTarget = target;
@@ -34,7 +44,7 @@ public class FloatingText : MonoBehaviour
 
     private void OnUpdate()
     {
-        if (followTarget == null)
+        if (followTarget == null || mainCamera == null)
         {
             return;
         }
@@ -43,5 +53,11 @@ public class FloatingText : MonoBehaviour
         this.transform.forward = mainCamera.transform.forward;
         // 跟随目标
         this.transform.position = followTarget.position + offset;
+        // 缩放
+    }
+
+    private void OnDisable()
+    {
+        ServiceLocator.Get<IMonoManager>().RemoveUpdateListener(OnUpdate);
     }
 }

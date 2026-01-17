@@ -1,40 +1,53 @@
-using Framework;
+﻿using Framework;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Game.Battle.Core;
+using UnityEngine;
 
 namespace Game.Battle
 {
     /// <summary>
-    /// ս��������
+    /// 战斗管理器
     /// </summary>
     public class BattleManager : SingletonBase<BattleManager>, IBattleManager
     {
-        // ��������
-        private int _monsterNum;
-        // ս��������
+        // 战斗上下文
         private IBattleContext context;
-        // ʵ��ս����
-        private BattlePoint battlePoint; 
 
         private BattleManager()
         {
 
         }
 
-        public async Task StartBattle(/* ս����ɫѡ�񣬹���ѡ��ս������ѡ�񣨿�ѡ���� */)
+        public async Task StartBattle()
         {
-            // ��ʼ��ս��������
-            context = new BattleContext();
-            // ��ʼ��ս����ع�����
-            InitBattle();
-            // ��ʼ��ս��
-            await context.InitBattle();
-            // ��ȡ�����ϵ�ս������󣬳�ʼ��ս�������
-            battlePoint = BattlePoint.Instance.InitBattlePoint();
-            // �����غ�
-            MonoManager.Instance.StartCoroutine(context.GetTurnManager().BattleLoop());
+            // 清理场景内容缓存
+            MainTest.Instance.ClearScene();
+            // 创建战斗加载界面
+            BattleLoadingController battleLoadingController = await ServiceLocator.Get<IUIManager>().CreateViewAsync<BattleLoadingView, BattleLoadingModel, BattleLoadingController>(E_UILayer.Mid);
+            // 销毁跟随玩家摄像机
+            GameObject.Destroy(OrbitCameraController.Instance.gameObject);
+            // 加载战斗场景
+            ServiceLocator.Get<ISceneManager>().LoadSceneAsync(ResKeyCollection.LevelScene, UnityEngine.SceneManagement.LoadSceneMode.Single, 
+            (progress) => battleLoadingController.UpdateProgress(progress), 
+            async () =>
+            {
+                // 销毁战斗加载界面
+                ServiceLocator.Get<IUIManager>().DestroyView();
+                // 销毁主界面
+                ServiceLocator.Get<IUIManager>().DestroyView();
+                // 初始化战斗上下文
+                context = new BattleContext();
+                // 初始化战斗
+                InitBattle();
+                // 战斗上下文的战斗初始化
+                await context.InitBattle();
+                // 初始化
+                BattlePoint.Instance.InitBattlePoint();
+                // 开始战斗循环
+                ServiceLocator.Get<IMonoManager>().StartCoroutine(context.GetTurnManager().BattleLoop());
+            });
         }
 
         public IBattleContext GetContext()
@@ -44,48 +57,50 @@ namespace Game.Battle
 
         private void InitBattle()
         {
-            // ����ս��������
-            ServiceLocator.Register<ITargetSelectManager>(TargetSelectManager.Instance);
-            // ����Ҵ���ʱ����������Ҫ������Ҵ���
-            ServiceLocator.Register<IDamageCalcManager>(DamageCalcManager.Instance);
-            ServiceLocator.Register<ISkillManager>(SkillManager.Instance);
-
-            // �����˳�ս���¼�
+            ServiceLocator.Get<ITargetSelectManager>().Init(context);
+            // IDamageCalcManager 依赖ITargetSelectManager
+            ServiceLocator.Get<IDamageCalcManager>().Init(context);
+            // 监听战斗退出事件
             context.GetEventBus().AddListener<QuitBattleEvent>(OnQuitBattleEvent);
         }
 
         /// <summary>
-        /// �˳�ս���¼��ص�
-        /// ����ս�����桢����ս��������ݡ���ʾ�ڱ�������
+        /// 战斗退出事件回调
         /// </summary>
         /// <param name="quitBattleEvent"></param>
         private void OnQuitBattleEvent(QuitBattleEvent quitBattleEvent)
         {
-            // ����ս������
+            // 销毁战斗界面
             ServiceLocator.Get<IUIManager>().DestroyView();
-            // ����ս��
+            // 清理战斗数据
             context.CleanupBattle();
-            // ��ʾ�ڱ���
+            // 销毁战斗输入处理器、战斗点对象、战斗UI调度器
+            GameObject.Destroy(BattleInputHandler.Instance.gameObject);
+            GameObject.Destroy(BattlePoint.Instance.gameObject);
+            GameObject.Destroy(BattleUIScheduler.Instance.gameObject);
+            // 显示黑背景
             ShowBackView();
         }
 
         private async void ShowBackView()
         {
+            // 创建黑背景界面遮挡
             BackController backController = await ServiceLocator.Get<IUIManager>().CreateViewAsync<BackView, BackModel, BackController>(E_UILayer.Mid);
-            //backController.CompletedHide(() =>
-            //{
-            //    //�л�����
-            //    SceneManager.Instance.LoadSceneAsync(ResKeyCollection.MainScene, UnityEngine.SceneManagement.LoadSceneMode.Single, (progress) =>
-            //    {
-            //        LogManager.Log($"���ؽ��ȣ�{progress}");
-            //    }, async () =>
-            //    {
-            //        // ���ر���
-            //        ServiceLocator.Get<IUIManager>().DestroyView();
-            //        // ��ʾ������
-            //        await ServiceLocator.Get<IUIManager>().CreateViewAsync<MainView, MainModel, MainController>(E_UILayer.Top);
-            //    });
-            //});
+            ServiceLocator.Get<ISceneManager>().LoadSceneAsync(ResKeyCollection.MainScene, UnityEngine.SceneManagement.LoadSceneMode.Single, (progress) =>
+            {
+                // 不需要显示进度
+            }, 
+            async () =>
+            {
+                // 销毁黑背景界面
+                ServiceLocator.Get<IUIManager>().DestroyView();
+                // 销毁战斗界面
+                ServiceLocator.Get<IUIManager>().DestroyView();
+                // 创建主界面
+                await ServiceLocator.Get<IUIManager>().CreateViewAsync<MainView, MainModel, MainController>(E_UILayer.Top);
+                // 初始化场景
+                MainTest.Instance.InitScene();
+            });
         }
     }
 }
