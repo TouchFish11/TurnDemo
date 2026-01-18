@@ -60,11 +60,8 @@ public class BattleUIInitializer
             foreach (IBattleEntityObject battleEntity in battleEntities)
             {
                 NormalMonsterStateUI monsterStateUI = await ObjectBuilder.GetObject<NormalMonsterStateUI>(E_AssetBundleType.UI, ResKeyCollection.MonsterStateUI, null);
-                if (UIManager.WorldToLocalPointInRectangle(BattlePoint.Instance.CurrentActiveCamera, UIManager.Instance.UICamera, _view.MonsterStateArea, monsterStateUI.gameObject, battleEntity.GameObject.transform.position, Vector2.up * 250))
-                {
-                    monsterStateUI.Init(battleEntity);
-                    normalMonsterStateUIs.Add(monsterStateUI);
-                }
+                monsterStateUI.Init(battleEntity, _view.MonsterStateArea);
+                normalMonsterStateUIs.Add(monsterStateUI);
             }
         }
         _model.UpdateNormalMonsterState(normalMonsterStateUIs);

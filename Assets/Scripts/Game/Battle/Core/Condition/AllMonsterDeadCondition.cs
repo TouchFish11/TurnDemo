@@ -1,12 +1,14 @@
-using Game.Battle;
 
-/// <summary>
-/// 所有怪物死亡条件
-/// </summary>
-public class AllMonsterDeadCondition : IBattleOverCondition
+namespace Game.Battle
 {
-    public bool CheckOver(IBattleContext context)
+    /// <summary>
+    /// 所有怪物死亡条件
+    /// </summary>
+    public class AllMonsterDeadCondition : IBattleOverCondition
     {
-        return context.GetMonsterObjects().Count == 0;
+        public bool CheckOver(IBattleContext context)
+        {
+            return context.GetLiveMonsterObjects().Count == 0;
+        }
     }
 }

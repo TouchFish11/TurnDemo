@@ -17,7 +17,7 @@ public class FloatingTextManager : SingletonAutoMono<FloatingTextManager>, IFloa
     // 玩家对象位置
     private Transform player;
     // 最大显示距离
-    private const float MaxDisplayDistance = 6f;
+    private const float MaxDisplayDistance = 10f;
 
     private void Awake()
     {
@@ -33,7 +33,7 @@ public class FloatingTextManager : SingletonAutoMono<FloatingTextManager>, IFloa
             npcObjects.Add(obj.GetComponent<NpcObject>());
         }
 
-        // 测试：通过玩家标签查找
+        // 通过玩家管理器获取
         player = ServiceLocator.Get<IPlayerManager>().MainPlayer.GameObject.transform;
     }
 
@@ -54,7 +54,7 @@ public class FloatingTextManager : SingletonAutoMono<FloatingTextManager>, IFloa
                 {
                     npcObject.IsShowFloatingText = true;
                     FloatingText floatingText = await ObjectBuilder.GetObject<FloatingText>(E_AssetBundleType.Prefab, ResKeyCollection.UI_3D_FloatingText, null);
-                    floatingText.Init(npcObject.transform, npcObject.NpcInfo.f_speakerName, npcObject.NpcInfo.f_identity);
+                    floatingText.Init(npcObject.transform, player, npcObject.NpcInfo.f_speakerName, npcObject.NpcInfo.f_identity);
                     npcToTextMap.TryAdd(npcObject, floatingText);
                 }
             }

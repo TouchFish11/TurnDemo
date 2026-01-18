@@ -74,8 +74,7 @@ namespace Game
         public override IEnumerator Die()
         {
             // ÕÊº“≤•∑≈À¿Õˆ∂Øª≠
-            AnimationPlayManager.Instance.PlayAnimationOver(this.GetComponent<BattleAnimationComponent>(), AnimationComponent.Battle_Layer_Name, E_AnimationType.Death);
-            yield break;
+            yield return AnimationPlayManager.Instance.WaitForAnimOver(this.GetComponent<BattleAnimationComponent>(), AnimationComponent.Battle_Layer_Name, E_AnimationType.Death);
         }
     }
 }

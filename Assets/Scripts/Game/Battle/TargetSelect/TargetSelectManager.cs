@@ -124,8 +124,9 @@ public class TargetSelectManager : SingletonBase<TargetSelectManager>, ITargetSe
     private void SelectNextMainTarget()
     {
         E_SkillTargetType targetType = (E_SkillTargetType)skillInfo.f_SkillTargetType;
-        List<IBattleEntityObject> targets = new List<IBattleEntityObject>(targetType == E_SkillTargetType.Friend ? BattleManager.Instance.GetContext().GetPlayerObjects() :
-            BattleManager.Instance.GetContext().GetMonsterObjects());
+        List<IBattleEntityObject> targets = new List<IBattleEntityObject>(targetType == E_SkillTargetType.Friend ?
+                                                                         ServiceLocator.Get<IBattleManager>().GetContext().GetLivePlayerObjects() :
+                                                                         ServiceLocator.Get<IBattleManager>().GetContext().GetLiveMonsterObjects());
 
         // 只有最后一个目标，不用处理
         if (targets.Count == 1)
@@ -149,8 +150,9 @@ public class TargetSelectManager : SingletonBase<TargetSelectManager>, ITargetSe
     private void SelectPreviousMainTarget()
     {
         E_SkillTargetType targetType = (E_SkillTargetType)skillInfo.f_SkillTargetType;
-        List<IBattleEntityObject> targets = new List<IBattleEntityObject>(targetType == E_SkillTargetType.Friend ? BattleManager.Instance.GetContext().GetPlayerObjects() :
-     BattleManager.Instance.GetContext().GetMonsterObjects());
+        List<IBattleEntityObject> targets = new List<IBattleEntityObject>(targetType == E_SkillTargetType.Friend ? 
+                                                                         ServiceLocator.Get<IBattleManager>().GetContext().GetLivePlayerObjects() :
+                                                                         ServiceLocator.Get<IBattleManager>().GetContext().GetLiveMonsterObjects());
 
         // 只有最后一个目标，不用处理
         if (targets.Count == 1)

@@ -4,6 +4,7 @@ using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using Game.Battle;
 using Game;
+using System;
 
 /// <summary>
 /// 战斗输入处理器
@@ -15,22 +16,29 @@ public class BattleInputHandler : SingletonAutoMono<BattleInputHandler>
     // 是否正在滑动
     private bool _isDragging;
     // 滑动阈值
-    private const float DragThreshold = 100f;
+    [SerializeField] private float dragThreshold = 110f;
     // 当前选择的技能ID
     private int skillId;
 
     /// <summary>
     /// 选中对象事件
     /// </summary>
-    public event UnityAction<IBattleEntityObject> OnSelectedObject;
+    public event Action<IBattleEntityObject> OnSelectedObject;
+
     /// <summary>
     /// 左滑动一定阈值时
     /// </summary>
-    public event UnityAction OnLeftDrag;
+    public event Action OnLeftDrag;
+
     /// <summary>
     /// 右滑动一定阈值时
     /// </summary>
-    public event UnityAction OnRightDrag;
+    public event Action OnRightDrag;
+
+    /// <summary>
+    /// 滑动事件
+    /// </summary>
+    public event Action<float> OnDrag;
 
     private void Awake()
     {
@@ -64,7 +72,7 @@ public class BattleInputHandler : SingletonAutoMono<BattleInputHandler>
         if (Mouse.current.leftButton.isPressed)
         {
             // 满足拖曳条件才能滑动，设置合理的阈值能避免点击时的轻微抖动被误判为拖拽
-            if (!_isDragging && Vector2.Distance(Input.mousePosition, _dragStartPosition) > DragThreshold)
+            if (!_isDragging && Vector2.Distance(Input.mousePosition, _dragStartPosition) > dragThreshold)
             {
                 _isDragging = true;
             }
@@ -74,8 +82,10 @@ public class BattleInputHandler : SingletonAutoMono<BattleInputHandler>
             {
                 // 根据拖拽方向切换目标
                 float dragDeltaX = Input.mousePosition.x - _dragStartPosition.x;
+                // 拖曳回调
+                OnDrag?.Invoke(dragDeltaX);
                 // 上述是为了避免误判，这里是处理拖曳多少偏移量才能切换目标
-                if (Mathf.Abs(dragDeltaX) > DragThreshold)
+                if (Mathf.Abs(dragDeltaX) > dragThreshold)
                 {
                     // 向右拖拽，选择下一个敌人为主目标
                     if (dragDeltaX > 0)
@@ -87,7 +97,6 @@ public class BattleInputHandler : SingletonAutoMono<BattleInputHandler>
                     {
                         OnLeftDrag?.Invoke();
                     }
-
                     // 重新记录拖曳起始位置
                     _dragStartPosition = Input.mousePosition;
                 }

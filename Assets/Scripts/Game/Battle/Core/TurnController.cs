@@ -94,8 +94,10 @@ namespace Game.Battle
                 }
 
                 // 当前实体正在行动，等待其行动结束
-                if (!_currentActEntity.CanAct)
+                if (_currentActEntity == null || !_currentActEntity.CanAct)
                 {
+                    // 排序位置
+                    SortOrder();
                     // 更新当前行动实体
                     UpdateActEntity();
                     // 启用当前实体行动
@@ -111,11 +113,6 @@ namespace Game.Battle
         /// </summary>
         private void UpdateActEntity()
         {
-            if (_currentActEntity != null)
-            {
-                SortOrder();
-            }
-
             // 再让下一个实体行动
             _currentActEntity = _context.GetAllBattleEntity()[0];
             // 更新当前实体
@@ -132,49 +129,31 @@ namespace Game.Battle
         {
             if (target is PlayerObject)
             {
-                // 当前玩家看向存活怪物中心
-                Vector3 center = GetLiveMonstersCenter();
-                Transform playerTrans = BattlePoint.Instance.GetPlayerTransByIndex(target.EntityPosIndex);
-
-                Vector3 playerPos = playerTrans.position;
-                Vector3 newPlayerPos = new Vector3(playerPos.x, 0, playerPos.z);
-                playerTrans.rotation = Quaternion.LookRotation(center - newPlayerPos);
+                //Transform playerTrans = BattlePoint.Instance.GetPlayerTransByIndex(target.EntityPosIndex);
+                //Vector3 newPlayerPos = new Vector3(playerTrans.position.x, 0, playerTrans.position.z);
+                //LogManager.Log($"玩家位置索引：{target.EntityPosIndex}；玩家位置；{newPlayerPos}");
 
                 // 所有怪物看向当前玩家
-                IEnumerable<Transform> monsterTrans = BattlePoint.Instance.GetMonsterTransforms();
-                foreach (var trans in monsterTrans)
-                {
-                    Vector3 transPos = trans.position;
-                    Vector3 newtransPos = new Vector3(transPos.x, 0, transPos.z);
-                    trans.rotation = Quaternion.LookRotation(newPlayerPos - newtransPos);
-                }
+                //IEnumerable<Transform> monsterTrans = BattlePoint.Instance.GetMonsterTransforms();
+                //foreach (var trans in monsterTrans)
+                //{
+                //    Vector3 newtransPos = new Vector3(trans.position.x, 0, trans.position.z);
+                //    // 计算怪物在世界空间中需要的目标旋转（朝向玩家）
+                //    //trans.rotation = Quaternion.LookRotation(newPlayerPos - newtransPos);
+                //    Quaternion parentWorldRot = trans.parent.rotation;
+                //    trans.localRotation = Quaternion.Inverse(parentWorldRot) * Quaternion.LookRotation(newPlayerPos - newtransPos);
+                //    LogManager.Log($"怪物位置索引：{target.EntityPosIndex}；怪物位置；{newtransPos}");
+                //}
             }
             else if (target is MonsterObject)
             {
                 // 假设是单体攻击，怪物攻击哪个玩家，就激活哪个玩家的摄像机
-
-
             }
-        }
-
-        // 获取存活怪物中心
-        private Vector3 GetLiveMonstersCenter()
-        {
-            List<IBattleEntityObject> monsters = new List<IBattleEntityObject>(_context.GetMonsterObjects());
-
-            int leftIndex = monsters[0].EntityPosIndex;
-            int rightIndex = monsters[monsters.Count - 1].EntityPosIndex;
-
-            Vector3 leftPos = BattlePoint.Instance.GetMonsterTransByIndex(leftIndex).position;
-            Vector3 rightPos = BattlePoint.Instance.GetMonsterTransByIndex(rightIndex).position;
-
-            Vector3 center = (leftPos + rightPos) / 2;
-
-            return new Vector3(center.x, 0, center.z);
         }
 
         /// <summary>
         /// 初始化顺序
+        /// 用于选取第一个行动的实体
         /// </summary>
         private void InitOrder()
         {
@@ -203,6 +182,7 @@ namespace Game.Battle
                 }
             });
 
+            // TODO：暂时这样处理：第一个行动的实体行动值为0，后续可能根据算法优化
             _context.GetFirstBattleEntity().SetActionValue(0);
             // 事件分发传递，更新行动轴UI显示
             _context.GetEventBus().TriggerEvent(new ActionBarSortPostEvent(_context, _context.GetLiveEntitys()));
@@ -210,9 +190,15 @@ namespace Game.Battle
 
         /// <summary>
         /// 排序顺序
+        /// 模拟行动值的变化
         /// </summary>
         private void SortOrder()
         {
+            if (_currentActEntity == null)
+            {
+                return;
+            }
+
             // 暂时移除第一个角色，不参与计算
             _context.GetAllBattleEntity().Remove(_currentActEntity);
 
@@ -302,93 +288,23 @@ namespace Game.Battle
         /// </summary>
         public IEnumerator RemoveDeadMonster()
         {
-            var deadMonsters = _context.GetDeadMonsterEntitys();
-            foreach (var deadMonster in deadMonsters)
+            var deadEntitys = _context.GetDeadEntitys();
+            foreach (var battleEntity in deadEntitys)
             {
-                yield return deadMonster.Die();
-                _context.GetAllBattleEntity().Remove(deadMonster);
-                GameObject.Destroy(deadMonster.GameObject);
+                yield return battleEntity.Die();
+                _context.GetAllBattleEntity().Remove(battleEntity);
+                if (battleEntity == _currentActEntity)
+                {
+                    _currentActEntity = null;
+                }
+                if (battleEntity is MonsterObject)
+                {
+                    GameObject.Destroy(battleEntity.GameObject);
+                }
             }
 
             // 事件分发传递，更新行动轴UI显示
             _context.GetEventBus().TriggerEvent(new ActionBarSortPostEvent(_context, _context.GetLiveEntitys()));
-        }
-
-        /// <summary>
-        /// 更新怪物实体位置
-        /// 切换相机时更新
-        /// </summary>
-        public void UpdateMonsterEntityPoses()
-        {
-            int newCount = _context.GetMonsterObjects().Count;
-            if (currentMonsterCount == newCount)
-            {
-                return;
-            }
-            currentMonsterCount = newCount;
-
-            List<Transform> monsterTrans = new List<Transform>(BattlePoint.Instance.GetMonsterTransforms());
-            var monsters = _context.GetMonsterObjects();
-            monsters.Sort((m1, m2) =>
-            {
-                if (m1.EntityPosIndex < m2.EntityPosIndex)
-                {
-                    return -1;
-                }
-                else
-                {
-                    return 1;
-                }
-            });
-            for (int i = 0; i < monsters.Count; i++)
-            {
-                // 更新位置索引
-                (monsters[i] as MonsterObject).EntityPosIndex = i;
-                // 设置父对象
-                monsters[i].GameObject.transform.SetParent(monsterTrans[i], false);
-            }
-
-            //// 移动对齐剩下的怪物位置
-            //int index = battleEntity.EntityPosIndex;
-            //if (index == 0 || index == monsterTrans.Count - 1)
-            //{
-            //    // 不用处理
-            //}
-            //else if (index == 1)
-            //{
-            //    // 获取0索引怪物
-            //    IBattleEntityObject target = GetMonsterByIndex(0);
-            //    // 移动最左侧的怪物到1的位置
-            //    target.GameObject.transform.SetParent(BattlePoint.Instance.GetMonsterTransByIndex(index), false);
-            //}
-            //else if (index == monsterTrans.Count - 2)
-            //{
-            //    // 获取最后索引怪物
-            //    IBattleEntityObject target = GetMonsterByIndex(monsterTrans.Count - 1);
-            //    // 移动最右侧的怪物到指定的位置
-            //    target.GameObject.transform.SetParent(BattlePoint.Instance.GetMonsterTransByIndex(index), false);
-            //}
-            //else if (index == monsterTrans.Count / 2)
-            //{
-            //    IBattleEntityObject target = GetMonsterByIndex(_context.GetAllBattleEntity().Count - 2);
-            //    int index2 = target.EntityPosIndex;
-            //    target.GameObject.transform.SetParent(BattlePoint.Instance.GetMonsterTransByIndex(index), false);
-            //    target = GetMonsterByIndex(_context.GetAllBattleEntity().Count - 1);
-            //    target.GameObject.transform.SetParent(BattlePoint.Instance.GetMonsterTransByIndex(index2), false);
-            //}
-        }
-
-        private IBattleEntityObject GetMonsterByIndex(int index)
-        {
-            foreach (var monster in _context.GetMonsterObjects())
-            {
-                if (monster.EntityPosIndex == index)
-                {
-                    return monster;
-                }
-            }
-
-            return null;
         }
 
         /// <summary>

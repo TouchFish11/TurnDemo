@@ -220,6 +220,9 @@ MonoBehaviour:
   txtName: {fileID: 5530964485628218252}
   txtTip: {fileID: 2883994550372819381}
   offset: {x: 0, y: 2, z: 0}
+  minScale: {x: 0.2, y: 0.2, z: 0.2}
+  maxScale: {x: 1.75, y: 1.75, z: 1.75}
+  scaleSpeed: 1.1
 --- !u!1 &3186431727286745216
 GameObject:
   m_ObjectHideFlags: 0

@@ -394,7 +394,7 @@ GameObject:
   - component: {fileID: 4540942759848689064}
   m_Layer: 0
   m_Name: DogPBR
-  m_TagString: Player
+  m_TagString: MonsterObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -833,7 +833,7 @@ GameObject:
   - component: {fileID: 3874733818209283567}
   m_Layer: 0
   m_Name: root
-  m_TagString: Untagged
+  m_TagString: MonsterObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1180,7 +1180,7 @@ GameObject:
   - component: {fileID: 3319957339964345136}
   m_Layer: 0
   m_Name: Prefab_Boss
-  m_TagString: Player
+  m_TagString: MonsterObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

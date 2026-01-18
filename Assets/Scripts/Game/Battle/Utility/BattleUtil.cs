@@ -38,18 +38,18 @@ public class BattleUtil
             case E_CharacterType.PlayerCharacter:
                 // 主目标是玩家角色
                 if (mainTarget is PlayerObject)
-                    allTargets.AddRange(mainTarget.Context.GetPlayerObjects());
+                    allTargets.AddRange(mainTarget.Context.GetLivePlayerObjects());
                 // 主目标是怪物角色
                 else
-                    allTargets.AddRange(mainTarget.Context.GetMonsterObjects());
+                    allTargets.AddRange(mainTarget.Context.GetLiveMonsterObjects());
                 break;
             case E_CharacterType.MonsterCharacter:
                 // 主目标是怪物角色
                 if (mainTarget is MonsterObject)
-                    allTargets.AddRange(mainTarget.Context.GetMonsterObjects());
+                    allTargets.AddRange(mainTarget.Context.GetLiveMonsterObjects());
                 // 主目标是玩家角色
                 else
-                    allTargets.AddRange(mainTarget.Context.GetPlayerObjects());
+                    allTargets.AddRange(mainTarget.Context.GetLivePlayerObjects());
                 break;
         }
 

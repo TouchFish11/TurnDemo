@@ -21,7 +21,7 @@
             "currentTaskId": "2_1",
             "currentPro": 0,
             "isCompleted": false,
-            "isTracking": false
+            "isTracking": true
         }
     ]
 }

@@ -1,6 +1,4 @@
 ﻿using Framework;
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Game.Battle.Core;
 using UnityEngine;
@@ -22,12 +20,10 @@ namespace Game.Battle
 
         public async Task StartBattle()
         {
-            // 清理场景内容缓存
-            MainTest.Instance.ClearScene();
             // 创建战斗加载界面
             BattleLoadingController battleLoadingController = await ServiceLocator.Get<IUIManager>().CreateViewAsync<BattleLoadingView, BattleLoadingModel, BattleLoadingController>(E_UILayer.Mid);
-            // 销毁跟随玩家摄像机
-            GameObject.Destroy(OrbitCameraController.Instance.gameObject);
+            // 清理场景内容缓存
+            MainTest.Instance.ClearScene();
             // 加载战斗场景
             ServiceLocator.Get<ISceneManager>().LoadSceneAsync(ResKeyCollection.LevelScene, UnityEngine.SceneManagement.LoadSceneMode.Single, 
             (progress) => battleLoadingController.UpdateProgress(progress), 
@@ -44,7 +40,7 @@ namespace Game.Battle
                 // 战斗上下文的战斗初始化
                 await context.InitBattle();
                 // 初始化
-                BattlePoint.Instance.InitBattlePoint();
+                BattlePoint.Instance.InitBattlePoint(context, context.GetLivePlayerObjects());
                 // 开始战斗循环
                 ServiceLocator.Get<IMonoManager>().StartCoroutine(context.GetTurnManager().BattleLoop());
             });
@@ -96,10 +92,9 @@ namespace Game.Battle
                 ServiceLocator.Get<IUIManager>().DestroyView();
                 // 销毁战斗界面
                 ServiceLocator.Get<IUIManager>().DestroyView();
-                // 创建主界面
-                await ServiceLocator.Get<IUIManager>().CreateViewAsync<MainView, MainModel, MainController>(E_UILayer.Top);
                 // 初始化场景
                 MainTest.Instance.InitScene();
+                await Task.CompletedTask;
             });
         }
     }

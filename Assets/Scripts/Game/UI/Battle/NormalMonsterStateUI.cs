@@ -28,6 +28,10 @@ public class NormalMonsterStateUI : BaseUIBehaviour
     private readonly List<Image> weakneses = new List<Image>();  
     // 战斗实体接口
     private IBattleEntityObject battleEntity;
+    // UI父对象
+    private Transform monsterStateArea;
+    // 上一次的位置
+    private Vector3 lastPos;
 
     public IBattleEntityObject BattleEntity => battleEntity;
 
@@ -50,7 +54,7 @@ public class NormalMonsterStateUI : BaseUIBehaviour
     /// 初始化普通怪物状态UI
     /// </summary>
     /// <param name="battleEntity"></param>
-    public async void Init(IBattleEntityObject battleEntity)
+    public async void Init(IBattleEntityObject battleEntity, Transform monsterStateArea)
     {
         foreach (Image weaknessIcon in weakneses)
         {
@@ -59,6 +63,7 @@ public class NormalMonsterStateUI : BaseUIBehaviour
         weakneses.Clear();
 
         this.battleEntity = battleEntity;
+        this.monsterStateArea = monsterStateArea;
 
         PropertyComponent propertyComponent = this.battleEntity.GetComponent<PropertyComponent>();
         // 初始化血量
@@ -132,6 +137,20 @@ public class NormalMonsterStateUI : BaseUIBehaviour
     private void OnUpdate()
     {
         FadeBllood();
+        FollowTarget();
+    }
+
+    /// <summary>
+    /// 跟随目标
+    /// </summary>
+    private void FollowTarget()
+    {
+        if (battleEntity == null)
+        {
+            return;
+        }
+
+        UIManager.WorldToLocalPointInRectangle(BattlePoint.Instance.CurrentActiveCamera, UIManager.Instance.UICamera, monsterStateArea, this.gameObject, battleEntity.GameObject.transform.position, Vector2.up * 250);
     }
 
     /// <summary>

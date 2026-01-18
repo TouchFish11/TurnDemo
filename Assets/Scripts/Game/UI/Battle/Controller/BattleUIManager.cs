@@ -316,11 +316,8 @@ public class BattleUIManager
         {
             // 不用设置父对象，在坐标转换时会自动设置
             SelectMarkerUI selectMarkerUI = await ObjectBuilder.GetObject<SelectMarkerUI>(E_AssetBundleType.UI, ResKeyCollection.SelectMarkerUI, null);
-            if (UIManager.WorldToLocalPointInRectangle(BattlePoint.Instance.CurrentActiveCamera, UIManager.Instance.UICamera, _view.SelectMarkerArea, selectMarkerUI.gameObject, battleEntity.GameObject.transform.position, Vector2.up * 50))
-            {
-                selectMarkerUI.InitSelectMarker((battleEntity is PlayerObject) ? E_SkillTargetType.Friend : E_SkillTargetType.Enemy);
-                selectMarkerUIs.Add(selectMarkerUI);
-            }
+            selectMarkerUI.InitSelectMarker(battleEntity, (battleEntity is PlayerObject) ? E_SkillTargetType.Friend : E_SkillTargetType.Enemy, _view.SelectMarkerArea);
+            selectMarkerUIs.Add(selectMarkerUI);
         }
         _model.UpdateSelectMarker(selectMarkerUIs);
     }

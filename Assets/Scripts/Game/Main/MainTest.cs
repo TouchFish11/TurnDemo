@@ -44,6 +44,8 @@ public class MainTest : SingletonMono<MainTest>
     /// </summary>
     public void ClearScene()
     {
+        // 销毁跟随玩家摄像机
+        GameObject.Destroy(OrbitCameraController.Instance.gameObject);
         // 清理对象
         ServiceLocator.Get<IPlayerManager>().Clear();
         // 清理浮动文本管理器

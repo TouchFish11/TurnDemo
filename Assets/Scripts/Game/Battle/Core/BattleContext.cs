@@ -85,17 +85,14 @@ namespace Game.Battle.Core
             }
 
             // 批量创建怪物角色（从配置+预制体）
+            int monsterCount = 5;
             var monsterTrans = new List<Transform>(BattlePoint.Instance.GetMonsterTransforms());
-            var monsterDataDic = BinaryDataManager.Instance.GetConfig<MonsterInfoContainer>(E_ConfigLoadType.Editor).dataDic;
+            var keys = new List<int>(BinaryDataManager.Instance.GetConfig<MonsterInfoContainer>(E_ConfigLoadType.Editor).dataDic.Keys);
             index = 0;
-            foreach (int monsterId in monsterDataDic.Keys)
+            while (index < monsterCount)
             {
-                if (index == monsterTrans.Count)
-                {
-                    break;
-                }
-
                 var transform = monsterTrans[index];
+                int monsterId = keys[Random.Range(0, keys.Count)];
                 var monsterObject = await MonsterBuilder.CreateMonster(monsterId, transform);
                 // 注入上下文，供角色内部组件使用
                 monsterObject.BattleInit(monsterId, this);

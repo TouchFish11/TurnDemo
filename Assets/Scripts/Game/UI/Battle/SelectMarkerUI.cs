@@ -1,4 +1,5 @@
 using Framework;
+using Game.Battle;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,6 +28,11 @@ public class SelectMarkerUI : BaseUIBehaviour
     private Color enermyRed = Color.red;
     private Color friendBlue = Color.blue;
 
+    // 标记目标
+    private IBattleEntityObject battleEntity;
+    // 标记父对象
+    private Transform selectMarkerArea;
+
     protected override void Awake()
     {
         base.Awake();
@@ -51,8 +57,10 @@ public class SelectMarkerUI : BaseUIBehaviour
     /// 初始化选择标记
     /// </summary>
     /// <param name="skillTargetType"></param>
-    public void InitSelectMarker(E_SkillTargetType skillTargetType)
+    public void InitSelectMarker(IBattleEntityObject battleEntity, E_SkillTargetType skillTargetType, Transform selectMarkerArea)
     {
+        this.battleEntity = battleEntity;
+        this.selectMarkerArea = selectMarkerArea;
         Color color = skillTargetType == E_SkillTargetType.Enemy ? enermyRed : friendBlue;
         foreach (Image image in images)
         {
@@ -62,8 +70,22 @@ public class SelectMarkerUI : BaseUIBehaviour
 
     private void OnUpdate()
     {
+        FollowTarget();
         //更新标记动画
         UpdateMarkerAnimation();
+    }
+
+    /// <summary>
+    /// 跟随目标
+    /// </summary>
+    private void FollowTarget()
+    {
+        if (battleEntity == null)
+        {
+            return;
+        }
+
+        UIManager.WorldToLocalPointInRectangle(BattlePoint.Instance.CurrentActiveCamera, UIManager.Instance.UICamera, selectMarkerArea, this.gameObject, battleEntity.GameObject.transform.position, Vector2.up * 50);
     }
 
     /// <summary>
