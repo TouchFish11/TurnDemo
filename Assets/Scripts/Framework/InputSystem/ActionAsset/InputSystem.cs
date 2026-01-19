@@ -51,7 +51,7 @@ namespace Framework
             }
 
 #if EDITOR_TEST_AB || !UNITY_EDITOR
-            TextAsset json = await AssetBundleManager.Instance.LoadAssetAsync<TextAsset>(E_AssetBundleType.InputData, FileUtility.InputActionLocalFileName);
+            TextAsset json = await AssetBundleManager.Instance.LoadAssetAsync<TextAsset>(E_AssetBundleType.GameConfig, FileUtility.InputActionLocalFileName);
             _jsonInputData = json.text;
             UpdateActions();
 #else

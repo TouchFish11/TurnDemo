@@ -1,6 +1,7 @@
 using Framework;
 using Game.Battle;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -54,7 +55,7 @@ public class NormalMonsterStateUI : BaseUIBehaviour
     /// 初始化普通怪物状态UI
     /// </summary>
     /// <param name="battleEntity"></param>
-    public async void Init(IBattleEntityObject battleEntity, Transform monsterStateArea)
+    public async Task Init(IBattleEntityObject battleEntity, Transform monsterStateArea)
     {
         foreach (Image weaknessIcon in weakneses)
         {
@@ -79,7 +80,7 @@ public class NormalMonsterStateUI : BaseUIBehaviour
         // 初始化弱点
         foreach (E_ElementType elementType in toughnessComponent.WeakPropertys)
         {
-            GameObject weaknessIconObj = await ObjectBuilder.GetOrCreateInstance(E_AssetBundleType.UI, ResKeyCollection.WeaknessUI, WeaknessBar);
+            GameObject weaknessIconObj = await ObjectBuilder.GetGameobject(E_AssetBundleType.UI, ResKeyCollection.WeaknessUI, WeaknessBar);
             Image weaknessIcon = weaknessIconObj.GetComponent<Image>();
             weaknessIcon.color = ((int)elementType).ToElementTypeColor();
             weakneses.Add(weaknessIcon);

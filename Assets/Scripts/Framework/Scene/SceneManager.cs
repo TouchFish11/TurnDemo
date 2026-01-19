@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
@@ -13,32 +11,23 @@ namespace Framework
     /// </summary>
     public class SceneManager : SingletonBase<SceneManager>, ISceneManager
     {
-        // 当前加载进度
-        private float currentProgress = 0;
-
         private SceneManager()
         {
 
         }
 
-        /// <summary>
-        /// 场景异步加载
-        /// </summary>
-        /// <param name="scenePath">场景路径</param>
-        /// <param name="mode">加载模式</param>
-        /// <param name="overCallBack">结束回调</param>
         public async void LoadSceneAsync(string scenePath, LoadSceneMode mode, UnityAction<float> onLoadProgress, Func<Task> completed)
         {
-            if (!AssetBundleManager.Instance.ContainPath(scenePath))
+            // 加载场景所需的AB包
+            if (!await ServiceLocator.Get<IAssetBundleManager>().LoadSceneBundleAsync())
             {
-                LogManager.LogError($"不存在该场景：{scenePath}");
+                LogManager.LogError($"场景加载失败：{scenePath}");
                 return;
             }
 
-            // 加载场景所需的AB包
-            if (!await AssetBundleManager.Instance.LoadSceneBundleAsync())
+            if (!ServiceLocator.Get<IAssetBundleManager>().ContainPath(scenePath))
             {
-                LogManager.Log($"场景加载失败：{scenePath}");
+                LogManager.LogError($"不存在该场景：{scenePath}");
                 return;
             }
 
@@ -46,21 +35,25 @@ namespace Framework
             AsyncOperation ao = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(scenePath, mode);
             // 禁止自动激活场景
             ao.allowSceneActivation = false;
-            // 记录上一次加载的进度
-            float lastProgress = 0;
-            while (lastProgress != ao.progress || ao.progress != 0.9f)
+            float currentProgress = 0;
+            while (ao.progress < 0.9f)
             {
-                lastProgress = ao.progress - lastProgress;
-                currentProgress += lastProgress / 0.9f;
-                onLoadProgress?.Invoke(currentProgress);
+                currentProgress = ao.progress / 0.9f;
+                onLoadProgress?.Invoke(Mathf.Clamp01(currentProgress));
+                await Task.Yield();
+            }
+            // 此时进度已到0.9f，先将进度回调置为1.0f，给用户完整的进度反馈
+            onLoadProgress?.Invoke(1.0f);
+            // 激活场景
+            ao.allowSceneActivation = true;
+
+            while (!ao.isDone)
+            {
                 await Task.Yield();
             }
 
             // 执行加载完成事件
             await completed?.Invoke();
-
-            // 激活场景
-            ao.allowSceneActivation = true;
         }
     }
 }

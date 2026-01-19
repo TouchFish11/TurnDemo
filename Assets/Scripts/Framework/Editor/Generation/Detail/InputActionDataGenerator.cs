@@ -323,14 +323,12 @@ public class InputActionDataGenerator : ClassGenerator
 
         foreach (var item in nameToJsonMap)
         {
-            string filePath = $"{Application.dataPath}/Editor/ArtRes/GameData/Input/{item.Key}.json";
+            string filePath = $"{Application.dataPath}/Editor/ArtRes/GameConfig/InputConfig/{item.Key}.json";
             File.WriteAllText(filePath, item.Value);
         }
 
         AssetDatabase.Refresh();
     }
-
-
 
     /// <summary>
     /// »ñÈ¡2DVectorÂ·¾¶

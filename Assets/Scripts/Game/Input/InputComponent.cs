@@ -3,8 +3,6 @@ using Game;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 /// <summary>
@@ -14,16 +12,17 @@ using UnityEngine.InputSystem;
 [ComponentId(nameof(InputComponent))]
 public class InputComponent : BaseComponent
 {
+    // 输入系统接口
     private IInputSystem inputSystem;
-
+    // 输入动作名称列表
     private List<string> actionNmaes = new List<string>();
+    // 允许的输入数量
+    private byte inputLimitCount;
 
     /// <summary>
     /// 是否限制输入
     /// </summary>
     private bool IsLimitInput => inputLimitCount != 0;
-    // 允许的输入数量
-    private byte inputLimitCount;
 
     /// <summary>
     /// 键盘输入改变事件

@@ -26,21 +26,20 @@ namespace Framework
         /// <returns></returns>
         public Task<T> LoadAssetAsync<T>(string assetName) where T : Object
         {
-            // 先从缓存中查找
-            if (_nameToAssetInfoMap.TryGetValue(assetName, out AssetInfo assetInfo))
-            {
-                LogManager.Log($"{assetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{assetInfo.RefCount}");
-                return Task.FromResult(assetInfo.GetAsset() as T);
-            }
-
             // 缓存中没有则异步加载
             TaskCompletionSource<T> source = TaskSourceBuilder.CreateTCS<T>();
             AssetBundleRequest abr = assetBundle.LoadAssetAsync<T>(assetName);
             abr.completed += (asyncOperation) =>
             {
                 AssetInfo newAssetInfo = new AssetInfo(assetName, abr.asset as T);
-                _nameToAssetInfoMap.Add(assetName, newAssetInfo);
-                LogManager.Log($"{assetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{newAssetInfo.RefCount}");
+                if (!_nameToAssetInfoMap.TryAdd(assetName, newAssetInfo))
+                {
+                    LogManager.LogError($"资源重复加载。包名：{assetBundle.name}，资源名：{assetName}");
+                }
+                else
+                {
+                    LogManager.Log($"{assetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{newAssetInfo.RefCount}");
+                }
                 source.SetResult(abr.asset as T);
             };
             return source.Task;
@@ -54,22 +53,21 @@ namespace Framework
         /// <returns></returns>
         public Task<Object> LoadAssetAsync(string assetName, System.Type type)
         {
-            // 先从缓存中查找
-            if (_nameToAssetInfoMap.TryGetValue(assetName, out AssetInfo assetInfo))
-            {
-                LogManager.Log($"{assetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{assetInfo.RefCount}");
-                return Task.FromResult(assetInfo.GetAsset());
-            }
-
             // 缓存中没有则异步加载
             AssetBundleRequest abr = assetBundle.LoadAssetAsync(assetName, type);
             TaskCompletionSource<Object> source = TaskSourceBuilder.CreateTCS<Object>();
             abr.completed += (asyncOperation) =>
             {
                 AssetInfo newAssetInfo = new AssetInfo(assetName, abr.asset);
-                _nameToAssetInfoMap.Add(assetName, newAssetInfo);
+                if (!_nameToAssetInfoMap.TryAdd(assetName, newAssetInfo))
+                {
+                    LogManager.LogError($"资源重复加载。包名：{assetBundle.name}，资源名：{assetName}");
+                }
+                else
+                {
+                    LogManager.Log($"{assetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{newAssetInfo.RefCount}");
+                }
                 source.SetResult(abr.asset);
-                LogManager.Log($"{assetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{newAssetInfo.RefCount}");
             };
             return source.Task;
         }

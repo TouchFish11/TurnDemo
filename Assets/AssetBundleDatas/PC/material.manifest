@@ -1,0 +1,22 @@
+ManifestFileVersion: 0
+CRC: 4234612253
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: ebad69d91ed49c931d760a400dc89547
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 5e762ccb57c4caaabbb5a4199ac82c23
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: ebad69d91ed49c931d760a400dc89547
+HashAppended: 0
+ClassTypes:
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Editor/ArtRes/Material/Ground.mat
+Dependencies: []

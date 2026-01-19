@@ -1,0 +1,48 @@
+ManifestFileVersion: 0
+CRC: 4068807302
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: animation
+      Dependencies: {}
+    Info_1:
+      Name: animator
+      Dependencies:
+        Dependency_0: animation
+    Info_2:
+      Name: camera
+      Dependencies: {}
+    Info_3:
+      Name: material
+      Dependencies: {}
+    Info_4:
+      Name: mesh
+      Dependencies: {}
+    Info_5:
+      Name: prefab
+      Dependencies:
+        Dependency_0: animator
+    Info_6:
+      Name: scene
+      Dependencies:
+        Dependency_0: camera
+        Dependency_1: material
+        Dependency_2: ui
+    Info_7:
+      Name: texture
+      Dependencies: {}
+    Info_8:
+      Name: ui
+      Dependencies:
+        Dependency_0: texture
+        Dependency_1: spriteatlas
+    Info_9:
+      Name: vfx
+      Dependencies: {}
+    Info_10:
+      Name: spriteatlas
+      Dependencies:
+        Dependency_0: texture
+    Info_11:
+      Name: gameconfig
+      Dependencies: {}

@@ -1,0 +1,35 @@
+ManifestFileVersion: 0
+CRC: 1729213692
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: df7a70369fd224aec4f0bcf0d3909cec
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: b231db9f7e50c8e18d8778f9bd95889f
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: df7a70369fd224aec4f0bcf0d3909cec
+HashAppended: 0
+ClassTypes:
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: d4d0f64f65ae7754bab2cce7e2a00690, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: eac6c27b63a607941a8885a6b8126cf9, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Editor/ArtRes/Animator/Monster/TurtleShellAnimtor.controller
+- Assets/Editor/ArtRes/Animator/Monster/SlimeAnimtor.controller
+- Assets/Editor/ArtRes/Animator/Role/BaseRole.controller
+- Assets/Editor/ArtRes/Animator/PlayerController.controller
+- Assets/Editor/ArtRes/Animator/Role/FireFlyAnimtor.controller
+- Assets/Editor/ArtRes/Animator/Monster/BaseMonster.controller
+- Assets/Editor/ArtRes/Animator/Role/HertaAnimtor.controller
+Dependencies:
+- D:/UnityProject/TurnDemo/Assets/AssetBundleDatas/PC/animation

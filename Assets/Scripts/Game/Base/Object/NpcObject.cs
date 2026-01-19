@@ -14,7 +14,7 @@ namespace Game
 
         public override void BaseInit(int id)
         {
-            NpcInfo = BinaryDataManager.Instance.GetConfig<NpcInfoContainer>(E_ConfigLoadType.Excel).dataDic[id];
+            NpcInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<NpcInfoContainer>(E_ConfigLoadType.Excel).dataDic[id];
         }
 
         public void OnInteract(IEntityObject entityObject)

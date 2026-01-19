@@ -23,7 +23,7 @@ namespace Game.Battle
             // 创建战斗加载界面
             BattleLoadingController battleLoadingController = await ServiceLocator.Get<IUIManager>().CreateViewAsync<BattleLoadingView, BattleLoadingModel, BattleLoadingController>(E_UILayer.Mid);
             // 清理场景内容缓存
-            MainTest.Instance.ClearScene();
+            Main.Instance.ClearScene();
             // 加载战斗场景
             ServiceLocator.Get<ISceneManager>().LoadSceneAsync(ResKeyCollection.LevelScene, UnityEngine.SceneManagement.LoadSceneMode.Single, 
             (progress) => battleLoadingController.UpdateProgress(progress), 
@@ -93,7 +93,7 @@ namespace Game.Battle
                 // 销毁战斗界面
                 ServiceLocator.Get<IUIManager>().DestroyView();
                 // 初始化场景
-                MainTest.Instance.InitScene();
+                Main.Instance.InitScene();
                 await Task.CompletedTask;
             });
         }

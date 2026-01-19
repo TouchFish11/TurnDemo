@@ -33,7 +33,7 @@ public class EditorConfigLoader : ConfigLoader
     {
 #if EDITOR_TEST_AB || !UNITY_EDITOR
             // 异步加载数据
-            TextAsset tInfo = await AssetBundleManager.Instance.LoadAssetAsync<TextAsset>(E_AssetBundleType.TableInfo, $"{typeof(K).Name}.btyes");
+            TextAsset tInfo = await AssetBundleManager.Instance.LoadAssetAsync<TextAsset>(E_AssetBundleType.GameConfig, $"{typeof(K).Name}");
 #else
         // 加载编辑器数据
         TextAsset tInfo = EditorResManager.Instance.LoadEditorAsset<TextAsset>($"{typeof(K).Name}", ".bytes");

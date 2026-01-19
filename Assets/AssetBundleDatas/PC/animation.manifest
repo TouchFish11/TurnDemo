@@ -1,0 +1,43 @@
+ManifestFileVersion: 0
+CRC: 2465928829
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 401e2913524045234826a38d25ee2cc7
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 4c4a741bc998ac9508c2cbb90099a4d9
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 401e2913524045234826a38d25ee2cc7
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 90
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+- Class: 137
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Editor/ArtRes/Animation/Role/FireFly/FireFly_Ultimate_Anim.fbx
+- Assets/Editor/ArtRes/Animation/Role/Herta/Herta_Ultimate_Anim.fbx
+- Assets/Editor/ArtRes/Animation/Role/FireFly/FireFly_BattleAttack_Anim.fbx
+- Assets/Editor/ArtRes/Animation/Monster/TurtleShell_Attack_Anim.fbx
+- Assets/Editor/ArtRes/Animation/Role/FireFly/FireFly_Attack_Anim.fbx
+- Assets/Editor/ArtRes/Animation/Role/Herta/Herta_Attack_Anim.fbx
+- Assets/Editor/ArtRes/Animation/Role/Herta/Herta_BattleAttack_Anim.fbx
+- Assets/Editor/ArtRes/Animation/Monster/Slime_Attack_Anim.fbx
+Dependencies: []

@@ -126,7 +126,7 @@ namespace Framework
         private readonly string[] _filterSuffixes = new string[] { ".meta" };
 
         // 预定义枚举数组
-        private readonly string[] defaultNames = new string[] { "UI", "Scene", "Lua", "Music", "Json", "TableInfo", "InputData", "Camera", "Video" };
+        private readonly string[] defaultNames = new string[] { "UI", "Scene", "Lua", "Music", "Camera", "Video", "GameConfig" };
 
         // 枚举文件生成路径
         private readonly string filePath = Application.dataPath + "/Scripts/Framework/AssetBundle/Management/E_AssetBundleType.cs";

@@ -46,8 +46,8 @@ public class ExcelConfigLoader : ConfigLoader
     private async Task LoadTableAsync<T, K>()
     {
 #if EDITOR_TEST_AB || !UNITY_EDITOR
-            // 异步加载数据
-            TextAsset tInfo = await AssetBundleManager.Instance.LoadAssetAsync<TextAsset>(E_AssetBundleType.TableInfo, $"{typeof(K).Name}.btyes");
+        // 异步加载数据，资源名不需要后缀。.tInfo的后缀是txt
+        TextAsset tInfo = await AssetBundleManager.Instance.LoadAssetAsync<TextAsset>(E_AssetBundleType.GameConfig, $"{typeof(K).Name}.tInfo");
 #else
         // 加载编辑器数据
         TextAsset tInfo = EditorResManager.Instance.LoadEditorAsset<TextAsset>($"{typeof(K).Name}.tInfo");

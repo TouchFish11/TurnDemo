@@ -1,0 +1,82 @@
+ManifestFileVersion: 0
+CRC: 3549565969
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 974cb2f7e588b255e0da615dcfdf1ff6
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: a189f319546fc23573395aef2cfa0e86
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 974cb2f7e588b255e0da615dcfdf1ff6
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 96
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 59c9d7ece60304a429efdc040fb18ef1, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 2d6b8671949109744acec73e933cba7c, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 50376b98351e9c94cb4ef939b242c1da, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 55bce397dff95a644b777987ab48fdb2, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 65d58424288243e42b21e9e410db943f, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 097e2bd265ee1d84cb47df5abf741ea0, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 20a28525f89e3cd42879d392e2ee731d, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 484b196ff77ffb5458ce087a5c8d9353, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 198
+  Script: {instanceID: 0}
+- Class: 199
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Editor/ArtRes/VFX/Monster/Boss/VFX_MonsterDead.prefab
+- Assets/Editor/ArtRes/VFX/Role/Herta/VFX_HeartUltimateSkill.prefab
+- Assets/Editor/ArtRes/VFX/General/VFX_Environment_Rain.prefab
+- Assets/Editor/ArtRes/VFX/Role/FireFly/VFX_FireFlyNormalSkill.prefab
+- Assets/Editor/ArtRes/VFX/Role/FireFly/VFX_NormalSkill_Wave.prefab
+- Assets/Editor/ArtRes/VFX/Role/Herta/VFX_HertaSkill.prefab
+- Assets/Editor/ArtRes/VFX/General/Status/VFX_Dot_Blue03.prefab
+- Assets/Editor/ArtRes/VFX/Unknow/VFX_Unknow01.prefab
+- Assets/Editor/ArtRes/VFX/Role/Herta/VFX_HeartUltimatePose.prefab
+- Assets/Editor/ArtRes/VFX/General/Status/VFX_Shield.prefab
+- Assets/Editor/ArtRes/VFX/General/Status/VFX_Dot_Green02.prefab
+- Assets/Editor/ArtRes/VFX/General/Hit/VFX_MonsterHit.prefab
+- Assets/Editor/ArtRes/VFX/General/Status/VFX_Heal.prefab
+- Assets/Editor/ArtRes/VFX/General/VFX_SupportSkill_02.prefab
+- Assets/Editor/ArtRes/VFX/General/Status/VFX_Dot_Blue01.prefab
+- Assets/Editor/ArtRes/VFX/Unknow/VFX_Unkow02.prefab
+- Assets/Editor/ArtRes/VFX/General/VFX_SupportSkill_01.prefab
+- Assets/Editor/ArtRes/VFX/Role/FireFly/VFX_FireFlyBattleSkill.prefab
+- Assets/Editor/ArtRes/VFX/Monster/VFX_MonsterAttackSkill.prefab
+- Assets/Editor/ArtRes/VFX/Role/Herta/VFX_HertaNormalSkill.prefab
+- Assets/Editor/ArtRes/VFX/Role/FireFly/VFX_BlueHit.prefab
+- Assets/Editor/ArtRes/VFX/Role/Herta/VFX_HertaBattleSkill.prefab
+- Assets/Editor/ArtRes/VFX/Role/FireFly/VFX_FireFlyUltimatePose.prefab
+- Assets/Editor/ArtRes/VFX/Role/FireFly/VFX_FireFlyUltimateSkill.prefab
+- Assets/Editor/ArtRes/VFX/General/Status/VFX_Dot_Green01.prefab
+- Assets/Editor/ArtRes/VFX/General/Status/VFX_Dot_Blue02.prefab
+- Assets/Editor/ArtRes/VFX/Unknow/VFX_Unknow03.prefab
+Dependencies: []

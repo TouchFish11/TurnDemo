@@ -88,8 +88,16 @@ namespace Framework
             {
                 // 没用即添加，有即比较MD5是否相同：不同则替换，同则不处理
                 string abName = abNames[i].ToLower();
-                // 初始化包装器
-                _nameToWrapperMap.TryAdd(abName, new AssetBundleWrapper(abName, PathUtility.GetAbLoadPath(abName + AbSuffix)));
+                if (abName == "scene")
+                {
+                    // 初始化场景包包装器
+                    _nameToWrapperMap.TryAdd(abName, new SceneBundleWrapper(abName, PathUtility.GetAbLoadPath(abName + AbSuffix)));
+                }
+                else
+                {
+                    // 初始化非场景包包装器
+                    _nameToWrapperMap.TryAdd(abName, new AssetBundleWrapper(abName, PathUtility.GetAbLoadPath(abName + AbSuffix)));
+                }
             }
 
             return true;
@@ -261,12 +269,12 @@ namespace Framework
         /// </summary>
         /// <param name="scenePath"></param>
         /// <returns></returns>
-        public bool ContainPath(string scenePath)
+        public bool ContainPath(string sceneName)
         {
             string abName = E_AssetBundleType.Scene.ToString().ToLower();
             if (_nameToWrapperMap.TryGetValue(abName, out var wrapper))
             {
-                return wrapper.Convert<SceneBundleWrapper>().ContainPath(scenePath);
+                return wrapper.Convert<SceneBundleWrapper>().ContainPath(sceneName);
             }
             return false;
         }

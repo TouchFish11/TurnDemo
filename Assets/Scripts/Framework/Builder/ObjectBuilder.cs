@@ -47,14 +47,14 @@ namespace Framework
             return component;
         }
 
-        public static async Task<GameObject> GetOrCreateInstance(E_AssetBundleType assetBundleType, string assetName, Transform parent, bool worldPosStay = false)
+        public static async Task<GameObject> GetGameobject(E_AssetBundleType assetBundleType, string assetName, Transform parent, bool worldPosStay = false)
         {
             GameObject cacheObj = await PoolManager.Instance.GetAssetBundleObjAsync(assetBundleType, assetName);
             cacheObj.transform.SetParent(parent, worldPosStay);
             return cacheObj;
         }
 
-        public static async Task<GameObject> GetOrCreateInstance(E_AssetBundleType assetBundleType, string assetName, Vector3 position, Quaternion quaternion)
+        public static async Task<GameObject> GetGameobject(E_AssetBundleType assetBundleType, string assetName, Vector3 position, Quaternion quaternion)
         {
             GameObject cacheObj = await PoolManager.Instance.GetAssetBundleObjAsync(assetBundleType, assetName);
             cacheObj.transform.SetPositionAndRotation(position, quaternion);

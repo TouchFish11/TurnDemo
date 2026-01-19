@@ -7,6 +7,9 @@ namespace Framework
     /// </summary>
     public class SceneBundleWrapper : BundleWrapper
     {
+        // 场景名称列表
+        private List<string> sceneNames = new List<string>();
+
         public SceneBundleWrapper(string abName, string path) : base(abName, path)
         {
 
@@ -17,7 +20,7 @@ namespace Framework
         /// </summary>
         /// <param name="scenePath"></param>
         /// <returns></returns>
-        public bool ContainPath(string scenePath)
+        public bool ContainPath(string sceneName)
         {
             if (assetBundle == null)
             {
@@ -25,9 +28,13 @@ namespace Framework
                 return false;
             }
 
-            // 获取所有场景路径
-            List<string> paths = new List<string>(assetBundle.GetAllScenePaths());
-            if (paths.Contains(scenePath))
+            // 缓存场景名
+            if (sceneNames.Count == 0)
+            {
+                CacheSceneNames();
+            }
+
+            if (sceneNames.Contains(sceneName))
             {
                 return true;
             }
@@ -48,6 +55,20 @@ namespace Framework
             }
 
             return assetBundle.GetAllScenePaths();
+        }
+
+        /// <summary>
+        /// 缓存场景名
+        /// </summary>
+        private void CacheSceneNames()
+        {
+            var scenePaths = assetBundle.GetAllScenePaths();
+            foreach (var scenePath in scenePaths)
+            {
+                string[] strs = scenePath.Split('/');
+                string sceneName = strs[strs.Length - 1];
+                sceneNames.Add(sceneName.Substring(0, sceneName.LastIndexOf('.')));
+            }
         }
 
         /// <summary>

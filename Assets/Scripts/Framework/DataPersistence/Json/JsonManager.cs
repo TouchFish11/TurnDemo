@@ -39,7 +39,7 @@ namespace Framework
         {
 #if EDITOR_TEST_AB || !UNITY_EDITOR
             T container = null;
-            TextAsset textAsset = await AssetBundleManager.Instance.LoadAssetAsync<TextAsset>(E_AssetBundleType.Json, $"{typeof(K).Name}.json");
+            TextAsset textAsset = await AssetBundleManager.Instance.LoadAssetAsync<TextAsset>(E_AssetBundleType.GameConfig, $"{typeof(K).Name}.json");
             //转换为对象
             container = JsonUtility.FromJson<T>(textAsset.text);
             //存储

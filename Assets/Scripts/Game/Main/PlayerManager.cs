@@ -34,7 +34,7 @@ public class PlayerManager : SingletonBase<PlayerManager>, IPlayerManager
         main.BaseInit(1);
 
         // 根据本地编队数据，创建对应的角色模型作为该对象的子对象
-        GameObject fireFlyObj = await ObjectBuilder.GetOrCreateInstance(E_AssetBundleType.Prefab, ResKeyCollection.Prefab_FireFly, main.transform);
+        GameObject fireFlyObj = await ObjectBuilder.GetGameobject(E_AssetBundleType.Prefab, ResKeyCollection.Prefab_FireFly, main.transform);
         main.AddEntity(fireFlyObj.GetComponent<FireFly>());
 
         uidToEntityMap.Add(uid, main);

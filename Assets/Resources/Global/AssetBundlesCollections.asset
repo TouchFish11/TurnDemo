@@ -54,7 +54,7 @@ MonoBehaviour:
       size: 15654
       name: TurtleShellAnimtor.controller
     - assetPath: Assets\Editor\ArtRes\Animator\Role\BaseRole.controller
-      size: 26955
+      size: 27043
       name: BaseRole.controller
     - assetPath: Assets\Editor\ArtRes\Animator\Role\FireFlyAnimtor.controller
       size: 35313
@@ -70,43 +70,38 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\Camera\UICamera.prefab
       size: 2122
       name: UICamera.prefab
-  - assetBundleName: gamedata
+  - assetBundleName: gameconfig
     assetInfoList:
-    - assetPath: Assets\Editor\ArtRes\GameData\BranchInfo.tInfo.txt
+    - assetPath: Assets\Editor\ArtRes\GameConfig\BranchInfo.tInfo.txt
       size: 159
       name: BranchInfo.tInfo.txt
-    - assetPath: Assets\Editor\ArtRes\GameData\DialogueInfo.tInfo.txt
+    - assetPath: Assets\Editor\ArtRes\GameConfig\DialogueInfo.tInfo.txt
       size: 468
       name: DialogueInfo.tInfo.txt
-    - assetPath: Assets\Editor\ArtRes\GameData\MonsterInfo.bytes
+    - assetPath: Assets\Editor\ArtRes\GameConfig\MonsterInfo.bytes
       size: 405
       name: MonsterInfo.bytes
-    - assetPath: Assets\Editor\ArtRes\GameData\NpcInfo.tInfo.txt
+    - assetPath: Assets\Editor\ArtRes\GameConfig\NpcInfo.tInfo.txt
       size: 150
       name: NpcInfo.tInfo.txt
-    - assetPath: Assets\Editor\ArtRes\GameData\RoleInfo.bytes
+    - assetPath: Assets\Editor\ArtRes\GameConfig\RoleInfo.bytes
       size: 390
       name: RoleInfo.bytes
-    - assetPath: Assets\Editor\ArtRes\GameData\SkillInfo.bytes
+    - assetPath: Assets\Editor\ArtRes\GameConfig\SkillInfo.bytes
       size: 1057
       name: SkillInfo.bytes
-    - assetPath: Assets\Editor\ArtRes\GameData\StatusInfo.bytes
+    - assetPath: Assets\Editor\ArtRes\GameConfig\StatusInfo.bytes
       size: 126
       name: StatusInfo.bytes
-    - assetPath: Assets\Editor\ArtRes\GameData\TaskConditionInfo.tInfo.txt
+    - assetPath: Assets\Editor\ArtRes\GameConfig\TaskConditionInfo.tInfo.txt
       size: 67
       name: TaskConditionInfo.tInfo.txt
-    - assetPath: Assets\Editor\ArtRes\GameData\TaskInfo.tInfo.txt
+    - assetPath: Assets\Editor\ArtRes\GameConfig\TaskInfo.tInfo.txt
       size: 255
       name: TaskInfo.tInfo.txt
-    - assetPath: Assets\Editor\ArtRes\GameData\Input\MainActionMap.json
-      size: 6641
+    - assetPath: Assets\Editor\ArtRes\GameConfig\InputConfig\MainActionMap.json
+      size: 6638
       name: MainActionMap.json
-  - assetBundleName: general
-    assetInfoList:
-    - assetPath: Assets\Editor\ArtRes\General\ItemGrid.prefab
-      size: 11903
-      name: ItemGrid.prefab
   - assetBundleName: material
     assetInfoList:
     - assetPath: Assets\Editor\ArtRes\Material\Ground.mat
@@ -119,29 +114,32 @@ MonoBehaviour:
       name: MergedMesh.asset
   - assetBundleName: prefab
     assetInfoList:
-    - assetPath: Assets\Editor\ArtRes\Prefab\Prefab_Boss.prefab
-      size: 80400
-      name: Prefab_Boss.prefab
-    - assetPath: Assets\Editor\ArtRes\Prefab\Prefab_Npc.prefab
-      size: 4454
-      name: Prefab_Npc.prefab
     - assetPath: Assets\Editor\ArtRes\Prefab\Prefab_Player.prefab
       size: 80476
       name: Prefab_Player.prefab
+    - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Prefab_Boss.prefab
+      size: 80419
+      name: Prefab_Boss.prefab
     - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Prefab_Slime.prefab
       size: 16615
       name: Prefab_Slime.prefab
     - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Prefab_TurtleShell.prefab
       size: 37036
       name: Prefab_TurtleShell.prefab
-    - assetPath: Assets\Editor\ArtRes\Prefab\Role\Prefab_FireFly.prefab
-      size: 92529
+    - assetPath: Assets\Editor\ArtRes\Prefab\Role\Battle\Prefab_FireFly.prefab
+      size: 92487
       name: Prefab_FireFly.prefab
-    - assetPath: Assets\Editor\ArtRes\Prefab\Role\Prefab_Herta.prefab
-      size: 90752
+    - assetPath: Assets\Editor\ArtRes\Prefab\Role\Battle\Prefab_Herta.prefab
+      size: 91420
       name: Prefab_Herta.prefab
+    - assetPath: Assets\Editor\ArtRes\Prefab\Role\Main\Prefab_Main_FireFly.prefab
+      size: 92501
+      name: Prefab_Main_FireFly.prefab
+    - assetPath: Assets\Editor\ArtRes\Prefab\Role\Main\Prefab_Npc.prefab
+      size: 4454
+      name: Prefab_Npc.prefab
     - assetPath: Assets\Editor\ArtRes\Prefab\UI\UI_3D_FloatingText.prefab
-      size: 11206
+      size: 11301
       name: UI_3D_FloatingText.prefab
   - assetBundleName: scene
     assetInfoList:
@@ -149,15 +147,18 @@ MonoBehaviour:
       size: 9392
       name: BeginScene.unity
     - assetPath: Assets\Editor\ArtRes\Scene\LevelScene.unity
-      size: 72770
+      size: 96236
       name: LevelScene.unity
     - assetPath: Assets\Editor\ArtRes\Scene\MainScene.unity
-      size: 47203
+      size: 53006
       name: MainScene.unity
   - assetBundleName: spriteatlas
     assetInfoList:
+    - assetPath: Assets\Editor\ArtRes\SpriteAtlas\Atlas_Default.spriteatlasv2
+      size: 392
+      name: Atlas_Default.spriteatlasv2
     - assetPath: Assets\Editor\ArtRes\SpriteAtlas\Atlas_Generic.spriteatlasv2
-      size: 394
+      size: 465
       name: Atlas_Generic.spriteatlasv2
     - assetPath: Assets\Editor\ArtRes\SpriteAtlas\Atlas_Icon.spriteatlasv2
       size: 469
@@ -170,12 +171,12 @@ MonoBehaviour:
       name: DarkIcons.png
   - assetBundleName: texture
     assetInfoList:
+    - assetPath: Assets\Editor\ArtRes\Texture\Default\WhiteDefaultImage.png
+      size: 516
+      name: WhiteDefaultImage.png
     - assetPath: Assets\Editor\ArtRes\Texture\Generic\CrossCircle4Split128.png
       size: 1239
       name: CrossCircle4Split128.png
-    - assetPath: Assets\Editor\ArtRes\Texture\Generic\WhiteImage.png
-      size: 516
-      name: WhiteImage.png
     - assetPath: Assets\Editor\ArtRes\Texture\Generic\xArrowheadInwards128.png
       size: 884
       name: xArrowheadInwards128.png
@@ -203,7 +204,7 @@ MonoBehaviour:
       size: 11515
       name: BattleMessageUI.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Battle\BattleView.prefab
-      size: 92703
+      size: 92694
       name: BattleView.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Battle\DamageTextUI.prefab
       size: 10542
@@ -215,7 +216,7 @@ MonoBehaviour:
       size: 24489
       name: ActionGridUI.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Battle\ActionLine\WaitingActUI.prefab
-      size: 4792
+      size: 4839
       name: WaitingActUI.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Battle\Buff\StatusEffectTextUI.prefab
       size: 12670
@@ -253,6 +254,9 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\UI\Dialogue\DialogueView.prefab
       size: 99711
       name: DialogueView.prefab
+    - assetPath: Assets\Editor\ArtRes\UI\General\ItemGrid.prefab
+      size: 11903
+      name: ItemGrid.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Global\GlobalMessageView.prefab
       size: 9864
       name: GlobalMessageView.prefab
@@ -278,7 +282,7 @@ MonoBehaviour:
       size: 12041
       name: TaskTypeContainer.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Task\TaskView.prefab
-      size: 57007
+      size: 57011
       name: TaskView.prefab
   - assetBundleName: vfx
     assetInfoList:

@@ -60,7 +60,7 @@ public class BattleUIInitializer
             foreach (IBattleEntityObject battleEntity in battleEntities)
             {
                 NormalMonsterStateUI monsterStateUI = await ObjectBuilder.GetObject<NormalMonsterStateUI>(E_AssetBundleType.UI, ResKeyCollection.MonsterStateUI, null);
-                monsterStateUI.Init(battleEntity, _view.MonsterStateArea);
+                await monsterStateUI.Init(battleEntity, _view.MonsterStateArea);
                 normalMonsterStateUIs.Add(monsterStateUI);
             }
         }

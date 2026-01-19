@@ -1,0 +1,28 @@
+ManifestFileVersion: 0
+CRC: 3351786554
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 0b69ea1d5f49269bcbb02b87ed148209
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 923768aebf385ad86f7762daa8034951
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 0b69ea1d5f49269bcbb02b87ed148209
+HashAppended: 0
+ClassTypes:
+- Class: 213
+  Script: {instanceID: 0}
+- Class: 687078895
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Editor/ArtRes/Texture/Icon/Role/Icon_FireFly.png
+- Assets/Editor/ArtRes/Texture/Icon/Role/Icon_Herta.png
+- Assets/Editor/ArtRes/Texture/Generic/xArrowheadInwards128.png
+- Assets/Editor/ArtRes/Texture/Generic/CrossCircle4Split128.png
+- Assets/Editor/ArtRes/Texture/Default/WhiteDefaultImage.png
+- Assets/Editor/ArtRes/Texture/Icon/Monster/Icon_Slime.png
+- Assets/Editor/ArtRes/Texture/Icon/Monster/Icon_TurtleShell.png
+Dependencies: []

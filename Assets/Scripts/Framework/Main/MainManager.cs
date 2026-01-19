@@ -22,11 +22,11 @@ namespace Framework
             // 激活处理器
             ServiceLocator.Get<IQuitHandler>().ActiveHandler();
             // 初始化AB包资源
-            await ServiceLocator.Get<AssetBundleManager>().Init();
-            // 初始化UI管理器
-            await ServiceLocator.Get<IUIManager>().InitUIManagerAsync();
+            await ServiceLocator.Get<IAssetBundleManager>().Init();
             // 初始化游戏数据
             await ServiceLocator.Get<IGameDataManager>().InitDataAsync();
+            // 初始化UI管理器
+            await ServiceLocator.Get<IUIManager>().InitUIManagerAsync();
             // 初始化Lua管理器
             // await EnvManager.Instance.InitLuaAsync("Main");
             // 初始化更新器
