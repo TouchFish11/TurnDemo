@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 4068807302
+CRC: 2972680203
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -45,4 +45,7 @@ AssetBundleManifest:
         Dependency_0: texture
     Info_11:
       Name: gameconfig
+      Dependencies: {}
+    Info_12:
+      Name: hotupdate
       Dependencies: {}

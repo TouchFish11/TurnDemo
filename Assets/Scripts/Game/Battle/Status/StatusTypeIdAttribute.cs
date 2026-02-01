@@ -1,18 +1,18 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-/// <summary>
-/// ×´Ì¬ÀàÐÍIDÌØÐÔ
-/// </summary>
-[AttributeUsage(AttributeTargets.Class)]
-public class StatusTypeIdAttribute : Attribute
+namespace Game.Battle.Status
 {
-    public int StatusId { get; }
-
-    public StatusTypeIdAttribute(int statusId)
+    /// <summary>
+    /// ×´Ì¬ï¿½ï¿½ï¿½ï¿½IDï¿½ï¿½ï¿½ï¿½
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class)]
+    public class StatusTypeIdAttribute : Attribute
     {
-        this.StatusId = statusId;
+        public int StatusId { get; }
+
+        public StatusTypeIdAttribute(int statusId)
+        {
+            StatusId = statusId;
+        }
     }
 }

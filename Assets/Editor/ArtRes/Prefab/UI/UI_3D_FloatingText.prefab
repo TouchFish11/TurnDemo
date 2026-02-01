@@ -180,7 +180,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 364923409875062070}
-  - component: {fileID: 7367445859785105795}
   m_Layer: 0
   m_Name: UI_3D_FloatingText
   m_TagString: Untagged
@@ -205,24 +204,6 @@ Transform:
   - {fileID: 5044181241580903674}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7367445859785105795
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1901471170513839619}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb41a3604a218614994fa75512bb3633, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  txtName: {fileID: 5530964485628218252}
-  txtTip: {fileID: 2883994550372819381}
-  offset: {x: 0, y: 2, z: 0}
-  minScale: {x: 0.2, y: 0.2, z: 0.2}
-  maxScale: {x: 1.75, y: 1.75, z: 1.75}
-  scaleSpeed: 1.1
 --- !u!1 &3186431727286745216
 GameObject:
   m_ObjectHideFlags: 0

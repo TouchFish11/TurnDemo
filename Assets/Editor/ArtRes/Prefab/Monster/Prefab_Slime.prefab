@@ -392,7 +392,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3909633431463551550}
-  - component: {fileID: 315003803528719274}
   - component: {fileID: 6255624501681295193}
   m_Layer: 7
   m_Name: Prefab_Slime
@@ -417,18 +416,6 @@ Transform:
   - {fileID: 629413798285070904}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &315003803528719274
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8203686128467633264}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ed1a797fce4d0f43810ec268adc64b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &6255624501681295193
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -492,6 +479,7 @@ GameObject:
   - component: {fileID: 629413798285070904}
   - component: {fileID: 7327744176988142782}
   - component: {fileID: 8867683382350920672}
+  - component: {fileID: 7912900028493963059}
   m_Layer: 7
   m_Name: SlimeModel
   m_TagString: Untagged
@@ -547,5 +535,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1517df3647e8bd249923fe0376fc96b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7912900028493963059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8631900144888114847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 998f1b9e94641584996b7151f503f835, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

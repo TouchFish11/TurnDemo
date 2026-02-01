@@ -1,22 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-/// <summary>
-/// ×´Ì¬ÀàÐÍ
-/// </summary>
-public enum E_StatusType : byte
+namespace Game.Battle.Status.Enum
 {
     /// <summary>
-    /// ÕýÃæÐ§¹û
+    /// ×´Ì¬ï¿½ï¿½ï¿½ï¿½
     /// </summary>
-    Positive = 1,
-    /// <summary>
-    /// ¸ºÃæÐ§¹û
-    /// </summary>
-    Negative,
-    /// <summary>
-    /// ÉËº¦Ð§¹û£¨´ý¶¨£©
-    /// </summary>
-    Damage,
+    public enum E_StatusType : byte
+    {
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½
+        /// </summary>
+        Positive = 1,
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½
+        /// </summary>
+        Negative,
+        /// <summary>
+        /// ï¿½Ëºï¿½Ð§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        /// </summary>
+        Damage,
+    }
 }

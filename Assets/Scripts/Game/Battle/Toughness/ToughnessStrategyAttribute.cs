@@ -1,46 +1,45 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-
-/// <summary>
-/// ÈÍÐÔÏà¹Ø²ßÂÔÃ¶¾Ù
-/// </summary>
-public enum E_ToughnessStrategyType
+namespace Game.Battle.Toughness
 {
     /// <summary>
-    /// ÄÜ·ñÏ÷¼õÅÐ¶¨¹æÔò
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø²ï¿½ï¿½ï¿½Ã¶ï¿½ï¿½
     /// </summary>
-    ReduceJudge,
-
-    /// <summary>
-    /// Ï÷¼õÁ¿¼ÆËã¹æÔò
-    /// </summary>
-    ValueCalculate
-}
-
-/// <summary>
-/// ÈÍÐÔ²ßÂÔÌØÐÔ
-/// </summary>
-[AttributeUsage(AttributeTargets.Class)]
-public class ToughnessStrategyAttribute : Attribute
-{
-    /// <summary>
-    /// ²ßÂÔÀàÐÍ
-    /// Çø·ÖÅÐ¶¨¹æÔòºÍÊýÖµ¹æÔò
-    /// </summary>
-    public E_ToughnessStrategyType StrategyType { get; }
-
-    /// <summary>
-    /// ¹æÔòÓÅÏÈ¼¶
-    /// ÊýÖµÔ½´óÔ½ÏÈÖ´ÐÐ
-    /// </summary>
-    public int Priority { get; }
-
-    public ToughnessStrategyAttribute(E_ToughnessStrategyType strategyType, int priority)
+    public enum E_ToughnessStrategyType
     {
-        StrategyType = strategyType;
-        Priority = priority;
+        /// <summary>
+        /// ï¿½Ü·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½
+        /// </summary>
+        ReduceJudge,
+
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        /// </summary>
+        ValueCalculate
+    }
+
+    /// <summary>
+    /// ï¿½ï¿½ï¿½Ô²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class)]
+    public class ToughnessStrategyAttribute : Attribute
+    {
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½
+        /// </summary>
+        public E_ToughnessStrategyType StrategyType { get; }
+
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¼ï¿½
+        /// ï¿½ï¿½ÖµÔ½ï¿½ï¿½Ô½ï¿½ï¿½Ö´ï¿½ï¿½
+        /// </summary>
+        public int Priority { get; }
+
+        public ToughnessStrategyAttribute(E_ToughnessStrategyType strategyType, int priority)
+        {
+            StrategyType = strategyType;
+            Priority = priority;
+        }
     }
 }

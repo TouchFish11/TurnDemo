@@ -1,27 +1,28 @@
-using Game.Battle;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using Game.Battle.Enum;
+using Game.Battle.Objects;
 
-/// <summary>
-/// ÈÍÐÔÏ÷¼õ²ßÂÔ
-/// </summary>
-public interface IToughnessReduceStrategy
+namespace Game.Battle.Toughness
 {
     /// <summary>
-    /// ¹æÔòÓÅÏÈ¼¶
-    /// ÊýÖµÔ½´óÔ½ÏÈÖ´ÐÐ
-    /// ÊôÐÔÃûºÍToughnessStrategyAttributeÖÐµÄÒªÒ»ÖÂ
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
-    int Priority { get; }
+    public interface IToughnessReduceStrategy
+    {
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¼ï¿½
+        /// ï¿½ï¿½ÖµÔ½ï¿½ï¿½Ô½ï¿½ï¿½Ö´ï¿½ï¿½
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ToughnessStrategyAttributeï¿½Ðµï¿½ÒªÒ»ï¿½ï¿½
+        /// </summary>
+        int Priority { get; }
 
-    /// <summary>
-    /// ÄÜ·ñÏ÷¼õÈÍÐÔ
-    /// </summary>
-    /// <param name="reducer"></param>
-    /// <param name="target"></param>
-    /// <param name="propertyType"></param>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    bool CanReduceToughness(IBattleEntityObject reducer, IBattleEntityObject target, E_ElementType propertyType, int value);
+        /// <summary>
+        /// ï¿½Ü·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        /// </summary>
+        /// <param name="reducer"></param>
+        /// <param name="target"></param>
+        /// <param name="propertyType"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        bool CanReduceToughness(IBattleEntityObject reducer, IBattleEntityObject target, E_ElementType propertyType, int value);
+    }
 }

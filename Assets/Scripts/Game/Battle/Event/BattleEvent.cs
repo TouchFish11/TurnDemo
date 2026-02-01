@@ -1,17 +1,18 @@
+using Game.Battle.Context;
 
-namespace Game.Battle
+namespace Game.Battle.Event
 {
     /// <summary>
-    /// 战斗事件事件基类（所有战斗事件继承此类，携带上下文）
+    /// 战锟斤拷锟铰硷拷锟铰硷拷锟斤拷锟洁（锟斤拷锟斤拷战锟斤拷锟铰硷拷锟教承达拷锟洁，携锟斤拷锟斤拷锟斤拷锟侥ｏ拷
     /// </summary>
     public abstract class BattleEvent
     {
         /// <summary>
-        /// 战斗上下文（存储当前回合、角色列表等全局数据）
+        /// 战锟斤拷锟斤拷锟斤拷锟侥ｏ拷锟芥储锟斤拷前锟截合★拷锟斤拷色锟叫憋拷锟斤拷全锟斤拷锟斤拷锟捷ｏ拷
         /// </summary>
-        public IBattleContext Context { get; } 
+        public IBattleContext Context { get; }
 
-        public BattleEvent(IBattleContext context)
+        protected BattleEvent(IBattleContext context)
         {
             Context = context;
         }

@@ -1,30 +1,34 @@
-using Game.Battle;
 using System.Collections.Generic;
+using Game.Battle.Objects;
+using Game.Battle.Skill.Interface;
 
-/// <summary>
-/// ¼¼ÄÜ¹¤³§
-/// </summary>
-public abstract class SkillFactory : ISkillFactory
+namespace Game.Battle.Skill.Base
 {
     /// <summary>
-    /// ÅúÁ¿´´½¨¼¼ÄÜ¶ÔÏó
+    /// ï¿½ï¿½ï¿½Ü¹ï¿½ï¿½ï¿½
     /// </summary>
-    /// <param name="skillIds"></param>
-    /// <returns></returns>
-    public IEnumerable<ISkill> CreateSkills(IBattleEntityObject caster, params int[] skillIds)
+    public abstract class SkillFactory : ISkillFactory
     {
-        List<ISkill> skills = new List<ISkill>();
-        foreach (int skillId in skillIds)
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü¶ï¿½ï¿½ï¿½
+        /// </summary>
+        /// <param name="skillIds"></param>
+        /// <returns></returns>
+        public IEnumerable<ISkill> CreateSkills(IBattleEntityObject caster, params int[] skillIds)
         {
-            skills.Add(CreateSkill(caster, skillId));
+            List<ISkill> skills = new List<ISkill>();
+            foreach (int skillId in skillIds)
+            {
+                skills.Add(CreateSkill(caster, skillId));
+            }
+            return skills;
         }
-        return skills;
-    }
 
-    /// <summary>
-    /// ´´½¨¼¼ÄÜ¶ÔÏó
-    /// </summary>
-    /// <param name="skillId"></param>
-    /// <returns></returns>
-    public abstract ISkill CreateSkill(IBattleEntityObject caster, int skillId);
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü¶ï¿½ï¿½ï¿½
+        /// </summary>
+        /// <param name="skillId"></param>
+        /// <returns></returns>
+        public abstract ISkill CreateSkill(IBattleEntityObject caster, int skillId);
+    }
 }

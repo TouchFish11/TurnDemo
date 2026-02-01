@@ -1,15 +1,19 @@
-using Game.Battle;
+using Game.Battle.Context;
+using Game.Battle.Objects;
 
-/// <summary>
-/// ÉËº¦¼ÆËã¹ÜÀíÆ÷½Ó¿Ú
-/// </summary>
-public interface IDamageCalcManager
+namespace Game.Battle.Damage
 {
-    void CalcSkillDamage(IBattleEntityObject source, IBattleEntityObject target, SkillInfo skillInfo, out DamageResult damageResult);
-
     /// <summary>
-    /// ³õÊ¼»¯
+    /// ï¿½Ëºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¿ï¿½
     /// </summary>
-    /// <param name="context"></param>
-    void Init(IBattleContext context);
+    public interface IDamageCalcManager
+    {
+        void CalcSkillDamage(IBattleEntityObject source, IBattleEntityObject target, SkillInfo skillInfo, out DamageResult damageResult);
+
+        /// <summary>
+        /// ï¿½ï¿½Ê¼ï¿½ï¿½
+        /// </summary>
+        /// <param name="context"></param>
+        void Init(IBattleContext context);
+    }
 }

@@ -1,19 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-/// <summary>
-/// ¸¡¶¯ÎÄ±¾¹ÜÀíÆ÷½Ó¿Ú
-/// </summary>
-public interface IFloatingTextManager
+namespace Game.FloatingText
 {
     /// <summary>
-    /// ³õÊ¼»¯
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¿ï¿½
     /// </summary>
-    void Init();
+    public interface IFloatingTextManager
+    {
+        /// <summary>
+        /// ï¿½ï¿½Ê¼ï¿½ï¿½
+        /// </summary>
+        void Init();
 
-    /// <summary>
-    /// Çå¿Õ»º´æ
-    /// </summary>
-    void ClearCache();
+        /// <summary>
+        /// ï¿½ï¿½Õ»ï¿½ï¿½ï¿½
+        /// </summary>
+        void ClearCache();
+    }
 }

@@ -1,8 +1,8 @@
 
-namespace Game.Battle
+namespace Game.Battle.Enum
 {
     /// <summary>
-    /// Íæ¼Ò¶¯Ì¬ÊôÐÔÀàÐÍ
+    /// ï¿½ï¿½Ò¶ï¿½Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     public enum E_DynamicPropertyType
     {

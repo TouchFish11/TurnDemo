@@ -1,25 +1,25 @@
 
-namespace Game.Battle
+namespace Game.Battle.Enum
 {
     /// <summary>
-    /// ÊôÐÔÀàÐÍ
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     public enum E_ElementType
     {
         /// <summary>
-        /// »ð
+        /// ï¿½ï¿½
         /// </summary>
         Fire =1,
         /// <summary>
-        /// ±ù
+        /// ï¿½ï¿½
         /// </summary>
         Ice,
         /// <summary>
-        /// ÎïÀí
+        /// ï¿½ï¿½ï¿½ï¿½
         /// </summary>
         Physical,
         /// <summary>
-        /// Á¿×Ó
+        /// ï¿½ï¿½ï¿½ï¿½
         /// </summary>
         Quantum,
     }

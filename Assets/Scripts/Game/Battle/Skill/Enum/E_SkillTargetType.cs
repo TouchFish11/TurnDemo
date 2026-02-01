@@ -1,18 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-/// <summary>
-/// ¼¼ÄÜÄ¿±êÀàÐÍ
-/// </summary>
-public enum E_SkillTargetType : byte
+namespace Game.Battle.Skill.Enum
 {
     /// <summary>
-    /// ÓÑ·½
+    /// ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
-    Friend = 1,
-    /// <summary>
-    /// µÐ·½
-    /// </summary>
-    Enemy,
+    public enum E_SkillTargetType : byte
+    {
+        /// <summary>
+        /// ï¿½Ñ·ï¿½
+        /// </summary>
+        Friend = 1,
+        /// <summary>
+        /// ï¿½Ð·ï¿½
+        /// </summary>
+        Enemy,
+    }
 }

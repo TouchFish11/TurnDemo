@@ -1,25 +1,25 @@
-using Framework;
-using Game.Battle;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using Game.Battle.Objects;
 
-/// <summary>
-/// ¼¼ÄÜ¹¤³§½Ó¿Ú
-/// </summary>
-public interface ISkillFactory
+namespace Game.Battle.Skill.Interface
 {
     /// <summary>
-    /// ´´½¨¼¼ÄÜÊµÀý
+    /// ï¿½ï¿½ï¿½Ü¹ï¿½ï¿½ï¿½ï¿½Ó¿ï¿½
     /// </summary>
-    /// <param name="skillId"></param>
-    /// <returns></returns>
-    ISkill CreateSkill(IBattleEntityObject caster, int skillId);
+    public interface ISkillFactory
+    {
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½
+        /// </summary>
+        /// <param name="skillId"></param>
+        /// <returns></returns>
+        ISkill CreateSkill(IBattleEntityObject caster, int skillId);
     
-    /// <summary>
-    /// ÅúÁ¿´´½¨¼¼ÄÜÊµÀý
-    /// </summary>
-    /// <param name="skillIds"></param>
-    /// <returns></returns>
-    IEnumerable<ISkill> CreateSkills(IBattleEntityObject caster, params int[] skillIds);
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½
+        /// </summary>
+        /// <param name="skillIds"></param>
+        /// <returns></returns>
+        IEnumerable<ISkill> CreateSkills(IBattleEntityObject caster, params int[] skillIds);
+    }
 }

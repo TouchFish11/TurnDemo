@@ -1,0 +1,20 @@
+ManifestFileVersion: 0
+CRC: 3881320188
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 7da72b214dfe90df935ee10d0662cd6b
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 5ad585dd02dfb5016c0dad519eab8f49
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 7da72b214dfe90df935ee10d0662cd6b
+HashAppended: 0
+ClassTypes:
+- Class: 49
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Editor/ArtRes/HotUpdate/Assembly-CSharp-Game-HotUpdate.dll.bytes
+Dependencies: []

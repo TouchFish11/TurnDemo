@@ -1,20 +1,18 @@
-using Game.Battle;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public interface ISkillManager
+namespace Game.Battle.Skill.Interface
 {
-    /// <summary>
-    /// Ìí¼Ó¼¼ÄÜÃüÁîµ½»ØºÏ¶ÓÁÐ
-    /// </summary>
-    /// <param name="skill"></param>
-    void AddSkillCommand(ISkill skill);
+    public interface ISkillManager
+    {
+        /// <summary>
+        /// ï¿½ï¿½ï¿½Ó¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½îµ½ï¿½ØºÏ¶ï¿½ï¿½ï¿½
+        /// </summary>
+        /// <param name="skill"></param>
+        void AddSkillCommand(ISkill skill);
 
-    /// <summary>
-    /// ³õÊ¼»¯¼¼ÄÜÄ¿±ê
-    /// Í¨¹ýÄ¿±êÑ¡Ôñ¹ÜÀíÆ÷³õÊ¼»¯¼¼ÄÜÄ¿±ê
-    /// </summary>
-    /// <param name="skill"></param>
-    void InitSkillTarget(ISkill skill);
+        /// <summary>
+        /// ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½
+        /// Í¨ï¿½ï¿½Ä¿ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½
+        /// </summary>
+        /// <param name="skill"></param>
+        void InitSkillTarget(ISkill skill);
+    }
 }

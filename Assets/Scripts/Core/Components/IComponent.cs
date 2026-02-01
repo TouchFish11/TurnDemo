@@ -1,0 +1,28 @@
+namespace Core.Components
+{
+    /// <summary>
+    /// 组件核心接口，定义所有游戏组件的基础行为规范
+    /// 所有具体的游戏组件都应实现此接口
+    /// </summary>
+    public interface IComponent
+    {
+        /// <summary>
+        /// 获取当前组件所属的实体对象
+        /// 实体对象是组件的载体，一个实体可挂载多个不同类型的组件
+        /// </summary>
+        IEntityObject EntityObject { get; }
+
+        /// <summary>
+        /// 初始化组件
+        /// 在组件挂载到实体对象时调用，用于完成组件的初始状态设置、依赖绑定等
+        /// </summary>
+        /// <param name="entityObject">当前组件要归属的实体对象</param>
+        void Init(IEntityObject entityObject);
+
+        /// <summary>
+        /// 销毁组件
+        /// 在实体对象销毁或组件被移除时调用，用于释放组件占用的资源、取消事件监听等
+        /// </summary>
+        void Destroy();
+    }
+}

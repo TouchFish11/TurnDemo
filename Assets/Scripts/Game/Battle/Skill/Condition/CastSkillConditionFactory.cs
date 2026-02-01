@@ -1,9 +1,28 @@
-using Framework;
+using Core.Log;
+using Core.Reflection;
+using Core.Utility;
 
-/// <summary>
-/// ÊÍ·Å¼¼ÄÜÌõ¼ş¹¤³§
-/// </summary>
-public class CastSkillConditionFactory : Factory<ICastSkillCondition>
+namespace Game.Battle.Skill.Condition
 {
-
+    /// <summary>
+    /// é‡Šæ”¾æŠ€èƒ½æ¡ä»¶å·¥å‚
+    /// </summary>
+    public class CastSkillConditionFactory : Factory<ICastSkillCondition>, ICastSkillConditionFactory
+    {
+        void IFactory.InitFactory()
+        {
+            FactoryUtility.ScanAllType(typeToInterfaceMap, AssemblyUtility.GetHotUpdateAssemblies());
+        }
+        
+        public ICastSkillCondition GetCastSkillCondition<TCondition>()where TCondition : class, ICastSkillCondition
+        {
+            if (typeToInterfaceMap.TryGetValue(typeof(TCondition).ToIdentifier(), out var targetSelectStrategy))
+            {
+                return targetSelectStrategy;
+            }
+            
+            LogManager.LogError($"æœªæ‰¾åˆ°é‡Šæ”¾æŠ€èƒ½æ¡ä»¶ï¼Œ{typeof(TCondition).ToIdentifier()}");
+            return null;
+        }
+    }
 }

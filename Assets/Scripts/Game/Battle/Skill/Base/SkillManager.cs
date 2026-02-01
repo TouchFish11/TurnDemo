@@ -1,10 +1,16 @@
-using Framework;
 using System.Collections.Generic;
+using Core.Reflection;
+using Core.Service;
+using Core.Singleton;
+using Game.Battle.Command;
+using Game.Battle.Objects;
+using Game.Battle.Skill.Interface;
+using Game.Battle.TargetSelect;
 
-namespace Game.Battle
+namespace Game.Battle.Skill.Base
 {
     /// <summary>
-    /// ¼¼ÄÜ¹ÜÀíÆ÷
+    /// ï¿½ï¿½ï¿½Ü¹ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     public class SkillManager : SingletonBase<SkillManager>, ISkillManager
     {
@@ -15,20 +21,20 @@ namespace Game.Battle
 
         public void InitSkillTarget(ISkill skill)
         {
-            // Í¨¹ýÄ¿±êÑ¡Ôñ¹ÜÀíÆ÷»ñÈ¡¼¼ÄÜÖ÷Ä¿±ê
+            // Í¨ï¿½ï¿½Ä¿ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½
             IBattleEntityObject mainTaget = ServiceLocator.Get<ITargetSelectManager>().GetMainTarget();
-            // Í¨¹ýÄ¿±êÑ¡Ôñ¹ÜÀíÆ÷»ñÈ¡¼¼ÄÜËùÓÐÄ¿±ê
+            // Í¨ï¿½ï¿½Ä¿ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½
             List<IBattleEntityObject> selectedTargets = ServiceLocator.Get<ITargetSelectManager>().GetTargets();
-            // ³õÊ¼»¯¼¼ÄÜ
+            // ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             skill.Init(mainTaget, selectedTargets);
         }
 
 
         public void AddSkillCommand(ISkill skill)
         {
-            // ·â×°¼¼ÄÜ
-            SkillCommand skillCommand = ServiceLocator.Get<IFactoryManager>().GetFactory<CommandFactory>().GetSkillCommand(skill);
-            // ·ÅÈëÖ¸Áî
+            // ï¿½ï¿½×°ï¿½ï¿½ï¿½ï¿½
+            var skillCommand = ServiceLocator.Get<IFactoryManager>().GetFactory<ICommandFactory, CommandFactory>().GetSkillCommand(skill);
+            // ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½
             ServiceLocator.Get<IBattleManager>().GetContext().GetTurnManager().InsertCommand(skillCommand);
         }
     }

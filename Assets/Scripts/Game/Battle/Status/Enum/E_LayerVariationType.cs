@@ -1,18 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-/// <summary>
-/// Buff²ãÊý±ä»¯
-/// </summary>
-public enum E_LayerVariationType : byte
+namespace Game.Battle.Status.Enum
 {
     /// <summary>
-    /// ½µµÍ²ãÊý
+    /// Buffï¿½ï¿½ï¿½ï¿½ï¿½ä»¯
     /// </summary>
-    Sub,
-    /// <summary>
-    /// ÒÆ³ýËùÓÐ
-    /// </summary>
-    Remove,
+    public enum E_LayerVariationType : byte
+    {
+        /// <summary>
+        /// ï¿½ï¿½ï¿½Í²ï¿½ï¿½ï¿½
+        /// </summary>
+        Sub,
+        /// <summary>
+        /// ï¿½Æ³ï¿½ï¿½ï¿½ï¿½ï¿½
+        /// </summary>
+        Remove,
+    }
 }

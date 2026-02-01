@@ -1,52 +1,55 @@
+using Game.Battle.Context;
+using Game.Battle.Objects;
+using Game.Battle.Status.Data;
 
-namespace Game.Battle
+namespace Game.Battle.Status
 {
     /// <summary>
-    /// ×´Ì¬½Ó¿Ú
+    /// ×´Ì¬ï¿½Ó¿ï¿½
     /// </summary>
     public interface IStatus
     {
         /// <summary>
-        /// ×´Ì¬ÊÇ·ñÓÐÐ§
+        /// ×´Ì¬ï¿½Ç·ï¿½ï¿½ï¿½Ð§
         /// </summary>
         bool IsValid { get; set; }
 
         /// <summary>
-        /// À´Ô´
+        /// ï¿½ï¿½Ô´
         /// </summary>
         IBattleEntityObject Sourcer { get; }
 
         /// <summary>
-        /// ÓµÓÐ
+        /// Óµï¿½ï¿½
         /// </summary>
         IBattleEntityObject Owner { get; }
 
         /// <summary>
-        /// ×´Ì¬ÊôÐÔ
+        /// ×´Ì¬ï¿½ï¿½ï¿½ï¿½
         /// </summary>
         StatusProperty StatusProperty { get; }
 
         /// <summary>
-        /// ×´Ì¬¼Ó³ÉÊý¾Ý
+        /// ×´Ì¬ï¿½Ó³ï¿½ï¿½ï¿½ï¿½ï¿½
         /// </summary>
         StatusBonusData BonusData { get; }
 
         /// <summary>
-        /// »ØºÏ¿ªÊ¼Ê±µÄÉúÐ§Âß¼­
+        /// ï¿½ØºÏ¿ï¿½Ê¼Ê±ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ß¼ï¿½
         /// </summary>
         /// <param name="owner"></param>
         /// <param name="context"></param>
         void TurnStart(IBattleEntityObject owner, IBattleContext context);
 
         /// <summary>
-        /// »ØºÏ½áÊøÊ±µÄÉúÐ§Âß¼­
+        /// ï¿½ØºÏ½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ß¼ï¿½
         /// </summary>
         /// <param name="owner"></param>
         /// <param name="context"></param>
         void TurnEnd(IBattleEntityObject owner, IBattleContext context);
 
         /// <summary>
-        /// ³õÊ¼»¯×´Ì¬
+        /// ï¿½ï¿½Ê¼ï¿½ï¿½×´Ì¬
         /// </summary>
         /// <param name="sorucer"></param>
         /// <param name="owner"></param>
@@ -54,8 +57,8 @@ namespace Game.Battle
         void InitStatus(IBattleEntityObject sorucer, IBattleEntityObject owner, int statusId);
 
         /// <summary>
-        /// ¸Ä±ä²ãÊý
-        /// ÓÃÓÚÍâ²¿ÐÞ¸Ä×´Ì¬²ãÊý
+        /// ï¿½Ä±ï¿½ï¿½ï¿½ï¿½
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½â²¿ï¿½Þ¸ï¿½×´Ì¬ï¿½ï¿½ï¿½ï¿½
         /// </summary>
         /// <param name="deltaPine"></param>
         void ChangePine(int deltaPine);

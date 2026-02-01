@@ -1,22 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-/// <summary>
-/// ¼¼ÄÜ·¶Î§ÀàÐÍ
-/// </summary>
-public enum E_SkillRangeType : byte
+namespace Game.Battle.Skill.Enum
 {
     /// <summary>
-    /// µ¥Ìå
+    /// ï¿½ï¿½ï¿½Ü·ï¿½Î§ï¿½ï¿½ï¿½ï¿½
     /// </summary>
-    Single = 1,
-    /// <summary>
-    /// À©É¢
-    /// </summary>
-    Diffusion,
-    /// <summary>
-    /// È«Ìå
-    /// </summary>
-    All,
+    public enum E_SkillRangeType : byte
+    {
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½
+        /// </summary>
+        Single = 1,
+        /// <summary>
+        /// ï¿½ï¿½É¢
+        /// </summary>
+        Diffusion,
+        /// <summary>
+        /// È«ï¿½ï¿½
+        /// </summary>
+        All,
+    }
 }

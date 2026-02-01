@@ -1,59 +1,62 @@
 using System;
 
-/// <summary>
-/// ¶Ô»°¹ÜÀíÆ÷½Ó¿Ú
-/// </summary>
-public interface IDialogueManager
+namespace Game.Dialogue
 {
     /// <summary>
-    /// ÊÇ·ñÕıÔÚÏÔÊ¾¶Ô»°
+    /// å¯¹è¯ç®¡ç†å™¨æ¥å£
     /// </summary>
-    bool IsDialogueActive { get; }
+    public interface IDialogueManager
+    {
+        /// <summary>
+        /// æ˜¯å¦æ­£åœ¨æ˜¾ç¤ºå¯¹è¯
+        /// </summary>
+        bool IsDialogueActive { get; }
 
-    /// <summary>
-    /// ¶Ô»°¿ªÊ¼
-    /// </summary>
-    event Action OnDialogueStart;
+        /// <summary>
+        /// å¯¹è¯å¼€å§‹
+        /// </summary>
+        event Action OnDialogueStart;
 
-    /// <summary>
-    /// ¶Ô»°½áÊø
-    /// </summary>
-    event Action OnDialogueEnd;
+        /// <summary>
+        /// å¯¹è¯ç»“æŸ
+        /// </summary>
+        event Action OnDialogueEnd;
 
-    /// <summary>
-    /// ·ÖÖ§Ñ¡Ôñ
-    /// </summary>
-    event Action OnBranchSelected;
+        /// <summary>
+        /// åˆ†æ”¯é€‰æ‹©
+        /// </summary>
+        event Action OnBranchSelected;
 
-    /// <summary>
-    /// µ¥¾ä¶Ô»°¿ªÊ¼ÊÂ¼ş
-    /// </summary>
-    event Action<DialogueInfo> OnSingleDialogueStart;
+        /// <summary>
+        /// å•å¥å¯¹è¯å¼€å§‹äº‹ä»¶
+        /// </summary>
+        event Action<DialogueInfo> OnSingleDialogueStart;
 
-    /// <summary>
-    /// µ¥¾ä¶Ô»°½áÊøÊÂ¼ş
-    /// </summary>
-    event Action OnSingleDialogueEnd;
+        /// <summary>
+        /// å•å¥å¯¹è¯ç»“æŸäº‹ä»¶
+        /// </summary>
+        event Action OnSingleDialogueEnd;
 
-    /// <summary>
-    /// Æô¶¯¶Ô»°
-    /// </summary>
-    /// <param name="startDialogueId"></param>
-    void StartDialogue(int startDialogueId);
+        /// <summary>
+        /// å¯åŠ¨å¯¹è¯
+        /// </summary>
+        /// <param name="startDialogueId"></param>
+        void StartDialogue(int startDialogueId);
 
-    /// <summary>
-    /// ÍÆ½ø¶Ô»°
-    /// </summary>
-    void NextDialogue();
+        /// <summary>
+        /// æ¨è¿›å¯¹è¯
+        /// </summary>
+        void NextDialogue();
 
-    /// <summary>
-    /// Ñ¡ÔñÑ¡Ïî
-    /// </summary>
-    /// <param name="dialogueId"></param>
-    void OnSelectOpt(int dialogueId);
+        /// <summary>
+        /// é€‰æ‹©é€‰é¡¹
+        /// </summary>
+        /// <param name="dialogueId"></param>
+        void OnSelectOpt(int dialogueId);
 
-    /// <summary>
-    /// ½áÊø¶Ô»°
-    /// </summary>
-    void EndDialogue();
+        /// <summary>
+        /// ç»“æŸå¯¹è¯
+        /// </summary>
+        void EndDialogue();
+    }
 }

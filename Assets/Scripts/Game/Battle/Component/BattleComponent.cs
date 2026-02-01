@@ -1,9 +1,11 @@
+using Core.Components;
+using Game.Battle.Objects;
 using UnityEngine;
 
-namespace Game.Battle
+namespace Game.Battle.Component
 {
     /// <summary>
-    /// Õ½¶·×é¼þ
+    /// Õ½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     public abstract class BattleComponent : MonoBehaviour, IBattleComponent
     {

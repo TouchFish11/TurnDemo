@@ -1,18 +1,18 @@
-using Game.Battle;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using Game.Battle.Objects;
 
-/// <summary>
-/// ¼¼ÄÜÊ©·¨Ìõ¼ş½Ó¿Ú
-/// </summary>
-public interface ICastSkillCondition
+namespace Game.Battle.Skill.Condition
 {
     /// <summary>
-    /// ÄÜ·ñÊÍ·Å
+    /// é‡Šæ”¾æŠ€èƒ½æ¡ä»¶æ¥å£
     /// </summary>
-    /// <param name="caster"></param>
-    /// <param name="skill"></param>
-    /// <returns></returns>
-    bool CanCast(IBattleEntityObject caster, ISkill skill);
+    public interface ICastSkillCondition
+    {
+        /// <summary>
+        /// èƒ½å¦é‡Šæ”¾    
+        /// </summary>
+        /// <param name="caster"></param>
+        /// <param name="skill"></param>
+        /// <returns></returns>
+        bool CanCast(IBattleEntityObject caster, ISkill skill);
+    }
 }

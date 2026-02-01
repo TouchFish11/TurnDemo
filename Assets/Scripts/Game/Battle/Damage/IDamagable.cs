@@ -1,8 +1,11 @@
 
-/// <summary>
-/// ©иик╨╕╣д
-/// </summary>
-public interface IDamagable
+namespace Game.Battle.Damage
 {
+    /// <summary>
+    /// О©╫О©╫О©╫к╨О©╫О©╫О©╫
+    /// </summary>
+    public interface IDamagable
+    {
 
+    }
 }

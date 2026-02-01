@@ -1,50 +1,54 @@
-using Framework;
+using Core.DataPersistence.Binary;
+using Core.Service;
 
-/// <summary>
-/// ×´Ì¬ÊôÐÔ
-/// </summary>
-public class StatusProperty
+namespace Game.Battle.Status
 {
     /// <summary>
-    /// ×´Ì¬ÐÅÏ¢
+    /// ×´Ì¬ï¿½ï¿½ï¿½ï¿½
     /// </summary>
-    public StatusInfo StatusInfo { get; }
-
-    // ¶¯Ì¬ÊôÐÔ
-    private int remainingRound; // Ê£Óà»ØºÏ
-    private int currentPine;    // µ±Ç°²ãÊý
-
-    public StatusProperty(int statusId)
+    public class StatusProperty
     {
-        StatusInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<StatusInfoContainer>(E_ConfigLoadType.Editor).dataDic[statusId];
-        currentPine = StatusInfo.f_startPine;
-        remainingRound = StatusInfo.f_durationRound;
-    }
+        /// <summary>
+        /// ×´Ì¬ï¿½ï¿½Ï¢
+        /// </summary>
+        public StatusInfo StatusInfo { get; }
 
-    /// <summary>
-    /// Ê£Óà»ØºÏ
-    /// </summary>
-    public int RemainingRound { get => remainingRound; }
-    /// <summary>
-    /// µ±Ç°²ãÊý
-    /// </summary>
-    public int CurrentPine { get => currentPine; }
+        // ï¿½ï¿½Ì¬ï¿½ï¿½ï¿½ï¿½
+        private int remainingRound; // Ê£ï¿½ï¿½Øºï¿½
+        private int currentPine;    // ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½
 
-    /// <summary>
-    /// ÉèÖÃÊ£Óà»ØºÏÊý
-    /// </summary>
-    /// <param name="remainingRound"></param>
-    public void SetRemainingRound(int remainingRound)
-    {
-        this.remainingRound = remainingRound;
-    }
+        public StatusProperty(int statusId)
+        {
+            StatusInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<StatusInfoContainer>(EConfigLoadType.Editor).dataDic[statusId];
+            currentPine = StatusInfo.f_startPine;
+            remainingRound = StatusInfo.f_durationRound;
+        }
 
-    /// <summary>
-    /// ÉèÖÃµ±Ç°²ãÊý
-    /// </summary>
-    /// <param name="currentPine"></param>
-    public void SetCurrentPine(int currentPine)
-    {
-        this.currentPine = currentPine;
+        /// <summary>
+        /// Ê£ï¿½ï¿½Øºï¿½
+        /// </summary>
+        public int RemainingRound { get => remainingRound; }
+        /// <summary>
+        /// ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½
+        /// </summary>
+        public int CurrentPine { get => currentPine; }
+
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½Ê£ï¿½ï¿½Øºï¿½ï¿½ï¿½
+        /// </summary>
+        /// <param name="remainingRound"></param>
+        public void SetRemainingRound(int remainingRound)
+        {
+            this.remainingRound = remainingRound;
+        }
+
+        /// <summary>
+        /// ï¿½ï¿½ï¿½Ãµï¿½Ç°ï¿½ï¿½ï¿½ï¿½
+        /// </summary>
+        /// <param name="currentPine"></param>
+        public void SetCurrentPine(int currentPine)
+        {
+            this.currentPine = currentPine;
+        }
     }
 }

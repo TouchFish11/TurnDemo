@@ -1,9 +1,28 @@
-using Framework;
+using Core.Log;
+using Core.Reflection;
+using Core.Utility;
 
-/// <summary>
-/// 目标选择策略工厂
-/// </summary>
-public class TargetSelectStrategyFactory : Factory<ITargetSelectStrategy>
+namespace Game.Battle.TargetSelect
 {
-
+    /// <summary>
+    /// 鐩爣閫夋嫨绛栫暐宸ュ巶
+    /// </summary>
+    public class TargetSelectStrategyFactory : Factory<ITargetSelectStrategy>, ITargetSelectStrategyFactory
+    {
+        void IFactory.InitFactory()
+        {
+            FactoryUtility.ScanAllType(typeToInterfaceMap, AssemblyUtility.GetHotUpdateAssemblies());
+        }
+        
+        public ITargetSelectStrategy GetTargetSelectStrategy<TStrategy>()where TStrategy : class, ITargetSelectStrategy
+        {
+            if (typeToInterfaceMap.TryGetValue(typeof(TStrategy).ToIdentifier(), out var targetSelectStrategy))
+            {
+                return targetSelectStrategy;
+            }
+            
+            LogManager.LogError($"鏈壘鍒扮洰鏍囬�夋嫨绛栫暐锛寋typeof(TStrategy).ToIdentifier()}");
+            return null;
+        }
+    }
 }

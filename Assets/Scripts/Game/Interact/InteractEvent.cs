@@ -1,13 +1,16 @@
-using Framework;
 using System.Collections.Generic;
+using Core.EventCenter;
 
-/// <summary>
-/// 交互事件
-/// </summary>
-public class InteractEvent : Event
+namespace Game.Interact
 {
     /// <summary>
-    /// 交互对象列表
+    /// 浜や簰浜嬩欢
     /// </summary>
-    public List<IInteractable> Interactables { get; set; }
+    public class InteractEvent : Event
+    {
+        /// <summary>
+        /// 浜や簰瀵硅薄鍒楄〃
+        /// </summary>
+        public List<IInteractable> Interactables { get; set; }
+    }
 }

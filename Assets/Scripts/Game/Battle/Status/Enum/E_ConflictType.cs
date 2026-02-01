@@ -1,22 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-/// <summary>
-/// ³å³öÀàÐÍ
-/// </summary>
-public enum E_ConflictType : byte
+namespace Game.Battle.Status.Enum
 {
     /// <summary>
-    /// µþ¼Ó
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
-    Add = 1,
-    /// <summary>
-    /// ¶ÀÁ¢
-    /// </summary>
-    Lonel,
-    /// <summary>
-    /// ¸²¸Ç
-    /// </summary>
-    Cover,
+    public enum E_ConflictType : byte
+    {
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½
+        /// </summary>
+        Add = 1,
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½
+        /// </summary>
+        Lonely,
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½
+        /// </summary>
+        Cover,
+    }
 }

@@ -1,33 +1,32 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-/// <summary>
-/// ÊôÐÔ¼Ó³ÉÀàÐÍ
-/// </summary>
-public enum E_PropertyBonusType
+namespace Game.Battle.Property
 {
-    // ÉúÃüÏà¹Ø
-    BuildHp,
-    PercentHp,
+    /// <summary>
+    /// ï¿½ï¿½ï¿½Ô¼Ó³ï¿½ï¿½ï¿½ï¿½ï¿½
+    /// </summary>
+    public enum E_PropertyBonusType
+    {
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        BuildHp,
+        PercentHp,
 
-    // ¹¥»÷Ïà¹Ø
-    BuildAtk,
-    PercentAtk,
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        BuildAtk,
+        PercentAtk,
 
-    // ·ÀÓùÏà¹Ø
-    BuildDef,
-    PercentDef,
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        BuildDef,
+        PercentDef,
 
-    // ËÙ¶ÈÏà¹Ø
-    BuildSpeed, 
-    PercentSpeed,
+        // ï¿½Ù¶ï¿½ï¿½ï¿½ï¿½
+        BuildSpeed, 
+        PercentSpeed,
 
-    // ±©»÷Ïà¹Ø
-    BuildCrit,
-    PercentCrit,
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        BuildCrit,
+        PercentCrit,
 
-    // ±¬ÉËÏà¹Ø
-    BuildCritDmg, 
-    PercentCritDmg,
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        BuildCritDmg, 
+        PercentCritDmg,
+    }
 }

@@ -1,18 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-/// <summary>
-/// ×´Ì¬Ä¿±êÀàÐÍ
-/// </summary>
-public enum E_StatusTargetType : byte
+namespace Game.Battle.Status.Enum
 {
     /// <summary>
-    /// ÓÑ·½
+    /// ×´Ì¬Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
-    Friend = 1,
-    /// <summary>
-    /// µÐ·½
-    /// </summary>
-    Enermy,
+    public enum E_StatusTargetType : byte
+    {
+        /// <summary>
+        /// ï¿½Ñ·ï¿½
+        /// </summary>
+        Friend = 1,
+        /// <summary>
+        /// ï¿½Ð·ï¿½
+        /// </summary>
+        Enermy,
+    }
 }

@@ -1,14 +1,22 @@
+using System.Collections.Generic;
+using Game.Battle.Component;
 
-namespace Game.Battle
+namespace Game.Battle.Skill.Interface
 {
     /// <summary>
-    /// ¼¼ÄÜ×é¼þ½Ó¿Ú
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¿ï¿½
     /// </summary>
-    public interface ISkillComponent
+    public interface ISkillComponent : IBattleComponent
     {
         /// <summary>
-        /// ÊÇ·ñÊÍ·Å
+        /// ï¿½Ç·ï¿½ï¿½Í·ï¿½
         /// </summary>
         bool IsRelease { get; }
+
+        /// <summary>
+        /// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ÐµÄ¼ï¿½ï¿½ï¿½
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<ISkill> GetSkills();
     }
 }

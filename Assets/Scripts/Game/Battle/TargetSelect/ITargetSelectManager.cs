@@ -1,47 +1,49 @@
-using Game.Battle;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using Game.Battle.Context;
+using Game.Battle.Objects;
 
-/// <summary>
-/// Ä¿±êÑ¡Ôñ¹ÜÀíÆ÷½Ó¿Ú
-/// </summary>
-public interface ITargetSelectManager
+namespace Game.Battle.TargetSelect
 {
     /// <summary>
-    /// ¼¤»îÄ¿±êÑ¡Ôñ
+    /// Ä¿ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¿ï¿½
     /// </summary>
-    void ActiveSelectTarget();
+    public interface ITargetSelectManager
+    {
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½Ñ¡ï¿½ï¿½
+        /// </summary>
+        void ActiveSelectTarget();
 
-    /// <summary>
-    /// Ê§»îÄ¿±êÑ¡Ôñ
-    /// </summary>
-    void InActiveSelectTarget();
+        /// <summary>
+        /// Ê§ï¿½ï¿½Ä¿ï¿½ï¿½Ñ¡ï¿½ï¿½
+        /// </summary>
+        void InActiveSelectTarget();
 
-    /// <summary>
-    /// »ñÈ¡Ö÷Ä¿±ê
-    /// </summary>
-    /// <returns></returns>
-    IBattleEntityObject GetMainTarget();
+        /// <summary>
+        /// ï¿½ï¿½È¡ï¿½ï¿½Ä¿ï¿½ï¿½
+        /// </summary>
+        /// <returns></returns>
+        IBattleEntityObject GetMainTarget();
 
-    /// <summary>
-    /// »ñÈ¡Ä¿±êÁÐ±í£¨°üº¬Ö÷Ä¿±ê£©
-    /// </summary>
-    /// <returns></returns>
-    List<IBattleEntityObject> GetTargets();
+        /// <summary>
+        /// ï¿½ï¿½È¡Ä¿ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ê£©
+        /// </summary>
+        /// <returns></returns>
+        List<IBattleEntityObject> GetTargets();
 
-    /// <summary>
-    /// Ñ¡ÔñÄ¿±ê
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="caster"></param>
-    /// <param name="skillInfo"></param>
-    void SelectTarget(IBattleContext context, IBattleEntityObject caster, SkillInfo skillInfo, ITargetSelectStrategy targetSelectStrategy);
+        /// <summary>
+        /// Ñ¡ï¿½ï¿½Ä¿ï¿½ï¿½
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="caster"></param>
+        /// <param name="skillInfo"></param>
+        /// <param name="targetSelectStrategy"></param>
+        void SelectTarget(IBattleContext context, IBattleEntityObject caster, SkillInfo skillInfo, ITargetSelectStrategy targetSelectStrategy);
 
-    /// <summary>
-    /// ³õÊ¼»¯
-    /// </summary>
-    /// <param name="battleContext"></param>
-    void Init(IBattleContext battleContext);
+        /// <summary>
+        /// ï¿½ï¿½Ê¼ï¿½ï¿½
+        /// </summary>
+        /// <param name="battleContext"></param>
+        void Init(IBattleContext battleContext);
+    }
 }

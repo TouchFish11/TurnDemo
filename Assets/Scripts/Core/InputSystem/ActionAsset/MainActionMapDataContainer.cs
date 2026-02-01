@@ -1,0 +1,19 @@
+using System;
+using System.Collections.Generic;
+
+namespace Core.InputSystem.ActionAsset
+{
+	/// <summary/>
+	/// MainActionMapData输入动作数据容器
+	/// <summary/>
+	[Serializable]
+	public class MainActionMapDataContainer
+	{
+		public Dictionary<E_MainActionMap, KeyPathMap> actionMap = new Dictionary<E_MainActionMap, KeyPathMap>();
+
+		public MainActionMapDataContainer()
+		{
+			InputSystem.InitContainer<MainActionMapData>(this);
+		}
+	}
+}

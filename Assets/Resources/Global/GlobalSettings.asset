@@ -12,22 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ea9e8f3715bb5a4fbd80d03411434d0, type: 3}
   m_Name: GlobalSettings
   m_EditorClassIdentifier: 
-  FilterLevel: 255
-  WriteLogMaxIntervalTime: 30
-  IsOpenLayout: 1
-  UploadServerIp: http://ip:port/...
-  ResServerIp: http://ip:port/...
-  ReDownloadCompareFileMaxNum: 5
-  ReDownloadAbMaxNum: 5
-  MaxConcurrencyNum: 8
+  hotUpdateLoadPath: 
+  filterLevel: 255
+  writeLogMaxIntervalTime: 30
+  isOpenLayout: 1
+  uploadServerIp: http://ip:port/...
+  resServerIp: http://ip:port/...
+  reDownloadCompareFileMaxNum: 5
+  reDownloadAbMaxNum: 5
+  maxConcurrencyNum: 8
   connectTimeout: 60
   downloadTimeout: 60
   maxRetryCount: 5
   maxRetryWaitSeconds: 5
-  SpeedUpdateInterval: 1
-  ABLoadPath: 0
-  UserDataPath: 0
-  UdpReceiveBufferSize: 8192
-  TcpReceiveTempBufferSize: 1024
-  TcpReceiveBufferSize: 1024
-  HeartMsgSendIntervalTime: 3000
+  speedUpdateInterval: 1
+  abLoadPath: 0
+  userDataPath: 0
+  udpReceiveBufferSize: 8192
+  tcpReceiveTempBufferSize: 1024
+  tcpReceiveBufferSize: 1024
+  heartMsgSendIntervalTime: 3000

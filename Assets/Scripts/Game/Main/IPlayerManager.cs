@@ -1,21 +1,25 @@
 using System.Threading.Tasks;
+using Core.Components;
 
-/// <summary>
-/// Íæ¼Ò¹ÜÀíÆ÷½Ó¿Ú
-/// </summary>
-public interface IPlayerManager
+namespace Game.Main
 {
-    IEntityObject MainPlayer { get; }
-
     /// <summary>
-    /// ´´½¨Íæ¼ÒÓÃ»§
+    /// ï¿½ï¿½Ò¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¿ï¿½
     /// </summary>
-    /// <param name="uid"></param>
-    /// <returns></returns>
-    Task CreatePlayer(uint uid);
+    public interface IPlayerManager
+    {
+        IEntityObject MainPlayer { get; }
 
-    /// <summary>
-    /// ÇåÀíÍæ¼Ò
-    /// </summary>
-    void Clear();
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½
+        /// </summary>
+        /// <param name="uid"></param>
+        /// <returns></returns>
+        Task CreatePlayer(uint uid);
+
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        /// </summary>
+        void Clear();
+    }
 }

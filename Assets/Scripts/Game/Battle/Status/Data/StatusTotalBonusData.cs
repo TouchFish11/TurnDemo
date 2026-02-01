@@ -1,122 +1,124 @@
-using Game.Battle;
 using System.Collections.Generic;
 
-/// <summary>
-/// ×´Ì¬×Ü¼Ó³ÉÊý¾Ý
-/// </summary>
-public struct StatusTotalBonusData
+namespace Game.Battle.Status.Data
 {
-    // ×Ü¹¥»÷Á¦°Ù·Ö±È¼Ó³É
-    private int _totalAtkPercentBonus;
-    // ×Ü¹¥»÷Á¦¹Ì¶¨¼Ó³É
-    private int _totalAtkBuildBonus;
-    // ×Ü·ÀÓùÁ¦°Ù·Ö±È¼Ó³É
-    private int _totalDefPercentBonus;
-    // ×Ü·ÀÓùÁ¦¹Ì¶¨¼Ó³É
-    private int _totalDefBuildBonus;
-    // ×Ü¼õ·À°Ù·Ö±È
-    private int _totalSubDefPercent;
-    // ×ÜÎÞÊÓ·ÀÓù°Ù·Ö±È
-    private int _totalIgnoreDefPercent;
-    // ×ÜÉúÃüÖµ°Ù·Ö±È¼Ó³É
-    private int _totalHpPercentBonus;
-    // ×ÜÉúÃüÖµ¹Ì¶¨¼Ó³É
-    private int _totalHpBuildBonus;
-
     /// <summary>
-    /// ¸üÐÂ×Ü¹¥»÷Á¦¼Ó³É
+    /// ×´Ì¬ï¿½Ü¼Ó³ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
-    public void UpdateTotalAtkBonus(IEnumerable<IStatus> statuses)
+    public struct StatusTotalBonusData
     {
-        _totalAtkPercentBonus = 0;
-        _totalAtkBuildBonus = 0;
+        // ï¿½Ü¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù·Ö±È¼Ó³ï¿½
+        private int _totalAtkPercentBonus;
+        // ï¿½Ü¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¶ï¿½ï¿½Ó³ï¿½
+        private int _totalAtkBuildBonus;
+        // ï¿½Ü·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù·Ö±È¼Ó³ï¿½
+        private int _totalDefPercentBonus;
+        // ï¿½Ü·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¶ï¿½ï¿½Ó³ï¿½
+        private int _totalDefBuildBonus;
+        // ï¿½Ü¼ï¿½ï¿½ï¿½ï¿½Ù·Ö±ï¿½
+        private int _totalSubDefPercent;
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Ó·ï¿½ï¿½ï¿½ï¿½Ù·Ö±ï¿½
+        private int _totalIgnoreDefPercent;
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½Ù·Ö±È¼Ó³ï¿½
+        private int _totalHpPercentBonus;
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½Ì¶ï¿½ï¿½Ó³ï¿½
+        private int _totalHpBuildBonus;
 
-        foreach (IStatus status in statuses)
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½Ü¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó³ï¿½
+        /// </summary>
+        public void UpdateTotalAtkBonus(IEnumerable<IStatus> statuses)
         {
-            // ¼ÆËã¹¥»÷Á¦°Ù·Ö±È¼Ó³ÉÖ®ºÍ
-            _totalAtkPercentBonus += status.BonusData.AtkPercentBonus;
-            // ¼ÆËã¹¥»÷¹Ì¶¨ÊýÖµ¼Ó³ÉÖ®ºÍ
-            _totalAtkBuildBonus += status.BonusData.AtkBuildBonus;
+            _totalAtkPercentBonus = 0;
+            _totalAtkBuildBonus = 0;
+
+            foreach (IStatus status in statuses)
+            {
+                // ï¿½ï¿½ï¿½ã¹¥ï¿½ï¿½ï¿½ï¿½ï¿½Ù·Ö±È¼Ó³ï¿½Ö®ï¿½ï¿½
+                _totalAtkPercentBonus += status.BonusData.AtkPercentBonus;
+                // ï¿½ï¿½ï¿½ã¹¥ï¿½ï¿½ï¿½Ì¶ï¿½ï¿½ï¿½Öµï¿½Ó³ï¿½Ö®ï¿½ï¿½
+                _totalAtkBuildBonus += status.BonusData.AtkBuildBonus;
+            }
         }
-    }
 
-    /// <summary>
-    /// ¸üÐÂ×Ü·ÀÓùÁ¦¼Ó³É
-    /// </summary>
-    public void UpdateTotalDefBonus(IEnumerable<IStatus> statuses)
-    {
-        _totalDefPercentBonus = 0;
-        _totalDefBuildBonus = 0;
-
-        foreach (IStatus status in statuses)
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½Ü·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó³ï¿½
+        /// </summary>
+        public void UpdateTotalDefBonus(IEnumerable<IStatus> statuses)
         {
-            // ¼ÆËã·ÀÓùÁ¦°Ù·Ö±È¼Ó³ÉÖ®ºÍ
-            _totalDefPercentBonus += status.BonusData.DefPercentBonus;
-            // ¼ÆËã·ÀÓù¹Ì¶¨ÊýÖµ¼Ó³ÉÖ®ºÍ
-            _totalDefBuildBonus += status.BonusData.DefBuildBonus;
+            _totalDefPercentBonus = 0;
+            _totalDefBuildBonus = 0;
+
+            foreach (IStatus status in statuses)
+            {
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù·Ö±È¼Ó³ï¿½Ö®ï¿½ï¿½
+                _totalDefPercentBonus += status.BonusData.DefPercentBonus;
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¶ï¿½ï¿½ï¿½Öµï¿½Ó³ï¿½Ö®ï¿½ï¿½
+                _totalDefBuildBonus += status.BonusData.DefBuildBonus;
+            }
         }
-    }
 
-    /// <summary>
-    /// ¸üÐÂ×ÜÉúÃüÖµ¼Ó³É
-    /// </summary>
-    public void UpdateTotalHpBonus(IEnumerable<IStatus> statuses)
-    {
-        _totalHpPercentBonus = 0;
-        _totalHpBuildBonus = 0;
-
-        foreach (IStatus status in statuses)
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½Ó³ï¿½
+        /// </summary>
+        public void UpdateTotalHpBonus(IEnumerable<IStatus> statuses)
         {
-            // ¼ÆËãÉúÃüÖµ°Ù·Ö±È¼Ó³ÉÖ®ºÍ
-            _totalHpPercentBonus += status.BonusData.HpPercentBonus;
-            // ¼ÆËãÉúÃüÖµ¹Ì¶¨ÊýÖµ¼Ó³ÉÖ®ºÍ
-            _totalHpBuildBonus += status.BonusData.HpBuildBonus;
+            _totalHpPercentBonus = 0;
+            _totalHpBuildBonus = 0;
+
+            foreach (IStatus status in statuses)
+            {
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½Ù·Ö±È¼Ó³ï¿½Ö®ï¿½ï¿½
+                _totalHpPercentBonus += status.BonusData.HpPercentBonus;
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½Ì¶ï¿½ï¿½ï¿½Öµï¿½Ó³ï¿½Ö®ï¿½ï¿½
+                _totalHpBuildBonus += status.BonusData.HpBuildBonus;
+            }
         }
+
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½XXXï¿½Ó³ï¿½
+        // ...
+
+        /// <summary>
+        /// ï¿½Ü¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù·Ö±È¼Ó³ï¿½
+        /// </summary>
+        public readonly int TotalAtkPercentBonus { get => _totalAtkPercentBonus; }
+
+        /// <summary>
+        /// ï¿½Ü¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¶ï¿½ï¿½Ó³ï¿½
+        /// </summary>
+        public readonly int TotalAtkBuildBonus { get => _totalAtkBuildBonus; }
+
+        /// <summary>
+        /// ï¿½Ü·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù·Ö±È¼Ó³ï¿½
+        /// </summary>
+        public readonly int TotalDefPercentBonus { get => _totalDefPercentBonus; }
+
+        /// <summary>
+        /// ï¿½Ü·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¶ï¿½ï¿½Ó³ï¿½
+        /// </summary>
+        public readonly int TotalDefBuildBonus { get => _totalDefBuildBonus; }
+
+        /// <summary>
+        /// ï¿½Ü¼ï¿½ï¿½ï¿½ï¿½Ù·Ö±ï¿½
+        /// </summary>
+        public readonly int TotalSubDefPercent { get => _totalSubDefPercent; }
+
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½Ó·ï¿½ï¿½ï¿½ï¿½Ù·Ö±ï¿½
+        /// </summary>
+        public readonly int TotalIgnoreDefPercent { get => _totalIgnoreDefPercent; }
+
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½Ù·Ö±È¼Ó³ï¿½
+        /// </summary>
+        public readonly int TotalHpPercentBonus { get => _totalHpPercentBonus; }
+
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½Ì¶ï¿½ï¿½Ó³ï¿½
+        /// </summary>
+        public readonly int TotalHpBuildBonus { get => _totalHpBuildBonus; }
+
+        // ï¿½ï¿½xxxxï¿½Ó³ï¿½
+        // ...
     }
-
-    // ¸üÐÂ×ÜXXX¼Ó³É
-    // ...
-
-    /// <summary>
-    /// ×Ü¹¥»÷Á¦°Ù·Ö±È¼Ó³É
-    /// </summary>
-    public readonly int TotalAtkPercentBonus { get => _totalAtkPercentBonus; }
-
-    /// <summary>
-    /// ×Ü¹¥»÷Á¦¹Ì¶¨¼Ó³É
-    /// </summary>
-    public readonly int TotalAtkBuildBonus { get => _totalAtkBuildBonus; }
-
-    /// <summary>
-    /// ×Ü·ÀÓùÁ¦°Ù·Ö±È¼Ó³É
-    /// </summary>
-    public readonly int TotalDefPercentBonus { get => _totalDefPercentBonus; }
-
-    /// <summary>
-    /// ×Ü·ÀÓùÁ¦¹Ì¶¨¼Ó³É
-    /// </summary>
-    public readonly int TotalDefBuildBonus { get => _totalDefBuildBonus; }
-
-    /// <summary>
-    /// ×Ü¼õ·À°Ù·Ö±È
-    /// </summary>
-    public readonly int TotalSubDefPercent { get => _totalSubDefPercent; }
-
-    /// <summary>
-    /// ×ÜÎÞÊÓ·ÀÓù°Ù·Ö±È
-    /// </summary>
-    public readonly int TotalIgnoreDefPercent { get => _totalIgnoreDefPercent; }
-
-    /// <summary>
-    /// ×ÜÉúÃüÖµ°Ù·Ö±È¼Ó³É
-    /// </summary>
-    public readonly int TotalHpPercentBonus { get => _totalHpPercentBonus; }
-
-    /// <summary>
-    /// ×ÜÉúÃüÖµ¹Ì¶¨¼Ó³É
-    /// </summary>
-    public readonly int TotalHpBuildBonus { get => _totalHpBuildBonus; }
-
-    // ×Üxxxx¼Ó³É
-    // ...
 }

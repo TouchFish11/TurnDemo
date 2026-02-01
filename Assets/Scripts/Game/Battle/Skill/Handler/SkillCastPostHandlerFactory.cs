@@ -1,9 +1,31 @@
-using Framework;
+using Core.Log;
+using Core.Reflection;
+using Core.Utility;
 
-/// <summary>
-/// �����ͷź���������
-/// </summary>
-public class SkillCastPostHandlerFactory : Factory<ISkillCastPostHandler>
+namespace Game.Battle.Skill.Handler
 {
-
+    /// <summary>
+    /// 技能释放后处理器工厂
+    /// </summary>
+    public class SkillCastPostHandlerFactory : Factory<ISkillCastPostHandler>, ISkillCastPostHandlerFactory
+    {
+        /// <summary>
+        /// 初始化工厂
+        /// </summary>
+        void IFactory.InitFactory()
+        {
+            FactoryUtility.ScanAllType(typeToInterfaceMap, AssemblyUtility.GetHotUpdateAssemblies());
+        }
+        
+        public ISkillCastPostHandler GetSkillCastPostHandler<THandler>()where THandler : class, ISkillCastPostHandler
+        {
+            if (typeToInterfaceMap.TryGetValue(typeof(THandler).ToIdentifier(), out var targetSelectStrategy))
+            {
+                return targetSelectStrategy;
+            }
+            
+            LogManager.LogError($"未找到技能释放后处理器，{typeof(THandler).ToIdentifier()}");
+            return null;
+        }
+    }
 }

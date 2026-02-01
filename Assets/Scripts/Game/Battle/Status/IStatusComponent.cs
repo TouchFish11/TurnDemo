@@ -1,8 +1,8 @@
 
-namespace Game.Battle
+namespace Game.Battle.Status
 {
     /// <summary>
-    /// ×´Ì¬×é¼þ½Ó¿Ú
+    /// ×´Ì¬ï¿½ï¿½ï¿½ï¿½Ó¿ï¿½
     /// </summary>
     public interface IStatusComponent
     {

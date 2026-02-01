@@ -85,7 +85,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 1
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -421,7 +421,6 @@ GameObject:
   - component: {fileID: 3214171002099275123}
   - component: {fileID: 3373782751997185742}
   - component: {fileID: 5113141429336589354}
-  - component: {fileID: 3148268205111970118}
   m_Layer: 5
   m_Name: BattleLoadingView
   m_TagString: Untagged
@@ -500,15 +499,3 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &3148268205111970118
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9212993229702971113}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b643db786bb3ac4db0051e9ca207650, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

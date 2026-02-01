@@ -1,64 +1,65 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// ¶¯»­²ÎÊý
-/// </summary>
-public class AnimationParameter
+namespace Game.Animation
 {
     /// <summary>
-    /// ÒÆ¶¯²ÎÊýhash£¨bool£©
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
-    public int IsRunHash { get; } = Animator.StringToHash("IsRun");
+    public class AnimationParameter
+    {
+        /// <summary>
+        /// ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½hashï¿½ï¿½boolï¿½ï¿½
+        /// </summary>
+        public int IsRunHash { get; } = Animator.StringToHash("IsRun");
 
-    /// <summary>
-    /// ÆÕ¹¥Ô¤±¸ÊÍ·Åhash
-    /// </summary>
-    public int PreNormalAttackTriggerHash { get; } = Animator.StringToHash("PreNormalAttackTrigger");
+        /// <summary>
+        /// ï¿½Õ¹ï¿½Ô¤ï¿½ï¿½ï¿½Í·ï¿½hash
+        /// </summary>
+        public int PreNormalAttackTriggerHash { get; } = Animator.StringToHash("PreNormalAttackTrigger");
 
-    /// <summary>
-    /// ÆÕÍ¨¹¥»÷´¥·¢hash
-    /// </summary>
-    public int NormalAtkTirggerHash { get; } = Animator.StringToHash("NormalAtkTirgger");
+        /// <summary>
+        /// ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½hash
+        /// </summary>
+        public int NormalAtkTirggerHash { get; } = Animator.StringToHash("NormalAtkTirgger");
 
-    /// <summary>
-    /// Õ½¼¼Ô¤±¸ÊÍ·Åhash
-    /// </summary>
-    public int PreBattleAttackTriggerHash { get; } = Animator.StringToHash("PreBattleAttackTrigger");
+        /// <summary>
+        /// Õ½ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½Í·ï¿½hash
+        /// </summary>
+        public int PreBattleAttackTriggerHash { get; } = Animator.StringToHash("PreBattleAttackTrigger");
 
-    /// <summary>
-    /// Õ½¼¼¹¥»÷´¥·¢hash
-    /// </summary>
-    public int BattleAtkTriggerHash { get; } = Animator.StringToHash("BattleAtkTrigger");
+        /// <summary>
+        /// Õ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½hash
+        /// </summary>
+        public int BattleAtkTriggerHash { get; } = Animator.StringToHash("BattleAtkTrigger");
 
-    /// <summary>
-    /// ÖÕ½á¼¼Ô¤±¸ÊÍ·Åhash
-    /// </summary>
-    public int PreUltimateAttackTriggerHash { get; } = Animator.StringToHash("PreUltimateAttackTrigger");
+        /// <summary>
+        /// ï¿½Õ½á¼¼Ô¤ï¿½ï¿½ï¿½Í·ï¿½hash
+        /// </summary>
+        public int PreUltimateAttackTriggerHash { get; } = Animator.StringToHash("PreUltimateAttackTrigger");
 
-    /// <summary>
-    /// ÖÕ½á¼¼¹¥»÷´¥·¢hash
-    /// </summary>
-    public int UltimateAtkTriggerHash { get; } = Animator.StringToHash("UltimateAtkTrigger");
+        /// <summary>
+        /// ï¿½Õ½á¼¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½hash
+        /// </summary>
+        public int UltimateAtkTriggerHash { get; } = Animator.StringToHash("UltimateAtkTrigger");
 
-    /// <summary>
-    /// ÊÜ»÷´¥·¢hash
-    /// </summary>
-    public int HitTriggerHash { get; } = Animator.StringToHash("HitTrigger");
+        /// <summary>
+        /// ï¿½Ü»ï¿½ï¿½ï¿½ï¿½ï¿½hash
+        /// </summary>
+        public int HitTriggerHash { get; } = Animator.StringToHash("HitTrigger");
 
-    /// <summary>
-    /// ËÀÍö´¥·¢hash
-    /// </summary>
-    public int DeathTriggerHash { get; } = Animator.StringToHash("DeathTrigger");
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½hash
+        /// </summary>
+        public int DeathTriggerHash { get; } = Animator.StringToHash("DeathTrigger");
 
-    /// <summary>
-    /// ÖØÉú´¥·¢hash
-    /// </summary>
-    public int RebirthTriggerHash { get; } = Animator.StringToHash("RebirthTrigger");
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½hash
+        /// </summary>
+        public int RebirthTriggerHash { get; } = Animator.StringToHash("RebirthTrigger");
 
-    /// <summary>
-    /// ¹¥»÷´¥·¢hash
-    /// </summary>
-    public int AttackTirggerHash { get; } = Animator.StringToHash("AttackTirgger");
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½hash
+        /// </summary>
+        public int AttackTirggerHash { get; } = Animator.StringToHash("AttackTirgger");
+    }
 }

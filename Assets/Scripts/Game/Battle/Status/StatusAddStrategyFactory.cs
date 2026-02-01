@@ -1,10 +1,12 @@
-using Framework;
+using Core.Reflection;
 
-
-/// <summary>
-/// ×´Ì¬Ìí¼Ó²ßÂÔ¹¤³§
-/// </summary>
-public class StatusAddStrategyFactory : Factory<IStatusAddStrategy>
+namespace Game.Battle.Status
 {
+    /// <summary>
+    /// ×´Ì¬ï¿½ï¿½ï¿½Ó²ï¿½ï¿½Ô¹ï¿½ï¿½ï¿½
+    /// </summary>
+    public class StatusAddStrategyFactory : Factory<IStatusAddStrategy>, IStatusAddStrategyFactory
+    {
 
+    }
 }

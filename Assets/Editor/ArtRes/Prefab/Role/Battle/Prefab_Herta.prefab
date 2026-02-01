@@ -1023,7 +1023,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8920187607334548559}
   - component: {fileID: 7518319030712218432}
-  - component: {fileID: 3473453459587503041}
   - component: {fileID: 8356256246887810003}
   m_Layer: 6
   m_Name: Prefab_Herta
@@ -1071,18 +1070,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &3473453459587503041
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2250326712176135106}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a717dfae6d688324cacc24232cb93127, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!143 &8356256246887810003
 CharacterController:
   m_ObjectHideFlags: 0
@@ -2028,7 +2015,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3195606589522412434}
   - component: {fileID: 5306630210144203072}
-  - component: {fileID: 3023136730148805674}
+  - component: {fileID: 4018579973550237407}
+  - component: {fileID: 1738267494769200745}
   m_Layer: 6
   m_Name: HertaModel
   m_TagString: Untagged
@@ -2077,7 +2065,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &3023136730148805674
+--- !u!114 &4018579973550237407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7595142887923274600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 998f1b9e94641584996b7151f503f835, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1738267494769200745
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

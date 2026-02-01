@@ -1,16 +1,16 @@
-using Game.Battle;
 using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-/// <summary>
-/// ¼¼ÄÜÊÍ·Åºó´¦ÀíÆ÷
-/// </summary>
-public interface ISkillCastPostHandler
+namespace Game.Battle.Skill.Handler
 {
     /// <summary>
-    /// ´¦Àí
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½Í·Åºï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
-    /// <returns></returns>
-    IEnumerator OnHnadle(ISkill skill);
+    public interface ISkillCastPostHandler
+    {
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½
+        /// </summary>
+        /// <returns></returns>
+        IEnumerator OnHandle(ISkill skill);
+    }
 }

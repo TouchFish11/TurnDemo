@@ -85,7 +85,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3029750556725743803}
   - component: {fileID: 890339993854061349}
-  - component: {fileID: 7038136043842407116}
   m_Layer: 5
   m_Name: ActionGridUI
   m_TagString: Untagged
@@ -123,21 +122,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2617262108100588149}
   m_CullTransparentMesh: 1
---- !u!114 &7038136043842407116
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2617262108100588149}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba6a277890ce048428af969ee424b5bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveRange: 2.5
-  moveSpeed: 5
-  falshSpeed: 1.2
 --- !u!1 &4441154039650325763
 GameObject:
   m_ObjectHideFlags: 0

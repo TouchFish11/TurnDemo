@@ -1,14 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-/// <summary>
-/// ÉËº¦Ä£ÐÍ
-/// </summary>
-public enum E_DamageModel
+namespace Game.Battle.Skill.Enum
 {
-    Life,
-    Attack,
-    Defend,
-    Speed,
+    /// <summary>
+    /// ï¿½Ëºï¿½Ä£ï¿½ï¿½
+    /// </summary>
+    public enum E_DamageModel
+    {
+        Life,
+        Attack,
+        Defend,
+        Speed,
+    }
 }

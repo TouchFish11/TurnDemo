@@ -1,24 +1,25 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using Core.Components;
 
-/// <summary>
-/// 可交互的
-/// </summary>
-public interface IInteractable
+namespace Game.Interact
 {
     /// <summary>
-    /// Npc信息
+    /// 锟缴斤拷锟斤拷锟斤拷
     /// </summary>
-    NpcInfo NpcInfo { get; }
+    public interface IInteractable
+    {
+        /// <summary>
+        /// Npc淇℃伅
+        /// </summary>
+        NpcInfo NpcInfo { get; }
 
-    /// <summary>
-    /// 是否显示浮动文本
-    /// </summary>
-    public bool IsShowFloatingText { get; }
+        /// <summary>
+        /// 鏄惁鏄剧ず娴姩鏂囨湰
+        /// </summary>
+        public bool IsShowFloatingText { get; }
 
-    /// <summary>
-    /// 交互
-    /// </summary>
-    void OnInteract(IEntityObject entityObject);
+        /// <summary>
+        /// 浜や簰
+        /// </summary>
+        void Interact(IEntityObject entityObject);
+    }
 }

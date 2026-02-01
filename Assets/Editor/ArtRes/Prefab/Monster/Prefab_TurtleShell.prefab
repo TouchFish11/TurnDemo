@@ -136,7 +136,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6801962216985205782}
-  - component: {fileID: 7769388953899198778}
   - component: {fileID: 1549914689538611630}
   m_Layer: 7
   m_Name: Prefab_TurtleShell
@@ -161,18 +160,6 @@ Transform:
   - {fileID: 918246367833428249}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7769388953899198778
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1861187692708249038}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc6750d2079cf8c4b8102e03f69a9c12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &1549914689538611630
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -205,6 +192,7 @@ GameObject:
   - component: {fileID: 918246367833428249}
   - component: {fileID: 6674926625030128700}
   - component: {fileID: 8187239376867546666}
+  - component: {fileID: 8321461470769455905}
   m_Layer: 7
   m_Name: TurtleShellModel
   m_TagString: Untagged
@@ -260,6 +248,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1517df3647e8bd249923fe0376fc96b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8321461470769455905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3190074845036211744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 998f1b9e94641584996b7151f503f835, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &3350194718456900991

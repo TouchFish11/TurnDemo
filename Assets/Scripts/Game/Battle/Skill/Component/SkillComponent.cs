@@ -1,45 +1,48 @@
-using Framework;
 using System.Collections.Generic;
+using Core.Log;
+using Core.Utility;
+using Game.Battle.Component;
+using Game.Battle.Skill.Base;
+using Game.Battle.Skill.Condition;
+using Game.Battle.Skill.Interface;
+using Game.Battle.TargetSelect;
 
-namespace Game.Battle
+namespace Game.Battle.Skill.Component
 {
     /// <summary>
-    /// Õ½¶·ÊµÌå¼¼ÄÜ×é¼þ
-    /// ¹ÜÀíÊµÌå¼¼ÄÜ£¬Ìá¹©ÊÍ·ÅÈë¿Ú
+    /// Õ½ï¿½ï¿½Êµï¿½å¼¼ï¿½ï¿½ï¿½ï¿½ï¿½
+    /// ï¿½ï¿½ï¿½ï¿½Êµï¿½å¼¼ï¿½Ü£ï¿½ï¿½á¹©ï¿½Í·ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     public abstract class SkillComponent : BattleComponent, ISkillComponent
     {
-        // ¼¼ÄÜÁÐ±í£¨ÅäÖÃ±í¼ÓÔØ£©  ¿ÉÄÜÕâ¸ö×é¼þÖ»ÓÐ¼¼ÄÜIdÁÐ±í¾Í¿ÉÒÔÁË
-        protected readonly Dictionary<int, ISkill> skills = new Dictionary<int, ISkill>();
-        // ¼¼ÄÜÊÍ·ÅÌõ¼þÁÐ±í
-        protected List<ICastSkillCondition> castSkillConditions = new List<ICastSkillCondition>();
-        // ¼¼ÄÜÄ¿±êÑ¡Ôñ²ßÂÔÁÐ±í
-        protected List<ITargetSelectStrategy> targetSelectStrategies = new List<ITargetSelectStrategy>();
-
-        // ¼¼ÄÜ¹¤³§½Ó¿Ú
-        protected ISkillFactory skillFactory;
-
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã±ï¿½ï¿½ï¿½ï¿½Ø£ï¿½  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö»ï¿½Ð¼ï¿½ï¿½ï¿½Idï¿½Ð±ï¿½ï¿½Í¿ï¿½ï¿½ï¿½ï¿½ï¿½
+        protected readonly Dictionary<int, ISkill> skills = new();
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
+        protected readonly List<ICastSkillCondition> castSkillConditions = new();
+        // ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
+        protected readonly List<ITargetSelectStrategy> targetSelectStrategies = new();
+        
         public abstract bool IsRelease { get; protected set; }
 
         /// <summary>
-        /// ³õÊ¼»¯¼¼ÄÜÁÐ±í
+        /// ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
         /// </summary>
         /// <param name="f_skillIds"></param>
+        /// <param name="skillFactory"></param>
         public void InitSkills(string f_skillIds, ISkillFactory skillFactory)
         {
-            this.skillFactory = skillFactory;
-            // Í¨¹ý¼¼ÄÜ¹¤³§¼ÓÔØ¼¼ÄÜ£¨ÅäÖÃ±í¶ÁÈ¡½ÇÉ«¼¼ÄÜIDÁÐ±í£©
-            int[] skillIds = TextUtility.SplitToIntArr(f_skillIds, 2);
-            var skills = skillFactory.CreateSkills(this.BattleEntity, skillIds);
+            // Í¨ï¿½ï¿½ï¿½ï¿½ï¿½Ü¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ï¿½Ü£ï¿½ï¿½ï¿½ï¿½Ã±ï¿½ï¿½ï¿½È¡ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½IDï¿½Ð±ï¿½ï¿½ï¿½
+            var skillIds = TextUtility.SplitToIntArr(f_skillIds, 2);
+            var skills = skillFactory.CreateSkills(BattleEntity, skillIds);
 
-            foreach (ISkill skill in skills)
+            foreach (var skill in skills)
             {
                 this.skills.Add(skill.SkillInfo.f_id, skill);
             }
         }
 
         /// <summary>
-        /// ÊÍ·ÅÖ¸¶¨IDµÄ¼¼ÄÜ
+        /// ï¿½Í·ï¿½Ö¸ï¿½ï¿½IDï¿½Ä¼ï¿½ï¿½ï¿½
         /// </summary>
         /// <param name="skillId"></param>
         public void CastSkill(int skillId)
@@ -53,18 +56,18 @@ namespace Game.Battle
 
                 IsRelease = false;
 
-                // ·¢ËÍ¼¼ÄÜÃüÁîµ½»ØºÏ¶ÓÁÐ
+                // ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½îµ½ï¿½ØºÏ¶ï¿½ï¿½ï¿½
                 skill.SetTargetSelectStrategy(targetSelectStrategies[0]);
                 SkillManager.Instance.AddSkillCommand(skill);
             }
             else
             {
-                LogManager.LogError($"Î´ÕÒµ½¼¼ÄÜÊµÀý£¬ skillId = {skillId}");
+                LogManager.LogError($"Î´ï¿½Òµï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ skillId = {skillId}");
             }
         }
 
         /// <summary>
-        /// ÄÜ·ñÊÍ·Å
+        /// ï¿½Ü·ï¿½ï¿½Í·ï¿½
         /// </summary>
         /// <param name="skill"></param>
         /// <returns></returns>
@@ -72,7 +75,7 @@ namespace Game.Battle
         {
             foreach (ICastSkillCondition condition in castSkillConditions)
             {
-                if (!condition.CanCast(this.BattleEntity, skill))
+                if (!condition.CanCast(BattleEntity, skill))
                 {
                     return false;
                 }
@@ -81,7 +84,7 @@ namespace Game.Battle
         }
 
         /// <summary>
-        /// Ìí¼ÓÖ¸¶¨IDµÄ¼¼ÄÜ
+        /// ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½IDï¿½Ä¼ï¿½ï¿½ï¿½
         /// </summary>
         /// <param name="skillId"></param>
         /// <param name="newSkill"></param>
@@ -94,7 +97,7 @@ namespace Game.Battle
         }
 
         /// <summary>
-        /// Ìí¼ÓÊÍ·ÅÌõ¼þ
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½ï¿½ï¿½ï¿½ï¿½
         /// </summary>
         /// <param name="castSkillCondition"></param>
         public void AddCastCondition(ICastSkillCondition castSkillCondition)
@@ -106,7 +109,7 @@ namespace Game.Battle
         }
 
         /// <summary>
-        /// ÒÆ³ýÊÍ·ÅÌõ¼þ
+        /// ï¿½Æ³ï¿½ï¿½Í·ï¿½ï¿½ï¿½ï¿½ï¿½
         /// </summary>
         /// <param name="castSkillCondition"></param>
         public void RemoveCastCondition(ICastSkillCondition castSkillCondition)
@@ -115,7 +118,7 @@ namespace Game.Battle
         }
 
         /// <summary>
-        /// Ìí¼ÓÄ¿±êÑ¡Ôñ²ßÂÔ
+        /// ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½
         /// </summary>
         /// <param name="targetSelectStrategy"></param>
         public void AddTargetSelectStrategy(ITargetSelectStrategy targetSelectStrategy)
@@ -125,7 +128,7 @@ namespace Game.Battle
         }
 
         /// <summary>
-        /// ÒÆ³ýÄ¿±êÑ¡Ôñ²ßÂÔ
+        /// ï¿½Æ³ï¿½Ä¿ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½
         /// </summary>
         /// <param name="targetSelectStrategy"></param>
         public void RemoveTargetSelectStrategy(ITargetSelectStrategy targetSelectStrategy)
@@ -135,7 +138,7 @@ namespace Game.Battle
         }
 
         /// <summary>
-        /// ÅÅÐòÄ¿±êÑ¡Ôñ²ßÂÔ
+        /// ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½
         /// </summary>
         private void SortTargetStratgy()
         {
@@ -153,7 +156,7 @@ namespace Game.Battle
         }
 
         /// <summary>
-        /// »ñÈ¡ËùÓÐµÄ¼¼ÄÜID
+        /// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ÐµÄ¼ï¿½ï¿½ï¿½ID
         /// </summary>
         /// <returns></returns>
         public IEnumerable<int> GetSkillIds()
@@ -162,12 +165,15 @@ namespace Game.Battle
         }
 
         /// <summary>
-        /// »ñÈ¡ËùÓÐµÄ¼¼ÄÜ
+        /// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ÐµÄ¼ï¿½ï¿½ï¿½
         /// </summary>
         /// <returns></returns>
-        public List<ISkill> GetSkills()
+        public IEnumerable<ISkill> GetSkills()
         {
-            return new List<ISkill>(skills.Values);
+            foreach (var skill in skills.Values)
+            {
+                yield return skill;
+            }
         }
     }
 }

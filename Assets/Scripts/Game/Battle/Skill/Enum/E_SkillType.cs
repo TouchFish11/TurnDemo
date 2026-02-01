@@ -1,34 +1,33 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-/// <summary>
-/// 技能类型
-/// </summary>
-public enum E_SkillType : byte
+namespace Game.Battle.Skill.Enum
 {
     /// <summary>
-    /// 怪物技能类型统一用该类型表示
+    /// 锟斤拷锟斤拷锟斤拷锟斤拷
     /// </summary>
-    Monster,
-    /// <summary>
-    /// 普通攻击
-    /// </summary>
-    NormalAttack,
-    /// <summary>
-    /// 战技
-    /// </summary>
-    CombatSkill,
-    /// <summary>
-    /// 终结技
-    /// </summary>
-    UltimateSkill,
-    /// <summary>
-    /// 强化普攻
-    /// </summary>
-    EnhancedNormalAttack,
-    /// <summary>
-    /// 强化战技
-    /// </summary>
-    EnhancedCombatSkill,
+    public enum E_SkillType : byte
+    {
+        /// <summary>
+        /// 锟斤拷锟斤技锟斤拷锟斤拷锟斤拷统一锟矫革拷锟斤拷锟酵憋拷示
+        /// </summary>
+        Monster,
+        /// <summary>
+        /// 锟斤拷通锟斤拷锟斤拷
+        /// </summary>
+        NormalAttack,
+        /// <summary>
+        /// 战锟斤拷
+        /// </summary>
+        CombatSkill,
+        /// <summary>
+        /// 锟秸结技
+        /// </summary>
+        UltimateSkill,
+        /// <summary>
+        /// 强锟斤拷锟秸癸拷
+        /// </summary>
+        EnhancedNormalAttack,
+        /// <summary>
+        /// 强锟斤拷战锟斤拷
+        /// </summary>
+        EnhancedCombatSkill,
+    }
 }

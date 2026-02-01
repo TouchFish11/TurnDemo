@@ -271,7 +271,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6069341316128081461}
   - component: {fileID: 8925590932623598020}
-  - component: {fileID: 6075221927368124853}
+  - component: {fileID: 8115793589201087250}
+  - component: {fileID: 3214332920977906278}
   m_Layer: 6
   m_Name: FireFlyModel
   m_TagString: Untagged
@@ -320,7 +321,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &6075221927368124853
+--- !u!114 &8115793589201087250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1101296133929643299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 998f1b9e94641584996b7151f503f835, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3214332920977906278
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2626,7 +2639,6 @@ GameObject:
   - component: {fileID: 6002678892428818309}
   - component: {fileID: 9097442525535145278}
   - component: {fileID: 7934149596511193372}
-  - component: {fileID: 2071638967613880830}
   m_Layer: 6
   m_Name: Prefab_Main_FireFly
   m_TagString: PlayerObject
@@ -2699,18 +2711,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &2071638967613880830
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8386864370058345178}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab038e7a453c38f4383c5989c71ff747, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &8636781305178168163
 GameObject:
   m_ObjectHideFlags: 0

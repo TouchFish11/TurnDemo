@@ -1174,7 +1174,6 @@ GameObject:
   - component: {fileID: 6636059414599173624}
   - component: {fileID: 5767565484104830323}
   - component: {fileID: 6294868034906354380}
-  - component: {fileID: 3799003586249248740}
   m_Layer: 5
   m_Name: LoginView
   m_TagString: Untagged
@@ -1252,15 +1251,3 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &3799003586249248740
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7516443693989605268}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4ed7bc951962f541bc429d4630ada1e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

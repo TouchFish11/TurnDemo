@@ -1,20 +1,23 @@
 
-/// <summary>
-/// ¶¯»­ÀàÐÍ
-/// </summary>
-public enum E_AnimationType : byte
+namespace Game.Animation
 {
-    None,
-    Idle = 1,
-    Run = 2,
-    PreNormalAttack = 3,
-    NormalAttack = 4,
-    PreBattleAttack = 5,
-    BattleAttack = 6,
-    PreUltimateAttack = 7,
-    UltimateAttack = 8,
-    Hit,
-    Death,
-    Rebirth,
-    Attack,
+    /// <summary>
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    /// </summary>
+    public enum E_AnimationType : byte
+    {
+        None,
+        Idle = 1,
+        Run = 2,
+        PreNormalAttack = 3,
+        NormalAttack = 4,
+        PreBattleAttack = 5,
+        BattleAttack = 6,
+        PreUltimateAttack = 7,
+        UltimateAttack = 8,
+        Hit,
+        Death,
+        Rebirth,
+        Attack,
+    }
 }

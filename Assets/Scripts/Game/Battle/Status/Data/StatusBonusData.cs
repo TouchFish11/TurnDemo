@@ -1,50 +1,49 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-/// <summary>
-/// 状态加成数据
-/// 每个状态内部加成
-/// </summary>
-public struct StatusBonusData
+namespace Game.Battle.Status.Data
 {
     /// <summary>
-    /// 攻击力百分比加成属性
+    /// 状态锟接筹拷锟斤拷锟斤拷
+    /// 每锟斤拷状态锟节诧拷锟接筹拷
     /// </summary>
-    public int AtkPercentBonus { get; set; }
+    public struct StatusBonusData
+    {
+        /// <summary>
+        /// 锟斤拷锟斤拷锟斤拷锟劫分比加筹拷锟斤拷锟斤拷
+        /// </summary>
+        public int AtkPercentBonus { get; set; }
 
-    /// <summary>
-    /// 攻击力固定数值加成属性
-    /// </summary>
-    public int AtkBuildBonus { get; set; }
+        /// <summary>
+        /// 锟斤拷锟斤拷锟斤拷锟教讹拷锟斤拷值锟接筹拷锟斤拷锟斤拷
+        /// </summary>
+        public int AtkBuildBonus { get; set; }
 
-    /// <summary>
-    /// 防御力百分比加成属性
-    /// </summary>
-    public int DefPercentBonus { get; set; }
+        /// <summary>
+        /// 锟斤拷锟斤拷锟斤拷锟劫分比加筹拷锟斤拷锟斤拷
+        /// </summary>
+        public int DefPercentBonus { get; set; }
 
-    /// <summary>
-    /// 防御力固定数值加成属性
-    /// </summary>
-    public int DefBuildBonus { get; set; }
+        /// <summary>
+        /// 锟斤拷锟斤拷锟斤拷锟教讹拷锟斤拷值锟接筹拷锟斤拷锟斤拷
+        /// </summary>
+        public int DefBuildBonus { get; set; }
 
-    /// <summary>
-    /// 降低防御力百分比
-    /// </summary>
-    public int SubDefPercent { get; set; }
+        /// <summary>
+        /// 锟斤拷锟酵凤拷锟斤拷锟斤拷锟劫分憋拷
+        /// </summary>
+        public int SubDefPercent { get; set; }
 
-    /// <summary>
-    /// 无视防御百分比
-    /// </summary>
-    public int IgnoreDefPercent { get; set; }
+        /// <summary>
+        /// 锟斤拷锟接凤拷锟斤拷锟劫分憋拷
+        /// </summary>
+        public int IgnoreDefPercent { get; set; }
 
-    /// <summary>
-    /// 生命值百分比加成属性
-    /// </summary>
-    public int HpPercentBonus { get; set; }
+        /// <summary>
+        /// 锟斤拷锟斤拷值锟劫分比加筹拷锟斤拷锟斤拷
+        /// </summary>
+        public int HpPercentBonus { get; set; }
 
-    /// <summary>
-    /// 生命值固定数值加成属性
-    /// </summary>
-    public int HpBuildBonus { get; set; }
+        /// <summary>
+        /// 锟斤拷锟斤拷值锟教讹拷锟斤拷值锟接筹拷锟斤拷锟斤拷
+        /// </summary>
+        public int HpBuildBonus { get; set; }
+    }
 }

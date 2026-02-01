@@ -1239,7 +1239,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1342082114438881873}
-  - component: {fileID: 5890256608976198920}
   m_Layer: 5
   m_Name: ActingTipArea
   m_TagString: Untagged
@@ -1268,20 +1267,6 @@ RectTransform:
   m_AnchoredPosition: {x: -251, y: 169.47}
   m_SizeDelta: {x: 393.66, y: 228.94}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &5890256608976198920
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3872866388942061266}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3180e574ef3a0f942989a2b596296693, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveRange: 6
-  moveSpeed: 7
 --- !u!1 &3967105017563849047
 GameObject:
   m_ObjectHideFlags: 0
@@ -1801,7 +1786,6 @@ GameObject:
   - component: {fileID: 7707006530792071595}
   - component: {fileID: 3761416556721229723}
   - component: {fileID: 8327654917911730071}
-  - component: {fileID: 469792974474808492}
   m_Layer: 5
   m_Name: BattleView
   m_TagString: Untagged
@@ -1893,18 +1877,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &469792974474808492
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4403554962906805450}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ef8c498148f5204c9e84426c3e8ce37, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &4526231031633670432
 GameObject:
   m_ObjectHideFlags: 0

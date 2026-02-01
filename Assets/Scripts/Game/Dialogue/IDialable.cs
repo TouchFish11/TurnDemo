@@ -1,19 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-/// <summary>
-/// ¿É¶Ô»°½Ó¿Ú
-/// </summary>
-public interface IDialable
+namespace Game.Dialogue
 {
     /// <summary>
-    /// ¶Ô»°¿ªÊ¼
+    /// ï¿½É¶Ô»ï¿½ï¿½Ó¿ï¿½
     /// </summary>
-    void OnDialogueStart();
+    public interface IDialable
+    {
+        /// <summary>
+        /// ï¿½Ô»ï¿½ï¿½ï¿½Ê¼
+        /// </summary>
+        void OnDialogueStart();
 
-    /// <summary>
-    /// ¶Ô»°½áÊø
-    /// </summary>
-    void OnDialogueEnd();
+        /// <summary>
+        /// ï¿½Ô»ï¿½ï¿½ï¿½ï¿½ï¿½
+        /// </summary>
+        void OnDialogueEnd();
+    }
 }

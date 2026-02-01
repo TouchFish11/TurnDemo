@@ -1,22 +1,26 @@
-using Game.Battle;
+using Game.Battle.Context;
+using Game.Battle.Objects;
 
-/// <summary>
-/// Ä¿±êÑ¡Ôñ²ßÂÔ½Ó¿Ú
-/// </summary>
-public interface ITargetSelectStrategy
+namespace Game.Battle.TargetSelect
 {
     /// <summary>
-    /// ÓÅÏÈ¼¶
-    /// Ô½¸ßÔ½ÏÈÖ´ÐÐ
+    /// Ä¿ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½Ô½Ó¿ï¿½
     /// </summary>
-    public int Priority { get; }
+    public interface ITargetSelectStrategy
+    {
+        /// <summary>
+        /// ï¿½ï¿½ï¿½È¼ï¿½
+        /// Ô½ï¿½ï¿½Ô½ï¿½ï¿½Ö´ï¿½ï¿½
+        /// </summary>
+        public int Priority { get; }
 
-    /// <summary>
-    /// Ñ¡ÔñÖ÷Ä¿±ê
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="caster"></param>
-    /// <param name="skillInfo"></param>
-    /// <returns></returns>
-    IBattleEntityObject SelectMainTarget(IBattleContext context, IBattleEntityObject caster, SkillInfo skillInfo);
+        /// <summary>
+        /// Ñ¡ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="caster"></param>
+        /// <param name="skillInfo"></param>
+        /// <returns></returns>
+        IBattleEntityObject SelectMainTarget(IBattleContext context, IBattleEntityObject caster, SkillInfo skillInfo);
+    }
 }

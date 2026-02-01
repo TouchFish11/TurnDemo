@@ -1,20 +1,21 @@
+using Core.Components;
+using Game.Battle.Objects;
 
-
-namespace Game.Battle
+namespace Game.Battle.Component
 {
     /// <summary>
-    /// Õ½¶·×é¼þ½Ó¿Ú
+    /// Õ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¿ï¿½
     /// </summary>
     public interface IBattleComponent : IComponent
     {
         /// <summary>
-        /// Õ½¶·ÊµÌå
+        /// Õ½ï¿½ï¿½Êµï¿½ï¿½
         /// </summary>
         IBattleEntityObject BattleEntity { get; }
 
         /// <summary>
-        /// Õ½¶·³õÊ¼»¯
+        /// Õ½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
         /// </summary>
-        void BattleInit(IBattleEntityObject battleEntity);
+        public void BattleInit(IBattleEntityObject battleEntity);
     }
 }

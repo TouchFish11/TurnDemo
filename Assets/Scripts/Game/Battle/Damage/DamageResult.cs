@@ -1,53 +1,58 @@
-using Game.Battle;
+using Game.Battle.Enum;
+using Game.Battle.Objects;
+using Game.Battle.Skill.Enum;
 
-/// <summary>
-/// ÉËº¦½á¹û
-/// </summary>
-public readonly struct DamageResult
+namespace Game.Battle.Damage
 {
     /// <summary>
-    /// ÉËº¦À´Ô´
+    /// ï¿½Ëºï¿½ï¿½ï¿½ï¿½
     /// </summary>
-    public IBattleEntityObject Source { get; }
-
-    /// <summary>
-    /// Ä¿±ê
-    /// </summary>
-    public IBattleEntityObject Target { get; }
-
-    /// <summary>
-    /// ×îÖÕÉËº¦
-    /// </summary>
-    public int FinalDamage { get; }
-
-    /// <summary>
-    /// ÉËº¦ÊôÐÔ
-    /// </summary>
-    public E_ElementType ElementType { get; }
-
-    /// <summary>
-    /// ÉËº¦ÀàÐÍ
-    /// </summary>
-    public E_DamageType DamageType { get; }
-
-    /// <summary>
-    /// ÊÇ·ñ±©»÷
-    /// </summary>
-    public bool IsCrit { get; }
-
-    /// <summary>
-    /// ¼¼ÄÜÐÅÏ¢
-    /// </summary>
-    public SkillInfo SkillInfo { get; }
-
-    public DamageResult(IBattleEntityObject source, IBattleEntityObject target, int finalDamage, E_ElementType elementType, E_DamageType damageType, bool isCrit, SkillInfo skillInfo)
+    public readonly struct DamageResult
     {
-        Source = source;
-        Target = target;
-        FinalDamage = finalDamage;
-        ElementType = elementType;
-        DamageType = damageType;
-        IsCrit = isCrit;
-        SkillInfo = skillInfo;
+        /// <summary>
+        /// ï¿½Ëºï¿½ï¿½ï¿½Ô´
+        /// </summary>
+        public IBattleEntityObject Source { get; }
+
+        /// <summary>
+        /// Ä¿ï¿½ï¿½
+        /// </summary>
+        public IBattleEntityObject Target { get; }
+
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½Ëºï¿½
+        /// </summary>
+        public int FinalDamage { get; }
+
+        /// <summary>
+        /// ï¿½Ëºï¿½ï¿½ï¿½ï¿½ï¿½
+        /// </summary>
+        public E_ElementType ElementType { get; }
+
+        /// <summary>
+        /// ï¿½Ëºï¿½ï¿½ï¿½ï¿½ï¿½
+        /// </summary>
+        public E_DamageType DamageType { get; }
+
+        /// <summary>
+        /// ï¿½Ç·ñ±©»ï¿½
+        /// </summary>
+        public bool IsCrit { get; }
+
+        /// <summary>
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
+        /// </summary>
+        public SkillInfo SkillInfo { get; }
+
+        public DamageResult(IBattleEntityObject source, IBattleEntityObject target, int finalDamage, E_ElementType elementType, E_DamageType damageType, bool isCrit, SkillInfo skillInfo)
+        {
+            Source = source;
+            Target = target;
+            FinalDamage = finalDamage;
+            ElementType = elementType;
+            DamageType = damageType;
+            IsCrit = isCrit;
+            SkillInfo = skillInfo;
+        }
     }
 }
