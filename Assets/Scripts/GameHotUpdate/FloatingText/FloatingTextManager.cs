@@ -30,7 +30,7 @@ namespace GameHotUpdate.FloatingText
 
         private void Awake()
         {
-            ServiceLocator.Get<IMonoManager>().AddFixedUpdateListener(OnFixedUpdate);
+            ServiceLocator.Get<IMonoAdapter>().AddFixedUpdateListener(OnFixedUpdate);
         }
 
         public void Init()
@@ -73,7 +73,7 @@ namespace GameHotUpdate.FloatingText
                     if (npcObject.IsShowFloatingText)
                     {
                         npcObject.IsShowFloatingText = false;
-                        PoolManager.Instance.PushObj(npcToTextMap[npcObject].gameObject);
+                        ServiceLocator.Get<IPoolManager>().PushObj(npcToTextMap[npcObject].gameObject);
                         npcToTextMap.Remove(npcObject);
                     }
                 }

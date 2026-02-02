@@ -51,7 +51,7 @@ namespace GameHotUpdate.UI.Battle.Status
             // 重置移动组件到初始位置
             Mover.localPosition = originMoverPos;
             // 向Mono管理器注册帧更新回调
-            ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpadte);
+            ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpadte);
         }
         
         public void InitText(Sprite icon, string buffName)
@@ -74,7 +74,7 @@ namespace GameHotUpdate.UI.Battle.Status
                 // 重置累计时间
                 currentTime = 0;
                 // 将当前游戏物体回收到对象池
-                PoolManager.Instance.PushObj(gameObject);
+                ServiceLocator.Get<IPoolManager>().PushObj(gameObject);
             }
             // 让移动组件沿Y轴向上移动（基于帧率的平滑移动）
             Mover.Translate(Time.deltaTime * upMoveSpeed * Vector3.up);
@@ -87,7 +87,7 @@ namespace GameHotUpdate.UI.Battle.Status
         protected override void OnDisable()
         {
             // 从Mono管理器移除帧更新回调
-            ServiceLocator.Get<IMonoManager>().RemoveUpdateListener(OnUpadte);
+            ServiceLocator.Get<IMonoAdapter>().RemoveUpdateListener(OnUpadte);
         }
     }
 }

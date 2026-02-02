@@ -39,7 +39,7 @@ namespace GameHotUpdate.UI.Battle
             // 重置图标到初始位置
             imgActingIcon.transform.position = originTrans;
             // 注册帧更新回调，用于处理图标动画
-            ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
+            ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpdate);
         }
         
         /// <summary>
@@ -84,7 +84,7 @@ namespace GameHotUpdate.UI.Battle
         /// </summary>
         protected override void OnDisable()
         {
-            ServiceLocator.Get<IMonoManager>().RemoveUpdateListener(OnUpdate);
+            ServiceLocator.Get<IMonoAdapter>().RemoveUpdateListener(OnUpdate);
         }
     }
 }

@@ -53,7 +53,7 @@ namespace Core.Scene
             // 异步加载场景（Unity原生接口）
             var ao = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(scenePath, mode);
             // 开启更新进度协程
-            ServiceLocator.Get<IMonoManager>().StartCoroutine(UpdateProgress_Cor(ao, onLoadProgress));
+            ServiceLocator.Get<IMonoAdapter>().StartCoroutine(UpdateProgress_Cor(ao, onLoadProgress));
             // 等待场景加载结束
             await TaskUtility.WaitUntil(() => ao.isDone);
             // 执行场景加载完成后的异步回调逻辑

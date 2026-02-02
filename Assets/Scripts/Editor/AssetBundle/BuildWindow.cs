@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.AssetBundles.Update.Collection;
 using Core.DataPersistence.Json;
+using Core.Service;
 using Core.Utility;
 using CustomEditor.ScriptGeneration;
 using Editor.Menu;

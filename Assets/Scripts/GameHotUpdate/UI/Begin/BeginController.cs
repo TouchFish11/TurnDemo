@@ -20,11 +20,11 @@ namespace GameHotUpdate.UI.Begin
         protected override System.Threading.Tasks.Task OnInit()
         {
             // ע������¼�
-            AssetBundleUpdater.Instance.GetContext().OnUpdatePhase += OnUpdatePhase;
-            AssetBundleUpdater.Instance.GetContext().OnProgress += OnProgress;
-            AssetBundleUpdater.Instance.GetContext().OnUpdateSpeed += OnUpdateSpeed;
-            AssetBundleUpdater.Instance.GetContext().OnCheckProgress += OnCheckProgress;
-            AssetBundleUpdater.Instance.GetContext().OnUpdateFinish += OnUpdateFinish;
+            ServiceLocator.Get<IAssetBundleUpdater>().GetContext().OnUpdatePhase += OnUpdatePhase;
+            ServiceLocator.Get<IAssetBundleUpdater>().GetContext().OnProgress += OnProgress;
+            ServiceLocator.Get<IAssetBundleUpdater>().GetContext().OnUpdateSpeed += OnUpdateSpeed;
+            ServiceLocator.Get<IAssetBundleUpdater>().GetContext().OnCheckProgress += OnCheckProgress;
+            ServiceLocator.Get<IAssetBundleUpdater>().GetContext().OnUpdateFinish += OnUpdateFinish;
 
             OnUpdatePhase(EUpdatePhase.None);
             model.IsActiveProgress = true;
@@ -40,14 +40,14 @@ namespace GameHotUpdate.UI.Begin
         /// </summary>
         public async System.Threading.Tasks.Task CheckUpdate()
         {
-            if (!await AssetBundleUpdater.Instance.CheckUpdate())
+            if (!await ServiceLocator.Get<IAssetBundleUpdater>().CheckUpdate())
             {
                 LogManager.Log($"����ʧ��");
                 return;
             }
 
             // ��ʼ��AB��
-            if (!await AssetBundleManager.Instance.Init())
+            if (!await ServiceLocator.Get<IAssetBundleManager>().Init())
             {
                 LogManager.Log($"AB����ʼ��ʧ��");
                 return;

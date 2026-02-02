@@ -23,7 +23,7 @@ namespace GameHotUpdate.UI.Global
         protected override void OnEnable()
         {
             currentDuration = 0;
-            ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
+            ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpdate);
         }
 
         /// <summary>
@@ -45,13 +45,13 @@ namespace GameHotUpdate.UI.Global
             currentDuration += Time.deltaTime;
             if (currentDuration >= duration)
             {
-                PoolManager.Instance.PushObj(gameObject);
+                ServiceLocator.Get<IPoolManager>().PushObj(gameObject);
             }
         }
 
         protected override void OnDisable()
         {
-            ServiceLocator.Get<IMonoManager>().RemoveUpdateListener(OnUpdate);
+            ServiceLocator.Get<IMonoAdapter>().RemoveUpdateListener(OnUpdate);
         }
     }
 }

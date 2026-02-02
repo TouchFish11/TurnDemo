@@ -2,19 +2,18 @@
 using System.Collections.Generic;
 using Core.AssetBundles.Management;
 using Core.AssetBundles.Update;
-using Core.DataPersistence;
 using Core.DataPersistence.Binary;
 using Core.DataPersistence.Json;
 using Core.EditorRes;
-using Core.EventCenter;
+using Core.GlobalEvent;
 using Core.HotUpdate;
-using Core.InputSystem.ActionAsset;
+using Core.Input.ActionAsset;
 using Core.Log;
 using Core.Mono;
 using Core.Music;
 using Core.Net;
 using Core.Pool;
-using Core.QuitHandler;
+using Core.Quit;
 using Core.Reflection;
 using Core.Res;
 using Core.Scene;
@@ -43,8 +42,8 @@ namespace Core.Service
         public static void InitService()
         {
             // 继承Mono
-            Register<IMonoManager>(MonoManager.Instance);
-            Register<IQuitHandler>(QuitHandler.QuitHandler.Instance);
+            Register<IMonoAdapter>(MonoAdapter.Instance);
+            Register<IQuitHandler>(QuitHandler.Instance);
             Register<IUWRManager>(UWRManager.Instance);
 
             // 不继承Mono
@@ -52,9 +51,8 @@ namespace Core.Service
             Register<IAssetBundleUpdater>(AssetBundleUpdater.Instance);
             Register<IBinaryDataManager>(BinaryDataManager.Instance);
             Register<IEditorResManager>(EditorResManager.Instance);
-            Register<IEventCenter>(EventCenter.EventCenter.Instance);
-            Register<IGameDataManager>(GameDataManager.Instance);
-            Register<IInputSystem>(InputSystem.ActionAsset.InputSystem.Instance);
+            Register<IEventCenter>(EventCenter.Instance);
+            Register<IInputSystem>(InputSystem.Instance);
             Register<IJsonManager>(JsonManager.Instance);
             Register<IMusicManager>(MusicManager.Instance);
             Register<IPoolManager>(PoolManager.Instance);

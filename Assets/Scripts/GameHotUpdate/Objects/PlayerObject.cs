@@ -70,7 +70,7 @@ namespace GameHotUpdate.Objects
         /// <param name="playerTriggerUltimateSkillEvent"></param>
         protected virtual void OnCastUltimateSkill(PlayerTriggerUltimateSkillEvent playerTriggerUltimateSkillEvent)
         {
-            if ((UnityEngine.Object)playerTriggerUltimateSkillEvent.Caster != this)
+            if ((Object)playerTriggerUltimateSkillEvent.Caster != this)
             {
                 return;
             }

@@ -61,16 +61,16 @@ namespace GameHotUpdate.UI.Battle.Base
         /// <param name="waitingActUI"></param>
         public void CacheWaitingCommmand(WaitingActUI waitingActUI)
         {
-            this.waitingActUIs.Add(waitingActUI);
+            waitingActUIs.Add(waitingActUI);
         }
 
         public void ClearWaitingActUI()
         {
-            foreach (var waitingActUI in this.waitingActUIs)
+            foreach (var waitingActUI in waitingActUIs)
             {
                 ServiceLocator.Get<IPoolManager>().PushObj(waitingActUI.gameObject);
             }
-            this.waitingActUIs.Clear();
+            waitingActUIs.Clear();
         }
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace GameHotUpdate.UI.Battle.Base
         /// <param name="roleStateUI"></param>
         public void InitRoleStateUI(RoleStateUI roleStateUI)
         {
-            this.roleStateUIs.Add(roleStateUI);
+            roleStateUIs.Add(roleStateUI);
         }
 
         /// <summary>

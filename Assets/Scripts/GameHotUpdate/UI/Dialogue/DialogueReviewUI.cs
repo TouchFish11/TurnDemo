@@ -16,7 +16,7 @@ namespace GameHotUpdate.UI.Dialogue
         protected override void Awake()
         {
             base.Awake();
-            RectTransform = this.transform as RectTransform;
+            RectTransform = transform as RectTransform;
         }
 
         public void Init(string speakerName, string dialogueText)

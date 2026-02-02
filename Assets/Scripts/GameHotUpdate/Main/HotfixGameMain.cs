@@ -1,7 +1,7 @@
+using System;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.Config;
-using Core.DataPersistence;
 using Core.Log;
 using Core.Pool;
 using Core.Reflection;
@@ -12,9 +12,12 @@ using Game.Main;
 using Game.Manager;
 using Game.Objects;
 using GameHotUpdate.Cameras;
+using GameHotUpdate.Manager;
 using GameHotUpdate.Objects;
 using GameHotUpdate.UI.Main;
 using UnityEngine;
+using IGameManager = Game.Manager.IGameManager;
+using Object = UnityEngine.Object;
 
 namespace GameHotUpdate.Main
 {
@@ -29,18 +32,25 @@ namespace GameHotUpdate.Main
         /// </summary>
         private static async void Init()
         {
-            // 初始化工厂
-            ServiceLocator.Get<IFactoryManager>().InitFactorys();
-            // 注册游戏业务层管理器到服务容器（供全局调用）
-            ServiceLocator.Register<IGameManager>(GameManager.Instance);
-            // 初始化UI管理器，创建画布和UI相机
-            await ServiceLocator.Get<IUIManager>().InitUIManagerAsync();
-            // 初始化游戏数据（加载本地存档、配置表等持久化数据）
-            await ServiceLocator.Get<IGameDataManager>().InitDataAsync();
-            // 自动登录逻辑（暂注释，可根据业务开启）
-            //await ServiceLocator.Get<IServerManager>().TryAutoLogin();
-            // 初始化游戏场景（创建NPC、玩家、UI等核心游戏对象）
-            await InitScene();
+            try
+            {
+                // 初始化工厂
+                ServiceLocator.Get<IFactoryManager>().InitFactorys();
+                // 注册游戏业务层管理器到服务容器（供全局调用）
+                ServiceLocator.Register<IGameManager>(GameManager.Instance);
+                // 初始化游戏数据、服务
+                await ServiceLocator.Get<IGameManager>().Init(new GameDataManager(), new GameServiceManger());
+                // 初始化UI管理器，创建画布和UI相机
+                await ServiceLocator.Get<IUIManager>().InitUIManagerAsync();
+                // 自动登录逻辑（暂注释，可根据业务开启）
+                //await ServiceLocator.Get<IServerManager>().TryAutoLogin();
+                // 初始化游戏场景（创建NPC、玩家、UI等核心游戏对象）
+                await InitScene();
+            }
+            catch (Exception e)
+            {
+                LogManager.LogError($"{nameof(HotfixGameMain)}.{nameof(Init)}: {e.Message}");
+            }
         }
 
         /// <summary>
@@ -53,7 +63,6 @@ namespace GameHotUpdate.Main
             // 参数说明：资源类型（预制体）、预制体资源键、生成位置、旋转角度
             var villager = await ServiceLocator.Get<IObjectBuilder>().
                 GetHotfixObject<NpcObject>(EAssetBundleType.Prefab, ResKeyCollection.Prefab_Npc, null);
-            LogManager.Log($"{villager}");
             villager.transform.SetPositionAndRotation(new Vector3(0, 1, 8.39f), Quaternion.identity);
             // 初始化NPC基础属性（参数为NPC配置ID，对应配置表）
             villager.BaseInit(1);
@@ -61,16 +70,15 @@ namespace GameHotUpdate.Main
             // 创建流浪汉NPC对象
             var Vagrant = await ServiceLocator.Get<IObjectBuilder>().
                 GetHotfixObject<NpcObject>(EAssetBundleType.Prefab, ResKeyCollection.Prefab_Npc,null);
-            LogManager.Log($"{Vagrant}");
             Vagrant.transform.SetPositionAndRotation(new Vector3(6.94f, 1, 8.39f), Quaternion.identity);
             Vagrant.BaseInit(2);
             
             // 创建玩家对象（参数为玩家配置ID，对应玩家基础配置表）
             await ServiceLocator.Get<IPlayerManager>().CreatePlayer(1001);
-
+            
             // 创建主界面UI（MVC架构）：指定UI层级为中层，初始化MainView、MainModel、MainController
             var mainController = await ServiceLocator.Get<IUIManager>().CreateViewAsync<MainView, MainModel, MainController>(E_UILayer.Mid, ResKeyCollection.MainView);
-
+            
             // 初始化飘字管理器
             ServiceLocator.Get<IFloatingTextManager>().Init();
         }

@@ -1,5 +1,5 @@
-using Core.EventCenter;
-using Core.EventCenter.Events;
+using Core.GlobalEvent;
+using Core.GlobalEvent.Events;
 using Core.Service;
 using Core.UI.MVC;
 
@@ -32,7 +32,7 @@ namespace GameHotUpdate.UI.MVC
             ServiceLocator.Get<IEventCenter>().TriggerEvent(new MouseVisibleChangedEvent
             {
                 IsVisible = true,
-                SourceName = this.ToString()
+                SourceName = ToString()
             });
             
             await OnInit();
@@ -81,7 +81,7 @@ namespace GameHotUpdate.UI.MVC
             ServiceLocator.Get<IEventCenter>().TriggerEvent(new MouseVisibleChangedEvent
             {
                 IsVisible = false,
-                SourceName = this.ToString()
+                SourceName = ToString()
             });
         }
     }

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using Core.EventCenter;
-using Core.EventCenter.Events;
+using Core.GlobalEvent;
+using Core.GlobalEvent.Events;
 using Core.Log;
 using Core.Service;
 using Core.Singleton;

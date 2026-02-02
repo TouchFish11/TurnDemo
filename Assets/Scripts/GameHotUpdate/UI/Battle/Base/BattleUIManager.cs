@@ -127,7 +127,7 @@ namespace GameHotUpdate.UI.Battle.Base
         /// <param name="context">战斗上下文，用于触发退出战斗事件</param>
         public void ShowBattleOver(IBattleContext context)
         {
-            ServiceLocator.Get<IMonoManager>().StartCoroutine(ShowBattleOver_Cor());
+            ServiceLocator.Get<IMonoAdapter>().StartCoroutine(ShowBattleOver_Cor());
             return;
 
             // 战斗结束界面显示协程
@@ -535,7 +535,7 @@ namespace GameHotUpdate.UI.Battle.Base
             var icon = await ServiceLocator.Get<IFactoryManager>().GetFactory<IAssetLoaderFactory, AssetLoaderFactory>().GetSpriteLoader().GetSpriteAsync(ResKeyCollection.Atlas_Icon, roleInfo.f_icon);
             
             // 启动协程控制显示时长
-            ServiceLocator.Get<IMonoManager>().StartCoroutine(ShowPaiting_Cor(icon, skillInfo));
+            ServiceLocator.Get<IMonoAdapter>().StartCoroutine(ShowPaiting_Cor(icon, skillInfo));
             return;
 
             // 立绘显示协程

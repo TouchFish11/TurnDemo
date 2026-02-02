@@ -23,7 +23,7 @@ namespace GameHotUpdate.UI.Battle.Status
 
         protected override void OnEnable()
         {
-            ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
+            ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpdate);
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace GameHotUpdate.UI.Battle.Status
 
         protected override void OnDisable()
         {
-            ServiceLocator.Get<IMonoManager>().RemoveUpdateListener(OnUpdate);
+            ServiceLocator.Get<IMonoAdapter>().RemoveUpdateListener(OnUpdate);
         }
 
         public int GetStatusId() => status.StatusProperty.StatusInfo.f_id;

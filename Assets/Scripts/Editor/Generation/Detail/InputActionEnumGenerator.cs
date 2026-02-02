@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Core.InputSystem.ActionAsset;
+using Core.Input.ActionAsset;
 using Framework.Editor.Generation;
 using UnityEditor;
 
@@ -35,12 +35,12 @@ namespace Editor.Generation.Detail
         public void GenerateScript()
         {
             StringBuilder sb = new StringBuilder();
-
+            
             sb.AppendLine($"namespace {_nameSpace}");
             sb.AppendLine("{");
             sb.AppendLine($"\tpublic enum {_enumName}");
             sb.AppendLine("\t{");
-            sb.AppendLine(_predefinedNames != null ? "\t\t// Ԥ��������" : "");
+            sb.AppendLine(_predefinedNames != null ? "\t\t// 预定义类型" : "");
 
             if (_predefinedNames != null)
             {
@@ -52,7 +52,7 @@ namespace Editor.Generation.Detail
                 }
             }
 
-            sb.AppendLine("\t\t// ��������");
+            sb.AppendLine("\t\t// 生成类型");
             // �����Զ���ö����
             foreach (string enumName in _enumNames)
             {

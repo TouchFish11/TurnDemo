@@ -107,7 +107,7 @@ namespace GameHotUpdate.Battle.Damage
         //    //        int tempDmg = dot.CalcSkillDamage();
         //    //        target.ProcessDamage(new DamageResult());
         //    //        //�ַ��¼�
-        //    //        //EventCenter.Instance.EventTrigger(E_EventType.OnApplyDamage, new ApplyDamageEvent(attacker, target, tempDmg));
+        //    //        //ServiceLocator.Get<IEventCenter>().EventTrigger(E_EventType.OnApplyDamage, new ApplyDamageEvent(attacker, target, tempDmg));
         //    //        //��ʾ�˺�
         //    //        CreateDamageText(tempDmg, target);
         //    //        //��ʾ�ۼ��˺�

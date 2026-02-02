@@ -1,5 +1,6 @@
 using Core.Components;
 using Core.DataPersistence.Binary;
+using Core.Log;
 using Core.Service;
 using Game.Dialogue;
 using Game.Interact;
@@ -12,19 +13,18 @@ namespace GameHotUpdate.Objects
     /// <summary>
     /// NPC����
     /// </summary>
-    [RequireComponent(typeof(InteractTrigger))]
     public class NpcObject : EntityObject, IInteractable
     {
         public bool IsShowFloatingText { get; set; }
 
         public NpcInfo NpcInfo { get; private set; }
         
-        private InteractTrigger  _interactTrigger;
+        private InteractTrigger _interactTrigger;
 
         public override void BaseInit(int id)
         {
             NpcInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<NpcInfoContainer>(EConfigLoadType.Excel).dataDic[id];
-            _interactTrigger = this.gameObject.GetComponent<InteractTrigger>();
+            _interactTrigger = AddComponent<InteractTrigger>();
             _interactTrigger.Init(this);
         }
 

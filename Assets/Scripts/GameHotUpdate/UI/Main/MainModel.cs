@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Core.Pool;
+using Core.Service;
 using GameHotUpdate.UI.Interact;
 using GameHotUpdate.UI.MVC;
 
@@ -21,7 +22,7 @@ namespace GameHotUpdate.UI.Main
         {
             foreach (var interactUI in this.interactUIs)
             {
-                PoolManager.Instance.PushObj(interactUI.gameObject);
+                ServiceLocator.Get<IPoolManager>().PushObj(interactUI.gameObject);
             }
             
             this.interactUIs.Clear();

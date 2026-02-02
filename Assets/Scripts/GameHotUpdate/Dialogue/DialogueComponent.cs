@@ -1,5 +1,5 @@
 using Core.Components;
-using Core.InputSystem.ActionAsset;
+using Core.Input.ActionAsset;
 using Core.Service;
 using Game.Animation;
 using Game.Components;

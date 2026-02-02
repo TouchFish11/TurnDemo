@@ -1,4 +1,5 @@
 using Core.Res;
+using Core.Service;
 using Core.Singleton;
 
 namespace Core.ScriptableObject
@@ -21,7 +22,7 @@ namespace Core.ScriptableObject
         /// <returns></returns>
         public T LoadSO<T>(string path) where T : UnityEngine.ScriptableObject
         {
-            return ResourcesManager.Instance.Load<T>(path);
+            return ServiceLocator.Get<IResourcesManager>().Load<T>(path);
         }
     }
 }

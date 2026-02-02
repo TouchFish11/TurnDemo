@@ -79,7 +79,7 @@ namespace GameHotUpdate.Battle.Skill.Handlers
                 .UpdateOperator(currentEntity, provider);
             
             // 切换战斗相机至当前玩家实体视角（聚焦释放技能的玩家）
-            BattlePoint.Instance.ActiveCamera(currentEntity);
+            BattlePoint.BattlePoint.Instance.ActiveCamera(currentEntity);
             
             // 更新实体朝向（让当前实体面向目标方向/默认方向）
             context.GetTurnManager().UpdateEntityLookAt(currentEntity);

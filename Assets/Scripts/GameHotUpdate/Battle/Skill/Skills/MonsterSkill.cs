@@ -29,7 +29,7 @@ namespace GameHotUpdate.Battle.Skill.Skills
         {
             base.OnPreCast(context);
             // ���������������
-            BattlePoint.Instance.ActiveCamera(MainTarget);
+            BattlePoint.BattlePoint.Instance.ActiveCamera(MainTarget);
             // �໥���򡢿��򹥻������
             context.GetTurnManager().UpdateEntityLookAt(MainTarget);
             // ����Ŀ��ѡ��

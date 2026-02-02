@@ -18,18 +18,14 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// }} 
 
 	// {{ AOT generic types
-	// Core.AssetBundles.Management.AssetBundleManager.<LoadAssetAsync>d__10<object>
 	// Core.AssetBundles.Update.Collection.Collection.<GetEnumerator>d__12<object,object>
 	// Core.AssetBundles.Update.Collection.Collection<object,object>
-	// Core.DataPersistence.Json.JsonManager.<FromJsonAsync>d__6<object>
-	// Core.EventCenter.EventInfo.<>c<object>
-	// Core.EventCenter.EventInfo<object>
 	// Core.Global.GameSettingEvent<byte>
 	// Core.Singleton.SingletonAutoMono<object>
 	// Core.Singleton.SingletonMono<object>
 	// Core.UI.PanelInfo<object,object,object>
 	// Game.Components.ComponentFactory.<AddComponent>d__5<object>
-	// System.Action<GameHotUpdate.Battle.BattlePoint.PointInfo>
+	// System.Action<Game.Battle.PointInfo>
 	// System.Action<GameHotUpdate.Battle.Relic.RelicEffect>
 	// System.Action<UnityEngine.InputSystem.InputAction.CallbackContext>
 	// System.Action<UnityEngine.Vector2>
@@ -38,11 +34,11 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Action<int>
 	// System.Action<object,object>
 	// System.Action<object>
-	// System.Collections.Generic.ArraySortHelper<GameHotUpdate.Battle.BattlePoint.PointInfo>
+	// System.Collections.Generic.ArraySortHelper<Game.Battle.PointInfo>
 	// System.Collections.Generic.ArraySortHelper<GameHotUpdate.Battle.Relic.RelicEffect>
 	// System.Collections.Generic.ArraySortHelper<int>
 	// System.Collections.Generic.ArraySortHelper<object>
-	// System.Collections.Generic.Comparer<GameHotUpdate.Battle.BattlePoint.PointInfo>
+	// System.Collections.Generic.Comparer<Game.Battle.PointInfo>
 	// System.Collections.Generic.Comparer<GameHotUpdate.Battle.Relic.RelicEffect>
 	// System.Collections.Generic.Comparer<int>
 	// System.Collections.Generic.Comparer<object>
@@ -87,7 +83,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.EqualityComparer<int>
 	// System.Collections.Generic.EqualityComparer<object>
 	// System.Collections.Generic.EqualityComparer<uint>
-	// System.Collections.Generic.ICollection<GameHotUpdate.Battle.BattlePoint.PointInfo>
+	// System.Collections.Generic.ICollection<Game.Battle.PointInfo>
 	// System.Collections.Generic.ICollection<GameHotUpdate.Battle.Relic.RelicEffect>
 	// System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<Core.Types.TypeIdentifier,object>>
 	// System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<byte,object>>
@@ -97,11 +93,11 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<uint,object>>
 	// System.Collections.Generic.ICollection<int>
 	// System.Collections.Generic.ICollection<object>
-	// System.Collections.Generic.IComparer<GameHotUpdate.Battle.BattlePoint.PointInfo>
+	// System.Collections.Generic.IComparer<Game.Battle.PointInfo>
 	// System.Collections.Generic.IComparer<GameHotUpdate.Battle.Relic.RelicEffect>
 	// System.Collections.Generic.IComparer<int>
 	// System.Collections.Generic.IComparer<object>
-	// System.Collections.Generic.IEnumerable<GameHotUpdate.Battle.BattlePoint.PointInfo>
+	// System.Collections.Generic.IEnumerable<Game.Battle.PointInfo>
 	// System.Collections.Generic.IEnumerable<GameHotUpdate.Battle.Relic.RelicEffect>
 	// System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<Core.Types.TypeIdentifier,object>>
 	// System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<byte,object>>
@@ -111,7 +107,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<uint,object>>
 	// System.Collections.Generic.IEnumerable<int>
 	// System.Collections.Generic.IEnumerable<object>
-	// System.Collections.Generic.IEnumerator<GameHotUpdate.Battle.BattlePoint.PointInfo>
+	// System.Collections.Generic.IEnumerator<Game.Battle.PointInfo>
 	// System.Collections.Generic.IEnumerator<GameHotUpdate.Battle.Relic.RelicEffect>
 	// System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<Core.Types.TypeIdentifier,object>>
 	// System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<byte,object>>
@@ -126,7 +122,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.IEqualityComparer<int>
 	// System.Collections.Generic.IEqualityComparer<object>
 	// System.Collections.Generic.IEqualityComparer<uint>
-	// System.Collections.Generic.IList<GameHotUpdate.Battle.BattlePoint.PointInfo>
+	// System.Collections.Generic.IList<Game.Battle.PointInfo>
 	// System.Collections.Generic.IList<GameHotUpdate.Battle.Relic.RelicEffect>
 	// System.Collections.Generic.IList<int>
 	// System.Collections.Generic.IList<object>
@@ -136,15 +132,15 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.KeyValuePair<int,object>
 	// System.Collections.Generic.KeyValuePair<object,object>
 	// System.Collections.Generic.KeyValuePair<uint,object>
-	// System.Collections.Generic.List.Enumerator<GameHotUpdate.Battle.BattlePoint.PointInfo>
+	// System.Collections.Generic.List.Enumerator<Game.Battle.PointInfo>
 	// System.Collections.Generic.List.Enumerator<GameHotUpdate.Battle.Relic.RelicEffect>
 	// System.Collections.Generic.List.Enumerator<int>
 	// System.Collections.Generic.List.Enumerator<object>
-	// System.Collections.Generic.List<GameHotUpdate.Battle.BattlePoint.PointInfo>
+	// System.Collections.Generic.List<Game.Battle.PointInfo>
 	// System.Collections.Generic.List<GameHotUpdate.Battle.Relic.RelicEffect>
 	// System.Collections.Generic.List<int>
 	// System.Collections.Generic.List<object>
-	// System.Collections.Generic.ObjectComparer<GameHotUpdate.Battle.BattlePoint.PointInfo>
+	// System.Collections.Generic.ObjectComparer<Game.Battle.PointInfo>
 	// System.Collections.Generic.ObjectComparer<GameHotUpdate.Battle.Relic.RelicEffect>
 	// System.Collections.Generic.ObjectComparer<int>
 	// System.Collections.Generic.ObjectComparer<object>
@@ -155,11 +151,11 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.ObjectEqualityComparer<uint>
 	// System.Collections.Generic.Stack.Enumerator<object>
 	// System.Collections.Generic.Stack<object>
-	// System.Collections.ObjectModel.ReadOnlyCollection<GameHotUpdate.Battle.BattlePoint.PointInfo>
+	// System.Collections.ObjectModel.ReadOnlyCollection<Game.Battle.PointInfo>
 	// System.Collections.ObjectModel.ReadOnlyCollection<GameHotUpdate.Battle.Relic.RelicEffect>
 	// System.Collections.ObjectModel.ReadOnlyCollection<int>
 	// System.Collections.ObjectModel.ReadOnlyCollection<object>
-	// System.Comparison<GameHotUpdate.Battle.BattlePoint.PointInfo>
+	// System.Comparison<Game.Battle.PointInfo>
 	// System.Comparison<GameHotUpdate.Battle.Relic.RelicEffect>
 	// System.Comparison<int>
 	// System.Comparison<object>
@@ -178,7 +174,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Linq.Lookup.Grouping.<GetEnumerator>d__7<int,object>
 	// System.Linq.Lookup.Grouping<int,object>
 	// System.Linq.Lookup<int,object>
-	// System.Predicate<GameHotUpdate.Battle.BattlePoint.PointInfo>
+	// System.Predicate<Game.Battle.PointInfo>
 	// System.Predicate<GameHotUpdate.Battle.Relic.RelicEffect>
 	// System.Predicate<int>
 	// System.Predicate<object>
@@ -203,7 +199,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Threading.Tasks.TaskFactory<byte>
 	// System.Threading.Tasks.TaskFactory<object>
 	// UnityEngine.Events.UnityAction<byte>
-	// UnityEngine.Events.UnityAction<float>
 	// UnityEngine.Events.UnityAction<int,int>
 	// UnityEngine.Events.UnityAction<long,long>
 	// UnityEngine.Events.UnityAction<long>
@@ -222,15 +217,14 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 
 	public void RefMethods()
 	{
-		// System.Threading.Tasks.Task<object> Core.AssetBundles.Management.AssetBundleManager.LoadAssetAsync<object>(Core.AssetBundles.Management.EAssetBundleType,string)
+		// System.Threading.Tasks.Task<object> Core.AssetBundles.Management.IAssetBundleManager.LoadAssetAsync<object>(Core.AssetBundles.Management.EAssetBundleType,string)
 		// object Core.Components.IEntityObject.GetComponent<object>()
 		// object Core.Components.IEntityObject.GetComponentInChildren<object>()
-		// System.Threading.Tasks.Task<object> Core.DataPersistence.Json.JsonManager.FromJsonAsync<object>(string,Core.DataPersistence.Json.E_JsonType)
-		// System.Void Core.EventCenter.EventCenter.SubscribeEvent<object>(System.Action<object>,System.Func<object,bool>)
-		// System.Void Core.EventCenter.EventCenter.UnsubscribeEvent<object>(System.Action<object>)
-		// System.Void Core.EventCenter.IEventCenter.SubscribeEvent<object>(System.Action<object>,System.Func<object,bool>)
-		// System.Void Core.EventCenter.IEventCenter.TriggerEvent<object>(object)
-		// System.Void Core.Pool.PoolManager.ClearType<object>()
+		// object Core.DataPersistence.Binary.IBinaryDataManager.Load<object>(string)
+		// System.Threading.Tasks.Task<object> Core.DataPersistence.Json.IJsonManager.FromJsonAsync<object>(string,Core.DataPersistence.Json.E_JsonType)
+		// System.Void Core.GlobalEvent.IEventCenter.SubscribeEvent<object>(System.Action<object>,System.Func<object,bool>)
+		// System.Void Core.GlobalEvent.IEventCenter.TriggerEvent<object>(object)
+		// System.Void Core.GlobalEvent.IEventCenter.UnsubscribeEvent<object>(System.Action<object>)
 		// object Core.Reflection.IFactoryManager.GetFactory<object,object>()
 		// System.Threading.Tasks.Task<object> Core.UI.IUIManager.CreateViewAsync<object,object,object>(Core.UI.E_UILayer,string)
 		// object Core.UI.IUIManager.GetController<object>()
@@ -241,7 +235,8 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// System.Collections.Generic.IEnumerable<Core.Components.IComponent> Game.Components.ComponentFactory.AddComponent<object>(Core.Components.IEntityObject)
 		// object Game.Objects.EntityObject.AddComponent<object>()
 		// object Game.Objects.EntityObject.GetComponent<object>()
-		// System.Threading.Tasks.Task<object> Game.Objects.IObjectBuilder.GetUIObject<object>(Core.AssetBundles.Management.EAssetBundleType,string,UnityEngine.Transform,bool)
+		// System.Threading.Tasks.Task<object> Game.Objects.IObjectBuilder.GetHotfixObject<object>(Core.AssetBundles.Management.EAssetBundleType,string,UnityEngine.Transform,bool)
+		// System.Threading.Tasks.Task<object> Game.Objects.IObjectBuilder.GetHotfixUIObject<object>(Core.AssetBundles.Management.EAssetBundleType,string,UnityEngine.Transform,bool)
 		// object System.Activator.CreateInstance<object>()
 		// bool System.Linq.Enumerable.Any<object>(System.Collections.Generic.IEnumerable<object>,System.Func<object,bool>)
 		// int System.Linq.Enumerable.Count<object>(System.Collections.Generic.IEnumerable<object>)

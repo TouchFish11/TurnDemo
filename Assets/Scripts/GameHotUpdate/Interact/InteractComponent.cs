@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Core.Components;
-using Core.EventCenter;
+using Core.GlobalEvent;
 using Core.Service;
 using Game.Components;
 using Game.Dialogue;

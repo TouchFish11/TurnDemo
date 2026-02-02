@@ -346,7 +346,7 @@ namespace GameHotUpdate.Turn
         private void BattleOver()
         {
             // 切换为正常倍速
-            TimerManager.Instance.SetTimeRate(E_TimeRate.Normal);
+            ServiceLocator.Get<ITimerManager>().SetTimeRate(E_TimeRate.Normal);
             // 触发战斗结束事件
             _context.GetEventBus().TriggerEvent(new BattleOverEvent(_context));
         }

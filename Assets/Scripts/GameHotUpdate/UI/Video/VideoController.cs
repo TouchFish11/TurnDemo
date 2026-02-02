@@ -21,11 +21,11 @@ namespace GameHotUpdate.UI.Video
         public async void PlayVideo()
         {
             // ������Ⱦ����
-            RenderTexture renderTexture = await AssetBundleManager.Instance.LoadAssetAsync<RenderTexture>(EAssetBundleType.Texture, "VideoTexture");
+            RenderTexture renderTexture = await ServiceLocator.Get<IAssetBundleManager>().LoadAssetAsync<RenderTexture>(EAssetBundleType.Texture, "VideoTexture");
             // ��������
             model.RawImgVideo = renderTexture;
             // ������Ƶ
-            VideoClip videoClip = await AssetBundleManager.Instance.LoadAssetAsync<VideoClip>(EAssetBundleType.Video, "���»�İ-������ߡ�-������(����)");
+            VideoClip videoClip = await ServiceLocator.Get<IAssetBundleManager>().LoadAssetAsync<VideoClip>(EAssetBundleType.Video, "���»�İ-������ߡ�-������(����)");
             // ������Ƶ
             VideoManager.Instance.OnPrePlay += OnPrePlay;
             VideoManager.Instance.PlayVideo(videoClip, renderTexture);

@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Core.Global;
 using Core.Log;
+using Core.Service;
 using UnityEngine.Events;
 using UnityEngine.Networking;
 
@@ -95,7 +96,7 @@ namespace Core.AssetBundles.Update
                 // 下载进度轮询变量：记录上一帧的下载字节数，用于计算当前帧新增下载量
                 long lastFrameDownloadBytes = 0;
                 // 获取下载上下文（用于判断是否暂停下载）
-                var context = AssetBundleUpdater.Instance.GetContext();
+                var context = ServiceLocator.Get<IAssetBundleUpdater>().GetContext();
 
                 // 下载循环：请求未完成、未暂停时持续轮询
                 while (_request != null && !_request.isDone && !context.IsPauseDownload)

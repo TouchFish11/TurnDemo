@@ -31,7 +31,7 @@ namespace GameHotUpdate.UI.Battle
 
         private void Awake()
         {
-            GameObject = this.gameObject;
+            GameObject = gameObject;
             _battleController = ServiceLocator.Get<IUIManager>().GetController<BattleController>();
             LogManager.Log($"_battleController:{_battleController}");
         }

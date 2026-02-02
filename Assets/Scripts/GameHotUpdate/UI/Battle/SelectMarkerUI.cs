@@ -57,7 +57,7 @@ namespace GameHotUpdate.UI.Battle
         {
             transform.rotation = originQuaterion;
             transform.localScale = originScale;
-            MonoManager.Instance.AddUpdateListener(OnUpdate);
+            ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpdate);
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace GameHotUpdate.UI.Battle
 
         protected override void OnDisable()
         {
-            ServiceLocator.Get<IMonoManager>().RemoveUpdateListener(OnUpdate);
+            ServiceLocator.Get<IMonoAdapter>().RemoveUpdateListener(OnUpdate);
         }
     }
 }

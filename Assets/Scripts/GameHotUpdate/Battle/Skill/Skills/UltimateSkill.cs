@@ -51,7 +51,7 @@ namespace GameHotUpdate.Battle.Skill.Skills
         protected virtual void OnPreUltimateCast(IBattleContext context)
         {
             // ����������
-            BattlePoint.Instance.ActiveCamera(Caster);
+            BattlePoint.BattlePoint.Instance.ActiveCamera(Caster);
             // ���¿���
             context.GetTurnManager().UpdateEntityLookAt(Caster);
             // ����Ŀ��ѡ��

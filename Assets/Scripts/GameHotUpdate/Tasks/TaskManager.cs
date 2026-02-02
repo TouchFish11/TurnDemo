@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Core.DataPersistence.Binary;
-using Core.EventCenter;
+using Core.GlobalEvent;
 using Core.Log;
 using Core.Service;
 using Core.Singleton;
@@ -50,7 +50,7 @@ namespace GameHotUpdate.Tasks
         public void CheckTaskState()
         {
             // 若没有正在追踪的任务，直接返回
-            if (!ServiceLocator.Get<IGameManager>().TaskDataCollection.IsTracking(out var taskData))
+            if (!ServiceLocator.Get<IGameManager>().GameDataManager.TaskDataCollection.IsTracking(out var taskData))
             {
                 LogManager.Log($"{nameof(TaskManager)}.{nameof(CheckTaskState)}，任务数据：{taskData}");
                 return;
@@ -86,7 +86,7 @@ namespace GameHotUpdate.Tasks
             currentConditionInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<TaskConditionInfoContainer>(EConfigLoadType.Excel).dataDic[currentTaskInfo.f_completionConditionId];
 
             // 检查任务数据集合中是否已存在该任务数据
-            if (ServiceLocator.Get<IGameManager>().TaskDataCollection.TryGetValue(id, out var taskData))
+            if (ServiceLocator.Get<IGameManager>().GameDataManager.TaskDataCollection.TryGetValue(id, out var taskData))
             {
                 // 若存在，标记为正在追踪，并赋值给当前任务数据
                 taskData.isTracking = true;
@@ -103,7 +103,7 @@ namespace GameHotUpdate.Tasks
                     isTracking = true 
                 };
                 // 将新任务数据添加到任务集合中
-                ServiceLocator.Get<IGameManager>().TaskDataCollection.TryAdd(id, newTaskData);
+                ServiceLocator.Get<IGameManager>().GameDataManager.TaskDataCollection.TryAdd(id, newTaskData);
                 currentTaskData = newTaskData;
             }
 
@@ -125,11 +125,11 @@ namespace GameHotUpdate.Tasks
             {
                 case E_TaskContentType.Dialogue:
                     // 对话类任务：注册对话事件监听
-                    EventCenter.Instance.SubscribeEvent<DialogueEvent>(OnDialogueEvent);
+                    ServiceLocator.Get<IEventCenter>().SubscribeEvent<DialogueEvent>(OnDialogueEvent);
                     break;
                 case E_TaskContentType.Battle:
                     // 战斗类任务：注册战斗事件监听
-                    EventCenter.Instance.SubscribeEvent<BattleEvent>(OnBattleEvent);
+                    ServiceLocator.Get<IEventCenter>().SubscribeEvent<BattleEvent>(OnBattleEvent);
                     break;
                 case E_TaskContentType.Other:
                     // 其他类型任务：暂不处理
@@ -148,11 +148,11 @@ namespace GameHotUpdate.Tasks
             {
                 case E_TaskContentType.Dialogue:
                     // 移除对话事件监听
-                    EventCenter.Instance.UnsubscribeEvent<DialogueEvent>(OnDialogueEvent);
+                    ServiceLocator.Get<IEventCenter>().UnsubscribeEvent<DialogueEvent>(OnDialogueEvent);
                     break;
                 case E_TaskContentType.Battle:
                     // 移除战斗事件监听
-                    EventCenter.Instance.UnsubscribeEvent<BattleEvent>(OnBattleEvent);
+                    ServiceLocator.Get<IEventCenter>().UnsubscribeEvent<BattleEvent>(OnBattleEvent);
                     break;
                 case E_TaskContentType.Other:
                     // 其他类型任务：暂不处理
@@ -224,7 +224,7 @@ namespace GameHotUpdate.Tasks
                         isTracking = true 
                     };
                     // 将下一个任务数据添加到任务集合
-                    ServiceLocator.Get<IGameManager>().TaskDataCollection.TryAdd(currentTaskInfo.f_id, nextTaskData);
+                    ServiceLocator.Get<IGameManager>().GameDataManager.TaskDataCollection.TryAdd(currentTaskInfo.f_id, nextTaskData);
                     // 更新当前任务数据为下一个任务
                     currentTaskData = nextTaskData;
                     

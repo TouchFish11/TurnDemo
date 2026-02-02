@@ -7,19 +7,27 @@ namespace GameHotUpdate.Interact
     /// <summary>
     /// ����������
     /// </summary>
+    [ComponentId(typeof(InteractTrigger))]
     [RequireComponent(typeof(Collider))]
-    public class InteractTrigger : MonoBehaviour
+    public class InteractTrigger : MonoBehaviour, IComponent
     {
         // ��ȡ��ǰ����Ľ����߼���ʵ��IInteractable�������
         private IInteractable interactable;
         private BoxCollider _collider;
         
+        public IEntityObject EntityObject { get; private set; }
+        
         private void Awake()
         {
-            _collider = this.GetComponent<BoxCollider>();
+            _collider = GetComponent<BoxCollider>();
             _collider.isTrigger = true;
             _collider.center = new Vector3(0, -0.5f, 0);
             _collider.size = new Vector3(4, 4, 4);
+        }
+        
+        void IComponent.Init(IEntityObject entityObject)
+        {
+            EntityObject =  entityObject;
         }
 
         /// <summary>
@@ -30,7 +38,7 @@ namespace GameHotUpdate.Interact
         {
             this.interactable = interactable;
         }
-
+        
         private void OnTriggerEnter(Collider other)
         {
             var interactComponent = other.GetComponent<IEntityObject>().GetComponent<InteractComponent>();
@@ -47,6 +55,13 @@ namespace GameHotUpdate.Interact
             {
                 interactComponent.RemoveInteract(interactable);
             }
+        }
+        
+        public void Destroy()
+        {
+            interactable = null;
+            EntityObject = null;
+            _collider =  null;
         }
     }
 }

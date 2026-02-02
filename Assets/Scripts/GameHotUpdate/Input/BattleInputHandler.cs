@@ -62,7 +62,7 @@ namespace GameHotUpdate.Input
         /// </summary>
         private void Awake()
         {
-            GameObject = this.gameObject;
+            GameObject = gameObject;
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace GameHotUpdate.Input
         public void Init(IBattleContext context)
         {
             // 注册帧更新监听，每帧执行输入处理逻辑
-            ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
+            ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpdate);
             // 从战斗管理器事件总线订阅技能选择事件，接收选中的技能ID
             context.GetEventBus().AddListener<SelectSkillEvent>(OnSelectSkillEvent);
         }
@@ -209,7 +209,7 @@ namespace GameHotUpdate.Input
         private void OnDisable()
         {
             // 移除帧更新监听
-            ServiceLocator.Get<IMonoManager>().RemoveUpdateListener(OnUpdate);
+            ServiceLocator.Get<IMonoAdapter>().RemoveUpdateListener(OnUpdate);
             // 清空事件委托，避免空引用和内存泄漏
             OnSelectedObject = null;
             OnLeftDrag = null;

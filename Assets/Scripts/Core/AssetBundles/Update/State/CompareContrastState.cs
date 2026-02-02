@@ -5,6 +5,7 @@ using Core.AssetBundles.Update.Collection;
 using Core.AssetBundles.Update.Enum;
 using Core.DataPersistence.Json;
 using Core.Log;
+using Core.Service;
 using Core.Utility;
 
 namespace Core.AssetBundles.Update.State
@@ -99,7 +100,7 @@ namespace Core.AssetBundles.Update.State
                 try
                 {
                     // 反序列化缓存文件到缓存集合
-                    var abCacheCollection = JsonManager.Instance.FromJson<AbPackageCacheCollection>(cacheContent);
+                    var abCacheCollection = ServiceLocator.Get<IJsonManager>().FromJson<AbPackageCacheCollection>(cacheContent);
                     foreach (var (abName, abPackageCacheInfo) in abCacheCollection)
                     {
                         cachePackageCollection.TryAdd(abName, abPackageCacheInfo);

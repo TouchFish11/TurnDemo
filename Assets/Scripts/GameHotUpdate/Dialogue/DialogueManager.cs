@@ -3,8 +3,8 @@ using System.Collections;
 using System.Text;
 using Core.Config;
 using Core.DataPersistence.Binary;
-using Core.EventCenter;
 using Core.Global;
+using Core.GlobalEvent;
 using Core.Mono;
 using Core.Pool;
 using Core.Service;
@@ -103,7 +103,7 @@ namespace GameHotUpdate.Dialogue
             {
                 dialogueOver = false;
                 // ������ʾ
-                typewriterCor = MonoManager.Instance.StartCoroutine(ApplyTypewriter());
+                typewriterCor = ServiceLocator.Get<IMonoAdapter>().StartCoroutine(ApplyTypewriter());
                 OnSingleDialogueStart?.Invoke(currentDialogueInfo);
             }
             else
@@ -145,7 +145,7 @@ namespace GameHotUpdate.Dialogue
             // �����ô��ֻ�Ч������δ���ʱ����ֹͣЧ��ֱ����ʾ�����ı�
             if (!dialogueOver && typewriterCor != null)
             {
-                MonoManager.Instance.StopCoroutine(typewriterCor);
+                ServiceLocator.Get<IMonoAdapter>().StopCoroutine(typewriterCor);
                 dialogueController.ShowDialogueText(npcInfo.f_speakerName, currentDialogueInfo.f_dialgueText);
                 dialogueOver = true;
                 OnSingleDialogueEnd?.Invoke();

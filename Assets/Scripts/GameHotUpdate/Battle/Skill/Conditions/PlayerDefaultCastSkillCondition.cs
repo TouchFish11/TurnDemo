@@ -1,5 +1,5 @@
-using Core.EventCenter;
-using Core.EventCenter.Events;
+using Core.GlobalEvent;
+using Core.GlobalEvent.Events;
 using Core.Service;
 using Game.Battle.Enum;
 using Game.Battle.Objects;

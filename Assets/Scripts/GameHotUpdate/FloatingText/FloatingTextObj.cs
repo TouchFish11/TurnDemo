@@ -32,15 +32,15 @@ namespace GameHotUpdate.FloatingText
 
         private void Awake()
         {
-            txtName = this.transform.Find($"{nameof(txtName)}")?.GetComponent<TextMeshPro>();
-            txtTip = this.transform.Find($"{nameof(txtTip)}")?.GetComponent<TextMeshPro>();
+            txtName = transform.Find($"{nameof(txtName)}")?.GetComponent<TextMeshPro>();
+            txtTip = transform.Find($"{nameof(txtTip)}")?.GetComponent<TextMeshPro>();
             
             mainCamera = Camera.main;
         }
 
         private void OnEnable()
         {
-            ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
+            ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpdate);
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace GameHotUpdate.FloatingText
 
         private void OnDisable()
         {
-            ServiceLocator.Get<IMonoManager>().RemoveUpdateListener(OnUpdate);
+            ServiceLocator.Get<IMonoAdapter>().RemoveUpdateListener(OnUpdate);
         }
     }
 }

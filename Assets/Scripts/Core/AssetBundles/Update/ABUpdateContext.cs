@@ -5,6 +5,7 @@ using Core.AssetBundles.Update.Collection;
 using Core.AssetBundles.Update.Enum;
 using Core.DataPersistence.Json;
 using Core.Log;
+using Core.Service;
 using Core.Utility;
 using UnityEngine.Events;
 
@@ -408,7 +409,7 @@ namespace Core.AssetBundles.Update
         public async Task WriteCacheFile()
         {
             var cacheFilePath = PathUtility.GetAbLoadPath(FileUtility.CacheDefaultName);
-            await JsonManager.Instance.SaveToJsonAsync(CachePackageCollection, cacheFilePath);
+            await ServiceLocator.Get<IJsonManager>().SaveToJsonAsync(CachePackageCollection, cacheFilePath);
         }
 
         /// <summary>

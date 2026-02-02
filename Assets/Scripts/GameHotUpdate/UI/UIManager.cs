@@ -42,7 +42,7 @@ namespace GameHotUpdate.UI
         {
 #if EDITOR_TEST_AB || !UNITY_EDITOR
             // 加载画布资源
-            var canvasObj = await AssetBundleManager.Instance.LoadAssetAsync<GameObject>(EAssetBundleType.UI, ResKeyCollection.Canvas);
+            var canvasObj = await ServiceLocator.Get<IAssetBundleManager>().LoadAssetAsync<GameObject>(EAssetBundleType.UI, ResKeyCollection.Canvas);
             // 实例化画布对象
             var canvasInstance = Object.Instantiate(canvasObj);
             // 记录画布对象
@@ -57,7 +57,7 @@ namespace GameHotUpdate.UI
             _systemLayer = Canvas.transform.Find("System");
 
             // 加载UI摄像机资源
-            var uiCameraObj = await AssetBundleManager.Instance.LoadAssetAsync<GameObject>(EAssetBundleType.Camera, ResKeyCollection.UICamera);
+            var uiCameraObj = await ServiceLocator.Get<IAssetBundleManager>().LoadAssetAsync<GameObject>(EAssetBundleType.Camera, ResKeyCollection.UICamera);
             // 实例化摄像机对象
             var uiCameraInstance = Object.Instantiate(uiCameraObj);
             // 记录UI摄像机

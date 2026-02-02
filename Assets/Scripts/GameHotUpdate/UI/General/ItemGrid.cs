@@ -13,7 +13,7 @@ namespace GameHotUpdate.UI.General
         protected override void Awake()
         {
             base.Awake();
-            Transform = this.transform;
+            Transform = transform;
         }
 
         public void Init()

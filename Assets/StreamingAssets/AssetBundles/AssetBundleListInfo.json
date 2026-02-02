@@ -18,8 +18,8 @@
     "values": [
         {
             "packageName": "animation.assetbundle",
-            "packageSize": 905179,
-            "packageMD5": "79aa641e37304eb8e0f6a01acf312e14"
+            "packageSize": 903567,
+            "packageMD5": "5ba88d324b258583f38312521954d391"
         },
         {
             "packageName": "animator.assetbundle",
@@ -38,8 +38,8 @@
         },
         {
             "packageName": "hotupdate.assetbundle",
-            "packageSize": 140132,
-            "packageMD5": "198e34662cf9b07b904ab7420578dae3"
+            "packageSize": 140774,
+            "packageMD5": "29648e62d654afec7f842e42428791f4"
         },
         {
             "packageName": "material.assetbundle",
@@ -54,17 +54,17 @@
         {
             "packageName": "PC.assetbundle",
             "packageSize": 1975,
-            "packageMD5": "b2a9b717896551a243cb6f79f9033d8c"
+            "packageMD5": "47ff797b248586d98f0739f69d462f06"
         },
         {
             "packageName": "prefab.assetbundle",
-            "packageSize": 29177592,
-            "packageMD5": "e04e5880c8937cd1d40e36ffe98a6ae9"
+            "packageSize": 28533738,
+            "packageMD5": "df357078294ec0e7dde317a5093b6f3f"
         },
         {
             "packageName": "scene.assetbundle",
-            "packageSize": 14658746,
-            "packageMD5": "8da5381943766809ed57c6989effe95d"
+            "packageSize": 14020837,
+            "packageMD5": "c2faed5e8cf21378dedfe271cbc2c4f8"
         },
         {
             "packageName": "spriteatlas.assetbundle",
@@ -78,8 +78,8 @@
         },
         {
             "packageName": "ui.assetbundle",
-            "packageSize": 14397479,
-            "packageMD5": "b0a73131e1a0e3ef553ee170ba991a3b"
+            "packageSize": 13748782,
+            "packageMD5": "fed2120576875580a582e3ec0731a560"
         },
         {
             "packageName": "vfx.assetbundle",

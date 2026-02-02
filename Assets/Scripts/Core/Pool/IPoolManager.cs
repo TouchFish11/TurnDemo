@@ -47,12 +47,6 @@ namespace Core.Pool
         /// </summary>
         /// <param name="obj">游戏对象</param>
         void PushObj(GameObject obj);
-
-        /// <summary>
-        /// 清理指定类型的缓存
-        /// </summary>
-        /// <typeparam name="T">对象类型，与对象名称一致</typeparam>
-        void ClearType<T>();
         
         /// <summary>
         /// 清除指定类型缓存

@@ -128,7 +128,7 @@ namespace GameHotUpdate.UI.Battle.SkillKey
                     // ѡ�У��Ŵ�+���ΪSelected
                     transform.localScale = SelectedScale;
                     triggerPhase = E_TriggerPhase.Selected;
-                    battleContext.GetEventBus().TriggerEvent(new SelectSkillEvent(battleContext, skillId, battleEntity, _targetSelectStrategy));
+                    battleContext?.GetEventBus().TriggerEvent(new SelectSkillEvent(battleContext, skillId, battleEntity, _targetSelectStrategy));
                 }
             }
             else

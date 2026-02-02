@@ -39,7 +39,7 @@ namespace GameHotUpdate.UI.Battle
         
         protected override void OnEnable()
         {
-            MonoManager.Instance.AddUpdateListener(OnUpdate);
+            ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpdate);
             (DamageTextMover.transform as RectTransform).anchoredPosition = Vector3.zero;
             DamageTextMover.localScale = StartScale;
             currentTime = 0;
@@ -72,7 +72,7 @@ namespace GameHotUpdate.UI.Battle
             if (currentTime >= destroyTime)
             {
                 currentTime = 0;
-                PoolManager.Instance.PushObj(gameObject);
+                ServiceLocator.Get<IPoolManager>().PushObj(gameObject);
             }
 
             // �ı�����
@@ -83,7 +83,7 @@ namespace GameHotUpdate.UI.Battle
 
         protected override void OnDisable()
         {
-            ServiceLocator.Get<IMonoManager>().RemoveUpdateListener(OnUpdate);
+            ServiceLocator.Get<IMonoAdapter>().RemoveUpdateListener(OnUpdate);
         }
     }
 }

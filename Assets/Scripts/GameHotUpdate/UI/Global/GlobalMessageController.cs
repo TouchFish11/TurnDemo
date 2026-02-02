@@ -1,7 +1,7 @@
 using Core.AssetBundles.Management;
 using Core.Config;
-using Core.EventCenter;
-using Core.EventCenter.Events;
+using Core.GlobalEvent;
+using Core.GlobalEvent.Events;
 using Core.Service;
 using Game.Objects;
 using GameHotUpdate.UI.MVC;
@@ -16,7 +16,7 @@ namespace GameHotUpdate.UI.Global
         protected override async System.Threading.Tasks.Task OnInit()
         {
             // �����¼�
-            EventCenter.Instance.SubscribeEvent<GlobalMessageEvent>(OnGlobalMessageEvent);
+            ServiceLocator.Get<IEventCenter>().SubscribeEvent<GlobalMessageEvent>(OnGlobalMessageEvent);
             await System.Threading.Tasks.Task.CompletedTask;
         }
 
@@ -34,7 +34,7 @@ namespace GameHotUpdate.UI.Global
         public override void Destroy()
         {
             base.Destroy();
-            EventCenter.Instance.UnsubscribeEvent<GlobalMessageEvent>(OnGlobalMessageEvent);
+            ServiceLocator.Get<IEventCenter>().UnsubscribeEvent<GlobalMessageEvent>(OnGlobalMessageEvent);
         }
     }
 }

@@ -119,7 +119,7 @@ namespace GameHotUpdate.UI.Dialogue
             // 将当前对话信息缓存到故事回顾视图
             view.StoryReviewView.CacheDialogueInfo(dialogueInfo);
             // 启动对话提示动画协程
-            dialogueTipCor = ServiceLocator.Get<IMonoManager>().StartCoroutine(DialogueTip_Cor());
+            dialogueTipCor = ServiceLocator.Get<IMonoAdapter>().StartCoroutine(DialogueTip_Cor());
         }
         
         /// <summary>
@@ -128,7 +128,7 @@ namespace GameHotUpdate.UI.Dialogue
         private void OnSingleDialogueEnd()
         {
             // 停止对话提示动画协程
-            ServiceLocator.Get<IMonoManager>().StopCoroutine(dialogueTipCor);
+            ServiceLocator.Get<IMonoAdapter>().StopCoroutine(dialogueTipCor);
             // 恢复默认提示文本
             view.SetTip(DefaultTip);
         }

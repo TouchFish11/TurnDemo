@@ -221,7 +221,7 @@ namespace Core.AssetBundles.Management
         /// <param name="assetName">卸载的资源名称</param>
         public void UnloadAsset(EAssetBundleType assetBundleType, string assetName)
         {
-            string abName = assetBundleType.ToString().ToLower();
+            var abName = assetBundleType.ToString().ToLower();
             if (_nameToWrapperMap.TryGetValue(abName, out var wrapper))
             {
                 // 卸载资源

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Core.Mono;
+using Core.Service;
 using Core.Singleton;
 using UnityEngine;
 using UnityEngine.Events;
@@ -36,7 +37,7 @@ namespace Core.Res
                 info = _nameToResInfoMap[cacheName] as ResourcesInfo<T>;
                 if (info.Asset == null)
                 {
-                    MonoManager.Instance.StopCoroutine(info.ResCoroutine);
+                    ServiceLocator.Get<IMonoAdapter>().StopCoroutine(info.ResCoroutine);
                     //�ÿ�Э��
                     info.ResCoroutine = null;
                     //ͬ�����أ���¼��Դ
@@ -88,7 +89,7 @@ namespace Core.Res
             _nameToResInfoMap.Add(cacheName, info);
 
             //ͨ��Mono����������Э��
-            info.ResCoroutine = MonoManager.Instance.StartCoroutine(LoadAsync_Cor());
+            info.ResCoroutine = ServiceLocator.Get<IMonoAdapter>().StartCoroutine(LoadAsync_Cor());
 
             IEnumerator LoadAsync_Cor()
             {
@@ -154,7 +155,7 @@ namespace Core.Res
         /// <param name="callBack">ж����ɻص�</param>
         public void UnloadUnusedAssets(UnityAction callBack = null)
         {
-            MonoManager.Instance.StartCoroutine(UnLoadUnusedAssets_Cor(callBack));
+            ServiceLocator.Get<IMonoAdapter>().StartCoroutine(UnLoadUnusedAssets_Cor(callBack));
 
             static IEnumerator UnLoadUnusedAssets_Cor(UnityAction callBack = null)
             {

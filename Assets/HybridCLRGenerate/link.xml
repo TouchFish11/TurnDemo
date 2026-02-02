@@ -21,40 +21,37 @@
     <type fullname="TaskInfoContainer" preserve="all" />
   </assembly>
   <assembly fullname="Assembly-CSharp-Core">
-    <type fullname="Core.AssetBundles.Management.AssetBundleManager" preserve="all" />
     <type fullname="Core.AssetBundles.Management.EAssetBundleType" preserve="all" />
+    <type fullname="Core.AssetBundles.Management.IAssetBundleManager" preserve="all" />
     <type fullname="Core.AssetBundles.Update.ABUpdateContext" preserve="all" />
-    <type fullname="Core.AssetBundles.Update.AssetBundleUpdater" preserve="all" />
     <type fullname="Core.AssetBundles.Update.Collection.Collection`2" preserve="all" />
     <type fullname="Core.AssetBundles.Update.Enum.EUpdatePhase" preserve="all" />
+    <type fullname="Core.AssetBundles.Update.IAssetBundleUpdater" preserve="all" />
     <type fullname="Core.Components.ComponentIdAttribute" preserve="all" />
     <type fullname="Core.Components.EntityProperty" preserve="all" />
     <type fullname="Core.Components.IComponent" preserve="all" />
     <type fullname="Core.Components.IEntityObject" preserve="all" />
     <type fullname="Core.Config.ResKeyCollection" preserve="all" />
-    <type fullname="Core.DataPersistence.Binary.BinaryDataManager" preserve="all" />
     <type fullname="Core.DataPersistence.Binary.EConfigLoadType" preserve="all" />
     <type fullname="Core.DataPersistence.Binary.IBinaryDataManager" preserve="all" />
-    <type fullname="Core.DataPersistence.IGameDataManager" preserve="all" />
     <type fullname="Core.DataPersistence.Json.E_JsonType" preserve="all" />
-    <type fullname="Core.DataPersistence.Json.JsonManager" preserve="all" />
-    <type fullname="Core.EventCenter.EventCenter" preserve="all" />
-    <type fullname="Core.EventCenter.Events.GlobalMessageEvent" preserve="all" />
-    <type fullname="Core.EventCenter.Events.MouseVisibleChangedEvent" preserve="all" />
-    <type fullname="Core.EventCenter.IEventCenter" preserve="all" />
+    <type fullname="Core.DataPersistence.Json.IJsonManager" preserve="all" />
     <type fullname="Core.Global.GameSettingEvent`1" preserve="all" />
     <type fullname="Core.Global.GameSettingManager" preserve="all" />
-    <type fullname="Core.InputSystem.ActionAsset.IInputSystem" preserve="all" />
+    <type fullname="Core.GlobalEvent.Events.GlobalMessageEvent" preserve="all" />
+    <type fullname="Core.GlobalEvent.Events.MouseVisibleChangedEvent" preserve="all" />
+    <type fullname="Core.GlobalEvent.IEventCenter" preserve="all" />
+    <type fullname="Core.Input.ActionAsset.IInputSystem" preserve="all" />
+    <type fullname="Core.Input.ActionAsset.MainActionMapDataContainer" preserve="all" />
+    <type fullname="Core.Input.CoreListen.InputDataContainer" preserve="all" />
     <type fullname="Core.Loader.AssetLoaderFactory" preserve="all" />
     <type fullname="Core.Loader.IAssetLoaderFactory" preserve="all" />
     <type fullname="Core.Loader.Loaders.ISpriteLoader" preserve="all" />
     <type fullname="Core.Log.LogManager" preserve="all" />
-    <type fullname="Core.Main.IMainManager" preserve="all" />
-    <type fullname="Core.Mono.IMonoManager" preserve="all" />
-    <type fullname="Core.Mono.MonoManager" preserve="all" />
+    <type fullname="Core.Mono.IMonoAdapter" preserve="all" />
+    <type fullname="Core.Music.MusicData" preserve="all" />
     <type fullname="Core.Pool.IPoolData" preserve="all" />
     <type fullname="Core.Pool.IPoolManager" preserve="all" />
-    <type fullname="Core.Pool.PoolManager" preserve="all" />
     <type fullname="Core.Reflection.IFactory" preserve="all" />
     <type fullname="Core.Reflection.IFactoryManager" preserve="all" />
     <type fullname="Core.Scene.ISceneManager" preserve="all" />
@@ -67,7 +64,7 @@
     <type fullname="Core.Singleton.SingletonBase`1" preserve="all" />
     <type fullname="Core.Singleton.SingletonMono`1" preserve="all" />
     <type fullname="Core.Time.E_TimeRate" preserve="all" />
-    <type fullname="Core.Time.TimerManager" preserve="all" />
+    <type fullname="Core.Time.ITimerManager" preserve="all" />
     <type fullname="Core.UI.BaseUIBehaviour" preserve="all" />
     <type fullname="Core.UI.E_UILayer" preserve="all" />
     <type fullname="Core.UI.IPanelInfo" preserve="all" />
@@ -82,7 +79,6 @@
     <type fullname="Core.Utility.AssemblyUtility" preserve="all" />
     <type fullname="Core.Utility.FileUtility" preserve="all" />
     <type fullname="Core.Utility.PathUtility" preserve="all" />
-    <type fullname="Core.Utility.TaskUtility" preserve="all" />
     <type fullname="Core.Utility.TextUtility" preserve="all" />
     <type fullname="Core.Utility.UIUtility" preserve="all" />
     <type fullname="Core.Video.VideoManager" preserve="all" />
@@ -111,6 +107,7 @@
     <type fullname="Game.Battle.IBattlePoint" preserve="all" />
     <type fullname="Game.Battle.Input.IBattleInputHandler" preserve="all" />
     <type fullname="Game.Battle.Objects.IBattleEntityObject" preserve="all" />
+    <type fullname="Game.Battle.PointInfo" preserve="all" />
     <type fullname="Game.Battle.Property.BattleProperty" preserve="all" />
     <type fullname="Game.Battle.Property.E_PropertyBonusType" preserve="all" />
     <type fullname="Game.Battle.Property.MonsterProperty" preserve="all" />
@@ -165,7 +162,10 @@
     <type fullname="Game.Interact.IInteractable" preserve="all" />
     <type fullname="Game.Interact.InteractEvent" preserve="all" />
     <type fullname="Game.Main.IPlayerManager" preserve="all" />
+    <type fullname="Game.Manager.GameManager" preserve="all" />
+    <type fullname="Game.Manager.IGameDataManager" preserve="all" />
     <type fullname="Game.Manager.IGameManager" preserve="all" />
+    <type fullname="Game.Manager.IGameServiceManger" preserve="all" />
     <type fullname="Game.Objects.EntityObject" preserve="all" />
     <type fullname="Game.Objects.IObjectBuilder" preserve="all" />
     <type fullname="Game.Property.IPropertyComponent" preserve="all" />
@@ -225,7 +225,6 @@
     <type fullname="UnityEngine.GameObject" preserve="all" />
     <type fullname="UnityEngine.HeaderAttribute" preserve="all" />
     <type fullname="UnityEngine.LayerMask" preserve="all" />
-    <type fullname="UnityEngine.Light" preserve="all" />
     <type fullname="UnityEngine.Mathf" preserve="all" />
     <type fullname="UnityEngine.MonoBehaviour" preserve="all" />
     <type fullname="UnityEngine.Object" preserve="all" />
@@ -254,6 +253,7 @@
     <type fullname="UnityEngine.ParticleSystem" preserve="all" />
   </assembly>
   <assembly fullname="UnityEngine.PhysicsModule">
+    <type fullname="UnityEngine.BoxCollider" preserve="all" />
     <type fullname="UnityEngine.CharacterController" preserve="all" />
     <type fullname="UnityEngine.Collider" preserve="all" />
     <type fullname="UnityEngine.CollisionFlags" preserve="all" />

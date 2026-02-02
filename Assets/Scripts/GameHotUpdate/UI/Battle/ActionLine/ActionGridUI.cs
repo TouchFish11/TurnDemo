@@ -25,11 +25,11 @@ namespace GameHotUpdate.UI.Battle.ActionLine
         [Inject(1)] private RectTransform Flashing { get; set; }
         
         // 选中框水平移动的范围
-        [SerializeField] private float moveRange;
+        [SerializeField] private float moveRange = 3f;
         // 选中框移动的速度
-        [SerializeField] private float moveSpeed;
+        [SerializeField] private float moveSpeed = 5f;
         // 闪烁动画的速度
-        [SerializeField] private float falshSpeed;
+        [SerializeField] private float falshSpeed = 1.5f;
         
         // 选中框的矩形变换组件
         private RectTransform imgSelectRect;
@@ -79,7 +79,7 @@ namespace GameHotUpdate.UI.Battle.ActionLine
         /// </summary>
         protected override void OnEnable()
         {
-            ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
+            ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpdate);
         }
 
         /// <summary>
@@ -190,7 +190,7 @@ namespace GameHotUpdate.UI.Battle.ActionLine
         /// </summary>
         protected override void OnDisable()
         {
-            ServiceLocator.Get<IMonoManager>().RemoveUpdateListener(OnUpdate);
+            ServiceLocator.Get<IMonoAdapter>().RemoveUpdateListener(OnUpdate);
         }
     }
 }

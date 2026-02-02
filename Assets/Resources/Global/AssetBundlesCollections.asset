@@ -105,7 +105,7 @@ MonoBehaviour:
   - assetBundleName: hotupdate
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\HotUpdate\Assembly-CSharp-Game-HotUpdate.dll.bytes
-      size: 282624
+      size: 283648
       name: Assembly-CSharp-Game-HotUpdate.dll.bytes
   - assetBundleName: material
     assetInfos:
@@ -126,7 +126,7 @@ MonoBehaviour:
       size: 80841
       name: Prefab_Boss.prefab
     - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Prefab_Slime.prefab
-      size: 16615
+      size: 16617
       name: Prefab_Slime.prefab
     - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Prefab_TurtleShell.prefab
       size: 37036
@@ -141,21 +141,21 @@ MonoBehaviour:
       size: 92501
       name: Prefab_Main_FireFly.prefab
     - assetPath: Assets\Editor\ArtRes\Prefab\Role\Main\Prefab_Npc.prefab
-      size: 4002
+      size: 3581
       name: Prefab_Npc.prefab
     - assetPath: Assets\Editor\ArtRes\Prefab\UI\UI_3D_FloatingText.prefab
-      size: 11301
+      size: 10674
       name: UI_3D_FloatingText.prefab
   - assetBundleName: scene
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\Scene\BeginScene.unity
-      size: 9392
+      size: 8997
       name: BeginScene.unity
     - assetPath: Assets\Editor\ArtRes\Scene\LevelScene.unity
-      size: 96236
+      size: 76696
       name: LevelScene.unity
     - assetPath: Assets\Editor\ArtRes\Scene\MainScene.unity
-      size: 56660
+      size: 55728
       name: MainScene.unity
   - assetBundleName: spriteatlas
     assetInfos:
@@ -206,16 +206,16 @@ MonoBehaviour:
       size: 2218
       name: BackView.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Battle\BattleMessageUI.prefab
-      size: 11515
+      size: 11079
       name: BattleMessageUI.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Battle\BattleView.prefab
       size: 91822
       name: BattleView.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Battle\DamageTextUI.prefab
-      size: 10542
+      size: 9992
       name: DamageTextUI.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Battle\SelectMarkerUI.prefab
-      size: 12759
+      size: 12232
       name: SelectMarkerUI.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Battle\ActionLine\ActionGridUI.prefab
       size: 24017
@@ -239,7 +239,7 @@ MonoBehaviour:
       size: 4466
       name: BattlePointUI.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Battle\Role\HealTextUI.prefab
-      size: 6889
+      size: 6806
       name: HealTextUI.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Battle\Role\RoleStateUI.prefab
       size: 33503
@@ -257,7 +257,7 @@ MonoBehaviour:
       size: 5346
       name: DialogueReviewUI.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Dialogue\DialogueView.prefab
-      size: 99717
+      size: 99295
       name: DialogueView.prefab
     - assetPath: Assets\Editor\ArtRes\UI\General\ItemGrid.prefab
       size: 11481

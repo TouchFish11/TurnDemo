@@ -1,5 +1,6 @@
 using Core.Pool;
 using Core.Reflection;
+using Core.Service;
 using Game.Battle.Skill;
 using Game.Battle.Toughness;
 
@@ -23,7 +24,7 @@ namespace Game.Battle.Command
         /// <returns></returns>
         public ISkillCommand GetSkillCommand(ISkill skill)
         {
-            var skillCommand = PoolManager.Instance.GetData<SkillCommand>();
+            var skillCommand = ServiceLocator.Get<IPoolManager>().GetData<SkillCommand>();
             skillCommand.Init(skill);
             return skillCommand; 
         }
@@ -35,7 +36,7 @@ namespace Game.Battle.Command
         /// <returns></returns>
         public IToughnessCommand GetToughnessCommand(IToughnessComponent component)
         {
-            var command = PoolManager.Instance.GetData<ToughnessCommand>();
+            var command = ServiceLocator.Get<IPoolManager>().GetData<ToughnessCommand>();
             command.Init(component);
             return command;
         }

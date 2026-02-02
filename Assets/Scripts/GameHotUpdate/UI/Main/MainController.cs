@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Core.Config;
-using Core.EventCenter;
+using Core.GlobalEvent;
 using Core.Log;
 using Core.Service;
 using Core.UI;

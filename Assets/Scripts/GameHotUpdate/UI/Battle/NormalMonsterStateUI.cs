@@ -59,7 +59,7 @@ namespace GameHotUpdate.UI.Battle
 
         protected override void OnEnable()
         {
-            ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
+            ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpdate);
         }
 
         /// <summary>
@@ -71,14 +71,14 @@ namespace GameHotUpdate.UI.Battle
         {
             foreach (var weaknessIcon in weakneses)
             {
-                PoolManager.Instance.PushObj(weaknessIcon.gameObject);
+                ServiceLocator.Get<IPoolManager>().PushObj(weaknessIcon.gameObject);
             }
             weakneses.Clear();
 
-            this.BattleEntity = battleEntity;
+            BattleEntity = battleEntity;
             this.monsterStateArea = monsterStateArea;
 
-            PropertyComponent propertyComponent = this.BattleEntity.GetComponent<PropertyComponent>();
+            PropertyComponent propertyComponent = BattleEntity.GetComponent<PropertyComponent>();
             // ��ʼ��Ѫ��
             imgHp.fillAmount = imgFade.fillAmount = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentHp) / (float)propertyComponent.GetPropertyValue(E_DynamicPropertyType.MaxHp);
             imgToughness.fillAmount = 1;
@@ -183,7 +183,7 @@ namespace GameHotUpdate.UI.Battle
 
         protected override void OnDisable()
         {
-            ServiceLocator.Get<IMonoManager>().RemoveUpdateListener(OnUpdate);
+            ServiceLocator.Get<IMonoAdapter>().RemoveUpdateListener(OnUpdate);
         }
     }
 }

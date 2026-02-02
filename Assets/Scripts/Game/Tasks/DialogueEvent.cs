@@ -1,4 +1,4 @@
-using Core.EventCenter;
+using Core.GlobalEvent;
 
 namespace Game.Tasks
 {

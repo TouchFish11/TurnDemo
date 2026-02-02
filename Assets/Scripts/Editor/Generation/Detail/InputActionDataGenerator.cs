@@ -4,7 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using Core.Extension;
-using Core.InputSystem.ActionAsset;
+using Core.Input.ActionAsset;
 using Core.Res;
 using CustomEditor.ScriptGeneration;
 using Framework.Editor.Generation;
@@ -21,9 +21,9 @@ namespace Editor.Generation.Detail
     /// </summary>
     public class InputActionDataGenerator : ClassGenerator
     {
-        protected override string NameSpace => "Framework";
+        protected override string NameSpace => "Core.Input.ActionAsset";
         protected override string Note { get; set; }
-        protected E_AccessModifier accessModifier = E_AccessModifier.Public;
+        protected readonly E_AccessModifier accessModifier = E_AccessModifier.Public;
         // ��������
         private readonly string variableType = "string";
         // ��̬���η�
@@ -34,7 +34,7 @@ namespace Editor.Generation.Detail
         // ���붯����Դ
         private InputActionAsset inputActions;
 
-        private readonly string filePath = $"{Application.dataPath}/Scripts/Framework/InputSystem/ActionAsset/";
+        private readonly string filePath = $"{Application.dataPath}/Scripts/Core/Input/ActionAsset/";
 
         public override void GenerateScript()
         {
@@ -95,9 +95,9 @@ namespace Editor.Generation.Detail
             foreach (var pair in mapToActionsMap)
             {
                 string enumFilePath = $"{filePath}E_{pair.Key}.cs";
-                IScriptGenerator scriptGenerator = new InputActionEnumGenerator(pair.Value, new string[] { "None" }, enumFilePath, nameof(Framework));
+                IScriptGenerator scriptGenerator = new InputActionEnumGenerator(pair.Value, new string[] { "None" }, enumFilePath, NameSpace);
                 scriptGenerator.GenerateScript();
-                Debug.Log($"E_{pair.Key}������·����{enumFilePath}");
+                Debug.Log($"E_{pair.Key} 生成成功，路径：{enumFilePath}");
             }
         }
 
@@ -134,7 +134,7 @@ namespace Editor.Generation.Detail
                 sb.AppendLine("{");
                 sb.AppendLine($"\t/// <summary>");
                 sb.AppendLine($"\t/// {Note}");
-                sb.AppendLine($"\t/// <summary>");
+                sb.AppendLine($"\t/// </summary>");
                 sb.AppendLine($"\tpublic class {className}");
                 sb.AppendLine("\t{");
 
@@ -239,7 +239,7 @@ namespace Editor.Generation.Detail
                     File.Delete(dataFilePath);
                 }
                 File.WriteAllText(dataFilePath, pair.Value);
-                Debug.Log($"{pair.Key}������·����{dataFilePath}");
+                Debug.Log($"{pair.Key} 生成成功，路径：{dataFilePath}");
             }
 
             // ˢ��
@@ -266,8 +266,8 @@ namespace Editor.Generation.Detail
                 sb.AppendLine($"namespace {NameSpace}");
                 sb.AppendLine("{");
                 sb.AppendLine($"\t/// <summary>");
-                sb.AppendLine($"\t/// {Note}����");
-                sb.AppendLine($"\t/// <summary>");
+                sb.AppendLine($"\t/// {Note}数据容器类");
+                sb.AppendLine($"\t/// </summary>");
                 sb.AppendLine($"\t[Serializable]");
                 sb.AppendLine($"\tpublic class {className}");
                 sb.AppendLine("\t{");
@@ -295,7 +295,7 @@ namespace Editor.Generation.Detail
                     {
                         string containerFilePath = $"{filePath}{dataName}Container.cs";
                         File.WriteAllText(containerFilePath, pair.Value);
-                        Debug.Log($"{dataName}Container������·����{containerFilePath}");
+                        Debug.Log($"{dataName}Container 生成成功，路径：{containerFilePath}");
                     }
                 }
             }
@@ -315,8 +315,8 @@ namespace Editor.Generation.Detail
 
             foreach (InputActionMap map in inputActions.actionMaps)
             {
-                string className = $"{nameof(Framework)}.{map.name}Data";
-                Type inputActionDataType = Type.GetType($"{className}, Assembly-CSharp");
+                string className = $"Core.Input.ActionAsset.{map.name}Data";
+                Type inputActionDataType = Type.GetType($"{className}, Assembly-CSharp-Core");
                 PropertyInfo[] properties = inputActionDataType.GetProperties(BindingFlags.Public | BindingFlags.Static);
                 foreach (PropertyInfo propertyInfo in properties)
                 {

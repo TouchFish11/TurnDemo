@@ -1,4 +1,4 @@
-using Game.Tasks;
+using System.Threading.Tasks;
 
 namespace Game.Manager
 {
@@ -8,13 +8,21 @@ namespace Game.Manager
     public interface IGameManager
     {
         /// <summary>
-        /// 初始化游戏相关服务
+        /// 游戏数据管理器
         /// </summary>
-        void InitGameService();
+        IGameDataManager GameDataManager { get; }
+        
+        /// <summary>
+        /// 游戏服务管理器
+        /// </summary>
+        IGameServiceManger  GameServiceManger { get; }
 
         /// <summary>
-        /// 任务数据集合
+        /// 异步初始化数据
         /// </summary>
-        TaskDataCollection TaskDataCollection { get; }
+        /// <param name="gameDataManager"></param>
+        /// <param name="gameServiceManger"></param>
+        /// <returns></returns>
+        Task Init(IGameDataManager gameDataManager, IGameServiceManger gameServiceManger);
     }
 }

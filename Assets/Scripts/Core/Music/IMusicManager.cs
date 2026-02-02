@@ -10,15 +10,20 @@ namespace Core.Music
     {
         void ChangeBackgroundMusicVolume(float value);
         void ChangeSoundVolume(float value);
-        void Clear();
-        Task<AudioSource> CreateSoundAsync(string soundName, bool isLoop = false);
+        void ClearSound();
+        Task<int> CreateSoundAsync(string soundName, float Volume, bool open, bool isLoop = false);
         void PauseBackgroundMusic();
-        bool PauseSelectSound(AudioSource sound);
+        bool PauseSound(int audioId);
         void PauseSound();
-        Task PlayBackgroundMusic(string musicName, bool isLoop = true);
+        Task CreateBackgroundMusic(string musicName, float Volume, bool open, bool isLoop = true);
         void PlaySound();
-        bool SelectStopSound(AudioSource sound);
+        bool StopSound(int audioId);
         void StopBackgroundMusic();
         void StopSound();
+
+        /// <summary>
+        /// 播放当前背景音乐
+        /// </summary>
+        void PlayBackgroundMusic();
     }
 }

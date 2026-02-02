@@ -49,7 +49,6 @@ namespace Core.HotUpdate
                         LogManager.Log($"已缓存编辑器已自动加载热更程序集，{dllText.name}");
                     }
                 }
-                LogManager.Log($"编辑器已自动加载热更程序集，{dllText.name}");
 #endif
             }
 

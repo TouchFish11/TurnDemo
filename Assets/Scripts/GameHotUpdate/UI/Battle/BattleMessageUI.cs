@@ -36,7 +36,7 @@ namespace GameHotUpdate.UI.Battle
         protected override void OnEnable()
         {
             currentDuration = 0;
-            ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
+            ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpdate);
         }
 
         public void InitMessage(Color color, string msg)
@@ -51,13 +51,13 @@ namespace GameHotUpdate.UI.Battle
             currentDuration += Time.deltaTime;
             if (currentDuration >= duration)
             {
-                PoolManager.Instance.PushObj(gameObject);
+                ServiceLocator.Get<IPoolManager>().PushObj(gameObject);
             }
         }
 
         protected override void OnDisable()
         {
-            ServiceLocator.Get<IMonoManager>().RemoveUpdateListener(OnUpdate);
+            ServiceLocator.Get<IMonoAdapter>().RemoveUpdateListener(OnUpdate);
         }
     }
 }

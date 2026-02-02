@@ -7,6 +7,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Core.Global;
 using Core.Net;
+using Core.Quit;
+using Core.Service;
 using Core.Singleton;
 using Core.Utility;
 using UnityEngine;
@@ -35,7 +37,7 @@ namespace Core.Log
 
         private LogManager()
         {
-            QuitHandler.QuitHandler.Instance.OnAppQuit += OnApplicationQuit;
+            ServiceLocator.Get<IQuitHandler>().OnAppQuit += OnApplicationQuit;
             LogSavePath = PathUtility.GetLogLocalSavePath(FileUtility.LocalLogFileName);
             WriteLogMaxIntervalTime = GlobalSettings.Instance.writeLogMaxIntervalTime;
             InitLogFile();
@@ -96,7 +98,7 @@ namespace Core.Log
         /// <param name="progressCallBack"></param>
         public void UploadLog(UploadProgressCallBack progressCallBack)
         {
-            UWRManager.Instance.UploadAssetAsync(GlobalSettings.Instance.uploadServerIp, LogSavePath, progressCallBack: progressCallBack);
+            ServiceLocator.Get<IUWRManager>().UploadAssetAsync(GlobalSettings.Instance.uploadServerIp, LogSavePath, progressCallBack: progressCallBack);
         }
 
         /// <summary>

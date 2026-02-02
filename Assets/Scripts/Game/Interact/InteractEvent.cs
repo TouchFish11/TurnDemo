@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Core.EventCenter;
+using Core.GlobalEvent;
 
 namespace Game.Interact
 {

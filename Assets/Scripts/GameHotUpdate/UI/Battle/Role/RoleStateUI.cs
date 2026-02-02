@@ -79,7 +79,7 @@ namespace GameHotUpdate.UI.Battle.Role
 
         protected override void OnEnable()
         {
-            ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
+            ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpdate);
         }
 
         /// <summary>
@@ -228,7 +228,7 @@ namespace GameHotUpdate.UI.Battle.Role
         {
             StatusGridUI statusGrid = statusGridUIs.FirstOrDefault(s => s.GetStatusId() == newStatus.StatusProperty.StatusInfo.f_id);
             // ���뻺���
-            PoolManager.Instance.PushObj(statusGrid.gameObject);
+            ServiceLocator.Get<IPoolManager>().PushObj(statusGrid.gameObject);
             // �����¸���
             StatusGridUI statusGridUI = await ServiceLocator.Get<IObjectBuilder>().GetHotfixUIObject<StatusGridUI>(EAssetBundleType.UI, ResKeyCollection.StatusGridUI, svBuffBox.content);
             statusGridUI.Init(newStatus);
@@ -246,7 +246,7 @@ namespace GameHotUpdate.UI.Battle.Role
                 if (!statusGridUIs[i].IsValid)
                 {
                     // �Ƴ���Ч��״̬
-                    PoolManager.Instance.PushObj(statusGridUIs[i].gameObject);
+                    ServiceLocator.Get<IPoolManager>().PushObj(statusGridUIs[i].gameObject);
                     statusGridUIs.RemoveAt(i);
                 }
             }
@@ -289,7 +289,7 @@ namespace GameHotUpdate.UI.Battle.Role
 
         protected override void OnDisable()
         {
-            ServiceLocator.Get<IMonoManager>().RemoveUpdateListener(OnUpdate);
+            ServiceLocator.Get<IMonoAdapter>().RemoveUpdateListener(OnUpdate);
         }
     }
 }

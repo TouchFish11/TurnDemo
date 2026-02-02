@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Core.AssetBundles.Update.Enum;
 using Core.AssetBundles.Update.State;
 using Core.Log;
-using Core.QuitHandler;
+using Core.Quit;
 using Core.Service;
 using Core.Singleton;
 using Core.Utility;

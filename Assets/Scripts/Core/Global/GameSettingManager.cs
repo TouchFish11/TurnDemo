@@ -1,4 +1,5 @@
 using Core.DataPersistence.Json;
+using Core.Service;
 using Core.Singleton;
 
 namespace Core.Global
@@ -23,7 +24,7 @@ namespace Core.Global
         /// </summary>
         public void Init()
         {
-            gameSettingData = JsonManager.Instance.FromJson<GameSettingData>("");
+            gameSettingData = ServiceLocator.Get<IJsonManager>().FromJson<GameSettingData>("");
             gameSettingData.enableTypewriter = true;
         }
 

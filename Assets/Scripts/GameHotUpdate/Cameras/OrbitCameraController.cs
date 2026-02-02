@@ -55,7 +55,7 @@ namespace GameHotUpdate.Cameras
         {
             base.Awake();
 
-            ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
+            ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpdate);
             ServiceLocator.Get<IDialogueManager>().OnDialogueStart += OnDialogueStart;
             ServiceLocator.Get<IDialogueManager>().OnDialogueEnd += OnDialogueEnd;
 
@@ -199,7 +199,7 @@ namespace GameHotUpdate.Cameras
 
         private void OnDestroy()
         {
-            ServiceLocator.Get<IMonoManager>().RemoveUpdateListener(OnUpdate);
+            ServiceLocator.Get<IMonoAdapter>().RemoveUpdateListener(OnUpdate);
         }
         
         #region 无用

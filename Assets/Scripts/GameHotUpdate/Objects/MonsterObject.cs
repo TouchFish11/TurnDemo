@@ -138,7 +138,7 @@ namespace GameHotUpdate.Objects
                 new ProjectileData(this, null, null, null), 
                 vFXInfo);
             // 播放怪物死亡动画，并等待动画播放完成
-            this.StartCoroutine(ServiceLocator.Get<IAnimationPlayManager>().
+            StartCoroutine(ServiceLocator.Get<IAnimationPlayManager>().
                 WaitForAnimOver(GetComponent<BattleAnimationComponent>(), 
                 AnimationComponent.Battle_Layer_Name, 
                 E_AnimationType.Death));

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Core.Log;
 using Core.Pool;
+using Core.Service;
 using UnityEngine.Events;
 
 namespace Core.Time
@@ -11,7 +12,7 @@ namespace Core.Time
     public class TimeChecker : ITimeChecker
     {
         // �洢ʱ������ֵ� Key��Ψһ����Value��ʱ�����
-        private Dictionary<int, DateTime> _dateTimeDic = new Dictionary<int, DateTime>();
+        private Dictionary<int, DateTime> _dateTimeDic = new();
 
         /// <summary>
         /// ʱ�����Ψһ��
@@ -30,7 +31,7 @@ namespace Core.Time
         public int CreateTargetTime(System.DateTime currentTime, int targetDay, int targetHour, int targetMin, int targetSec)
         {
             // ��������ָ��ʱ��� DateTime ����
-            DateTime tagetTime = PoolManager.Instance.GetData<DateTime>("GameUtility");
+            DateTime tagetTime = ServiceLocator.Get<IPoolManager>().GetData<DateTime>("GameUtility");
             //��ʼ��ʱ�����
             tagetTime = tagetTime.Init(currentTime, targetDay, targetHour, targetMin, targetSec);
             //�洢���ֵ�

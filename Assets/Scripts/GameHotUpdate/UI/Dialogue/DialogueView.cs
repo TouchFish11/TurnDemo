@@ -48,7 +48,7 @@ namespace GameHotUpdate.UI.Dialogue
         {
             base.Awake();
             // 从子物体中获取剧情回顾视图接口实例，关联剧情回顾功能
-            StoryReviewView = this.GetComponentInChildren<StoryReviewView>();
+            StoryReviewView = GetComponentInChildren<StoryReviewView>();
         }
         #endregion
 
@@ -59,7 +59,7 @@ namespace GameHotUpdate.UI.Dialogue
         /// <param name="isActive">是否激活：true显示，false隐藏</param>
         public void SetDialogueBoxActive(bool isActive)
         {
-            this.DialogueBox.gameObject.SetActive(isActive);
+            DialogueBox.gameObject.SetActive(isActive);
         }
 
         /// <summary>

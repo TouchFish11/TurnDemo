@@ -63,7 +63,7 @@ namespace GameHotUpdate.Battle.Skill.Skills.FireFly
             yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).normalizedTime >= 0.9f);
 
             // �ص���ʼλ��
-            targetPos = BattlePoint.Instance.GetPlayerTransByIndex(Caster.EntityPosIndex).position;
+            targetPos = BattlePoint.BattlePoint.Instance.GetPlayerTransByIndex(Caster.EntityPosIndex).position;
             Caster.GameObject.transform.position = targetPos;
 
             yield return _waitForSeconds0_25;

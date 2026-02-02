@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.Global;
+using Core.Service;
 using Core.Singleton;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -15,9 +16,9 @@ namespace Core.Pool
     public class PoolManager : SingletonBase<PoolManager>, IPoolManager
     {
         // 存储继承Mono对象
-        private readonly Dictionary<string, PoolObj> _poolObjDic = new Dictionary<string, PoolObj>();
+        private readonly Dictionary<string, PoolObj> _poolObjDic = new();
         // 存储不继承Mono对象
-        private readonly Dictionary<string, BasePoolData> _poolDataDic = new Dictionary<string, BasePoolData>();
+        private readonly Dictionary<string, BasePoolData> _poolDataDic = new();
         // 缓存池根对象
         private GameObject _poolRootObj;
 
@@ -49,7 +50,7 @@ namespace Core.Pool
 
 #if EDITOR_TEST_AB || !UNITY_EDITOR
             // AB包异步加载
-            var obj = await AssetBundleManager.Instance.LoadAssetAsync<GameObject>(assetBundleType, assetName);
+            var obj = await ServiceLocator.Get<IAssetBundleManager>().LoadAssetAsync<GameObject>(assetBundleType, assetName);
             // 实例化预设体
             var instanceObj = Object.Instantiate(obj);
             // 避免实例化出的对象的名字后带有(Clone)
@@ -119,18 +120,6 @@ namespace Core.Pool
                 poolData.Push(data);
                 _poolDataDic.Add(dataName, poolData);
             }
-        }
-        
-        public void ClearType<T>()
-        {
-            var objName = typeof(T).Name;
-            if (!_poolObjDic.TryGetValue(objName, out var poolObj))
-            {
-                return;
-            }
-            
-            poolObj.Clear();
-            _poolObjDic.Remove(objName);
         }
         
         public void ClearTypes(params Type[] types)

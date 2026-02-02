@@ -115,7 +115,7 @@ namespace GameHotUpdate.UI.Task
             // 临时设置任务分组允许取消选中，避免初始化过程中Toggle无法响应事件
             view.TaskItemGroup.allowSwitchOff = true;
             // 获取全局任务数据集合实例
-            taskDataCollection = ServiceLocator.Get<IGameManager>().TaskDataCollection;
+            taskDataCollection = ServiceLocator.Get<IGameManager>().GameDataManager.TaskDataCollection;
             // 从二进制数据管理器加载任务配置表（Excel配置），获取任务ID到任务信息的映射表
             var idToInfoMap = ServiceLocator.Get<IBinaryDataManager>().GetConfig<TaskInfoContainer>(EConfigLoadType.Excel).dataDic;
 
@@ -225,7 +225,7 @@ namespace GameHotUpdate.UI.Task
             }
             
             // 同步任务追踪状态：从任务数据集合中获取当前任务的追踪标记
-            if (ServiceLocator.Get<IGameManager>().TaskDataCollection.TryGetValue(id, out var taskData))
+            if (ServiceLocator.Get<IGameManager>().GameDataManager.TaskDataCollection.TryGetValue(id, out var taskData))
             {
                 model.IsFollowingTask = taskData.isTracking;
             }

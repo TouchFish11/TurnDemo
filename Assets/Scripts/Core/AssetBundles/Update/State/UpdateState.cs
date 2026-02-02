@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Core.AssetBundles.Update.Collection;
 using Core.AssetBundles.Update.Enum;
 using Core.DataPersistence.Json;
+using Core.Service;
 
 namespace Core.AssetBundles.Update.State
 {
@@ -62,7 +63,7 @@ namespace Core.AssetBundles.Update.State
         protected void AnalyzeCompareFileInfo(string listInfo, EFileAnalyzeType analyzeType)
         {
             // 反序列化JSON到包集合
-            var collection = JsonManager.Instance.FromJson<ABPackageCollection>(listInfo);
+            var collection = ServiceLocator.Get<IJsonManager>().FromJson<ABPackageCollection>(listInfo);
             
             // 根据解析类型，将包信息加入本地/远程集合
             if (analyzeType == EFileAnalyzeType.Local)

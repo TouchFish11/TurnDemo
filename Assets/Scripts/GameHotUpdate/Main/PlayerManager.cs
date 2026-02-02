@@ -19,7 +19,7 @@ namespace GameHotUpdate.Main
     public class PlayerManager : SingletonBase<PlayerManager>, IPlayerManager
     {
         // uid���û�ʵ���ӳ��
-        private Dictionary<uint, IEntityObject> uidToEntityMap = new Dictionary<uint, IEntityObject>();
+        private readonly Dictionary<uint, IEntityObject> uidToEntityMap = new();
 
         public IEntityObject MainPlayer => uidToEntityMap[1001];
 
@@ -52,7 +52,7 @@ namespace GameHotUpdate.Main
             foreach (var entity in uidToEntityMap.Values)
             {
                 entity.Destroy();
-                UnityEngine.Object.Destroy(entity.GameObject);
+                Object.Destroy(entity.GameObject);
             }
 
             uidToEntityMap.Clear();

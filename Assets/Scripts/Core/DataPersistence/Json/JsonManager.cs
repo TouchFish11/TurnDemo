@@ -1,154 +1,88 @@
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Core.AssetBundles.Management;
-using Core.Service;
 using Core.Singleton;
 using UnityEngine;
 
 namespace Core.DataPersistence.Json
 {
     /// <summary>
-    /// Json���ݹ����� ��Ҫ����Json�����л�(�洢)�ͷ����л�(��ȡ)
+    /// JSON数据管理单例类
+    /// 负责JSON数据的序列化（保存）和反序列化（读取）操作
+    /// 实现IJsonManager接口，基于Unity的JsonUtility封装
     /// </summary>
     public class JsonManager : SingletonBase<JsonManager>, IJsonManager
     {
-        //�洢����Json����   ����������  ֵ������
-        private readonly Dictionary<string, object> _jsonDic = new Dictionary<string, object>();
-
+        /// <summary>
+        /// 私有构造函数（单例模式）
+        /// 防止外部实例化，保证全局唯一实例
+        /// </summary>
         private JsonManager()
         {
-
         }
-
-        /// <summary>
-        /// ����Json����
-        /// </summary>
-        public async Task LoadJsonAsync()
-        {
-            //LoadJsonAsync<T, K>()
-            //...
-            await Task.FromResult(true);
-        }
-
-        /// <summary>
-        /// ����Json����
-        /// </summary>
-        /// <typeparam name="T">��������</typeparam>
-        /// <typeparam name="K">���ݽṹ����</typeparam>
-        private async Task LoadJsonAsync<T, K>() where T : class where K : class
-        {
-#if EDITOR_TEST_AB || !UNITY_EDITOR
-            T container = null;
-            var textAsset = await ServiceLocator.Get<IAssetBundleManager>().LoadAssetAsync<TextAsset>(EAssetBundleType.GameConfig, $"{typeof(K).Name}.json");
-            //ת��Ϊ����
-            container = JsonUtility.FromJson<T>(textAsset.text);
-            //�洢
-            _jsonDic.Add(typeof(T).Name, container);
-#else
-            //ͬ����ȡ
-            TextAsset textAsset = EditorResManager.Instance.LoadEditorAsset<TextAsset>($"{typeof(K).Name}", ".json");
-            T container = JsonUtility.FromJson<T>(textAsset.text);
-            _jsonDic.Add(typeof(T).Name, container);
-            await Task.CompletedTask;
-#endif
-        }
-
-        /// <summary>
-        /// ��ȡJson����
-        /// </summary>
-        /// <typeparam name="T">��������</typeparam>
-        /// <returns></returns>
-        public T GetJsonData<T>() where T : class
-        {
-            if (_jsonDic.ContainsKey(typeof(T).Name))
-                return _jsonDic[typeof(T).Name] as T;
-            return null;
-        }
-
-        /// <summary>
-        /// ��Jsonת��Ϊ����
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="jsonType"></param>
-        /// <param name="json"></param>
-        /// <returns></returns>
+        
         public T FromJson<T>(string json, E_JsonType jsonType = E_JsonType.JsonUtlity) where T : new()
         {
+            // 空值校验：JSON字符串为空时返回默认实例
             if (string.IsNullOrEmpty(json))
             {
                 return new T();
             }
 
+            // 根据解析器类型执行反序列化
             return jsonType switch
             {
                 E_JsonType.JsonUtlity => JsonUtility.FromJson<T>(json),
-                _ => new T()
+                _ => new T() // 未知解析器类型时返回默认实例
             };
         }
-
-        /// <summary>
-        /// �첽��Jsonת��Ϊ����
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="path"></param>
-        /// <param name="jsonType"></param>
-        /// <returns></returns>
+        
         public async Task<T> FromJsonAsync<T>(string path, E_JsonType jsonType = E_JsonType.JsonUtlity) where T : new()
         {
+            // 文件存在性校验：文件不存在时返回默认实例
             if (!File.Exists(path))
             {
                 return new T();
             }
 
-            string json = await File.ReadAllTextAsync(path);
+            // 异步读取文件内容（非阻塞）
+            var json = await File.ReadAllTextAsync(path);
+            // JSON字符串空值校验
             if (string.IsNullOrEmpty(json))
             {
                 return new T();
             }
 
+            // 根据解析器类型执行反序列化
             return jsonType switch
             {
                 E_JsonType.JsonUtlity => JsonUtility.FromJson<T>(json),
-                _ => new T()
+                _ => new T() // 未知解析器类型时返回默认实例
             };
         }
-
-        /// <summary>
-        /// �Ӷ���ת��ΪJson
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="saveFilePath"></param>
-        /// <param name="type"></param>
+        
         public void SaveToJson(object data, string saveFilePath, E_JsonType type = E_JsonType.JsonUtlity)
         {
-            //���л�
-            string jsonStr = "";
-            switch (type)
+            // 根据序列化器类型执行序列化（格式化输出）
+            var jsonStr = type switch
             {
-                case E_JsonType.JsonUtlity:
-                    jsonStr = JsonUtility.ToJson(data, true);
-                    break;
-            }
+                E_JsonType.JsonUtlity => JsonUtility.ToJson(data, true),
+                _ => ""
+            };
+
+            // 同步写入文件
             File.WriteAllText(saveFilePath, jsonStr);
         }
-
-        /// <summary>
-        /// �Ӷ���ת��ΪJson
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="saveFilePath">����·��</param>
-        /// <param name="type"></param>
+        
         public async Task SaveToJsonAsync(object data, string saveFilePath, E_JsonType type = E_JsonType.JsonUtlity)
         {
-            //���л�
-            string jsonStr = "";
-            switch (type)
+            // 根据序列化器类型执行序列化（格式化输出）
+            var jsonStr = type switch
             {
-                case E_JsonType.JsonUtlity:
-                    jsonStr = JsonUtility.ToJson(data, true);
-                    break;
-            }
+                E_JsonType.JsonUtlity => JsonUtility.ToJson(data, true),
+                _ => ""
+            };
+
+            // 异步写入文件
             await File.WriteAllTextAsync(saveFilePath, jsonStr);
         }
     }

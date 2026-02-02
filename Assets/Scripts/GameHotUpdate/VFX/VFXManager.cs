@@ -20,7 +20,7 @@ namespace GameHotUpdate.VFX
 
         private VFXManager()
         {
-            ServiceLocator.Get<IMonoManager>().AddUpdateListener(OnUpdate);
+            ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpdate);
         }
 
         private void OnUpdate()

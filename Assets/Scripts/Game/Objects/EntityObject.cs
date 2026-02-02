@@ -101,14 +101,19 @@ namespace Game.Objects
         /// <returns>添加成功的组件实例</returns>
         public TComponent AddComponent<TComponent>() where TComponent : Component, IComponent
         {
+            IComponent returnComponent = null;
             // 通过组件工厂创建并挂载组件（封装Unity原生AddComponent逻辑）
             foreach (var component in ComponentFactory.AddComponent<TComponent>(this))
             {
+                if (typeof(TComponent).ToIdentifier() == component.GetType().ToIdentifier())
+                {
+                    returnComponent = component;
+                }
                 // 将组件存入缓存（TryAdd避免重复键异常）
                 typeToIComponentMap.TryAdd(component.GetType().ToIdentifier(), component);
             }
 
-            return null;
+            return returnComponent as TComponent;
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Core.Pool;
+using Core.Service;
 using GameHotUpdate.UI.General;
 using GameHotUpdate.UI.MVC;
 
@@ -132,8 +133,7 @@ namespace GameHotUpdate.UI.Task
             taskTypeToContainerMap.Clear();
 
             // 回收任务项和物品格子的对象池
-            PoolManager.Instance.ClearType<TaskItem>();
-            PoolManager.Instance.ClearType<ItemGrid>();
+            ServiceLocator.Get<IPoolManager>().ClearTypes(typeof(TaskItem), typeof(ItemGrid));
         }
     }
 }
