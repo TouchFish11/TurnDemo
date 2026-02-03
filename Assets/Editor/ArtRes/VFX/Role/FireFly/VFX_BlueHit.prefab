@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6725888542252475859}
   - component: {fileID: 8764078110394746322}
   - component: {fileID: 2114358387711140100}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: shockwave
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4908,7 +4908,7 @@ GameObject:
   - component: {fileID: 2999957490281894528}
   - component: {fileID: 3120947075525300350}
   - component: {fileID: 4690186291417164645}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: splash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9872,7 +9872,7 @@ GameObject:
   - component: {fileID: 1156143582962874969}
   - component: {fileID: 3252216524226734618}
   - component: {fileID: 7558136150266757183}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: VFX_BlueHit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14772,7 +14772,7 @@ GameObject:
   - component: {fileID: 350078618436116955}
   - component: {fileID: 3831898576455085823}
   - component: {fileID: 2430173372175421147}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: highlight_long
   m_TagString: Untagged
   m_Icon: {fileID: 0}

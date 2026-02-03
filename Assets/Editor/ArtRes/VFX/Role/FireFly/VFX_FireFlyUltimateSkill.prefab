@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6770536460967208145}
   - component: {fileID: 2864485023437115721}
   - component: {fileID: -8709829432470879344}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: VFX_FireFlyUltimateSkill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5030,7 +5030,7 @@ GameObject:
   - component: {fileID: 5079763813558197465}
   - component: {fileID: 5128457983482712798}
   - component: {fileID: 1071289064617201004}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: '2nd Slash '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10034,7 +10034,7 @@ GameObject:
   - component: {fileID: 3797629568967145391}
   - component: {fileID: 7019195016554652313}
   - component: {fileID: 678136024681895058}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Shiny
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -5,7 +5,6 @@ using Game.Battle.Context;
 using Game.Battle.Enum;
 using Game.Battle.Objects;
 using Game.Battle.Skill.Component;
-using Game.Battle.Skill.Handler;
 using Game.Battle.Skill.Interface;
 using Game.Battle.Status;
 using Game.Battle.TargetSelect;
@@ -22,7 +21,7 @@ namespace GameHotUpdate.Battle.Skill.Skills
     {
         private readonly ISkillComponent skillComponent;
 
-        protected UltimateSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
+        protected UltimateSkill(IBattleEntityObject caster, int skillId, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, statusAddStrategy)
         {
             skillComponent = Caster.GetComponent<SkillComponent>();
         }
@@ -30,7 +29,7 @@ namespace GameHotUpdate.Battle.Skill.Skills
         protected override IEnumerator OnCast(IBattleContext context)
         {
             // �սἼ�ͷ�ǰ
-            OnPreUltimateCast(context);
+            yield return OnPreUltimateCast(context);
             // �ȴ�����
             yield return new WaitUntil(() => skillComponent.IsRelease);
             // ȷ����������Ŀ��
@@ -43,15 +42,14 @@ namespace GameHotUpdate.Battle.Skill.Skills
             yield return OnUltimateCast(context);
         }
 
-        // ReSharper disable Unity.PerformanceAnalysis
         /// <summary>
         /// �սἼ�ͷ�ǰ
         /// </summary>
         /// <param name="context"></param>
-        protected virtual void OnPreUltimateCast(IBattleContext context)
+        protected virtual IEnumerator OnPreUltimateCast(IBattleContext context)
         {
             // ����������
-            BattlePoint.BattlePoint.Instance.ActiveCamera(Caster);
+            context.GetProxy().UpdateCamera(Caster);
             // ���¿���
             context.GetTurnManager().UpdateEntityLookAt(Caster);
             // ����Ŀ��ѡ��
@@ -62,7 +60,7 @@ namespace GameHotUpdate.Battle.Skill.Skills
                 .GetTargetSelectStrategy<PlayerBaseTargetSelectStrategy>();
             ServiceLocator.Get<ITargetSelectManager>().SelectTarget(context, Caster, SkillInfo, strategy);
             // �����սἼ���UI��ʾ
-            ServiceLocator.Get<IBattleUIScheduler>().UltimateTriggerChangeUI(Caster, SkillInfo);
+            yield return ServiceLocator.Get<IBattleUIScheduler>().UltimateTriggerChangeUI(Caster, SkillInfo);
             // ��ʱ�������������������ʾ
             PropertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentEnergy, 0);
         }

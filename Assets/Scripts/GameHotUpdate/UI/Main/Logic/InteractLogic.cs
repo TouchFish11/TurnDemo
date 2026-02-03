@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Core.AssetBundles.Management;
 using Core.Config;
+using Core.GlobalEvent;
 using Core.Log;
 using Core.Service;
 using Game.Interact;
@@ -34,7 +35,18 @@ namespace GameHotUpdate.UI.Main.Logic
         /// </summary>
         public override void Init()
         {
-
+            // 订阅交互事件（当触发InteractEvent时，执行OnInteractEvent回调）
+            ServiceLocator.Get<IEventCenter>().SubscribeEvent<InteractEvent>(OnInteractEvent);
+        }
+        
+        /// <summary>
+        /// 交互事件回调方法
+        /// 执行时机：接收到InteractEvent事件时触发
+        /// </summary>
+        /// <param name="interactEvent">交互事件数据（包含可交互对象列表）</param>
+        private void OnInteractEvent(InteractEvent interactEvent)
+        {
+            CreateInteract(interactEvent.Interactables);
         }
 
         /// <summary>
@@ -69,6 +81,13 @@ namespace GameHotUpdate.UI.Main.Logic
             {
                 LogManager.LogError($"{nameof(InteractLogic)}.{nameof(CreateInteract)}: {e.Message}");
             }
+        }
+
+        public override void Dispose()
+        {
+            // 取消交互事件的订阅
+            ServiceLocator.Get<IEventCenter>().UnsubscribeEvent<InteractEvent>(OnInteractEvent);
+            base.Dispose();
         }
     }
 }

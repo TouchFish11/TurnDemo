@@ -7,7 +7,7 @@ namespace Game.Tasks
     /// </summary>
     public interface ITaskManager
     {
-        event Action<TaskInfo, TaskData> OnUpdateTask;
+        event Action<TaskInfo, ITaskData> OnUpdateTask;
 
         event Action OnCancelTask;
 

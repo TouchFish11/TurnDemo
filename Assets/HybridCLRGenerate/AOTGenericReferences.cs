@@ -228,9 +228,9 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// object Core.Reflection.IFactoryManager.GetFactory<object,object>()
 		// System.Threading.Tasks.Task<object> Core.UI.IUIManager.CreateViewAsync<object,object,object>(Core.UI.E_UILayer,string)
 		// object Core.UI.IUIManager.GetController<object>()
-		// System.Void Core.UI.IUIManager.SetViewActive<object>(bool)
 		// object Core.UI.UIComponentBinder.GetControl<object>(string)
 		// System.Void Game.Battle.Event.IBattleEventBus.AddListener<object>(System.Action<object>)
+		// System.Void Game.Battle.Event.IBattleEventBus.RemoveListener<object>(System.Action<object>)
 		// System.Void Game.Battle.Event.IBattleEventBus.TriggerEvent<object>(object)
 		// System.Collections.Generic.IEnumerable<Core.Components.IComponent> Game.Components.ComponentFactory.AddComponent<object>(Core.Components.IEntityObject)
 		// object Game.Objects.EntityObject.AddComponent<object>()
@@ -280,6 +280,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// float UnityEngine.InputSystem.InputActionState.ApplyProcessors<float>(int,float,UnityEngine.InputSystem.InputControl<float>)
 		// UnityEngine.Vector2 UnityEngine.InputSystem.InputActionState.ReadValue<UnityEngine.Vector2>(int,int,bool)
 		// float UnityEngine.InputSystem.InputActionState.ReadValue<float>(int,int,bool)
+		// object UnityEngine.Object.FindFirstObjectByType<object>()
 		// object UnityEngine.Object.Instantiate<object>(object)
 	}
 }

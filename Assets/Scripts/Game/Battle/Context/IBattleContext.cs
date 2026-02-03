@@ -39,24 +39,30 @@ namespace Game.Battle.Context
         /// </summary>
         /// <returns>存活的怪物角色实体枚举集合</returns>
         IEnumerable<IBattleEntityObject> GetAliveMonsterEntitys();
-
-        /// <summary>
-        /// 获取回合控制器（管理回合顺序、回合切换等逻辑）
-        /// </summary>
-        /// <returns>回合控制器实例</returns>
-        ITurnController GetTurnManager();
-
+        
         /// <summary>
         /// 清理战斗资源
         /// 战斗结束后释放资源、清空实体、注销事件等收尾操作
         /// </summary>
         void CleanupBattle();
-
+        
+        /// <summary>
+        /// 获取回合控制器（管理回合顺序、回合切换等逻辑）
+        /// </summary>
+        /// <returns>回合控制器实例</returns>
+        ITurnController GetTurnManager();
+        
         /// <summary>
         /// 获取战斗事件总线（用于战斗内事件的发布/订阅）
         /// </summary>
         /// <returns>战斗事件总线实例</returns>
         IBattleEventBus GetEventBus();
+
+        /// <summary>
+        /// 获取战斗点代理
+        /// </summary>
+        /// <returns></returns>
+        IBattlePointProxy GetProxy();
 
         /// <summary>
         /// 消耗战斗点数（技能点/行动点）

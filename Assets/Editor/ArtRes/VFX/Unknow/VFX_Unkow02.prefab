@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1090263203035920015}
   - component: {fileID: 8203813991969652575}
   - component: {fileID: 3331330222462635689}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Sparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5022,7 +5022,7 @@ GameObject:
   - component: {fileID: 2095293402349308286}
   - component: {fileID: 5747870442995041693}
   - component: {fileID: 7201002460694439791}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Smoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9968,7 +9968,7 @@ GameObject:
   - component: {fileID: 6741691067004718224}
   - component: {fileID: 450411396681284646}
   - component: {fileID: 4806292890830777377}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Explosion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14856,7 +14856,7 @@ GameObject:
   - component: {fileID: 3030925917950584663}
   - component: {fileID: 2663215218374142075}
   - component: {fileID: 5888575929116801892}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Shockwave
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19762,7 +19762,7 @@ GameObject:
   - component: {fileID: 7832821148777149736}
   - component: {fileID: 582936237911813286}
   - component: {fileID: 685769746614046174}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: VFX_Unkow02
   m_TagString: Untagged
   m_Icon: {fileID: 0}

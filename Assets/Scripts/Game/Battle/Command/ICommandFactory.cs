@@ -1,5 +1,6 @@
 using Core.Reflection;
 using Game.Battle.Skill;
+using Game.Battle.Skill.Interface;
 using Game.Battle.Toughness;
 
 namespace Game.Battle.Command
@@ -9,14 +10,14 @@ namespace Game.Battle.Command
         /// <summary>
         /// ��ȡ��������
         /// </summary>
-        /// <param name="skill"></param>
+        /// <param name="skillData"></param>
         /// <returns></returns>
-        ISkillCommand GetSkillCommand(ISkill skill);
+        ISkillCommand GetSkillCommand(ISkillData skillData);
 
         /// <summary>
         /// ��ȡ��������
         /// </summary>
-        /// <param name="skill"></param>
+        /// <param name="component"></param>
         /// <returns></returns>
         IToughnessCommand GetToughnessCommand(IToughnessComponent component);
     }

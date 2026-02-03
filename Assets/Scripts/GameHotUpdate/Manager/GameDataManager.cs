@@ -9,6 +9,7 @@ using Core.Service;
 using Core.Utility;
 using Game.Manager;
 using Game.Tasks;
+using GameHotUpdate.Tasks;
 
 namespace GameHotUpdate.Manager
 {
@@ -57,7 +58,7 @@ namespace GameHotUpdate.Manager
             // ...
         }
         
-        public TaskDataCollection TaskDataCollection { get; private set; }
+        public ITaskDataCollection TaskDataCollection { get; private set; }
         
         public MusicData MusicData { get; private set; }
 

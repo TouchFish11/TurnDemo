@@ -139,6 +139,7 @@ namespace GameHotUpdate.Animation
         private void OnSelectSkillEvent(SelectSkillEvent selectSkillEvent)
         {
             // 过滤条件：事件触发者不是当前绑定实体，或触发者是怪物 → 不处理
+            // TODO：分为玩家/怪物战斗动画组件
             if (selectSkillEvent.Caster != BattleEntity || selectSkillEvent.Caster is MonsterObject)
             {
                 return;

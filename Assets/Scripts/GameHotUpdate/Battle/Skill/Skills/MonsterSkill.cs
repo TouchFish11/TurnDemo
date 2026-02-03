@@ -15,7 +15,7 @@ namespace GameHotUpdate.Battle.Skill.Skills
     /// </summary>
     public abstract class MonsterSkill : Skill
     {
-        protected MonsterSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
+        protected MonsterSkill(IBattleEntityObject caster, int skillId, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, statusAddStrategy)
         {
 
         }
@@ -29,7 +29,7 @@ namespace GameHotUpdate.Battle.Skill.Skills
         {
             base.OnPreCast(context);
             // ���������������
-            BattlePoint.BattlePoint.Instance.ActiveCamera(MainTarget);
+            context.GetProxy().UpdateCamera(MainTarget);
             // �໥���򡢿��򹥻������
             context.GetTurnManager().UpdateEntityLookAt(MainTarget);
             // ����Ŀ��ѡ��

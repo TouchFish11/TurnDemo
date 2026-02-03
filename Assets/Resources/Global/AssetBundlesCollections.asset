@@ -64,6 +64,9 @@ MonoBehaviour:
       name: HertaAnimtor.controller
   - assetBundleName: camera
     assetInfos:
+    - assetPath: Assets\Editor\ArtRes\Camera\BattleCamera.prefab
+      size: 2123
+      name: BattleCamera.prefab
     - assetPath: Assets\Editor\ArtRes\Camera\MainCamera.prefab
       size: 2433
       name: MainCamera.prefab
@@ -105,7 +108,7 @@ MonoBehaviour:
   - assetBundleName: hotupdate
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\HotUpdate\Assembly-CSharp-Game-HotUpdate.dll.bytes
-      size: 283648
+      size: 293376
       name: Assembly-CSharp-Game-HotUpdate.dll.bytes
   - assetBundleName: material
     assetInfos:
@@ -123,7 +126,7 @@ MonoBehaviour:
       size: 80476
       name: Prefab_Player.prefab
     - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Prefab_Boss.prefab
-      size: 80841
+      size: 81157
       name: Prefab_Boss.prefab
     - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Prefab_Slime.prefab
       size: 16617
@@ -152,7 +155,7 @@ MonoBehaviour:
       size: 8997
       name: BeginScene.unity
     - assetPath: Assets\Editor\ArtRes\Scene\LevelScene.unity
-      size: 76696
+      size: 68491
       name: LevelScene.unity
     - assetPath: Assets\Editor\ArtRes\Scene\MainScene.unity
       size: 55728
@@ -292,83 +295,83 @@ MonoBehaviour:
   - assetBundleName: vfx
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\VFX\General\VFX_Environment_Rain.prefab
-      size: 235326
+      size: 235328
       name: VFX_Environment_Rain.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\General\VFX_SupportSkill_01.prefab
-      size: 707283
+      size: 707289
       name: VFX_SupportSkill_01.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\General\VFX_SupportSkill_02.prefab
-      size: 235384
+      size: 235386
       name: VFX_SupportSkill_02.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\General\Hit\VFX_MonsterHit.prefab
-      size: 237069
+      size: 237071
       name: VFX_MonsterHit.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\General\Status\VFX_Dot_Blue01.prefab
-      size: 596048
+      size: 596053
       name: VFX_Dot_Blue01.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\General\Status\VFX_Dot_Blue02.prefab
-      size: 467843
+      size: 467847
       name: VFX_Dot_Blue02.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\General\Status\VFX_Dot_Blue03.prefab
-      size: 595996
+      size: 596001
       name: VFX_Dot_Blue03.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\General\Status\VFX_Dot_Green01.prefab
-      size: 595980
+      size: 595985
       name: VFX_Dot_Green01.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\General\Status\VFX_Dot_Green02.prefab
-      size: 467875
+      size: 467879
       name: VFX_Dot_Green02.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\General\Status\VFX_Heal.prefab
-      size: 708524
+      size: 708530
       name: VFX_Heal.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\General\Status\VFX_Shield.prefab
-      size: 350819
+      size: 350822
       name: VFX_Shield.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\Monster\VFX_MonsterAttackSkill.prefab
-      size: 354906
+      size: 354910
       name: VFX_MonsterAttackSkill.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\Monster\Boss\VFX_MonsterDead.prefab
-      size: 235603
+      size: 235605
       name: VFX_MonsterDead.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\Role\FireFly\VFX_BlueHit.prefab
-      size: 476729
+      size: 476733
       name: VFX_BlueHit.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\Role\FireFly\VFX_FireFlyBattleSkill.prefab
-      size: 355817
+      size: 355820
       name: VFX_FireFlyBattleSkill.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\Role\FireFly\VFX_FireFlyNormalSkill.prefab
-      size: 474199
+      size: 474203
       name: VFX_FireFlyNormalSkill.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\Role\FireFly\VFX_FireFlyUltimatePose.prefab
-      size: 116999
+      size: 117000
       name: VFX_FireFlyUltimatePose.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\Role\FireFly\VFX_FireFlyUltimateSkill.prefab
-      size: 364388
+      size: 364391
       name: VFX_FireFlyUltimateSkill.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\Role\FireFly\VFX_NormalSkill_Wave.prefab
-      size: 236628
+      size: 236630
       name: VFX_NormalSkill_Wave.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\Role\Herta\VFX_HeartUltimatePose.prefab
-      size: 118706
+      size: 118707
       name: VFX_HeartUltimatePose.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\Role\Herta\VFX_HeartUltimateSkill.prefab
-      size: 839421
+      size: 839428
       name: VFX_HeartUltimateSkill.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\Role\Herta\VFX_HertaBattleSkill.prefab
-      size: 1440034
+      size: 1440046
       name: VFX_HertaBattleSkill.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\Role\Herta\VFX_HertaNormalSkill.prefab
-      size: 716995
+      size: 717001
       name: VFX_HertaNormalSkill.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\Role\Herta\VFX_HertaSkill.prefab
-      size: 1546500
+      size: 1546513
       name: VFX_HertaSkill.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\Unknow\VFX_Unknow01.prefab
-      size: 350844
+      size: 350847
       name: VFX_Unknow01.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\Unknow\VFX_Unknow03.prefab
-      size: 1071424
+      size: 1071433
       name: VFX_Unknow03.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\Unknow\VFX_Unkow02.prefab
-      size: 597208
+      size: 597213
       name: VFX_Unkow02.prefab

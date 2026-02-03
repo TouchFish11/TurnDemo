@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3422696057138549147}
   - component: {fileID: 1204116952133598717}
   - component: {fileID: 3315750238902281812}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: flash_view
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4917,7 +4917,7 @@ GameObject:
   - component: {fileID: 1434875563695626410}
   - component: {fileID: 5183094210603940371}
   - component: {fileID: 8233829562514031798}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: lightning_remain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9872,7 +9872,7 @@ GameObject:
   - component: {fileID: 335708312463321951}
   - component: {fileID: 1253809367952035014}
   - component: {fileID: 7590987519946267593}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: flash_ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14778,7 +14778,7 @@ GameObject:
   - component: {fileID: 1762725504653307270}
   - component: {fileID: 5774487782198535419}
   - component: {fileID: 3654460263746422386}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: highlight_ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19675,7 +19675,7 @@ GameObject:
   - component: {fileID: 9085235124218839236}
   - component: {fileID: 2253043004736551029}
   - component: {fileID: 3362868363676600964}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: lighting_ring
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24581,7 +24581,7 @@ GameObject:
   - component: {fileID: 2024139781724765645}
   - component: {fileID: 5259621204294349457}
   - component: {fileID: 8836728136294095207}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: VFX_Unknow03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29495,7 +29495,7 @@ GameObject:
   - component: {fileID: 5282763017452193237}
   - component: {fileID: 6545177445390847858}
   - component: {fileID: 4094927005363093768}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: highlight_view
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34392,7 +34392,7 @@ GameObject:
   - component: {fileID: 3974359485410189075}
   - component: {fileID: 2683790282256296262}
   - component: {fileID: 5814684197773908474}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: hitspike_long
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39289,7 +39289,7 @@ GameObject:
   - component: {fileID: 9189615735683092065}
   - component: {fileID: 3052585741467601841}
   - component: {fileID: 4735755128240545378}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: smoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}

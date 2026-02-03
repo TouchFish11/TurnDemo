@@ -1,9 +1,9 @@
 using Core.Reflection;
 using Core.Service;
 using Game.Battle.Objects;
-using Game.Battle.Skill;
-using Game.Battle.Skill.Base;
 using Game.Battle.Skill.Handler;
+using Game.Battle.Skill.Interface;
+using GameHotUpdate.Battle.Skill.Base;
 using GameHotUpdate.Battle.Skill.Handlers;
 using GameHotUpdate.Battle.Skill.Skills.FireFly;
 
@@ -14,7 +14,7 @@ namespace GameHotUpdate.Skill.Fatory.Roles
     /// </summary>
     public class FireFlySkillFactory : SkillFactory
     {
-        public override ISkill CreateSkill(IBattleEntityObject caster, int skillId)
+        public override ISkillData CreateSkill(IBattleEntityObject caster, int skillId)
         {
             switch (skillId)
             {
@@ -22,17 +22,20 @@ namespace GameHotUpdate.Skill.Fatory.Roles
                     var handler = ServiceLocator.Get<IFactoryManager>().
                         GetFactory<ISkillCastPostHandlerFactory, SkillCastPostHandlerFactory>().
                         GetSkillCastPostHandler<BaseSkillCastPostHandler>();
-                    return new FireFlyNormalSkill(caster, skillId, handler, null);
+                    
+                    return new SkillData(new FireFlyNormalSkill(caster, skillId, null), handler);
                 case 11:
                     handler = ServiceLocator.Get<IFactoryManager>().
                         GetFactory<ISkillCastPostHandlerFactory, SkillCastPostHandlerFactory>().
                         GetSkillCastPostHandler<BaseSkillCastPostHandler>();
-                    return new FireFlyBattleSkill(caster, skillId, handler, null);
+                    
+                    return new SkillData(new FireFlyBattleSkill(caster, skillId, null), handler);
                 case 12:
                     handler = ServiceLocator.Get<IFactoryManager>().
                         GetFactory<ISkillCastPostHandlerFactory, SkillCastPostHandlerFactory>().
                         GetSkillCastPostHandler<BaseUltimateSkillCastPostHandler>();
-                    return new FireFlyUltimateSkill(caster, skillId, handler, null);
+                    
+                    return new SkillData(new FireFlyUltimateSkill(caster, skillId, null), handler);
                 default:
                     return null;
             }

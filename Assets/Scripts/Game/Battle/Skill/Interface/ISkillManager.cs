@@ -5,8 +5,8 @@ namespace Game.Battle.Skill.Interface
         /// <summary>
         /// ���Ӽ�������غ϶���
         /// </summary>
-        /// <param name="skill"></param>
-        void AddSkillCommand(ISkill skill);
+        /// <param name="skilldata"></param>
+        void AddSkillCommand(ISkillData skilldata);
 
         /// <summary>
         /// ��ʼ������Ŀ��

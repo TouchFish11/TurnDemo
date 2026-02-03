@@ -10,6 +10,7 @@ namespace Core.UI
     public interface IUIManager
     {
         Canvas Canvas { get; }
+        
         Camera UICamera { get; }
         
         Transform GetLayer(E_UILayer layer);
@@ -17,8 +18,6 @@ namespace Core.UI
         TController GetController<TController>() where TController : IuiController;
         
         Task InitUIManagerAsync();
-        
-        void SetViewActive<TController>(bool isActive) where TController : IuiController;
 
         /// <summary>
         /// 异步显示界面
@@ -36,5 +35,13 @@ namespace Core.UI
         /// 销毁界面
         /// </summary>
         void DestroyView(IuiController controller);
+
+        /// <summary>
+        /// 设置界面活动状态
+        /// 只能设置第一个查找到的实例，多实例无法准确获取
+        /// </summary>
+        /// <param name="controller"></param>
+        /// <param name="isActive"></param>
+        void SetViewActive(IuiController controller, bool isActive);
     }
 }

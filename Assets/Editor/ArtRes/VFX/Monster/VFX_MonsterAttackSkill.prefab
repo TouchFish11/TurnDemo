@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8463160738064634870}
   - component: {fileID: 4330541665203926452}
   - component: {fileID: 3126579486760476227}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Particle System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4850,7 +4850,7 @@ GameObject:
   - component: {fileID: 4682673904055299777}
   - component: {fileID: 8923949815623415790}
   - component: {fileID: 2333119876539910593}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Particle System (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9679,7 +9679,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2606633279358878957}
   - component: {fileID: 5365492164148717021}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9817,7 +9817,7 @@ GameObject:
   - component: {fileID: 1423882637342244418}
   - component: {fileID: 784667139416189224}
   - component: {fileID: 6176574858743291822}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: VFX_MonsterAttackSkill
   m_TagString: Untagged
   m_Icon: {fileID: 0}

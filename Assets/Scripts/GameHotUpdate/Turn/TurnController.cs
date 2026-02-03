@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.Config;
+using Core.Log;
 using Core.Service;
 using Core.Time;
 using Core.UI;
@@ -113,7 +114,7 @@ namespace GameHotUpdate.Turn
                     // 更新当前行动实体
                     UpdateActEntity();
                     // 启用当前实体行动
-                    _currentActEntity.ExecuteAction();
+                    _currentActEntity?.ExecuteAction();
                 }
 
                 yield return null;
@@ -325,6 +326,7 @@ namespace GameHotUpdate.Turn
             foreach (var battleEntityObject in deadEntities)
             {
                 _context.RemoveBattleEntity(battleEntityObject); 
+                LogManager.Log($"移除死亡的怪物：{battleEntityObject}");
             }
             
             // 事件分发传递，更新行动轴UI显示

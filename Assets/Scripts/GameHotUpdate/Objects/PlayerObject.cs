@@ -7,6 +7,7 @@ using Game.Battle.Context;
 using Game.Battle.Damage;
 using GameHotUpdate.Animation;
 using GameHotUpdate.Battle.Event.UI;
+using GameHotUpdate.Battle.ResponsibilityChain.DamageChain;
 using GameHotUpdate.Skill.Component;
 using UnityEngine;
 
@@ -31,6 +32,9 @@ namespace GameHotUpdate.Objects
         public override void BattleInit(int battleEntityId, IBattleContext context)
         {
             base.BattleInit(battleEntityId, context);
+            
+            // 初始化伤害链
+            damageChain = DamageChainBuilder.GetRolrDamageChain();
             // ����ս��������
             AddComponents(TextUtility.Split(RoleInfo.f_comNames, 2));
             // ������Ҽ��ܴ����¼�
@@ -41,13 +45,32 @@ namespace GameHotUpdate.Objects
 
         protected override IEnumerator OnExceuteAction()
         {
-            // �ȴ�����ж�����
-            yield return new WaitWhile(() => CanAct);
-        }
+            // TODO：玩家自动逻辑预留
+            bool isAuto = false;
 
-        protected override void OnPreTakeDamage(DamageResult damageResult)
-        {
-            /*��ʱ����Ҫʵ��*/
+            while (CanAct)
+            {
+                if (!isAuto)
+                {
+                    yield return null;
+                }
+                else
+                {
+                    // 执行每个角色自己的自动选择技能策略
+                    yield break;
+                }
+            }
+            
+            // if (isAuto)
+            // {
+            //
+            //     
+            // }
+            // else
+            // {
+            //     // �ȴ�����ж�����
+            //     yield return new WaitWhile(() => CanAct);
+            // }
         }
 
         /// <summary>

@@ -109,7 +109,7 @@ namespace Game.Battle.Objects
         /// </summary>
         /// <param name="damageResult">伤害结算结果对象（包含伤害类型、数值、来源等）</param>
         /// <returns>是否成功承受伤害（true=成功，false=免疫/格挡等未生效）</returns>
-        bool TryTakeDamage(DamageResult damageResult);
+        void TakeDamage(DamageResult damageResult);
 
         /// <summary>
         /// 增加行动次数计数

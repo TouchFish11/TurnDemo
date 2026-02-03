@@ -13,6 +13,7 @@ using Core.Mono;
 using Core.Music;
 using Core.Net;
 using Core.Pool;
+using Core.PreLoad;
 using Core.Quit;
 using Core.Reflection;
 using Core.Res;
@@ -64,6 +65,7 @@ namespace Core.Service
             Register<IFactoryManager>(FactoryManager.Instance);
             Register<IHotUpdateManager>(HotUpdateManager.Instance);
             Register<ISceneManager>(SceneManager.Instance);
+            Register<IPreLoadManager>(PreLoadManager.Instance);
 
             // Test
 #if !DISABLE_ADDRESSABLES

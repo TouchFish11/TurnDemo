@@ -94,7 +94,7 @@ namespace GameHotUpdate.UI.Battle
                 return;
             }
 
-            UIUtility.WorldToLocalPointInRectangle(ServiceLocator.Get<IBattlePoint>().CurrentActiveCamera, ServiceLocator.Get<IUIManager>().UICamera, selectMarkerArea, gameObject, battleEntity.GameObject.transform.position, Vector2.up * 50);
+            UIUtility.WorldToLocalPointInRectangle(ServiceLocator.Get<IBattlePointProxy>().CurrentActiveCamera, ServiceLocator.Get<IUIManager>().UICamera, selectMarkerArea, gameObject, battleEntity.GameObject.transform.position, Vector2.up * 50);
         }
 
         /// <summary>

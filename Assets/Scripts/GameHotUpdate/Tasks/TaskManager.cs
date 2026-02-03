@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Core.AssetBundles.Update.Collection;
 using Core.DataPersistence.Binary;
 using Core.GlobalEvent;
 using Core.Log;
@@ -22,13 +23,13 @@ namespace GameHotUpdate.Tasks
         // 当前任务的完成条件信息（配置表数据）
         private TaskConditionInfo currentConditionInfo;
         // 当前任务的运行时数据（进度、完成状态、追踪状态等）
-        private TaskData currentTaskData;
+        private ITaskData currentTaskData;
 
         /// <summary>
         /// 任务更新事件（任务信息/进度变化时触发）
         /// 回调参数：当前任务信息、当前任务运行时数据
         /// </summary>
-        public event Action<TaskInfo, TaskData> OnUpdateTask;
+        public event Action<TaskInfo, ITaskData> OnUpdateTask;
 
         /// <summary>
         /// 任务取消事件（取消当前追踪任务时触发）
@@ -57,7 +58,7 @@ namespace GameHotUpdate.Tasks
             }
             
             // 从配置表加载当前任务的基础信息和完成条件信息
-            currentTaskInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<TaskInfoContainer>(EConfigLoadType.Excel).dataDic[taskData.currentTaskId];
+            currentTaskInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<TaskInfoContainer>(EConfigLoadType.Excel).dataDic[taskData.CurrentTaskId];
             currentConditionInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<TaskConditionInfoContainer>(EConfigLoadType.Excel).dataDic[currentTaskInfo.f_completionConditionId];
             currentTaskData = taskData;
             
@@ -85,8 +86,15 @@ namespace GameHotUpdate.Tasks
             currentTaskInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<TaskInfoContainer>(EConfigLoadType.Excel).dataDic[id];
             currentConditionInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<TaskConditionInfoContainer>(EConfigLoadType.Excel).dataDic[currentTaskInfo.f_completionConditionId];
 
+            // 转换集合
+            var collection = TaskUtility.GetTaskDataCollection();
+            if (collection == null)
+            {
+                return;
+            }
+            
             // 检查任务数据集合中是否已存在该任务数据
-            if (ServiceLocator.Get<IGameManager>().GameDataManager.TaskDataCollection.TryGetValue(id, out var taskData))
+            if (collection.TryGetValue(id, out var taskData))
             {
                 // 若存在，标记为正在追踪，并赋值给当前任务数据
                 taskData.isTracking = true;
@@ -103,7 +111,7 @@ namespace GameHotUpdate.Tasks
                     isTracking = true 
                 };
                 // 将新任务数据添加到任务集合中
-                ServiceLocator.Get<IGameManager>().GameDataManager.TaskDataCollection.TryAdd(id, newTaskData);
+                collection.TryAdd(id, newTaskData);
                 currentTaskData = newTaskData;
             }
 
@@ -194,15 +202,15 @@ namespace GameHotUpdate.Tasks
         private void UpdateTaskNodeProgress()
         {
             // 当前任务进度+1
-            currentTaskData.currentPro += 1;
+            currentTaskData.CurrentPro += 1;
             
             // 检查进度是否达到任务要求的最大进度
-            if (currentTaskData.currentPro == currentConditionInfo.f_maxPro)
+            if (currentTaskData.CurrentPro == currentConditionInfo.f_maxPro)
             {
                 // 标记任务为已完成
-                currentTaskData.isCompleted = true;
+                currentTaskData.IsCompleted = true;
                 // 取消当前任务的追踪状态
-                currentTaskData.isTracking = false;
+                currentTaskData.IsTracking = false;
                 // 移除当前任务的事件监听
                 RemoveListenTaskEvent();
                 
@@ -223,8 +231,16 @@ namespace GameHotUpdate.Tasks
                         isCompleted = false, 
                         isTracking = true 
                     };
+                    
+                    // 转换集合
+                    var collection = TaskUtility.GetTaskDataCollection();
+                    if (collection == null)
+                    {
+                        return;
+                    }
+                    
                     // 将下一个任务数据添加到任务集合
-                    ServiceLocator.Get<IGameManager>().GameDataManager.TaskDataCollection.TryAdd(currentTaskInfo.f_id, nextTaskData);
+                    collection.TryAdd(currentTaskInfo.f_id, nextTaskData);
                     // 更新当前任务数据为下一个任务
                     currentTaskData = nextTaskData;
                     
@@ -244,7 +260,7 @@ namespace GameHotUpdate.Tasks
         public void CancelTask()
         {
             // 取消当前任务的追踪状态
-            currentTaskData.isTracking = false;
+            currentTaskData.IsTracking = false;
             // 移除任务相关事件监听
             RemoveListenTaskEvent();
             // 重置当前任务的配置和运行时数据

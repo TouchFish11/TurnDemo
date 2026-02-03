@@ -14,13 +14,13 @@ TagManager:
   - 
   - Water
   - UI
-  - PlayerObject
+  - Environment
   - MonsterObject
-  - 
-  - 
-  - 
-  - 
-  - 
+  - PlayerObject1
+  - PlayerObject2
+  - PlayerObject3
+  - PlayerObject4
+  - VFX
   - 
   - 
   - 

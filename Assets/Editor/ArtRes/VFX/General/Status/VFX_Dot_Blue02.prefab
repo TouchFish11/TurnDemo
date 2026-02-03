@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7996178490194654608}
   - component: {fileID: 3926437378215070799}
   - component: {fileID: 2777414187053690184}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Splash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4839,7 +4839,7 @@ GameObject:
   - component: {fileID: 7517010948736459918}
   - component: {fileID: 8260371508135014618}
   - component: {fileID: 7593047387935488303}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Shadow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9739,7 +9739,7 @@ GameObject:
   - component: {fileID: 8615753113702453587}
   - component: {fileID: 4064963692878642806}
   - component: {fileID: 8639863210658438070}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Drops
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14405,7 +14405,7 @@ GameObject:
   - component: {fileID: 5266709843412856874}
   - component: {fileID: 2492582780993262627}
   - component: {fileID: 3735914383794694247}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: VFX_Dot_Blue02
   m_TagString: Untagged
   m_Icon: {fileID: 0}

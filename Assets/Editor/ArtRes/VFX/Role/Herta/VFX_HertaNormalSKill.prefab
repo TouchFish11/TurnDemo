@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4910551110396165083}
   - component: {fileID: 2328587427319653968}
   - component: {fileID: 7771561687151252078}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: splash_particles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4908,7 +4908,7 @@ GameObject:
   - component: {fileID: 1089884872349815367}
   - component: {fileID: 7176942751596205643}
   - component: {fileID: 6773330986821020919}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: highlight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9823,7 +9823,7 @@ GameObject:
   - component: {fileID: 1321394766515248583}
   - component: {fileID: 6063180017852269802}
   - component: {fileID: 245449562467826460}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: splash_view
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14778,7 +14778,7 @@ GameObject:
   - component: {fileID: 3192434510557389643}
   - component: {fileID: 8140850560671356278}
   - component: {fileID: 3181460115767909674}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: splash_ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19734,7 +19734,7 @@ GameObject:
   - component: {fileID: 8339079901638580342}
   - component: {fileID: 6628833660116816884}
   - component: {fileID: 1306764726993919681}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: VFX_HertaNormalSkill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24657,7 +24657,7 @@ GameObject:
   - component: {fileID: 3231767869139333625}
   - component: {fileID: 7957012936088263814}
   - component: {fileID: 1755726364751524056}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: explosion_highlight
   m_TagString: Untagged
   m_Icon: {fileID: 0}

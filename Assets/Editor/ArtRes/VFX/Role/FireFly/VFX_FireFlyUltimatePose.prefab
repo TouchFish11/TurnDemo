@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1708516141122326890}
   - component: {fileID: 1876317205238357779}
   - component: {fileID: 2436470110293148857}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: VFX_FireFlyUltimatePose
   m_TagString: Untagged
   m_Icon: {fileID: 0}

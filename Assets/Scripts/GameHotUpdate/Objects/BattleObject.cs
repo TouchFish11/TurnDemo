@@ -8,6 +8,8 @@ using Game.Battle.Skill.Component;
 using Game.Objects;
 using GameHotUpdate.Animation;
 using GameHotUpdate.Battle.Event.Turn;
+using GameHotUpdate.Battle.ResponsibilityChain;
+using GameHotUpdate.Battle.ResponsibilityChain.DamageChain;
 using GameHotUpdate.Property;
 using UnityEngine;
 
@@ -53,6 +55,9 @@ namespace GameHotUpdate.Objects
         /// 是否死亡（当前血量≤0判定为死亡）
         /// </summary>
         public bool IsDead => GetComponent<PropertyComponent>().GetPropertyValue(E_DynamicPropertyType.CurrentHp) <= 0;
+
+        // 伤害处理链
+        protected Handler<DamageResult> damageChain;
 
         /// <summary>
         /// 剩余可行动次数（每回合初始为1，行动后减少）
@@ -102,69 +107,16 @@ namespace GameHotUpdate.Objects
         {
 
         }
-
-        /// <summary>
-        /// 判定是否可承受伤害
-        /// （如无敌、免疫状态下返回false）
-        /// </summary>
-        /// <returns>true=可承受伤害，false=不可承受伤害</returns>
-        protected bool CanTakeDamage()
-        {
-            return true;
-        }
-
+        
         /// <summary>
         /// 承受伤害入口方法
         /// </summary>
         /// <param name="damageResult">伤害结算结果对象（包含最终伤害、伤害类型等信息）</param>
-        public bool TryTakeDamage(DamageResult damageResult)
+        public void TakeDamage(DamageResult damageResult)
         {
-            // 判定是否可承受伤害，不可承受则直接返回
-            if (!CanTakeDamage())
-            {
-                return false;
-            }
-
-            // 承受伤害前的预处理（抽象方法，子类实现）
-            OnPreTakeDamage(damageResult);
-            // 执行承受伤害核心逻辑
-            OnTakeDamage(damageResult);
-            
-            return true;
+            damageChain.HandleRequest(damageResult);
         }
-
-        /// <summary>
-        /// 承受伤害前的预处理（抽象方法）
-        /// 子类需实现伤害减免、护盾抵消、伤害反射等前置逻辑
-        /// </summary>
-        /// <param name="damageResult">伤害结算结果对象</param>
-        protected abstract void OnPreTakeDamage(DamageResult damageResult);
-
-        /// <summary>
-        /// 承受伤害核心逻辑
-        /// 处理扣血、播放受击动画等基础逻辑，子类可重写扩展
-        /// </summary>
-        /// <param name="damageResult">伤害结算结果对象</param>
-        protected virtual void OnTakeDamage(DamageResult damageResult)
-        {
-            // 播放受击动画
-            GetComponent<BattleAnimationComponent>().SetAnimationState(E_AnimationType.Hit);
-
-            // 获取属性组件，处理血量扣减
-            var propertyComponent = GetComponent<PropertyComponent>();
-            // 获取当前血量
-            var currentHp = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentHp);
-            // 扣减最终伤害量
-            propertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentHp, currentHp - damageResult.FinalDamage);
-
-            // 修正血量：最小为0（防止血量为负数）
-            currentHp = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentHp);
-            if (currentHp <= 0)
-            {
-                propertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentHp, 0);
-            }
-        }
-
+        
         /// <summary>
         /// 死亡逻辑（抽象方法）
         /// 子类需实现死亡动画、掉落、移除战斗等具体逻辑

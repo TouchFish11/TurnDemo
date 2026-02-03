@@ -38,8 +38,10 @@
     <type fullname="Core.DataPersistence.Json.IJsonManager" preserve="all" />
     <type fullname="Core.Global.GameSettingEvent`1" preserve="all" />
     <type fullname="Core.Global.GameSettingManager" preserve="all" />
+    <type fullname="Core.GlobalEvent.Event" preserve="all" />
     <type fullname="Core.GlobalEvent.Events.GlobalMessageEvent" preserve="all" />
     <type fullname="Core.GlobalEvent.Events.MouseVisibleChangedEvent" preserve="all" />
+    <type fullname="Core.GlobalEvent.IEvent" preserve="all" />
     <type fullname="Core.GlobalEvent.IEventCenter" preserve="all" />
     <type fullname="Core.Input.ActionAsset.IInputSystem" preserve="all" />
     <type fullname="Core.Input.ActionAsset.MainActionMapDataContainer" preserve="all" />
@@ -52,6 +54,8 @@
     <type fullname="Core.Music.MusicData" preserve="all" />
     <type fullname="Core.Pool.IPoolData" preserve="all" />
     <type fullname="Core.Pool.IPoolManager" preserve="all" />
+    <type fullname="Core.PreLoad.IPreLoadManager" preserve="all" />
+    <type fullname="Core.PreLoad.PreLoadData" preserve="all" />
     <type fullname="Core.Reflection.IFactory" preserve="all" />
     <type fullname="Core.Reflection.IFactoryManager" preserve="all" />
     <type fullname="Core.Scene.ISceneManager" preserve="all" />
@@ -86,10 +90,12 @@
   <assembly fullname="Assembly-CSharp-Game">
     <type fullname="Game.Animation.AnimationParameter" preserve="all" />
     <type fullname="Game.Animation.E_AnimationType" preserve="all" />
+    <type fullname="Game.Battle.BattlePoint" preserve="all" />
     <type fullname="Game.Battle.Camera.IOrbitCameraController" preserve="all" />
-    <type fullname="Game.Battle.Command.CommandFactory" preserve="all" />
+    <type fullname="Game.Battle.Command.Command" preserve="all" />
     <type fullname="Game.Battle.Command.ICommand" preserve="all" />
     <type fullname="Game.Battle.Command.ICommandFactory" preserve="all" />
+    <type fullname="Game.Battle.Command.ISkillCommand" preserve="all" />
     <type fullname="Game.Battle.Command.IToughnessCommand" preserve="all" />
     <type fullname="Game.Battle.Component.BattleComponent" preserve="all" />
     <type fullname="Game.Battle.Component.IBattleComponent" preserve="all" />
@@ -105,6 +111,7 @@
     <type fullname="Game.Battle.Event.IBattleEventBus" preserve="all" />
     <type fullname="Game.Battle.IBattleManager" preserve="all" />
     <type fullname="Game.Battle.IBattlePoint" preserve="all" />
+    <type fullname="Game.Battle.IBattlePointProxy" preserve="all" />
     <type fullname="Game.Battle.Input.IBattleInputHandler" preserve="all" />
     <type fullname="Game.Battle.Objects.IBattleEntityObject" preserve="all" />
     <type fullname="Game.Battle.PointInfo" preserve="all" />
@@ -112,8 +119,6 @@
     <type fullname="Game.Battle.Property.E_PropertyBonusType" preserve="all" />
     <type fullname="Game.Battle.Property.MonsterProperty" preserve="all" />
     <type fullname="Game.Battle.Property.RoleProperty" preserve="all" />
-    <type fullname="Game.Battle.Skill.Base.SkillFactory" preserve="all" />
-    <type fullname="Game.Battle.Skill.Base.SkillManager" preserve="all" />
     <type fullname="Game.Battle.Skill.Component.SkillComponent" preserve="all" />
     <type fullname="Game.Battle.Skill.Condition.CastSkillConditionFactory" preserve="all" />
     <type fullname="Game.Battle.Skill.Condition.ICastSkillCondition" preserve="all" />
@@ -155,6 +160,7 @@
     <type fullname="Game.Components.BaseComponent" preserve="all" />
     <type fullname="Game.Components.CharacterControllerComponent" preserve="all" />
     <type fullname="Game.Components.PlayerInputComponent" preserve="all" />
+    <type fullname="Game.Data.IData" preserve="all" />
     <type fullname="Game.Dialogue.IDialable" preserve="all" />
     <type fullname="Game.Dialogue.IDialogueManager" preserve="all" />
     <type fullname="Game.FloatingText.IFloatingTextManager" preserve="all" />
@@ -169,23 +175,16 @@
     <type fullname="Game.Objects.EntityObject" preserve="all" />
     <type fullname="Game.Objects.IObjectBuilder" preserve="all" />
     <type fullname="Game.Property.IPropertyComponent" preserve="all" />
-    <type fullname="Game.Tasks.BattleEvent" preserve="all" />
-    <type fullname="Game.Tasks.DialogueEvent" preserve="all" />
     <type fullname="Game.Tasks.E_TaskContentType" preserve="all" />
+    <type fullname="Game.Tasks.E_TaskType" preserve="all" />
+    <type fullname="Game.Tasks.ITaskData" preserve="all" />
+    <type fullname="Game.Tasks.ITaskDataCollection" preserve="all" />
     <type fullname="Game.Tasks.ITaskManager" preserve="all" />
-    <type fullname="Game.Tasks.IntExtension" preserve="all" />
-    <type fullname="Game.Tasks.TaskData" preserve="all" />
-    <type fullname="Game.Tasks.TaskDataCollection" preserve="all" />
-    <type fullname="Game.UI.Back.IBackController" preserve="all" />
-    <type fullname="Game.UI.Back.IBackModel" preserve="all" />
-    <type fullname="Game.UI.Back.IBackView" preserve="all" />
     <type fullname="Game.UI.Battle.IBattleUIScheduler" preserve="all" />
     <type fullname="Game.UI.Battle.SkillKey.Provider.ISkillKeyUIDataProvider" preserve="all" />
     <type fullname="Game.UI.Battle.SkillKey.Provider.ISkillKeyUIDataProviderFactory" preserve="all" />
     <type fullname="Game.UI.Battle.SkillKey.Provider.SkillKeyUIData" preserve="all" />
     <type fullname="Game.UI.Battle.SkillKey.Provider.SkillKeyUIDataProviderFactory" preserve="all" />
-    <type fullname="Game.UI.Begin.IBeginController" preserve="all" />
-    <type fullname="Game.UI.Begin.IBeginModel" preserve="all" />
     <type fullname="Game.VFX.IVFXManager" preserve="all" />
     <type fullname="Game.VFX.ProjectileData" preserve="all" />
     <type fullname="Game.VFX.ProjectileTrans" preserve="all" />
@@ -240,6 +239,7 @@
     <type fullname="UnityEngine.Texture" preserve="all" />
     <type fullname="UnityEngine.Time" preserve="all" />
     <type fullname="UnityEngine.Transform" preserve="all" />
+    <type fullname="UnityEngine.U2D.SpriteAtlas" preserve="all" />
     <type fullname="UnityEngine.Vector2" preserve="all" />
     <type fullname="UnityEngine.Vector3" preserve="all" />
     <type fullname="UnityEngine.WaitForSeconds" preserve="all" />

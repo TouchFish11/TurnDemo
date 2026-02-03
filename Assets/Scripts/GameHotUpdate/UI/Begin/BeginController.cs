@@ -6,7 +6,6 @@ using Core.Log;
 using Core.Service;
 using Core.UI;
 using Core.Utility;
-using Game.UI.Begin;
 using GameHotUpdate.UI.MVC;
 using GameHotUpdate.UI.Video;
 
@@ -15,7 +14,7 @@ namespace GameHotUpdate.UI.Begin
     /// <summary>
     /// ��ʼ���������
     /// </summary>
-    public class BeginController : UIController<BeginView, BeginModel>, IBeginController
+    public class BeginController : UIController<BeginView, BeginModel>
     {
         protected override System.Threading.Tasks.Task OnInit()
         {

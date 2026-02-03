@@ -13,7 +13,7 @@ namespace Core.AssetBundles.Update.Collection
     /// <typeparam name="TKey">键的类型</typeparam>
     /// <typeparam name="TValue">值的类型</typeparam>
     [Serializable]
-    public abstract class Collection<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>>, ISerializationCallbackReceiver
+    public abstract class Collection<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>>, ISerializationCallbackReceiver, ICollection<TKey, TValue>
     {
         // 核心键值映射容器，用于高效的键值对查找、添加、删除操作
         protected readonly Dictionary<TKey, TValue> keyToValueMap = new Dictionary<TKey, TValue>();
@@ -86,7 +86,7 @@ namespace Core.AssetBundles.Update.Collection
         /// <returns>找到键返回true，未找到返回false</returns>
         public bool TryGetValue(TKey key, out TValue value)
         {
-            if (keyToValueMap.TryGetValue(key, out TValue findValue))
+            if (keyToValueMap.TryGetValue(key, out var findValue))
             {
                 value = findValue;
                 return true;

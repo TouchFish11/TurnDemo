@@ -26,19 +26,15 @@ namespace GameHotUpdate.Battle.Skill.Handlers
         /// </summary>
         /// <param name="skill">当前释放的技能实例</param>
         /// <returns>协程迭代器</returns>
-        public IEnumerator OnHandle(ISkill skill)
+        public IEnumerator Handle(ISkill skill)
         {
             // 获取技能释放者的战斗上下文
             var context = skill.Caster.Context;
             // 获取当前执行技能的实体（释放者）
             var currentEntity = context.GetCurrentEntity();
 
-            // 战斗已结束则直接终止流程
-            if (context.GetTurnManager().IsBattleOver)
-            {
-                yield break;
-            }
-
+            // TODO：不能这里判断，这里早于命令执行后，应该在命令执行完后再判断是否结束等逻辑。
+            
             // 非玩家实体不执行后续逻辑（仅处理玩家释放终极技能的场景）
             if (currentEntity is not PlayerObject)
             {
@@ -79,7 +75,7 @@ namespace GameHotUpdate.Battle.Skill.Handlers
                 .UpdateOperator(currentEntity, provider);
             
             // 切换战斗相机至当前玩家实体视角（聚焦释放技能的玩家）
-            BattlePoint.BattlePoint.Instance.ActiveCamera(currentEntity);
+            context.GetProxy().UpdateCamera(currentEntity);
             
             // 更新实体朝向（让当前实体面向目标方向/默认方向）
             context.GetTurnManager().UpdateEntityLookAt(currentEntity);

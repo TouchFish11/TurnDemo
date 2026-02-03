@@ -1,7 +1,6 @@
 using System;
 using Core.Service;
 using Core.UI;
-using Game.UI.Back;
 using GameHotUpdate.UI.MVC;
 
 namespace GameHotUpdate.UI.Back
@@ -9,7 +8,7 @@ namespace GameHotUpdate.UI.Back
     /// <summary>
     /// 
     /// </summary>
-    public class BackController : UIController<BackView, BackModel>, IBackController
+    public class BackController : UIController<BackView, BackModel>
     {
         public void CompletedHide(Action action)
         {

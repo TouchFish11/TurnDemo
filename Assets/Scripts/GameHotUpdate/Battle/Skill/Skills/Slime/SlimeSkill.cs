@@ -23,7 +23,7 @@ namespace GameHotUpdate.Battle.Skill.Skills.Slime
         /// </summary>
         public string Attack { get; } = "Attack";
 
-        public SlimeSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
+        public SlimeSkill(IBattleEntityObject caster, int skillId, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, statusAddStrategy)
         {
             Caster.GetComponentInChildren<AnimationTrigger>().OnAttack += OnAttack;
         }

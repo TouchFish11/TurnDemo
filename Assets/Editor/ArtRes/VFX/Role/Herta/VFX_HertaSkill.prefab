@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5781145206804311743}
   - component: {fileID: 6057947174825307092}
   - component: {fileID: 7615784273313876205}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: ripples
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4908,7 +4908,7 @@ GameObject:
   - component: {fileID: 60141662231680779}
   - component: {fileID: 1323385545745111424}
   - component: {fileID: 5055879812612111654}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: flash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9805,7 +9805,7 @@ GameObject:
   - component: {fileID: 6101883718103128899}
   - component: {fileID: 8109785335220719667}
   - component: {fileID: 6592408371998012563}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: bubbles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14702,7 +14702,7 @@ GameObject:
   - component: {fileID: 7358957546328992451}
   - component: {fileID: 1838677527796107847}
   - component: {fileID: 2316171054654644024}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: ground_water
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19617,7 +19617,7 @@ GameObject:
   - component: {fileID: 1568219437346295183}
   - component: {fileID: 2219525902077536985}
   - component: {fileID: 7902639432157931390}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: stream_down
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24516,7 +24516,7 @@ GameObject:
   - component: {fileID: 797207903845103897}
   - component: {fileID: 3905529335776442744}
   - component: {fileID: 525164512473659734}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: VFX_HertaSkill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29440,7 +29440,7 @@ GameObject:
   - component: {fileID: 3682565985152582020}
   - component: {fileID: 3041831369403258684}
   - component: {fileID: 8415283334481510503}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: ground_color
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34328,7 +34328,7 @@ GameObject:
   - component: {fileID: 3311603479524084272}
   - component: {fileID: 481445054616632267}
   - component: {fileID: 8635049574971401622}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: splash_long_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39234,7 +39234,7 @@ GameObject:
   - component: {fileID: 1309010163531797300}
   - component: {fileID: 4283284866287969918}
   - component: {fileID: 1748575975962311002}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: splash_long
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44140,7 +44140,7 @@ GameObject:
   - component: {fileID: 1007000033321968977}
   - component: {fileID: 5441407236772819416}
   - component: {fileID: 1370280343189390698}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: stream_up
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -49039,7 +49039,7 @@ GameObject:
   - component: {fileID: 1029848883873293328}
   - component: {fileID: 5227624062930652078}
   - component: {fileID: 199927421322773890}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: beam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53946,7 +53946,7 @@ GameObject:
   - component: {fileID: 5192714652601523037}
   - component: {fileID: 3959783049548291623}
   - component: {fileID: 7996725138835628244}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: bubbles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58843,7 +58843,7 @@ GameObject:
   - component: {fileID: 3602984875759070668}
   - component: {fileID: 6676894321160881905}
   - component: {fileID: 6292532268053119209}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: splash_mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}

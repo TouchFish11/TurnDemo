@@ -51,20 +51,10 @@ namespace GameHotUpdate.Battle.Summon.Summons
 
         public override void Heal(int value)
         {
-            // �ٻ��ﲻ�ɻظ�������չΪ�ɻظ���
-        }
 
-        //public override void TakeDamage(int damage, E_ElementType propertyType)
-        //{
-        //    // �ٻ��ﲻ�ɱ�����������չΪ�ɱ�������
-        //}
+        }
 
         protected override IEnumerator OnExceuteAction()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        protected override void OnPreTakeDamage(DamageResult damageResult)
         {
             throw new System.NotImplementedException();
         }

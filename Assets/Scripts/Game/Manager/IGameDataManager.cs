@@ -29,7 +29,7 @@ namespace Game.Manager
         /// <summary>
         /// 任务数据集合
         /// </summary>
-        TaskDataCollection TaskDataCollection { get; }
+        ITaskDataCollection TaskDataCollection { get; }
 
         Task InitData();
         

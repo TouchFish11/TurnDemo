@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 699033541633367244}
   - component: {fileID: 1741037311406154482}
   - component: {fileID: 5011290609747484547}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Spinning
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4841,7 +4841,7 @@ GameObject:
   - component: {fileID: 3292141806920730741}
   - component: {fileID: 2555342581955208693}
   - component: {fileID: 3571191607641909052}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: BlackBack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9671,7 +9671,7 @@ GameObject:
   - component: {fileID: 1731874991266527420}
   - component: {fileID: 69856880019577461}
   - component: {fileID: 621525730728150251}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: VFX_Shield
   m_TagString: Untagged
   m_Icon: {fileID: 0}

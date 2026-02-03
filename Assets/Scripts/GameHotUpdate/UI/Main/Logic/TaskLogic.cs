@@ -26,6 +26,12 @@ namespace GameHotUpdate.UI.Main.Logic
         /// </summary>
         public override void Init()
         {
+            // 初始化任务栏状态：默认隐藏
+            SetTaskbarActive(false);
+            // 注册任务系统回调：任务更新时执行TaskLogic的UpdateTask方法
+            ServiceLocator.Get<ITaskManager>().OnUpdateTask += UpdateTask;
+            // 注册任务系统回调：任务取消时执行TaskLogic的CancelTask方法
+            ServiceLocator.Get<ITaskManager>().OnCancelTask += CancelTask;
             // 通过服务定位器获取任务管理器，执行任务状态检查
             ServiceLocator.Get<ITaskManager>().CheckTaskState();
         }
@@ -36,10 +42,10 @@ namespace GameHotUpdate.UI.Main.Logic
         /// </summary>
         /// <param name="currentTaskInfo">当前任务的基础信息（如任务名称、描述、目标等）</param>
         /// <param name="currentTaskData">当前任务的运行时数据（如完成状态、追踪状态、进度等）</param>
-        public void UpdateTask(TaskInfo currentTaskInfo, TaskData currentTaskData)
+        public void UpdateTask(TaskInfo currentTaskInfo, ITaskData currentTaskData)
         {
             // 确定任务栏激活状态：已完成则取消激活，未完成则根据追踪状态判断
-            var isActive = currentTaskData.isCompleted ? !currentTaskData.isCompleted : currentTaskData.isTracking;
+            var isActive = currentTaskData.IsCompleted ? !currentTaskData.IsCompleted : currentTaskData.IsTracking;
             // 设置任务栏激活/禁用状态
             mainView.SetTaskbarActive(isActive);
             
@@ -68,6 +74,13 @@ namespace GameHotUpdate.UI.Main.Logic
         {
             // 调用视图层方法更新任务栏激活状态
             mainView.SetTaskbarActive(isActive);
+        }
+
+        public override void Dispose()
+        {
+            ServiceLocator.Get<ITaskManager>().OnUpdateTask -= UpdateTask;
+            ServiceLocator.Get<ITaskManager>().OnCancelTask -= CancelTask;
+            base.Dispose();
         }
     }
 }

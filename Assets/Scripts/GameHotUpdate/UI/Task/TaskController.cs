@@ -1,16 +1,18 @@
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
+using Core.AssetBundles.Update.Collection;
 using Core.Config;
 using Core.DataPersistence.Binary;
 using Core.Pool;
 using Core.Service;
 using Core.UI;
 using Core.Utility;
-using Game.Manager;
 using Game.Objects;
 using Game.Tasks;
+using GameHotUpdate.Tasks;
 using GameHotUpdate.UI.General;
 using GameHotUpdate.UI.MVC;
+using TaskUtility = GameHotUpdate.Tasks.TaskUtility;
 
 namespace GameHotUpdate.UI.Task
 {
@@ -22,7 +24,7 @@ namespace GameHotUpdate.UI.Task
     public class TaskController : UIController<TaskView, TaskModel>
     {
         // 任务数据集合，存储当前所有任务的状态数据
-        private TaskDataCollection taskDataCollection;
+        private ITaskDataCollection taskDataCollection;
         
         /// <summary>
         /// 控制器初始化方法（异步）
@@ -46,7 +48,7 @@ namespace GameHotUpdate.UI.Task
                     model.IsFollowingTask = true;
                     view.UpdateFollowTask(model.IsFollowingTask);
                     // 选中当前正在追踪的任务
-                    SelectTrackingTask(taskData.currentTaskId);
+                    SelectTrackingTask(taskData.CurrentTaskId);
                 }
                 else
                 {
@@ -115,7 +117,13 @@ namespace GameHotUpdate.UI.Task
             // 临时设置任务分组允许取消选中，避免初始化过程中Toggle无法响应事件
             view.TaskItemGroup.allowSwitchOff = true;
             // 获取全局任务数据集合实例
-            taskDataCollection = ServiceLocator.Get<IGameManager>().GameDataManager.TaskDataCollection;
+
+            taskDataCollection = TaskUtility.GetTaskDataCollection();
+            if (taskDataCollection == null)
+            {
+                return;
+            }
+            
             // 从二进制数据管理器加载任务配置表（Excel配置），获取任务ID到任务信息的映射表
             var idToInfoMap = ServiceLocator.Get<IBinaryDataManager>().GetConfig<TaskInfoContainer>(EConfigLoadType.Excel).dataDic;
 
@@ -123,7 +131,7 @@ namespace GameHotUpdate.UI.Task
             foreach (var taskInfo in idToInfoMap.Values)
             {
                 // 检查任务数据集合中是否包含当前任务ID（判断是否是已解锁/可显示的任务）
-                if (taskDataCollection.ContainsKey(taskInfo.f_id))
+                if (((Collection<string, TaskData>)taskDataCollection).ContainsKey(taskInfo.f_id))
                 {
                     // 如果任务已完成，则跳过不显示
                     if (taskDataCollection.IsFinished(taskInfo.f_id))
@@ -184,7 +192,7 @@ namespace GameHotUpdate.UI.Task
             // 注册任务项选中事件，选中时更新任务详情展示
             taskItemWrapper.OnSelectedTask += UpdateTaskDetail;
             // 尝试从任务数据集合中获取该任务的状态数据
-            taskDataCollection.TryGetValue(taskInfo.f_id, out var taskData);
+            //((Collection<string, TaskData>)taskDataCollection).TryGetValue(taskInfo.f_id, out var _);
             // 初始化任务项UI（传入任务信息和任务分组组件）
             taskItemWrapper.Init(taskInfo, view.TaskItemGroup);
             // 将任务项添加到所属的任务类型容器中管理
@@ -225,7 +233,7 @@ namespace GameHotUpdate.UI.Task
             }
             
             // 同步任务追踪状态：从任务数据集合中获取当前任务的追踪标记
-            if (ServiceLocator.Get<IGameManager>().GameDataManager.TaskDataCollection.TryGetValue(id, out var taskData))
+            if (((Collection<string, TaskData>)taskDataCollection).TryGetValue(id, out var taskData))
             {
                 model.IsFollowingTask = taskData.isTracking;
             }

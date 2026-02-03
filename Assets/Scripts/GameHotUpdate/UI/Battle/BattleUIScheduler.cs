@@ -1,3 +1,4 @@
+using System.Collections;
 using Core.Log;
 using Core.Reflection;
 using Core.Service;
@@ -42,10 +43,10 @@ namespace GameHotUpdate.UI.Battle
         /// </summary>
         /// <param name="caster"></param>
         /// <param name="skillInfo"></param>
-        public void UltimateTriggerChangeUI(IBattleEntityObject caster, SkillInfo skillInfo)
+        public IEnumerator UltimateTriggerChangeUI(IBattleEntityObject caster, SkillInfo skillInfo)
         {
             // ��ʾ��ɫ����
-            _battleController.BattleUiManager.ShowPaiting((caster as PlayerObject)?.RoleInfo, skillInfo);
+            yield return _battleController.BattleUiManager.ShowPaiting((caster as PlayerObject)?.RoleInfo, skillInfo);
             // �����ж���ʾ
             _battleController.BattleUiManager.SetActTipActive(E_ActTipType.Hide);
             // �����սἼUI��ʾ
@@ -66,7 +67,7 @@ namespace GameHotUpdate.UI.Battle
         public void UpdateCameraAndHideMarkerAndMonsterUI(IBattleContext context, IBattleEntityObject target)
         {
             // ���������������
-            ServiceLocator.Get<IBattlePoint>().ActiveCamera(target);
+            ServiceLocator.Get<IBattlePointProxy>().UpdateCamera(target);
             // �໥���򡢿��򹥻������
             context.GetTurnManager().UpdateEntityLookAt(target);
             // ���ع���UI

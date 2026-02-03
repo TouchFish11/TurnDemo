@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 662888202626207244}
   - component: {fileID: 2740526688600152227}
   - component: {fileID: 5347294479656891867}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: VFX_HeartUltimatePose
   m_TagString: Untagged
   m_Icon: {fileID: 0}

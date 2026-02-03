@@ -8,6 +8,7 @@ using Core.Log;
 using Core.Mono;
 using Core.Reflection;
 using Core.Service;
+using Core.Time;
 using Core.UI;
 using Core.Utility;
 using Game.Battle;
@@ -21,12 +22,14 @@ using Game.Tasks;
 using Game.UI.Battle.SkillKey.Provider;
 using GameHotUpdate.Battle.Event.Turn;
 using GameHotUpdate.Objects;
+using GameHotUpdate.Tasks;
 using GameHotUpdate.UI.Battle.ActionLine;
 using GameHotUpdate.UI.Battle.Status;
 using UnityEngine;
 using BattlePointUI = GameHotUpdate.UI.Battle.BattlePoint.BattlePointUI;
 using Random = UnityEngine.Random;
 using SkillKeyUI = GameHotUpdate.UI.Battle.SkillKey.SkillKeyUI;
+using TaskUtility = Core.Utility.TaskUtility;
 
 namespace GameHotUpdate.UI.Battle.Base
 {
@@ -176,7 +179,7 @@ namespace GameHotUpdate.UI.Battle.Base
             var dmgTextOffset = GetDamageTextUIPos(damageResult.Target, damageTextXOffsetRange, damageTextYOffsetRange);
             
             // 将世界坐标转换为UI本地坐标并设置文本位置
-            if (UIUtility.WorldToLocalPointInRectangle(ServiceLocator.Get<IBattlePoint>().CurrentActiveCamera, UIManager.Instance.UICamera, _view.ViewObj.transform, damageTextUIWrapper.gameObject, damageResult.Target.GameObject.transform.position, dmgTextOffset))
+            if (UIUtility.WorldToLocalPointInRectangle(ServiceLocator.Get<IBattlePointProxy>().CurrentActiveCamera, UIManager.Instance.UICamera, _view.ViewObj.transform, damageTextUIWrapper.gameObject, damageResult.Target.GameObject.transform.position, dmgTextOffset))
             {
                 // 初始化伤害文本（元素颜色、伤害类型文本、最终伤害值）
                 damageTextUIWrapper.InitDamageText(((int)damageResult.ElementType).ToElementTypeColor(), GetDamgeTypeText(damageResult), damageResult.FinalDamage);
@@ -200,7 +203,7 @@ namespace GameHotUpdate.UI.Battle.Base
             var dmgTextOffset = GetDamageTextUIPos(target, damageTextXOffsetRange, damageTextYOffsetRange);
             
             // 将世界坐标转换为UI本地坐标并设置文本位置
-            if (UIUtility.WorldToLocalPointInRectangle(ServiceLocator.Get<IBattlePoint>().CurrentActiveCamera, UIManager.Instance.UICamera, _view.ViewObj.transform, damageTextUIWrapper.gameObject, target.GameObject.transform.position, dmgTextOffset))
+            if (UIUtility.WorldToLocalPointInRectangle(ServiceLocator.Get<IBattlePointProxy>().CurrentActiveCamera, UIManager.Instance.UICamera, _view.ViewObj.transform, damageTextUIWrapper.gameObject, target.GameObject.transform.position, dmgTextOffset))
             {
                 // 初始化治疗文本（绿色字体、"+"前缀、治疗量）
                 damageTextUIWrapper.InitDamageText(Color.green, GetHealText(), deltaHp);
@@ -247,7 +250,7 @@ namespace GameHotUpdate.UI.Battle.Base
             
                 // 计算状态文本显示位置（目标实体上方160像素）
                 if (UIUtility.WorldToLocalPointInRectangle(
-                        ServiceLocator.Get<IBattlePoint>().CurrentActiveCamera, 
+                        ServiceLocator.Get<IBattlePointProxy>().CurrentActiveCamera, 
                         ServiceLocator.Get<IUIManager>().UICamera,
                         _view.BuffTextArea, statusEffectTextUIWrapper.gameObject, 
                         newStatus.Owner.SubGameObject.transform.position, 
@@ -529,14 +532,16 @@ namespace GameHotUpdate.UI.Battle.Base
         /// </summary>
         /// <param name="roleInfo">角色信息</param>
         /// <param name="skillInfo">技能信息</param>
-        public async void ShowPaiting(RoleInfo roleInfo, SkillInfo skillInfo)
+        public IEnumerator ShowPaiting(RoleInfo roleInfo, SkillInfo skillInfo)
         {
             // 加载角色立绘图标
-            var icon = await ServiceLocator.Get<IFactoryManager>().GetFactory<IAssetLoaderFactory, AssetLoaderFactory>().GetSpriteLoader().GetSpriteAsync(ResKeyCollection.Atlas_Icon, roleInfo.f_icon);
+            var iconTask = ServiceLocator.Get<IFactoryManager>().GetFactory<IAssetLoaderFactory, AssetLoaderFactory>().GetSpriteLoader().GetSpriteAsync(ResKeyCollection.Atlas_Icon, roleInfo.f_icon);
+            yield return TaskUtility.WaitForTask(iconTask);
             
             // 启动协程控制显示时长
-            ServiceLocator.Get<IMonoAdapter>().StartCoroutine(ShowPaiting_Cor(icon, skillInfo));
-            return;
+            yield return ShowPaiting_Cor(iconTask.Result, skillInfo);
+            
+            yield break;
 
             // 立绘显示协程
             IEnumerator ShowPaiting_Cor(Sprite icon, SkillInfo skillInfo)

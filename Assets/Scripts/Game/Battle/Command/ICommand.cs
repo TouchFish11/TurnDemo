@@ -31,5 +31,12 @@ namespace Game.Battle.Command
         /// <param name="context"></param>
         /// <returns></returns>
         IEnumerator Execute(IBattleContext context);
+
+        /// <summary>
+        /// 执行后处理
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        IEnumerator ExcutePostProcess(IBattleContext context);
     }
 }

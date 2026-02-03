@@ -4,6 +4,9 @@ using Game.Battle.Skill;
 
 namespace Game.VFX
 {
+    /// <summary>
+    /// 弹射物数据
+    /// </summary>
     public struct ProjectileData
     {
         public readonly IBattleEntityObject caster;

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4829365033076837966}
   - component: {fileID: 7459755666839637969}
   - component: {fileID: 3616347190934013}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Flash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4899,7 +4899,7 @@ GameObject:
   - component: {fileID: 6402686687424091805}
   - component: {fileID: 3073600034497402786}
   - component: {fileID: 5963068951322184357}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Particles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9787,7 +9787,7 @@ GameObject:
   - component: {fileID: 5755239207208704429}
   - component: {fileID: 24288367565513456}
   - component: {fileID: 8841409712295059328}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Lightning
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14625,7 +14625,7 @@ GameObject:
   - component: {fileID: 5909129707488920901}
   - component: {fileID: 77323422271870925}
   - component: {fileID: 8366765017717535839}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Particles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19513,7 +19513,7 @@ GameObject:
   - component: {fileID: 6192814134691867524}
   - component: {fileID: 5487803170010430412}
   - component: {fileID: 1065169743878073323}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Flash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24401,7 +24401,7 @@ GameObject:
   - component: {fileID: 3182711499539523329}
   - component: {fileID: 7805662073783377966}
   - component: {fileID: 4529619266905533132}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: VFX_SupportSkill_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}

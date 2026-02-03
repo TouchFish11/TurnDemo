@@ -28,8 +28,8 @@
         },
         {
             "packageName": "camera.assetbundle",
-            "packageSize": 3049,
-            "packageMD5": "8f61921654d53b5b36efeb4d229ec77b"
+            "packageSize": 3155,
+            "packageMD5": "50d998c62497ebfc42f4d98b27c03a59"
         },
         {
             "packageName": "gameconfig.assetbundle",
@@ -38,8 +38,8 @@
         },
         {
             "packageName": "hotupdate.assetbundle",
-            "packageSize": 140774,
-            "packageMD5": "29648e62d654afec7f842e42428791f4"
+            "packageSize": 145570,
+            "packageMD5": "8ac6a8bf00fb1663a8ffa1c9befc1d03"
         },
         {
             "packageName": "material.assetbundle",
@@ -54,17 +54,17 @@
         {
             "packageName": "PC.assetbundle",
             "packageSize": 1975,
-            "packageMD5": "47ff797b248586d98f0739f69d462f06"
+            "packageMD5": "4258651902d4083e4dec3848a314e894"
         },
         {
             "packageName": "prefab.assetbundle",
-            "packageSize": 28533738,
-            "packageMD5": "df357078294ec0e7dde317a5093b6f3f"
+            "packageSize": 28533719,
+            "packageMD5": "58823a4df9b3b8213d664716b80acfbd"
         },
         {
             "packageName": "scene.assetbundle",
-            "packageSize": 14020837,
-            "packageMD5": "c2faed5e8cf21378dedfe271cbc2c4f8"
+            "packageSize": 14020593,
+            "packageMD5": "359abd3c873fd9ef7b734aabc084defa"
         },
         {
             "packageName": "spriteatlas.assetbundle",
@@ -83,8 +83,8 @@
         },
         {
             "packageName": "vfx.assetbundle",
-            "packageSize": 11047969,
-            "packageMD5": "64c773931b88988c732c8c8f8c75087e"
+            "packageSize": 11048047,
+            "packageMD5": "3a423235976d14b4fdbcf069ba2c1790"
         }
     ]
 }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 85771348308622864}
   - component: {fileID: 2053255249259724735}
   - component: {fileID: 4693889404354415169}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Beam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4900,7 +4900,7 @@ GameObject:
   - component: {fileID: 8388206981407677592}
   - component: {fileID: 4464575100271772603}
   - component: {fileID: 1294001907636422277}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: VFX_MonsterDead
   m_TagString: Untagged
   m_Icon: {fileID: 0}

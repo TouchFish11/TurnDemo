@@ -1,0 +1,43 @@
+using System.Collections;
+using Game.Battle.Command;
+using Game.Battle.Context;
+using Game.Battle.Skill.Interface;
+
+namespace GameHotUpdate.Battle.Command
+{
+    /// <summary>
+    /// ��������
+    /// ��װ���ܵĵ���
+    /// </summary>
+    public class SkillCommand : Game.Battle.Command.Command, ISkillCommand
+    {
+        public override int Priority { get; protected set; }
+        
+        public ISkillData SkillData;
+
+        /// <summary>
+        /// ��ʼ����������
+        /// </summary>
+        /// <param name="skillData"></param>
+        public void Init(ISkillData skillData)
+        {
+            Sender = skillData.Skill.Caster;
+            this.SkillData = skillData;
+        }
+        
+        /// <summary>
+        /// ִ�м���
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public override IEnumerator Execute(IBattleContext context)
+        {
+            return SkillData.Skill.Cast(context);
+        }
+
+        public override IEnumerator ExcutePostProcess(IBattleContext context)
+        {
+            yield return SkillData.SkillCastPostHandler.Handle(SkillData.Skill);
+        }
+    }
+}

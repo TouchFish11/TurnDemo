@@ -20,14 +20,14 @@ namespace GameHotUpdate.Battle.Skill.Skills.FireFly
         private static WaitForSeconds _waitForSeconds0_25 = new WaitForSeconds(0.25f);
         private readonly string ultimateAttackState = "UltimateAttack";
 
-        public FireFlyUltimateSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
+        public FireFlyUltimateSkill(IBattleEntityObject caster, int skillId, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, statusAddStrategy)
         {
 
         }
 
-        protected override void OnPreUltimateCast(IBattleContext context)
+        protected override IEnumerator OnPreUltimateCast(IBattleContext context)
         {
-            base.OnPreUltimateCast(context);
+            yield return base.OnPreUltimateCast(context);
 
             // ����Ԥ������������սἼpose���սἼ����
             Caster.GetComponent<BattleAnimationComponent>().SetUltimatePose();
@@ -63,7 +63,7 @@ namespace GameHotUpdate.Battle.Skill.Skills.FireFly
             yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).normalizedTime >= 0.9f);
 
             // �ص���ʼλ��
-            targetPos = BattlePoint.BattlePoint.Instance.GetPlayerTransByIndex(Caster.EntityPosIndex).position;
+            targetPos = context.GetProxy().BattlePoint.GetRoleTransByIndex(Caster.EntityPosIndex).position;
             Caster.GameObject.transform.position = targetPos;
 
             yield return _waitForSeconds0_25;

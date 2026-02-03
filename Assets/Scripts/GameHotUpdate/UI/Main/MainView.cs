@@ -65,7 +65,7 @@ namespace GameHotUpdate.UI.Main
         /// </summary>
         /// <param name="taskInfo">任务基础配置信息</param>
         /// <param name="taskData">任务当前进度数据</param>
-        public void UpdateTask(TaskInfo taskInfo, TaskData taskData)
+        public void UpdateTask(TaskInfo taskInfo, ITaskData taskData)
         {
             // 1. 设置任务标题
             txtTaskTitle.text = taskInfo.f_taskName;
@@ -76,7 +76,7 @@ namespace GameHotUpdate.UI.Main
             var taskCondition = taskConditionContainer.dataDic[taskInfo.f_completionConditionId];
 
             // 3. 设置任务描述及进度（格式：任务描述 + 当前进度/最大进度）
-            txtTaskDescription.text = $"{taskInfo.f_taskDescription}  {taskData.currentPro}/{taskCondition.f_maxPro}";
+            txtTaskDescription.text = $"{taskInfo.f_taskDescription}  {taskData.CurrentPro}/{taskCondition.f_maxPro}";
         }
         #endregion
     }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6880179826872284596}
   - component: {fileID: 5454208637581071066}
   - component: {fileID: 3523364086202755333}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: VFX_MonsterHit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4909,7 +4909,7 @@ GameObject:
   - component: {fileID: 8628988900014600083}
   - component: {fileID: 6388270660705491145}
   - component: {fileID: 3553048466323374924}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Particle System (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

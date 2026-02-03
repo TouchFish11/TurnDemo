@@ -9,7 +9,7 @@ namespace GameHotUpdate.Battle.Skill.Handlers
     /// </summary>
     public class BaseSkillCastPostHandler : ISkillCastPostHandler
     {
-        public IEnumerator OnHandle(ISkill skill)
+        public IEnumerator Handle(ISkill skill)
         {
             // �����ж�����
             skill.Caster.SubActCount();

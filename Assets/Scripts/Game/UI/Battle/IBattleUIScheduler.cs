@@ -1,3 +1,4 @@
+using System.Collections;
 using Core.UI.MVC;
 using Game.Battle.Context;
 using Game.Battle.Objects;
@@ -15,7 +16,7 @@ namespace Game.UI.Battle
         /// </summary>
         /// <param name="caster"></param>
         /// <param name="skillInfo"></param>
-        void UltimateTriggerChangeUI(IBattleEntityObject caster, SkillInfo skillInfo);
+        IEnumerator UltimateTriggerChangeUI(IBattleEntityObject caster, SkillInfo skillInfo);
 
         /// <summary>
         /// ������������ر�ǡ�����UI

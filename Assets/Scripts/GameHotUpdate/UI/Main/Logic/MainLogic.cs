@@ -27,5 +27,12 @@ namespace GameHotUpdate.UI.Main.Logic
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public T As<T>() where T : MainLogic => this as T;
+        
+        public virtual void Dispose()
+        {
+            mainController = null;
+            mainModel = null;
+            mainView = null;
+        }
     }
 }

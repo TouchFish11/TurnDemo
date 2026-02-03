@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2532555529945553968}
   - component: {fileID: 5189423210687304614}
   - component: {fileID: 6812947281156660745}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Flash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4899,7 +4899,7 @@ GameObject:
   - component: {fileID: 3378091897422096189}
   - component: {fileID: 4566414258093751906}
   - component: {fileID: 4833824779865269398}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: VFX_NormalSkill_Wave
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -21,6 +21,13 @@ namespace Game.Battle.Command
 
         public abstract IEnumerator Execute(IBattleContext context);
 
+        /// <summary>
+        /// 执行后处理
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public abstract IEnumerator ExcutePostProcess(IBattleContext context);
+
         public virtual void ResetData()
         {
             Sender = null;

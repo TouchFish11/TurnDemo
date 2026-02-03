@@ -23,7 +23,7 @@ namespace GameHotUpdate.Battle.Projectile
             foreach (IBattleEntityObject target in projectileData.targets)
             {
                 damageCalcManager.CalcSkillDamage(projectileData.caster, target, projectileData.skill.SkillInfo, out DamageResult result);
-                target.TryTakeDamage(result);
+                target.TakeDamage(result);
 
                 // ��ײ��Ч
                 ProjectileTrans projectileTrans = new ProjectileTrans(target.GameObject.transform.position, Quaternion.identity);

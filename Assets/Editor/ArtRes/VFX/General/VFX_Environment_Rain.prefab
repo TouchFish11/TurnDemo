@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1699896182404904748}
   - component: {fileID: 1037606995633642352}
   - component: {fileID: 682790856231040190}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Particle System (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4899,7 +4899,7 @@ GameObject:
   - component: {fileID: 6249118705865271221}
   - component: {fileID: 6979346188334962273}
   - component: {fileID: 5523950517686563093}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: VFX_Environment_Rain
   m_TagString: Untagged
   m_Icon: {fileID: 0}

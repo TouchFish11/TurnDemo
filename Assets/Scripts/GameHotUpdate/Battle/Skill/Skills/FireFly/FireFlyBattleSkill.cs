@@ -19,7 +19,7 @@ namespace GameHotUpdate.Battle.Skill.Skills.FireFly
     {
         private readonly string battleAttackState = "BattleAttack";
 
-        public FireFlyBattleSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
+        public FireFlyBattleSkill(IBattleEntityObject caster, int skillId, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, statusAddStrategy)
         {
 
         }

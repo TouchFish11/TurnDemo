@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace Game.VFX
 {
+    /// <summary>
+    /// 弹射物变换信息
+    /// </summary>
     public readonly struct ProjectileTrans
     {
         public Transform Parent { get; }

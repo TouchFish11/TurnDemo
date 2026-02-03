@@ -1,8 +1,8 @@
 namespace Core.Config
 {
 	/// <summary>
-	/// 资源键集合类
-	/// <summary/>
+	/// 资源键值集合类，自动生成，包含所有资源名称的静态字符串常量
+	/// </summary>
 	public class ResKeyCollection
 	{
 		public static string Slime_Attack_Anim => "Slime_Attack_Anim";
@@ -20,19 +20,15 @@ namespace Core.Config
 		public static string BaseRole => "BaseRole";
 		public static string FireFlyAnimtor => "FireFlyAnimtor";
 		public static string HertaAnimtor => "HertaAnimtor";
+		public static string BattleCamera => "BattleCamera";
 		public static string MainCamera => "MainCamera";
 		public static string UICamera => "UICamera";
 		public static string BranchInfo => "BranchInfo";
 		public static string DialogueInfo => "DialogueInfo";
-		public static string MonsterInfo => "MonsterInfo";
 		public static string NpcInfo => "NpcInfo";
-		public static string RoleInfo => "RoleInfo";
-		public static string SkillInfo => "SkillInfo";
-		public static string StatusInfo => "StatusInfo";
 		public static string TaskConditionInfo => "TaskConditionInfo";
 		public static string TaskInfo => "TaskInfo";
 		public static string MainActionMap => "MainActionMap";
-		public static string ItemGrid => "ItemGrid";
 		public static string Ground => "Ground";
 		public static string MergedMesh => "MergedMesh";
 		public static string Prefab_Player => "Prefab_Player";
@@ -79,6 +75,7 @@ namespace Core.Config
 		public static string DialogueOptUI => "DialogueOptUI";
 		public static string DialogueReviewUI => "DialogueReviewUI";
 		public static string DialogueView => "DialogueView";
+		public static string ItemGrid => "ItemGrid";
 		public static string GlobalMessageView => "GlobalMessageView";
 		public static string MessageUI => "MessageUI";
 		public static string InteractUI => "InteractUI";

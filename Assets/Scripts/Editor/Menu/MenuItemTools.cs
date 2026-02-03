@@ -50,7 +50,7 @@ namespace Editor.Menu
         {
             IScriptGenerator scriptGenerator = new ResKeyCollectionClassGenerator();
             scriptGenerator.GenerateScript();
-            Debug.Log($"ResKeyCollection脚本已生成，{AssetPath}{nameof(ResKeyCollection)}");
+            Debug.Log($"ResKeyCollection脚本已生成，位置：$\"{{Application.dataPath}}/Scripts/Core/Config/ResKeyCollection.cs\"");
         }
 
         /// <summary>

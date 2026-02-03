@@ -11,6 +11,6 @@ namespace Game.Battle.Skill.Handler
         /// ����
         /// </summary>
         /// <returns></returns>
-        IEnumerator OnHandle(ISkill skill);
+        IEnumerator Handle(ISkill skill);
     }
 }

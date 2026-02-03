@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Game.VFX
 {
     /// <summary>
-    /// VFX��Ϣ
+    /// VFX信息
     /// </summary>
     public class VFXInfo : IPoolData
     {
@@ -18,7 +18,7 @@ namespace Game.VFX
         /// �Ƿ�ֹͣ
         /// �ⲿ�ɿ����޸�,true���Ƴ�VFX
         /// </summary>
-        public bool IsStop { get; set; } = false;
+        public bool IsStop { get; set; }
 
         /// <summary>
         /// �Ƿ���

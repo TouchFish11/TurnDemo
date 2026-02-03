@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6560845154063038288}
   - component: {fileID: 8891747807489523809}
   - component: {fileID: 295945909356671320}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: VFX_Unknow01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4843,7 +4843,7 @@ GameObject:
   - component: {fileID: 1201760966719440263}
   - component: {fileID: 2641678261336088095}
   - component: {fileID: 1551468384242352460}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Particle System (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9673,7 +9673,7 @@ GameObject:
   - component: {fileID: 6171516108155192170}
   - component: {fileID: 333897982520416533}
   - component: {fileID: 6308920703226198588}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Particle System (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

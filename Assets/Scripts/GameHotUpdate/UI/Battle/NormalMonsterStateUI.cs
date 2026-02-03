@@ -14,6 +14,7 @@ using Game.Objects;
 using Game.Tasks;
 using GameHotUpdate.Battle.Event.General;
 using GameHotUpdate.Property;
+using GameHotUpdate.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -163,7 +164,7 @@ namespace GameHotUpdate.UI.Battle
                 return;
             }
 
-            UIUtility.WorldToLocalPointInRectangle(ServiceLocator.Get<IBattlePoint>().CurrentActiveCamera, ServiceLocator.Get<IUIManager>().UICamera, monsterStateArea, gameObject, BattleEntity.GameObject.transform.position, Vector2.up * 250);
+            UIUtility.WorldToLocalPointInRectangle(ServiceLocator.Get<IBattlePointProxy>().CurrentActiveCamera, ServiceLocator.Get<IUIManager>().UICamera, monsterStateArea, gameObject, BattleEntity.GameObject.transform.position, Vector2.up * 250);
         }
 
         /// <summary>

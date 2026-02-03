@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 2475199887
+CRC: 1802553720
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: a01a7148a21868345222decea7e89d40
+    Hash: 6a16326f01e2870d2963a31a9e824a5a
   TypeTreeHash:
     serializedVersion: 2
     Hash: ade0906da2404468b76c766d231ab3ab
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: a01a7148a21868345222decea7e89d40
+    Hash: 6a16326f01e2870d2963a31a9e824a5a
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -24,4 +24,5 @@ SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/Editor/ArtRes/Camera/UICamera.prefab
 - Assets/Editor/ArtRes/Camera/MainCamera.prefab
+- Assets/Editor/ArtRes/Camera/BattleCamera.prefab
 Dependencies: []

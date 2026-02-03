@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 892630167830218603}
   - component: {fileID: 5780565353836289436}
   - component: {fileID: 1311092282888591438}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Particle System (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4899,7 +4899,7 @@ GameObject:
   - component: {fileID: 860179691825064869}
   - component: {fileID: 7785806757746944530}
   - component: {fileID: 3569836523882954544}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: VFX_SupportSkill_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}

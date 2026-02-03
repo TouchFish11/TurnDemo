@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using Core.Log;
+using Core.Service;
 using Core.Utility;
 using Game.Battle.Component;
-using Game.Battle.Skill.Base;
 using Game.Battle.Skill.Condition;
 using Game.Battle.Skill.Interface;
 using Game.Battle.TargetSelect;
@@ -16,7 +16,7 @@ namespace Game.Battle.Skill.Component
     public abstract class SkillComponent : BattleComponent, ISkillComponent
     {
         // �����б������ñ����أ�  ����������ֻ�м���Id�б��Ϳ�����
-        protected readonly Dictionary<int, ISkill> skills = new();
+        protected readonly Dictionary<int, ISkillData> skillDatas = new();
         // �����ͷ������б�
         protected readonly List<ICastSkillCondition> castSkillConditions = new();
         // ����Ŀ��ѡ������б�
@@ -33,11 +33,9 @@ namespace Game.Battle.Skill.Component
         {
             // ͨ�����ܹ������ؼ��ܣ����ñ���ȡ��ɫ����ID�б���
             var skillIds = TextUtility.SplitToIntArr(f_skillIds, 2);
-            var skills = skillFactory.CreateSkills(BattleEntity, skillIds);
-
-            foreach (var skill in skills)
+            foreach (var skillData in skillFactory.CreateSkills(BattleEntity, skillIds))
             {
-                this.skills.Add(skill.SkillInfo.f_id, skill);
+                this.skillDatas.Add(skillData.Skill.SkillInfo.f_id, skillData);
             }
         }
 
@@ -47,9 +45,9 @@ namespace Game.Battle.Skill.Component
         /// <param name="skillId"></param>
         public void CastSkill(int skillId)
         {
-            if (skills.TryGetValue(skillId, out var skill))
+            if (skillDatas.TryGetValue(skillId, out var skillData))
             {
-                if (!CanCast(skill))
+                if (!CanCast(skillData.Skill))
                 {
                     return;
                 }
@@ -57,8 +55,8 @@ namespace Game.Battle.Skill.Component
                 IsRelease = false;
 
                 // ���ͼ�������غ϶���
-                skill.SetTargetSelectStrategy(targetSelectStrategies[0]);
-                SkillManager.Instance.AddSkillCommand(skill);
+                skillData.Skill.SetTargetSelectStrategy(targetSelectStrategies[0]);
+                ServiceLocator.Get<ISkillManager>().AddSkillCommand(skillData);
             }
             else
             {
@@ -87,12 +85,12 @@ namespace Game.Battle.Skill.Component
         /// ����ָ��ID�ļ���
         /// </summary>
         /// <param name="skillId"></param>
-        /// <param name="newSkill"></param>
-        public void AddSkill(int skillId, ISkill newSkill)
+        /// <param name="skillData"></param>
+        public void AddSkill(int skillId, ISkillData skillData)
         {
-            if (!skills.TryGetValue(skillId, out ISkill _))
+            if (!skillDatas.TryGetValue(skillId, out ISkillData _))
             {
-                skills.Add(skillId, newSkill);
+                skillDatas.Add(skillId, skillData);
             }
         }
 
@@ -161,7 +159,7 @@ namespace Game.Battle.Skill.Component
         /// <returns></returns>
         public IEnumerable<int> GetSkillIds()
         {
-            return skills.Keys;
+            return skillDatas.Keys;
         }
 
         /// <summary>
@@ -170,9 +168,9 @@ namespace Game.Battle.Skill.Component
         /// <returns></returns>
         public IEnumerable<ISkill> GetSkills()
         {
-            foreach (var skill in skills.Values)
+            foreach (var skillData in skillDatas.Values)
             {
-                yield return skill;
+                yield return skillData.Skill;
             }
         }
     }

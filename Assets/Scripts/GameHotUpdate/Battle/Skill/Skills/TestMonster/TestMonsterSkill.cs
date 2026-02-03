@@ -10,7 +10,7 @@ namespace GameHotUpdate.Battle.Skill.Skills.TestMonster
 {
     public class TestMonsterSkill : Skill
     {
-        public TestMonsterSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
+        public TestMonsterSkill(IBattleEntityObject caster, int skillId, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, statusAddStrategy)
         {
 
         }

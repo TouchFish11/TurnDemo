@@ -35,11 +35,6 @@ namespace Game.Battle.Skill
         List<IBattleEntityObject> AllTargets { get; }
 
         /// <summary>
-        /// �����ͷź�����
-        /// </summary>
-        ISkillCastPostHandler SkillCastPostHandler { get; }
-
-        /// <summary>
         /// �������
         /// </summary>
         IPropertyComponent PropertyComponent { get; }

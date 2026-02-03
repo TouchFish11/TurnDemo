@@ -199,13 +199,13 @@ namespace GameHotUpdate.UI
         /// 设置界面活动状态
         /// 只能设置第一个查找到的实例，多实例无法准确获取
         /// </summary>
-        /// <typeparam name="TController"></typeparam>
+        /// <param name="controller"></param>
         /// <param name="isActive"></param>
-        public void SetViewActive<TController>(bool isActive) where TController : IuiController
+        public void SetViewActive(IuiController controller, bool isActive)
         {
             foreach (var panelInfo in _panels)
             {
-                if (panelInfo.UiController is not TController)
+                if (panelInfo.UiController != controller)
                 {
                     continue;
                 }

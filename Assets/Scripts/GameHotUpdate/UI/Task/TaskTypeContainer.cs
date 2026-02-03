@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Core.UI;
 using Core.Utility;
-using Game.Tasks;
+using GameHotUpdate.Tasks;
 using TMPro;
 
 namespace GameHotUpdate.UI.Task

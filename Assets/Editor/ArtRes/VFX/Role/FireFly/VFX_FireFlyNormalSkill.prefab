@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 144821833550278550}
   - component: {fileID: 2095230606439265201}
   - component: {fileID: 2726842066503871450}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Hit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4901,7 +4901,7 @@ GameObject:
   - component: {fileID: 6341685666475422378}
   - component: {fileID: 8778143696503324418}
   - component: {fileID: 4048039546049135176}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Shockwave 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9790,7 +9790,7 @@ GameObject:
   - component: {fileID: 2902718742126114236}
   - component: {fileID: 3678637605584896415}
   - component: {fileID: 8632250670609093361}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: VFX_FireFlyNormalSkill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14691,7 +14691,7 @@ GameObject:
   - component: {fileID: 6995976409559307385}
   - component: {fileID: 3234108411173176763}
   - component: {fileID: 5858456341799322892}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Shockwave
   m_TagString: Untagged
   m_Icon: {fileID: 0}

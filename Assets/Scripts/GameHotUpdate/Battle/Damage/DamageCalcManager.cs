@@ -8,6 +8,7 @@ using Game.Battle.Skill.Enum;
 using Game.Tasks;
 using GameHotUpdate.Battle.Damage.Strategys;
 using GameHotUpdate.Battle.Event.General;
+using GameHotUpdate.Tasks;
 
 namespace GameHotUpdate.Battle.Damage
 {
@@ -70,7 +71,7 @@ namespace GameHotUpdate.Battle.Damage
         private void OnToughnessBrokenEvent(ToughnessBrokenEvent toughnessBrokenEvent)
         {
             CalcBrokenDamage(toughnessBrokenEvent.Breaker, toughnessBrokenEvent.Target, toughnessBrokenEvent.SkillInfo, out DamageResult result);
-            toughnessBrokenEvent.Target.TryTakeDamage(result);
+            toughnessBrokenEvent.Target.TakeDamage(result);
         }
 
         private void CalcBrokenDamage(IBattleEntityObject source, IBattleEntityObject target, SkillInfo skillInfo, out DamageResult damageResult)

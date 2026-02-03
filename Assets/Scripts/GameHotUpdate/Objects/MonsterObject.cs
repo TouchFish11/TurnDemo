@@ -13,7 +13,9 @@ using Game.Battle.Damage;
 using Game.Battle.Toughness;
 using Game.VFX;
 using GameHotUpdate.Animation;
+using GameHotUpdate.Battle.Command;
 using GameHotUpdate.Battle.Event.UI;
+using GameHotUpdate.Battle.ResponsibilityChain.DamageChain;
 using UnityEngine;
 
 namespace GameHotUpdate.Objects
@@ -57,22 +59,13 @@ namespace GameHotUpdate.Objects
         public override void BattleInit(int monsterId, IBattleContext context)
         {
             base.BattleInit(monsterId, context);
-
+            
+            // 初始化伤害链
+            damageChain = DamageChainBuilder.GetMonsterDamageChain();
             // 解析配置中的技能ID字符串（分隔符为2），填充到技能列表
             skillIds.AddRange(TextUtility.SplitToIntArr(MonsterInfo.f_skillIds, 2));
             // 根据配置的组件名称列表，为怪物添加对应的战斗组件（如韧性组件、动画组件等）
             AddComponents(TextUtility.Split(MonsterInfo.f_comNames, 2));
-        }
-
-        /// <summary>
-        /// 受击前的处理逻辑
-        /// 主要用于扣除怪物韧性值，是韧性系统的核心触发点
-        /// </summary>
-        /// <param name="damageResult">伤害结果对象（包含伤害来源、元素类型、技能信息等）</param>
-        protected override void OnPreTakeDamage(DamageResult damageResult)
-        {
-            // 获取韧性组件，根据伤害信息扣除对应韧性
-            GetComponent<IToughnessComponent>().ReduceToughness(damageResult.Source, damageResult.ElementType, damageResult.SkillInfo);
         }
 
         /// <summary>
@@ -83,11 +76,12 @@ namespace GameHotUpdate.Objects
         /// <returns>协程迭代器</returns>
         protected override IEnumerator OnExceuteAction()
         {
-            // 第一步：执行韧性恢复逻辑（若韧性被击破则等待恢复完成）
+            // 执行韧性恢复逻辑（若韧性被击破则等待恢复完成）
             yield return RestoreToughness();
 
-            // 第二步：随机从技能列表中选择一个技能ID
-            int skillId = skillIds[Random.Range(0, skillIds.Count)];
+            // 随机从技能列表中选择一个技能ID
+            // TODO：可以封装随机选择的策略类，用于玩家/怪物AI
+            var skillId = skillIds[Random.Range(0, skillIds.Count)];
             // 释放选中的技能
             CastSkill(skillId);
         }

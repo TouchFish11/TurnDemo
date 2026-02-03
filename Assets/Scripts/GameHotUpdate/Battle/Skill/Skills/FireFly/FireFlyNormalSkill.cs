@@ -25,7 +25,7 @@ namespace GameHotUpdate.Battle.Skill.Skills.FireFly
         private Vector3 localVfx = new Vector3(-90, 180, 0);
         private Transform vfxTrans;
 
-        public FireFlyNormalSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
+        public FireFlyNormalSkill(IBattleEntityObject caster, int skillId, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, statusAddStrategy)
         {
 
         }

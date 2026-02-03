@@ -1,4 +1,3 @@
-using Game.UI.Begin;
 using GameHotUpdate.UI.MVC;
 
 namespace GameHotUpdate.UI.Begin
@@ -6,7 +5,7 @@ namespace GameHotUpdate.UI.Begin
     /// <summary>
     /// ��ʼ��������
     /// </summary>
-    public class BeginModel : UIModel, IBeginModel
+    public class BeginModel : UIModel
     {
         private float  sliderProgress;
         private string txtPro;

@@ -19,7 +19,7 @@ namespace GameHotUpdate.Battle.Skill.Skills.Herta
     {
         private readonly string battleAttackState = "BattleAttack";
 
-        public HertaBattleSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
+        public HertaBattleSkill(IBattleEntityObject caster, int skillId, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, statusAddStrategy)
         {
 
         }

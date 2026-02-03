@@ -12,7 +12,7 @@ namespace GameHotUpdate.Battle.Skill.Skills
     /// </summary>
     public abstract class PlayerSkill : Skill
     {
-        public PlayerSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
+        protected PlayerSkill(IBattleEntityObject caster, int skillId, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, statusAddStrategy)
         {
 
         }

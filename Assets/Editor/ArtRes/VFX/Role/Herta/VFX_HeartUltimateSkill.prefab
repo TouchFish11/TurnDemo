@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1348755401565378189}
   - component: {fileID: 6943751236595504039}
   - component: {fileID: 7386906006821660739}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: beam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5007,7 +5007,7 @@ GameObject:
   - component: {fileID: 5368347603484663008}
   - component: {fileID: 8402855674110402399}
   - component: {fileID: 7633439740842462721}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: ground_water
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9940,7 +9940,7 @@ GameObject:
   - component: {fileID: 6886548337494905963}
   - component: {fileID: 4005903192568515805}
   - component: {fileID: 7862885240727098931}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: splash_long_start
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14864,7 +14864,7 @@ GameObject:
   - component: {fileID: 890491338549687377}
   - component: {fileID: 2132197320128892521}
   - component: {fileID: 2310632435196430810}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: splash_long_loop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19788,7 +19788,7 @@ GameObject:
   - component: {fileID: 3880426454124028484}
   - component: {fileID: 2351460812702152283}
   - component: {fileID: 7618134502454351558}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: ground_ring_loop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24694,7 +24694,7 @@ GameObject:
   - component: {fileID: 3961132032568290359}
   - component: {fileID: 3156608376992761407}
   - component: {fileID: 6701878611718292053}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: ground_ring_start
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29601,7 +29601,7 @@ GameObject:
   - component: {fileID: 3524705453681853040}
   - component: {fileID: 8929912546786294426}
   - component: {fileID: 2846147962184947482}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: VFX_HeartUltimateSkill
   m_TagString: Untagged
   m_Icon: {fileID: 0}

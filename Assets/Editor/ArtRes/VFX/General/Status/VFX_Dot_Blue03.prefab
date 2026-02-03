@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 990196062244610554}
   - component: {fileID: 9222436837077451118}
   - component: {fileID: 3978161304502216908}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Sparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4956,7 +4956,7 @@ GameObject:
   - component: {fileID: 1188752445356466055}
   - component: {fileID: 7440316211359178098}
   - component: {fileID: 1211997191250452988}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Shadow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9856,7 +9856,7 @@ GameObject:
   - component: {fileID: 4078594184310223985}
   - component: {fileID: 8457408754832633739}
   - component: {fileID: 6953436049543629373}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Shockwave
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14756,7 +14756,7 @@ GameObject:
   - component: {fileID: 158005715062026099}
   - component: {fileID: 7224367270037532843}
   - component: {fileID: 8212592645098319684}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: VFX_Dot_Blue03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19669,7 +19669,7 @@ GameObject:
   - component: {fileID: 5077034697472356269}
   - component: {fileID: 8535424963091627974}
   - component: {fileID: 7533268101954830487}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Circle
   m_TagString: Untagged
   m_Icon: {fileID: 0}

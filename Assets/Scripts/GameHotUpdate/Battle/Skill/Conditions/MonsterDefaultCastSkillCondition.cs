@@ -3,6 +3,7 @@ using Game.Battle.Skill;
 using Game.Battle.Skill.Condition;
 using Game.Battle.Skill.Enum;
 using Game.Tasks;
+using GameHotUpdate.Tasks;
 
 namespace GameHotUpdate.Battle.Skill.Conditions
 {

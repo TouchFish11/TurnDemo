@@ -13,6 +13,7 @@ using Core.UI;
 using Core.Utility;
 using Game.Dialogue;
 using Game.Tasks;
+using GameHotUpdate.Tasks;
 using GameHotUpdate.UI.Dialogue;
 using UnityEngine;
 

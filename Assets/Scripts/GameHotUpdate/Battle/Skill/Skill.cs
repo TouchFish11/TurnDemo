@@ -33,6 +33,7 @@ namespace GameHotUpdate.Battle.Skill
         protected VFXInfo vFXInfo;
         // buffId����
         protected int[] statusIds;
+        // 
         private readonly float waitTime = 0.85f;
 
         public SkillInfo SkillInfo { get; private set; }
@@ -51,11 +52,10 @@ namespace GameHotUpdate.Battle.Skill
 
         public ITargetSelectStrategy TargetSelectStrategy { get; private set; }
 
-        protected Skill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy)
+        protected Skill(IBattleEntityObject caster, int skillId, IStatusAddStrategy statusAddStrategy)
         {
             Caster = caster;
             SkillInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<SkillInfoContainer>(EConfigLoadType.Editor).dataDic[skillId];
-            SkillCastPostHandler = postHandler;
             statusIds = TextUtility.SplitToIntArr(SkillInfo.f_statusId, 2);
             StatusAddStrategy = statusAddStrategy;
             PropertyComponent = Caster.GetComponent<PropertyComponent>();
@@ -94,8 +94,8 @@ namespace GameHotUpdate.Battle.Skill
             yield return OnCast(context);
             // �ȴ�ʱ�䣬�Ż�ս������
             yield return new WaitForSeconds(waitTime);
-            // �ͷŽ�������
-            yield return OnPostCast();
+            // TODO：暂时调用
+            OnPostCast();
         }
 
         /// <summary>
@@ -110,15 +110,16 @@ namespace GameHotUpdate.Battle.Skill
         /// �����ͷź�
         /// </summary>
         /// <returns></returns>
-        protected virtual IEnumerator OnPostCast()
+        protected void OnPostCast()
         {
             // TODO�������ƶ���SkillCastPostHandler��
             // ���ս��������ʾ���˺����ı�
-            ((BattleController)ServiceLocator.Get<IBattleUIScheduler>().BattleController).BattleUiManager.ClearActiveDamageTextUI();
+            //((BattleController)ServiceLocator.Get<IBattleUIScheduler>().BattleController).BattleUiManager.ClearActiveDamageTextUI();
             // ������˺��ۼ���ʾUI
+            
             ((BattleController)ServiceLocator.Get<IBattleUIScheduler>().BattleController).BattleUiManager.UpdateCumulativeDamage(false, 0);
 
-            yield return SkillCastPostHandler.OnHandle(this);
+            // yield return SkillCastPostHandler.Handle(this);
         }
 
         /// <summary>

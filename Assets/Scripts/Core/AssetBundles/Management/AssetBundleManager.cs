@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.Log;
 using Core.Singleton;
 using Core.Utility;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Core.AssetBundles.Management
 {
@@ -132,10 +134,10 @@ namespace Core.AssetBundles.Management
         /// <summary>
         /// 异步加载资源
         /// </summary>
-        /// <typeparam name="T">资源类型</typeparam>
         /// <param name="assetBundleType">资源所在AB包名</param>
         /// <param name="assetName">资源名</param>
-        public async Task<Object> LoadAssetAsync(EAssetBundleType assetBundleType, string assetName, System.Type type)
+        /// <param name="type"></param>
+        public async Task<Object> LoadAssetAsync(EAssetBundleType assetBundleType, string assetName, Type type)
         {
             string abName = assetBundleType.ToString().ToLower();
             if (!_nameToWrapperMap.TryGetValue(abName, out var wrapper))
@@ -161,7 +163,6 @@ namespace Core.AssetBundles.Management
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="assetBundleType"></param>
-        /// <param name="assetName"></param>
         /// <returns></returns>
         public async Task<T[]> LoadAssetsAsync<T>(EAssetBundleType assetBundleType) where T : Object
         {
@@ -169,7 +170,7 @@ namespace Core.AssetBundles.Management
             if (!_nameToWrapperMap.TryGetValue(abName, out var wrapper))
             {
                 LogManager.LogError($"AB包：{abName}不存在");
-                return new T[0];
+                return Array.Empty<T>();
             }
 
             // 存在资源缓存，直接返回
@@ -188,17 +189,16 @@ namespace Core.AssetBundles.Management
         /// <summary>
         /// 异步加载所有资源
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="assetBundleType"></param>
-        /// <param name="assetName"></param>
+        /// <param name="type"></param>
         /// <returns></returns>
-        public async Task<Object[]> LoadAssetsAsync(EAssetBundleType assetBundleType, System.Type type)
+        public async Task<Object[]> LoadAssetsAsync(EAssetBundleType assetBundleType, Type type)
         {
             string abName = assetBundleType.ToString().ToLower();
             if (!_nameToWrapperMap.TryGetValue(abName, out var wrapper))
             {
                 LogManager.LogError($"AB包：{abName}不存在");
-                return new Object[0];
+                return Array.Empty<Object>();
             }
 
             // 存在资源缓存，直接返回
@@ -253,7 +253,7 @@ namespace Core.AssetBundles.Management
         /// <returns></returns>
         public async Task<bool> LoadSceneBundleAsync()
         {
-            string abName = EAssetBundleType.Scene.ToString().ToLower();
+            string abName = nameof(EAssetBundleType.Scene).ToLower();
             if (_nameToWrapperMap.TryGetValue(abName, out var _))
             {
                 return await LoadDependenciesAndTargetAsync(abName);
@@ -266,11 +266,11 @@ namespace Core.AssetBundles.Management
         /// <summary>
         /// 是否包含该场景路径
         /// </summary>
-        /// <param name="scenePath"></param>
+        /// <param name="sceneName"></param>
         /// <returns></returns>
         public bool ContainPath(string sceneName)
         {
-            string abName = EAssetBundleType.Scene.ToString().ToLower();
+            string abName = nameof(EAssetBundleType.Scene).ToLower();
             if (_nameToWrapperMap.TryGetValue(abName, out var wrapper))
             {
                 return wrapper.Convert<SceneBundleWrapper>().ContainPath(sceneName);
@@ -283,7 +283,7 @@ namespace Core.AssetBundles.Management
         /// </summary>
         public async Task<string[]> GetAllScenePaths()
         {
-            string abName = EAssetBundleType.Scene.ToString().ToLower();
+            string abName = nameof(EAssetBundleType.Scene).ToLower();
             if (_nameToWrapperMap.TryGetValue(abName, out var wrapper))
             {
                 // 加载依赖和目标包
@@ -291,13 +291,13 @@ namespace Core.AssetBundles.Management
                 if(!isSuccess)
                 {
                     LogManager.LogError($"场景包加载失败，无法获取场景路径");
-                    return new string[0];
+                    return Array.Empty<string>();
                 }
                 return wrapper.Convert<SceneBundleWrapper>().GetAllScenePaths();
             }
 
             // 包不存在，返回空数组
-            return new string[0];
+            return Array.Empty<string>();
         }
 
         /// <summary>
@@ -313,7 +313,7 @@ namespace Core.AssetBundles.Management
             _mainWrapper = null;
             _abManifest = null;
             BundleWrapper.UnloadAllAssetBundles(false);
-            System.GC.Collect();
+            GC.Collect();
         }
 
         /// <summary>
@@ -333,7 +333,7 @@ namespace Core.AssetBundles.Management
                 if (!isSuccess)
                 {
                     LogManager.LogError($"依赖包：{dependencies[i]}加载失败，无法加载目标包：{abName}");
-                    return isSuccess;
+                    return false;
                 }
             }
 

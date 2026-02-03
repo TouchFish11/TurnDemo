@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Core.Pool;
 using Core.Service;
+using Game.Battle;
 using Game.Battle.Context;
 using Game.Battle.Event;
 using Game.Battle.Objects;
@@ -22,6 +23,8 @@ namespace GameHotUpdate.Context
     {
         // 战斗事件总线实例
         private BattleEventBus _eventBus;
+        // 战斗点代理
+        private readonly IBattlePointProxy _battlePointProxy;
         // 战斗实体列表
         private List<IBattleEntityObject> _allBattleEntity = new();
         // 回合管理器
@@ -35,9 +38,10 @@ namespace GameHotUpdate.Context
         /// 最大战技点数
         public int MaxBattlePointCount { get; private set; } = 5;
 
-        public BattleContext()
+        public BattleContext(IBattlePointProxy battlePointProxy)
         {
             _eventBus = new BattleEventBus();
+            _battlePointProxy = battlePointProxy;
             // 注入自身（IBattleContext）
             _turnManager = new TurnController(this, new AllMonsterDeadCondition());
             CurentBattlePointCount = MaxBattlePointCount;
@@ -205,6 +209,11 @@ namespace GameHotUpdate.Context
         public IBattleEventBus GetEventBus()
         {
             return _eventBus;
+        }
+        
+        public IBattlePointProxy GetProxy()
+        {
+            return _battlePointProxy;
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Core.Log;
 using Core.Service;
 using Game.Battle.Command;
 using Game.Battle.Context;
@@ -10,84 +11,104 @@ using GameHotUpdate.UI.Battle.Base;
 namespace GameHotUpdate.Command
 {
     /// <summary>
-    /// ս��ָ�������
+    /// 战斗指令控制器
+    /// 负责管理战斗中所有指令的执行、排序、插入、过滤等核心逻辑
     /// </summary>
     public class BattleCommandsController
     {
-        // ս�������б�
-        private readonly List<ICommand> _battleCommands = new List<ICommand>();
-        // ս��������
+        // 战斗指令队列：存储待执行的战斗指令
+        private readonly List<ICommand> _battleCommands = new();
+        // 战斗上下文：提供战斗相关的环境数据和管理类访问
         private readonly IBattleContext _context;
-        // ��ǰִ�е�����
+        // 当前正在执行的指令
         private ICommand _command;
-        // �Ƿ��˳�
+        // 是否退出战斗：标记战斗是否结束，用于终止指令执行循环
         private bool _isQuit;
 
+        /// <summary>
+        /// 获取待执行指令队列的数量
+        /// </summary>
         public int Count => _battleCommands.Count;
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="context">战斗上下文实例，提供战斗环境核心数据</param>
         public BattleCommandsController(IBattleContext context)
         {
             _context = context;
         }
 
+        /// <summary>
+        /// 执行战斗指令的核心协程
+        /// 循环执行指令队列中的指令，直到队列为空或战斗结束
+        /// </summary>
+        /// <returns>协程迭代器</returns>
         public IEnumerator ExcuteCommand()
         {
-            // ����������û�н�������ִ��
+            // 循环条件：有正在执行的指令 或 待执行队列有指令 且 未退出战斗
             while ((_command != null || _battleCommands.Count > 0) && !_isQuit)
             {
+                // 获取队列首个指令作为当前执行命令
                 GetFirst();
-                // ִ�м�������
+                // 执行当前命令（指令自身的执行逻辑）
                 yield return _command.Execute(_context);
-                _command = null;
-                // ��������ִ�к��߼�
+                // 执行完命令内容后的处理逻辑
                 yield return OnPostCommandExcute();
+
+                // 判断是否退出战斗
+                if (_isQuit)
+                {
+                    yield break;
+                }
+                
+                // 命令执行完后逻辑
+                yield return _command.ExcutePostProcess(_context);
+                // 执行完成后清空当前命令
+                _command = null;
             }
 
-            // ��ǰ��������ִ�к����߼�
-            // ,,,
+            // 注：此处可扩展战斗结束后的统一处理逻辑
         }
 
         /// <summary>
-        /// ����ִ�к�
+        /// 指令执行后的后置处理逻辑
+        /// 包含：清理死亡怪物、检查战斗结束状态、过滤无效指令
         /// </summary>
+        /// <returns>协程迭代器</returns>
         private IEnumerator OnPostCommandExcute()
         {
-            yield return RemoveDeadMonster();
-            // ���ս���Ƿ����
+            // 移除战斗中死亡的怪物
+            yield return _context.GetTurnManager().RemoveDeadMonster();
+            // 检查战斗是否结束，并更新退出标记
             _isQuit = _context.GetTurnManager().CheckBattleOver();
-            // δ������ɸ������Ч����
+            // 过滤队列中无效的指令（如执行者已死亡的指令）
             FilterInvalidCommand();
         }
 
         /// <summary>
-        /// ִ����������Ƴ������Ĺ���ʵ��
-        /// </summary>
-        /// <returns></returns>
-        private IEnumerator RemoveDeadMonster()
-        {
-            return _context.GetTurnManager().RemoveDeadMonster();
-        }
-
-        /// <summary>
-        /// ������Ч����
+        /// 过滤指令队列中的无效指令
+        /// 反向遍历队列，移除IsValid为false的指令
         /// </summary>
         private void FilterInvalidCommand()
         {
-            for (int i = _battleCommands.Count - 1; i >= 0; i--)
+            // 反向遍历：避免移除元素导致的索引错乱
+            for (var i = _battleCommands.Count - 1; i >= 0; i--)
             {
                 if (!_battleCommands[i].IsValid)
                 {
+                    LogManager.Log($"已过滤无效指令：{_battleCommands[i]}");
                     _battleCommands.RemoveAt(i);
                 }
             }
-            // ָ���Ŷӣ�����UI��ʾ
+            // 更新UI：刷新等待指令的显示列表
             ((BattleController)ServiceLocator.Get<IBattleUIScheduler>().BattleController).BattleUiManager.UpdateWaitingCommmand(GetCommandSenders());
         }
 
         /// <summary>
-        /// ��ȡ�׸�����
+        /// 获取指令队列的首个指令
+        /// 若队列有指令，将首个指令赋值给当前执行指令，并从队列移除
         /// </summary>
-        /// <returns></returns>
         public void GetFirst()
         {
             if (_battleCommands.Count > 0)
@@ -98,39 +119,44 @@ namespace GameHotUpdate.Command
         }
 
         /// <summary>
-        /// ����ָ��
+        /// 插入新的战斗指令到执行队列
+        /// 1. 若当前无执行指令，直接赋值为当前指令
+        /// 2. 若当前有执行指令，加入队列并按优先级排序
         /// </summary>
-        /// <param name="command"></param>
+        /// <param name="command">待插入的战斗指令</param>
         public void InsertCommand(ICommand command)
         {
             if (_command == null)
             {
+                // 当前无执行指令，直接执行新指令
                 _command = command;
                 return;
             }
             else
             {
+                // 当前有执行指令，加入待执行队列
                 _battleCommands.Add(command);
-                // �����ȼ���������
+                // 按指令优先级重新排序队列
                 SortCommand();
-                // ָ���Ŷӣ�����UI��ʾ
+                // 更新UI：刷新等待指令的显示列表
                 ((BattleController)ServiceLocator.Get<IBattleUIScheduler>().BattleController).BattleUiManager.UpdateWaitingCommmand(GetCommandSenders());
             }
         }
 
         /// <summary>
-        /// �Ƴ��׸�����
+        /// 移除指令队列的首个指令
+        /// 执行后更新UI等待指令显示
         /// </summary>
         public void RemoveFirst()
         {
             _battleCommands.RemoveAt(0);
-            // ָ���Ŷӣ�����UI��ʾ
+            // 更新UI：刷新等待指令的显示列表
             ((BattleController)ServiceLocator.Get<IBattleUIScheduler>().BattleController).BattleUiManager.UpdateWaitingCommmand(GetCommandSenders());
         }
 
         /// <summary>
-        /// ��������
-        /// �����ȼ�����
+        /// 对指令队列按优先级排序
+        /// 优先级高（数值大）的指令排在队列前位
         /// </summary>
         private void SortCommand()
         {
@@ -138,23 +164,27 @@ namespace GameHotUpdate.Command
             {
                 if (c1.Priority > c2.Priority)
                 {
+                    // c1优先级更高，排在前面（返回-1表示c1在c2前）
                     return -1;
                 }
                 else if (c1.Priority < c2.Priority)
                 {
+                    // c2优先级更高，c1排在后面
                     return 1;
                 }
                 else
                 {
+                    // 优先级相同，保持原有顺序
                     return 0;
                 }
             });
         }
 
         /// <summary>
-        /// ��ȡ��������б�
+        /// 获取待执行指令队列中所有指令的发送者
+        /// 用于UI层显示等待执行指令的实体列表
         /// </summary>
-        /// <returns></returns>
+        /// <returns>指令发送者（战斗实体）列表</returns>
         public List<IBattleEntityObject> GetCommandSenders()
         {
             List<IBattleEntityObject> battleEntities = new List<IBattleEntityObject>(_battleCommands.Count);

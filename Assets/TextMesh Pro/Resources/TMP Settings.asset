@@ -20,7 +20,7 @@ MonoBehaviour:
   m_EnableRaycastTarget: 1
   m_GetFontFeaturesAtRuntime: 1
   m_missingGlyphCharacter: 0
-  m_warningsDisabled: 0
+  m_warningsDisabled: 1
   m_defaultFontAsset: {fileID: 11400000, guid: ee14cfdc5dc09f74caf1993390ae7f78, type: 2}
   m_defaultFontAssetPath: Fonts & Materials/
   m_defaultFontSize: 36

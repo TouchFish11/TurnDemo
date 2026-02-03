@@ -19,14 +19,14 @@ namespace GameHotUpdate.Battle.Skill.Skills.Herta
     {
         private readonly string ultimateAttackState = "UltimateAttack";
 
-        public HertaUltimateSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
+        public HertaUltimateSkill(IBattleEntityObject caster, int skillId, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, statusAddStrategy)
         {
 
         }
 
-        protected override void OnPreUltimateCast(IBattleContext context)
+        protected override IEnumerator OnPreUltimateCast(IBattleContext context)
         {
-            base.OnPreUltimateCast(context);
+            yield return base.OnPreUltimateCast(context);
 
             // ����Ԥ������������սἼpose���սἼ����
             Caster.GetComponent<BattleAnimationComponent>().SetUltimatePose();

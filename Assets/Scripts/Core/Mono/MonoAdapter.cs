@@ -81,7 +81,7 @@ namespace Core.Mono
             {
                 return;
             }
-            fixedUpdates.Remove(fixedUpdateFun);
+            fixedUpdates?.Remove(fixedUpdateFun);
         }
 
         public void RemoveUpdateListener(Action updateFun)
@@ -90,7 +90,7 @@ namespace Core.Mono
             {
                 return;
             }
-            updates.Remove(updateFun);
+            updates?.Remove(updateFun);
         }
         
         public void RemoveLateUpdateListener(Action lateUpdateFun)
@@ -99,7 +99,7 @@ namespace Core.Mono
             {
                 return;
             }
-            lateUpdates.Remove(lateUpdateFun);
+            lateUpdates?.Remove(lateUpdateFun);
         }
 
         private void FixedUpdate()

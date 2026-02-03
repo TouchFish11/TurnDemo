@@ -1,18 +1,15 @@
 using Game.Battle.Skill;
+using Game.Battle.Skill.Handler;
+using Game.Battle.Skill.Interface;
 
 namespace Game.Battle.Command
 {
     public interface ISkillCommand : ICommand
     {
         /// <summary>
-        /// ���ܶ���
-        /// </summary>
-        ISkill Skill { get; }
-
-        /// <summary>
         /// ��ʼ����������
         /// </summary>
-        /// <param name="skill"></param>
-        void Init(ISkill skill);
+        /// <param name="SkillData"></param>
+        void Init(ISkillData SkillData);
     }
 }

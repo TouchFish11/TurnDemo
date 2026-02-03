@@ -19,7 +19,7 @@ namespace GameHotUpdate.Battle.Skill.Skills.Herta
     {
         private readonly string attackState = "NormalAttack";
 
-        public HertaNormalSkill(IBattleEntityObject caster, int skillId, ISkillCastPostHandler postHandler, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, postHandler, statusAddStrategy)
+        public HertaNormalSkill(IBattleEntityObject caster, int skillId, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, statusAddStrategy)
         {
 
         }

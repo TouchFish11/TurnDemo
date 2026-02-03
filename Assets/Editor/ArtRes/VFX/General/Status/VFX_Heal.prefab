@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3318281379708738058}
   - component: {fileID: 4544937744763408751}
   - component: {fileID: 3682861654162800138}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Shockwave
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4899,7 +4899,7 @@ GameObject:
   - component: {fileID: 8037638548824305521}
   - component: {fileID: 4858292438840498314}
   - component: {fileID: 3197309628137263607}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Flare-horizontal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9787,7 +9787,7 @@ GameObject:
   - component: {fileID: 4270408505703409924}
   - component: {fileID: 620024809372311096}
   - component: {fileID: 6177563484393051384}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Flare-vertical
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14675,7 +14675,7 @@ GameObject:
   - component: {fileID: 6736857806747458631}
   - component: {fileID: 7689598126806911166}
   - component: {fileID: 7026816668550443284}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Flare
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19563,7 +19563,7 @@ GameObject:
   - component: {fileID: 8531432686307294139}
   - component: {fileID: 3843049129972600373}
   - component: {fileID: 6718448218151095409}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Particles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24451,7 +24451,7 @@ GameObject:
   - component: {fileID: 2014453533637658158}
   - component: {fileID: 369661456901467712}
   - component: {fileID: 5493394211368790769}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: VFX_Heal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
