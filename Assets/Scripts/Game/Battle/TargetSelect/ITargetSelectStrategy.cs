@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Game.Battle.Context;
 using Game.Battle.Objects;
 
@@ -17,10 +18,10 @@ namespace Game.Battle.TargetSelect
         /// <summary>
         /// ѡ����Ŀ��
         /// </summary>
-        /// <param name="context"></param>
+        /// <param name="targets"></param>
         /// <param name="caster"></param>
         /// <param name="skillInfo"></param>
         /// <returns></returns>
-        IBattleEntityObject SelectMainTarget(IBattleContext context, IBattleEntityObject caster, SkillInfo skillInfo);
+        IBattleEntityObject SelectMainTarget(List<IBattleEntityObject> targets, IBattleEntityObject caster, SkillInfo skillInfo);
     }
 }

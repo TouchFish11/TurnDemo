@@ -1,10 +1,11 @@
 using System.Collections;
+using System.Text;
 using Core.Config;
+using Core.Log;
 using Core.Service;
 using Game.Animation;
 using Game.Battle.Context;
 using Game.Battle.Objects;
-using Game.Battle.Skill.Handler;
 using Game.Battle.Status;
 using Game.VFX;
 using GameHotUpdate.Animation;
@@ -52,6 +53,13 @@ namespace GameHotUpdate.Battle.Skill.Skills.Slime
         {
             base.OnPreCast(context);
             vFXInfo = new VFXInfo();
+
+            StringBuilder sb = new StringBuilder();
+            foreach (var battleEntityObject in AllTargets)
+            {
+                sb.AppendLine($"怪物选择目标：{battleEntityObject}");
+            }
+            LogManager.Log($"{sb}");
         }
 
         protected override IEnumerator OnCast(IBattleContext context)

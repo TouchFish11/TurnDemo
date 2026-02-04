@@ -27,6 +27,14 @@ namespace GameHotUpdate.Context
         private readonly IBattlePointProxy _battlePointProxy;
         // 战斗实体列表
         private List<IBattleEntityObject> _allBattleEntity = new();
+        
+        // 场景怪物列表
+        private readonly List<IBattleEntityObject> _monsterObjects = new();
+        // 场景玩家列表
+        private readonly List<IBattleEntityObject> _roleObjects = new();
+        // 场景召唤物列表
+        // ...
+        
         // 回合管理器
         private ITurnController _turnManager;
         // 当前行动实体
@@ -43,9 +51,41 @@ namespace GameHotUpdate.Context
             _eventBus = new BattleEventBus();
             _battlePointProxy = battlePointProxy;
             // 注入自身（IBattleContext）
-            _turnManager = new TurnController(this, new AllMonsterDeadCondition());
-            CurentBattlePointCount = MaxBattlePointCount;
+            _turnManager = new TurnController(this, new AllMonsterDeadCondition(), new AllPlayerDeadCondition());
+            // 更新起始战技点
+            CurentBattlePointCount = 3;
         }
+        
+        public void AddSceneMonster(IBattleEntityObject battleEntity)
+        {
+            _monsterObjects.Add(battleEntity);
+        }
+        
+        public void AddSceneRole(IBattleEntityObject battleEntity)
+        {
+            _roleObjects.Add(battleEntity);
+        }
+        
+        public void RemoveSceneMonster(IBattleEntityObject battleEntity)
+        {
+            _monsterObjects.Remove(battleEntity);
+        }
+        
+        public void RemoveSceneRole(IBattleEntityObject battleEntity)
+        {
+            _roleObjects.Remove(battleEntity);
+        }
+
+        public List<IBattleEntityObject> GetSceneMonsters()
+        {
+            return _monsterObjects;
+        }
+
+        public List<IBattleEntityObject> GetSceneRoles()
+        {
+            return _roleObjects;
+        }
+        
 
         public void ConsumeSkillPoint(int cost)
         {

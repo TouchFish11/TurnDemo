@@ -1,8 +1,6 @@
 using System.Collections;
 using System.ComponentModel;
-using Game.Battle.Damage;
 using Game.Battle.Objects;
-using GameHotUpdate.Battle.Event;
 using GameHotUpdate.Objects;
 
 namespace GameHotUpdate.Battle.Summon.Summons
@@ -19,27 +17,6 @@ namespace GameHotUpdate.Battle.Summon.Summons
             Owner = owner;
             // ���ġ����˼����ͷ��¼��������˷ż���ʱ���ٻ���Эͬ������(��ѡ)
             //BattleEventBus.AddListener<SkillCastEvent>(OnOwnerSkillCastHandler);
-        }
-
-        /// <summary>
-        /// �¼��ص��������ͷż��ܺ��ٻ���Эͬ����
-        /// </summary>
-        /// <param name="evt"></param>
-        private void OnOwnerSkillCastHandler(SkillCastEvent evt)
-        {
-            //// ����Ӧ�ٻ��ߵļ����ͷţ�����ʣ���ж�����
-            //if (evt.Caster != Owner || RemainingActionTimes <= 0) return;
-
-            //Console.WriteLine($"\n{Name}��Ӧ{Owner.Name}�ļ��ܣ�����Эͬ������");
-            //// Эͬ���������ý�ɫ���˺�API��
-            //var summonDamage = Owner.GetAttribute(AttributeType.BaseAtk) * _ЭͬAttackRatio;
-            //evt.Target.TakeDamage(summonDamage);
-            //Console.WriteLine($"{evt.Target.Name}�ܵ�{Name}��Эͬ�˺���{summonDamage}��");
-
-            //// �����ж�����
-            //ConsumeActionTime();
-            //if (RemainingActionTimes <= 0)
-            //    Console.WriteLine($"{Name}�ж������ľ�����ʧ��");
         }
 
         public bool GetBattleComponent<TComponent>(out TComponent component) where TComponent : IComponent

@@ -1,6 +1,4 @@
-using System.Collections;
 using Core.Log;
-using Core.Reflection;
 using Core.Service;
 using Core.Singleton;
 using Core.UI;
@@ -10,10 +8,7 @@ using Game.Battle.Context;
 using Game.Battle.Objects;
 using Game.Battle.TargetSelect;
 using Game.UI.Battle;
-using Game.UI.Battle.SkillKey.Provider;
-using GameHotUpdate.Objects;
 using GameHotUpdate.UI.Battle.Base;
-using GameHotUpdate.UI.Battle.SkillKey.Provider;
 using UnityEngine;
 
 namespace GameHotUpdate.UI.Battle
@@ -35,27 +30,6 @@ namespace GameHotUpdate.UI.Battle
             GameObject = gameObject;
             _battleController = ServiceLocator.Get<IUIManager>().GetController<BattleController>();
             LogManager.Log($"_battleController:{_battleController}");
-        }
-        
-        /// <summary>
-        /// �սἼ����ʱUI�仯
-        /// ��ʾ�սἼ��ɫ���桢�����ж���ʾ
-        /// </summary>
-        /// <param name="caster"></param>
-        /// <param name="skillInfo"></param>
-        public IEnumerator UltimateTriggerChangeUI(IBattleEntityObject caster, SkillInfo skillInfo)
-        {
-            // ��ʾ��ɫ����
-            yield return _battleController.BattleUiManager.ShowPaiting((caster as PlayerObject)?.RoleInfo, skillInfo);
-            // �����ж���ʾ
-            _battleController.BattleUiManager.SetActTipActive(E_ActTipType.Hide);
-            // �����սἼUI��ʾ
-            var provider = ServiceLocator.Get<IFactoryManager>()
-                .GetFactory<ISkillKeyUIDataProviderFactory, SkillKeyUIDataProviderFactory>()
-                .GetCastSkillCondition<UltimateSkillKeyUIDataProvider>();
-            _battleController.BattleUiManager.UpdateOperator(caster, provider);
-            // ���¹���Ѫ��λ��
-            _battleController.UiInitializer.InitMonsterUI(caster.Context.GetAliveMonsterEntitys());
         }
 
         /// <summary>

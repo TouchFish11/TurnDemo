@@ -3,7 +3,6 @@ using Core.Log;
 using Game.Battle.Component;
 using Game.Battle.Event;
 using Game.Battle.Objects;
-using GameHotUpdate.Battle.Event;
 using GameHotUpdate.Battle.Event.Turn;
 
 namespace GameHotUpdate.Battle.Talent
@@ -22,7 +21,6 @@ namespace GameHotUpdate.Battle.Talent
             // �������п��ܴ����츳���¼��������ã��������ඩ�ģ�
             BattleEntity.Context.GetEventBus().AddListener<TurnStartEvent>(OnBattleEventHandler);
             BattleEntity.Context.GetEventBus().AddListener<TurnEndEvent>(OnBattleEventHandler);
-            BattleEntity.Context.GetEventBus().AddListener<SkillCastEvent>(OnBattleEventHandler);
         }
 
         /// <summary>

@@ -106,7 +106,6 @@ namespace GameHotUpdate.UI.Battle.Base
                 var normalMonsterStateUIs = new List<NormalMonsterStateUI>();
                 if (battleEntities != null)
                 {
-                    // 遍历所有怪物战斗实体，逐个创建怪物状态UI
                     foreach (var battleEntity in battleEntities)
                     {
                         // 从资源包加载怪物状态UI预制体，并挂载到怪物UI区域

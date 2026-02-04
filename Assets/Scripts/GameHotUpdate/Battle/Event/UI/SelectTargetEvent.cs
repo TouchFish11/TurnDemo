@@ -19,7 +19,6 @@ namespace GameHotUpdate.Battle.Event.UI
         /// </summary>
         public IBattleEntityObject MainTarget { get; private set; }
 
-
         public SelectTargetEvent(IBattleContext context, IBattleEntityObject mainTarget, List<IBattleEntityObject> selectedTargets) : base(context)
         {
             MainTarget = mainTarget;

@@ -18,8 +18,7 @@ namespace GameHotUpdate.Battle.Event
             OnBattleEvent?.Invoke(eventInfo);
         }
     }
-
-
+    
     /// <summary>
     /// 战斗事件总线
     /// 局部事件总线，负责战斗流程中各模块间的事件通信

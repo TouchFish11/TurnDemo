@@ -9,7 +9,6 @@ using Game.Animation;
 using Game.Battle;
 using Game.Battle.Command;
 using Game.Battle.Context;
-using Game.Battle.Damage;
 using Game.Battle.Toughness;
 using Game.VFX;
 using GameHotUpdate.Animation;

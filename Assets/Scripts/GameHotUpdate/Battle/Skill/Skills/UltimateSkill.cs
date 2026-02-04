@@ -1,75 +1,86 @@
 using System.Collections;
-using Core.Reflection;
 using Core.Service;
 using Game.Battle.Context;
 using Game.Battle.Enum;
+using Game.Battle.Event;
 using Game.Battle.Objects;
 using Game.Battle.Skill.Component;
 using Game.Battle.Skill.Interface;
 using Game.Battle.Status;
 using Game.Battle.TargetSelect;
 using Game.UI.Battle;
-using GameHotUpdate.Battle.TargetSelect.Strategys;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Skill.Skills
 {
     /// <summary>
-    /// �սἼ����
+    /// 终结技（必杀技）抽象基类
+    /// 所有角色的终极技能都需继承此类并实现核心释放逻辑
     /// </summary>
     public abstract class UltimateSkill : PlayerSkill
     {
+        /// <summary>
+        /// 技能组件引用（用于判断技能释放状态）
+        /// </summary>
         private readonly ISkillComponent skillComponent;
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="caster">技能释放者（战斗实体）</param>
+        /// <param name="skillId">技能ID</param>
+        /// <param name="statusAddStrategy">状态添加策略（用于处理技能附加状态）</param>
         protected UltimateSkill(IBattleEntityObject caster, int skillId, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, statusAddStrategy)
         {
+            // 从释放者身上获取技能组件，用于后续判断释放状态
             skillComponent = Caster.GetComponent<SkillComponent>();
         }
 
+        /// <summary>
+        /// 技能释放核心流程（重写父类方法）
+        /// 封装终结技释放的通用流程，子类仅需实现具体释放逻辑
+        /// </summary>
+        /// <param name="context">战斗上下文（包含战斗场景、实体、规则等核心信息）</param>
+        /// <returns>协程迭代器</returns>
         protected override IEnumerator OnCast(IBattleContext context)
         {
-            // �սἼ�ͷ�ǰ
-            yield return OnPreUltimateCast(context);
-            // �ȴ�����
+            // 执行终结技释放前的预处理逻辑
+            yield return OnPreUltimateCast();
+
+            // 待技能组件确认释放（阻塞直到释放条件满足）
             yield return new WaitUntil(() => skillComponent.IsRelease);
-            // ȷ����������Ŀ��
+
+            // 清空释放者当前能量（终结技消耗所有能量）
+            PropertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentEnergy, 0);
+
+            // 初始化技能目标（重置/筛选技能可作用的目标列表）
             ServiceLocator.Get<ISkillManager>().InitSkillTarget(this);
-            // ����Ŀ��ѡ��
+
+            // 关闭目标选择（终结技释放时不再允许手动选择目标）
             ServiceLocator.Get<ITargetSelectManager>().InActiveSelectTarget();
-            // �������UI����
+            
             ServiceLocator.Get<IBattleUIScheduler>().UltimateCasting();
-            // �սἼ�ͷ�
+
+            // 执行具体的终结技释放逻辑（子类实现）
             yield return OnUltimateCast(context);
         }
 
         /// <summary>
-        /// �սἼ�ͷ�ǰ
+        /// 终结技释放前的预处理逻辑
+        /// 可由子类重写，扩展自定义预处理行为
         /// </summary>
-        /// <param name="context"></param>
-        protected virtual IEnumerator OnPreUltimateCast(IBattleContext context)
+        /// <returns>协程迭代器</returns>
+        protected virtual IEnumerator OnPreUltimateCast()
         {
-            // ����������
-            context.GetProxy().UpdateCamera(Caster);
-            // ���¿���
-            context.GetTurnManager().UpdateEntityLookAt(Caster);
-            // ����Ŀ��ѡ��
-            ServiceLocator.Get<ITargetSelectManager>().ActiveSelectTarget();
-            // ��������Ŀ��ѡ��
-            var strategy = ServiceLocator.Get<IFactoryManager>()
-                .GetFactory<ITargetSelectStrategyFactory, TargetSelectStrategyFactory>()
-                .GetTargetSelectStrategy<PlayerBaseTargetSelectStrategy>();
-            ServiceLocator.Get<ITargetSelectManager>().SelectTarget(context, Caster, SkillInfo, strategy);
-            // �����սἼ���UI��ʾ
-            yield return ServiceLocator.Get<IBattleUIScheduler>().UltimateTriggerChangeUI(Caster, SkillInfo);
-            // ��ʱ�������������������ʾ
-            PropertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentEnergy, 0);
+            yield return ServiceLocator.Get<IBattleEventScheduler>().PreUltimateCastDispatch(Caster, SkillInfo);
         }
 
         /// <summary>
-        /// �սἼ�ͷ�
+        /// 终结技核心释放逻辑（抽象方法）
+        /// 子类必须实现此方法，定义具体的技能效果（如伤害、控制、召唤等）
         /// </summary>
-        /// <param name="context"></param>
-        /// <returns></returns>
+        /// <param name="context">战斗上下文</param>
+        /// <returns>协程迭代器</returns>
         protected abstract IEnumerator OnUltimateCast(IBattleContext context);
     }
 }

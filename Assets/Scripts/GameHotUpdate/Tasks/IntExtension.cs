@@ -97,15 +97,5 @@ namespace GameHotUpdate.Tasks
         {
             return (E_DamageType)i;
         }
-
-        /// <summary>
-        /// ת��Ϊ����Ŀ������
-        /// </summary>
-        /// <param name="i"></param>
-        /// <returns></returns>
-        public static E_SkillTargetType ToSkillTargetType(this int i)
-        {
-            return (E_SkillTargetType)i;
-        }
     }
 }

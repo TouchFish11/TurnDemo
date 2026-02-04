@@ -1,8 +1,6 @@
 using System.Collections;
 using Core.Config;
 using Core.Service;
-using Game.Battle.Damage;
-using Game.Battle.Objects;
 using Game.VFX;
 using UnityEngine;
 
@@ -24,14 +22,14 @@ namespace GameHotUpdate.Battle.Projectile.Projectiles.Monster
         protected override void Trigger()
         {
             // �����˺�
-            foreach (IBattleEntityObject target in projectileData.targets)
+            foreach (var target in projectileData.targets)
             {
-                damageCalcManager.CalcSkillDamage(projectileData.caster, target, projectileData.skill.SkillInfo, out DamageResult result);
+                damageCalcManager.CalcSkillDamage(projectileData.caster, target, projectileData.skill.SkillInfo, out var result);
                 target.TakeDamage(result);
                 // ��ײ��Ч
-                ProjectileTrans projectileTrans = new ProjectileTrans(target.GameObject.transform.position + Vector3.up * 0.5f, Quaternion.identity);
-                VFXInfo vFXInfo = new VFXInfo();
-                ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_MonsterHit, projectileTrans, default, vFXInfo);
+                var projectileTrans = new ProjectileTrans(target.GameObject.transform.position + Vector3.up * 0.5f, Quaternion.identity);
+                var vfxInfo = new VFXInfo();
+                ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_MonsterHit, projectileTrans, default, vfxInfo);
             }
 
             vFXInfo.IsStop = true;

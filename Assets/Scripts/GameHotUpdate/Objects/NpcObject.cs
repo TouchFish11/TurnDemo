@@ -1,12 +1,10 @@
 using Core.Components;
 using Core.DataPersistence.Binary;
-using Core.Log;
 using Core.Service;
 using Game.Dialogue;
 using Game.Interact;
 using Game.Objects;
 using GameHotUpdate.Interact;
-using UnityEngine;
 
 namespace GameHotUpdate.Objects
 {

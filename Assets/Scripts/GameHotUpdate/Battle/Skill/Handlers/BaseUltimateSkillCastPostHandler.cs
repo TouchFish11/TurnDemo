@@ -1,7 +1,9 @@
 using System.Collections;
+using Core.Log;
 using Core.Reflection;
 using Core.Service;
 using Core.UI;
+using Game.Battle.Objects;
 using Game.Battle.Skill;
 using Game.Battle.Skill.Component;
 using Game.Battle.Skill.Enum;
@@ -33,30 +35,16 @@ namespace GameHotUpdate.Battle.Skill.Handlers
             // 获取当前执行技能的实体（释放者）
             var currentEntity = context.GetCurrentEntity();
 
-            // TODO：不能这里判断，这里早于命令执行后，应该在命令执行完后再判断是否结束等逻辑。
-            
-            // 非玩家实体不执行后续逻辑（仅处理玩家释放终极技能的场景）
-            if (currentEntity is not PlayerObject)
+            // 判断能否处理
+            if (!CanHandle(currentEntity))
             {
                 yield break;
             }
             
-            // 检查当前实体是否具备行动能力（如未被眩晕、冰冻等控制），无行动能力则终止流程
-            if (!currentEntity.CanAct)
-            {
-                yield break;
-            }
+            LogManager.Log($"角色：{skill.Caster}，终结技释放完毕，且可以执行后处理逻辑，当前行动角色：{currentEntity}");
             
             // 获取当前玩家的普通攻击技能信息（终极技能释放后，切回普攻的目标选择逻辑）
-            var skillComponent = currentEntity.GetComponent<SkillComponent>();
-            SkillInfo currentEntitySkillInfo = null;
-            foreach (var s in skillComponent.GetSkills())
-            {
-                if (s.SkillInfo.f_SkillType == (byte)E_SkillType.NormalAttack)
-                {
-                    currentEntitySkillInfo = s.SkillInfo;
-                }
-            }
+            var currentEntitySkillInfo = GetNormalSkillInfo(currentEntity);
             
             // 隐藏战斗界面的行动提示UI（如技能释放提示、行动按钮等）
             ServiceLocator.Get<IUIManager>()
@@ -74,25 +62,50 @@ namespace GameHotUpdate.Battle.Skill.Handlers
                 .BattleUiManager
                 .UpdateOperator(currentEntity, provider);
             
-            // 切换战斗相机至当前玩家实体视角（聚焦释放技能的玩家）
+            // 更新怪物位置
+            context.GetProxy().UpdateMonsterPos(currentEntity);
+            // 切换战斗相机至当前玩家实体视角
             context.GetProxy().UpdateCamera(currentEntity);
             
             // 更新实体朝向（让当前实体面向目标方向/默认方向）
             context.GetTurnManager().UpdateEntityLookAt(currentEntity);
             
-            // 获取玩家基础目标选择策略（用于普攻的目标筛选逻辑）
+            // 获取玩家基础目标选择策略
             var strategy = ServiceLocator.Get<IFactoryManager>().
                 GetFactory<ITargetSelectStrategyFactory, TargetSelectStrategyFactory>()
                 .GetTargetSelectStrategy<PlayerBaseTargetSelectStrategy>();
-            // 执行目标选择逻辑（为后续普攻选择可攻击的目标）
-            ServiceLocator.Get<ITargetSelectManager>()
-                .SelectTarget(context, currentEntity, currentEntitySkillInfo, strategy);
             
-            // 重新初始化怪物UI的血量显示（同步当前存活怪物的血量、状态等信息）
+            // 激活目标选择
+            ServiceLocator.Get<ITargetSelectManager>().ActiveSelectTarget();
+            // 执行目标选择逻辑
+            ServiceLocator.Get<ITargetSelectManager>().SelectTarget(context, currentEntity, currentEntitySkillInfo, strategy);
+            
+            // 重新初始化怪物UI的血量显示
             ServiceLocator.Get<IUIManager>()
                 .GetController<BattleController>()
                 .UiInitializer
                 .InitMonsterUI(context.GetAliveMonsterEntitys());
+        }
+
+        private static SkillInfo GetNormalSkillInfo(IBattleEntityObject currentEntity)
+        {
+            var skillComponent = currentEntity.GetComponent<SkillComponent>();
+            foreach (var s in skillComponent.GetSkills())
+            {
+                if (s.SkillInfo.f_SkillType == (byte)E_SkillType.NormalAttack)
+                {
+                    return s.SkillInfo;
+                }
+            }
+
+            LogManager.LogError($"{nameof(BaseUltimateSkillCastPostHandler)}.{nameof(GetNormalSkillInfo)}：未找到普攻技能信息");
+            return null;
+        }
+
+        private bool CanHandle(IBattleEntityObject currentEntity)
+        {
+            // 非玩家实体不执行后续逻辑（仅处理玩家释放终极技能的场景）;检查当前实体是否具备行动能力，无行动能力则终止流程
+            return currentEntity is PlayerObject && currentEntity.CanAct;
         }
     }
 }

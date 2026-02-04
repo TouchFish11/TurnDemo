@@ -38,11 +38,11 @@ namespace Core.AssetBundles.Management
                 AssetInfo newAssetInfo = new AssetInfo(assetName, abr.asset as T);
                 if (!_nameToAssetInfoMap.TryAdd(assetName, newAssetInfo))
                 {
-                    LogManager.LogError($"资源重复加载。包名：{assetBundle.name}，资源名：{assetName}");
+                    //LogManager.LogError($"资源重复加载。包名：{assetBundle.name}，资源名：{assetName}");
                 }
                 else
                 {
-                    LogManager.Log($"{assetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{newAssetInfo.RefCount}");
+                    //LogManager.Log($"{assetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{newAssetInfo.RefCount}");
                 }
                 source.SetResult(abr.asset as T);
             };
@@ -65,11 +65,11 @@ namespace Core.AssetBundles.Management
                 var newAssetInfo = new AssetInfo(assetName, abr.asset);
                 if (!_nameToAssetInfoMap.TryAdd(assetName, newAssetInfo))
                 {
-                    LogManager.LogError($"资源重复加载。包名：{assetBundle.name}，资源名：{assetName}");
+                    //LogManager.LogError($"资源重复加载。包名：{assetBundle.name}，资源名：{assetName}");
                 }
                 else
                 {
-                    LogManager.Log($"{assetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{newAssetInfo.RefCount}");
+                    //LogManager.Log($"{assetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{newAssetInfo.RefCount}");
                 }
                 source.SetResult(abr.asset);
             };
@@ -105,7 +105,7 @@ namespace Core.AssetBundles.Management
                         assetInfo = new AssetInfo(asset.name, asset);
                         _nameToAssetInfoMap.Add(asset.name, assetInfo);
                     }
-                    LogManager.Log($"{assetInfo.AssetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{assetInfo.RefCount}");
+                    //LogManager.Log($"{assetInfo.AssetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{assetInfo.RefCount}");
                 }
                 source.SetResult(assets.ToArray());
             };
@@ -141,7 +141,7 @@ namespace Core.AssetBundles.Management
                         assetInfo = new AssetInfo(asset.name, asset);
                         _nameToAssetInfoMap.Add(asset.name, assetInfo);
                     }
-                    LogManager.Log($"{assetInfo.AssetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{assetInfo.RefCount}");
+                    //LogManager.Log($"{assetInfo.AssetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{assetInfo.RefCount}");
                 }
                 source.SetResult(assets.ToArray());
             };
@@ -160,7 +160,7 @@ namespace Core.AssetBundles.Management
             if(_nameToAssetInfoMap.TryGetValue(assetName, out AssetInfo assetInfo))
             {
                 asset = assetInfo.GetAsset();
-                LogManager.Log($"{assetInfo.AssetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{assetInfo.RefCount}");
+                //LogManager.Log($"{assetInfo.AssetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{assetInfo.RefCount}");
                 return true;
             }
             else
@@ -181,7 +181,7 @@ namespace Core.AssetBundles.Management
             foreach (var assetInfo in _nameToAssetInfoMap.Values)
             {
                 assets.Add(assetInfo.GetAsset() as T);
-                LogManager.Log($"{assetInfo.AssetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{assetInfo.RefCount}");
+                //LogManager.Log($"{assetInfo.AssetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{assetInfo.RefCount}");
             }
             return assets.ToArray();
         }
@@ -196,7 +196,7 @@ namespace Core.AssetBundles.Management
             foreach (var assetInfo in _nameToAssetInfoMap.Values)
             {
                 assets.Add(assetInfo.GetAsset());
-                LogManager.Log($"{assetInfo.AssetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{assetInfo.RefCount}");
+                //LogManager.Log($"{assetInfo.AssetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{assetInfo.RefCount}");
             }
             return assets.ToArray();
         }
@@ -217,7 +217,7 @@ namespace Core.AssetBundles.Management
                 {
                     _nameToAssetInfoMap[assetName] = null;
                     _nameToAssetInfoMap.Remove(assetName);
-                    LogManager.Log($"{assetInfo.AssetName}资源被卸载，{bundelName}包引用数：{RefCount}");
+                    //LogManager.Log($"{assetInfo.AssetName}资源被卸载，{bundelName}包引用数：{RefCount}");
                 }
             }
         }
@@ -241,7 +241,7 @@ namespace Core.AssetBundles.Management
                 return assetBundle.GetAllAssetNames();
             }
             
-            LogManager.LogError($"获取资源名称失败，{bundelName}包未加载");
+            //LogManager.LogError($"获取资源名称失败，{bundelName}包未加载");
             return Array.Empty<string>();
         }
 

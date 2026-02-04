@@ -9,15 +9,7 @@ namespace Game.UI.Battle
     public interface IBattleUIScheduler
     {
         GameObject GameObject { get; }    
-            
-        /// <summary>
-        /// �սἼ����ʱUI�仯
-        /// ��ʾ�սἼ��ɫ���桢�����ж���ʾ
-        /// </summary>
-        /// <param name="caster"></param>
-        /// <param name="skillInfo"></param>
-        IEnumerator UltimateTriggerChangeUI(IBattleEntityObject caster, SkillInfo skillInfo);
-
+        
         /// <summary>
         /// ������������ر�ǡ�����UI
         /// �����ж�ǰ����

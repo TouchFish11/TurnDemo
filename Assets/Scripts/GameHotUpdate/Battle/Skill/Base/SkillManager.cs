@@ -1,10 +1,8 @@
-using System.Collections.Generic;
 using Core.Reflection;
 using Core.Service;
 using Core.Singleton;
 using Game.Battle;
 using Game.Battle.Command;
-using Game.Battle.Objects;
 using Game.Battle.Skill;
 using Game.Battle.Skill.Interface;
 using Game.Battle.TargetSelect;
@@ -25,9 +23,9 @@ namespace GameHotUpdate.Battle.Skill.Base
         public void InitSkillTarget(ISkill skill)
         {
             // ͨ��Ŀ��ѡ���������ȡ������Ŀ��
-            IBattleEntityObject mainTaget = ServiceLocator.Get<ITargetSelectManager>().GetMainTarget();
+            var mainTaget = ServiceLocator.Get<ITargetSelectManager>().GetMainTarget();
             // ͨ��Ŀ��ѡ���������ȡ��������Ŀ��
-            List<IBattleEntityObject> selectedTargets = ServiceLocator.Get<ITargetSelectManager>().GetTargets();
+            var selectedTargets = ServiceLocator.Get<ITargetSelectManager>().GetTargets();
             // ��ʼ������
             skill.Init(mainTaget, selectedTargets);
         }

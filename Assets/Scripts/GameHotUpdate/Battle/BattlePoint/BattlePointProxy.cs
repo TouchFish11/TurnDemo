@@ -105,6 +105,18 @@ namespace GameHotUpdate.Battle.BattlePoint
             ctx.GetEventBus().AddListener<TurnStartEvent>(OnTurnStartEvent);
             ServiceLocator.Get<IBattleInputHandler>().OnDrag += OnDrag;
         }
+
+        /// <summary>
+        /// 更新怪物位置
+        /// </summary>
+        /// <param name="battleEntity"></param>
+        public void UpdateMonsterPos(IBattleEntityObject battleEntity)
+        {
+            // 更新怪物中心位置
+            UpdateMonsterCenter(battleEntity);
+            // 更新怪物之间的相对位置
+            SortMonsterTrans();
+        }
         
         /// <summary>
         /// 更新相机
@@ -117,10 +129,7 @@ namespace GameHotUpdate.Battle.BattlePoint
             {
                 if (battleEntity is PlayerObject)
                 {
-                    // 更新怪物中心位置
-                    UpdateMonsterCenter(battleEntity);
-                    // 更新怪物之间的相对位置
-                    SortMonsterTrans();
+                    UpdateMonsterPos(battleEntity);
                     // 创建相机到指定位置点
                     await CreateCameraAtPos(battleEntity.EntityPosIndex);
                     // 更新相机Mask
@@ -158,8 +167,8 @@ namespace GameHotUpdate.Battle.BattlePoint
             {
                 return;
             }
-            
-            var monsters = new List<IBattleEntityObject>(context.GetAliveMonsterEntitys());
+
+            var monsters = context.GetSceneMonsters();
             switch (newLiveCount)
             {
                 // 居中显示，放在索引2的位置
@@ -218,7 +227,7 @@ namespace GameHotUpdate.Battle.BattlePoint
         /// <param name="entityPosIndex"></param>
         private async Task CreateCameraAtPos(int entityPosIndex)
         {
-            if(CurrentActiveCamera != null)
+            if(CurrentActiveCamera)
             {
                 ServiceLocator.Get<IPoolManager>().PushObj(CurrentActiveCamera.gameObject);
                 CurrentActiveCamera = null;
@@ -284,7 +293,7 @@ namespace GameHotUpdate.Battle.BattlePoint
         /// <param name="turnStartEvent"></param>
         private void OnTurnStartEvent(TurnStartEvent turnStartEvent)
         {
-            UpdateCamera(turnStartEvent.CurrentBattleEntity);
+            //UpdateCamera(turnStartEvent.CurrentBattleEntity);
         }
 
         public void Dispose()

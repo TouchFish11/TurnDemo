@@ -1,15 +1,12 @@
 using System.Collections;
-using Game.Animation;
 using Game.Battle.Context;
 using Game.Battle.Damage;
 using Game.Battle.Enum;
 using Game.Battle.Objects;
 using Game.Battle.Skill.Component;
 using Game.Objects;
-using GameHotUpdate.Animation;
 using GameHotUpdate.Battle.Event.Turn;
 using GameHotUpdate.Battle.ResponsibilityChain;
-using GameHotUpdate.Battle.ResponsibilityChain.DamageChain;
 using GameHotUpdate.Property;
 using UnityEngine;
 
@@ -42,7 +39,7 @@ namespace GameHotUpdate.Objects
         public int BattleEntityId { get; private set; }
 
         /// <summary>
-        /// 战斗对象的子游戏物体（用于挂载动画、特效等组件）
+        /// 战斗对象的子游戏物体（用于挂载动画组件）
         /// </summary>
         public GameObject SubGameObject { get; private set; }
 

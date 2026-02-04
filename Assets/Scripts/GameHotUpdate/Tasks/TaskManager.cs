@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Core.AssetBundles.Update.Collection;
 using Core.DataPersistence.Binary;
 using Core.GlobalEvent;
 using Core.Log;

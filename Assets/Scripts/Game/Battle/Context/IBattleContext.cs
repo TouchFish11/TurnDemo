@@ -164,5 +164,13 @@ namespace Game.Battle.Context
         /// <param name="index">要插入的目标索引</param>
         /// <param name="battleEntityObject">要插入的战斗实体</param>
         void Insert(int index, IBattleEntityObject battleEntityObject);
+
+        List<IBattleEntityObject> GetSceneMonsters();
+        
+        List<IBattleEntityObject> GetSceneRoles();
+        void AddSceneMonster(IBattleEntityObject battleEntity);
+        void AddSceneRole(IBattleEntityObject battleEntity);
+        void RemoveSceneMonster(IBattleEntityObject battleEntity);
+        void RemoveSceneRole(IBattleEntityObject battleEntity);
     }
 }

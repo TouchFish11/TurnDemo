@@ -1,13 +1,12 @@
 using System.Collections;
 using Core.Config;
 using Core.Service;
+using Game.Animation;
 using Game.Battle.Context;
 using Game.Battle.Objects;
-using Game.Battle.Skill.Handler;
 using Game.Battle.Status;
 using Game.VFX;
 using GameHotUpdate.Animation;
-using GameHotUpdate.Battle.Event;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Skill.Skills.FireFly
@@ -25,9 +24,9 @@ namespace GameHotUpdate.Battle.Skill.Skills.FireFly
 
         }
 
-        protected override IEnumerator OnPreUltimateCast(IBattleContext context)
+        protected override IEnumerator OnPreUltimateCast()
         {
-            yield return base.OnPreUltimateCast(context);
+            yield return base.OnPreUltimateCast();
 
             // ����Ԥ������������սἼpose���սἼ����
             Caster.GetComponent<BattleAnimationComponent>().SetUltimatePose();
@@ -50,8 +49,10 @@ namespace GameHotUpdate.Battle.Skill.Skills.FireFly
 
             yield return _waitForSeconds0_25;
 
-            context.GetEventBus().TriggerEvent(new SkillCastEvent(context, this, 0));
-            BattleAnimationComponent animationComponent = Caster.GetComponent<BattleAnimationComponent>();
+            // 根据技能配置的动画类型切换动画状态
+            var animationComponent = Caster.GetComponent<BattleAnimationComponent>();
+            animationComponent.SetAnimationState((E_AnimationType)SkillInfo.f_animationType);
+            
             // �ȴ������л�Ϊ�սἼ����
             yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).IsName(ultimateAttackState));
 

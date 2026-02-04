@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.Config;
 using Core.DataPersistence.Binary;
+using Core.Log;
 using Core.Mono;
 using Core.PreLoad;
 using Core.Scene;
@@ -13,6 +14,7 @@ using Core.UI.MVC;
 using Game.Battle;
 using Game.Battle.Context;
 using Game.Battle.Damage;
+using Game.Battle.Event;
 using Game.Battle.Input;
 using Game.Battle.Objects;
 using Game.Battle.Skill.Interface;
@@ -22,6 +24,7 @@ using Game.UI.Battle;
 using GameHotUpdate.Animation;
 using GameHotUpdate.Battle.BattlePoint;
 using GameHotUpdate.Battle.Damage;
+using GameHotUpdate.Battle.Event;
 using GameHotUpdate.Battle.Event.Turn;
 using GameHotUpdate.Battle.Object;
 using GameHotUpdate.Battle.Skill.Base;
@@ -44,7 +47,10 @@ namespace GameHotUpdate.Manager
     {
         // 战斗上下文
         private IBattleContext _context;
-
+        
+        // 怪物创建数量，测试（1~5）
+        private const int monsterCount = 5;
+        
         private BattleManager()
         {
 
@@ -67,6 +73,10 @@ namespace GameHotUpdate.Manager
             
             ServiceLocator.Register<ISkillManager>(SkillManager.Instance);
             ServiceLocator.Register<IAnimationPlayManager>(AnimationPlayManager.Instance);
+            
+            // 测试
+            ServiceLocator.Register<IBattleEventScheduler>(BattleEventScheduler.Instance);
+            ServiceLocator.Get<IBattleEventScheduler>().Init(context);
         }
 
         /// <summary>
@@ -81,6 +91,7 @@ namespace GameHotUpdate.Manager
             ServiceLocator.Unregister<IBattleInputHandler>();
             ServiceLocator.Unregister<IBattleUIScheduler>();
             ServiceLocator.Unregister<IBattlePointProxy>();
+            ServiceLocator.Unregister<IBattleEventScheduler>();
         }
 
         public async Task StartBattle(IuiController controller)
@@ -182,11 +193,12 @@ namespace GameHotUpdate.Manager
                 // 设置角色层级
                 SetLayerRecursively(hotfixPlayerObject.GameObject, ServiceLocator.Get<IBattlePointProxy>().GetRoleLayer(index));
                 _context.AddBattleEntity(hotfixPlayerObject);
+                _context.AddSceneRole(hotfixPlayerObject);
+                LogManager.Log($"已缓存场景对象：{hotfixPlayerObject}");
                 index++;
             }
 
             // 批量创建怪物角色（从配置+预制体）
-            const int monsterCount = 1;
             var monsterTrans = new List<Transform>(ServiceLocator.Get<IBattlePointProxy>().BattlePoint.GetMonsterTransforms());
             var keys = new List<int>(ServiceLocator.Get<IBinaryDataManager>().GetConfig<MonsterInfoContainer>(EConfigLoadType.Editor).dataDic.Keys);
             index = 0;
@@ -195,11 +207,14 @@ namespace GameHotUpdate.Manager
                 var transform = monsterTrans[index];
                 var monsterId = keys[Random.Range(0, keys.Count)];
                 var hotfixMonsterObject = await MonsterBuilder.CreateMonster(monsterId, transform);
+                hotfixMonsterObject.GameObject.name = $"{hotfixMonsterObject.GameObject.name}_{index}";
                 // 注入上下文，供角色内部组件使用
                 hotfixMonsterObject.BattleInit(monsterId, _context);
                 // 记录怪物所在的位置索引
                 hotfixMonsterObject.EntityPosIndex = index;
                 _context.AddBattleEntity(hotfixMonsterObject);
+                _context.AddSceneMonster(hotfixMonsterObject);
+                LogManager.Log($"已缓存场景对象：{hotfixMonsterObject}");
                 index++;
             }
         }
@@ -231,6 +246,8 @@ namespace GameHotUpdate.Manager
             ServiceLocator.Get<IBattlePointProxy>().Dispose();
             Object.Destroy(ServiceLocator.Get<IBattleInputHandler>().GameObject);
             Object.Destroy(ServiceLocator.Get<IBattleUIScheduler>().GameObject);
+            Object.Destroy(ServiceLocator.Get<IBattleEventScheduler>().GameObject);
+            
             // 移除注册
             UnregisterManager();
             // 清理战斗数据

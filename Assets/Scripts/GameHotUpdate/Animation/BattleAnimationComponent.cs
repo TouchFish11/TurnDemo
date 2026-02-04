@@ -5,7 +5,6 @@ using Game.Animation;
 using Game.Battle.Objects;
 using Game.Battle.Skill.Enum;
 using Game.Components;
-using GameHotUpdate.Battle.Event;
 using GameHotUpdate.Battle.Event.UI;
 using GameHotUpdate.Objects;
 
@@ -52,9 +51,6 @@ namespace GameHotUpdate.Animation
             BattleEntity = battleEntity;
             // 注册技能选择事件监听
             battleEntity.Context.GetEventBus().AddListener<SelectSkillEvent>(OnSelectSkillEvent);
-            // 注册技能释放事件监听
-            battleEntity.Context.GetEventBus().AddListener<SkillCastEvent>(OnSkillCastEvent);
-
             // 初始化默认动画类型：玩家默认预普通攻击动画，其他实体（怪物）默认无动画
             CurrentAnimationType = (battleEntity is PlayerObject) ? E_AnimationType.PreNormalAttack : E_AnimationType.None;
         }
@@ -164,23 +160,6 @@ namespace GameHotUpdate.Animation
                 case E_SkillType.EnhancedCombatSkill: // 强化战斗技能 → 暂未处理
                     break;
             }
-        }
-
-        /// <summary>
-        /// 技能释放事件回调
-        /// 根据技能配置的动画类型播放对应动画
-        /// </summary>
-        /// <param name="skillCastEvent">技能释放事件数据</param>
-        private void OnSkillCastEvent(SkillCastEvent skillCastEvent)
-        {
-            // 过滤条件：技能释放者不是当前绑定实体 → 不处理
-            if (skillCastEvent.Skill.Caster != BattleEntity)
-            {
-                return;
-            }
-
-            // 根据技能配置的动画类型切换动画状态
-            SetAnimationState((E_AnimationType)skillCastEvent.Skill.SkillInfo.f_animationType);
         }
 
         /// <summary>

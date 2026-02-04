@@ -1,13 +1,12 @@
 using System.Collections;
 using Core.Config;
 using Core.Service;
+using Game.Animation;
 using Game.Battle.Context;
 using Game.Battle.Objects;
-using Game.Battle.Skill.Handler;
 using Game.Battle.Status;
 using Game.VFX;
 using GameHotUpdate.Animation;
-using GameHotUpdate.Battle.Event;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Skill.Skills.Herta
@@ -35,8 +34,9 @@ namespace GameHotUpdate.Battle.Skill.Skills.Herta
         protected override IEnumerator OnCast(IBattleContext context)
         {
             // ���Ŷ���
-            context.GetEventBus().TriggerEvent(new SkillCastEvent(context, this, 0));
             BattleAnimationComponent animationComponent = Caster.GetComponent<BattleAnimationComponent>();
+            animationComponent.SetAnimationState((E_AnimationType)SkillInfo.f_animationType);
+            
             // �ȴ������л�Ϊս������
             yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).IsName(battleAttackState));
             // ������Ч

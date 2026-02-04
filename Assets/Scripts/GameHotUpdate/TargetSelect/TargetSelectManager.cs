@@ -4,12 +4,12 @@ using Core.Log;
 using Core.Service;
 using Core.Singleton;
 using Game.Battle.Context;
+using Game.Battle.Input;
 using Game.Battle.Objects;
 using Game.Battle.Skill.Enum;
 using Game.Battle.TargetSelect;
-using GameHotUpdate.Battle.Context;
 using GameHotUpdate.Battle.Event.UI;
-using GameHotUpdate.Input;
+using GameHotUpdate.Objects;
 using GameHotUpdate.Utility;
 
 namespace GameHotUpdate.TargetSelect
@@ -22,10 +22,13 @@ namespace GameHotUpdate.TargetSelect
     /// </summary>
     public class TargetSelectManager : SingletonBase<TargetSelectManager>, ITargetSelectManager
     {
+        // 缓存筛选出的所有目标
+        private List<IBattleEntityObject> _filterEntitys;
         // 已选中的范围目标列表（包含主目标及范围内的其他目标）
         private readonly List<IBattleEntityObject> _selectedTargets = new List<IBattleEntityObject>();
         // 当前选中的主目标（技能优先作用的核心目标）
         private IBattleEntityObject _mainTarget;
+        
         // 当前选中技能的配置信息
         private SkillInfo skillInfo;
         // 战斗上下文
@@ -54,6 +57,19 @@ namespace GameHotUpdate.TargetSelect
             // 注册技能选择事件监听：当玩家选择技能时触发目标选择逻辑
             battleContext.GetEventBus().AddListener<SelectSkillEvent>(OnSelectSkillEvent);
         }
+        
+        /// <summary>
+        /// 技能选择事件回调
+        /// 当玩家在UI中选中某个技能时触发，初始化目标选择的核心数据
+        /// </summary>
+        /// <param name="selectSkillEvent">技能选择事件（携带技能ID、释放者、战斗上下文等）</param>
+        private void OnSelectSkillEvent(SelectSkillEvent selectSkillEvent)
+        {
+            // 从配置表加载选中技能的详细配置
+            skillInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<SkillInfoContainer>(EConfigLoadType.Editor).dataDic[selectSkillEvent.SkillId];
+            // 触发目标选择逻辑
+            SelectTarget(selectSkillEvent.Context, selectSkillEvent.Caster, skillInfo, selectSkillEvent.TargetSelectStrategy);
+        }
 
         /// <summary>
         /// 激活目标选择交互
@@ -61,9 +77,11 @@ namespace GameHotUpdate.TargetSelect
         /// </summary>
         public void ActiveSelectTarget()
         {
-            BattleInputHandler.Instance.OnLeftDrag += SelectPreviousMainTarget;   // 左拖拽：切换上一个主目标
-            BattleInputHandler.Instance.OnRightDrag += SelectNextMainTarget;     // 右拖拽：切换下一个主目标
-            BattleInputHandler.Instance.OnSelectedObject += SelectClickMainTarget;// 点击：选中指定主目标
+            ServiceLocator.Get<IBattleInputHandler>().OnLeftDrag += SelectPreviousMainTarget;   // 左拖拽：切换上一个主目标
+            ServiceLocator.Get<IBattleInputHandler>().OnRightDrag += SelectNextMainTarget;     // 右拖拽：切换下一个主目标
+            ServiceLocator.Get<IBattleInputHandler>().OnSelectedObject += SelectClickMainTarget;// 点击：选中指定主目标
+            
+            LogManager.Log($"激活目标选择");
         }
 
         /// <summary>
@@ -72,9 +90,11 @@ namespace GameHotUpdate.TargetSelect
         /// </summary>
         public void InActiveSelectTarget()
         {
-            BattleInputHandler.Instance.OnLeftDrag -= SelectPreviousMainTarget;
-            BattleInputHandler.Instance.OnRightDrag -= SelectNextMainTarget;
-            BattleInputHandler.Instance.OnSelectedObject -= SelectClickMainTarget;
+            ServiceLocator.Get<IBattleInputHandler>().OnLeftDrag -= SelectPreviousMainTarget;
+            ServiceLocator.Get<IBattleInputHandler>().OnRightDrag -= SelectNextMainTarget;
+            ServiceLocator.Get<IBattleInputHandler>().OnSelectedObject -= SelectClickMainTarget;
+            
+            LogManager.Log($"禁用目标选择");
         }
 
         /// <summary>
@@ -88,8 +108,21 @@ namespace GameHotUpdate.TargetSelect
         public void SelectTarget(IBattleContext context, IBattleEntityObject caster, SkillInfo skillInfo, ITargetSelectStrategy targetSelectStrategy)
         {
             currentSelectStrategy = targetSelectStrategy;
-            // 技能切换时，先重新选择主目标（触发UI更新）
-            SelectMainTarget(context, caster, skillInfo);
+            if (currentSelectStrategy == null)
+            {
+                LogManager.LogError($"{nameof(TargetSelectManager)}.{nameof(SelectTarget)}：当前目标选择策略为null");
+                return;
+            }
+            
+            // 技能切换时，先重新选择主目标
+            _mainTarget = SelectMainTarget(context, caster, skillInfo);
+            if (_mainTarget == null)
+            {
+                LogManager.LogError($"{nameof(TargetSelectManager)}.{nameof(SelectMainTarget)}：当前选择的主目标为null");
+                return;
+            }
+            
+            LogManager.Log($"当前主目标：{_mainTarget}");
             // 基于主目标更新范围目标列表
             UpdateTargets();
         }
@@ -113,32 +146,75 @@ namespace GameHotUpdate.TargetSelect
         }
 
         /// <summary>
-        /// 技能选择事件回调
-        /// 当玩家在UI中选中某个技能时触发，初始化目标选择的核心数据
-        /// </summary>
-        /// <param name="selectSkillEvent">技能选择事件（携带技能ID、释放者、战斗上下文等）</param>
-        private void OnSelectSkillEvent(SelectSkillEvent selectSkillEvent)
-        {
-            // 从配置表加载选中技能的详细配置
-            skillInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<SkillInfoContainer>(EConfigLoadType.Editor).dataDic[selectSkillEvent.SkillId];
-            // 触发目标选择逻辑
-            SelectTarget(selectSkillEvent.Context, selectSkillEvent.Caster, skillInfo, selectSkillEvent.TargetSelectStrategy);
-        }
-
-        /// <summary>
         /// 选择主目标
         /// 基于当前选择策略，计算并设置技能的核心作用目标
         /// </summary>
         /// <param name="context">战斗上下文</param>
         /// <param name="caster">技能释放者</param>
         /// <param name="skillInfo">技能配置（影响目标选择规则）</param>
-        private void SelectMainTarget(IBattleContext context, IBattleEntityObject caster, SkillInfo skillInfo)
+        private IBattleEntityObject SelectMainTarget(IBattleContext context, IBattleEntityObject caster, SkillInfo skillInfo)
         {
             // 记录技能释放者，供后续范围目标计算使用
             this.caster = caster;
+            // 筛选出所有目标
+            FilterTargets(context);
             // 委托给当前策略计算主目标
-            _mainTarget = currentSelectStrategy.SelectMainTarget(context, caster, skillInfo);
-            LogManager.Log($"当前主目标：{_mainTarget}");
+            return currentSelectStrategy.SelectMainTarget(_filterEntitys, caster, skillInfo);
+        }
+
+        /// <summary>
+        /// 筛选目标
+        /// </summary>
+        /// <param name="context"></param>
+        private void FilterTargets(IBattleContext context)
+        {
+            // 从技能配置中解析目标类型（敌人/友方）
+            var targetType = (E_SkillTargetType)skillInfo.f_targetType;
+            // 根据施法者类型（玩家/怪物）筛选对应目标
+            switch (caster)
+            {
+                // 施法者为玩家的情况
+                case PlayerObject:
+                {
+                    if (targetType == E_SkillTargetType.Enemy)
+                    {
+                        // 获取场景对象
+                        _filterEntitys = context.GetSceneMonsters();
+                    }
+                    else
+                    {
+                        // 技能目标为友方：查询战斗内所有存活的玩家实体
+                        _filterEntitys = context.GetSceneRoles();
+                    }
+                    break;
+                }
+                // 施法者为怪物的情况
+                case MonsterObject:
+                {
+                    if (targetType == E_SkillTargetType.Enemy)
+                    {
+                        // 技能目标为敌人：查询战斗内所有存活的玩家实体
+                        _filterEntitys = context.GetSceneRoles();
+                    }
+                    else
+                    {
+                        // 技能目标为友方：查询战斗内所有存活的怪物实体
+                        _filterEntitys = context.GetSceneMonsters();
+                    }
+                    break;
+                }
+                default:
+                    LogManager.Log($"施法者不是：PlayerObject或MonsterObject");
+                    break;
+            }
+
+            // StringBuilder sb = new StringBuilder();
+            // foreach (var battleEntityObject in _filterEntitys)
+            // {
+            //     sb.AppendLine($"当前目标：{battleEntityObject}");
+            // }
+            //
+            // LogManager.Log($"{sb}");
         }
 
         /// <summary>
@@ -150,7 +226,7 @@ namespace GameHotUpdate.TargetSelect
             // 清空旧的范围目标列表
             _selectedTargets.Clear();
             // 计算主目标范围内的所有有效目标（玩家角色类型，按技能范围规则筛选）
-            BattleUtil.GetRangeTargets(E_CharacterType.PlayerCharacter, _mainTarget, skillInfo.f_skillRangeType, _selectedTargets);
+            BattleUtil.GetRangeTargets(_mainTarget, skillInfo.f_skillRangeType, _filterEntitys, _selectedTargets);
             // 触发目标选择变更事件，通知UI更新选中状态
             battleContext.GetEventBus().TriggerEvent(new SelectTargetEvent(battleContext, _mainTarget, _selectedTargets));
         }
@@ -161,28 +237,28 @@ namespace GameHotUpdate.TargetSelect
         /// </summary>
         private void SelectNextMainTarget()
         {
-            // 获取技能目标类型（友方/敌方），筛选对应类型的存活目标列表
-            var targetType = (E_SkillTargetType)skillInfo.f_SkillTargetType;
-            var targets = new List<IBattleEntityObject>();
-            if (targetType == E_SkillTargetType.Friend)
-            {
-                battleContext.GetAlivePlayerEntitys(targets); // 友方：获取存活的玩家角色
-            }
-            else
-            {
-                battleContext.GetAliveMonsterEntitys(targets); // 敌方：获取存活的怪物角色
-            }
-
             // 仅1个目标时无需切换
-            if (targets.Count == 1)
+            if (_filterEntitys.Count <= 1)
+            {
                 return;
+            }
 
             // 获取当前主目标在列表中的索引
-            var mainIndex = targets.IndexOf(_mainTarget);
-            // 索引未越界时，切换到下一个目标
-            if (mainIndex + 1 < targets.Count)
+            var mainIndex = _filterEntitys.IndexOf(_mainTarget);
+            
+            // 找不到目标，重置到中间
+            if (mainIndex == -1)
             {
-                _mainTarget = targets[++mainIndex];
+                mainIndex = _filterEntitys.Count / 2;
+                _mainTarget = _filterEntitys[mainIndex];
+                LogManager.LogError($"{nameof(TargetSelectManager)}.{nameof(SelectNextMainTarget)}：找不到目标，重置到中间");
+            }
+            
+            // 索引未越界时，切换到下一个目标
+            if (mainIndex + 1 < _filterEntitys.Count)
+            {
+                _mainTarget = _filterEntitys[++mainIndex];
+                LogManager.Log($"当前主目标：{_mainTarget}");
                 // 切换后更新范围目标列表并同步UI
                 UpdateTargets();
             }
@@ -194,30 +270,28 @@ namespace GameHotUpdate.TargetSelect
         /// </summary>
         private void SelectPreviousMainTarget()
         {
-            // 获取技能目标类型（友方/敌方），筛选对应类型的存活目标列表
-            var targetType = (E_SkillTargetType)skillInfo.f_SkillTargetType;
-            var targets = new List<IBattleEntityObject>();
-            if (targetType == E_SkillTargetType.Friend)
-            {
-                battleContext.GetAlivePlayerEntitys(targets); // 友方：获取存活的玩家角色
-            }
-            else
-            {
-                battleContext.GetAliveMonsterEntitys(targets); // 敌方：获取存活的怪物角色
-            }
-
             // 仅1个目标时无需切换
-            if (targets.Count == 1)
+            if (_filterEntitys.Count <= 1)
             {
                 return;
             }
-
+            
             // 获取当前主目标在列表中的索引
-            var mainIndex = targets.IndexOf(_mainTarget);
+            var mainIndex = _filterEntitys.IndexOf(_mainTarget);
+            
+            // 找不到目标，重置到中间
+            if (mainIndex == -1)
+            {
+                mainIndex = _filterEntitys.Count / 2;
+                _mainTarget = _filterEntitys[mainIndex];
+                LogManager.LogError($"{nameof(TargetSelectManager)}.{nameof(SelectNextMainTarget)}：找不到目标，重置到中间");
+            }
+            
             // 索引未越界时，切换到上一个目标
             if (mainIndex - 1 >= 0)
             {
-                _mainTarget = targets[--mainIndex];
+                _mainTarget = _filterEntitys[--mainIndex];
+                LogManager.Log($"当前主目标：{_mainTarget}");
                 // 切换后更新范围目标列表并同步UI
                 UpdateTargets();
             }

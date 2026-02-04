@@ -4,14 +4,14 @@ using Core.Log;
 using Core.Mono;
 using Core.Service;
 using Core.Singleton;
+using Game.Battle;
 using Game.Battle.Context;
 using Game.Battle.Input;
 using Game.Battle.Objects;
 using Game.Battle.Skill.Enum;
-using Game.Tasks;
 using GameHotUpdate.Battle.Event.UI;
+using GameHotUpdate.Layer;
 using GameHotUpdate.Objects;
-using GameHotUpdate.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -29,25 +29,66 @@ namespace GameHotUpdate.Input
         // 是否处于拖拽状态（用于区分点击和拖拽行为）
         private bool _isDragging;
         // 拖拽阈值（超过该距离判定为拖拽，否则为点击）
-        [SerializeField] private float dragThreshold = 110f;
+        private const float dragThreshold = 110f;
         // 当前选中的技能ID（用于释放技能时匹配技能配置）
         private int skillId;
+        private IBattleContext _context;
+        private Camera _camera;
+        private Action _OnLeftDrag;
+        private Action _OnRightDrag;
+        private Action<IBattleEntityObject> _OnSelectedObject;
 
         /// <summary>
         /// 选中战斗实体对象的事件（如选中玩家/怪物作为技能目标）
         /// 事件参数：选中的战斗实体对象接口
         /// </summary>
-        public event Action<IBattleEntityObject> OnSelectedObject;
-
+        public event Action<IBattleEntityObject> OnSelectedObject
+        {
+            add
+            {
+                if (_OnSelectedObject != null)
+                {
+                    LogManager.LogError($"{nameof(OnSelectedObject)}重复添加");
+                    return;
+                }
+                _OnSelectedObject += value;
+            }
+            remove => _OnSelectedObject -= value;
+        }
+        
         /// <summary>
         /// 向左拖拽的事件（用于切换目标等逻辑）
         /// </summary>
-        public event Action OnLeftDrag;
+        public event Action OnLeftDrag
+        {
+            add
+            {
+                if (_OnLeftDrag != null)
+                {
+                    LogManager.LogError($"{nameof(OnLeftDrag)}重复添加");
+                    return;
+                }
+                _OnLeftDrag += value;
+            }
+            remove => _OnLeftDrag -= value;
+        }
 
         /// <summary>
         /// 向右拖拽的事件（用于切换目标等逻辑）
         /// </summary>
-        public event Action OnRightDrag;
+        public event Action OnRightDrag
+        {
+            add
+            {
+                if (_OnRightDrag != null)
+                {
+                    LogManager.LogError($"{nameof(OnRightDrag)}重复添加");
+                    return;
+                }
+                _OnRightDrag += value;
+            }
+            remove => _OnRightDrag -= value;
+        }
 
         /// <summary>
         /// 拖拽过程中的事件（传递拖拽X轴偏移量）
@@ -64,8 +105,14 @@ namespace GameHotUpdate.Input
         private void Awake()
         {
             GameObject = gameObject;
+            _context = ServiceLocator.Get<IBattleManager>().GetContext();
         }
-
+        
+        private void Start()
+        {
+            _camera = Camera.main;
+        }
+        
         /// <summary>
         /// 初始化
         /// </summary>
@@ -132,12 +179,12 @@ namespace GameHotUpdate.Input
                         // 向右拖拽：触发右拖拽事件
                         if (dragDeltaX > 0)
                         {
-                            OnRightDrag?.Invoke();
+                            _OnRightDrag?.Invoke();
                         }
                         // 向左拖拽：触发左拖拽事件
                         else if (dragDeltaX < 0)
                         {
-                            OnLeftDrag?.Invoke();
+                            _OnLeftDrag?.Invoke();
                         }
                         // 重置拖拽起始位置，用于后续继续拖拽的偏移计算
                         _dragStartPosition = UnityEngine.Input.mousePosition;
@@ -147,9 +194,14 @@ namespace GameHotUpdate.Input
             
             if (Mouse.current.leftButton.wasReleasedThisFrame)
             {
-                // 重置拖拽状态，结束本次拖拽
-                _isDragging = false;
-
+                // 若是拖曳中释放鼠标，则不处理
+                if (_isDragging)
+                {
+                    // 重置拖拽状态，结束本次拖拽
+                    _isDragging = false;
+                    return;
+                }
+                
                 // 校验技能ID有效性（避免空引用）
                 if (!ServiceLocator.Get<IBinaryDataManager>().GetConfig<SkillInfoContainer>(EConfigLoadType.Editor).dataDic.ContainsKey(skillId))
                 {
@@ -160,7 +212,7 @@ namespace GameHotUpdate.Input
                 // 根据选中的技能ID获取技能配置信息
                 var skillInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<SkillInfoContainer>(EConfigLoadType.Editor).dataDic[skillId];
                 // 将技能范围类型转换为技能目标类型（友方/敌方）
-                var targetType = skillInfo.f_skillRangeType.ToSkillTargetType();
+                var targetType = (E_SkillTargetType)skillInfo.f_SkillTargetType;
 
                 // 根据技能目标类型设置射线检测的层级掩码（只检测对应层级的对象）
                 int layerMask;
@@ -168,11 +220,11 @@ namespace GameHotUpdate.Input
                 {
                     case E_SkillTargetType.Friend:
                         // 检测玩家对象层级
-                        layerMask = 1 << LayerMask.NameToLayer("PlayerObject");
+                        layerMask = LayerGeter.GetRoleBitLayer();
                         break;
                     case E_SkillTargetType.Enemy:
                         // 检测怪物对象层级
-                        layerMask = 1 << LayerMask.NameToLayer("MonsterObject");
+                        layerMask = LayerGeter.GetMonsterBitLayer();
                         break;
                     default:
                         LogManager.LogWarning($"未处理的技能目标类型：{targetType}");
@@ -180,25 +232,20 @@ namespace GameHotUpdate.Input
                 }
                 
                 // 从鼠标屏幕位置发射射线，检测对应层级的战斗对象
-                if (Physics.Raycast(Camera.main.ScreenPointToRay(UnityEngine.Input.mousePosition), out var hitInfo, 500, layerMask))
+                if (Physics.Raycast(_context.GetProxy().CurrentActiveCamera.ScreenPointToRay(UnityEngine.Input.mousePosition), out var hitInfo, 500, layerMask))
                 {
                     // 获取射线命中对象挂载的战斗对象组件
                     var currentMainTarget = hitInfo.collider.GetComponent<BattleObject>();
-                    if (currentMainTarget != null)
+                    if (currentMainTarget)
                     {
                         // 触发选中对象事件，传递选中的战斗对象
-                        OnSelectedObject?.Invoke(currentMainTarget);
+                        _OnSelectedObject?.Invoke(currentMainTarget);
                         LogManager.Log($"选中技能目标：{currentMainTarget.name}");
                     }
                     else
                     {
                         LogManager.LogWarning("射线命中对象未挂载BattleObject组件");
                     }
-                }
-                else
-                {
-                    // 未命中有效目标（仅日志注释，实际代码中日志已注释）
-                    // LogManager.Log($"未选中技能目标");
                 }
             }
         }
@@ -212,9 +259,9 @@ namespace GameHotUpdate.Input
             // 移除帧更新监听
             ServiceLocator.Get<IMonoAdapter>().RemoveUpdateListener(OnUpdate);
             // 清空事件委托，避免空引用和内存泄漏
-            OnSelectedObject = null;
-            OnLeftDrag = null;
-            OnRightDrag = null;
+            _OnSelectedObject = null;
+            _OnLeftDrag = null;
+            _OnRightDrag = null;
         }
     }
 }

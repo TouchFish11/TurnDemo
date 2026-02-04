@@ -1,14 +1,10 @@
-using Core.Reflection;
 using Core.Service;
 using Game.Battle.Event;
 using Game.Battle.TargetSelect;
-using Game.UI.Battle.SkillKey.Provider;
 using GameHotUpdate.Battle.Event.General;
 using GameHotUpdate.Battle.Event.Turn;
 using GameHotUpdate.Battle.Event.UI;
 using GameHotUpdate.Objects;
-using GameHotUpdate.TargetSelect;
-using GameHotUpdate.UI.Battle.SkillKey.Provider;
 
 namespace GameHotUpdate.UI.Battle.Base
 {
@@ -67,32 +63,32 @@ namespace GameHotUpdate.UI.Battle.Base
         /// <param name="turnStartEvent">回合开始事件数据</param>
         private void OnTurnStart(TurnStartEvent turnStartEvent)
         {
-            // 初始化存活怪物的UI展示
-            _uiInitializer.InitMonsterUI(turnStartEvent.Context.GetAliveMonsterEntitys());
-
-            if (turnStartEvent.CurrentBattleEntity is PlayerObject)
-            {
-                // 玩家回合：激活目标选择功能
-                TargetSelectManager.Instance.ActiveSelectTarget();
-                // 隐藏行动提示
-                _uiManager.SetActTipActive(E_ActTipType.Hide);
-                // 获取技能按键UI数据提供器，更新玩家操作面板
-                var provider = ServiceLocator.Get<IFactoryManager>().
-                    GetFactory<ISkillKeyUIDataProviderFactory, SkillKeyUIDataProviderFactory>().
-                    GetCastSkillCondition<BaseSkillKeyUIDataProvider>();
-                _uiManager.UpdateOperator(turnStartEvent.CurrentBattleEntity, provider);
-            }
-            else if (turnStartEvent.CurrentBattleEntity is MonsterObject)
-            {
-                // 怪物回合：关闭目标选择功能
-                ServiceLocator.Get<ITargetSelectManager>().InActiveSelectTarget();
-                // 清除选中目标的标记UI
-                _uiManager.ClearSelectMarker();
-                // 清空操作面板
-                _uiManager.SetOperator(null);
-                // 显示怪物行动提示
-                _uiManager.SetActTipActive(E_ActTipType.Monster);
-            }
+            // // 初始化存活怪物的UI展示
+            // _uiInitializer.InitMonsterUI(turnStartEvent.Context.GetAliveMonsterEntitys());
+            //
+            // if (turnStartEvent.CurrentBattleEntity is PlayerObject)
+            // {
+            //     // 玩家回合：激活目标选择功能
+            //     TargetSelectManager.Instance.ActiveSelectTarget();
+            //     // 隐藏行动提示
+            //     _uiManager.SetActTipActive(E_ActTipType.Hide);
+            //     // 获取技能按键UI数据提供器，更新玩家操作面板
+            //     var provider = ServiceLocator.Get<IFactoryManager>().
+            //         GetFactory<ISkillKeyUIDataProviderFactory, SkillKeyUIDataProviderFactory>().
+            //         GetCastSkillCondition<BaseSkillKeyUIDataProvider>();
+            //     _uiManager.UpdateOperator(turnStartEvent.CurrentBattleEntity, provider);
+            // }
+            // else if (turnStartEvent.CurrentBattleEntity is MonsterObject)
+            // {
+            //     // 怪物回合：关闭目标选择功能
+            //     ServiceLocator.Get<ITargetSelectManager>().InActiveSelectTarget();
+            //     // 清除选中目标的标记UI
+            //     _uiManager.ClearSelectMarker();
+            //     // 清空操作面板
+            //     _uiManager.SetOperator(null);
+            //     // 显示怪物行动提示
+            //     _uiManager.SetActTipActive(E_ActTipType.Monster);
+            // }
         }
 
         /// <summary>
@@ -212,7 +208,7 @@ namespace GameHotUpdate.UI.Battle.Base
         /// <param name="selectTargetEvent">目标选择变化事件数据</param>
         private void OnTargetSelectionChanged(SelectTargetEvent selectTargetEvent)
         {
-            // 若主目标是玩家，不处理目标标记更新
+            // TODO：若主目标是玩家，不处理目标标记更新，暂时不处理更新
             if (selectTargetEvent.MainTarget is PlayerObject)
             {
                 return;

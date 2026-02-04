@@ -4,9 +4,8 @@ using Game.Battle.Event;
 namespace GameHotUpdate.Battle.Event.UI
 {
     /// <summary>
-    /// ����ͷż����¼�
-    /// �������սἼ
-    /// ���ء��������UI
+    ///  玩家释放技能事件
+    /// 终结技不触发该事件
     /// </summary>
     public class PlayerReleaseSkillEvent : BattleEvent
     {

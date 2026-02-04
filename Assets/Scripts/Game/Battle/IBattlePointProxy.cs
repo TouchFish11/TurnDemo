@@ -38,5 +38,11 @@ namespace Game.Battle
         /// <param name="index">创建时的索引</param>
         /// <returns></returns>
         int GetRoleLayer(int index);
+
+        /// <summary>
+        /// 更新怪物位置
+        /// </summary>
+        /// <param name="battleEntity"></param>
+        void UpdateMonsterPos(IBattleEntityObject battleEntity);
     }
 }

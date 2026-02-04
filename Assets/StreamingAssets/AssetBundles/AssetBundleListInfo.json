@@ -38,8 +38,8 @@
         },
         {
             "packageName": "hotupdate.assetbundle",
-            "packageSize": 145570,
-            "packageMD5": "8ac6a8bf00fb1663a8ffa1c9befc1d03"
+            "packageSize": 149713,
+            "packageMD5": "e8d9d47b0eda5d9143ddc585f01c8f1f"
         },
         {
             "packageName": "material.assetbundle",
@@ -54,7 +54,7 @@
         {
             "packageName": "PC.assetbundle",
             "packageSize": 1975,
-            "packageMD5": "4258651902d4083e4dec3848a314e894"
+            "packageMD5": "5717ac3083be0fd4a739780f558cb3e0"
         },
         {
             "packageName": "prefab.assetbundle",
@@ -63,8 +63,8 @@
         },
         {
             "packageName": "scene.assetbundle",
-            "packageSize": 14020593,
-            "packageMD5": "359abd3c873fd9ef7b734aabc084defa"
+            "packageSize": 14020594,
+            "packageMD5": "1c3850a487f19c048aaec5280f34e777"
         },
         {
             "packageName": "spriteatlas.assetbundle",

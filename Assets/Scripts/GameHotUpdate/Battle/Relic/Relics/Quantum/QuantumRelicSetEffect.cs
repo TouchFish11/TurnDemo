@@ -1,7 +1,6 @@
 using System;
 using Core.Components;
 using Game.Battle.Objects;
-using GameHotUpdate.Battle.Event;
 
 namespace GameHotUpdate.Battle.Relic.Relics.Quantum
 {
@@ -40,7 +39,7 @@ namespace GameHotUpdate.Battle.Relic.Relics.Quantum
             Console.WriteLine($"{owner.GameObject.name}����{SetName}4����Ч����������׷�������˺�");
 
             // ���ġ������ͷ��¼������ж��Ƿ񱩻�������׷���˺���
-            BattleEntity.Context.GetEventBus().AddListener<SkillCastEvent>(OnSkillCastHandler);
+            //BattleEntity.Context.GetEventBus().AddListener<SkillCastEvent>(OnSkillCastHandler);
 
             // �����߼���2����/4���׻������Լӳɣ�ֱ�ӵ��ý�ɫ����API��
             var attributeBonus = RequiredCount switch
@@ -53,20 +52,20 @@ namespace GameHotUpdate.Battle.Relic.Relics.Quantum
             // owner.GetComponent<PropertyComponent>().AddRelicBonus(attributeBonus.RelicBoun, attributeBonus.BounValue);
         }
 
-        private void OnSkillCastHandler(SkillCastEvent skillCastEvent)
-        {
-            // ����������1. ����װ�������ͷż��� 2. ���ܴ����������򻯣������˺�>150�ж�Ϊ������
-            //if (skillCastEvent.Caster != Owner || skillCastEvent.Damage <= 150)
-            //{
-            //    return;
-            //}
-
-            Console.WriteLine($"\n������Ч����{SetName}4���״�����");
-
-            //int additionalDamage = (int)(skillCastEvent.Caster.GetComponent<PropertyComponent>().GetProperty<BattleProperty>().TotalAtk * _additionalDamageRatio);
-            //skillCastEvent.Targets[0].TakeDamage(additionalDamage, E_ElementType.Quantum, E_DamageType.Direct);
-            //Console.WriteLine($"{skillCastEvent.Targets[0].GameObject.name}�ܵ�����׷���˺���{additionalDamage}��");
-        }
+        // private void OnSkillCastHandler(SkillCastEvent skillCastEvent)
+        // {
+        //     // ����������1. ����װ�������ͷż��� 2. ���ܴ����������򻯣������˺�>150�ж�Ϊ������
+        //     //if (skillCastEvent.Caster != Owner || skillCastEvent.Damage <= 150)
+        //     //{
+        //     //    return;
+        //     //}
+        //
+        //     Console.WriteLine($"\n������Ч����{SetName}4���״�����");
+        //
+        //     //int additionalDamage = (int)(skillCastEvent.Caster.GetComponent<PropertyComponent>().GetProperty<BattleProperty>().TotalAtk * _additionalDamageRatio);
+        //     //skillCastEvent.Targets[0].TakeDamage(additionalDamage, E_ElementType.Quantum, E_DamageType.Direct);
+        //     //Console.WriteLine($"{skillCastEvent.Targets[0].GameObject.name}�ܵ�����׷���˺���{additionalDamage}��");
+        // }
 
         public void Destroy()
         {

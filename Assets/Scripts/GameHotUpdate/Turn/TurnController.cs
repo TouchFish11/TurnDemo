@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.Config;
-using Core.Log;
 using Core.Service;
 using Core.Time;
 using Core.UI;
@@ -35,7 +34,7 @@ namespace GameHotUpdate.Turn
         // 当前行动实体
         private IBattleEntityObject _currentActEntity;
         // 当前战斗结束条件
-        private readonly IBattleOverCondition battleOverCondition;
+        private readonly List<IBattleOverCondition> battleOverConditions = new();
         // 当前怪物数量
         private int currentMonsterCount;
 
@@ -54,11 +53,11 @@ namespace GameHotUpdate.Turn
         /// </summary>
         private const float SPEED_CORRECTION = 1.0f;
 
-        public TurnController(IBattleContext context, IBattleOverCondition battleOverCondition)
+        public TurnController(IBattleContext context, params IBattleOverCondition[] battleOverConditions)
         {
             _context = context;
             commandsController = new BattleCommandsController(context);
-            this.battleOverCondition = battleOverCondition;
+            this.battleOverConditions.AddRange(battleOverConditions);
         }
 
         /// <summary>
@@ -296,9 +295,17 @@ namespace GameHotUpdate.Turn
         /// <returns></returns>
         public bool CheckBattleOver()
         {
-            // 每次执行完命令后，检查战斗是否结束
-            IsBattleOver = battleOverCondition.CheckOver(_context);
-            return IsBattleOver;
+            foreach (var battleOverCondition in battleOverConditions)
+            {
+                // 每次执行完命令后，检查战斗是否结束
+                IsBattleOver = battleOverCondition.CheckOver(_context);
+                if (IsBattleOver)
+                {
+                    return true;
+                }
+            }
+            
+            return false;
         }
 
         /// <summary>
@@ -325,8 +332,16 @@ namespace GameHotUpdate.Turn
             // 移除
             foreach (var battleEntityObject in deadEntities)
             {
-                _context.RemoveBattleEntity(battleEntityObject); 
-                LogManager.Log($"移除死亡的怪物：{battleEntityObject}");
+                _context.RemoveBattleEntity(battleEntityObject);
+
+                if (battleEntityObject is PlayerObject)
+                {
+                    _context.RemoveSceneRole(battleEntityObject);
+                }
+                else
+                {
+                    _context.RemoveSceneMonster(battleEntityObject);
+                }
             }
             
             // 事件分发传递，更新行动轴UI显示
