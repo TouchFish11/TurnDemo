@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using Core.Log;
 using Core.Service;
 using Game.Battle.Command;
-using Game.Battle.Context;
 using Game.Battle.Objects;
 using Game.UI.Battle;
+using GameHotUpdate.Battle.StateMeachine;
 using GameHotUpdate.UI.Battle.Base;
 
 namespace GameHotUpdate.Command
@@ -18,25 +18,16 @@ namespace GameHotUpdate.Command
     {
         // 战斗指令队列：存储待执行的战斗指令
         private readonly List<ICommand> _battleCommands = new();
-        // 战斗上下文：提供战斗相关的环境数据和管理类访问
-        private readonly IBattleContext _context;
-        // 当前正在执行的指令
-        private ICommand _command;
+        // 回合循环状态
+        private TurnLoopState _turnLoopState;
         // 是否退出战斗：标记战斗是否结束，用于终止指令执行循环
         private bool _isQuit;
+        // 当前正在执行的指令
+        private ICommand _command;
 
-        /// <summary>
-        /// 获取待执行指令队列的数量
-        /// </summary>
-        public int Count => _battleCommands.Count;
-
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="context">战斗上下文实例，提供战斗环境核心数据</param>
-        public BattleCommandsController(IBattleContext context)
+        public BattleCommandsController(TurnLoopState turnLoopState)
         {
-            _context = context;
+            _turnLoopState = turnLoopState;
         }
 
         /// <summary>
@@ -52,7 +43,7 @@ namespace GameHotUpdate.Command
                 // 获取队列首个指令作为当前执行命令
                 GetFirst();
                 // 执行当前命令（指令自身的执行逻辑）
-                yield return _command.Execute(_context);
+                yield return _command.Execute(_turnLoopState.Context);
                 // 执行完命令内容后的处理逻辑
                 yield return OnPostCommandExcute();
 
@@ -63,7 +54,7 @@ namespace GameHotUpdate.Command
                 }
                 
                 // 命令执行完后逻辑
-                yield return _command.ExcutePostProcess(_context);
+                yield return _command.ExcutePostProcess(_turnLoopState.Context);
                 // 执行完成后清空当前命令
                 _command = null;
             }
@@ -79,9 +70,9 @@ namespace GameHotUpdate.Command
         private IEnumerator OnPostCommandExcute()
         {
             // 移除战斗中死亡的怪物
-            yield return _context.GetTurnManager().RemoveDeadMonster();
+            yield return _turnLoopState.RemoveDeadMonster();
             // 检查战斗是否结束，并更新退出标记
-            _isQuit = _context.GetTurnManager().CheckBattleOver();
+            _isQuit = _turnLoopState.CheckBattleOver();
             // 过滤队列中无效的指令（如执行者已死亡的指令）
             FilterInvalidCommand();
         }
@@ -132,15 +123,13 @@ namespace GameHotUpdate.Command
                 _command = command;
                 return;
             }
-            else
-            {
-                // 当前有执行指令，加入待执行队列
-                _battleCommands.Add(command);
-                // 按指令优先级重新排序队列
-                SortCommand();
-                // 更新UI：刷新等待指令的显示列表
-                ((BattleController)ServiceLocator.Get<IBattleUIScheduler>().BattleController).BattleUiManager.UpdateWaitingCommmand(GetCommandSenders());
-            }
+
+            // 当前有执行指令，加入待执行队列
+            _battleCommands.Add(command);
+            // 按指令优先级重新排序队列
+            SortCommand();
+            // 更新UI：刷新等待指令的显示列表
+            ((BattleController)ServiceLocator.Get<IBattleUIScheduler>().BattleController).BattleUiManager.UpdateWaitingCommmand(GetCommandSenders());
         }
 
         /// <summary>

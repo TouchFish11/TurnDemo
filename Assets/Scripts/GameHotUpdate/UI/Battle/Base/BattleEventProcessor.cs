@@ -41,7 +41,6 @@ namespace GameHotUpdate.UI.Battle.Base
         /// <param name="eventBus">战斗事件总线</param>
         public void RegisterBattleEvents(IBattleEventBus eventBus)
         {
-            eventBus.AddListener<TurnStartEvent>(OnTurnStart);               // 回合开始事件
             eventBus.AddListener<TurnEndEvent>(OnTurnEnd);                   // 回合结束事件
             eventBus.AddListener<OnBattlePointCountChangedEvent>(OnBattlePointCountChanged); // 战斗点数变化事件
             eventBus.AddListener<SelectTargetEvent>(OnTargetSelectionChanged); // 目标选择事件
@@ -54,41 +53,6 @@ namespace GameHotUpdate.UI.Battle.Base
             eventBus.AddListener<StatusAddedEvent>(OnStatusAddedEvent);       // 状态添加事件
             eventBus.AddListener<BattleOverEvent>(OnBattleOverEvent);         // 战斗结束事件
             eventBus.AddListener<MonsterDeadEvent>(OnMonsterDeadEvent);       // 怪物死亡事件
-        }
-
-        /// <summary>
-        /// 回合开始事件处理方法
-        /// 初始化怪物UI、切换目标选择状态、更新操作面板和行动提示等
-        /// </summary>
-        /// <param name="turnStartEvent">回合开始事件数据</param>
-        private void OnTurnStart(TurnStartEvent turnStartEvent)
-        {
-            // // 初始化存活怪物的UI展示
-            // _uiInitializer.InitMonsterUI(turnStartEvent.Context.GetAliveMonsterEntitys());
-            //
-            // if (turnStartEvent.CurrentBattleEntity is PlayerObject)
-            // {
-            //     // 玩家回合：激活目标选择功能
-            //     TargetSelectManager.Instance.ActiveSelectTarget();
-            //     // 隐藏行动提示
-            //     _uiManager.SetActTipActive(E_ActTipType.Hide);
-            //     // 获取技能按键UI数据提供器，更新玩家操作面板
-            //     var provider = ServiceLocator.Get<IFactoryManager>().
-            //         GetFactory<ISkillKeyUIDataProviderFactory, SkillKeyUIDataProviderFactory>().
-            //         GetCastSkillCondition<BaseSkillKeyUIDataProvider>();
-            //     _uiManager.UpdateOperator(turnStartEvent.CurrentBattleEntity, provider);
-            // }
-            // else if (turnStartEvent.CurrentBattleEntity is MonsterObject)
-            // {
-            //     // 怪物回合：关闭目标选择功能
-            //     ServiceLocator.Get<ITargetSelectManager>().InActiveSelectTarget();
-            //     // 清除选中目标的标记UI
-            //     _uiManager.ClearSelectMarker();
-            //     // 清空操作面板
-            //     _uiManager.SetOperator(null);
-            //     // 显示怪物行动提示
-            //     _uiManager.SetActTipActive(E_ActTipType.Monster);
-            // }
         }
 
         /// <summary>

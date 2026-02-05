@@ -45,7 +45,7 @@ namespace GameHotUpdate.Battle.Status.Statuses
 
             // ���ý�ɫ�ġ���ѪAPI��ִ�о����߼���ģ���ڲ�/����ģ��API���ã�
             int healValue = (int)(owner.GetComponent<PropertyComponent>().GetProperty<BattleProperty>().MaxHp * _healRatio);
-            owner.Heal(healValue);
+            owner.TakeHeal(healValue);
             LogManager.Log($"{owner.GameObject.name}����������Ѫ���ָ�{healValue}��HP");
 
             // ���ٳ����غϣ�������ʧЧ

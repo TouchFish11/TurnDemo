@@ -50,7 +50,7 @@ namespace Game.Battle.Context
         /// 获取回合控制器（管理回合顺序、回合切换等逻辑）
         /// </summary>
         /// <returns>回合控制器实例</returns>
-        ITurnController GetTurnManager();
+        IBattleStateMachine GetStateMachine();
         
         /// <summary>
         /// 获取战斗事件总线（用于战斗内事件的发布/订阅）

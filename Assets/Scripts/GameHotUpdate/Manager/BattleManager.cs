@@ -4,7 +4,6 @@ using Core.AssetBundles.Management;
 using Core.Config;
 using Core.DataPersistence.Binary;
 using Core.Log;
-using Core.Mono;
 using Core.PreLoad;
 using Core.Scene;
 using Core.Service;
@@ -49,7 +48,7 @@ namespace GameHotUpdate.Manager
         private IBattleContext _context;
         
         // 怪物创建数量，测试（1~5）
-        private const int monsterCount = 5;
+        private const int monsterCount = 3;
         
         private BattleManager()
         {
@@ -124,13 +123,8 @@ namespace GameHotUpdate.Manager
                 await CreateBattleEntity();
                 // 初始化战斗点，依赖战斗实体对象创建完成
                 ServiceLocator.Get<IBattlePointProxy>().InitProxy(_context, new List<IBattleEntityObject>(_context.GetAlivePlayerEntitys()));
-                
-                // 进入战斗准备
-                await _context.GetTurnManager().BattlePreparation();
-                // 战斗准备完毕，销毁战斗加载界面
-                ServiceLocator.Get<IUIManager>().DestroyView(battleLoadingController);
                 // 开始战斗
-                ServiceLocator.Get<IMonoAdapter>().StartCoroutine(_context.GetTurnManager().StartBattle());
+                _context.GetStateMachine().StartBattle();
             });
         }
 
@@ -242,16 +236,17 @@ namespace GameHotUpdate.Manager
         /// <param name="quitBattleEvent"></param>
         private void OnQuitBattleEvent(QuitBattleEvent quitBattleEvent)
         {
+            // 清理战斗数据
+            _context.CleanupBattle();
+            
             // 销毁战斗输入处理器、战斗点对象、战斗UI调度器
-            ServiceLocator.Get<IBattlePointProxy>().Dispose();
             Object.Destroy(ServiceLocator.Get<IBattleInputHandler>().GameObject);
             Object.Destroy(ServiceLocator.Get<IBattleUIScheduler>().GameObject);
             Object.Destroy(ServiceLocator.Get<IBattleEventScheduler>().GameObject);
             
             // 移除注册
             UnregisterManager();
-            // 清理战斗数据
-            _context.CleanupBattle();
+
             // 销毁战斗界面
             ServiceLocator.Get<IUIManager>().DestroyView(quitBattleEvent.BattleUIController);
             BackMain();

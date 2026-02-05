@@ -12,7 +12,6 @@ using Game.Battle.Context;
 using Game.Battle.Input;
 using Game.Battle.Objects;
 using Game.Objects;
-using GameHotUpdate.Battle.Event.Turn;
 using GameHotUpdate.Objects;
 using UnityEngine;
 
@@ -53,6 +52,7 @@ namespace GameHotUpdate.Battle.BattlePoint
             LayerMask.NameToLayer("PlayerObject3"),
             LayerMask.NameToLayer("PlayerObject4")
         };
+        
         // 怪物中心点x值
         private readonly byte[] bytes = { 6, 4, 2, 0 };
         
@@ -102,7 +102,6 @@ namespace GameHotUpdate.Battle.BattlePoint
                 index++;
             }
             
-            ctx.GetEventBus().AddListener<TurnStartEvent>(OnTurnStartEvent);
             ServiceLocator.Get<IBattleInputHandler>().OnDrag += OnDrag;
         }
 
@@ -129,6 +128,7 @@ namespace GameHotUpdate.Battle.BattlePoint
             {
                 if (battleEntity is PlayerObject)
                 {
+                    // 更新怪物位置
                     UpdateMonsterPos(battleEntity);
                     // 创建相机到指定位置点
                     await CreateCameraAtPos(battleEntity.EntityPosIndex);
@@ -143,7 +143,7 @@ namespace GameHotUpdate.Battle.BattlePoint
                 LogManager.LogError($"{nameof(BattlePointProxy)}.{nameof(UpdateCamera)}：{e.Message}");
             }
         }
-
+        
         /// <summary>
         /// 更新怪物中心位置
         /// </summary>
@@ -286,19 +286,9 @@ namespace GameHotUpdate.Battle.BattlePoint
             var targetRot = Quaternion.Euler(0, currentXAngle, 0f);
             CurrentActiveCamera.transform.localRotation = Quaternion.Slerp(CurrentActiveCamera.transform.localRotation, targetRot, Time.deltaTime * rotateSpeed);
         }
-        
-        /// <summary>
-        /// 战斗开始事件回调
-        /// </summary>
-        /// <param name="turnStartEvent"></param>
-        private void OnTurnStartEvent(TurnStartEvent turnStartEvent)
-        {
-            //UpdateCamera(turnStartEvent.CurrentBattleEntity);
-        }
 
         public void Dispose()
         {
-            context.GetEventBus().RemoveListener<TurnStartEvent>(OnTurnStartEvent);
             ServiceLocator.Get<IBattleInputHandler>().OnDrag -= OnDrag;
         }
     }

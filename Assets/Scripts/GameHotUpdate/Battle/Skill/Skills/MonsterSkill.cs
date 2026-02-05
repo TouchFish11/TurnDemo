@@ -42,9 +42,6 @@ namespace GameHotUpdate.Battle.Skill.Skills
             // 更新战斗相机视角，聚焦到技能主要目标（保证视觉焦点在目标身上）
             context.GetProxy().UpdateCamera(MainTarget);
             
-            // 同步施法者朝向，让怪物转向技能主要目标（表现层朝向修正）
-            context.GetTurnManager().UpdateEntityLookAt(MainTarget);
-            
             // 关闭目标选择状态，避免技能释放过程中重复选目标
             ServiceLocator.Get<ITargetSelectManager>().InActiveSelectTarget();
             

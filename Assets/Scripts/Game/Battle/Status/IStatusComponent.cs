@@ -6,6 +6,9 @@ namespace Game.Battle.Status
     /// </summary>
     public interface IStatusComponent
     {
-
+        /// <summary>
+        /// 更新状态
+        /// </summary>
+        void UpdateStatus();
     }
 }

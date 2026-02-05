@@ -155,7 +155,7 @@ MonoBehaviour:
       size: 8997
       name: BeginScene.unity
     - assetPath: Assets\Editor\ArtRes\Scene\LevelScene.unity
-      size: 68491
+      size: 68494
       name: LevelScene.unity
     - assetPath: Assets\Editor\ArtRes\Scene\MainScene.unity
       size: 55728

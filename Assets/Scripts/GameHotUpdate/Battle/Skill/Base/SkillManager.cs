@@ -7,6 +7,7 @@ using Game.Battle.Skill;
 using Game.Battle.Skill.Interface;
 using Game.Battle.TargetSelect;
 using GameHotUpdate.Battle.Command;
+using GameHotUpdate.Battle.Event.Turn;
 
 namespace GameHotUpdate.Battle.Skill.Base
 {
@@ -35,7 +36,8 @@ namespace GameHotUpdate.Battle.Skill.Base
             // ��װ����
             var skillCommand = ServiceLocator.Get<IFactoryManager>().GetFactory<ICommandFactory, CommandFactory>().GetSkillCommand(skilldata);
             // ����ָ��
-            ServiceLocator.Get<IBattleManager>().GetContext().GetTurnManager().InsertCommand(skillCommand);
+            var context = ServiceLocator.Get<IBattleManager>().GetContext();
+            context.GetEventBus().TriggerEvent(new InsertCommandEvent(context, skillCommand));
         }
     }
 }

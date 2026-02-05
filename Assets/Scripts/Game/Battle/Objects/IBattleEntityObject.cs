@@ -41,19 +41,7 @@ namespace Game.Battle.Objects
         /// 是否可执行行动
         /// 用于判断实体当前是否具备行动能力（如未被眩晕、冻结、死亡）
         /// </summary>
-        bool CanAct { get; }
-
-        /// <summary>
-        /// 启用行动能力
-        /// 解除行动限制，使CanAct状态变为true（如解除眩晕）
-        /// </summary>
-        void EnableAct();
-
-        /// <summary>
-        /// 禁用行动能力
-        /// 限制实体行动，使CanAct状态变为false（如眩晕、冻结）
-        /// </summary>
-        void DisableAct();
+        bool CanAct { get; set; }
 
         /// <summary>
         /// 战斗上下文
@@ -88,39 +76,21 @@ namespace Game.Battle.Objects
         /// 由战斗管理器在行动阶段调用
         /// </summary>
         void ExecuteAction();
-       
-        /// <summary>
-        /// 获取速度值
-        /// 速度决定行动值的增长速率，速度越高行动频率越快
-        /// </summary>
-        /// <returns>实体当前的速度属性值（整数）</returns>
-        int GetSpeed();
 
         /// <summary>
-        /// 治疗生命值
+        /// 受到治疗
         /// 为实体增加生命值（不会超过最大生命值）
         /// </summary>
         /// <param name="value">治疗量（正数）</param>
-        void Heal(int value);
+        void TakeHeal(int value);
 
         /// <summary>
-        /// 尝试承受伤害
+        /// 受到伤害
         /// 处理实体受到的伤害计算、扣血、伤害表现等逻辑
         /// </summary>
         /// <param name="damageResult">伤害结算结果对象（包含伤害类型、数值、来源等）</param>
         /// <returns>是否成功承受伤害（true=成功，false=免疫/格挡等未生效）</returns>
         void TakeDamage(DamageResult damageResult);
-
-        /// <summary>
-        /// 增加行动次数计数
-        /// </summary>
-        void AddActCount();
-
-        /// <summary>
-        /// 减少行动次数计数
-        /// 用于扣除实体的行动次数
-        /// </summary>
-        void SubActCount();
 
         /// <summary>
         /// 死亡处理协程
@@ -129,5 +99,7 @@ namespace Game.Battle.Objects
         /// </summary>
         /// <returns>迭代器用于协程执行</returns>
         IEnumerator Die();
+
+        void ChangeState(EActPhase eActPhase);
     }
 }

@@ -54,8 +54,6 @@ namespace GameHotUpdate.Battle.Event
                 _context.GetProxy().UpdateMonsterPos(turnStartEvent.CurrentBattleEntity);
                 // 更新相机显示
                 _context.GetProxy().UpdateCamera(turnStartEvent.CurrentBattleEntity);
-                // 怪物看向玩家
-                _context.GetTurnManager().UpdateEntityLookAt(turnStartEvent.CurrentBattleEntity);
             }
             
             // 更新UI
@@ -103,8 +101,6 @@ namespace GameHotUpdate.Battle.Event
             _context.GetProxy().UpdateMonsterPos(caster);
             // 更新相机显示
             _context.GetProxy().UpdateCamera(caster);
-            // 怪物看向玩家
-            _context.GetTurnManager().UpdateEntityLookAt(caster);
             // 玩家回合：激活目标选择功能
             ServiceLocator.Get<ITargetSelectManager>().ActiveSelectTarget();
             

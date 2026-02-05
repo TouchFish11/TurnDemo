@@ -9,7 +9,6 @@ using Game.Battle.Objects;
 using Game.Battle.Turn;
 using GameHotUpdate.Battle.Event;
 using GameHotUpdate.Battle.Event.Turn;
-using GameHotUpdate.Condition;
 using GameHotUpdate.Objects;
 using GameHotUpdate.Turn;
 using UnityEngine;
@@ -24,23 +23,21 @@ namespace GameHotUpdate.Context
         // 战斗事件总线实例
         private BattleEventBus _eventBus;
         // 战斗点代理
-        private readonly IBattlePointProxy _battlePointProxy;
-        // 战斗实体列表
+        private IBattlePointProxy _battlePointProxy;
+        // 战斗状态机
+        private IBattleStateMachine _battleMachine;
+        // 战斗实体总列表
         private List<IBattleEntityObject> _allBattleEntity = new();
-        
         // 场景怪物列表
         private readonly List<IBattleEntityObject> _monsterObjects = new();
         // 场景玩家列表
         private readonly List<IBattleEntityObject> _roleObjects = new();
         // 场景召唤物列表
         // ...
-        
-        // 回合管理器
-        private ITurnController _turnManager;
         // 当前行动实体
         private IBattleEntityObject _currentEntity;
 
-        /// 当前战机点数
+        /// 当前战技点数
         public int CurentBattlePointCount { get; private set; }
 
         /// 最大战技点数
@@ -50,8 +47,8 @@ namespace GameHotUpdate.Context
         {
             _eventBus = new BattleEventBus();
             _battlePointProxy = battlePointProxy;
-            // 注入自身（IBattleContext）
-            _turnManager = new TurnController(this, new AllMonsterDeadCondition(), new AllPlayerDeadCondition());
+            _battleMachine = new BattleStateMachine(this);
+            
             // 更新起始战技点
             CurentBattlePointCount = 3;
         }
@@ -101,23 +98,34 @@ namespace GameHotUpdate.Context
 
         public void CleanupBattle()
         {
-            // 销毁所有角色 GameObject
+            // 销毁所有实体 GameObject
             foreach (var entity in _allBattleEntity)
             {
+                entity.Destroy();
                 UnityEngine.Object.Destroy(entity.GameObject);
             }
+            
+            // 清理所有实体
             _allBattleEntity.Clear();
             _allBattleEntity = null;
+            
+            // 销毁状态机
+            _battleMachine.Dispose();
+            _battleMachine = null;
+            
+            // 销毁代理
+            _battlePointProxy.Dispose();
+            _battlePointProxy = null;
 
             // 清空事件总线
             _eventBus.Clear();
             _eventBus = null;
-
+            
             // 清空缓存池
             ServiceLocator.Get<IPoolManager>().Clear();
 
             _currentEntity = null;
-            _turnManager = null;
+            _battleMachine = null;
         }
 
         public void AddBattleEntity(IBattleEntityObject battleEntity)
@@ -241,9 +249,9 @@ namespace GameHotUpdate.Context
             return _allBattleEntity[0];
         }
 
-        public ITurnController GetTurnManager()
+        public IBattleStateMachine GetStateMachine()
         {
-            return _turnManager;
+            return _battleMachine;
         }
 
         public IBattleEventBus GetEventBus()

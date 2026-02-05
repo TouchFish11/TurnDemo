@@ -38,8 +38,8 @@
         },
         {
             "packageName": "hotupdate.assetbundle",
-            "packageSize": 149713,
-            "packageMD5": "e8d9d47b0eda5d9143ddc585f01c8f1f"
+            "packageSize": 149716,
+            "packageMD5": "a5d9326b6991d9a118247fbce1d32271"
         },
         {
             "packageName": "material.assetbundle",
@@ -54,7 +54,7 @@
         {
             "packageName": "PC.assetbundle",
             "packageSize": 1975,
-            "packageMD5": "5717ac3083be0fd4a739780f558cb3e0"
+            "packageMD5": "aff26344e7987023ef23ad2726de9d1f"
         },
         {
             "packageName": "prefab.assetbundle",

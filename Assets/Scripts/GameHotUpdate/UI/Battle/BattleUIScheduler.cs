@@ -42,8 +42,6 @@ namespace GameHotUpdate.UI.Battle
         {
             // ���������������
             ServiceLocator.Get<IBattlePointProxy>().UpdateCamera(target);
-            // �໥���򡢿��򹥻������
-            context.GetTurnManager().UpdateEntityLookAt(target);
             // ���ع���UI
             ServiceLocator.Get<IUIManager>().GetController<BattleController>().UiInitializer.InitMonsterUI(null);
             // ����Ŀ��ѡ��

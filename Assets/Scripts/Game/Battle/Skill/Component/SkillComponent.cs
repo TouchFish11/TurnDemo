@@ -157,9 +157,9 @@ namespace Game.Battle.Skill.Component
         /// ��ȡ���еļ���ID
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<int> GetSkillIds()
+        public List<int> GetSkillIds()
         {
-            return skillDatas.Keys;
+            return new List<int>(skillDatas.Keys);
         }
 
         /// <summary>

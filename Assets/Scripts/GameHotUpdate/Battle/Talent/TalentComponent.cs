@@ -19,8 +19,8 @@ namespace GameHotUpdate.Battle.Talent
             base.BattleInit(battleEntity);
 
             // �������п��ܴ����츳���¼��������ã��������ඩ�ģ�
-            BattleEntity.Context.GetEventBus().AddListener<TurnStartEvent>(OnBattleEventHandler);
-            BattleEntity.Context.GetEventBus().AddListener<TurnEndEvent>(OnBattleEventHandler);
+            //BattleEntity.Context.GetEventBus().AddListener<TurnStartEvent>(OnBattleEventHandler);
+            //BattleEntity.Context.GetEventBus().AddListener<TurnEndEvent>(OnBattleEventHandler);
         }
 
         /// <summary>
@@ -29,21 +29,21 @@ namespace GameHotUpdate.Battle.Talent
         /// <param name="battleEvent"></param>
         private void OnBattleEventHandler(BattleEvent battleEvent)
         {
-            if (battleEvent is TurnStartEvent turnStartEvent)
-            {
-                foreach (var talent in _talents)
-                {
-                    talent.OnTurnStartHandler(turnStartEvent);
-                }
-            }
+            // if (battleEvent is TurnStartEvent turnStartEvent)
+            // {
+            //     foreach (var talent in _talents)
+            //     {
+            //         //talent.OnTurnStartHandler(turnStartEvent);
+            //     }
+            // }
 
-            if (battleEvent is TurnEndEvent turnEndEvent)
-            {
-                foreach (var talent in _talents)
-                {
-                    talent.OnTurnEndHandler(turnEndEvent);
-                }
-            }
+            // if (battleEvent is TurnEndEvent turnEndEvent)
+            // {
+            //     foreach (var talent in _talents)
+            //     {
+            //         talent.OnTurnEndHandler(turnEndEvent);
+            //     }
+            // }
 
             foreach (var talent in _talents)
             {

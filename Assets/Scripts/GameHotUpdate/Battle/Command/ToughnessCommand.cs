@@ -11,8 +11,6 @@ namespace GameHotUpdate.Battle.Command
     /// </summary>
     public class ToughnessCommand : Game.Battle.Command.Command, IToughnessCommand
     {
-        // ���Իָ��ٶ�
-        private const float recoverySpeed = 40;
 
         /// <summary>
         /// �������
@@ -36,7 +34,7 @@ namespace GameHotUpdate.Battle.Command
             float currentValue = 0;
             while (ToughnessComponent.CurrentToughnessValue < ToughnessComponent.MaxToughnessVaue)
             {
-                currentValue += UnityEngine.Time.deltaTime * recoverySpeed;
+                //currentValue += UnityEngine.Time.deltaTime * recoverySpeed;
                 ToughnessComponent.SetToughnessValue((int)currentValue, ToughnessComponent.MaxToughnessVaue);
                 yield return null;
             }

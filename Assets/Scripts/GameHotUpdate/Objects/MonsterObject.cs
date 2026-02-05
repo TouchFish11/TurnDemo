@@ -1,18 +1,13 @@
 using System.Collections;
-using System.Collections.Generic;
 using Core.Config;
 using Core.DataPersistence.Binary;
-using Core.Reflection;
 using Core.Service;
 using Core.Utility;
 using Game.Animation;
-using Game.Battle;
-using Game.Battle.Command;
 using Game.Battle.Context;
-using Game.Battle.Toughness;
+using Game.Battle.Objects;
 using Game.VFX;
 using GameHotUpdate.Animation;
-using GameHotUpdate.Battle.Command;
 using GameHotUpdate.Battle.Event.UI;
 using GameHotUpdate.Battle.ResponsibilityChain.DamageChain;
 using UnityEngine;
@@ -30,12 +25,6 @@ namespace GameHotUpdate.Objects
         /// 包含怪物ID、技能ID列表、组件名称列表等基础配置
         /// </summary>
         public MonsterInfo MonsterInfo { get; private set; }
-
-        /// <summary>
-        /// 怪物可释放的技能ID列表
-        /// 战斗初始化时从MonsterInfo中解析填充
-        /// </summary>
-        private readonly List<int> skillIds = new();
 
         /// <summary>
         /// 基础初始化方法
@@ -61,58 +50,17 @@ namespace GameHotUpdate.Objects
             
             // 初始化伤害链
             damageChain = DamageChainBuilder.GetMonsterDamageChain();
-            // 解析配置中的技能ID字符串（分隔符为2），填充到技能列表
-            skillIds.AddRange(TextUtility.SplitToIntArr(MonsterInfo.f_skillIds, 2));
             // 根据配置的组件名称列表，为怪物添加对应的战斗组件（如韧性组件、动画组件等）
             AddComponents(TextUtility.Split(MonsterInfo.f_comNames, 2));
-        }
-
-        /// <summary>
-        /// 怪物行动逻辑的核心协程
-        /// 执行流程：先恢复韧性（若需）→ 随机选择技能释放
-        /// 注：该方法为怪物AI的核心入口，mono协程特性使其能异步等待操作完成
-        /// </summary>
-        /// <returns>协程迭代器</returns>
-        protected override IEnumerator OnExceuteAction()
-        {
-            // 执行韧性恢复逻辑（若韧性被击破则等待恢复完成）
-            yield return RestoreToughness();
-
-            // 随机从技能列表中选择一个技能ID
-            // TODO：可以封装随机选择的策略类，用于玩家/怪物AI
-            var skillId = skillIds[Random.Range(0, skillIds.Count)];
-            // 释放选中的技能
-            CastSkill(skillId);
-        }
-
-        /// <summary>
-        /// 韧性恢复协程
-        /// 逻辑：仅当韧性被击破时触发 → 创建韧性恢复指令 → 插入到回合队列 → 等待恢复完成
-        /// </summary>
-        /// <returns>协程迭代器</returns>
-        private IEnumerator RestoreToughness()
-        {
-            // 获取当前怪物的韧性组件
-            var toughnessComponent = GetComponent<IToughnessComponent>();
             
-            // 若韧性未被击破，直接退出协程（无需恢复）
-            if (!toughnessComponent.IsToughnessBroken())
-            {
-                yield break;
-            }
-
-            // 通过工厂管理器创建韧性恢复指令
-            var command = ServiceLocator.Get<IFactoryManager>()
-                .GetFactory<ICommandFactory, CommandFactory>()
-                .GetToughnessCommand(toughnessComponent);
-            
-            // 将韧性恢复指令插入到战斗回合管理器的指令队列中
-            ServiceLocator.Get<IBattleManager>().GetContext().GetTurnManager().InsertCommand(command);
-            
-            // 等待韧性值恢复至最大值（协程阻塞，直到条件满足）
-            yield return new WaitUntil(() => toughnessComponent.CurrentToughnessValue == toughnessComponent.MaxToughnessVaue);
+            AddState(EActPhase.SettlementBuff);
+            AddState(EActPhase.TurnStart);
+            AddState(EActPhase.RestoreToughness);
+            AddState(EActPhase.Operator);
+            AddState(EActPhase.TurnEnd);
         }
-
+        
+        
         /// <summary>
         /// 怪物死亡处理协程
         /// 执行流程：播放死亡特效 → 播放死亡动画 → 等待特效结束
@@ -142,13 +90,12 @@ namespace GameHotUpdate.Objects
 
         /// <summary>
         /// 怪物对象禁用时的清理逻辑
-        /// 主要用于触发UI层的怪物死亡事件，更新战斗界面状态
+        /// 触发怪物死亡事件
         /// </summary>
-        protected override void OnDisable()
+        public override void Destroy()
         {
-            base.OnDisable();
-            // 触发怪物死亡事件，通知UI层移除该怪物的状态显示
             Context.GetEventBus().TriggerEvent(new MonsterDeadEvent(Context, this));
+            base.Destroy();
         }
     }
 }

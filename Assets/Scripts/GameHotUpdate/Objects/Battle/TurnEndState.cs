@@ -1,0 +1,33 @@
+using Game.Battle.Objects;
+using GameHotUpdate.Battle.Event.Turn;
+
+namespace GameHotUpdate.Objects.Battle
+{
+    /// <summary>
+    /// 回合结束状态
+    /// </summary>
+    public class TurnEndState : TurnState
+    {
+        public TurnEndState(IBattleEntityObject battleEntity) : base(battleEntity)
+        {
+            
+        }
+
+        public override void Enter()
+        {
+            // 触发回合结束事件（供外部监听）
+            BattleEntity.Context.GetEventBus().TriggerEvent(new TurnEndEvent(BattleEntity.Context, this.BattleEntity));
+            Exit();
+        }
+
+        public override void Execute()
+        {
+
+        }
+
+        public override void Exit()
+        {
+
+        }
+    }
+}

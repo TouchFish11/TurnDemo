@@ -24,10 +24,10 @@ namespace GameHotUpdate.Battle.Talent.Talents
 
         public bool CanTrigger(BattleEvent battleEvent, IBattleEntityObject owner)
         {
-            if (battleEvent is not TurnEndEvent turnEndEvt)
-            {
-                return false;
-            }
+            // if (battleEvent is not TurnEndEvent turnEndEvt)
+            // {
+            //     return false;
+            // }
             return true;
             // ����������1. �ǽ�ɫ�����ж������¼� 2. ���غϻ�ɱ����(����жϵ������Լ����ܵ�) 3. δ������
             //return turnEndEvt.CurrentBattleEntity == owner && turnEndEvt.HasKilledEnemy && !_hasTriggeredThisTurn;
@@ -35,7 +35,7 @@ namespace GameHotUpdate.Battle.Talent.Talents
 
         public void Execute(BattleEvent battleEvent, IBattleEntityObject owner)
         {
-            var turnEndEvt = (TurnEndEvent)battleEvent;
+            //var turnEndEvt = (TurnEndEvent)battleEvent;
             LogManager.Log($"\n���츳������{owner.GameObject.name}�����츳��{Name}����");
             LogManager.Log($"{owner.GameObject.name}��ö����ж��غϣ�");
 
@@ -44,17 +44,17 @@ namespace GameHotUpdate.Battle.Talent.Talents
             //_hasTriggeredThisTurn = true; // ��Ǳ��غ��Ѵ���
         }
 
-        public void OnTurnStartHandler(TurnStartEvent turnStartEvent)
-        {
-            if (turnStartEvent.CurrentBattleEntity == Owner)
-            {
-                //_hasTriggeredThisTurn = false;
-            }
-        }
+        // public void OnTurnStartHandler(TurnStartEvent turnStartEvent)
+        // {
+        //     if (turnStartEvent.CurrentBattleEntity == Owner)
+        //     {
+        //         //_hasTriggeredThisTurn = false;
+        //     }
+        // }
 
-        public void OnTurnEndHandler(TurnEndEvent turnEndEvent)
-        {
-            /* �غϽ���ʱ����Ҫ���� */
-        }
+        // public void OnTurnEndHandler(TurnEndEvent turnEndEvent)
+        // {
+        //     /* �غϽ���ʱ����Ҫ���� */
+        // }
     }
 }

@@ -67,9 +67,6 @@ namespace GameHotUpdate.Battle.Skill.Handlers
             // 切换战斗相机至当前玩家实体视角
             context.GetProxy().UpdateCamera(currentEntity);
             
-            // 更新实体朝向（让当前实体面向目标方向/默认方向）
-            context.GetTurnManager().UpdateEntityLookAt(currentEntity);
-            
             // 获取玩家基础目标选择策略
             var strategy = ServiceLocator.Get<IFactoryManager>().
                 GetFactory<ITargetSelectStrategyFactory, TargetSelectStrategyFactory>()

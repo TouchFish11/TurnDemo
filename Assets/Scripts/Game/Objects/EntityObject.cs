@@ -158,9 +158,9 @@ namespace Game.Objects
         
         /// <summary>
         /// 实体禁用回调（Unity生命周期）
-        /// 子类可重写此方法，实现禁用时的逻辑（如暂停行为、保存状态等）
+        /// 内部预留方法，子类禁止重写（private修饰），用于规范实体销毁生命周期
         /// </summary>
-        protected virtual void OnDisable()
+        private void OnDisable()
         {
             
         }

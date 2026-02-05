@@ -31,11 +31,11 @@ namespace GameHotUpdate.Battle.Talent
         /// <summary>
         /// �غϿ�ʼʱ����
         /// </summary>
-        void OnTurnStartHandler(TurnStartEvent turnStartEvent);
+        //void OnTurnStartHandler(TurnStartEvent turnStartEvent);
 
         /// <summary>
         /// �غϽ���ʱ����
         /// </summary>
-        void OnTurnEndHandler(TurnEndEvent turnEndEvent);
+        //void OnTurnEndHandler(TurnEndEvent turnEndEvent);
     }
 }

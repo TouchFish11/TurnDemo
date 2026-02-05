@@ -11,8 +11,7 @@ namespace GameHotUpdate.Battle.Skill.Handlers
     {
         public IEnumerator Handle(ISkill skill)
         {
-            // �����ж�����
-            skill.Caster.SubActCount();
+            skill.Caster.CanAct = false;
             yield break;
         }
     }
