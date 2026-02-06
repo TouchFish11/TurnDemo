@@ -1,7 +1,6 @@
 using Core.Log;
 using Game.Battle.Event;
 using Game.Battle.Objects;
-using GameHotUpdate.Battle.Event.Turn;
 
 namespace GameHotUpdate.Battle.Talent.Talents
 {

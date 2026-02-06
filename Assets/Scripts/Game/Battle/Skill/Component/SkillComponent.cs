@@ -1,6 +1,6 @@
+using System;
 using System.Collections.Generic;
 using Core.Log;
-using Core.Service;
 using Core.Utility;
 using Game.Battle.Component;
 using Game.Battle.Skill.Condition;
@@ -10,29 +10,31 @@ using Game.Battle.TargetSelect;
 namespace Game.Battle.Skill.Component
 {
     /// <summary>
-    /// ս��ʵ�弼�����
-    /// ����ʵ�弼�ܣ��ṩ�ͷ����
+    /// 技能组件抽象基类
+    /// 负责管理战斗实体的技能数据、施法条件、目标选择策略，提供技能相关的核心操作能力
+    /// 所有具体的技能组件（如角色技能组件、怪物技能组件）需继承此类实现具体逻辑
     /// </summary>
     public abstract class SkillComponent : BattleComponent, ISkillComponent
     {
-        // �����б������ñ����أ�  ����������ֻ�м���Id�б��Ϳ�����
+        // 技能数据字典：Key为技能ID，Value为对应的技能数据对象，用于快速索引技能
         protected readonly Dictionary<int, ISkillData> skillDatas = new();
-        // �����ͷ������б�
+        // 施法条件集合：存储当前技能组件生效的所有施法条件，施法前需校验所有条件
         protected readonly List<ICastSkillCondition> castSkillConditions = new();
-        // ����Ŀ��ѡ������б�
+        // 目标选择策略集合：存储当前技能组件的所有目标选择策略，按优先级排序后生效
         protected readonly List<ITargetSelectStrategy> targetSelectStrategies = new();
-        
-        public abstract bool IsRelease { get; protected set; }
 
         /// <summary>
-        /// ��ʼ�������б�
+        /// 初始化技能列表
+        /// 从技能ID字符串解析出技能ID数组，并通过技能工厂创建对应技能数据，存入技能字典
         /// </summary>
-        /// <param name="f_skillIds"></param>
-        /// <param name="skillFactory"></param>
+        /// <param name="f_skillIds">技能ID拼接的字符串（格式需符合TextUtility.SplitToIntArr解析规则）</param>
+        /// <param name="skillFactory">技能工厂实例，用于创建技能数据对象</param>
         public void InitSkills(string f_skillIds, ISkillFactory skillFactory)
         {
-            // ͨ�����ܹ������ؼ��ܣ����ñ���ȡ��ɫ����ID�б���
+            // 将技能ID字符串解析为int数组（第二个参数2为分隔符标识，需参考TextUtility.SplitToIntArr实现）
             var skillIds = TextUtility.SplitToIntArr(f_skillIds, 2);
+            
+            // 遍历工厂创建的技能数据，将技能ID和数据映射存入字典
             foreach (var skillData in skillFactory.CreateSkills(BattleEntity, skillIds))
             {
                 this.skillDatas.Add(skillData.Skill.SkillInfo.f_id, skillData);
@@ -40,52 +42,41 @@ namespace Game.Battle.Skill.Component
         }
 
         /// <summary>
-        /// �ͷ�ָ��ID�ļ���
+        /// 校验指定技能是否可以释放
+        /// 校验逻辑：1. 技能是否存在于当前组件 2. 所有施法条件是否满足
         /// </summary>
-        /// <param name="skillId"></param>
-        public void CastSkill(int skillId)
+        /// <param name="skillId">要校验的技能ID</param>
+        /// <returns>true=可释放；false=不可释放（技能不存在/任意施法条件不满足）</returns>
+        public bool CanCast(int skillId)
         {
-            if (skillDatas.TryGetValue(skillId, out var skillData))
+            // 先校验技能是否存在
+            if (skillDatas.TryGetValue(skillId, out var data))
             {
-                if (!CanCast(skillData.Skill))
+                // 遍历所有施法条件，只要有一个条件不满足则返回false
+                foreach (var condition in castSkillConditions)
                 {
-                    return;
+                    if (!condition.CanCast(BattleEntity, data.Skill))
+                    {
+                        return false;
+                    }
                 }
-
-                IsRelease = false;
-
-                // ���ͼ�������غ϶���
-                skillData.Skill.SetTargetSelectStrategy(targetSelectStrategies[0]);
-                ServiceLocator.Get<ISkillManager>().AddSkillCommand(skillData);
             }
             else
             {
-                LogManager.LogError($"δ�ҵ�����ʵ���� skillId = {skillId}");
+                // 技能不存在，返回false
+                return false;
             }
-        }
-
-        /// <summary>
-        /// �ܷ��ͷ�
-        /// </summary>
-        /// <param name="skill"></param>
-        /// <returns></returns>
-        protected bool CanCast(ISkill skill)
-        {
-            foreach (ICastSkillCondition condition in castSkillConditions)
-            {
-                if (!condition.CanCast(BattleEntity, skill))
-                {
-                    return false;
-                }
-            }
+            
+            // 所有校验通过，返回true
             return true;
         }
 
         /// <summary>
-        /// ����ָ��ID�ļ���
+        /// 新增技能到当前组件
+        /// 注：仅当技能ID未存在时才会添加，避免重复
         /// </summary>
-        /// <param name="skillId"></param>
-        /// <param name="skillData"></param>
+        /// <param name="skillId">要添加的技能ID</param>
+        /// <param name="skillData">对应的技能数据对象</param>
         public void AddSkill(int skillId, ISkillData skillData)
         {
             if (!skillDatas.TryGetValue(skillId, out ISkillData _))
@@ -95,9 +86,10 @@ namespace Game.Battle.Skill.Component
         }
 
         /// <summary>
-        /// �����ͷ�����
+        /// 添加施法条件到当前组件
+        /// 注：仅当条件未存在时才会添加，避免重复
         /// </summary>
-        /// <param name="castSkillCondition"></param>
+        /// <param name="castSkillCondition">要添加的施法条件实例</param>
         public void AddCastCondition(ICastSkillCondition castSkillCondition)
         {
             if (!castSkillConditions.Contains(castSkillCondition))
@@ -107,36 +99,39 @@ namespace Game.Battle.Skill.Component
         }
 
         /// <summary>
-        /// �Ƴ��ͷ�����
+        /// 从当前组件移除指定施法条件
         /// </summary>
-        /// <param name="castSkillCondition"></param>
+        /// <param name="castSkillCondition">要移除的施法条件实例</param>
         public void RemoveCastCondition(ICastSkillCondition castSkillCondition)
         {
             castSkillConditions.Remove(castSkillCondition);
         }
 
         /// <summary>
-        /// ����Ŀ��ѡ�����
+        /// 添加目标选择策略到当前组件
+        /// 添加后会自动重新排序策略（按优先级降序）
         /// </summary>
-        /// <param name="targetSelectStrategy"></param>
+        /// <param name="targetSelectStrategy">要添加的目标选择策略实例</param>
         public void AddTargetSelectStrategy(ITargetSelectStrategy targetSelectStrategy)
         {
             targetSelectStrategies.Add(targetSelectStrategy);
-            SortTargetStratgy();
+            SortTargetStratgy(); // 添加后排序，保证策略优先级生效
         }
 
         /// <summary>
-        /// �Ƴ�Ŀ��ѡ�����
+        /// 从当前组件移除指定目标选择策略
+        /// 移除后会自动重新排序策略（按优先级降序）
         /// </summary>
-        /// <param name="targetSelectStrategy"></param>
+        /// <param name="targetSelectStrategy">要移除的目标选择策略实例</param>
         public void RemoveTargetSelectStrategy(ITargetSelectStrategy targetSelectStrategy)
         {
             targetSelectStrategies.Remove(targetSelectStrategy);
-            SortTargetStratgy();
+            SortTargetStratgy(); // 移除后排序，保证策略优先级生效
         }
 
         /// <summary>
-        /// ����Ŀ��ѡ�����
+        /// 目标选择策略排序（私有方法）
+        /// 按策略优先级降序排列（优先级高的排在前面，优先生效）
         /// </summary>
         private void SortTargetStratgy()
         {
@@ -144,34 +139,54 @@ namespace Game.Battle.Skill.Component
             {
                 if (s1.Priority > s2.Priority)
                 {
-                    return -1;
+                    return -1; // s1优先级更高，排在前面
                 }
                 else
                 {
-                    return 1;
+                    return 1; // s2优先级更高，排在前面
                 }
             });
         }
 
         /// <summary>
-        /// ��ȡ���еļ���ID
+        /// 获取当前组件管理的所有技能ID列表
         /// </summary>
-        /// <returns></returns>
+        /// <returns>技能ID的新列表（避免外部修改原字典）</returns>
         public List<int> GetSkillIds()
         {
             return new List<int>(skillDatas.Keys);
         }
 
         /// <summary>
-        /// ��ȡ���еļ���
+        /// 获取当前组件管理的所有技能实例
+        /// 采用迭代器方式返回，减少内存拷贝
         /// </summary>
-        /// <returns></returns>
+        /// <returns>技能实例的可枚举集合</returns>
         public IEnumerable<ISkill> GetSkills()
         {
             foreach (var skillData in skillDatas.Values)
             {
                 yield return skillData.Skill;
             }
+        }
+
+        /// <summary>
+        /// 获取指定ID的技能数据
+        /// 获取技能数据后，自动为技能设置目标选择策略
+        /// </summary>
+        /// <param name="skillId">要获取的技能ID</param>
+        /// <returns>对应的技能数据对象</returns>
+        public ISkillData GetSkillData(int skillId)
+        {
+            if (skillDatas.TryGetValue(skillId, out var data))
+            {
+                // 为技能设置最高优先级的目标选择策略（排序后第一个即为最高优先级）
+                data.Skill.SetTargetSelectStrategy(targetSelectStrategies[0]);
+                return data;
+            }
+            
+            LogManager.LogError($"{nameof(SkillComponent)}.{nameof(GetSkillData)}：该技能ID不存在,{skillId}");
+            return default;
         }
     }
 }

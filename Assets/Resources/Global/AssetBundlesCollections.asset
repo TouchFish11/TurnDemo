@@ -54,13 +54,13 @@ MonoBehaviour:
       size: 15654
       name: TurtleShellAnimtor.controller
     - assetPath: Assets\Editor\ArtRes\Animator\Role\BaseRole.controller
-      size: 27043
+      size: 27713
       name: BaseRole.controller
     - assetPath: Assets\Editor\ArtRes\Animator\Role\FireFlyAnimtor.controller
-      size: 35313
+      size: 35982
       name: FireFlyAnimtor.controller
     - assetPath: Assets\Editor\ArtRes\Animator\Role\HertaAnimtor.controller
-      size: 33215
+      size: 33886
       name: HertaAnimtor.controller
   - assetBundleName: camera
     assetInfos:
@@ -75,40 +75,40 @@ MonoBehaviour:
       name: UICamera.prefab
   - assetBundleName: gameconfig
     assetInfos:
-    - assetPath: Assets\Editor\ArtRes\GameConfig\BranchInfo.tInfo.txt
+    - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\BranchInfo.bytes
       size: 159
-      name: BranchInfo.tInfo.txt
-    - assetPath: Assets\Editor\ArtRes\GameConfig\DialogueInfo.tInfo.txt
-      size: 468
-      name: DialogueInfo.tInfo.txt
-    - assetPath: Assets\Editor\ArtRes\GameConfig\MonsterInfo.bytes
-      size: 405
+      name: BranchInfo.bytes
+    - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\DialogueInfo.bytes
+      size: 384
+      name: DialogueInfo.bytes
+    - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\MonsterInfo.bytes
+      size: 433
       name: MonsterInfo.bytes
-    - assetPath: Assets\Editor\ArtRes\GameConfig\NpcInfo.tInfo.txt
+    - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\NpcInfo.bytes
       size: 150
-      name: NpcInfo.tInfo.txt
-    - assetPath: Assets\Editor\ArtRes\GameConfig\RoleInfo.bytes
-      size: 390
+      name: NpcInfo.bytes
+    - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\RoleInfo.bytes
+      size: 391
       name: RoleInfo.bytes
-    - assetPath: Assets\Editor\ArtRes\GameConfig\SkillInfo.bytes
-      size: 1057
+    - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\SkillInfo.bytes
+      size: 1097
       name: SkillInfo.bytes
-    - assetPath: Assets\Editor\ArtRes\GameConfig\StatusInfo.bytes
+    - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\StatusInfo.bytes
       size: 126
       name: StatusInfo.bytes
-    - assetPath: Assets\Editor\ArtRes\GameConfig\TaskConditionInfo.tInfo.txt
-      size: 67
-      name: TaskConditionInfo.tInfo.txt
-    - assetPath: Assets\Editor\ArtRes\GameConfig\TaskInfo.tInfo.txt
-      size: 255
-      name: TaskInfo.tInfo.txt
+    - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\TaskConditionInfo.bytes
+      size: 64
+      name: TaskConditionInfo.bytes
+    - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\TaskInfo.bytes
+      size: 249
+      name: TaskInfo.bytes
     - assetPath: Assets\Editor\ArtRes\GameConfig\InputConfig\MainActionMap.json
       size: 6638
       name: MainActionMap.json
   - assetBundleName: hotupdate
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\HotUpdate\Assembly-CSharp-Game-HotUpdate.dll.bytes
-      size: 301568
+      size: 306176
       name: Assembly-CSharp-Game-HotUpdate.dll.bytes
   - assetBundleName: material
     assetInfos:
@@ -194,12 +194,12 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\Texture\Icon\Monster\Icon_TurtleShell.png
       size: 53513
       name: Icon_TurtleShell.png
-    - assetPath: Assets\Editor\ArtRes\Texture\Icon\Role\Icon_FireFly.png
+    - assetPath: Assets\Editor\ArtRes\Texture\Icon\Role\Icon_Warrior.png
       size: 52491
-      name: Icon_FireFly.png
-    - assetPath: Assets\Editor\ArtRes\Texture\Icon\Role\Icon_Herta.png
+      name: Icon_Warrior.png
+    - assetPath: Assets\Editor\ArtRes\Texture\Icon\Role\Icon_Wizard.png
       size: 58894
-      name: Icon_Herta.png
+      name: Icon_Wizard.png
   - assetBundleName: ui
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\UI\Canvas.prefab

@@ -21,6 +21,10 @@ namespace Core.DataPersistence.Binary
         {
             //await LoadTableAsync<xxxContainer, xxxInfo>();
             //...
+            await LoadTableAsync<RoleInfoContainer, RoleInfo>();
+            await LoadTableAsync<MonsterInfoContainer, MonsterInfo>();
+            await LoadTableAsync<SkillInfoContainer, SkillInfo>();
+            await LoadTableAsync<StatusInfoContainer, StatusInfo>();
             await LoadTableAsync<DialogueInfoContainer, DialogueInfo>();
             await LoadTableAsync<BranchInfoContainer, BranchInfo>();
             await LoadTableAsync<TaskInfoContainer, TaskInfo>();
@@ -48,10 +52,10 @@ namespace Core.DataPersistence.Binary
         {
 #if EDITOR_TEST_AB || !UNITY_EDITOR
         // 异步加载数据，资源名不需要后缀。.tInfo的后缀是txt
-        var tInfo = await ServiceLocator.Get<IAssetBundleManager>().LoadAssetAsync<TextAsset>(EAssetBundleType.GameConfig, $"{typeof(K).Name}.tInfo");
+        var tInfo = await ServiceLocator.Get<IAssetBundleManager>().LoadAssetAsync<TextAsset>(EAssetBundleType.GameConfig, $"{typeof(K).Name}");
 #else
             // 加载编辑器数据
-            TextAsset tInfo = EditorResManager.Instance.LoadEditorAsset<TextAsset>($"{typeof(K).Name}.tInfo");
+            TextAsset tInfo = EditorResManager.Instance.LoadEditorAsset<TextAsset>($"{typeof(K).Name}");
             await Task.CompletedTask;
 #endif
             // 转换二进制到数据类

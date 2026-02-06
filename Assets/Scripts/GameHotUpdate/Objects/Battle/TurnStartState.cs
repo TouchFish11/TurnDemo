@@ -15,16 +15,7 @@ namespace GameHotUpdate.Objects.Battle
             // 触发回合开始事件
             BattleEntity.Context.GetEventBus().TriggerEvent(new TurnStartEvent(BattleEntity.Context, BattleEntity));
 
-            switch (BattleEntity)
-            {
-                // 切换阶段
-                case PlayerObject:
-                    BattleEntity.ChangeState(EActPhase.Operator);
-                    break;
-                case MonsterObject:
-                    BattleEntity.ChangeState(EActPhase.RestoreToughness);
-                    break;
-            }
+            BattleEntity.ChangeState(EActPhase.Operator);
         }
         
         public override void Execute()

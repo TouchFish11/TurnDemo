@@ -83,6 +83,11 @@ namespace GameHotUpdate.Objects
             Context = context;
             // 赋值战斗实体ID
             BattleEntityId = battleEntityId;
+
+            AddState(EActPhase.SettlementBuff);
+            AddState(EActPhase.TurnStart);
+            AddState(EActPhase.Operator);
+            AddState(EActPhase.TurnEnd);
         }
 
         /// <summary>
@@ -90,7 +95,7 @@ namespace GameHotUpdate.Objects
         /// </summary>
         /// <param name="phase"></param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        protected void AddState(EActPhase phase)
+        private void AddState(EActPhase phase)
         {
             switch (phase)
             {
@@ -105,9 +110,6 @@ namespace GameHotUpdate.Objects
                     break;
                 case EActPhase.TurnEnd:
                     _turnStates.TryAdd(EActPhase.TurnEnd, new TurnEndState(this));
-                    break;
-                case EActPhase.RestoreToughness:
-                    _turnStates.TryAdd(EActPhase.RestoreToughness, new RestoreToughnessState(this));
                     break;
                 case EActPhase.None:
                 default:
@@ -133,6 +135,8 @@ namespace GameHotUpdate.Objects
         {
             
         }
+
+        public abstract void CastSkill(int skillId);
         
         public void TakeDamage(DamageResult damageResult)
         {

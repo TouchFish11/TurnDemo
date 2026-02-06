@@ -9,11 +9,15 @@ namespace Editor.ConfigData
     /// 用于存储单条配置数据的字段名与字段值的映射关系，支持多种基础数据类型的默认值初始化、值的获取与设置
     /// </summary>
     [Serializable]
-    public class EntryData
+    public class EntryData : ISerializationCallbackReceiver
     {
         // 字段名到字段值的映射字典，统一以字符串形式存储各类数据值
-        private Dictionary<string, string> fieldToValueMap = new Dictionary<string, string>();
+        private Dictionary<string, string> fieldToValueMap;
 
+        // 序列化/反序列化使用
+        public List<string> keys = new List<string>();
+        public List<string> values = new List<string>();
+        
         /// <summary>
         /// 构造函数：根据字段模板列表初始化配置项数据
         /// 为每个字段初始化对应类型的默认值并存入映射字典
@@ -21,6 +25,7 @@ namespace Editor.ConfigData
         /// <param name="fields">字段模板列表，包含字段名、字段类型等元信息</param>
         public EntryData(List<FieldTemplate> fields)
         {
+            fieldToValueMap = new();
             // 遍历所有字段模板，按字段类型初始化默认值
             foreach (var col in fields)
             {
@@ -122,6 +127,36 @@ namespace Editor.ConfigData
             }
             // 无论字段是否存在，都执行赋值（不存在时会自动添加键值对）
             fieldToValueMap[fieldName] = value;
+        }
+
+        public void OnBeforeSerialize()
+        {
+            keys.Clear();
+            values.Clear();
+            
+            foreach (var keyValuePair in fieldToValueMap)
+            {
+                keys.Add(keyValuePair.Key);
+                values.Add(keyValuePair.Value);
+            }
+        }
+
+        public void OnAfterDeserialize()
+        {
+            var complete = keys.Count == values.Count;
+            if (!complete)
+            {
+                Debug.LogError($"{nameof(EntryData)}.{nameof(OnAfterDeserialize)}：反序列化失败，数据不完整");
+                return;
+            }
+
+            fieldToValueMap = new();
+            fieldToValueMap.Clear();
+            var count = keys.Count;
+            for (var i = 0; i < count; i++)
+            {
+                fieldToValueMap.Add(keys[i], values[i]);
+            }
         }
     }
 }

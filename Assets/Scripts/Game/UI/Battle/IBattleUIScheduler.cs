@@ -1,4 +1,3 @@
-using System.Collections;
 using Core.UI.MVC;
 using Game.Battle.Context;
 using Game.Battle.Objects;

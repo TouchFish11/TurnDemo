@@ -16,8 +16,6 @@ namespace GameHotUpdate.Skill.Component
     [ComponentId(typeof(MonsterSkillComponent))]
     public class MonsterSkillComponent : SkillComponent
     {
-        public override bool IsRelease { get; protected set; }
-
         public override void BattleInit(IBattleEntityObject battleEntity)
         {
             base.BattleInit(battleEntity);

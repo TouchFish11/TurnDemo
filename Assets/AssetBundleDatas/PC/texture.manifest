@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 3351786554
+CRC: 2981615082
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 0b69ea1d5f49269bcbb02b87ed148209
+    Hash: 09eb60cad55d950c8a19f3eb19a06afa
   TypeTreeHash:
     serializedVersion: 2
     Hash: 923768aebf385ad86f7762daa8034951
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 0b69ea1d5f49269bcbb02b87ed148209
+    Hash: 09eb60cad55d950c8a19f3eb19a06afa
 HashAppended: 0
 ClassTypes:
 - Class: 213
@@ -18,8 +18,8 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/Editor/ArtRes/Texture/Icon/Role/Icon_FireFly.png
-- Assets/Editor/ArtRes/Texture/Icon/Role/Icon_Herta.png
+- Assets/Editor/ArtRes/Texture/Icon/Role/Icon_Warrior.png
+- Assets/Editor/ArtRes/Texture/Icon/Role/Icon_Wizard.png
 - Assets/Editor/ArtRes/Texture/Generic/xArrowheadInwards128.png
 - Assets/Editor/ArtRes/Texture/Generic/CrossCircle4Split128.png
 - Assets/Editor/ArtRes/Texture/Default/WhiteDefaultImage.png

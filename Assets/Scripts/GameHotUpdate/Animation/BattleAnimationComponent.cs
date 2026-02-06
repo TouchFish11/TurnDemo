@@ -74,19 +74,19 @@ namespace GameHotUpdate.Animation
             {
                 case E_AnimationType.None: // 无动画
                     break;
-                case E_AnimationType.PreNormalAttack: // 预普通攻击（攻击前摇）
+                case E_AnimationType.PreNormalAttack: // 预普通攻击
                     animatorComponent.Animator.SetTrigger(animationArg.PreNormalAttackTriggerHash);
                     break;
                 case E_AnimationType.NormalAttack: // 普通攻击
                     animatorComponent.Animator.SetTrigger(animationArg.NormalAtkTirggerHash);
                     break;
-                case E_AnimationType.PreBattleAttack: // 预战斗技能攻击（技能前摇）
+                case E_AnimationType.PreBattleAttack: // 预战斗技能攻击
                     animatorComponent.Animator.SetTrigger(animationArg.PreBattleAttackTriggerHash);
                     break;
                 case E_AnimationType.BattleAttack: // 战斗技能攻击
                     animatorComponent.Animator.SetTrigger(animationArg.BattleAtkTriggerHash);
                     break;
-                case E_AnimationType.PreUltimateAttack: // 预必杀技攻击（必杀前摇）
+                case E_AnimationType.PreUltimateAttack: // 预必杀技攻击
                     animatorComponent.Animator.SetTrigger(animationArg.PreUltimateAttackTriggerHash);
                     break;
                 case E_AnimationType.UltimateAttack: // 必杀技攻击
@@ -142,7 +142,7 @@ namespace GameHotUpdate.Animation
             }
 
             // 从配置表中获取选中技能的配置信息
-            var skillInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<SkillInfoContainer>(EConfigLoadType.Editor).dataDic[selectSkillEvent.SkillId];
+            var skillInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<SkillInfoContainer>(EConfigLoadType.Excel).dataDic[selectSkillEvent.SkillId];
             // 根据技能类型切换前置动画
             switch ((E_SkillType)skillInfo.f_SkillType)
             {

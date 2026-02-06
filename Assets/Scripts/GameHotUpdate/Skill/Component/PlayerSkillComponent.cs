@@ -11,13 +11,13 @@ using GameHotUpdate.Battle.TargetSelect.Strategys;
 namespace GameHotUpdate.Skill.Component
 {
     /// <summary>
-    /// ��ҽ�ɫ�������
+    /// 玩家技能组件
     /// </summary>
     [ComponentId(typeof(PlayerSkillComponent))]
     public class PlayerSkillComponent : SkillComponent
     {
-        public override bool IsRelease { get; protected set; }
-
+        public bool IsRelease { get; set; }
+        
         public override void BattleInit(IBattleEntityObject battleEntity)
         {
             base.BattleInit(battleEntity);
@@ -32,8 +32,8 @@ namespace GameHotUpdate.Skill.Component
         }
 
         /// <summary>
-        /// �ͷ��սἼ
-        /// ��ʱʹ��
+        /// 释放终结技
+        /// 点击终结技技能按键后，调用该方法改变标识，触发终结技释放
         /// </summary>
         public void ReleaseUltimate()
         {

@@ -1,15 +1,20 @@
 using System.Collections;
 using Core.Config;
 using Core.DataPersistence.Binary;
+using Core.Reflection;
 using Core.Service;
 using Core.Utility;
 using Game.Animation;
+using Game.Battle.Command;
 using Game.Battle.Context;
-using Game.Battle.Objects;
+using Game.Battle.Skill.Component;
 using Game.VFX;
 using GameHotUpdate.Animation;
+using GameHotUpdate.Battle.Command;
+using GameHotUpdate.Battle.Event.Turn;
 using GameHotUpdate.Battle.Event.UI;
 using GameHotUpdate.Battle.ResponsibilityChain.DamageChain;
+using GameHotUpdate.Battle.Toughness;
 using UnityEngine;
 
 namespace GameHotUpdate.Objects
@@ -18,7 +23,7 @@ namespace GameHotUpdate.Objects
     /// 怪物战斗对象
     /// 继承自BattleObject，封装了怪物的基础属性、战斗行为等核心逻辑
     /// </summary>
-    public class MonsterObject : BattleObject
+    public abstract class MonsterObject : BattleObject
     {
         /// <summary>
         /// 怪物配置信息（从配置表加载）
@@ -35,7 +40,7 @@ namespace GameHotUpdate.Objects
         {
             base.BaseInit(id);
             // 从二进制配置管理器中加载对应ID的怪物配置
-            MonsterInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<MonsterInfoContainer>(EConfigLoadType.Editor).dataDic[id];
+            MonsterInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<MonsterInfoContainer>(EConfigLoadType.Excel).dataDic[id];
         }
 
         /// <summary>
@@ -52,15 +57,27 @@ namespace GameHotUpdate.Objects
             damageChain = DamageChainBuilder.GetMonsterDamageChain();
             // 根据配置的组件名称列表，为怪物添加对应的战斗组件（如韧性组件、动画组件等）
             AddComponents(TextUtility.Split(MonsterInfo.f_comNames, 2));
-            
-            AddState(EActPhase.SettlementBuff);
-            AddState(EActPhase.TurnStart);
-            AddState(EActPhase.RestoreToughness);
-            AddState(EActPhase.Operator);
-            AddState(EActPhase.TurnEnd);
         }
-        
-        
+
+        public override void CastSkill(int skillId)
+        {
+            var skillComponent = this.GetComponent<SkillComponent>();
+            // 能否释放
+            if (!skillComponent.CanCast(skillId))
+            {
+                return;
+            }
+            
+            // 获取技能数据
+            var skillData = skillComponent.GetSkillData(skillId);
+            var toughnessComponent = this.GetComponent<ToughnessComponent>();
+            // 获取怪物行动指令
+            var actCommand = ServiceLocator.Get<IFactoryManager>().GetFactory<ICommandFactory, CommandFactory>()
+                .GetMonsterActCommand(toughnessComponent, skillData);
+            // 发送指令
+            Context.GetEventBus().TriggerEvent(new InsertCommandEvent(Context, actCommand));
+        }
+
         /// <summary>
         /// 怪物死亡处理协程
         /// 执行流程：播放死亡特效 → 播放死亡动画 → 等待特效结束

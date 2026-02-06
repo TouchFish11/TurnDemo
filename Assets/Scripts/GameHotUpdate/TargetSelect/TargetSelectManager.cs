@@ -66,7 +66,7 @@ namespace GameHotUpdate.TargetSelect
         private void OnSelectSkillEvent(SelectSkillEvent selectSkillEvent)
         {
             // 从配置表加载选中技能的详细配置
-            skillInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<SkillInfoContainer>(EConfigLoadType.Editor).dataDic[selectSkillEvent.SkillId];
+            skillInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<SkillInfoContainer>(EConfigLoadType.Excel).dataDic[selectSkillEvent.SkillId];
             // 触发目标选择逻辑
             SelectTarget(selectSkillEvent.Context, selectSkillEvent.Caster, skillInfo, selectSkillEvent.TargetSelectStrategy);
         }
@@ -77,6 +77,8 @@ namespace GameHotUpdate.TargetSelect
         /// </summary>
         public void ActiveSelectTarget()
         {
+            InActiveSelectTarget();
+            
             ServiceLocator.Get<IBattleInputHandler>().OnLeftDrag += SelectPreviousMainTarget;   // 左拖拽：切换上一个主目标
             ServiceLocator.Get<IBattleInputHandler>().OnRightDrag += SelectNextMainTarget;     // 右拖拽：切换下一个主目标
             ServiceLocator.Get<IBattleInputHandler>().OnSelectedObject += SelectClickMainTarget;// 点击：选中指定主目标
@@ -169,7 +171,7 @@ namespace GameHotUpdate.TargetSelect
         private void FilterTargets(IBattleContext context)
         {
             // 从技能配置中解析目标类型（敌人/友方）
-            var targetType = (E_SkillTargetType)skillInfo.f_targetType;
+            var targetType = (E_SkillTargetType)skillInfo.f_SkillTargetType;
             // 根据施法者类型（玩家/怪物）筛选对应目标
             switch (caster)
             {

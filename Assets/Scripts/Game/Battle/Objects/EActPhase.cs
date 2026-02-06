@@ -6,8 +6,6 @@ namespace Game.Battle.Objects
             
         SettlementBuff,
         
-        RestoreToughness,
-            
         TurnStart,
             
         Operator,

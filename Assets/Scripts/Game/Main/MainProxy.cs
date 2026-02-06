@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Reflection;
 using Core.AssetBundles.Management;
 using Core.AssetBundles.Update;

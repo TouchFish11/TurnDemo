@@ -18,17 +18,17 @@ namespace Editor.Generation.Detail
         /// <summary>
         /// 数据结构类在编辑器中的存储文件夹路径
         /// </summary>
-        private static readonly string DataclassEditorSavePath = $"{Application.dataPath}/Scripts/ConfigInfo/Info/";
+        private static readonly string DataclassEditorSavePath = $"{Application.dataPath}/Scripts/Config/EditorInfo/Info/";
 
         /// <summary>
         /// 数据容器类在编辑器中的存储文件夹路径
         /// </summary>
-        private static readonly string DataContainerEditorSavePath = $"{Application.dataPath}/Scripts/ConfigInfo/Container/";
+        private static readonly string DataContainerEditorSavePath = $"{Application.dataPath}/Scripts/Config/EditorInfo/Container/";
 
         /// <summary>
         /// 数据表文件在编辑器中的存储文件夹路径
         /// </summary>
-        private static readonly string TableInfoEditorSavePath = $"{Application.dataPath}/Editor/ArtRes/GameConfig/";
+        private static readonly string TableInfoEditorSavePath = $"{Application.dataPath}/Editor/ArtRes/GameConfig/Editor/";
 
         // 配置数据对象
         private readonly ConfigData.ConfigData configData;
@@ -185,13 +185,13 @@ namespace Editor.Generation.Detail
                             Debug.LogError($"字段类型不能为None，字段名称：{configData.columns[j].fieldName}");
                             return;
                         case E_FieldType.Int:
-                            fs.Write(BitConverter.GetBytes(int.Parse(rowData.GetValue(fieldName).ToString())), 0, 4);
+                            fs.Write(BitConverter.GetBytes(int.Parse(rowData.GetValue(fieldName))), 0, 4);
                             break;
                         case E_FieldType.Float:
-                            fs.Write(BitConverter.GetBytes(float.Parse(rowData.GetValue(fieldName).ToString())), 0, 4);
+                            fs.Write(BitConverter.GetBytes(float.Parse(rowData.GetValue(fieldName))), 0, 4);
                             break;
                         case E_FieldType.Bool:
-                            fs.Write(BitConverter.GetBytes(bool.Parse(rowData.GetValue(fieldName).ToString())), 0, 1);
+                            fs.Write(BitConverter.GetBytes(bool.Parse(rowData.GetValue(fieldName))), 0, 1);
                             break;
                         case E_FieldType.String:
                             byte[] bytes = Encoding.UTF8.GetBytes(rowData.GetValue(fieldName) ?? "");

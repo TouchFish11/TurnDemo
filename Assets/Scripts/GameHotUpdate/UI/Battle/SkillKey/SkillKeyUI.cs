@@ -200,7 +200,7 @@ namespace GameHotUpdate.UI.Battle.SkillKey
                 // 重置为选中状态（避免重复触发）
                 triggerPhase = E_TriggerPhase.Selected;
                 // 触发玩家技能执行事件（通知战斗系统释放技能）
-                battleContext.GetEventBus().TriggerEvent(new PlayerTriggerSkillEvent(battleContext, skillId, battleEntity));
+                battleContext.GetEventBus().TriggerEvent(new RoleTriggerSkillEvent(battleContext, skillId, battleEntity));
             }
             else
             {

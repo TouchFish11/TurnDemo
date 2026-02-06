@@ -15,15 +15,15 @@ namespace Core.DataPersistence.Binary
     public class EditorConfigLoader : ConfigLoader
     {
         // 存储所有表数据的字典，键：容器名  值：容器
-        private readonly Dictionary<string, object> _tableDic = new Dictionary<string, object>();
+        private readonly Dictionary<string, object> _tableDic = new();
 
         public override async Task LoadConfig()
         {
             //await LoadTableAsync<xxxContainer, xxxInfo>();
-            await LoadTableAsync<RoleInfoContainer, RoleInfo>();
-            await LoadTableAsync<MonsterInfoContainer, MonsterInfo>();
-            await LoadTableAsync<SkillInfoContainer, SkillInfo>();
-            await LoadTableAsync<StatusInfoContainer, StatusInfo>();
+            // await LoadTableAsync<RoleInfoContainer, RoleInfo>();
+            // await LoadTableAsync<MonsterInfoContainer, MonsterInfo>();
+            // await LoadTableAsync<SkillInfoContainer, SkillInfo>();
+            // await LoadTableAsync<StatusInfoContainer, StatusInfo>();
             await Task.CompletedTask;
         }
 
@@ -126,7 +126,7 @@ namespace Core.DataPersistence.Binary
                 MethodInfo methodInfo = dicObj.GetType().GetMethod("Add");
                 // 得到数据结构类对象中指定主键字段的值
                 object keyValue = dataObj.GetType().GetField(keyName).GetValue(dataObj);
-                methodInfo?.Invoke(dicObj, new object[] { keyValue, dataObj });
+                methodInfo?.Invoke(dicObj, new[] { keyValue, dataObj });
             }
 
             //把读取完的配置记录下来

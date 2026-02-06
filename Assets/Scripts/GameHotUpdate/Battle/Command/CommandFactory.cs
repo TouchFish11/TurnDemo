@@ -31,14 +31,17 @@ namespace GameHotUpdate.Battle.Command
         }
 
         /// <summary>
-        /// 获取韧性指令
+        /// 获取怪物行动指令
         /// </summary>
         /// <param name="component"></param>
+        /// <param name="skillData"></param>
         /// <returns></returns>
-        public IToughnessCommand GetToughnessCommand(IToughnessComponent component)
+        public IMonsterActCommand GetMonsterActCommand(IToughnessComponent component, ISkillData skillData)
         {
-            var command = ServiceLocator.Get<IPoolManager>().GetData<ToughnessCommand>();
-            command.Init(component);
+            var skillCommand = ServiceLocator.Get<IPoolManager>().GetData<SkillCommand>();
+            skillCommand.Init(skillData);
+            var command = ServiceLocator.Get<IPoolManager>().GetData<MonsterActCommand>();
+            command.Init(component, skillCommand);
             return command;
         }
         

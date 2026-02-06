@@ -15,7 +15,7 @@ namespace GameHotUpdate.Battle.Summon.Summons
         public void Init(IBattleEntityObject owner)
         {
             Owner = owner;
-            // ���ġ����˼����ͷ��¼��������˷ż���ʱ���ٻ���Эͬ������(��ѡ)
+
             //BattleEventBus.AddListener<SkillCastEvent>(OnOwnerSkillCastHandler);
         }
 
@@ -24,6 +24,11 @@ namespace GameHotUpdate.Battle.Summon.Summons
             bool isTrue = TryGetComponent<TComponent>(out TComponent c);
             component = c;
             return isTrue;
+        }
+
+        public override void CastSkill(int skillId)
+        {
+            
         }
 
         public override IEnumerator Die()

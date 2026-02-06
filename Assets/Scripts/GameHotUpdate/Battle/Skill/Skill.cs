@@ -88,7 +88,7 @@ namespace GameHotUpdate.Battle.Skill
             // 初始化释放者
             Caster = caster;
             // 从二进制配置管理器加载技能配置信息
-            SkillInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<SkillInfoContainer>(EConfigLoadType.Editor).dataDic[skillId];
+            SkillInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<SkillInfoContainer>(EConfigLoadType.Excel).dataDic[skillId];
             // 解析技能配置中的状态ID（分割字符串为int数组，分隔符为2？注：此处需确认分割规则，2为自定义分隔符标识）
             statusIds = TextUtility.SplitToIntArr(SkillInfo.f_statusId, 2);
             // 初始化状态添加策略

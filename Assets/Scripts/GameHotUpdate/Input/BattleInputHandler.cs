@@ -203,14 +203,14 @@ namespace GameHotUpdate.Input
                 }
                 
                 // 校验技能ID有效性（避免空引用）
-                if (!ServiceLocator.Get<IBinaryDataManager>().GetConfig<SkillInfoContainer>(EConfigLoadType.Editor).dataDic.ContainsKey(skillId))
+                if (!ServiceLocator.Get<IBinaryDataManager>().GetConfig<SkillInfoContainer>(EConfigLoadType.Excel).dataDic.ContainsKey(skillId))
                 {
                     LogManager.LogWarning($"技能ID {skillId} 不存在，无法获取技能配置");
                     return;
                 }
 
                 // 根据选中的技能ID获取技能配置信息
-                var skillInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<SkillInfoContainer>(EConfigLoadType.Editor).dataDic[skillId];
+                var skillInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<SkillInfoContainer>(EConfigLoadType.Excel).dataDic[skillId];
                 // 将技能范围类型转换为技能目标类型（友方/敌方）
                 var targetType = (E_SkillTargetType)skillInfo.f_SkillTargetType;
 

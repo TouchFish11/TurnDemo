@@ -9,12 +9,7 @@ namespace Game.Battle.Skill.Interface
     public interface ISkillComponent : IBattleComponent
     {
         /// <summary>
-        /// �Ƿ��ͷ�
-        /// </summary>
-        bool IsRelease { get; }
-
-        /// <summary>
-        /// ��ȡ���еļ���
+        /// 获取所有技能
         /// </summary>
         /// <returns></returns>
         IEnumerable<ISkill> GetSkills();

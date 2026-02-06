@@ -23,8 +23,8 @@
         },
         {
             "packageName": "animator.assetbundle",
-            "packageSize": 186683,
-            "packageMD5": "e9aaaa30589fe24b253ebc5ef639667e"
+            "packageSize": 186764,
+            "packageMD5": "c86405e01a4fa92de00a5efad7fd9c90"
         },
         {
             "packageName": "camera.assetbundle",
@@ -33,13 +33,13 @@
         },
         {
             "packageName": "gameconfig.assetbundle",
-            "packageSize": 4356,
-            "packageMD5": "a01c1fc1673d1a8c78e33f37f1b5c3c2"
+            "packageSize": 4418,
+            "packageMD5": "35a4915f06b9c1ad2d906d88f41d62fa"
         },
         {
             "packageName": "hotupdate.assetbundle",
-            "packageSize": 149716,
-            "packageMD5": "a5d9326b6991d9a118247fbce1d32271"
+            "packageSize": 151483,
+            "packageMD5": "77bd1e701d536b45e59e16617e642a6c"
         },
         {
             "packageName": "material.assetbundle",
@@ -54,7 +54,7 @@
         {
             "packageName": "PC.assetbundle",
             "packageSize": 1975,
-            "packageMD5": "aff26344e7987023ef23ad2726de9d1f"
+            "packageMD5": "d73ef5224334ca2873498262cb9782e0"
         },
         {
             "packageName": "prefab.assetbundle",
@@ -68,13 +68,13 @@
         },
         {
             "packageName": "spriteatlas.assetbundle",
-            "packageSize": 280284,
-            "packageMD5": "5e1cef4a4078fe816d0eab3aaf2e5ba8"
+            "packageSize": 280285,
+            "packageMD5": "d2d404f63d3fa8fb67e0584df2ec1a60"
         },
         {
             "packageName": "texture.assetbundle",
             "packageSize": 5456,
-            "packageMD5": "ebf1a06aa47b6723366ea20f6a50fac1"
+            "packageMD5": "6d0d4fb2f1231b7d7a7a9049aea53c8e"
         },
         {
             "packageName": "ui.assetbundle",

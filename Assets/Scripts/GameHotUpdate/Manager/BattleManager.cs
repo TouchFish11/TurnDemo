@@ -48,7 +48,7 @@ namespace GameHotUpdate.Manager
         private IBattleContext _context;
         
         // 怪物创建数量，测试（1~5）
-        private const int monsterCount = 3;
+        private const int monsterCount = 5;
         
         private BattleManager()
         {
@@ -168,7 +168,7 @@ namespace GameHotUpdate.Manager
         {
             var playerTrans = new List<Transform>(ServiceLocator.Get<IBattlePointProxy>().BattlePoint.GetRoleTransforms());
             // 批量创建玩家角色（从配置+预制体）
-            var playerDataDic = ServiceLocator.Get<IBinaryDataManager>().GetConfig<RoleInfoContainer>(EConfigLoadType.Editor).dataDic;
+            var playerDataDic = ServiceLocator.Get<IBinaryDataManager>().GetConfig<RoleInfoContainer>(EConfigLoadType.Excel).dataDic;
             var index = 0;
             foreach (var roleId in playerDataDic.Keys)
             {
@@ -194,7 +194,7 @@ namespace GameHotUpdate.Manager
 
             // 批量创建怪物角色（从配置+预制体）
             var monsterTrans = new List<Transform>(ServiceLocator.Get<IBattlePointProxy>().BattlePoint.GetMonsterTransforms());
-            var keys = new List<int>(ServiceLocator.Get<IBinaryDataManager>().GetConfig<MonsterInfoContainer>(EConfigLoadType.Editor).dataDic.Keys);
+            var keys = new List<int>(ServiceLocator.Get<IBinaryDataManager>().GetConfig<MonsterInfoContainer>(EConfigLoadType.Excel).dataDic.Keys);
             index = 0;
             while (index < monsterCount)
             {

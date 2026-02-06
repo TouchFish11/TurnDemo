@@ -6,7 +6,7 @@ using Excel;
 using UnityEditor;
 using UnityEngine;
 
-namespace Framework.Editor.Excel
+namespace Editor.Excel
 {
     /// <summary>
     /// Excel解析工具
@@ -21,17 +21,17 @@ namespace Framework.Editor.Excel
         /// <summary>
         /// 数据结构类脚本在编辑器的存储的文件夹
         /// </summary>
-        private static readonly string DataclassEditorSavePath = $"{Application.dataPath}/Scripts/ExcelInfo/Info/";
+        private static readonly string DataclassEditorSavePath = $"{Application.dataPath}/Scripts/Config/ExcelInfo/Info/";
 
         /// <summary>
         /// 数据容器类脚本在编辑器的存储的文件夹
         /// </summary>
-        private static readonly string DataContainerEditorSavePath = $"{Application.dataPath}/Scripts/ExcelInfo/Container/";
+        private static readonly string DataContainerEditorSavePath = $"{Application.dataPath}/Scripts/Config/ExcelInfo/Container/";
 
         /// <summary>
         /// 表数据文件在编辑器的存储文件夹
         /// </summary>
-        private static readonly string TableInfoEditorSavePath = $"{Application.dataPath}/Editor/ArtRes/GameData/";
+        private static readonly string TableInfoEditorSavePath = $"{Application.dataPath}/Editor/ArtRes/GameConfig/Excel/";
 
         /// <summary>
         /// Excek数据内容开始行号
@@ -161,7 +161,7 @@ namespace Framework.Editor.Excel
             if (!Directory.Exists(TableInfoEditorSavePath))
                 Directory.CreateDirectory(TableInfoEditorSavePath);
 
-            using (var fs = new FileStream(TableInfoEditorSavePath + table.TableName + ".tInfo.txt", FileMode.OpenOrCreate, FileAccess.Write))
+            using (var fs = new FileStream($"{TableInfoEditorSavePath}{table.TableName}.bytes", FileMode.OpenOrCreate, FileAccess.Write))
             {
                 // 先存储需要写多少行数据，方便读取  -4是因为前面四行是配置规则，不是数据
                 fs.Write(BitConverter.GetBytes(table.Rows.Count - BeginIndex), 0, 4);

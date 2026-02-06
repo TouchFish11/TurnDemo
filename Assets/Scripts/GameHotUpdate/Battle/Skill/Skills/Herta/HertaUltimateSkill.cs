@@ -26,9 +26,7 @@ namespace GameHotUpdate.Battle.Skill.Skills.Herta
         protected override IEnumerator OnPreUltimateCast()
         {
             yield return base.OnPreUltimateCast();
-
-            // ����Ԥ������������սἼpose���սἼ����
-            Caster.GetComponent<BattleAnimationComponent>().SetUltimatePose();
+            
             projectileData = new ProjectileData(Caster, MainTarget, AllTargets, this);
             projectileTrans = new ProjectileTrans(Caster.GameObject.transform.position, Quaternion.identity);
             vFXInfo = new VFXInfo();

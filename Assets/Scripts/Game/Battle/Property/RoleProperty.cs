@@ -21,7 +21,7 @@ namespace Game.Battle.Property
         public override void InitProperty(int id)
         {
             base.InitProperty(id);
-            RoleInfo roleInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<RoleInfoContainer>(EConfigLoadType.Editor).dataDic[id];
+            RoleInfo roleInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<RoleInfoContainer>(EConfigLoadType.Excel).dataDic[id];
 
             baseHp = roleInfo.f_baseHp;
             baseAtk = roleInfo.f_baseAtk;

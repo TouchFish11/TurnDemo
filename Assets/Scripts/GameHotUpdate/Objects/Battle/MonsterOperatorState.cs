@@ -31,17 +31,13 @@ namespace GameHotUpdate.Objects.Battle
         /// <returns>协程迭代器</returns>
         protected override IEnumerator OnExceuteAction()
         {
-            // 封装韧性恢复和怪物技能释放指令，执行指令时先判断是否恢复韧性条，再处理技能释放
-            
-            var skillComponent = BattleEntity.GetComponent<SkillComponent>();
-            
             // 随机从技能列表中选择一个技能ID
             // TODO：可以封装随机选择的策略类，用于玩家/怪物AI
             var skillId = skillIds[Random.Range(0, skillIds.Count)];
             // 释放选中的技能
-            skillComponent.CastSkill(skillId);
+            BattleEntity.CastSkill(skillId);
             // 行动结束
-            BattleEntity.CanAct = false;
+            //BattleEntity.CanAct = false;
             yield break;
         }
 

@@ -1,29 +1,29 @@
 ManifestFileVersion: 0
-CRC: 315138785
+CRC: 3060374695
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 5df139029e167398233d842de29ba72b
+    Hash: 40076f3599805cfbec67f15f45d59b8c
   TypeTreeHash:
     serializedVersion: 2
     Hash: 5ad585dd02dfb5016c0dad519eab8f49
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 5df139029e167398233d842de29ba72b
+    Hash: 40076f3599805cfbec67f15f45d59b8c
 HashAppended: 0
 ClassTypes:
 - Class: 49
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/Editor/ArtRes/GameConfig/NpcInfo.tInfo.txt
-- Assets/Editor/ArtRes/GameConfig/TaskInfo.tInfo.txt
-- Assets/Editor/ArtRes/GameConfig/MonsterInfo.bytes
-- Assets/Editor/ArtRes/GameConfig/StatusInfo.bytes
-- Assets/Editor/ArtRes/GameConfig/TaskConditionInfo.tInfo.txt
-- Assets/Editor/ArtRes/GameConfig/BranchInfo.tInfo.txt
-- Assets/Editor/ArtRes/GameConfig/RoleInfo.bytes
-- Assets/Editor/ArtRes/GameConfig/DialogueInfo.tInfo.txt
+- Assets/Editor/ArtRes/GameConfig/Excel/MonsterInfo.bytes
+- Assets/Editor/ArtRes/GameConfig/Excel/BranchInfo.bytes
+- Assets/Editor/ArtRes/GameConfig/Excel/TaskConditionInfo.bytes
+- Assets/Editor/ArtRes/GameConfig/Excel/TaskInfo.bytes
+- Assets/Editor/ArtRes/GameConfig/Excel/StatusInfo.bytes
+- Assets/Editor/ArtRes/GameConfig/Excel/SkillInfo.bytes
+- Assets/Editor/ArtRes/GameConfig/Excel/DialogueInfo.bytes
+- Assets/Editor/ArtRes/GameConfig/Excel/NpcInfo.bytes
 - Assets/Editor/ArtRes/GameConfig/InputConfig/MainActionMap.json
-- Assets/Editor/ArtRes/GameConfig/SkillInfo.bytes
+- Assets/Editor/ArtRes/GameConfig/Excel/RoleInfo.bytes
 Dependencies: []

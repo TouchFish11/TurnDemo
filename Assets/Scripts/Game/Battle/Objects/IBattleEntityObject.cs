@@ -100,6 +100,16 @@ namespace Game.Battle.Objects
         /// <returns>迭代器用于协程执行</returns>
         IEnumerator Die();
 
+        /// <summary>
+        /// 切换状态
+        /// </summary>
+        /// <param name="eActPhase"></param>
         void ChangeState(EActPhase eActPhase);
+        
+        /// <summary>
+        /// 释放技能
+        /// </summary>
+        /// <param name="skillId"></param>
+        void CastSkill(int skillId);
     }
 }

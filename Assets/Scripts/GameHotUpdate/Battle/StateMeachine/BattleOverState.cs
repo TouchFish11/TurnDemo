@@ -3,7 +3,6 @@ using Core.Time;
 using Game.Battle.Context;
 using Game.Battle.Turn;
 using GameHotUpdate.Battle.Event.Turn;
-using GameHotUpdate.Turn;
 
 namespace GameHotUpdate.Battle.StateMeachine
 {

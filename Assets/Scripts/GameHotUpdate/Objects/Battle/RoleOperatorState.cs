@@ -1,9 +1,6 @@
 using System.Collections;
-using Core.Log;
 using Game.Battle.Objects;
-using Game.Battle.Skill.Component;
 using GameHotUpdate.Battle.Event.UI;
-using GameHotUpdate.Skill.Component;
 using UnityEngine;
 
 namespace GameHotUpdate.Objects.Battle
@@ -18,8 +15,8 @@ namespace GameHotUpdate.Objects.Battle
         public override void Enter()
         {
             // 监听技能释放事件
-            BattleEntity.Context.GetEventBus().AddListener<PlayerTriggerSkillEvent>(OnCastSkill);
-            BattleEntity.Context.GetEventBus().AddListener<PlayerTriggerUltimateSkillEvent>(OnCastUltimateSkill);
+            BattleEntity.Context.GetEventBus().AddListener<RoleTriggerSkillEvent>(OnCastSkill);
+            BattleEntity.Context.GetEventBus().AddListener<RoleTriggerUltimateSkillEvent>(OnCastUltimateSkill);
             base.Enter();
         }
         
@@ -48,32 +45,31 @@ namespace GameHotUpdate.Objects.Battle
         /// 点击技能按键后触发
         /// </summary>
         /// <param name="triggerSkillEvent"></param>
-        private void OnCastSkill(PlayerTriggerSkillEvent triggerSkillEvent)
+        private void OnCastSkill(RoleTriggerSkillEvent triggerSkillEvent)
         {
             if ((Object)triggerSkillEvent.Caster != this.BattleEntity)
             {
                 return;
             }
 
-            BattleEntity.GetComponent<SkillComponent>().CastSkill(triggerSkillEvent.SkillId);
-            // // 行动结束
+            BattleEntity.CastSkill(triggerSkillEvent.SkillId);
+            // 行动结束
             // BattleEntity.CanAct = false;
-            // LogManager.Log($"行动结束");
         }
 
         /// <summary>
         /// 释放终结技技能事件回调
         /// 点击终结技技能按键后触发
         /// </summary>
-        /// <param name="playerTriggerUltimateSkillEvent"></param>
-        protected void OnCastUltimateSkill(PlayerTriggerUltimateSkillEvent playerTriggerUltimateSkillEvent)
+        /// <param name="roleTriggerUltimateSkillEvent"></param>
+        protected void OnCastUltimateSkill(RoleTriggerUltimateSkillEvent roleTriggerUltimateSkillEvent)
         {
-            if ((BattleObject)playerTriggerUltimateSkillEvent.Caster != this.BattleEntity)
+            if ((BattleObject)roleTriggerUltimateSkillEvent.Caster != this.BattleEntity)
             {
                 return;
             }
 
-            BattleEntity.GetComponent<PlayerSkillComponent>().CastSkill(playerTriggerUltimateSkillEvent.SkillId);
+            BattleEntity.CastSkill(roleTriggerUltimateSkillEvent.SkillId);
         }
 
         public override void Execute()
@@ -84,8 +80,8 @@ namespace GameHotUpdate.Objects.Battle
         public override void Exit()
         {
             // 移除事件监听
-            BattleEntity.Context.GetEventBus().RemoveListener<PlayerTriggerSkillEvent>(OnCastSkill);
-            BattleEntity.Context.GetEventBus().RemoveListener<PlayerTriggerUltimateSkillEvent>(OnCastUltimateSkill);
+            BattleEntity.Context.GetEventBus().RemoveListener<RoleTriggerSkillEvent>(OnCastSkill);
+            BattleEntity.Context.GetEventBus().RemoveListener<RoleTriggerUltimateSkillEvent>(OnCastUltimateSkill);
         }
     }
 }

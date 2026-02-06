@@ -4,11 +4,12 @@ using Game.Battle.Context;
 using Game.Battle.Enum;
 using Game.Battle.Event;
 using Game.Battle.Objects;
-using Game.Battle.Skill.Component;
 using Game.Battle.Skill.Interface;
 using Game.Battle.Status;
 using Game.Battle.TargetSelect;
 using Game.UI.Battle;
+using GameHotUpdate.Animation;
+using GameHotUpdate.Skill.Component;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Skill.Skills
@@ -22,7 +23,7 @@ namespace GameHotUpdate.Battle.Skill.Skills
         /// <summary>
         /// 技能组件引用（用于判断技能释放状态）
         /// </summary>
-        private readonly ISkillComponent skillComponent;
+        private readonly PlayerSkillComponent skillComponent;
 
         /// <summary>
         /// 构造函数
@@ -33,7 +34,7 @@ namespace GameHotUpdate.Battle.Skill.Skills
         protected UltimateSkill(IBattleEntityObject caster, int skillId, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, statusAddStrategy)
         {
             // 从释放者身上获取技能组件，用于后续判断释放状态
-            skillComponent = Caster.GetComponent<SkillComponent>();
+            skillComponent = Caster.GetComponent<PlayerSkillComponent>();
         }
 
         /// <summary>
@@ -73,6 +74,8 @@ namespace GameHotUpdate.Battle.Skill.Skills
         protected virtual IEnumerator OnPreUltimateCast()
         {
             yield return ServiceLocator.Get<IBattleEventScheduler>().PreUltimateCastDispatch(Caster, SkillInfo);
+            // 终结技动画Pose
+            Caster.GetComponent<BattleAnimationComponent>().SetUltimatePose();
         }
 
         /// <summary>

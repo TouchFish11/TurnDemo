@@ -6,17 +6,16 @@ using Game.Battle.Skill.Interface;
 namespace GameHotUpdate.Battle.Command
 {
     /// <summary>
-    /// ��������
-    /// ��װ���ܵĵ���
+    /// 技能指令
     /// </summary>
     public class SkillCommand : Game.Battle.Command.Command, ISkillCommand
     {
         public override int Priority { get; protected set; }
         
-        public ISkillData SkillData;
+        public ISkillData SkillData { get; protected set; }
 
         /// <summary>
-        /// ��ʼ����������
+        /// 初始化指令
         /// </summary>
         /// <param name="skillData"></param>
         public void Init(ISkillData skillData)
@@ -26,7 +25,7 @@ namespace GameHotUpdate.Battle.Command
         }
         
         /// <summary>
-        /// ִ�м���
+        /// ִ执行技能
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>

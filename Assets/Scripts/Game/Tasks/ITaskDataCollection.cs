@@ -1,5 +1,3 @@
-using Core.AssetBundles.Update.Collection;
-
 namespace Game.Tasks
 {
     public interface ITaskDataCollection

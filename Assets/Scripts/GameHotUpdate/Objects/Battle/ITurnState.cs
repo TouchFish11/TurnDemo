@@ -1,5 +1,3 @@
-using Game.Battle.Objects;
-
 namespace GameHotUpdate.Objects.Battle
 {
     /// <summary>

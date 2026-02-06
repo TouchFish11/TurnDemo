@@ -19,7 +19,7 @@ namespace Game.Battle.Status
 
         public StatusProperty(int statusId)
         {
-            StatusInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<StatusInfoContainer>(EConfigLoadType.Editor).dataDic[statusId];
+            StatusInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<StatusInfoContainer>(EConfigLoadType.Excel).dataDic[statusId];
             currentPine = StatusInfo.f_startPine;
             remainingRound = StatusInfo.f_durationRound;
         }

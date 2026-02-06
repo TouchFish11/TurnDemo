@@ -1,0 +1,59 @@
+{
+    "configName": "NewInfo",
+    "columns": [
+        {
+            "fieldType": 1,
+            "fieldName": "newField1",
+            "fieldDescription": "",
+            "key": true
+        },
+        {
+            "fieldType": 2,
+            "fieldName": "newField2",
+            "fieldDescription": "",
+            "key": false
+        },
+        {
+            "fieldType": 3,
+            "fieldName": "newField3",
+            "fieldDescription": "",
+            "key": false
+        },
+        {
+            "fieldType": 4,
+            "fieldName": "newField4",
+            "fieldDescription": "",
+            "key": false
+        }
+    ],
+    "rows": [
+        {
+            "keys": [
+                "newField1",
+                "newField2",
+                "newField3",
+                "newField4"
+            ],
+            "values": [
+                "1",
+                "2",
+                "asdsad",
+                "True"
+            ]
+        },
+        {
+            "keys": [
+                "newField1",
+                "newField2",
+                "newField3",
+                "newField4"
+            ],
+            "values": [
+                "0",
+                "0",
+                "",
+                "False"
+            ]
+        }
+    ]
+}

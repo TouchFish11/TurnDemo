@@ -11,7 +11,7 @@ namespace Game.Battle.Property
         public override void InitProperty(int id)
         {
             base.InitProperty(id);
-            MonsterInfo monsterInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<MonsterInfoContainer>(EConfigLoadType.Editor).dataDic[id];
+            MonsterInfo monsterInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<MonsterInfoContainer>(EConfigLoadType.Excel).dataDic[id];
 
             baseHp = monsterInfo.f_baseHp;
             baseAtk = monsterInfo.f_baseAtk;

@@ -17,7 +17,7 @@ namespace GameHotUpdate.Battle.Status.Strategy.AddStrategy
         {
             foreach (int id in statusIds)
             {
-                StatusInfo statusInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<StatusInfoContainer>(EConfigLoadType.Editor).dataDic[id];
+                StatusInfo statusInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<StatusInfoContainer>(EConfigLoadType.Excel).dataDic[id];
                 IStatus status = ServiceLocator.Get<IFactoryManager>().GetFactory<IStatusFactory, StatusFactory>().GetStatus(id);
 
                 foreach (IBattleEntityObject target in targets)
