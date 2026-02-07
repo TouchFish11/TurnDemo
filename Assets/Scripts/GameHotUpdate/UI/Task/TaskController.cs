@@ -6,11 +6,10 @@ using Core.DataPersistence.Binary;
 using Core.Pool;
 using Core.Service;
 using Core.UI;
-using Core.Utility;
 using Game.Objects;
 using Game.Tasks;
+using GameHotUpdate.Item;
 using GameHotUpdate.Tasks;
-using GameHotUpdate.UI.General;
 using GameHotUpdate.UI.MVC;
 using TaskUtility = GameHotUpdate.Tasks.TaskUtility;
 
@@ -204,7 +203,7 @@ namespace GameHotUpdate.UI.Task
         /// 当任务项被选中时，触发该方法更新详情面板的任务信息
         /// </summary>
         /// <param name="id">选中的任务ID</param>
-        private async void UpdateTaskDetail(string id)
+        private void UpdateTaskDetail(string id)
         {
             // 从配置中获取任务基础信息
             var selectTaskInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<TaskInfoContainer>(EConfigLoadType.Excel).dataDic[id];
@@ -218,21 +217,32 @@ namespace GameHotUpdate.UI.Task
             model.CurrentTaskInfo = selectTaskInfo;
             foreach (var itemGrid in model.GetItemGrids())
             {
-                ServiceLocator.Get<IPoolManager>().PushObj(itemGrid.Transform.gameObject);
+                ServiceLocator.Get<IPoolManager>().PushObj(itemGrid.gameObject);
             }
             model.ClearItemGrid();
+
+            // 解析奖励ID数组，获取物品格子
+            ItemUtility.GetItemGrid(selectTaskInfo.f_taskRewrardIds, view.RewardBox, grid => model.AddItemGrid(grid));
             
-            // 解析奖励ID数组（按分隔符拆分，参数2表示分隔符索引/格式）
-            var rewardIds = TextUtility.SplitToIntArr(selectTaskInfo.f_taskRewrardIds, 2);
-            // 异步创建奖励物品格子并初始化
-            foreach (var rewardId in rewardIds)
-            {
-                var itemGridWrapper = await ServiceLocator.Get<IObjectBuilder>().GetHotfixUIObject<ItemGrid>(EAssetBundleType.UI, ResKeyCollection.ItemGrid, view.RewardBox);
-                itemGridWrapper.Init();
-                model.AddItemGrid(itemGridWrapper);
-            }
+            // // 解析奖励ID数组
+            // TextUtility.SplitMultiple(selectTaskInfo.f_taskRewrardIds, 1, 2, async (int awardId, int num) =>
+            // {
+            //     // 获取UI
+            //     var itemGrid = await ServiceLocator.Get<IObjectBuilder>().GetHotfixUIObject<ItemGrid>(EAssetBundleType.UI, ResKeyCollection.ItemGrid, view.RewardBox);
+            //     // 读取配置
+            //     var itemInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<ItemInfoContainer>(EConfigLoadType.Excel).dataDic[awardId];
+            //     // 加载图标
+            //     var itemIcon = await ServiceLocator.Get<IFactoryManager>()
+            //         .GetFactory<IAssetLoaderFactory, AssetLoaderFactory>().GetSpriteLoader()
+            //         .GetSpriteAsync(ResKeyCollection.Atlas_Icon, itemInfo.f_icon);
+            //     // 初始化
+            //     itemGrid.Init(itemIcon, num, itemInfo.f_quality);
+            //     // 缓存
+            //     model.AddItemGrid(itemGrid);
+            // });
             
             // 同步任务追踪状态：从任务数据集合中获取当前任务的追踪标记
+            
             if (((Collection<string, TaskData>)taskDataCollection).TryGetValue(id, out var taskData))
             {
                 model.IsFollowingTask = taskData.isTracking;

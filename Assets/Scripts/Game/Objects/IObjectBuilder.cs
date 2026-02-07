@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.UI;
@@ -38,6 +39,16 @@ namespace Game.Objects
         /// <param name="worldPosStay"></param>
         /// <returns></returns>
         Task<GameObject> GetGameobject(EAssetBundleType assetBundleType, string assetName, Transform parent, bool worldPosStay = false);
-        
+
+        /// <summary>
+        /// 获取热更UI
+        /// </summary>
+        /// <param name="assetBundleType"></param>
+        /// <param name="type"></param>
+        /// <param name="assetName"></param>
+        /// <param name="parent"></param>
+        /// <param name="worldPosStay"></param>
+        /// <returns></returns>
+        Task<Component> GetHotfixUIObject(EAssetBundleType assetBundleType, Type type, string assetName, Transform parent, bool worldPosStay = false);
     }
 }

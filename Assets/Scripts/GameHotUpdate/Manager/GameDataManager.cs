@@ -7,8 +7,10 @@ using Core.Log;
 using Core.Music;
 using Core.Service;
 using Core.Utility;
+using Game.Activity;
 using Game.Manager;
 using Game.Tasks;
+using GameHotUpdate.Activity.Data;
 using GameHotUpdate.Tasks;
 
 namespace GameHotUpdate.Manager
@@ -37,7 +39,8 @@ namespace GameHotUpdate.Manager
             LogManager.Log($"任务数据加载成功，{TaskDataCollection}");
             
             // 活动数据
-            // ...
+            ActivityDataCollection = await ServiceLocator.Get<IJsonManager>().FromJsonAsync<ActivityDataCollection>(PathUtility.GetUserDataLocalSavePath(FileUtility.LocalActivityDataFileName));
+            LogManager.Log($"活动数据加载成功，{ActivityDataCollection}");
         }
 
         public async Task SaveData()
@@ -55,7 +58,8 @@ namespace GameHotUpdate.Manager
             LogManager.Log($"输入数据保存成功，{InputActionContainer}");
             
             // 活动数据
-            // ...
+            await ServiceLocator.Get<IJsonManager>().SaveToJsonAsync(ActivityDataCollection, PathUtility.GetUserDataLocalSavePath(FileUtility.LocalActivityDataFileName));
+            LogManager.Log($"活动数据保存成功，{ActivityDataCollection}");
         }
         
         public ITaskDataCollection TaskDataCollection { get; private set; }
@@ -63,6 +67,8 @@ namespace GameHotUpdate.Manager
         public MusicData MusicData { get; private set; }
 
         public MainActionMapDataContainer InputActionContainer { get; private set; }
+        
+        public IActivityDataCollection ActivityDataCollection { get; private set; }
         
         public InputDataContainer InputDataContainer { get; private set; }
     }

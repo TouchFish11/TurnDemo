@@ -84,6 +84,14 @@ namespace Core.Utility
         /// TaskData.json
         /// </value>
         public static string LocalTaskDataFileName => "TaskData.json";
+        
+        /// <summary>
+        /// 活动系统数据缓存文件名称
+        /// </summary>
+        /// <value>
+        /// ActivityData.json
+        /// </value>
+        public static string LocalActivityDataFileName => "ActivityData.json";
 
         /// <summary>
         /// 获取所有文件

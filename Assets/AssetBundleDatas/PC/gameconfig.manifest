@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 3060374695
+CRC: 3188516135
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 40076f3599805cfbec67f15f45d59b8c
+    Hash: 99766d08f299511ec2c0154adc530d3e
   TypeTreeHash:
     serializedVersion: 2
     Hash: 5ad585dd02dfb5016c0dad519eab8f49
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 40076f3599805cfbec67f15f45d59b8c
+    Hash: 99766d08f299511ec2c0154adc530d3e
 HashAppended: 0
 ClassTypes:
 - Class: 49
@@ -20,10 +20,13 @@ Assets:
 - Assets/Editor/ArtRes/GameConfig/Excel/BranchInfo.bytes
 - Assets/Editor/ArtRes/GameConfig/Excel/TaskConditionInfo.bytes
 - Assets/Editor/ArtRes/GameConfig/Excel/TaskInfo.bytes
+- Assets/Editor/ArtRes/GameConfig/Excel/ActivityInfo.bytes
 - Assets/Editor/ArtRes/GameConfig/Excel/StatusInfo.bytes
 - Assets/Editor/ArtRes/GameConfig/Excel/SkillInfo.bytes
 - Assets/Editor/ArtRes/GameConfig/Excel/DialogueInfo.bytes
+- Assets/Editor/ArtRes/GameConfig/Editor/NewInfo.bytes
 - Assets/Editor/ArtRes/GameConfig/Excel/NpcInfo.bytes
+- Assets/Editor/ArtRes/GameConfig/Excel/ItemInfo.bytes
 - Assets/Editor/ArtRes/GameConfig/InputConfig/MainActionMap.json
 - Assets/Editor/ArtRes/GameConfig/Excel/RoleInfo.bytes
 Dependencies: []

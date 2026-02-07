@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Core.Pool;
 using Core.Service;
-using GameHotUpdate.UI.General;
+using GameHotUpdate.Item.UI;
 using GameHotUpdate.UI.MVC;
 
 namespace GameHotUpdate.UI.Task

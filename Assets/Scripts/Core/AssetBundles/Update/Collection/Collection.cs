@@ -16,15 +16,11 @@ namespace Core.AssetBundles.Update.Collection
     public abstract class Collection<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>>, ISerializationCallbackReceiver, ICollection<TKey, TValue>
     {
         // 核心键值映射容器，用于高效的键值对查找、添加、删除操作
-        protected readonly Dictionary<TKey, TValue> keyToValueMap = new Dictionary<TKey, TValue>();
-        
+        protected readonly Dictionary<TKey, TValue> keyToValueMap = new();
         // 序列化用的键列表，与values列表一一对应
-        [SerializeField]
-        private List<TKey> keys = new List<TKey>();
-        
+        [SerializeField] private List<TKey> keys = new();
         // 序列化用的值列表，与keys列表一一对应
-        [SerializeField]
-        private List<TValue> values = new List<TValue>();
+        [SerializeField] private List<TValue> values = new();
 
         /// <summary>
         /// 索引器，通过键快速获取对应的值

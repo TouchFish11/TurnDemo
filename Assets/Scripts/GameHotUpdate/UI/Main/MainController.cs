@@ -5,6 +5,7 @@ using Core.Log;
 using Core.Service;
 using Core.UI;
 using Game.Battle;
+using GameHotUpdate.Activity.UI.Base;
 using GameHotUpdate.UI.Main.Logic;
 using GameHotUpdate.UI.MVC;
 using GameHotUpdate.UI.Task;
@@ -56,16 +57,29 @@ namespace GameHotUpdate.UI.Main
             {
                 switch (btnName)
                 {
+                    case "btnActivity":
+                        await ServiceLocator.Get<IUIManager>().CreateViewAsync<ActivityView, ActivityModel, ActivityController>(E_UILayer.Mid, ResKeyCollection.ActivityView);
+                        break;
+                    case "btnJourney":
+                        
+                        break;
+                    case "btnBag":
+                        
+                        break;
                     // 任务按钮点击：打开任务界面
                     case "btnTask":
-                        // 通过UIManager创建任务界面，指定层级为Mid，资源键为TaskView
                         await ServiceLocator.Get<IUIManager>().CreateViewAsync<TaskView, TaskModel, TaskController>(E_UILayer.Mid, ResKeyCollection.TaskView);
                         break;
-                    
                     // 战斗测试按钮点击：启动战斗
                     case "btnBattleTest":
                         // 通过BattleManager启动战斗，传入当前控制器上下文
                         await ServiceLocator.Get<IBattleManager>().StartBattle(this);
+                        break;
+                    case "btnTeam":
+                        
+                        break;
+                    case "btnRole":
+                        
                         break;
                 }
             }

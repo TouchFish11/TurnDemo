@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.Pool;
@@ -47,6 +48,20 @@ namespace GameHotUpdate.Manager
             }
             
             var uiObj = cacheObj.AddComponent<T>();
+            return uiObj;
+        }
+        
+        public async Task<Component> GetHotfixUIObject(EAssetBundleType assetBundleType, Type type, string assetName, Transform parent, bool worldPosStay = false)
+        {
+            var cacheObj = await ServiceLocator.Get<IPoolManager>().GetAssetBundleObjAsync(assetBundleType, assetName);
+            cacheObj.transform.SetParent(parent, worldPosStay);
+
+            if (cacheObj.TryGetComponent(type, out var component))
+            {
+                return component;
+            }
+            
+            var uiObj = cacheObj.AddComponent(type);
             return uiObj;
         }
 

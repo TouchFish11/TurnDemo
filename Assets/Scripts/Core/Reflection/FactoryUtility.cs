@@ -15,6 +15,33 @@ namespace Core.Reflection
         /// <summary>
         /// 扫描所有实现TIValue的类型
         /// </summary>
+        /// <param name="dic"></param>
+        /// <param name="keyFunc"></param>
+        /// <param name="valueFunc"></param>
+        /// <param name="isAbstract"></param>
+        /// <param name="isInterface"></param>
+        /// <param name="assemblies"></param>
+        /// <typeparam name="Tkey"></typeparam>
+        /// <typeparam name="TIValue"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        public static void ScanAllType<TIValue, Tkey, TValue>(IDictionary<Tkey, TValue> dic, Func<Type, Tkey> keyFunc, Func<Type, TValue> valueFunc, bool isAbstract = false,
+            bool isInterface = false, params Assembly[] assemblies) where TValue : class
+        {
+            foreach (var assembly in assemblies)
+            {
+                foreach (var type in assembly.GetTypes())
+                {
+                    if (typeof(TIValue).IsAssignableFrom(type) && !isAbstract && !type.IsInterface)
+                    {
+                        dic.Add(keyFunc.Invoke(type), valueFunc.Invoke(type));
+                    }
+                }
+            }
+        }
+        
+        /// <summary>
+        /// 扫描所有实现TIValue的类型
+        /// </summary>
         public static void ScanAllType<TIValue>(Dictionary<TypeIdentifier, TIValue> dic, params Assembly[] assemblies) where TIValue : class
         {
             foreach (var assembly in assemblies)

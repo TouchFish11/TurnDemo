@@ -1,17 +1,19 @@
 ManifestFileVersion: 0
-CRC: 2981615082
+CRC: 2321643883
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 09eb60cad55d950c8a19f3eb19a06afa
+    Hash: 362453d2b258381e79f98af6256e35cd
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 923768aebf385ad86f7762daa8034951
+    Hash: 033fafe2c9f6c610c3a734393882fd4c
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 09eb60cad55d950c8a19f3eb19a06afa
+    Hash: 362453d2b258381e79f98af6256e35cd
 HashAppended: 0
 ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
 - Class: 213
   Script: {instanceID: 0}
 - Class: 687078895
@@ -19,10 +21,49 @@ ClassTypes:
 SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/Editor/ArtRes/Texture/Icon/Role/Icon_Warrior.png
-- Assets/Editor/ArtRes/Texture/Icon/Role/Icon_Wizard.png
-- Assets/Editor/ArtRes/Texture/Generic/xArrowheadInwards128.png
-- Assets/Editor/ArtRes/Texture/Generic/CrossCircle4Split128.png
+- Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_21.png
+- Assets/Editor/ArtRes/Texture/Icon/Item/Item_StarCoin.png
+- Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_08.png
+- Assets/Editor/ArtRes/Texture/Activity/Activity_Pic_03.png
+- Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_14.png
+- Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_04.png
+- Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_25.png
+- Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_12.png
+- Assets/Editor/ArtRes/Texture/Generic/BrightIcons.png
+- Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_24.png
+- Assets/Editor/ArtRes/Texture/Activity/Activity_Pic_05.png
 - Assets/Editor/ArtRes/Texture/Default/WhiteDefaultImage.png
+- Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_06.png
+- Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_15.png
+- Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_19.png
+- Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_27.png
+- Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_17.png
+- Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_18.png
+- Assets/Editor/ArtRes/Texture/Icon/Role/Icon_Wizard.png
+- Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_05.png
+- Assets/Editor/ArtRes/Texture/Generic/xArrowheadInwards128.png
+- Assets/Editor/ArtRes/Texture/Activity/Activity_Pic_04.png
+- Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_11.png
+- Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_22.png
+- Assets/Editor/ArtRes/Texture/Generic/DarkIcons.png
+- Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_20.png
+- Assets/Editor/ArtRes/Texture/Generic/CrossCircle4Split128.png
+- Assets/Editor/ArtRes/Texture/Activity/Activity_Pic_06.png
+- Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_01.png
+- Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_03.png
+- Assets/Editor/ArtRes/Texture/Activity/Activity_Pic_02.png
+- Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_23.png
 - Assets/Editor/ArtRes/Texture/Icon/Monster/Icon_Slime.png
+- Assets/Editor/ArtRes/Texture/Activity/Activity_Pic_07.png
+- Assets/Editor/ArtRes/Texture/Icon/Item/bg_swhirl_yellow.png
+- Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_10.png
+- Assets/Editor/ArtRes/Texture/Icon/Item/Item_OriginalEngraving.png
+- Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_09.png
 - Assets/Editor/ArtRes/Texture/Icon/Monster/Icon_TurtleShell.png
+- Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_26.png
+- Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_16.png
+- Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_02.png
+- Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_07.png
+- Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_13.png
+- Assets/Editor/ArtRes/Texture/Activity/Activity_Pic_01.png
 Dependencies: []

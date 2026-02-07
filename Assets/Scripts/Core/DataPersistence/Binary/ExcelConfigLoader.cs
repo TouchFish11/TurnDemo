@@ -30,6 +30,9 @@ namespace Core.DataPersistence.Binary
             await LoadTableAsync<TaskInfoContainer, TaskInfo>();
             await LoadTableAsync<TaskConditionInfoContainer, TaskConditionInfo>();
             await LoadTableAsync<NpcInfoContainer, NpcInfo>();
+            
+            await LoadTableAsync<ActivityInfoContainer,ActivityInfo>();
+            await LoadTableAsync<ItemInfoContainer,ItemInfo>();
             await Task.FromResult(true);
         }
 

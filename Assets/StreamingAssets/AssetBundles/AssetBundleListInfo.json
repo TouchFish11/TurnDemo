@@ -33,13 +33,13 @@
         },
         {
             "packageName": "gameconfig.assetbundle",
-            "packageSize": 4418,
-            "packageMD5": "35a4915f06b9c1ad2d906d88f41d62fa"
+            "packageSize": 6012,
+            "packageMD5": "a076e1aa40af01fbb3bab3f2f79fa46d"
         },
         {
             "packageName": "hotupdate.assetbundle",
-            "packageSize": 151483,
-            "packageMD5": "77bd1e701d536b45e59e16617e642a6c"
+            "packageSize": 161106,
+            "packageMD5": "55f28a517aa2551dfef92d51e257198c"
         },
         {
             "packageName": "material.assetbundle",
@@ -53,33 +53,33 @@
         },
         {
             "packageName": "PC.assetbundle",
-            "packageSize": 1975,
-            "packageMD5": "d73ef5224334ca2873498262cb9782e0"
+            "packageSize": 1974,
+            "packageMD5": "dedaaed159381510674c39422b317933"
         },
         {
             "packageName": "prefab.assetbundle",
-            "packageSize": 28533719,
-            "packageMD5": "58823a4df9b3b8213d664716b80acfbd"
+            "packageSize": 29019678,
+            "packageMD5": "aa8b99b6f6459497d04e8bdb1a0c0f87"
         },
         {
             "packageName": "scene.assetbundle",
-            "packageSize": 14020594,
-            "packageMD5": "1c3850a487f19c048aaec5280f34e777"
+            "packageSize": 14498618,
+            "packageMD5": "64b753c688111eb84336840abc2b275f"
         },
         {
             "packageName": "spriteatlas.assetbundle",
-            "packageSize": 280285,
-            "packageMD5": "d2d404f63d3fa8fb67e0584df2ec1a60"
+            "packageSize": 4902083,
+            "packageMD5": "f972bdd354828bd74cab2ab3534b75b2"
         },
         {
             "packageName": "texture.assetbundle",
-            "packageSize": 5456,
-            "packageMD5": "6d0d4fb2f1231b7d7a7a9049aea53c8e"
+            "packageSize": 264538,
+            "packageMD5": "ebbfb4a1691f467cec56ffa0a7383db6"
         },
         {
             "packageName": "ui.assetbundle",
-            "packageSize": 13748782,
-            "packageMD5": "fed2120576875580a582e3ec0731a560"
+            "packageSize": 14253542,
+            "packageMD5": "8cb5ca2d8752bf07502762c323b552ff"
         },
         {
             "packageName": "vfx.assetbundle",

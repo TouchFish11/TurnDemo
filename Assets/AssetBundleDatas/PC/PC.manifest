@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 1323340240
+CRC: 3155907146
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -35,7 +35,6 @@ AssetBundleManifest:
       Name: ui
       Dependencies:
         Dependency_0: texture
-        Dependency_1: spriteatlas
     Info_9:
       Name: vfx
       Dependencies: {}

@@ -8,6 +8,7 @@ using Core.Singleton;
 namespace Game.Manager
 {
     /// <summary>
+    /// TODO：热更
     /// 游戏管理器
     /// </summary>
     public class GameManager : SingletonBase<GameManager>, IGameManager

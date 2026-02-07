@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Core.Components;
 using Game.Battle.Component;
-using Game.Battle.Event;
 using Game.Battle.Objects;
 using Game.Battle.Status;
 using Game.Battle.Status.Data;

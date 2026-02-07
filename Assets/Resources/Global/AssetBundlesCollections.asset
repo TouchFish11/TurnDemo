@@ -54,13 +54,13 @@ MonoBehaviour:
       size: 15654
       name: TurtleShellAnimtor.controller
     - assetPath: Assets\Editor\ArtRes\Animator\Role\BaseRole.controller
-      size: 27713
+      size: 28762
       name: BaseRole.controller
     - assetPath: Assets\Editor\ArtRes\Animator\Role\FireFlyAnimtor.controller
-      size: 35982
+      size: 37339
       name: FireFlyAnimtor.controller
     - assetPath: Assets\Editor\ArtRes\Animator\Role\HertaAnimtor.controller
-      size: 33886
+      size: 35169
       name: HertaAnimtor.controller
   - assetBundleName: camera
     assetInfos:
@@ -75,12 +75,21 @@ MonoBehaviour:
       name: UICamera.prefab
   - assetBundleName: gameconfig
     assetInfos:
+    - assetPath: Assets\Editor\ArtRes\GameConfig\Editor\NewInfo.bytes
+      size: 33
+      name: NewInfo.bytes
+    - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\ActivityInfo.bytes
+      size: 939
+      name: ActivityInfo.bytes
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\BranchInfo.bytes
       size: 159
       name: BranchInfo.bytes
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\DialogueInfo.bytes
       size: 384
       name: DialogueInfo.bytes
+    - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\ItemInfo.bytes
+      size: 843
+      name: ItemInfo.bytes
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\MonsterInfo.bytes
       size: 433
       name: MonsterInfo.bytes
@@ -108,7 +117,7 @@ MonoBehaviour:
   - assetBundleName: hotupdate
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\HotUpdate\Assembly-CSharp-Game-HotUpdate.dll.bytes
-      size: 306176
+      size: 331264
       name: Assembly-CSharp-Game-HotUpdate.dll.bytes
   - assetBundleName: material
     assetInfos:
@@ -158,10 +167,13 @@ MonoBehaviour:
       size: 68494
       name: LevelScene.unity
     - assetPath: Assets\Editor\ArtRes\Scene\MainScene.unity
-      size: 55728
+      size: 49952
       name: MainScene.unity
   - assetBundleName: spriteatlas
     assetInfos:
+    - assetPath: Assets\Editor\ArtRes\SpriteAtlas\Atlas_Activity.spriteatlasv2
+      size: 394
+      name: Atlas_Activity.spriteatlasv2
     - assetPath: Assets\Editor\ArtRes\SpriteAtlas\Atlas_Default.spriteatlasv2
       size: 392
       name: Atlas_Default.spriteatlasv2
@@ -169,25 +181,58 @@ MonoBehaviour:
       size: 465
       name: Atlas_Generic.spriteatlasv2
     - assetPath: Assets\Editor\ArtRes\SpriteAtlas\Atlas_Icon.spriteatlasv2
-      size: 469
+      size: 544
       name: Atlas_Icon.spriteatlasv2
-    - assetPath: Assets\Editor\ArtRes\SpriteAtlas\BrightIcons.png
-      size: 57098
-      name: BrightIcons.png
-    - assetPath: Assets\Editor\ArtRes\SpriteAtlas\DarkIcons.png
-      size: 74858
-      name: DarkIcons.png
+    - assetPath: Assets\Editor\ArtRes\SpriteAtlas\Atlas_SelTarget.spriteatlasv2
+      size: 2290
+      name: Atlas_SelTarget.spriteatlasv2
   - assetBundleName: texture
     assetInfos:
+    - assetPath: Assets\Editor\ArtRes\Texture\Activity\Activity_Pic_01.png
+      size: 667127
+      name: Activity_Pic_01.png
+    - assetPath: Assets\Editor\ArtRes\Texture\Activity\Activity_Pic_02.png
+      size: 951420
+      name: Activity_Pic_02.png
+    - assetPath: Assets\Editor\ArtRes\Texture\Activity\Activity_Pic_03.png
+      size: 743235
+      name: Activity_Pic_03.png
+    - assetPath: Assets\Editor\ArtRes\Texture\Activity\Activity_Pic_04.png
+      size: 308961
+      name: Activity_Pic_04.png
+    - assetPath: Assets\Editor\ArtRes\Texture\Activity\Activity_Pic_05.png
+      size: 957278
+      name: Activity_Pic_05.png
+    - assetPath: Assets\Editor\ArtRes\Texture\Activity\Activity_Pic_06.png
+      size: 1060768
+      name: Activity_Pic_06.png
+    - assetPath: Assets\Editor\ArtRes\Texture\Activity\Activity_Pic_07.png
+      size: 782321
+      name: Activity_Pic_07.png
     - assetPath: Assets\Editor\ArtRes\Texture\Default\WhiteDefaultImage.png
       size: 516
       name: WhiteDefaultImage.png
+    - assetPath: Assets\Editor\ArtRes\Texture\Generic\BrightIcons.png
+      size: 57098
+      name: BrightIcons.png
     - assetPath: Assets\Editor\ArtRes\Texture\Generic\CrossCircle4Split128.png
       size: 1239
       name: CrossCircle4Split128.png
+    - assetPath: Assets\Editor\ArtRes\Texture\Generic\DarkIcons.png
+      size: 74858
+      name: DarkIcons.png
     - assetPath: Assets\Editor\ArtRes\Texture\Generic\xArrowheadInwards128.png
       size: 884
       name: xArrowheadInwards128.png
+    - assetPath: Assets\Editor\ArtRes\Texture\Icon\Item\bg_swhirl_yellow.png
+      size: 171394
+      name: bg_swhirl_yellow.png
+    - assetPath: Assets\Editor\ArtRes\Texture\Icon\Item\Item_OriginalEngraving.png
+      size: 129239
+      name: Item_OriginalEngraving.png
+    - assetPath: Assets\Editor\ArtRes\Texture\Icon\Item\Item_StarCoin.png
+      size: 161173
+      name: Item_StarCoin.png
     - assetPath: Assets\Editor\ArtRes\Texture\Icon\Monster\Icon_Slime.png
       size: 48340
       name: Icon_Slime.png
@@ -200,11 +245,128 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\Texture\Icon\Role\Icon_Wizard.png
       size: 58894
       name: Icon_Wizard.png
+    - assetPath: Assets\Editor\ArtRes\Texture\SelTarget\Crosshair_01.png
+      size: 23517
+      name: Crosshair_01.png
+    - assetPath: Assets\Editor\ArtRes\Texture\SelTarget\Crosshair_02.png
+      size: 21804
+      name: Crosshair_02.png
+    - assetPath: Assets\Editor\ArtRes\Texture\SelTarget\Crosshair_03.png
+      size: 10456
+      name: Crosshair_03.png
+    - assetPath: Assets\Editor\ArtRes\Texture\SelTarget\Crosshair_04.png
+      size: 8467
+      name: Crosshair_04.png
+    - assetPath: Assets\Editor\ArtRes\Texture\SelTarget\Crosshair_05.png
+      size: 52766
+      name: Crosshair_05.png
+    - assetPath: Assets\Editor\ArtRes\Texture\SelTarget\Crosshair_06.png
+      size: 39318
+      name: Crosshair_06.png
+    - assetPath: Assets\Editor\ArtRes\Texture\SelTarget\Crosshair_07.png
+      size: 51815
+      name: Crosshair_07.png
+    - assetPath: Assets\Editor\ArtRes\Texture\SelTarget\Crosshair_08.png
+      size: 59856
+      name: Crosshair_08.png
+    - assetPath: Assets\Editor\ArtRes\Texture\SelTarget\Crosshair_09.png
+      size: 39884
+      name: Crosshair_09.png
+    - assetPath: Assets\Editor\ArtRes\Texture\SelTarget\Crosshair_10.png
+      size: 22827
+      name: Crosshair_10.png
+    - assetPath: Assets\Editor\ArtRes\Texture\SelTarget\Crosshair_11.png
+      size: 300797
+      name: Crosshair_11.png
+    - assetPath: Assets\Editor\ArtRes\Texture\SelTarget\Crosshair_12.png
+      size: 11543
+      name: Crosshair_12.png
+    - assetPath: Assets\Editor\ArtRes\Texture\SelTarget\Crosshair_13.png
+      size: 56686
+      name: Crosshair_13.png
+    - assetPath: Assets\Editor\ArtRes\Texture\SelTarget\Crosshair_14.png
+      size: 37217
+      name: Crosshair_14.png
+    - assetPath: Assets\Editor\ArtRes\Texture\SelTarget\Crosshair_15.png
+      size: 9397
+      name: Crosshair_15.png
+    - assetPath: Assets\Editor\ArtRes\Texture\SelTarget\Crosshair_16.png
+      size: 36508
+      name: Crosshair_16.png
+    - assetPath: Assets\Editor\ArtRes\Texture\SelTarget\Crosshair_17.png
+      size: 15746
+      name: Crosshair_17.png
+    - assetPath: Assets\Editor\ArtRes\Texture\SelTarget\Crosshair_18.png
+      size: 36694
+      name: Crosshair_18.png
+    - assetPath: Assets\Editor\ArtRes\Texture\SelTarget\Crosshair_19.png
+      size: 41929
+      name: Crosshair_19.png
+    - assetPath: Assets\Editor\ArtRes\Texture\SelTarget\Crosshair_20.png
+      size: 40158
+      name: Crosshair_20.png
+    - assetPath: Assets\Editor\ArtRes\Texture\SelTarget\Crosshair_21.png
+      size: 41681
+      name: Crosshair_21.png
+    - assetPath: Assets\Editor\ArtRes\Texture\SelTarget\Crosshair_22.png
+      size: 42137
+      name: Crosshair_22.png
+    - assetPath: Assets\Editor\ArtRes\Texture\SelTarget\Crosshair_23.png
+      size: 36384
+      name: Crosshair_23.png
+    - assetPath: Assets\Editor\ArtRes\Texture\SelTarget\Crosshair_24.png
+      size: 45194
+      name: Crosshair_24.png
+    - assetPath: Assets\Editor\ArtRes\Texture\SelTarget\Crosshair_25.png
+      size: 54414
+      name: Crosshair_25.png
+    - assetPath: Assets\Editor\ArtRes\Texture\SelTarget\Crosshair_26.png
+      size: 20590
+      name: Crosshair_26.png
+    - assetPath: Assets\Editor\ArtRes\Texture\SelTarget\Crosshair_27.png
+      size: 25727
+      name: Crosshair_27.png
   - assetBundleName: ui
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\UI\Canvas.prefab
       size: 13454
       name: Canvas.prefab
+    - assetPath: Assets\Editor\ArtRes\UI\Activity\ActivityUI.prefab
+      size: 17355
+      name: ActivityUI.prefab
+    - assetPath: Assets\Editor\ArtRes\UI\Activity\ActivityView.prefab
+      size: 27283
+      name: ActivityView.prefab
+    - assetPath: Assets\Editor\ArtRes\UI\Activity\Common\ActivityBkComponent.prefab
+      size: 3644
+      name: ActivityBkComponent.prefab
+    - assetPath: Assets\Editor\ArtRes\UI\Activity\Common\ActivityDescritionComponent.prefab
+      size: 6607
+      name: ActivityDescritionComponent.prefab
+    - assetPath: Assets\Editor\ArtRes\UI\Activity\Common\ActivityJoinComponent.prefab
+      size: 9128
+      name: ActivityJoinComponent.prefab
+    - assetPath: Assets\Editor\ArtRes\UI\Activity\Common\ActivityNameComponent.prefab
+      size: 6598
+      name: ActivityNameComponent.prefab
+    - assetPath: Assets\Editor\ArtRes\UI\Activity\Common\ActivityTemplateUI.prefab
+      size: 37968
+      name: ActivityTemplateUI.prefab
+    - assetPath: Assets\Editor\ArtRes\UI\Activity\Common\ActvityTimeComponent.prefab
+      size: 9476
+      name: ActvityTimeComponent.prefab
+    - assetPath: Assets\Editor\ArtRes\UI\Activity\Common\AwardPreviewComponent.prefab
+      size: 18956
+      name: AwardPreviewComponent.prefab
+    - assetPath: Assets\Editor\ArtRes\UI\Activity\Common\LimitTimeAwardComponent.prefab
+      size: 11322
+      name: LimitTimeAwardComponent.prefab
+    - assetPath: Assets\Editor\ArtRes\UI\Activity\Details\EmbersCanonActivityUI.prefab
+      size: 10865
+      name: EmbersCanonActivityUI.prefab
+    - assetPath: Assets\Editor\ArtRes\UI\Activity\Details\OrbitalDepartureActivityUI.prefab
+      size: 11744
+      name: OrbitalDepartureActivityUI.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Back\BackView.prefab
       size: 2218
       name: BackView.prefab
@@ -218,7 +380,7 @@ MonoBehaviour:
       size: 9992
       name: DamageTextUI.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Battle\SelectMarkerUI.prefab
-      size: 12232
+      size: 16699
       name: SelectMarkerUI.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Battle\ActionLine\ActionGridUI.prefab
       size: 24017
@@ -262,9 +424,6 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\UI\Dialogue\DialogueView.prefab
       size: 99295
       name: DialogueView.prefab
-    - assetPath: Assets\Editor\ArtRes\UI\General\ItemGrid.prefab
-      size: 11481
-      name: ItemGrid.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Global\GlobalMessageView.prefab
       size: 9446
       name: GlobalMessageView.prefab
@@ -274,6 +433,9 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\UI\Inreract\InteractUI.prefab
       size: 13789
       name: InteractUI.prefab
+    - assetPath: Assets\Editor\ArtRes\UI\Item\ItemGrid.prefab
+      size: 11906
+      name: ItemGrid.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Loading\BattleLoadingView.prefab
       size: 14731
       name: BattleLoadingView.prefab
@@ -281,7 +443,7 @@ MonoBehaviour:
       size: 37165
       name: LoginView.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Main\MainView.prefab
-      size: 38954
+      size: 77625
       name: MainView.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Task\TaskItem.prefab
       size: 13208

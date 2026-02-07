@@ -1,0 +1,18 @@
+{
+    "keys": [
+        1001,
+        1002
+    ],
+    "values": [
+        {
+            "activityId": 1001,
+            "isComplete": false,
+            "currentPro": 0
+        },
+        {
+            "activityId": 1002,
+            "isComplete": false,
+            "currentPro": 0
+        }
+    ]
+}

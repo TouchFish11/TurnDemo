@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 3925818954
+CRC: 1614287745
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 302f1c2de466cd5340dc3c2b46665d1a
+    Hash: 240f951a1afff54b17d3c6f757b29b7c
   TypeTreeHash:
     serializedVersion: 2
     Hash: 033fafe2c9f6c610c3a734393882fd4c
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 302f1c2de466cd5340dc3c2b46665d1a
+    Hash: 240f951a1afff54b17d3c6f757b29b7c
 HashAppended: 0
 ClassTypes:
 - Class: 28
@@ -20,9 +20,9 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/Editor/ArtRes/SpriteAtlas/DarkIcons.png
+- Assets/Editor/ArtRes/SpriteAtlas/Atlas_Activity.spriteatlasv2
 - Assets/Editor/ArtRes/SpriteAtlas/Atlas_Default.spriteatlasv2
-- Assets/Editor/ArtRes/SpriteAtlas/BrightIcons.png
+- Assets/Editor/ArtRes/SpriteAtlas/Atlas_SelTarget.spriteatlasv2
 - Assets/Editor/ArtRes/SpriteAtlas/Atlas_Generic.spriteatlasv2
 - Assets/Editor/ArtRes/SpriteAtlas/Atlas_Icon.spriteatlasv2
 Dependencies:

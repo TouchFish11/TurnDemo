@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Core.Input.ActionAsset;
 using Core.Input.CoreListen;
 using Core.Music;
+using Game.Activity;
 using Game.Tasks;
 
 namespace Game.Manager
@@ -30,6 +31,8 @@ namespace Game.Manager
         /// 任务数据集合
         /// </summary>
         ITaskDataCollection TaskDataCollection { get; }
+
+        IActivityDataCollection ActivityDataCollection { get; }
 
         Task InitData();
         
