@@ -75,11 +75,14 @@ MonoBehaviour:
       name: UICamera.prefab
   - assetBundleName: gameconfig
     assetInfos:
+    - assetPath: Assets\Editor\ArtRes\GameConfig\BattleActivityConfig.json
+      size: 1383
+      name: BattleActivityConfig.json
     - assetPath: Assets\Editor\ArtRes\GameConfig\Editor\NewInfo.bytes
       size: 33
       name: NewInfo.bytes
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\ActivityInfo.bytes
-      size: 939
+      size: 955
       name: ActivityInfo.bytes
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\BranchInfo.bytes
       size: 159
@@ -88,7 +91,7 @@ MonoBehaviour:
       size: 384
       name: DialogueInfo.bytes
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\ItemInfo.bytes
-      size: 843
+      size: 1363
       name: ItemInfo.bytes
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\MonsterInfo.bytes
       size: 433
@@ -117,7 +120,7 @@ MonoBehaviour:
   - assetBundleName: hotupdate
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\HotUpdate\Assembly-CSharp-Game-HotUpdate.dll.bytes
-      size: 331264
+      size: 338432
       name: Assembly-CSharp-Game-HotUpdate.dll.bytes
   - assetBundleName: material
     assetInfos:
@@ -167,7 +170,7 @@ MonoBehaviour:
       size: 68494
       name: LevelScene.unity
     - assetPath: Assets\Editor\ArtRes\Scene\MainScene.unity
-      size: 49952
+      size: 52564
       name: MainScene.unity
   - assetBundleName: spriteatlas
     assetInfos:
@@ -180,20 +183,23 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\SpriteAtlas\Atlas_Generic.spriteatlasv2
       size: 465
       name: Atlas_Generic.spriteatlasv2
-    - assetPath: Assets\Editor\ArtRes\SpriteAtlas\Atlas_Icon.spriteatlasv2
-      size: 544
-      name: Atlas_Icon.spriteatlasv2
     - assetPath: Assets\Editor\ArtRes\SpriteAtlas\Atlas_SelTarget.spriteatlasv2
       size: 2290
       name: Atlas_SelTarget.spriteatlasv2
+    - assetPath: Assets\Editor\ArtRes\SpriteAtlas\Icon\Atlas_Icon_BattleEntity.spriteatlasv2
+      size: 469
+      name: Atlas_Icon_BattleEntity.spriteatlasv2
+    - assetPath: Assets\Editor\ArtRes\SpriteAtlas\Icon\Atlas_Icon_Common.spriteatlasv2
+      size: 394
+      name: Atlas_Icon_Common.spriteatlasv2
+    - assetPath: Assets\Editor\ArtRes\SpriteAtlas\Icon\Atlas_Icon_Item.spriteatlasv2
+      size: 394
+      name: Atlas_Icon_Item.spriteatlasv2
   - assetBundleName: texture
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\Texture\Activity\Activity_Pic_01.png
       size: 667127
       name: Activity_Pic_01.png
-    - assetPath: Assets\Editor\ArtRes\Texture\Activity\Activity_Pic_02.png
-      size: 951420
-      name: Activity_Pic_02.png
     - assetPath: Assets\Editor\ArtRes\Texture\Activity\Activity_Pic_03.png
       size: 743235
       name: Activity_Pic_03.png
@@ -206,9 +212,12 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\Texture\Activity\Activity_Pic_06.png
       size: 1060768
       name: Activity_Pic_06.png
-    - assetPath: Assets\Editor\ArtRes\Texture\Activity\Activity_Pic_07.png
+    - assetPath: Assets\Editor\ArtRes\Texture\Activity\EmbersCanon\EmbersCanon.png
+      size: 951420
+      name: EmbersCanon.png
+    - assetPath: Assets\Editor\ArtRes\Texture\Activity\OrbitalDeparture\OrbitalDeparture.png
       size: 782321
-      name: Activity_Pic_07.png
+      name: OrbitalDeparture.png
     - assetPath: Assets\Editor\ArtRes\Texture\Default\WhiteDefaultImage.png
       size: 516
       name: WhiteDefaultImage.png
@@ -224,9 +233,18 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\Texture\Generic\xArrowheadInwards128.png
       size: 884
       name: xArrowheadInwards128.png
+    - assetPath: Assets\Editor\ArtRes\Texture\Icon\Common\Icon_Common_Battle.png
+      size: 21660
+      name: Icon_Common_Battle.png
+    - assetPath: Assets\Editor\ArtRes\Texture\Icon\Common\Icon_Common_Check.png
+      size: 12029
+      name: Icon_Common_Check.png
     - assetPath: Assets\Editor\ArtRes\Texture\Icon\Item\bg_swhirl_yellow.png
       size: 171394
       name: bg_swhirl_yellow.png
+    - assetPath: Assets\Editor\ArtRes\Texture\Icon\Item\Item_EmbersOfGenesis.png
+      size: 140944
+      name: Item_EmbersOfGenesis.png
     - assetPath: Assets\Editor\ArtRes\Texture\Icon\Item\Item_OriginalEngraving.png
       size: 129239
       name: Item_OriginalEngraving.png
@@ -350,7 +368,7 @@ MonoBehaviour:
       size: 6598
       name: ActivityNameComponent.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Activity\Common\ActivityTemplateUI.prefab
-      size: 37968
+      size: 37477
       name: ActivityTemplateUI.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Activity\Common\ActvityTimeComponent.prefab
       size: 9476
@@ -361,11 +379,17 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\UI\Activity\Common\LimitTimeAwardComponent.prefab
       size: 11322
       name: LimitTimeAwardComponent.prefab
-    - assetPath: Assets\Editor\ArtRes\UI\Activity\Details\EmbersCanonActivityUI.prefab
-      size: 10865
+    - assetPath: Assets\Editor\ArtRes\UI\Activity\Details\EmbersCanonActivity\EmbersCanonActivityUI.prefab
+      size: 67577
       name: EmbersCanonActivityUI.prefab
-    - assetPath: Assets\Editor\ArtRes\UI\Activity\Details\OrbitalDepartureActivityUI.prefab
-      size: 11744
+    - assetPath: Assets\Editor\ArtRes\UI\Activity\Details\EmbersCanonActivity\EmbersCanonSubActivityUI_01\BattleLevelUI.prefab
+      size: 10895
+      name: BattleLevelUI.prefab
+    - assetPath: Assets\Editor\ArtRes\UI\Activity\Details\EmbersCanonActivity\EmbersCanonSubActivityUI_01\EmbersCanonSubActivityUI_01.prefab
+      size: 28311
+      name: EmbersCanonSubActivityUI_01.prefab
+    - assetPath: Assets\Editor\ArtRes\UI\Activity\Details\OrbitalDepartureActivity\OrbitalDepartureActivityUI.prefab
+      size: 56288
       name: OrbitalDepartureActivityUI.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Back\BackView.prefab
       size: 2218
@@ -434,7 +458,7 @@ MonoBehaviour:
       size: 13789
       name: InteractUI.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Item\ItemGrid.prefab
-      size: 11906
+      size: 11898
       name: ItemGrid.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Loading\BattleLoadingView.prefab
       size: 14731

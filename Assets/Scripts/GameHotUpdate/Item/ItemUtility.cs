@@ -41,7 +41,7 @@ namespace GameHotUpdate.Item
                     // 加载图标
                     var itemIcon = await ServiceLocator.Get<IFactoryManager>()
                         .GetFactory<IAssetLoaderFactory, AssetLoaderFactory>().GetSpriteLoader()
-                        .GetSpriteAsync(ResKeyCollection.Atlas_Icon, itemInfo.f_icon);
+                        .GetSpriteAsync(ResKeyCollection.Atlas_Icon_Item, itemInfo.f_icon);
                     // 初始化
                     itemGrid.Init(itemIcon, num, itemInfo.f_quality);
                     callback?.Invoke(itemGrid);
@@ -79,7 +79,7 @@ namespace GameHotUpdate.Item
                     // 加载图标
                     var itemIcon = await ServiceLocator.Get<IFactoryManager>()
                         .GetFactory<IAssetLoaderFactory, AssetLoaderFactory>().GetSpriteLoader()
-                        .GetSpriteAsync(ResKeyCollection.Atlas_Icon, itemInfo.f_icon);
+                        .GetSpriteAsync(ResKeyCollection.Atlas_Icon_Item, itemInfo.f_icon);
                     // 初始化
                     itemGrid.Init(itemIcon, num, itemInfo.f_quality);
                     callback?.Invoke(itemGrid);

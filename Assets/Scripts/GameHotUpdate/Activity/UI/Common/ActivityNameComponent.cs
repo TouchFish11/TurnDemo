@@ -1,4 +1,5 @@
 using Core.UI;
+using GameHotUpdate.Activity.UI.Base;
 using TMPro;
 
 namespace GameHotUpdate.Activity.UI.Common
@@ -6,7 +7,7 @@ namespace GameHotUpdate.Activity.UI.Common
     /// <summary>
     /// 活动名称UI组件
     /// </summary>
-    public class ActivityNameComponent : BaseUIBehaviour
+    public class ActivityNameComponent : ActivityUIComponent
     {
         [Inject] private TextMeshProUGUI txtActivityName;
 
@@ -17,6 +18,11 @@ namespace GameHotUpdate.Activity.UI.Common
         public void SetTitle(out TextMeshProUGUI txtActivityName)
         {
             txtActivityName = this.txtActivityName;
+        }
+
+        protected override void OnInit()
+        {
+
         }
     }
 }

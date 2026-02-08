@@ -1,11 +1,14 @@
 using System;
+using System.Collections.Generic;
+using Core.DataPersistence.Binary;
+using Core.Service;
 using Game.Data;
 using UnityEngine;
 
 namespace GameHotUpdate.Activity.Data
 {
     /// <summary>
-    /// 活动数据
+    /// 单个活动数据
     /// 存储用户活动相关数据
     /// </summary>
     [Serializable]
@@ -27,20 +30,29 @@ namespace GameHotUpdate.Activity.Data
         /// <summary>
         /// 是否完成
         /// </summary>
-        public bool IsComplete
-        {
-            get => isComplete;
-            set => isComplete = value;
-        }
+        public bool IsComplete => isComplete;
 
         /// <summary>
-        /// 当前进度
-        /// 最大进度由配置表获取
+        /// 当前进度，每次需+=1即可
+        /// 内部会自动根据进度判断是否完成
         /// </summary>
         public int CurrentPro
         {
             get => currentPro;
-            set => currentPro = value;
+            set
+            {
+                currentPro = value;
+                CheckOver();
+            }
+        }
+
+        /// <summary>
+        /// 检查是否完成
+        /// </summary>
+        private void CheckOver()
+        {
+            var activityInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<ActivityInfoContainer>(EConfigLoadType.Excel).dataDic[activityId];
+            isComplete = activityInfo.f_maxPro == currentPro;
         }
     }
 }

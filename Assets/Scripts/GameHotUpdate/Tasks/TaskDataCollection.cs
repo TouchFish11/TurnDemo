@@ -1,3 +1,4 @@
+using System;
 using Core.AssetBundles.Update.Collection;
 using Core.Utility;
 using Game.Tasks;
@@ -8,6 +9,7 @@ namespace GameHotUpdate.Tasks
     /// 任务数据集合类
     /// 用于管理游戏中所有任务数据的存储、查询等操作，继承自通用键值集合类
     /// </summary>
+    [Serializable]
     public class TaskDataCollection : Collection<string, TaskData>, ITaskDataCollection
     {
         /// <summary>

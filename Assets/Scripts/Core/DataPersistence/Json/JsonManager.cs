@@ -1,6 +1,9 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Core.Singleton;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using UnityEngine;
 
 namespace Core.DataPersistence.Json
@@ -12,15 +15,27 @@ namespace Core.DataPersistence.Json
     /// </summary>
     public class JsonManager : SingletonBase<JsonManager>, IJsonManager
     {
+        public static JsonSerializerSettings DefaultSettings => new()
+        {
+            TypeNameHandling = TypeNameHandling.All,
+            NullValueHandling = NullValueHandling.Ignore,
+            Formatting = Formatting.Indented,
+            Converters = new List<JsonConverter>
+            {
+                new StringEnumConverter()  // 枚举序列化为字符串
+            }
+        };
+        
         /// <summary>
         /// 私有构造函数（单例模式）
         /// 防止外部实例化，保证全局唯一实例
         /// </summary>
         private JsonManager()
         {
+            
         }
         
-        public T FromJson<T>(string json, E_JsonType jsonType = E_JsonType.JsonUtlity) where T : new()
+        public T FromJson<T>(string json, E_JsonType jsonType = E_JsonType.Newtonsoft) where T : new()
         {
             // 空值校验：JSON字符串为空时返回默认实例
             if (string.IsNullOrEmpty(json))
@@ -32,11 +47,12 @@ namespace Core.DataPersistence.Json
             return jsonType switch
             {
                 E_JsonType.JsonUtlity => JsonUtility.FromJson<T>(json),
+                E_JsonType.Newtonsoft => JsonConvert.DeserializeObject<T>(json, DefaultSettings),
                 _ => new T() // 未知解析器类型时返回默认实例
             };
         }
         
-        public async Task<T> FromJsonAsync<T>(string path, E_JsonType jsonType = E_JsonType.JsonUtlity) where T : new()
+        public async Task<T> FromJsonAsync<T>(string path, E_JsonType jsonType = E_JsonType.Newtonsoft) where T : new()
         {
             // 文件存在性校验：文件不存在时返回默认实例
             if (!File.Exists(path))
@@ -56,16 +72,18 @@ namespace Core.DataPersistence.Json
             return jsonType switch
             {
                 E_JsonType.JsonUtlity => JsonUtility.FromJson<T>(json),
+                E_JsonType.Newtonsoft => JsonConvert.DeserializeObject<T>(json, DefaultSettings),
                 _ => new T() // 未知解析器类型时返回默认实例
             };
         }
         
-        public void SaveToJson(object data, string saveFilePath, E_JsonType type = E_JsonType.JsonUtlity)
+        public void SaveToJson(object data, string saveFilePath, E_JsonType type = E_JsonType.Newtonsoft)
         {
             // 根据序列化器类型执行序列化（格式化输出）
             var jsonStr = type switch
             {
                 E_JsonType.JsonUtlity => JsonUtility.ToJson(data, true),
+                E_JsonType.Newtonsoft => JsonConvert.SerializeObject(data, DefaultSettings),
                 _ => ""
             };
 
@@ -73,12 +91,13 @@ namespace Core.DataPersistence.Json
             File.WriteAllText(saveFilePath, jsonStr);
         }
         
-        public async Task SaveToJsonAsync(object data, string saveFilePath, E_JsonType type = E_JsonType.JsonUtlity)
+        public async Task SaveToJsonAsync(object data, string saveFilePath, E_JsonType type = E_JsonType.Newtonsoft)
         {
             // 根据序列化器类型执行序列化（格式化输出）
             var jsonStr = type switch
             {
                 E_JsonType.JsonUtlity => JsonUtility.ToJson(data, true),
+                E_JsonType.Newtonsoft => JsonConvert.SerializeObject(data, DefaultSettings),
                 _ => ""
             };
 

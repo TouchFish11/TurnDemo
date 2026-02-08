@@ -286,7 +286,7 @@ namespace GameHotUpdate.UI.Battle.Base
                     var icon = await ServiceLocator.Get<IFactoryManager>()
                         .GetFactory<IAssetLoaderFactory, AssetLoaderFactory>()
                         .GetSpriteLoader()
-                        .GetSpriteAsync(ResKeyCollection.Atlas_Icon, iconName);
+                        .GetSpriteAsync(ResKeyCollection.Atlas_Icon_BattleEntity, iconName);
                     // 初始化UI
                     waitingActUIWrapper.Init(icon);
                     // 更新模型层的等待队列UI数据
@@ -320,7 +320,7 @@ namespace GameHotUpdate.UI.Battle.Base
                     // 获取实体对应的图标名称
                     var iconName = GetIconByEntity(battleEntity);
                     // 加载图标精灵
-                    var icon = await ServiceLocator.Get<IFactoryManager>().GetFactory<IAssetLoaderFactory, AssetLoaderFactory>().GetSpriteLoader().GetSpriteAsync(ResKeyCollection.Atlas_Icon, iconName);
+                    var icon = await ServiceLocator.Get<IFactoryManager>().GetFactory<IAssetLoaderFactory, AssetLoaderFactory>().GetSpriteLoader().GetSpriteAsync(ResKeyCollection.Atlas_Icon_BattleEntity, iconName);
                     // 初始化行动格子UI（图标、行动值、实体引用、是否第一个）
                     actionGridUIWrapper.Init(icon, battleEntity.ActionValue, battleEntity, isFirst);
                     // 更新模型层的行动条UI数据
@@ -533,7 +533,7 @@ namespace GameHotUpdate.UI.Battle.Base
         public IEnumerator ShowPaiting(RoleInfo roleInfo, SkillInfo skillInfo)
         {
             // 加载角色立绘图标
-            var iconTask = ServiceLocator.Get<IFactoryManager>().GetFactory<IAssetLoaderFactory, AssetLoaderFactory>().GetSpriteLoader().GetSpriteAsync(ResKeyCollection.Atlas_Icon, roleInfo.f_icon);
+            var iconTask = ServiceLocator.Get<IFactoryManager>().GetFactory<IAssetLoaderFactory, AssetLoaderFactory>().GetSpriteLoader().GetSpriteAsync(ResKeyCollection.Atlas_Icon_BattleEntity, roleInfo.f_icon);
             yield return TaskUtility.WaitForTask(iconTask);
             
             // 启动协程控制显示时长

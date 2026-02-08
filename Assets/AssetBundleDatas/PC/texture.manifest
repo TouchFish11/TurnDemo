@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 2321643883
+CRC: 3989165816
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 362453d2b258381e79f98af6256e35cd
+    Hash: f880383e0c7563952de1620467b039b3
   TypeTreeHash:
     serializedVersion: 2
     Hash: 033fafe2c9f6c610c3a734393882fd4c
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 362453d2b258381e79f98af6256e35cd
+    Hash: f880383e0c7563952de1620467b039b3
 HashAppended: 0
 ClassTypes:
 - Class: 28
@@ -33,6 +33,7 @@ Assets:
 - Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_24.png
 - Assets/Editor/ArtRes/Texture/Activity/Activity_Pic_05.png
 - Assets/Editor/ArtRes/Texture/Default/WhiteDefaultImage.png
+- Assets/Editor/ArtRes/Texture/Icon/Item/Item_EmbersOfGenesis.png
 - Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_06.png
 - Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_15.png
 - Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_19.png
@@ -46,15 +47,16 @@ Assets:
 - Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_11.png
 - Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_22.png
 - Assets/Editor/ArtRes/Texture/Generic/DarkIcons.png
+- Assets/Editor/ArtRes/Texture/Icon/Common/Icon_Common_Check.png
 - Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_20.png
 - Assets/Editor/ArtRes/Texture/Generic/CrossCircle4Split128.png
 - Assets/Editor/ArtRes/Texture/Activity/Activity_Pic_06.png
 - Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_01.png
 - Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_03.png
-- Assets/Editor/ArtRes/Texture/Activity/Activity_Pic_02.png
+- Assets/Editor/ArtRes/Texture/Activity/EmbersCanon/EmbersCanon.png
 - Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_23.png
 - Assets/Editor/ArtRes/Texture/Icon/Monster/Icon_Slime.png
-- Assets/Editor/ArtRes/Texture/Activity/Activity_Pic_07.png
+- Assets/Editor/ArtRes/Texture/Activity/OrbitalDeparture/OrbitalDeparture.png
 - Assets/Editor/ArtRes/Texture/Icon/Item/bg_swhirl_yellow.png
 - Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_10.png
 - Assets/Editor/ArtRes/Texture/Icon/Item/Item_OriginalEngraving.png
@@ -64,6 +66,7 @@ Assets:
 - Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_16.png
 - Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_02.png
 - Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_07.png
+- Assets/Editor/ArtRes/Texture/Icon/Common/Icon_Common_Battle.png
 - Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_13.png
 - Assets/Editor/ArtRes/Texture/Activity/Activity_Pic_01.png
 Dependencies: []

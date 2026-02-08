@@ -6,9 +6,8 @@ namespace Core.DataPersistence.Json
     /// </summary>
     public enum E_JsonType
     {
-        /// <summary>
-        /// Unity内置
-        /// </summary>
         JsonUtlity,
+        
+        Newtonsoft,
     }
 }

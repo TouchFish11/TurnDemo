@@ -7,4 +7,5 @@ public class ActivityInfo
 	public string f_detailUI_res;
 	public int f_duration;
 	public string f_awardIds;
+	public int f_maxPro;
 }

@@ -1,4 +1,5 @@
 using Core.UI;
+using GameHotUpdate.Activity.UI.Base;
 using GameHotUpdate.Item.UI;
 using UnityEngine.UI;
 
@@ -7,7 +8,7 @@ namespace GameHotUpdate.Activity.UI.Common
     /// <summary>
     /// 活动奖励预览组件
     /// </summary>
-    public class AwardPreviewComponent : BaseUIBehaviour
+    public class AwardPreviewComponent : ActivityUIComponent 
     {
         [Inject] private ScrollRect svAward;
 
@@ -30,6 +31,11 @@ namespace GameHotUpdate.Activity.UI.Common
         public void SetAward(ItemGrid award)
         {
             award.gameObject.transform.SetParent(svAward.content, false);
+        }
+
+        protected override void OnInit()
+        {
+
         }
     }
 }

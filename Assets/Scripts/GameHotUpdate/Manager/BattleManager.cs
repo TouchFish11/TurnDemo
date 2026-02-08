@@ -152,7 +152,7 @@ namespace GameHotUpdate.Manager
                 new(EAssetBundleType.UI, ResKeyCollection.SkillKeyUI, typeof(GameObject)),
                 
                 // SpriteAtlas
-                new(EAssetBundleType.SpriteAtlas, ResKeyCollection.Atlas_Icon, typeof(SpriteAtlas)),
+                new(EAssetBundleType.SpriteAtlas, ResKeyCollection.Atlas_Icon_BattleEntity, typeof(SpriteAtlas)),
                 new(EAssetBundleType.SpriteAtlas, ResKeyCollection.BrightIcons, typeof(SpriteAtlas)),
             };
             

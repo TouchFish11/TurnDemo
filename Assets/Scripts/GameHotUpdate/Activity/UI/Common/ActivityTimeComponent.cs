@@ -1,4 +1,5 @@
 using Core.UI;
+using GameHotUpdate.Activity.UI.Base;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,7 +9,7 @@ namespace GameHotUpdate.Activity.UI.Common
     /// <summary>
     /// 活动时间UI组件
     /// </summary>
-    public class ActivityTimeComponent : BaseUIBehaviour
+    public class ActivityTimeComponent : ActivityUIComponent
     {
         [Inject] private Image imgBk;
         [Inject] private TextMeshProUGUI txtTime;
@@ -29,6 +30,11 @@ namespace GameHotUpdate.Activity.UI.Common
         public void SetDurationTime(out TextMeshProUGUI txtDurationTime)
         {
             txtDurationTime = txtTime;
+        }
+
+        protected override void OnInit()
+        {
+
         }
     }
 }

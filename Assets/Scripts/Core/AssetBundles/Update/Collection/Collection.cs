@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Core.Log;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Core.AssetBundles.Update.Collection
@@ -13,9 +14,11 @@ namespace Core.AssetBundles.Update.Collection
     /// <typeparam name="TKey">键的类型</typeparam>
     /// <typeparam name="TValue">值的类型</typeparam>
     [Serializable]
+    [JsonObject(MemberSerialization.OptIn)]
     public abstract class Collection<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>>, ISerializationCallbackReceiver, ICollection<TKey, TValue>
     {
         // 核心键值映射容器，用于高效的键值对查找、添加、删除操作
+        [JsonProperty]
         protected readonly Dictionary<TKey, TValue> keyToValueMap = new();
         // 序列化用的键列表，与values列表一一对应
         [SerializeField] private List<TKey> keys = new();

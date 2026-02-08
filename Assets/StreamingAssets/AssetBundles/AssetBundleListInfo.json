@@ -33,13 +33,13 @@
         },
         {
             "packageName": "gameconfig.assetbundle",
-            "packageSize": 6012,
-            "packageMD5": "a076e1aa40af01fbb3bab3f2f79fa46d"
+            "packageSize": 6660,
+            "packageMD5": "40ec7e3ac22d2c5b49c922ac65e8fe36"
         },
         {
             "packageName": "hotupdate.assetbundle",
-            "packageSize": 161106,
-            "packageMD5": "55f28a517aa2551dfef92d51e257198c"
+            "packageSize": 164665,
+            "packageMD5": "4c8f46576cc4db5c6a5469a1ff4ecb31"
         },
         {
             "packageName": "material.assetbundle",
@@ -54,32 +54,32 @@
         {
             "packageName": "PC.assetbundle",
             "packageSize": 1974,
-            "packageMD5": "dedaaed159381510674c39422b317933"
+            "packageMD5": "a3ebaca455ccac7eb4d9a01591978f8f"
         },
         {
             "packageName": "prefab.assetbundle",
-            "packageSize": 29019678,
-            "packageMD5": "aa8b99b6f6459497d04e8bdb1a0c0f87"
+            "packageSize": 29026845,
+            "packageMD5": "269200dc7b8e8865b2e1f291360af5a6"
         },
         {
             "packageName": "scene.assetbundle",
-            "packageSize": 14498618,
-            "packageMD5": "64b753c688111eb84336840abc2b275f"
+            "packageSize": 14506206,
+            "packageMD5": "dc574becd84c4f6e93d3d2f872946e0d"
         },
         {
             "packageName": "spriteatlas.assetbundle",
-            "packageSize": 4902083,
-            "packageMD5": "f972bdd354828bd74cab2ab3534b75b2"
+            "packageSize": 4948496,
+            "packageMD5": "fdee488e6d8903ef783e407bc0390712"
         },
         {
             "packageName": "texture.assetbundle",
-            "packageSize": 264538,
-            "packageMD5": "ebbfb4a1691f467cec56ffa0a7383db6"
+            "packageSize": 267022,
+            "packageMD5": "0f43938e63f5c52e9b5e9723e9bb908d"
         },
         {
             "packageName": "ui.assetbundle",
-            "packageSize": 14253542,
-            "packageMD5": "8cb5ca2d8752bf07502762c323b552ff"
+            "packageSize": 14260298,
+            "packageMD5": "f37e72804e32eb9e37287c5418e4cca2"
         },
         {
             "packageName": "vfx.assetbundle",

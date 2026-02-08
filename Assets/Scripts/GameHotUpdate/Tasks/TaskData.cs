@@ -1,23 +1,23 @@
 using System;
 using Game.Tasks;
+using Newtonsoft.Json;
 
 namespace GameHotUpdate.Tasks
 {
     /// <summary>
-    /// ��������
+    /// 任务数据
     /// </summary>
     [Serializable]
     public class TaskData : ITaskData
     {
-        // ��ǰ����Id
-        public string currentTaskId;
-        // ��ǰ�������
-        public int currentPro;
-        // �Ƿ����
-        public bool isCompleted;
-        // �Ƿ�����׷��
-        public bool isTracking;
-
+        // 当前任务ID
+        [JsonProperty] public string currentTaskId;
+        // 当前任务进度
+        [JsonProperty] public int currentPro;
+        // 是否完成
+        [JsonProperty] public bool isCompleted;
+        // 是否追踪
+        [JsonProperty] public bool isTracking;
         
         public string CurrentTaskId => currentTaskId;
 

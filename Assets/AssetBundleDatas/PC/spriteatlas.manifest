@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 1614287745
+CRC: 1634874443
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 240f951a1afff54b17d3c6f757b29b7c
+    Hash: 02b5d1ecb124ffdc90e213f48c28aee2
   TypeTreeHash:
     serializedVersion: 2
     Hash: 033fafe2c9f6c610c3a734393882fd4c
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 240f951a1afff54b17d3c6f757b29b7c
+    Hash: 02b5d1ecb124ffdc90e213f48c28aee2
 HashAppended: 0
 ClassTypes:
 - Class: 28
@@ -24,6 +24,8 @@ Assets:
 - Assets/Editor/ArtRes/SpriteAtlas/Atlas_Default.spriteatlasv2
 - Assets/Editor/ArtRes/SpriteAtlas/Atlas_SelTarget.spriteatlasv2
 - Assets/Editor/ArtRes/SpriteAtlas/Atlas_Generic.spriteatlasv2
-- Assets/Editor/ArtRes/SpriteAtlas/Atlas_Icon.spriteatlasv2
+- Assets/Editor/ArtRes/SpriteAtlas/Icon/Atlas_Icon_Item.spriteatlasv2
+- Assets/Editor/ArtRes/SpriteAtlas/Icon/Atlas_Icon_Common.spriteatlasv2
+- Assets/Editor/ArtRes/SpriteAtlas/Icon/Atlas_Icon_BattleEntity.spriteatlasv2
 Dependencies:
 - D:/UnityProject/TurnDemo/Assets/AssetBundleDatas/PC/texture

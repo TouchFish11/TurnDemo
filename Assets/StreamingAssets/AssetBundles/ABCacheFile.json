@@ -1,4 +1,6 @@
 {
-    "keys": [],
-    "values": []
+  "$type": "Core.AssetBundles.Update.Collection.AbPackageCacheCollection, Assembly-CSharp-Core",
+  "keyToValueMap": {
+    "$type": "System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[Core.AssetBundles.Update.Collection.AbPackageCacheInfo, Assembly-CSharp-Core]], mscorlib"
+  }
 }

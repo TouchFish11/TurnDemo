@@ -10,6 +10,7 @@ using Game.Manager;
 using Game.Objects;
 using GameHotUpdate.Activity.Core;
 using GameHotUpdate.Activity.Data;
+using GameHotUpdate.Activity.UI.EmbersCanon;
 using GameHotUpdate.UI.MVC;
 
 namespace GameHotUpdate.Activity.UI.Base
@@ -72,7 +73,14 @@ namespace GameHotUpdate.Activity.UI.Base
             if (!activityDataCollection.TryGetValue(activityInfo.f_id, out var activityData))
             {
                 // 新增活动数据
-                activityData = new ActivityData { ActivityId = activityInfo.f_id };
+                // TODO：暂时这样处理
+                activityData = activityInfo.f_id switch
+                {
+                    1001 => new ActivityData { ActivityId = activityInfo.f_id },
+                    1002 => new EmbersCanonData { ActivityId = activityInfo.f_id },
+                    _ => activityData
+                };
+                
                 // 缓存
                 activityDataCollection.TryAdd(activityInfo.f_id, activityData);
             }

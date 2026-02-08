@@ -1,18 +1,48 @@
 {
-    "keys": [
-        1001,
-        1002
-    ],
-    "values": [
-        {
-            "activityId": 1001,
-            "isComplete": false,
-            "currentPro": 0
-        },
-        {
-            "activityId": 1002,
-            "isComplete": false,
-            "currentPro": 0
-        }
-    ]
+  "$type": "GameHotUpdate.Activity.Data.ActivityDataCollection, Assembly-CSharp-Game-HotUpdate",
+  "keyToValueMap": {
+    "$type": "System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[GameHotUpdate.Activity.Data.ActivityData, Assembly-CSharp-Game-HotUpdate]], mscorlib",
+    "1001": {
+      "$type": "GameHotUpdate.Activity.Data.ActivityData, Assembly-CSharp-Game-HotUpdate",
+      "ActivityId": 1001,
+      "IsComplete": true,
+      "CurrentPro": 1
+    },
+    "1002": {
+      "$type": "GameHotUpdate.Activity.UI.EmbersCanon.EmbersCanonData, Assembly-CSharp-Game-HotUpdate",
+      "levels": {
+        "$type": "System.Collections.Generic.List`1[[GameHotUpdate.Activity.UI.EmbersCanon.EmbersCanonLevelEntry, Assembly-CSharp-Game-HotUpdate]], mscorlib",
+        "$values": [
+          {
+            "$type": "GameHotUpdate.Activity.UI.EmbersCanon.EmbersCanonLevelEntry, Assembly-CSharp-Game-HotUpdate",
+            "levelId": 1001,
+            "isComplete": false
+          },
+          {
+            "$type": "GameHotUpdate.Activity.UI.EmbersCanon.EmbersCanonLevelEntry, Assembly-CSharp-Game-HotUpdate",
+            "levelId": 1002,
+            "isComplete": false
+          },
+          {
+            "$type": "GameHotUpdate.Activity.UI.EmbersCanon.EmbersCanonLevelEntry, Assembly-CSharp-Game-HotUpdate",
+            "levelId": 1003,
+            "isComplete": false
+          },
+          {
+            "$type": "GameHotUpdate.Activity.UI.EmbersCanon.EmbersCanonLevelEntry, Assembly-CSharp-Game-HotUpdate",
+            "levelId": 1004,
+            "isComplete": false
+          },
+          {
+            "$type": "GameHotUpdate.Activity.UI.EmbersCanon.EmbersCanonLevelEntry, Assembly-CSharp-Game-HotUpdate",
+            "levelId": 1005,
+            "isComplete": false
+          }
+        ]
+      },
+      "ActivityId": 1002,
+      "IsComplete": false,
+      "CurrentPro": 0
+    }
+  }
 }

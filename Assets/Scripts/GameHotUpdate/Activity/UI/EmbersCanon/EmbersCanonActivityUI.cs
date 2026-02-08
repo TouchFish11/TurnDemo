@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Core.AssetBundles.Management;
 using Core.Config;
 using Core.Loader;
 using Core.Log;
 using Core.Pool;
 using Core.Reflection;
 using Core.Service;
+using Game.Objects;
 using GameHotUpdate.Activity.Core;
 using GameHotUpdate.Activity.UI.Common;
 using GameHotUpdate.Item;
@@ -60,7 +62,7 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
             txtActivityName.text = $"{activityInfo.f_name}";
             
             _activityTimeComponent.SetDurationTime(out var txtTime);
-            txtTime.text = $"{activityInfo}";
+            txtTime.text = $"{ToDurationStr(activityInfo.f_duration)}";
             
             // 解析奖励ID数组，获取物品格子
             ItemUtility.GetItemGrid(activityInfo.f_awardIds, grid =>
@@ -73,9 +75,14 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
             });
         }
         
-        private void OnTriggerJoin()
+        private async void OnTriggerJoin()
         {
-            LogManager.Log($"参与按钮点击");
+            // 创建关卡界面到活动界面下
+            var subActivityUi  = await ServiceLocator.Get<IObjectBuilder>()
+                .GetHotfixUIObject<EmbersCanonSubActivityUI_01>(EAssetBundleType.UI, ResKeyCollection.EmbersCanonSubActivityUI_01,
+                    activityView);
+            // 初始化关卡子界面
+            subActivityUi.Init(ActivityData, activityInfo);
         }
 
         private void OnTriggerLimitTimeAward()
@@ -93,11 +100,13 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
                 ServiceLocator.Get<IPoolManager>().PushObj(itemGrid.gameObject);
             }
             _itemGrids.Clear();
+            ServiceLocator.Get<IPoolManager>().ClearTypes(typeof(ItemGrid));
         }
         
         protected override void OnHide()
         {
             ClearItem();
+            ServiceLocator.Get<IPoolManager>().ClearTypes(typeof(EmbersCanonActivityUI));
             
             _activityJoinComponent.OnClickJoin -= OnTriggerJoin;
             _limitTimeAwardComponent.OnClickAward -= OnTriggerLimitTimeAward;

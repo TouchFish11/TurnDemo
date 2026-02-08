@@ -80,7 +80,7 @@ namespace GameHotUpdate.UI.Battle.Base
                 var icon = await ServiceLocator.Get<IFactoryManager>()
                     .GetFactory<IAssetLoaderFactory, AssetLoaderFactory>()
                     .GetSpriteLoader()
-                    .GetSpriteAsync(ResKeyCollection.Atlas_Icon, iconName);
+                    .GetSpriteAsync(ResKeyCollection.Atlas_Icon_BattleEntity, iconName);
                 // 获取当前实体的玩家属性组件
                 var playerPropertyComponent = battleEntity.GetComponent<PlayerPropertyComponent>();
                 // 获取角色核心属性数据

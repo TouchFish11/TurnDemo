@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 2859326177
+CRC: 3050745582
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 2a676fce21127923886f43ed43b6c859
+    Hash: 73f42f0f08b6550280a05a2cb041965a
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 4016118117986881250920a7d7643ece
+    Hash: 5a7207b54101e1eaf68aee67eea10e26
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 2a676fce21127923886f43ed43b6c859
+    Hash: 73f42f0f08b6550280a05a2cb041965a
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -45,6 +45,8 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: 8e694552afc49314b9fea5ad0f690cad, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: f8191a650170818418d2dba232fbd795, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
@@ -53,11 +55,19 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: 3352bc49264abcc4da04136443ee6181, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 5105eddc8cec1d140b1b3853f117254d, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: d0653bd277256cf49907a0131b4b902e, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 2fafe2cfe61f6974895a912c3755e8f1, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 156d291ff7f81ec4fbfe686179347ee0, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 39fa3d8997a24136984ca6e2c99902bc, type: 3}
 - Class: 114
@@ -65,29 +75,21 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: bd18ef7ec971e584da215b74d57da286, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: 2a4db7a114972834c8e4117be1d82ba3, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: 156d291ff7f81ec4fbfe686179347ee0, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: 5105eddc8cec1d140b1b3853f117254d, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: 3352bc49264abcc4da04136443ee6181, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: d0653bd277256cf49907a0131b4b902e, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: 81d2b3bb0da402e4694362f0e64edbd8, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: f8191a650170818418d2dba232fbd795, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: dfbf2782bedf9c243b2ae5a197b7d868, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: 2a4db7a114972834c8e4117be1d82ba3, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 81d2b3bb0da402e4694362f0e64edbd8, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: 17992368500737c41a3719aa5eed3a09, type: 3}
 - Class: 114
-  Script: {fileID: 11500000, guid: bd18ef7ec971e584da215b74d57da286, type: 3}
+  Script: {fileID: 11500000, guid: eacc4304e81ba88449ac3e2ccee6da81, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 128
@@ -174,47 +176,49 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: UnityEngine.UI
   ClassName: UnityEngine.UI.Toggle/ToggleEvent
 Assets:
-- Assets/Editor/ArtRes/UI/Canvas.prefab
-- Assets/Editor/ArtRes/UI/Item/ItemGrid.prefab
 - Assets/Editor/ArtRes/UI/Battle/BattleMessageUI.prefab
-- Assets/Editor/ArtRes/UI/Activity/Common/ActivityTemplateUI.prefab
-- Assets/Editor/ArtRes/UI/Global/MessageUI.prefab
 - Assets/Editor/ArtRes/UI/Dialogue/DialogueView.prefab
-- Assets/Editor/ArtRes/UI/Battle/Role/BattlePointUI.prefab
-- Assets/Editor/ArtRes/UI/Battle/DamageTextUI.prefab
-- Assets/Editor/ArtRes/UI/Activity/Common/ActvityTimeComponent.prefab
 - Assets/Editor/ArtRes/UI/Main/MainView.prefab
-- Assets/Editor/ArtRes/UI/Battle/Monster/WeaknessUI.prefab
+- Assets/Editor/ArtRes/UI/Activity/Details/EmbersCanonActivity/EmbersCanonSubActivityUI_01/EmbersCanonSubActivityUI_01.prefab
 - Assets/Editor/ArtRes/UI/Battle/Monster/MonsterStateUI.prefab
-- Assets/Editor/ArtRes/UI/Begin/BeginView.prefab
-- Assets/Editor/ArtRes/UI/Battle/BattleView.prefab
 - Assets/Editor/ArtRes/UI/Activity/Common/ActivityBkComponent.prefab
-- Assets/Editor/ArtRes/UI/Battle/Role/SkillKeyUI.prefab
 - Assets/Editor/ArtRes/UI/Loading/BattleLoadingView.prefab
 - Assets/Editor/ArtRes/UI/Battle/Role/HealTextUI.prefab
-- Assets/Editor/ArtRes/UI/Activity/ActivityView.prefab
-- Assets/Editor/ArtRes/UI/Activity/Common/ActivityDescritionComponent.prefab
-- Assets/Editor/ArtRes/UI/Battle/Role/RoleStateUI.prefab
-- Assets/Editor/ArtRes/UI/Activity/Details/EmbersCanonActivityUI.prefab
 - Assets/Editor/ArtRes/UI/Battle/Buff/StatusGridUI.prefab
+- Assets/Editor/ArtRes/UI/Activity/Common/ActivityDescritionComponent.prefab
 - Assets/Editor/ArtRes/UI/Global/GlobalMessageView.prefab
-- Assets/Editor/ArtRes/UI/Battle/Buff/StatusEffectTextUI.prefab
 - Assets/Editor/ArtRes/UI/Task/TaskTypeContainer.prefab
 - Assets/Editor/ArtRes/UI/Back/BackView.prefab
 - Assets/Editor/ArtRes/UI/Task/TaskView.prefab
 - Assets/Editor/ArtRes/UI/Activity/Common/ActivityNameComponent.prefab
-- Assets/Editor/ArtRes/UI/Dialogue/DialogueOptUI.prefab
-- Assets/Editor/ArtRes/UI/Activity/Details/OrbitalDepartureActivityUI.prefab
+- Assets/Editor/ArtRes/UI/Activity/Details/OrbitalDepartureActivity/OrbitalDepartureActivityUI.prefab
 - Assets/Editor/ArtRes/UI/Battle/ActionLine/WaitingActUI.prefab
 - Assets/Editor/ArtRes/UI/Inreract/InteractUI.prefab
-- Assets/Editor/ArtRes/UI/Dialogue/DialogueReviewUI.prefab
 - Assets/Editor/ArtRes/UI/Battle/SelectMarkerUI.prefab
+- Assets/Editor/ArtRes/UI/Activity/Common/AwardPreviewComponent.prefab
+- Assets/Editor/ArtRes/UI/Task/TaskItem.prefab
+- Assets/Editor/ArtRes/UI/Activity/Details/EmbersCanonActivity/EmbersCanonSubActivityUI_01/BattleLevelUI.prefab
+- Assets/Editor/ArtRes/UI/Canvas.prefab
+- Assets/Editor/ArtRes/UI/Item/ItemGrid.prefab
+- Assets/Editor/ArtRes/UI/Activity/Common/ActivityTemplateUI.prefab
+- Assets/Editor/ArtRes/UI/Global/MessageUI.prefab
+- Assets/Editor/ArtRes/UI/Battle/Role/BattlePointUI.prefab
+- Assets/Editor/ArtRes/UI/Battle/DamageTextUI.prefab
+- Assets/Editor/ArtRes/UI/Activity/Common/ActvityTimeComponent.prefab
+- Assets/Editor/ArtRes/UI/Activity/ActivityView.prefab
+- Assets/Editor/ArtRes/UI/Battle/Monster/WeaknessUI.prefab
+- Assets/Editor/ArtRes/UI/Begin/BeginView.prefab
+- Assets/Editor/ArtRes/UI/Battle/BattleView.prefab
+- Assets/Editor/ArtRes/UI/Battle/Role/SkillKeyUI.prefab
+- Assets/Editor/ArtRes/UI/Battle/Role/RoleStateUI.prefab
+- Assets/Editor/ArtRes/UI/Activity/Details/EmbersCanonActivity/EmbersCanonActivityUI.prefab
+- Assets/Editor/ArtRes/UI/Battle/Buff/StatusEffectTextUI.prefab
+- Assets/Editor/ArtRes/UI/Dialogue/DialogueOptUI.prefab
+- Assets/Editor/ArtRes/UI/Dialogue/DialogueReviewUI.prefab
 - Assets/Editor/ArtRes/UI/Activity/Common/LimitTimeAwardComponent.prefab
 - Assets/Editor/ArtRes/UI/Battle/ActionLine/ActionGridUI.prefab
 - Assets/Editor/ArtRes/UI/Activity/ActivityUI.prefab
-- Assets/Editor/ArtRes/UI/Task/TaskItem.prefab
 - Assets/Editor/ArtRes/UI/Login/LoginView.prefab
 - Assets/Editor/ArtRes/UI/Activity/Common/ActivityJoinComponent.prefab
-- Assets/Editor/ArtRes/UI/Activity/Common/AwardPreviewComponent.prefab
 Dependencies:
 - D:/UnityProject/TurnDemo/Assets/AssetBundleDatas/PC/texture

@@ -1,5 +1,6 @@
 using System;
 using Core.UI;
+using GameHotUpdate.Activity.UI.Base;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,7 +10,7 @@ namespace GameHotUpdate.Activity.UI.Common
     /// <summary>
     /// 参与按钮UI组件
     /// </summary>
-    public class ActivityJoinComponent : BaseUIBehaviour
+    public class ActivityJoinComponent : ActivityUIComponent
     {
         [Inject] private Button btnJoin;
         [Inject] private TextMeshProUGUI txtJoin;
@@ -22,6 +23,11 @@ namespace GameHotUpdate.Activity.UI.Common
         {
             base.Awake();
             imgBtnJoin = btnJoin.image;
+        }
+        
+        protected override void OnInit()
+        {
+
         }
         
         /// <summary>

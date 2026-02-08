@@ -1,4 +1,5 @@
 using Core.UI;
+using GameHotUpdate.Activity.UI.Base;
 using TMPro;
 
 namespace GameHotUpdate.Activity.UI.Common
@@ -6,7 +7,7 @@ namespace GameHotUpdate.Activity.UI.Common
     /// <summary>
     /// 活动描述UI组件
     /// </summary>
-    public class ActivityDescritionComponent : BaseUIBehaviour
+    public class ActivityDescritionComponent : ActivityUIComponent
     {
         [Inject] private TextMeshProUGUI txtActivityDescrition;
         
@@ -17,6 +18,11 @@ namespace GameHotUpdate.Activity.UI.Common
         public void SetActivityDescrition(out TextMeshProUGUI txtActivityDescrition)
         {
             txtActivityDescrition = this.txtActivityDescrition;
+        }
+
+        protected override void OnInit()
+        {
+
         }
     }
 }

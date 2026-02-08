@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Core.Components;
 using Core.Log;
@@ -13,13 +14,12 @@ namespace Game.Objects
     /// 所有游戏实体的基类，封装组件管理、生命周期（初始化/销毁）等核心逻辑
     /// 继承MonoBehaviour以挂载到GameObject，实现IEntityObject接口规范实体行为约束
     /// </summary>
-    [DisallowMultipleComponent] // 禁止同一GameObject挂载多个该类实例
+    [DisallowMultipleComponent]
     public abstract class EntityObject : MonoBehaviour, IEntityObject
     {
         /// <summary>
         /// 自定义组件缓存映射表
         /// Key：组件类型标识（TypeIdentifier），Value：对应的IComponent组件实例
-        /// 作用：缓存已获取的自定义组件，避免重复查找GameObject/子物体，提升性能
         /// </summary>
         private readonly Dictionary<TypeIdentifier, IComponent> typeToIComponentMap = new();
 
@@ -30,8 +30,8 @@ namespace Game.Objects
         public GameObject GameObject => gameObject;
 
         /// <summary>
-        /// 实体属性组件
-        /// 存储实体核心属性（如血量、攻击力等），由子类负责初始化赋值
+        /// 实体属性
+        /// 存储实体属性，由子类负责初始化赋值
         /// </summary>
         public EntityProperty EntityProperty { get; protected set; }
         
@@ -41,6 +41,19 @@ namespace Game.Objects
         /// </summary>
         /// <param name="id">实体唯一标识ID（全局唯一，用于区分不同实体）</param>
         public abstract void BaseInit(int id);
+
+        private void OnEnable()
+        {
+            OnActive();
+        }
+
+        /// <summary>
+        /// 在激活时调用
+        /// </summary>
+        protected virtual void OnActive()
+        {
+            
+        }
         
         /// <summary>
         /// 获取当前GameObject上的指定自定义组件（重写MonoBehaviour原生方法）
@@ -139,6 +152,14 @@ namespace Game.Objects
         }
         
         /// <summary>
+        /// 在失活时调用
+        /// </summary>
+        protected virtual void OnInActive()
+        {
+            
+        }
+        
+        /// <summary>
         /// 销毁当前实体（自定义生命周期方法）
         /// 清理所有自定义组件、释放属性引用，子类可重写扩展销毁逻辑
         /// </summary>
@@ -162,7 +183,7 @@ namespace Game.Objects
         /// </summary>
         private void OnDisable()
         {
-            
+            OnInActive();
         }
 
         /// <summary>

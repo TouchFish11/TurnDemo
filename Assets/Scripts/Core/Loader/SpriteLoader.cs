@@ -29,7 +29,7 @@ namespace Core.Loader
             // 图集加载失败（返回null），则返回默认精灵
             if (!spriteAtlas)
             {
-                LogManager.LogWarning($"{typeof(SpriteLoader)}.{nameof(GetSpriteAsync)}，图集获取失败");
+                LogManager.LogWarning($"{nameof(SpriteLoader)}.{nameof(GetSpriteAsync)}，图集获取失败");
                 return await GetDefault();
             }
 
@@ -37,13 +37,13 @@ namespace Core.Loader
             var sprite = spriteAtlas.GetSprite(assetName);
             
             // 精灵获取失败（返回null），则返回默认精灵；否则返回目标精灵
-            if (!sprite)
+            if (sprite)
             {
-                LogManager.LogWarning($"{typeof(SpriteLoader)}.{nameof(GetSpriteAsync)}，精灵获取失败");
-                return await GetDefault();
+                return sprite;
             }
             
-            return sprite;
+            LogManager.LogWarning($"{nameof(SpriteLoader)}.{nameof(GetSpriteAsync)}，精灵获取失败");
+            return await GetDefault();
         }
 
         /// <summary>
