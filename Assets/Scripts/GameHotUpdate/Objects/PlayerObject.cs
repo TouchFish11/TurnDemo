@@ -38,7 +38,7 @@ namespace GameHotUpdate.Objects
             // 添加组件
             AddComponents(TextUtility.Split(RoleInfo.f_comNames, 2));
             // 初始化伤害链
-            damageChain = DamageChainBuilder.GetRolrDamageChain();
+            damageChain = DamageChainBuilder.GetRoleDamageChain();
         }
 
         public override void CastSkill(int skillId)

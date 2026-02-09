@@ -111,5 +111,11 @@ namespace Game.Battle.Objects
         /// </summary>
         /// <param name="skillId"></param>
         void CastSkill(int skillId);
+
+        /// <summary>
+        /// 提供护盾
+        /// </summary>
+        /// <param name="sheildAmount">护盾量</param>
+        void TakeSheild(int sheildAmount);
     }
 }

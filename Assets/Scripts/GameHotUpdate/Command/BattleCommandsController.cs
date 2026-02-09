@@ -6,7 +6,7 @@ using Game.Battle.Command;
 using Game.Battle.Objects;
 using Game.UI.Battle;
 using GameHotUpdate.Battle.StateMeachine;
-using GameHotUpdate.UI.Battle.Base;
+using GameHotUpdate.Battle.UI.Base;
 
 namespace GameHotUpdate.Command
 {

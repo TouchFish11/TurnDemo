@@ -13,4 +13,5 @@ public class RoleInfo
 	public int f_baseSpeed;
 	public int f_maxEnergy;
 	public int f_dmgTextYOffset;
+	public int f_selMarkerYOffset;
 }

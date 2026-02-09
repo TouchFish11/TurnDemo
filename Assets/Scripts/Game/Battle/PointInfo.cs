@@ -18,9 +18,9 @@ namespace Game.Battle
         /// <summary>
         /// 怪物中心点x值
         /// </summary>
-        public byte MonsterCenterX { get; }
+        public float MonsterCenterX { get; }
 
-        public PointInfo(Transform point, IBattleEntityObject battleEntity, byte monsterCenterX)
+        public PointInfo(Transform point, IBattleEntityObject battleEntity, float monsterCenterX)
         {
             Point = point;
             BattleEntity = battleEntity;

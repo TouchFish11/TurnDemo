@@ -6,9 +6,9 @@ using Game.Battle.Enum;
 using Game.Battle.Turn;
 using Game.UI.Battle;
 using GameHotUpdate.Battle.Event.UI;
+using GameHotUpdate.Battle.UI;
+using GameHotUpdate.Battle.UI.Base;
 using GameHotUpdate.Property;
-using GameHotUpdate.UI.Battle;
-using GameHotUpdate.UI.Battle.Base;
 using GameHotUpdate.UI.Loading.Battle;
 
 namespace GameHotUpdate.Battle.StateMeachine

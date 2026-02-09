@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Core.DataPersistence.Binary;
 using Core.Service;
 using Game.Data;

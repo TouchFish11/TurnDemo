@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 3050745582
+CRC: 3368703143
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 73f42f0f08b6550280a05a2cb041965a
+    Hash: 1893ad9c9a70010125b8a722921823d0
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 5a7207b54101e1eaf68aee67eea10e26
+    Hash: e98d4a8c1a2e0474a2e9ca5d48836a49
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 73f42f0f08b6550280a05a2cb041965a
+    Hash: 1893ad9c9a70010125b8a722921823d0
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -25,11 +25,11 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
 - Class: 114
@@ -49,11 +49,15 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: eacc4304e81ba88449ac3e2ccee6da81, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: fc1515ab76e54f068e2f2207940fab32, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: a1ee5f5ef89e13b4b9ba3fdbbcf6d112, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 3352bc49264abcc4da04136443ee6181, type: 3}
 - Class: 114
@@ -89,7 +93,9 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: 17992368500737c41a3719aa5eed3a09, type: 3}
 - Class: 114
-  Script: {fileID: 11500000, guid: eacc4304e81ba88449ac3e2ccee6da81, type: 3}
+  Script: {fileID: 11500000, guid: 35d3d3ade35f5bc4ca237ace6b73ac7b, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 3e473b1e8e7740a48bc6a8e14c8ee619, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 128
@@ -183,7 +189,7 @@ Assets:
 - Assets/Editor/ArtRes/UI/Battle/Monster/MonsterStateUI.prefab
 - Assets/Editor/ArtRes/UI/Activity/Common/ActivityBkComponent.prefab
 - Assets/Editor/ArtRes/UI/Loading/BattleLoadingView.prefab
-- Assets/Editor/ArtRes/UI/Battle/Role/HealTextUI.prefab
+- Assets/Editor/ArtRes/UI/Battle/Float/HealTextUI.prefab
 - Assets/Editor/ArtRes/UI/Battle/Buff/StatusGridUI.prefab
 - Assets/Editor/ArtRes/UI/Activity/Common/ActivityDescritionComponent.prefab
 - Assets/Editor/ArtRes/UI/Global/GlobalMessageView.prefab
@@ -203,7 +209,7 @@ Assets:
 - Assets/Editor/ArtRes/UI/Activity/Common/ActivityTemplateUI.prefab
 - Assets/Editor/ArtRes/UI/Global/MessageUI.prefab
 - Assets/Editor/ArtRes/UI/Battle/Role/BattlePointUI.prefab
-- Assets/Editor/ArtRes/UI/Battle/DamageTextUI.prefab
+- Assets/Editor/ArtRes/UI/Battle/Float/DamageTextUI.prefab
 - Assets/Editor/ArtRes/UI/Activity/Common/ActvityTimeComponent.prefab
 - Assets/Editor/ArtRes/UI/Activity/ActivityView.prefab
 - Assets/Editor/ArtRes/UI/Battle/Monster/WeaknessUI.prefab
@@ -213,6 +219,7 @@ Assets:
 - Assets/Editor/ArtRes/UI/Battle/Role/RoleStateUI.prefab
 - Assets/Editor/ArtRes/UI/Activity/Details/EmbersCanonActivity/EmbersCanonActivityUI.prefab
 - Assets/Editor/ArtRes/UI/Battle/Buff/StatusEffectTextUI.prefab
+- Assets/Editor/ArtRes/UI/Battle/Float/ShieldTextUI.prefab
 - Assets/Editor/ArtRes/UI/Dialogue/DialogueOptUI.prefab
 - Assets/Editor/ArtRes/UI/Dialogue/DialogueReviewUI.prefab
 - Assets/Editor/ArtRes/UI/Activity/Common/LimitTimeAwardComponent.prefab

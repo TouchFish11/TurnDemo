@@ -5,13 +5,12 @@ using Game.Battle.Event;
 namespace GameHotUpdate.Battle.Event.General
 {
     /// <summary>
-    /// Ӧ���˺��¼�
-    /// �˺��������������˺�����������
+    /// 应用伤害事件
     /// </summary>
     public class ApplyDamageEvent : BattleEvent
     {
         /// <summary>
-        /// �˺����
+        /// 伤害结果
         /// </summary>
         public DamageResult DamageResult {  get; private set; } 
 

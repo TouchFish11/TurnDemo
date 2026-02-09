@@ -230,7 +230,7 @@ namespace GameHotUpdate.TargetSelect
             // 计算主目标范围内的所有有效目标（玩家角色类型，按技能范围规则筛选）
             BattleUtil.GetRangeTargets(_mainTarget, skillInfo.f_skillRangeType, _filterEntitys, _selectedTargets);
             // 触发目标选择变更事件，通知UI更新选中状态
-            battleContext.GetEventBus().TriggerEvent(new SelectTargetEvent(battleContext, _mainTarget, _selectedTargets));
+            battleContext.GetEventBus().TriggerEvent(new SelectTargetEvent(battleContext, caster, _mainTarget, _selectedTargets));
         }
 
         /// <summary>

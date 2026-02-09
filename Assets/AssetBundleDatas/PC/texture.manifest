@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 3989165816
+CRC: 991426807
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: f880383e0c7563952de1620467b039b3
+    Hash: 0f75f490ded66781e47fd82a29b3d165
   TypeTreeHash:
     serializedVersion: 2
     Hash: 033fafe2c9f6c610c3a734393882fd4c
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: f880383e0c7563952de1620467b039b3
+    Hash: 0f75f490ded66781e47fd82a29b3d165
 HashAppended: 0
 ClassTypes:
 - Class: 28
@@ -59,6 +59,7 @@ Assets:
 - Assets/Editor/ArtRes/Texture/Activity/OrbitalDeparture/OrbitalDeparture.png
 - Assets/Editor/ArtRes/Texture/Icon/Item/bg_swhirl_yellow.png
 - Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_10.png
+- Assets/Editor/ArtRes/Texture/Icon/Common/Icon_Common_Shield.png
 - Assets/Editor/ArtRes/Texture/Icon/Item/Item_OriginalEngraving.png
 - Assets/Editor/ArtRes/Texture/SelTarget/Crosshair_09.png
 - Assets/Editor/ArtRes/Texture/Icon/Monster/Icon_TurtleShell.png

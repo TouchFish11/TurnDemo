@@ -11,9 +11,9 @@ using Game.Battle.Skill.Handler;
 using Game.Battle.TargetSelect;
 using Game.UI.Battle.SkillKey.Provider;
 using GameHotUpdate.Battle.TargetSelect.Strategys;
+using GameHotUpdate.Battle.UI.Base;
+using GameHotUpdate.Battle.UI.SkillKey.Provider;
 using GameHotUpdate.Objects;
-using GameHotUpdate.UI.Battle.Base;
-using GameHotUpdate.UI.Battle.SkillKey.Provider;
 
 namespace GameHotUpdate.Battle.Skill.Handlers
 {
@@ -76,12 +76,8 @@ namespace GameHotUpdate.Battle.Skill.Handlers
             ServiceLocator.Get<ITargetSelectManager>().ActiveSelectTarget();
             // 执行目标选择逻辑
             ServiceLocator.Get<ITargetSelectManager>().SelectTarget(context, currentEntity, currentEntitySkillInfo, strategy);
-            
-            // 重新初始化怪物UI的血量显示
-            ServiceLocator.Get<IUIManager>()
-                .GetController<BattleController>()
-                .UiInitializer
-                .InitMonsterUI(context.GetAliveMonsterEntitys());
+            // 重新激活怪物UI的血量显示
+            ServiceLocator.Get<IUIManager>().GetController<BattleController>().MonsterStateUIManager.ActiveMonsterUIs();
         }
 
         private static SkillInfo GetNormalSkillInfo(IBattleEntityObject currentEntity)

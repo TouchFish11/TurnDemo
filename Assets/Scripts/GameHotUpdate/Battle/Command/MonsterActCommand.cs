@@ -1,7 +1,13 @@
 using System.Collections;
+using Core.Service;
+using Core.UI;
+using Core.Utility;
 using Game.Battle.Command;
 using Game.Battle.Context;
 using Game.Battle.Toughness;
+using GameHotUpdate.Battle.UI.Base;
+using GameHotUpdate.Cameras;
+using GameHotUpdate.Layer;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Command
@@ -48,6 +54,20 @@ namespace GameHotUpdate.Battle.Command
             {
                 yield break;
             }
+            
+            // 隐藏其他怪物血量UI显示
+            ServiceLocator.Get<IUIManager>().GetController<BattleController>().MonsterStateUIManager.ActiveMonsterUI(Sender);
+            // 计算相机世界坐标的位置和看向
+            var monsterPos = Sender.GameObject.transform.position;
+            monsterPos = new Vector3(monsterPos.x, 1, monsterPos.z);
+            var pos = monsterPos + Sender.GameObject.transform.forward * 4;
+            var rotation = Quaternion.LookRotation(monsterPos - pos);
+            
+            // 获取遮罩
+            var preMask = LayerGeter.GetPreBitLayer();
+            var mask = preMask | (1 << Sender.GameObject.layer);
+            // 创建相机
+            yield return TaskUtility.WaitForTask(ServiceLocator.Get<IBattleCameraManager>().CreateCamera(null, pos, rotation, mask));
             
             float currentValue = 0;
             // 等待韧性值恢复至最大值

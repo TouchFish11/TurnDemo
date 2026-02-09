@@ -29,6 +29,7 @@ using GameHotUpdate.Battle.Object;
 using GameHotUpdate.Battle.Skill.Base;
 using GameHotUpdate.Context;
 using GameHotUpdate.Input;
+using GameHotUpdate.Layer;
 using GameHotUpdate.Main;
 using GameHotUpdate.Objects;
 using GameHotUpdate.TargetSelect;
@@ -48,7 +49,7 @@ namespace GameHotUpdate.Manager
         private IBattleContext _context;
         
         // 怪物创建数量，测试（1~5）
-        private const int monsterCount = 5;
+        private const int monsterCount = 3;
         
         private BattleManager()
         {
@@ -185,7 +186,7 @@ namespace GameHotUpdate.Manager
                 // 记录角色所在的位置索引
                 hotfixPlayerObject.EntityPosIndex = index;
                 // 设置角色层级
-                SetLayerRecursively(hotfixPlayerObject.GameObject, ServiceLocator.Get<IBattlePointProxy>().GetRoleLayer(index));
+                LayerUtility.SetLayerRecursively(hotfixPlayerObject.GameObject, LayerGeter.GetRoleLayerByIndex(index));
                 _context.AddBattleEntity(hotfixPlayerObject);
                 _context.AddSceneRole(hotfixPlayerObject);
                 LogManager.Log($"已缓存场景对象：{hotfixPlayerObject}");
@@ -206,24 +207,15 @@ namespace GameHotUpdate.Manager
                 hotfixMonsterObject.BattleInit(monsterId, _context);
                 // 记录怪物所在的位置索引
                 hotfixMonsterObject.EntityPosIndex = index;
+                // 设置怪物层级
+                LayerUtility.SetLayerRecursively(hotfixMonsterObject.GameObject, LayerGeter.GetMonsterLayerByIndex(index));
                 _context.AddBattleEntity(hotfixMonsterObject);
                 _context.AddSceneMonster(hotfixMonsterObject);
                 LogManager.Log($"已缓存场景对象：{hotfixMonsterObject}");
                 index++;
             }
         }
-        
-        /// <summary>
-        /// 递归设置物体及其所有子物体的 Layer
-        /// </summary>
-        private static void SetLayerRecursively(GameObject obj, int layer)
-        {
-            obj.layer = layer;
-            foreach (Transform child in obj.transform)
-            {
-                SetLayerRecursively(child.gameObject, layer);
-            }
-        }
+
         
         public IBattleContext GetContext()
         {

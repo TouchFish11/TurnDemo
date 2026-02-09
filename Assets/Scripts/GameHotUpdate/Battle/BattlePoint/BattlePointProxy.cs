@@ -2,16 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Core.AssetBundles.Management;
-using Core.Config;
 using Core.Log;
-using Core.Pool;
 using Core.Service;
 using Game.Battle;
 using Game.Battle.Context;
 using Game.Battle.Input;
 using Game.Battle.Objects;
-using Game.Objects;
+using GameHotUpdate.Cameras;
+using GameHotUpdate.Layer;
 using GameHotUpdate.Objects;
 using UnityEngine;
 
@@ -22,15 +20,6 @@ namespace GameHotUpdate.Battle.BattlePoint
     /// </summary>
     public class BattlePointProxy : IBattlePointProxy
     {
-        // 点信息列表
-        private readonly List<PointInfo> pointInfos = new();
-        // 战斗上下文
-        private IBattleContext context;
-        // 当前相机旋转角度
-        private float currentXAngle;
-        // 当前怪物数量
-        private int currentMonsterCount;
-        
         // X轴旋转角度限制
         private const float minXAngle = -3f;
         private const float maxXAngle = 3f;
@@ -38,49 +27,27 @@ namespace GameHotUpdate.Battle.BattlePoint
         private const float rotateAddSpeed = 5f;
         // 旋转灵敏度
         private const float rotateSpeed = 1.5f;
-        // 预先的层级数组
-        private readonly int[] preLayers =
-        {
-            1 << LayerMask.NameToLayer("MonsterObject"),
-            1 << LayerMask.NameToLayer("Environment"),
-            1 << LayerMask.NameToLayer("VFX"),
-        };
-        // 玩家层级数组
-        private readonly int[] roleLayers = {
-            LayerMask.NameToLayer("PlayerObject1"),
-            LayerMask.NameToLayer("PlayerObject2"),
-            LayerMask.NameToLayer("PlayerObject3"),
-            LayerMask.NameToLayer("PlayerObject4")
-        };
-        
         // 怪物中心点x值
-        private readonly byte[] bytes = { 6, 4, 2, 0 };
+        private readonly float[] monstetCenterXs = { 6f, 4f, 2f, 0f };
+        // 点信息列表
+        private List<PointInfo> pointInfos = new();
+        // 战斗上下文
+        private IBattleContext context;
+        // 当前相机旋转角度
+        private float currentXAngle;
+        // 当前怪物数量
+        private int currentMonsterCount;
         
         /// <summary>
         /// 场景战斗点
         /// </summary>
-        public Game.Battle.BattlePoint BattlePoint { get; }
+        public Game.Battle.BattlePoint BattlePoint { get; } = UnityEngine.Object.FindFirstObjectByType<Game.Battle.BattlePoint>();
 
         /// <summary>
         /// 当前激活相机
         /// </summary>
         public Camera CurrentActiveCamera { get; private set; }
 
-        public BattlePointProxy()
-        {
-            BattlePoint = UnityEngine.Object.FindFirstObjectByType<Game.Battle.BattlePoint>();
-        }
-
-        /// <summary>
-        /// 获取角色层级
-        /// </summary>
-        /// <param name="index">创建时的索引</param>
-        /// <returns></returns>
-        public int GetRoleLayer(int index)
-        {
-            return roleLayers[index];
-        }
-        
         /// <summary>
         /// 初始化战斗点对象
         /// </summary>
@@ -97,7 +64,7 @@ namespace GameHotUpdate.Battle.BattlePoint
                     break;
                 }
                 
-                var pointInfo = new PointInfo(roleTrans, players[index], bytes[index]);
+                var pointInfo = new PointInfo(roleTrans, players[index], monstetCenterXs[index]);
                 pointInfos.Add(pointInfo);
                 index++;
             }
@@ -227,18 +194,9 @@ namespace GameHotUpdate.Battle.BattlePoint
         /// <param name="entityPosIndex"></param>
         private async Task CreateCameraAtPos(int entityPosIndex)
         {
-            if(CurrentActiveCamera)
-            {
-                ServiceLocator.Get<IPoolManager>().PushObj(CurrentActiveCamera.gameObject);
-                CurrentActiveCamera = null;
-            }
-            
             // 创建相机到指定位置点
             var cameraTrans = BattlePoint.GetRoleCameraTransByIndex(entityPosIndex);
-            var cameraObj = await ServiceLocator.Get<IObjectBuilder>()
-                .GetGameobject(EAssetBundleType.Camera, ResKeyCollection.BattleCamera, cameraTrans);
-            CurrentActiveCamera = cameraObj.GetComponent<Camera>();
-            CurrentActiveCamera.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+            CurrentActiveCamera = await ServiceLocator.Get<IBattleCameraManager>().CreateCamera(cameraTrans, Vector3.zero, Quaternion.identity);
         }
 
         /// <summary>
@@ -247,30 +205,26 @@ namespace GameHotUpdate.Battle.BattlePoint
         /// <param name="currentPosIndex"></param>
         private void UpdateCameraMask(int currentPosIndex)
         {
-            ResetCameraMask();
-            var mask = 0;
+            var mask = ResetCameraMask();
+            // 根据当前玩家位置索引，只渲染符合的角色
+            var roleLayers = LayerGeter.GetRoleLayers();
             for (var i = currentPosIndex; i < roleLayers.Length; i++)
             {
                 mask |= 1 << roleLayers[i];
             }
-            
-            CurrentActiveCamera.cullingMask |= mask;
+            CurrentActiveCamera.cullingMask = mask;
         }
 
         /// <summary>
         /// 重置相机Mask层级
         /// </summary>
-        private void ResetCameraMask()
+        private static int ResetCameraMask()
         {
-            // 重置层级
-            CurrentActiveCamera.cullingMask = 0;
-            var mask = 0;
-            foreach (var preLayer in preLayers)
-            {
-                mask |= preLayer;
-            }
-
-            CurrentActiveCamera.cullingMask = mask;
+            var mask= LayerGeter.GetPreBitLayer();
+            // TODO：暂时写所有怪物，后续优化
+            mask |= LayerGeter.GetMonsterBitLayer();
+            
+            return mask;
         }
         
         /// <summary>
@@ -289,6 +243,8 @@ namespace GameHotUpdate.Battle.BattlePoint
 
         public void Dispose()
         {
+            pointInfos.Clear();
+            pointInfos = null;
             ServiceLocator.Get<IBattleInputHandler>().OnDrag -= OnDrag;
         }
     }

@@ -1,28 +1,6 @@
 {
   "$type": "GameHotUpdate.Tasks.TaskDataCollection, Assembly-CSharp-Game-HotUpdate",
   "keyToValueMap": {
-    "$type": "System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[GameHotUpdate.Tasks.TaskData, Assembly-CSharp-Game-HotUpdate]], mscorlib",
-    "1_1": {
-      "$type": "GameHotUpdate.Tasks.TaskData, Assembly-CSharp-Game-HotUpdate",
-      "currentTaskId": "1_1",
-      "currentPro": 0,
-      "isCompleted": false,
-      "isTracking": false,
-      "CurrentTaskId": "1_1",
-      "CurrentPro": 0,
-      "IsCompleted": false,
-      "IsTracking": false
-    },
-    "2_1": {
-      "$type": "GameHotUpdate.Tasks.TaskData, Assembly-CSharp-Game-HotUpdate",
-      "currentTaskId": "2_1",
-      "currentPro": 0,
-      "isCompleted": false,
-      "isTracking": true,
-      "CurrentTaskId": "2_1",
-      "CurrentPro": 0,
-      "IsCompleted": false,
-      "IsTracking": true
-    }
+    "$type": "System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[GameHotUpdate.Tasks.TaskData, Assembly-CSharp-Game-HotUpdate]], mscorlib"
   }
 }

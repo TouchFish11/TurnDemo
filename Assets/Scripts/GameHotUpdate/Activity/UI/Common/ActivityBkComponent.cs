@@ -1,9 +1,3 @@
-using System;
-using Core.Config;
-using Core.Loader;
-using Core.Log;
-using Core.Reflection;
-using Core.Service;
 using Core.UI;
 using GameHotUpdate.Activity.UI.Base;
 using UnityEngine;

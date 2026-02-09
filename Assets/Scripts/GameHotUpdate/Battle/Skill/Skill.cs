@@ -13,8 +13,8 @@ using Game.Battle.TargetSelect;
 using Game.Property;
 using Game.UI.Battle;
 using Game.VFX;
+using GameHotUpdate.Battle.UI.Base;
 using GameHotUpdate.Property;
-using GameHotUpdate.UI.Battle.Base;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Skill

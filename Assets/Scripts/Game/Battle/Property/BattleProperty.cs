@@ -34,6 +34,7 @@ namespace Game.Battle.Property
             this.id = id;
         }
 
+        // 静态属性
         public int BaseHp => baseHp;
         public int BaseAtk => baseAtk;
         public int BaseDef => baseDef;
@@ -41,13 +42,14 @@ namespace Game.Battle.Property
         public int BaseCrit => baseCrit;
         public int BaseCritDmg => baseCritDmg;
 
+        // 动态属性
         public int CurrentHp { get => currentHp; set => currentHp = value; }
         public int MaxHp { get => maxHp; set => maxHp = value; }
         public int TotalAtk { get => totalAtk; set => totalAtk = value; }
         public int TotalDef { get => totalDef; set => totalDef = value; }
         public int CurrentSpeed { get => currentSpeed; set => currentSpeed = value; }
         public int TotalCrit { get => totalCrit; set => totalCrit = value; }
-        public int TotalCritDmg { get => totalCritDmg; set => totalCritDmg = Mathf.Clamp(value, default, value); }
-        public int CurrentShield { get => currentShield; set => currentShield = Mathf.Clamp(value, default, value); }
+        public int TotalCritDmg { get => totalCritDmg; set => totalCritDmg = Mathf.Clamp(value, 0, value); }
+        public int CurrentShield { get => currentShield; set => currentShield = Mathf.Clamp(value, 0, value); }
     }
 }

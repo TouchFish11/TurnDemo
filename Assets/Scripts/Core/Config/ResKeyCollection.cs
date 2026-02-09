@@ -60,6 +60,7 @@ namespace Core.Config
 		public static string xArrowheadInwards128 => "xArrowheadInwards128";
 		public static string Icon_Common_Battle => "Icon_Common_Battle";
 		public static string Icon_Common_Check => "Icon_Common_Check";
+		public static string Icon_Common_Shield => "Icon_Common_Shield";
 		public static string bg_swhirl_yellow => "bg_swhirl_yellow";
 		public static string Item_EmbersOfGenesis => "Item_EmbersOfGenesis";
 		public static string Item_OriginalEngraving => "Item_OriginalEngraving";
@@ -113,16 +114,17 @@ namespace Core.Config
 		public static string BackView => "BackView";
 		public static string BattleMessageUI => "BattleMessageUI";
 		public static string BattleView => "BattleView";
-		public static string DamageTextUI => "DamageTextUI";
 		public static string SelectMarkerUI => "SelectMarkerUI";
 		public static string ActionGridUI => "ActionGridUI";
 		public static string WaitingActUI => "WaitingActUI";
 		public static string StatusEffectTextUI => "StatusEffectTextUI";
 		public static string StatusGridUI => "StatusGridUI";
+		public static string DamageTextUI => "DamageTextUI";
+		public static string HealTextUI => "HealTextUI";
+		public static string ShieldTextUI => "ShieldTextUI";
 		public static string MonsterStateUI => "MonsterStateUI";
 		public static string WeaknessUI => "WeaknessUI";
 		public static string BattlePointUI => "BattlePointUI";
-		public static string HealTextUI => "HealTextUI";
 		public static string RoleStateUI => "RoleStateUI";
 		public static string SkillKeyUI => "SkillKeyUI";
 		public static string BeginView => "BeginView";

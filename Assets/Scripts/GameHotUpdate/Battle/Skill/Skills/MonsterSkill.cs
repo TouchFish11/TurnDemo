@@ -5,7 +5,7 @@ using Game.Battle.Objects;
 using Game.Battle.Skill.Interface;
 using Game.Battle.Status;
 using Game.Battle.TargetSelect;
-using GameHotUpdate.UI.Battle.Base;
+using GameHotUpdate.Battle.UI.Base;
 
 namespace GameHotUpdate.Battle.Skill.Skills
 {
@@ -46,8 +46,8 @@ namespace GameHotUpdate.Battle.Skill.Skills
             ServiceLocator.Get<ITargetSelectManager>().InActiveSelectTarget();
             
             // 获取战斗UI控制器，重置怪物相关UI（清空之前的选中/操作状态）
-            BattleController controller = ServiceLocator.Get<IUIManager>().GetController<BattleController>();
-            controller.UiInitializer.InitMonsterUI(null);
+            var controller = ServiceLocator.Get<IUIManager>().GetController<BattleController>();
+            controller.MonsterStateUIManager.InActiveMonsterUIs();
             
             // 清除所有目标选中标记（UI层面隐藏选中框）
             controller.BattleUiManager.ClearSelectMarker();

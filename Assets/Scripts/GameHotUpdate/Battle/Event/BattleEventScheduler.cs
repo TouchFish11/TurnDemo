@@ -1,22 +1,33 @@
+using System;
 using System.Collections;
+using Core.DataPersistence.Binary;
 using Core.Log;
 using Core.Reflection;
 using Core.Service;
 using Core.Singleton;
 using Core.UI;
+using Game.Battle;
 using Game.Battle.Context;
 using Game.Battle.Event;
 using Game.Battle.Objects;
+using Game.Battle.Skill.Enum;
 using Game.Battle.TargetSelect;
 using Game.UI.Battle.SkillKey.Provider;
 using GameHotUpdate.Battle.Event.Turn;
+using GameHotUpdate.Battle.Event.UI;
+using GameHotUpdate.Battle.UI.Base;
+using GameHotUpdate.Battle.UI.SkillKey.Provider;
+using GameHotUpdate.Cameras;
+using GameHotUpdate.Layer;
 using GameHotUpdate.Objects;
-using GameHotUpdate.UI.Battle.Base;
-using GameHotUpdate.UI.Battle.SkillKey.Provider;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Event
 {
+    /// <summary>
+    /// 战斗事件逻辑调度器
+    /// 监听战斗事件，执行其它模块的统一调用
+    /// </summary>
     public class BattleEventScheduler : SingletonAutoMono<BattleEventScheduler>, IBattleEventScheduler
     {
         private IBattleContext _context;
@@ -37,9 +48,51 @@ namespace GameHotUpdate.Battle.Event
         
         private void ListenerBattleEvent()
         {
+            // 监听回合开始事件
             _context.GetEventBus().AddListener<TurnStartEvent>(TurnStartEventScheduler);
+            // 监听角色技能选择事件
+            _context.GetEventBus().AddListener<SelectSkillEvent>(SelectSkillEventScheduler);
         }
 
+        /// <summary>
+        /// 终结技释放前调度逻辑
+        /// </summary>
+        /// <param name="caster"></param>
+        /// <param name="skillInfo"></param>
+        public IEnumerator PreUltimateCastDispatch(IBattleEntityObject caster, SkillInfo skillInfo)
+        {
+            // 先执行战斗点位置变化
+            _context.GetProxy().UpdateMonsterPos(caster);
+            // 更新相机显示
+            _context.GetProxy().UpdateCamera(caster);
+            // 玩家回合：激活目标选择功能
+            ServiceLocator.Get<ITargetSelectManager>().ActiveSelectTarget();
+            
+            // 更新UI
+            var controller = ServiceLocator.Get<IUIManager>().GetController<BattleController>();
+            
+            // 隐藏行动提示
+            controller.BattleUiManager.SetActTipActive(E_ActTipType.Hide);
+            
+            // 激活怪物血量UI显示
+            controller.MonsterStateUIManager.ActiveMonsterUIs();
+
+            // 显示终结技立绘
+            yield return controller.BattleUiManager.ShowPaiting((caster as PlayerObject)?.RoleInfo, skillInfo);
+
+            // 获取终结技技能按键UI数据提供器
+            var provider = ServiceLocator.Get<IFactoryManager>()
+                .GetFactory<ISkillKeyUIDataProviderFactory, SkillKeyUIDataProviderFactory>()
+                .GetCastSkillCondition<UltimateSkillKeyUIDataProvider>();
+            
+            // 根据数据更新玩家操作按键，按键触发技能选择事件
+            controller.BattleUiManager.UpdateOperator(caster, provider);
+        }
+        
+        /// <summary>
+        /// 回合开始事件调度逻辑
+        /// </summary>
+        /// <param name="turnStartEvent"></param>
         private void TurnStartEventScheduler(TurnStartEvent turnStartEvent)
         {
             if (turnStartEvent.CurrentBattleEntity == null)
@@ -56,14 +109,13 @@ namespace GameHotUpdate.Battle.Event
                 _context.GetProxy().UpdateCamera(turnStartEvent.CurrentBattleEntity);
             }
             
-            // 更新UI
             var controller = ServiceLocator.Get<IUIManager>().GetController<BattleController>();
-            controller.UiInitializer.InitMonsterUI(turnStartEvent.Context.GetAliveMonsterEntitys());
-            
             switch (turnStartEvent.CurrentBattleEntity)
             {
                 case PlayerObject:
                 {
+                    // 角色行动才激活怪物UI显示
+                    controller.MonsterStateUIManager.ActiveMonsterUIs();
                     // 玩家回合：激活目标选择功能
                     ServiceLocator.Get<ITargetSelectManager>().ActiveSelectTarget();
                     // 隐藏行动提示
@@ -91,36 +143,54 @@ namespace GameHotUpdate.Battle.Event
         }
 
         /// <summary>
-        /// 终结技释放前调度逻辑
+        /// 角色技能选择事件调度逻辑
         /// </summary>
-        /// <param name="caster"></param>
-        /// <param name="skillInfo"></param>
-        public IEnumerator PreUltimateCastDispatch(IBattleEntityObject caster, SkillInfo skillInfo)
+        /// <param name="selectSkillEvent"></param>
+        private void SelectSkillEventScheduler(SelectSkillEvent selectSkillEvent)
         {
-            // 先执行战斗点位置变化
-            _context.GetProxy().UpdateMonsterPos(caster);
-            // 更新相机显示
-            _context.GetProxy().UpdateCamera(caster);
-            // 玩家回合：激活目标选择功能
-            ServiceLocator.Get<ITargetSelectManager>().ActiveSelectTarget();
+            if (selectSkillEvent.Caster is not PlayerObject playerObject)
+            {
+                return;
+            }
             
-            // 更新UI
-            var controller = ServiceLocator.Get<IUIManager>().GetController<BattleController>();
-            
-            // 隐藏行动提示
-            controller.BattleUiManager.SetActTipActive(E_ActTipType.Hide);
-            // 更新怪物血量UI
-            controller.UiInitializer.InitMonsterUI(caster.Context.GetAliveMonsterEntitys());
-            // 显示终结技立绘
-            yield return controller.BattleUiManager.ShowPaiting((caster as PlayerObject)?.RoleInfo, skillInfo);
-
-            // 获取终结技技能按键UI数据提供器
-            var provider = ServiceLocator.Get<IFactoryManager>()
-                .GetFactory<ISkillKeyUIDataProviderFactory, SkillKeyUIDataProviderFactory>()
-                .GetCastSkillCondition<UltimateSkillKeyUIDataProvider>();
-            
-            // 根据数据更新玩家操作按键，按键触发技能选择事件
-            controller.BattleUiManager.UpdateOperator(caster, provider);
+            // 读取技能信息
+            var skillInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<SkillInfoContainer>(EConfigLoadType.Excel)
+                .dataDic[selectSkillEvent.SkillId];
+            // 获取技能目标类型
+            var skillTargetType = (E_SkillTargetType)skillInfo.f_SkillTargetType;
+            switch (skillTargetType)
+            {
+                case E_SkillTargetType.None:
+                    LogManager.LogError($"{nameof(BattleEventScheduler)}.{nameof(SelectSkillEventScheduler)}：无效的目标类型，{skillTargetType}");
+                    break;
+                case E_SkillTargetType.Friend:
+                    // 更新相机看向玩家
+                    // TODO：计算相机世界坐标的位置和看向，数据暂时写死；且终结技会复用
+                    var worldPos = new Vector3(0, 1, 0.5f);
+                    var rotation = Quaternion.Euler(0, 180, 0);
+                    // 获取遮罩
+                    var mask = LayerGeter.GetRoleBitLayer() | LayerGeter.GetPreBitLayer();
+                    // 创建相机
+                    ServiceLocator.Get<IBattleCameraManager>().CreateCamera(null, worldPos, rotation, mask);
+                    break;
+                // TODO：存在bug，后续修复
+                // case E_SkillTargetType.Enemy:
+                //     // 更新相机看向怪物
+                //     var roleCameraParent = ServiceLocator.Get<IBattlePointProxy>().BattlePoint
+                //         .GetRoleCameraTransByIndex(playerObject.EntityPosIndex);
+                //     // 设置Mask
+                //     var mask2 = LayerGeter.GetPreBitLayer() | LayerGeter.GetMonsterBitLayer();
+                //     // 根据当前玩家位置索引，只渲染符合的角色
+                //     var roleLayers = LayerGeter.GetRoleLayers();
+                //     for (var i = playerObject.EntityPosIndex; i < roleLayers.Length; i++)
+                //     {
+                //         mask2 |= 1 << roleLayers[i];
+                //     }
+                //     ServiceLocator.Get<IBattleCameraManager>().CreateCamera(roleCameraParent, Vector3.zero, Quaternion.identity, mask2);
+                //     break;
+                default:
+                    return;
+            }
         }
     }
 }

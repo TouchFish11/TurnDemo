@@ -1,16 +1,22 @@
 namespace Game.Battle.Skill.Enum
 {
     /// <summary>
-    /// ����Ŀ������
+    /// 技能目标类型
     /// </summary>
     public enum E_SkillTargetType : byte
     {
         /// <summary>
-        /// �ѷ�
+        /// 无
+        /// </summary>
+        None,
+        
+        /// <summary>
+        /// 友方
         /// </summary>
         Friend = 1,
+        
         /// <summary>
-        /// �з�
+        /// 敌方
         /// </summary>
         Enemy,
     }

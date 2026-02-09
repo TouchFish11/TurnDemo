@@ -7,7 +7,7 @@ using GameHotUpdate.Battle.Event.General;
 namespace GameHotUpdate.Property
 {
     /// <summary>
-    /// ����������
+    /// 角色属性组件
     /// </summary>
     [ComponentId(typeof(PlayerPropertyComponent))]
     public class PlayerPropertyComponent : PropertyComponent

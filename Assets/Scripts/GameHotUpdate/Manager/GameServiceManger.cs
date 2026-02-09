@@ -9,6 +9,7 @@ using Game.Manager;
 using Game.Objects;
 using Game.Tasks;
 using Game.VFX;
+using GameHotUpdate.Cameras;
 using GameHotUpdate.Dialogue;
 using GameHotUpdate.FloatingText;
 using GameHotUpdate.Input;
@@ -34,6 +35,7 @@ namespace GameHotUpdate.Manager
             ServiceLocator.Register<IPlayerManager>(PlayerManager.Instance);
             ServiceLocator.Register<IVFXManager>(VFX.VFXManager.Instance);
             ServiceLocator.Register<IBattleManager>(BattleManager.Instance);
+            ServiceLocator.Register<IBattleCameraManager>(BattleCameraManager.Instance);
         }
     }
 }

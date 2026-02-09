@@ -94,13 +94,13 @@ MonoBehaviour:
       size: 1363
       name: ItemInfo.bytes
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\MonsterInfo.bytes
-      size: 433
+      size: 441
       name: MonsterInfo.bytes
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\NpcInfo.bytes
       size: 150
       name: NpcInfo.bytes
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\RoleInfo.bytes
-      size: 391
+      size: 393
       name: RoleInfo.bytes
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\SkillInfo.bytes
       size: 1097
@@ -120,7 +120,7 @@ MonoBehaviour:
   - assetBundleName: hotupdate
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\HotUpdate\Assembly-CSharp-Game-HotUpdate.dll.bytes
-      size: 338432
+      size: 348672
       name: Assembly-CSharp-Game-HotUpdate.dll.bytes
   - assetBundleName: material
     assetInfos:
@@ -167,10 +167,10 @@ MonoBehaviour:
       size: 8997
       name: BeginScene.unity
     - assetPath: Assets\Editor\ArtRes\Scene\LevelScene.unity
-      size: 68494
+      size: 75953
       name: LevelScene.unity
     - assetPath: Assets\Editor\ArtRes\Scene\MainScene.unity
-      size: 52564
+      size: 49952
       name: MainScene.unity
   - assetBundleName: spriteatlas
     assetInfos:
@@ -239,6 +239,9 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\Texture\Icon\Common\Icon_Common_Check.png
       size: 12029
       name: Icon_Common_Check.png
+    - assetPath: Assets\Editor\ArtRes\Texture\Icon\Common\Icon_Common_Shield.png
+      size: 15224
+      name: Icon_Common_Shield.png
     - assetPath: Assets\Editor\ArtRes\Texture\Icon\Item\bg_swhirl_yellow.png
       size: 171394
       name: bg_swhirl_yellow.png
@@ -400,9 +403,6 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\UI\Battle\BattleView.prefab
       size: 91822
       name: BattleView.prefab
-    - assetPath: Assets\Editor\ArtRes\UI\Battle\DamageTextUI.prefab
-      size: 9992
-      name: DamageTextUI.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Battle\SelectMarkerUI.prefab
       size: 16699
       name: SelectMarkerUI.prefab
@@ -418,8 +418,17 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\UI\Battle\Buff\StatusGridUI.prefab
       size: 10556
       name: StatusGridUI.prefab
+    - assetPath: Assets\Editor\ArtRes\UI\Battle\Float\DamageTextUI.prefab
+      size: 10414
+      name: DamageTextUI.prefab
+    - assetPath: Assets\Editor\ArtRes\UI\Battle\Float\HealTextUI.prefab
+      size: 9907
+      name: HealTextUI.prefab
+    - assetPath: Assets\Editor\ArtRes\UI\Battle\Float\ShieldTextUI.prefab
+      size: 9881
+      name: ShieldTextUI.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Battle\Monster\MonsterStateUI.prefab
-      size: 17702
+      size: 17687
       name: MonsterStateUI.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Battle\Monster\WeaknessUI.prefab
       size: 2166
@@ -427,11 +436,8 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\UI\Battle\Role\BattlePointUI.prefab
       size: 4466
       name: BattlePointUI.prefab
-    - assetPath: Assets\Editor\ArtRes\UI\Battle\Role\HealTextUI.prefab
-      size: 6806
-      name: HealTextUI.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Battle\Role\RoleStateUI.prefab
-      size: 33503
+      size: 33504
       name: RoleStateUI.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Battle\Role\SkillKeyUI.prefab
       size: 8752

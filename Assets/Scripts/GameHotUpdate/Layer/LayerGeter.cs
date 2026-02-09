@@ -1,3 +1,4 @@
+using Core.Log;
 using UnityEngine;
 
 namespace GameHotUpdate.Layer
@@ -7,6 +8,50 @@ namespace GameHotUpdate.Layer
     /// </summary>
     public static class LayerGeter
     {
+        // 预先定义的层级数组
+        private static readonly int[] preLayers =
+        {
+            LayerMask.NameToLayer("Environment"),
+            LayerMask.NameToLayer("VFX"),
+        };
+        
+        // 玩家层级数组
+        private static readonly int[] roleLayers = {
+            LayerMask.NameToLayer("PlayerObject1"),
+            LayerMask.NameToLayer("PlayerObject2"),
+            LayerMask.NameToLayer("PlayerObject3"),
+            LayerMask.NameToLayer("PlayerObject4")
+        };
+        
+        // 怪物层级数据
+        private static readonly int[] monsterLayers = {
+            LayerMask.NameToLayer("MonsterObject1"),
+            LayerMask.NameToLayer("MonsterObject2"),
+            LayerMask.NameToLayer("MonsterObject3"),
+            LayerMask.NameToLayer("MonsterObject4"),
+            LayerMask.NameToLayer("MonsterObject5"),
+        };
+
+        public static int[] GetRoleLayers()
+        {
+            return roleLayers;
+        }
+
+        /// <summary>
+        /// 获取预定义的mask
+        /// </summary>
+        /// <returns></returns>
+        public static int GetPreBitLayer()
+        {
+            var mask = 0;
+            foreach (var layer in preLayers)
+            {
+                mask |= 1 << layer;
+            }
+
+            return mask;
+        }
+        
         /// <summary>
         /// 获取角色位运算后的层级
         /// </summary>
@@ -14,11 +59,10 @@ namespace GameHotUpdate.Layer
         public static int GetRoleBitLayer()
         {
             var mask = 0;
-
-            mask |= GetBitLayer("PlayerObject1");
-            mask |= GetBitLayer("PlayerObject2");
-            mask |= GetBitLayer("PlayerObject3");
-            mask |= GetBitLayer("PlayerObject4");
+            foreach (var roleLayer in roleLayers)
+            {
+                mask |= 1 << roleLayer;
+            }
 
             return mask;
         }
@@ -29,7 +73,13 @@ namespace GameHotUpdate.Layer
         /// <returns></returns>
         public static int GetMonsterBitLayer()
         {
-            return GetBitLayer("MonsterObject");
+            var mask = 0;
+            foreach (var monsterLayer in monsterLayers)
+            {
+                mask |= 1 << monsterLayer;
+            }
+
+            return mask;
         }
         
         /// <summary>
@@ -57,6 +107,21 @@ namespace GameHotUpdate.Layer
 
             return mask;
         }
+        
+        /// <summary>
+        /// 获取指定角色层级
+        /// </summary>
+        /// <returns></returns>
+        public static int GetRoleLayerByIndex(int index)
+        {
+            if (index < roleLayers.Length)
+            {
+                return roleLayers[index];
+            }
+            
+            LogManager.LogError($"{nameof(LayerGeter)}.{nameof(GetRoleLayerByIndex)}：索引越界，当前索引：{index}");
+            return -1;
+        }
 
         /// <summary>
         /// 获取怪物层级
@@ -65,6 +130,21 @@ namespace GameHotUpdate.Layer
         public static int GetMonsterLayer()
         {
             return GetBitLayer("MonsterObject");
+        }
+        
+        /// <summary>
+        /// 获取指定怪物层级
+        /// </summary>
+        /// <returns></returns>
+        public static int GetMonsterLayerByIndex(int index)
+        {
+            if (index < monsterLayers.Length)
+            {
+                return monsterLayers[index];
+            }
+            
+            LogManager.LogError($"{nameof(LayerGeter)}.{nameof(GetMonsterLayerByIndex)}：索引越界，当前索引：{index}");
+            return -1;
         }
         
         /// <summary>

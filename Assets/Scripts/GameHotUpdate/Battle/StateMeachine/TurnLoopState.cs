@@ -10,11 +10,11 @@ using Game.Battle.Objects;
 using Game.Battle.Turn;
 using GameHotUpdate.Battle.Event.Turn;
 using GameHotUpdate.Battle.Event.UI;
+using GameHotUpdate.Battle.UI.Base;
 using GameHotUpdate.Command;
 using GameHotUpdate.Condition;
 using GameHotUpdate.Objects;
 using GameHotUpdate.Property;
-using GameHotUpdate.UI.Battle.Base;
 
 namespace GameHotUpdate.Battle.StateMeachine
 {

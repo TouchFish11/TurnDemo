@@ -6,6 +6,7 @@ using Game.Battle.Damage;
 using Game.Battle.Enum;
 using Game.Battle.Objects;
 using Game.Objects;
+using GameHotUpdate.Battle.Event.General;
 using GameHotUpdate.Battle.ResponsibilityChain;
 using GameHotUpdate.Objects.Battle;
 using GameHotUpdate.Property;
@@ -131,9 +132,26 @@ namespace GameHotUpdate.Objects
             ChangeState(EActPhase.SettlementBuff);
         }
         
-        public void TakeHeal(int value)
+        public void TakeHeal(int healAmount)
         {
-            
+            var propertyComponent = this.GetComponent<PropertyComponent>();
+            var currentHp = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentHp);
+            propertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentHp, currentHp + healAmount);
+            // 触发应用治疗事件
+            Context.GetEventBus().TriggerEvent(new ApplyHealEvent(Context, this, healAmount));
+        }
+
+        /// <summary>
+        /// 提供护盾
+        /// </summary>
+        /// <param name="shieldAmount">护盾量</param>
+        public void TakeSheild(int shieldAmount)
+        {
+            var propertyComponent = this.GetComponent<PropertyComponent>();
+            var currentShield = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentShield);
+            propertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentShield, currentShield + shieldAmount);
+            // 触发应用治疗事件
+            Context.GetEventBus().TriggerEvent(new ApplyShieldEvent(Context, this, shieldAmount));
         }
 
         public abstract void CastSkill(int skillId);

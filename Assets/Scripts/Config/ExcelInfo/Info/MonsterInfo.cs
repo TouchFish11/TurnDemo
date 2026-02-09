@@ -14,4 +14,6 @@ public class MonsterInfo
 	public int f_baseToughness;
 	public string f_weaknesses;
 	public int f_dmgTextYOffset;
+	public int f_selMarkerYOffset;
+	public int f_bloodUiYOffset;
 }

@@ -535,7 +535,7 @@ GameObject:
   - component: {fileID: 2196240913021137398}
   - component: {fileID: 3439921051613028849}
   m_Layer: 5
-  m_Name: Image
+  m_Name: imgBot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

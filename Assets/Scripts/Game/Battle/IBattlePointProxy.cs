@@ -31,14 +31,7 @@ namespace Game.Battle
         void UpdateCamera(IBattleEntityObject battleEntity);
 
         void Dispose();
-
-        /// <summary>
-        /// 获取角色层级
-        /// </summary>
-        /// <param name="index">创建时的索引</param>
-        /// <returns></returns>
-        int GetRoleLayer(int index);
-
+        
         /// <summary>
         /// 更新怪物位置
         /// </summary>

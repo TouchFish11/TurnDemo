@@ -1,90 +1,90 @@
 {
-    "keys": [
-        "animation.assetbundle",
-        "animator.assetbundle",
-        "camera.assetbundle",
-        "gameconfig.assetbundle",
-        "hotupdate.assetbundle",
-        "material.assetbundle",
-        "mesh.assetbundle",
-        "PC.assetbundle",
-        "prefab.assetbundle",
-        "scene.assetbundle",
-        "spriteatlas.assetbundle",
-        "texture.assetbundle",
-        "ui.assetbundle",
-        "vfx.assetbundle"
-    ],
-    "values": [
-        {
-            "packageName": "animation.assetbundle",
-            "packageSize": 903567,
-            "packageMD5": "5ba88d324b258583f38312521954d391"
-        },
-        {
-            "packageName": "animator.assetbundle",
-            "packageSize": 186764,
-            "packageMD5": "c86405e01a4fa92de00a5efad7fd9c90"
-        },
-        {
-            "packageName": "camera.assetbundle",
-            "packageSize": 3155,
-            "packageMD5": "50d998c62497ebfc42f4d98b27c03a59"
-        },
-        {
-            "packageName": "gameconfig.assetbundle",
-            "packageSize": 6660,
-            "packageMD5": "40ec7e3ac22d2c5b49c922ac65e8fe36"
-        },
-        {
-            "packageName": "hotupdate.assetbundle",
-            "packageSize": 164665,
-            "packageMD5": "4c8f46576cc4db5c6a5469a1ff4ecb31"
-        },
-        {
-            "packageName": "material.assetbundle",
-            "packageSize": 41582,
-            "packageMD5": "7985db3822793d4f1c04d88debbb350d"
-        },
-        {
-            "packageName": "mesh.assetbundle",
-            "packageSize": 22907,
-            "packageMD5": "b22e45d63066f3bfdf4c44f0de5e7c6d"
-        },
-        {
-            "packageName": "PC.assetbundle",
-            "packageSize": 1974,
-            "packageMD5": "a3ebaca455ccac7eb4d9a01591978f8f"
-        },
-        {
-            "packageName": "prefab.assetbundle",
-            "packageSize": 29026845,
-            "packageMD5": "269200dc7b8e8865b2e1f291360af5a6"
-        },
-        {
-            "packageName": "scene.assetbundle",
-            "packageSize": 14506206,
-            "packageMD5": "dc574becd84c4f6e93d3d2f872946e0d"
-        },
-        {
-            "packageName": "spriteatlas.assetbundle",
-            "packageSize": 4948496,
-            "packageMD5": "fdee488e6d8903ef783e407bc0390712"
-        },
-        {
-            "packageName": "texture.assetbundle",
-            "packageSize": 267022,
-            "packageMD5": "0f43938e63f5c52e9b5e9723e9bb908d"
-        },
-        {
-            "packageName": "ui.assetbundle",
-            "packageSize": 14260298,
-            "packageMD5": "f37e72804e32eb9e37287c5418e4cca2"
-        },
-        {
-            "packageName": "vfx.assetbundle",
-            "packageSize": 11048047,
-            "packageMD5": "3a423235976d14b4fdbcf069ba2c1790"
-        }
-    ]
+  "$type": "Core.AssetBundles.Update.Collection.ABPackageCollection, Assembly-CSharp-Core",
+  "keyToValueMap": {
+    "$type": "System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core]], mscorlib",
+    "animation.assetbundle": {
+      "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
+      "PackageName": "animation.assetbundle",
+      "PackageSize": 903567,
+      "PackageMd5": "5ba88d324b258583f38312521954d391"
+    },
+    "animator.assetbundle": {
+      "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
+      "PackageName": "animator.assetbundle",
+      "PackageSize": 186764,
+      "PackageMd5": "c86405e01a4fa92de00a5efad7fd9c90"
+    },
+    "camera.assetbundle": {
+      "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
+      "PackageName": "camera.assetbundle",
+      "PackageSize": 3155,
+      "PackageMd5": "50d998c62497ebfc42f4d98b27c03a59"
+    },
+    "gameconfig.assetbundle": {
+      "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
+      "PackageName": "gameconfig.assetbundle",
+      "PackageSize": 6665,
+      "PackageMd5": "6587339fc9db965205d251693a583674"
+    },
+    "hotupdate.assetbundle": {
+      "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
+      "PackageName": "hotupdate.assetbundle",
+      "PackageSize": 169361,
+      "PackageMd5": "3853fe75fcf68e69cbe0ec387010f794"
+    },
+    "material.assetbundle": {
+      "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
+      "PackageName": "material.assetbundle",
+      "PackageSize": 41582,
+      "PackageMd5": "7985db3822793d4f1c04d88debbb350d"
+    },
+    "mesh.assetbundle": {
+      "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
+      "PackageName": "mesh.assetbundle",
+      "PackageSize": 22907,
+      "PackageMd5": "b22e45d63066f3bfdf4c44f0de5e7c6d"
+    },
+    "PC.assetbundle": {
+      "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
+      "PackageName": "PC.assetbundle",
+      "PackageSize": 1974,
+      "PackageMd5": "696bcfb86401664f69db54cf5480f936"
+    },
+    "prefab.assetbundle": {
+      "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
+      "PackageName": "prefab.assetbundle",
+      "PackageSize": 29034314,
+      "PackageMd5": "08d3f83cfeda76d9e8caf03fb86c7259"
+    },
+    "scene.assetbundle": {
+      "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
+      "PackageName": "scene.assetbundle",
+      "PackageSize": 14517861,
+      "PackageMd5": "e09a7f42cdc68127b61f25badca44d80"
+    },
+    "spriteatlas.assetbundle": {
+      "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
+      "PackageName": "spriteatlas.assetbundle",
+      "PackageSize": 4952500,
+      "PackageMd5": "0317e36683d4b21743d5755c18eb7590"
+    },
+    "texture.assetbundle": {
+      "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
+      "PackageName": "texture.assetbundle",
+      "PackageSize": 267607,
+      "PackageMd5": "5fd7fc53ddf2fde5f9a6ae61d03a8945"
+    },
+    "ui.assetbundle": {
+      "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
+      "PackageName": "ui.assetbundle",
+      "PackageSize": 14284530,
+      "PackageMd5": "1041f0eaf4cf59bc946cffd5d4b676a5"
+    },
+    "vfx.assetbundle": {
+      "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
+      "PackageName": "vfx.assetbundle",
+      "PackageSize": 11048047,
+      "PackageMd5": "3a423235976d14b4fdbcf069ba2c1790"
+    }
+  }
 }
