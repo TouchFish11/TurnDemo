@@ -8,6 +8,8 @@ namespace GameHotUpdate.Cameras
     /// </summary>
     public interface IBattleCameraManager
     {
+        GameObject GameObject { get; }
+        
         /// <summary>
         /// 创建相机
         /// </summary>
@@ -26,5 +28,10 @@ namespace GameHotUpdate.Cameras
         /// <param name="localRot">本地/世界旋转</param>
         /// <returns></returns>
         Task<Camera> CreateCamera(Transform cameraTrans, Vector3 localPos, Quaternion localRot);
+
+        /// <summary>
+        /// 当前激活的相机
+        /// </summary>
+        Camera CurrentActiveCamera { get; }
     }
 }

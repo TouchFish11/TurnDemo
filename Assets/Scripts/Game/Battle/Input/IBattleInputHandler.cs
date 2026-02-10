@@ -36,5 +36,7 @@ namespace Game.Battle.Input
         /// </summary>
         /// <param name="context"></param>
         void Init(IBattleContext context);
+
+        event Action<bool> OnRebound;
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Core.DataPersistence.Binary;
 using Core.Log;
@@ -25,10 +26,9 @@ namespace GameHotUpdate.TargetSelect
         // 缓存筛选出的所有目标
         private List<IBattleEntityObject> _filterEntitys;
         // 已选中的范围目标列表（包含主目标及范围内的其他目标）
-        private readonly List<IBattleEntityObject> _selectedTargets = new List<IBattleEntityObject>();
+        private readonly List<IBattleEntityObject> _selectedTargets = new();
         // 当前选中的主目标（技能优先作用的核心目标）
         private IBattleEntityObject _mainTarget;
-        
         // 当前选中技能的配置信息
         private SkillInfo skillInfo;
         // 战斗上下文
@@ -37,7 +37,12 @@ namespace GameHotUpdate.TargetSelect
         private IBattleEntityObject caster;
         // 当前生效的目标选择策略（不同技能有不同的目标选择规则）
         private ITargetSelectStrategy currentSelectStrategy;
-
+        
+        /// <summary>
+        /// 主目标选择变化
+        /// </summary>
+        public event Action<IBattleEntityObject> OnSelectChanged;
+        
         /// <summary>
         /// 私有构造函数
         /// 单例模式：禁止外部实例化，通过 SingletonBase 的 Instance 属性获取实例
@@ -124,6 +129,7 @@ namespace GameHotUpdate.TargetSelect
                 return;
             }
             
+            OnSelectChanged?.Invoke(_mainTarget);
             LogManager.Log($"当前主目标：{_mainTarget}");
             // 基于主目标更新范围目标列表
             UpdateTargets();
@@ -260,6 +266,7 @@ namespace GameHotUpdate.TargetSelect
             if (mainIndex + 1 < _filterEntitys.Count)
             {
                 _mainTarget = _filterEntitys[++mainIndex];
+                OnSelectChanged?.Invoke(_mainTarget);
                 LogManager.Log($"当前主目标：{_mainTarget}");
                 // 切换后更新范围目标列表并同步UI
                 UpdateTargets();
@@ -293,6 +300,7 @@ namespace GameHotUpdate.TargetSelect
             if (mainIndex - 1 >= 0)
             {
                 _mainTarget = _filterEntitys[--mainIndex];
+                OnSelectChanged?.Invoke(_mainTarget);
                 LogManager.Log($"当前主目标：{_mainTarget}");
                 // 切换后更新范围目标列表并同步UI
                 UpdateTargets();

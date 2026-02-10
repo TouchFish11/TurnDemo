@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Game.Battle.Context;
 using Game.Battle.Objects;
 
@@ -12,11 +13,6 @@ namespace Game.Battle
         BattlePoint BattlePoint { get; }
 
         /// <summary>
-        /// 当前激活相机
-        /// </summary>
-        UnityEngine.Camera CurrentActiveCamera { get; }
-
-        /// <summary>
         /// 初始化战斗点对象
         /// </summary>
         /// <param name="ctx"></param>
@@ -28,8 +24,11 @@ namespace Game.Battle
         /// 传入行动的玩家或被攻击的玩家
         /// </summary>
         /// <param name="battleEntity">当前操作的玩家对象</param>
-        void UpdateCamera(IBattleEntityObject battleEntity);
+        Task UpdateCamera(IBattleEntityObject battleEntity);
 
+        /// <summary>
+        /// 销毁代理
+        /// </summary>
         void Dispose();
         
         /// <summary>

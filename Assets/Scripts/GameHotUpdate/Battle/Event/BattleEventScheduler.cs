@@ -6,6 +6,7 @@ using Core.Reflection;
 using Core.Service;
 using Core.Singleton;
 using Core.UI;
+using Core.Utility;
 using Game.Battle;
 using Game.Battle.Context;
 using Game.Battle.Event;
@@ -64,27 +65,21 @@ namespace GameHotUpdate.Battle.Event
             // 先执行战斗点位置变化
             _context.GetProxy().UpdateMonsterPos(caster);
             // 更新相机显示
-            _context.GetProxy().UpdateCamera(caster);
+            yield return TaskUtility.WaitForTask(_context.GetProxy().UpdateCamera(caster));
             // 玩家回合：激活目标选择功能
             ServiceLocator.Get<ITargetSelectManager>().ActiveSelectTarget();
-            
             // 更新UI
             var controller = ServiceLocator.Get<IUIManager>().GetController<BattleController>();
-            
             // 隐藏行动提示
             controller.BattleUiManager.SetActTipActive(E_ActTipType.Hide);
-            
             // 激活怪物血量UI显示
             controller.MonsterStateUIManager.ActiveMonsterUIs();
-
             // 显示终结技立绘
             yield return controller.BattleUiManager.ShowPaiting((caster as PlayerObject)?.RoleInfo, skillInfo);
-
             // 获取终结技技能按键UI数据提供器
             var provider = ServiceLocator.Get<IFactoryManager>()
                 .GetFactory<ISkillKeyUIDataProviderFactory, SkillKeyUIDataProviderFactory>()
                 .GetCastSkillCondition<UltimateSkillKeyUIDataProvider>();
-            
             // 根据数据更新玩家操作按键，按键触发技能选择事件
             controller.BattleUiManager.UpdateOperator(caster, provider);
         }
@@ -93,7 +88,7 @@ namespace GameHotUpdate.Battle.Event
         /// 回合开始事件调度逻辑
         /// </summary>
         /// <param name="turnStartEvent"></param>
-        private void TurnStartEventScheduler(TurnStartEvent turnStartEvent)
+        private async void TurnStartEventScheduler(TurnStartEvent turnStartEvent)
         {
             if (turnStartEvent.CurrentBattleEntity == null)
             {
@@ -106,7 +101,7 @@ namespace GameHotUpdate.Battle.Event
                 // 先执行战斗点位置变化
                 _context.GetProxy().UpdateMonsterPos(turnStartEvent.CurrentBattleEntity);
                 // 更新相机显示
-                _context.GetProxy().UpdateCamera(turnStartEvent.CurrentBattleEntity);
+                await _context.GetProxy().UpdateCamera(turnStartEvent.CurrentBattleEntity);
             }
             
             var controller = ServiceLocator.Get<IUIManager>().GetController<BattleController>();
@@ -173,21 +168,20 @@ namespace GameHotUpdate.Battle.Event
                     // 创建相机
                     ServiceLocator.Get<IBattleCameraManager>().CreateCamera(null, worldPos, rotation, mask);
                     break;
-                // TODO：存在bug，后续修复
-                // case E_SkillTargetType.Enemy:
-                //     // 更新相机看向怪物
-                //     var roleCameraParent = ServiceLocator.Get<IBattlePointProxy>().BattlePoint
-                //         .GetRoleCameraTransByIndex(playerObject.EntityPosIndex);
-                //     // 设置Mask
-                //     var mask2 = LayerGeter.GetPreBitLayer() | LayerGeter.GetMonsterBitLayer();
-                //     // 根据当前玩家位置索引，只渲染符合的角色
-                //     var roleLayers = LayerGeter.GetRoleLayers();
-                //     for (var i = playerObject.EntityPosIndex; i < roleLayers.Length; i++)
-                //     {
-                //         mask2 |= 1 << roleLayers[i];
-                //     }
-                //     ServiceLocator.Get<IBattleCameraManager>().CreateCamera(roleCameraParent, Vector3.zero, Quaternion.identity, mask2);
-                //     break;
+                case E_SkillTargetType.Enemy:
+                    // 更新相机看向怪物
+                    var roleCameraParent = ServiceLocator.Get<IBattlePointProxy>().BattlePoint
+                        .GetRoleCameraTransByIndex(playerObject.EntityPosIndex);
+                    // 设置Mask
+                    var mask2 = LayerGeter.GetPreBitLayer() | LayerGeter.GetMonsterBitLayer();
+                    // 根据当前玩家位置索引，只渲染符合的角色
+                    var roleLayers = LayerGeter.GetRoleLayers();
+                    for (var i = playerObject.EntityPosIndex; i < roleLayers.Length; i++)
+                    {
+                        mask2 |= 1 << roleLayers[i];
+                    }
+                    ServiceLocator.Get<IBattleCameraManager>().CreateCamera(roleCameraParent, Vector3.zero, Quaternion.identity, mask2);
+                    break;
                 default:
                     return;
             }

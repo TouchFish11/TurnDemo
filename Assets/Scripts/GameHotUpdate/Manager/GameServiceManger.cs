@@ -35,7 +35,6 @@ namespace GameHotUpdate.Manager
             ServiceLocator.Register<IPlayerManager>(PlayerManager.Instance);
             ServiceLocator.Register<IVFXManager>(VFX.VFXManager.Instance);
             ServiceLocator.Register<IBattleManager>(BattleManager.Instance);
-            ServiceLocator.Register<IBattleCameraManager>(BattleCameraManager.Instance);
         }
     }
 }

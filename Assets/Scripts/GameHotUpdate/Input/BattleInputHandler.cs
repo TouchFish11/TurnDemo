@@ -4,12 +4,12 @@ using Core.Log;
 using Core.Mono;
 using Core.Service;
 using Core.Singleton;
-using Game.Battle;
 using Game.Battle.Context;
 using Game.Battle.Input;
 using Game.Battle.Objects;
 using Game.Battle.Skill.Enum;
 using GameHotUpdate.Battle.Event.UI;
+using GameHotUpdate.Cameras;
 using GameHotUpdate.Layer;
 using GameHotUpdate.Objects;
 using UnityEngine;
@@ -29,15 +29,20 @@ namespace GameHotUpdate.Input
         // 是否处于拖拽状态（用于区分点击和拖拽行为）
         private bool _isDragging;
         // 拖拽阈值（超过该距离判定为拖拽，否则为点击）
-        private const float dragThreshold = 110f;
+        private const float dragThreshold = 50f;
+        // 激活拖拽的最小偏移
+        private const float activateThreshold = 4f;
         // 当前选中的技能ID（用于释放技能时匹配技能配置）
         private int skillId;
-        private IBattleContext _context;
-        private Camera _camera;
+        // 上一帧鼠标X
+        private float lastMouseX;          
+        // 累计偏移量
+        private float nowDeltaX;
+        
         private Action _OnLeftDrag;
         private Action _OnRightDrag;
         private Action<IBattleEntityObject> _OnSelectedObject;
-
+        
         /// <summary>
         /// 选中战斗实体对象的事件（如选中玩家/怪物作为技能目标）
         /// 事件参数：选中的战斗实体对象接口
@@ -95,23 +100,13 @@ namespace GameHotUpdate.Input
         /// 事件参数：拖拽X轴方向的偏移量（像素）
         /// </summary>
         public event Action<float> OnDrag;
-
-        public GameObject GameObject { get; private set; }
         
         /// <summary>
-        /// 初始化方法
-        /// 注册更新监听、订阅技能选择事件
+        /// 是否触发回弹
         /// </summary>
-        private void Awake()
-        {
-            GameObject = gameObject;
-            _context = ServiceLocator.Get<IBattleManager>().GetContext();
-        }
-        
-        private void Start()
-        {
-            _camera = Camera.main;
-        }
+        public event Action<bool> OnRebound;
+
+        public GameObject GameObject => this.gameObject;
         
         /// <summary>
         /// 初始化
@@ -143,7 +138,7 @@ namespace GameHotUpdate.Input
         {
             InputHandle();
         }
-
+        
         /// <summary>
         /// 核心输入处理逻辑
         /// 处理鼠标左键的按下、拖拽、抬起全生命周期逻辑
@@ -160,43 +155,52 @@ namespace GameHotUpdate.Input
             if (Mouse.current.leftButton.isPressed)
             {
                 // 未进入拖拽状态时，判断鼠标移动距离是否超过阈值，超过则标记为拖拽状态
-                if (!_isDragging && Vector2.Distance(UnityEngine.Input.mousePosition, _dragStartPosition) > dragThreshold)
+                if (!_isDragging && Vector2.Distance(UnityEngine.Input.mousePosition, _dragStartPosition) > activateThreshold)
                 {
+                    nowDeltaX = 0;
+                    lastMouseX = UnityEngine.Input.mousePosition.x;
                     _isDragging = true;
                 }
 
                 // 处于拖拽状态时，处理拖拽偏移逻辑
                 if (_isDragging)
                 {
-                    // 计算当前鼠标位置与起始位置的X轴偏移量
-                    var dragDeltaX = UnityEngine.Input.mousePosition.x - _dragStartPosition.x;
+                    // 1. 获取当前鼠标X，计算【本次帧内】的偏移增量（核心修正）
+                    float currentMouseX = UnityEngine.Input.mousePosition.x;
+                    float deltaX = currentMouseX - lastMouseX;
+                    lastMouseX = currentMouseX; // 更新上一帧鼠标X
+
+                    // 2. 累加帧内增量到总偏移
+                    nowDeltaX += deltaX;
+
                     // 触发拖拽中事件，传递X轴偏移量
-                    OnDrag?.Invoke(dragDeltaX);
+                    OnDrag?.Invoke(deltaX);
 
                     // 偏移量超过阈值时，触发左右拖拽事件并重置起始位置（避免重复触发）
-                    if (Mathf.Abs(dragDeltaX) > dragThreshold)
+                    if (Mathf.Abs(nowDeltaX) > dragThreshold)
                     {
                         // 向右拖拽：触发右拖拽事件
-                        if (dragDeltaX > 0)
+                        if (nowDeltaX > 0)
                         {
                             _OnRightDrag?.Invoke();
                         }
                         // 向左拖拽：触发左拖拽事件
-                        else if (dragDeltaX < 0)
+                        else if (nowDeltaX < 0)
                         {
                             _OnLeftDrag?.Invoke();
                         }
-                        // 重置拖拽起始位置，用于后续继续拖拽的偏移计算
-                        _dragStartPosition = UnityEngine.Input.mousePosition;
+
+                        nowDeltaX = 0;
                     }
                 }
             }
             
             if (Mouse.current.leftButton.wasReleasedThisFrame)
             {
-                // 若是拖曳中释放鼠标，则不处理
+                // 若是拖曳中释放鼠标，则回弹
                 if (_isDragging)
                 {
+                    OnRebound?.Invoke(true);
                     // 重置拖拽状态，结束本次拖拽
                     _isDragging = false;
                     return;
@@ -232,7 +236,7 @@ namespace GameHotUpdate.Input
                 }
                 
                 // 从鼠标屏幕位置发射射线，检测对应层级的战斗对象
-                if (Physics.Raycast(_context.GetProxy().CurrentActiveCamera.ScreenPointToRay(UnityEngine.Input.mousePosition), out var hitInfo, 500, layerMask))
+                if (Physics.Raycast(ServiceLocator.Get<IBattleCameraManager>().CurrentActiveCamera.ScreenPointToRay(UnityEngine.Input.mousePosition), out var hitInfo, 500, layerMask))
                 {
                     // 获取射线命中对象挂载的战斗对象组件
                     var currentMainTarget = hitInfo.collider.GetComponent<BattleObject>();

@@ -27,6 +27,7 @@ using GameHotUpdate.Battle.Event;
 using GameHotUpdate.Battle.Event.Turn;
 using GameHotUpdate.Battle.Object;
 using GameHotUpdate.Battle.Skill.Base;
+using GameHotUpdate.Cameras;
 using GameHotUpdate.Context;
 using GameHotUpdate.Input;
 using GameHotUpdate.Layer;
@@ -49,7 +50,7 @@ namespace GameHotUpdate.Manager
         private IBattleContext _context;
         
         // 怪物创建数量，测试（1~5）
-        private const int monsterCount = 3;
+        private const int monsterCount = 1;
         
         private BattleManager()
         {
@@ -77,6 +78,9 @@ namespace GameHotUpdate.Manager
             // 测试
             ServiceLocator.Register<IBattleEventScheduler>(BattleEventScheduler.Instance);
             ServiceLocator.Get<IBattleEventScheduler>().Init(context);
+            
+            //  IBattleCameraManager 依赖 IBattleInputHandler
+            ServiceLocator.Register<IBattleCameraManager>(BattleCameraManager.Instance);
         }
 
         /// <summary>
@@ -84,6 +88,7 @@ namespace GameHotUpdate.Manager
         /// </summary>
         private static void UnregisterManager()
         {
+            ServiceLocator.Unregister<IBattleCameraManager>();
             ServiceLocator.Unregister<ITargetSelectManager>();
             ServiceLocator.Unregister<IDamageCalcManager>();
             ServiceLocator.Unregister<ISkillManager>();
@@ -232,6 +237,7 @@ namespace GameHotUpdate.Manager
             _context.CleanupBattle();
             
             // 销毁战斗输入处理器、战斗点对象、战斗UI调度器
+            Object.Destroy(ServiceLocator.Get<IBattleCameraManager>().GameObject);
             Object.Destroy(ServiceLocator.Get<IBattleInputHandler>().GameObject);
             Object.Destroy(ServiceLocator.Get<IBattleUIScheduler>().GameObject);
             Object.Destroy(ServiceLocator.Get<IBattleEventScheduler>().GameObject);

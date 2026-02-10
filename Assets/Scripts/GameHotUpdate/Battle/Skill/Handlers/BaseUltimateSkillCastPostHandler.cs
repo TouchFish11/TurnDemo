@@ -3,6 +3,7 @@ using Core.Log;
 using Core.Reflection;
 using Core.Service;
 using Core.UI;
+using Core.Utility;
 using Game.Battle.Objects;
 using Game.Battle.Skill;
 using Game.Battle.Skill.Component;
@@ -65,7 +66,7 @@ namespace GameHotUpdate.Battle.Skill.Handlers
             // 更新怪物位置
             context.GetProxy().UpdateMonsterPos(currentEntity);
             // 切换战斗相机至当前玩家实体视角
-            context.GetProxy().UpdateCamera(currentEntity);
+            yield return TaskUtility.WaitForTask(context.GetProxy().UpdateCamera(currentEntity));
             
             // 获取玩家基础目标选择策略
             var strategy = ServiceLocator.Get<IFactoryManager>().

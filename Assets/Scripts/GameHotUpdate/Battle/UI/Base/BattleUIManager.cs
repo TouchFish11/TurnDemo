@@ -22,6 +22,7 @@ using GameHotUpdate.Battle.Event.Turn;
 using GameHotUpdate.Battle.UI.ActionLine;
 using GameHotUpdate.Battle.UI.FloatText;
 using GameHotUpdate.Battle.UI.Status;
+using GameHotUpdate.Cameras;
 using GameHotUpdate.Objects;
 using GameHotUpdate.Tasks;
 using GameHotUpdate.UI;
@@ -162,7 +163,7 @@ namespace GameHotUpdate.Battle.UI.Base
             var dmgTextOffset = GetDamageTextUIPos(damageResult.Target, damageTextXOffsetRange, damageTextYOffsetRange);
             
             // 将世界坐标转换为UI本地坐标并设置文本位置
-            if (UIUtility.WorldToLocalPointInRectangle(ServiceLocator.Get<IBattlePointProxy>().CurrentActiveCamera, UIManager.Instance.UICamera, _view.ViewObj.transform, damageTextUIWrapper.gameObject, damageResult.Target.GameObject.transform.position, dmgTextOffset))
+            if (UIUtility.WorldToLocalPointInRectangle(ServiceLocator.Get<IBattleCameraManager>().CurrentActiveCamera, UIManager.Instance.UICamera, _view.ViewObj.transform, damageTextUIWrapper.gameObject, damageResult.Target.GameObject.transform.position, dmgTextOffset))
             {
                 // 初始化伤害文本（元素颜色、伤害类型文本、最终伤害值）
                 damageTextUIWrapper.InitDamageText(((int)damageResult.ElementType).ToElementTypeColor(), GetDamgeTypeText(damageResult), damageResult.FinalDamage);
@@ -186,7 +187,7 @@ namespace GameHotUpdate.Battle.UI.Base
             var dmgTextOffset = GetDamageTextUIPos(target, damageTextXOffsetRange, damageTextYOffsetRange);
             
             // 将世界坐标转换为UI本地坐标并设置文本位置
-            if (UIUtility.WorldToLocalPointInRectangle(ServiceLocator.Get<IBattlePointProxy>().CurrentActiveCamera, UIManager.Instance.UICamera, _view.ViewObj.transform, shieldTextUI.gameObject, target.GameObject.transform.position, dmgTextOffset))
+            if (UIUtility.WorldToLocalPointInRectangle(ServiceLocator.Get<IBattleCameraManager>().CurrentActiveCamera, UIManager.Instance.UICamera, _view.ViewObj.transform, shieldTextUI.gameObject, target.GameObject.transform.position, dmgTextOffset))
             {
                 // 初始化护盾文本
                 shieldTextUI.InitshieldText(sheilAmount);
@@ -207,7 +208,7 @@ namespace GameHotUpdate.Battle.UI.Base
             var dmgTextOffset = GetDamageTextUIPos(target, damageTextXOffsetRange, damageTextYOffsetRange);
             
             // 将世界坐标转换为UI本地坐标并设置文本位置
-            if (UIUtility.WorldToLocalPointInRectangle(ServiceLocator.Get<IBattlePointProxy>().CurrentActiveCamera, UIManager.Instance.UICamera, _view.ViewObj.transform, healTextUI.gameObject, target.GameObject.transform.position, dmgTextOffset))
+            if (UIUtility.WorldToLocalPointInRectangle(ServiceLocator.Get<IBattleCameraManager>().CurrentActiveCamera, UIManager.Instance.UICamera, _view.ViewObj.transform, healTextUI.gameObject, target.GameObject.transform.position, dmgTextOffset))
             {
                 // 初始化治疗文本
                 healTextUI.InitHealText(healAmount);
@@ -242,7 +243,7 @@ namespace GameHotUpdate.Battle.UI.Base
             
                 // 计算状态文本显示位置（目标实体上方160像素）
                 if (UIUtility.WorldToLocalPointInRectangle(
-                        ServiceLocator.Get<IBattlePointProxy>().CurrentActiveCamera, 
+                        ServiceLocator.Get<IBattleCameraManager>().CurrentActiveCamera, 
                         ServiceLocator.Get<IUIManager>().UICamera,
                         _view.BuffTextArea, statusEffectTextUIWrapper.gameObject, 
                         newStatus.Owner.SubGameObject.transform.position, 

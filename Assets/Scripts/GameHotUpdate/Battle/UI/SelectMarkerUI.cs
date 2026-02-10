@@ -7,6 +7,7 @@ using Core.Utility;
 using Game.Battle;
 using Game.Battle.Objects;
 using Game.Battle.Skill.Enum;
+using GameHotUpdate.Cameras;
 using GameHotUpdate.Objects;
 using UnityEngine;
 using UnityEngine.UI;
@@ -131,7 +132,7 @@ namespace GameHotUpdate.Battle.UI
 
             // 世界坐标转UI坐标，将标记定位到目标位置上方50像素处
             UIUtility.WorldToLocalPointInRectangle(
-                ServiceLocator.Get<IBattlePointProxy>().CurrentActiveCamera,  // 战斗主相机
+                ServiceLocator.Get<IBattleCameraManager>().CurrentActiveCamera,  // 战斗主相机
                 ServiceLocator.Get<IUIManager>().UICamera,                    // UI相机
                 selectMarkerArea,                                             // UI父节点
                 gameObject,                                                    // 当前标记UI对象

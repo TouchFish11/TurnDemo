@@ -12,6 +12,7 @@ using Game.Battle.Objects;
 using Game.Battle.Toughness;
 using Game.Objects;
 using GameHotUpdate.Battle.Event.General;
+using GameHotUpdate.Cameras;
 using GameHotUpdate.Objects;
 using GameHotUpdate.Property;
 using GameHotUpdate.Tasks;
@@ -197,7 +198,7 @@ namespace GameHotUpdate.Battle.UI.MonsterStateUI
 
             // 将怪物世界坐标转换为UI本地坐标，并应用Y轴偏移，更新UI位置
             UIUtility.WorldToLocalPointInRectangle(
-                ServiceLocator.Get<IBattlePointProxy>().CurrentActiveCamera,  // 战斗主相机
+                ServiceLocator.Get<IBattleCameraManager>().CurrentActiveCamera,  // 战斗主相机
                 ServiceLocator.Get<IUIManager>().UICamera,                    // UI相机
                 monsterStateArea,                                             // UI父节点
                 gameObject,                                                   // 当前UI对象

@@ -6,7 +6,6 @@ using Core.Log;
 using Core.Service;
 using Game.Battle;
 using Game.Battle.Context;
-using Game.Battle.Input;
 using Game.Battle.Objects;
 using GameHotUpdate.Cameras;
 using GameHotUpdate.Layer;
@@ -20,21 +19,12 @@ namespace GameHotUpdate.Battle.BattlePoint
     /// </summary>
     public class BattlePointProxy : IBattlePointProxy
     {
-        // X轴旋转角度限制
-        private const float minXAngle = -3f;
-        private const float maxXAngle = 3f;
-        // 旋转叠加速度
-        private const float rotateAddSpeed = 5f;
-        // 旋转灵敏度
-        private const float rotateSpeed = 1.5f;
         // 怪物中心点x值
         private readonly float[] monstetCenterXs = { 6f, 4f, 2f, 0f };
         // 点信息列表
         private List<PointInfo> pointInfos = new();
         // 战斗上下文
         private IBattleContext context;
-        // 当前相机旋转角度
-        private float currentXAngle;
         // 当前怪物数量
         private int currentMonsterCount;
         
@@ -42,11 +32,6 @@ namespace GameHotUpdate.Battle.BattlePoint
         /// 场景战斗点
         /// </summary>
         public Game.Battle.BattlePoint BattlePoint { get; } = UnityEngine.Object.FindFirstObjectByType<Game.Battle.BattlePoint>();
-
-        /// <summary>
-        /// 当前激活相机
-        /// </summary>
-        public Camera CurrentActiveCamera { get; private set; }
 
         /// <summary>
         /// 初始化战斗点对象
@@ -68,8 +53,6 @@ namespace GameHotUpdate.Battle.BattlePoint
                 pointInfos.Add(pointInfo);
                 index++;
             }
-            
-            ServiceLocator.Get<IBattleInputHandler>().OnDrag += OnDrag;
         }
 
         /// <summary>
@@ -83,13 +66,13 @@ namespace GameHotUpdate.Battle.BattlePoint
             // 更新怪物之间的相对位置
             SortMonsterTrans();
         }
-        
+
         /// <summary>
         /// 更新相机
         /// 传入行动的玩家或被攻击的玩家
         /// </summary>
         /// <param name="battleEntity">当前操作的玩家对象</param>
-        public async void UpdateCamera(IBattleEntityObject battleEntity)
+        public async Task UpdateCamera(IBattleEntityObject battleEntity)
         {
             try
             {
@@ -98,11 +81,9 @@ namespace GameHotUpdate.Battle.BattlePoint
                     // 更新怪物位置
                     UpdateMonsterPos(battleEntity);
                     // 创建相机到指定位置点
-                    await CreateCameraAtPos(battleEntity.EntityPosIndex);
+                    var camera = await CreateCameraAtPos(battleEntity.EntityPosIndex);
                     // 更新相机Mask
-                    UpdateCameraMask(battleEntity.EntityPosIndex);
-                    // 初始化当前旋转角度为相机初始角度
-                    currentXAngle = 0;
+                    UpdateCameraMask(camera, battleEntity.EntityPosIndex);
                 }
             }
             catch (Exception e)
@@ -192,18 +173,19 @@ namespace GameHotUpdate.Battle.BattlePoint
         /// 创建相机到指定位置
         /// </summary>
         /// <param name="entityPosIndex"></param>
-        private async Task CreateCameraAtPos(int entityPosIndex)
+        private Task<Camera> CreateCameraAtPos(int entityPosIndex)
         {
             // 创建相机到指定位置点
             var cameraTrans = BattlePoint.GetRoleCameraTransByIndex(entityPosIndex);
-            CurrentActiveCamera = await ServiceLocator.Get<IBattleCameraManager>().CreateCamera(cameraTrans, Vector3.zero, Quaternion.identity);
+            return ServiceLocator.Get<IBattleCameraManager>().CreateCamera(cameraTrans, Vector3.zero, Quaternion.identity);
         }
 
         /// <summary>
         /// 更新相机Mask
         /// </summary>
+        /// <param name="CurrentActiveCamera"></param>
         /// <param name="currentPosIndex"></param>
-        private void UpdateCameraMask(int currentPosIndex)
+        private void UpdateCameraMask(Camera CurrentActiveCamera, int currentPosIndex)
         {
             var mask = ResetCameraMask();
             // 根据当前玩家位置索引，只渲染符合的角色
@@ -226,26 +208,11 @@ namespace GameHotUpdate.Battle.BattlePoint
             
             return mask;
         }
-        
-        /// <summary>
-        /// 滑动事件回调
-        /// </summary>
-        /// <param name="deltaX"></param>
-        private void OnDrag(float deltaX)
-        {
-            // 转换为旋转角度
-            currentXAngle += deltaX * rotateAddSpeed * Time.deltaTime;
-            currentXAngle = Mathf.Clamp(currentXAngle, minXAngle, maxXAngle);
-            // 应用旋转（使用欧拉角，直观且易控制）
-            var targetRot = Quaternion.Euler(0, currentXAngle, 0f);
-            CurrentActiveCamera.transform.localRotation = Quaternion.Slerp(CurrentActiveCamera.transform.localRotation, targetRot, Time.deltaTime * rotateSpeed);
-        }
 
         public void Dispose()
         {
             pointInfos.Clear();
             pointInfos = null;
-            ServiceLocator.Get<IBattleInputHandler>().OnDrag -= OnDrag;
         }
     }
 }
