@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
-using Core.Builder;
 using Core.Log;
+using Core.Tasks;
+using Core.Tasks.Extensions;
 using UnityEngine;
 
 namespace Core.AssetBundles.Management
@@ -18,21 +19,112 @@ namespace Core.AssetBundles.Management
         protected string loadPath;
         // AB包资源引用计数
         protected uint refCount;
+        // // AB包加载任务
+        // protected Task<bool> assetBundleLoadTask;
+        // // AB包卸载任务
+        // protected Task<bool> assetBundleUnloadTask;
+        
         // AB包加载任务
-        protected Task<bool> assetBundleLoadTask;
+        private AssetBundleCreateRequestTask _assetBundleCreateRequestTask;
         // AB包卸载任务
-        protected Task<bool> assetBundleUnloadTask;
+        private AssetBundleUnloadOperationTask _assetBundleUnloadTask;
 
         /// <summary>
         /// 包装载器
         /// </summary>
-        /// <param name="assetBundle"></param>
+        /// <param name="abName"></param>
+        /// <param name="path"></param>
         protected BundleWrapper(string abName, string path)
         {
             bundelName = abName;
             loadPath = path;
         }
+        
+        /// <summary>
+        /// 从文件异步加载AssetBundle
+        /// </summary>
+        /// <returns></returns>
+        public async Task LoadFromFileAsync()
+        {
+            // 正在异步加载，返回任务
+            if (_assetBundleCreateRequestTask != null)
+            {
+                return;
+            }
+            
+            // 已加载完成，直接返回，避免重复加载
+            if (assetBundle)
+            {
+                return;
+            }
+            
+            // 异步加载AB包
+            assetBundle = await AssetBundle.LoadFromFileAsync(loadPath).AsTask();
 
+            // // 正在异步加载，返回任务
+            // if (assetBundleLoadTask != null)
+            // {
+            //     return assetBundleLoadTask;
+            // }
+            //
+
+            //
+            // // 已加载完成，返回缓存
+            // if (assetBundle != null)
+            // {
+            //     return Task.FromResult(true);
+            // }
+            //
+            // TaskCompletionSource<bool> source = TaskSourceBuilder.CreateTCS<bool>();
+            // assetBundleLoadTask = source.Task;
+            // // 异步加载AB包
+            // AssetBundleCreateRequest abcr = AssetBundle.LoadFromFileAsync(loadPath);
+            // abcr.completed += (asyncOperation) =>
+            // {
+            //     assetBundle = abcr.assetBundle;
+            //     source.SetResult(assetBundle != null);
+            // };
+            //
+            // return assetBundleLoadTask;
+        }
+
+        /// <summary>
+        /// 异步卸载AssetBundle
+        /// </summary>
+        /// <param name="unloadAllLoadedObjects"></param>
+        /// <returns></returns>
+        public virtual async Task UnloadAsync(bool unloadAllLoadedObjects)
+        {
+            // 正在异步卸载，返回
+            if (_assetBundleUnloadTask != null)
+            {
+                return;
+            }
+
+            // 卸载完成返回
+            if (!assetBundle)
+            {
+                return;
+            }
+            
+            // 异步卸载AB包
+            await assetBundle.UnloadAsync(unloadAllLoadedObjects).AsTask();
+            // 卸载完成后置空
+            assetBundle = null;
+            LogManager.Log($"{bundelName}包已被卸载");
+
+            // var source = new TaskCompletionSource<bool>();
+            // assetBundleUnloadTask = source.Task;
+            //
+            // abuo.completed += (_) =>
+            // {
+            //     source.SetResult(true);
+            //     assetBundle = null;
+            //     LogManager.Log($"{bundelName}包已被卸载");
+            // };
+            // return source.Task;
+        }
+        
         /// <summary>
         /// 卸载所有已加载的AssetBundle
         /// </summary>
@@ -41,76 +133,7 @@ namespace Core.AssetBundles.Management
         {
             AssetBundle.UnloadAllAssetBundles(unloadAllObjects);
         }
-
-        /// <summary>
-        /// 异步卸载AssetBundle
-        /// </summary>
-        /// <param name="unloadAllLoadedObjects"></param>
-        /// <returns></returns>
-        public virtual Task<bool> UnloadAsync(bool unloadAllLoadedObjects)
-        {
-            // 正在异步卸载，返回任务
-            if (assetBundleUnloadTask != null)
-            {
-                return assetBundleUnloadTask;
-            }
-
-            // 卸载完成，返回true
-            if (assetBundle == null)
-            {
-                return Task.FromResult(true);
-            }
-
-            var source = new TaskCompletionSource<bool>();
-            assetBundleUnloadTask = source.Task;
-
-#if UNITY_2021_3_OR_NEWER
-            // 异步卸载AB包
-            var abuo = assetBundle.UnloadAsync(unloadAllLoadedObjects);
-#else
-            var abuo = assetBundle.UnloadAsync(unloadAllLoadedObjects);
-#endif
-
-            abuo.completed += (_) =>
-            {
-                source.SetResult(true);
-                assetBundle = null;
-                LogManager.Log($"{bundelName}包已被卸载");
-            };
-            return source.Task;
-        }
-
-        /// <summary>
-        /// 从文件异步加载AssetBundle
-        /// </summary>
-        /// <returns></returns>
-        public Task<bool> LoadFromFileAsync()
-        {
-            // 正在异步加载，返回任务
-            if (assetBundleLoadTask != null)
-            {
-                return assetBundleLoadTask;
-            }
-
-            // 已加载完成，返回缓存
-            if (assetBundle != null)
-            {
-                return Task.FromResult(true);
-            }
-
-            TaskCompletionSource<bool> source = TaskSourceBuilder.CreateTCS<bool>();
-            assetBundleLoadTask = source.Task;
-            // 异步加载AB包
-            AssetBundleCreateRequest abcr = AssetBundle.LoadFromFileAsync(loadPath);
-            abcr.completed += (asyncOperation) =>
-            {
-                assetBundle = abcr.assetBundle;
-                source.SetResult(assetBundle != null);
-            };
-
-            return assetBundleLoadTask;
-        }
-
+        
         /// <summary>
         /// 转换为指定类型的包装器
         /// </summary>

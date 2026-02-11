@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Core.Log;
 using Core.Singleton;
@@ -62,7 +63,7 @@ namespace Core.AssetBundles.Management
         /// 初始化
         /// </summary>
         /// <returns>是否初始化成功</returns>
-        public async Task<bool> Init()
+        public async Task Init()
         {
             // 清空缓存
             ClearCache();
@@ -70,25 +71,22 @@ namespace Core.AssetBundles.Management
             // 构建主包信息
             _mainWrapper = new AssetBundleWrapper(AbMainName, PathUtility.GetAbLoadPath(AbMainName + AbSuffix));
             // 加载主包
-            bool isSuccess = await _mainWrapper.LoadFromFileAsync();
-            if(!isSuccess)
-            {
-                return false;
-            }
+            await _mainWrapper.LoadFromFileAsync();
 
             // 加载依赖文件
             _abManifest = await _mainWrapper.Convert<AssetBundleWrapper>().LoadAssetAsync<AssetBundleManifest>(nameof(AssetBundleManifest));
             if (_abManifest == null)
             {
-                return false;
+                // TODO:打印
+                return;
             }
 
             // 构建全部AB包信息
-            string[] abNames = _abManifest.GetAllAssetBundles();
-            for (int i = 0; i < abNames.Length; i++)
+            var abNames = _abManifest.GetAllAssetBundles();
+            for (var i = 0; i < abNames.Length; i++)
             {
                 // 没用即添加，有即比较MD5是否相同：不同则替换，同则不处理
-                string abName = abNames[i].ToLower();
+                var abName = abNames[i].ToLower();
                 if (abName == "scene")
                 {
                     // 初始化场景包包装器
@@ -100,8 +98,6 @@ namespace Core.AssetBundles.Management
                     _nameToWrapperMap.TryAdd(abName, new AssetBundleWrapper(abName, PathUtility.GetAbLoadPath(abName + AbSuffix)));
                 }
             }
-
-            return true;
         }
 
         /// <summary>
@@ -110,17 +106,18 @@ namespace Core.AssetBundles.Management
         /// <typeparam name="T">资源类型</typeparam>
         /// <param name="assetBundleType">资源所在AB包名</param>
         /// <param name="assetName">资源名</param>
-        public async Task<T> LoadAssetAsync<T>(EAssetBundleType assetBundleType, string assetName) where T : Object
+        /// <param name="token"></param>
+        public async Task<T> LoadAssetAsync<T>(EAssetBundleType assetBundleType, string assetName, CancellationToken token = default) where T : Object
         {
-            string abName = assetBundleType.ToString().ToLower();
+            var abName = assetBundleType.ToString().ToLower();
             if (!_nameToWrapperMap.TryGetValue(abName, out var wrapper))
             {
-                LogManager.LogError($"AB包：{abName}不存在");
+                LogManager.LogError($"AB包：{assetBundleType}不存在");
                 return null;
             }
 
             // 存在资源缓存，直接返回
-            if(wrapper.Convert<AssetBundleWrapper>().TryGetAsset(assetName, out Object asset))
+            if(wrapper.Convert<AssetBundleWrapper>().TryGetAsset(assetName, out var asset))
             {
                 return asset as T;
             }
@@ -128,7 +125,7 @@ namespace Core.AssetBundles.Management
             // 加载依赖和目标AB包
             await LoadDependenciesAndTargetAsync(abName);
             // 加载资源
-            return await wrapper.Convert<AssetBundleWrapper>().LoadAssetAsync<T>(assetName);
+            return await wrapper.Convert<AssetBundleWrapper>().LoadAssetAsync<T>(assetName, token);
         }
 
         /// <summary>
@@ -321,24 +318,19 @@ namespace Core.AssetBundles.Management
         /// </summary>
         /// <param name="abName"></param>
         /// <returns></returns>
-        private async Task<bool> LoadDependenciesAndTargetAsync(string abName)
+        private async Task LoadDependenciesAndTargetAsync(string abName)
         {
             // 获取该AB包的所有依赖
-            string[] dependencies = _abManifest.GetAllDependencies(abName);
+            var dependencies = _abManifest.GetAllDependencies(abName);
             // 加载所有依赖包
-            for (int i = 0; i < dependencies.Length; i++)
+            foreach (var dependency in dependencies)
             {
-                AssetBundleWrapper wrapper = _nameToWrapperMap[dependencies[i]].Convert<AssetBundleWrapper>();
-                bool isSuccess = await wrapper.LoadFromFileAsync();
-                if (!isSuccess)
-                {
-                    LogManager.LogError($"依赖包：{dependencies[i]}加载失败，无法加载目标包：{abName}");
-                    return false;
-                }
+                var wrapper = _nameToWrapperMap[dependency].Convert<AssetBundleWrapper>();
+                await wrapper.LoadFromFileAsync();
             }
-
+            
             // 加载目标包
-            return await _nameToWrapperMap[abName].LoadFromFileAsync();
+            await _nameToWrapperMap[abName].LoadFromFileAsync();
         }
     }
 }

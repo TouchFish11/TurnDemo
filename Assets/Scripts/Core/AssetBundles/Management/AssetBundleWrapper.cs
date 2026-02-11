@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Core.Builder;
 using Core.Log;
+using Core.Tasks.Extensions;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -15,38 +17,55 @@ namespace Core.AssetBundles.Management
     public class AssetBundleWrapper : BundleWrapper
     {
         // AssetBundle中的已加载的资源缓存
-        private readonly Dictionary<string, AssetInfo> _nameToAssetInfoMap = new Dictionary<string, AssetInfo>();
-
+        private readonly Dictionary<string, AssetInfo> _nameToAssetInfoMap = new();
+        
         public AssetBundleWrapper(string abName, string path) : base(abName, path)
         {
 
         }
 
         /// <summary>
-        ///  异步加载资源
+        /// 异步加载资源
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="assetName"></param>
+        /// <param name="token"></param>
         /// <returns></returns>
-        public Task<T> LoadAssetAsync<T>(string assetName) where T : Object
+        public async Task<T> LoadAssetAsync<T>(string assetName, CancellationToken token = default) where T : Object
         {
             // 缓存中没有则异步加载
-            TaskCompletionSource<T> source = TaskSourceBuilder.CreateTCS<T>();
-            AssetBundleRequest abr = assetBundle.LoadAssetAsync<T>(assetName);
-            abr.completed += (_) =>
+            var asset = await assetBundle.LoadAssetAsync<T>(assetName).AsTask<T>(token);
+            // 创建新资源信息
+            var newAssetInfo = new AssetInfo(assetName, asset);
+            // 缓存资源信息
+            if (!_nameToAssetInfoMap.TryAdd(assetName, newAssetInfo))
             {
-                AssetInfo newAssetInfo = new AssetInfo(assetName, abr.asset as T);
-                if (!_nameToAssetInfoMap.TryAdd(assetName, newAssetInfo))
-                {
-                    //LogManager.LogError($"资源重复加载。包名：{assetBundle.name}，资源名：{assetName}");
-                }
-                else
-                {
-                    //LogManager.Log($"{assetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{newAssetInfo.RefCount}");
-                }
-                source.SetResult(abr.asset as T);
-            };
-            return source.Task;
+                LogManager.LogError($"资源重复加载。AB包：{assetBundle.name}，资源名：{assetName}");
+            }
+            else
+            {
+                LogManager.Log($"{assetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{newAssetInfo.RefCount}");
+            }
+
+            return asset;
+
+            // // 缓存中没有则异步加载
+            // TaskCompletionSource<T> source = TaskSourceBuilder.CreateTCS<T>();
+            // AssetBundleRequest abr = assetBundle.LoadAssetAsync<T>(assetName);
+            // abr.completed += (_) =>
+            // {
+            //     AssetInfo newAssetInfo = new AssetInfo(assetName, abr.asset as T);
+            //     if (!_nameToAssetInfoMap.TryAdd(assetName, newAssetInfo))
+            //     {
+            //         //LogManager.LogError($"资源重复加载。包名：{assetBundle.name}，资源名：{assetName}");
+            //     }
+            //     else
+            //     {
+            //         //LogManager.Log($"{assetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{newAssetInfo.RefCount}");
+            //     }
+            //     source.SetResult(abr.asset as T);
+            // };
+            // return source.Task;
         }
 
         /// <summary>
@@ -54,36 +73,56 @@ namespace Core.AssetBundles.Management
         /// </summary>
         /// <param name="assetName"></param>
         /// <param name="type"></param>
+        /// <param name="token"></param>
         /// <returns></returns>
-        public Task<Object> LoadAssetAsync(string assetName, Type type)
+        public async Task<Object> LoadAssetAsync(string assetName, Type type, CancellationToken token = default)
         {
             // 缓存中没有则异步加载
-            var abr = assetBundle.LoadAssetAsync(assetName, type);
-            var source = TaskSourceBuilder.CreateTCS<Object>();
-            abr.completed += (_) =>
+            var asset = await assetBundle.LoadAssetAsync(assetName, type).AsTask<Object>(token);
+            // 创建新资源信息
+            var newAssetInfo = new AssetInfo(assetName, asset);
+            // 缓存资源信息
+            if (!_nameToAssetInfoMap.TryAdd(assetName, newAssetInfo))
             {
-                var newAssetInfo = new AssetInfo(assetName, abr.asset);
-                if (!_nameToAssetInfoMap.TryAdd(assetName, newAssetInfo))
-                {
-                    //LogManager.LogError($"资源重复加载。包名：{assetBundle.name}，资源名：{assetName}");
-                }
-                else
-                {
-                    //LogManager.Log($"{assetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{newAssetInfo.RefCount}");
-                }
-                source.SetResult(abr.asset);
-            };
-            return source.Task;
+                LogManager.LogError($"资源重复加载。AB包：{assetBundle.name}，资源名：{assetName}");
+            }
+            else
+            {
+                LogManager.Log($"{assetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{newAssetInfo.RefCount}");
+            }
+
+            return asset;
+            
+            // var source = TaskSourceBuilder.CreateTCS<Object>();
+            // abr.completed += (_) =>
+            // {
+            //     var newAssetInfo = new AssetInfo(assetName, abr.asset);
+            //     if (!_nameToAssetInfoMap.TryAdd(assetName, newAssetInfo))
+            //     {
+            //         //LogManager.LogError($"资源重复加载。包名：{assetBundle.name}，资源名：{assetName}");
+            //     }
+            //     else
+            //     {
+            //         //LogManager.Log($"{assetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{newAssetInfo.RefCount}");
+            //     }
+            //     source.SetResult(abr.asset);
+            // };
+            // return source.Task;
         }
 
         /// <summary>
-        /// 异步加载所有资源
+        /// 异步加载指定类型的所有资源
         /// </summary>
+        /// <param name="token"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public Task<T[]> LoadAllAssetsAsync<T>() where T : Object
+        public async Task<T[]> LoadAllAssetsAsync<T>(CancellationToken token = default) where T : Object
         {
-            var abr = assetBundle.LoadAllAssetsAsync<T>();
+            var assets = await assetBundle.LoadAllAssetsAsync<T>().AsTask<T>(token);
+            //int length = assets.l;
+            
+            //Task.WaitAll()
+            
             var source = TaskSourceBuilder.CreateTCS<T[]>();
             abr.completed += (_) =>
             {
@@ -222,7 +261,7 @@ namespace Core.AssetBundles.Management
             }
         }
 
-        public override Task<bool> UnloadAsync(bool unloadAllLoadedObjects)
+        public override Task UnloadAsync(bool unloadAllLoadedObjects)
         {
             // 清空已加载资源缓存
             _nameToAssetInfoMap.Clear();

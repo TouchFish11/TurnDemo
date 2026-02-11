@@ -13,7 +13,7 @@ namespace Core.AssetBundles.Management
         void ClearCache();
         bool ContainPath(string scenePath);
         Task<string[]> GetAllScenePaths();
-        Task<bool> Init();
+        Task Init();
         Task<T> LoadAssetAsync<T>(EAssetBundleType assetBundleType, string assetName) where T : Object;
         Task<Object> LoadAssetAsync(EAssetBundleType assetBundleType, string assetName, System.Type type);
         Task<T[]> LoadAssetsAsync<T>(EAssetBundleType assetBundleType) where T : Object;
