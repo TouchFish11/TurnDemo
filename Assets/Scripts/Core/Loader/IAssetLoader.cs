@@ -1,3 +1,6 @@
+using System.Threading.Tasks;
+using UnityEngine;
+
 namespace Core.Loader
 {
     /// <summary>

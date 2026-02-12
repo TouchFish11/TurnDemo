@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Core.HotUpdate;
 using Core.Log;
 using Core.Reflection;
+using Core.Service;
 using Core.Types;
 using Core.Utility;
 
@@ -71,7 +73,7 @@ namespace Game.Battle.Toughness
         /// </summary>
         private static void ScanAllToughnessStrategy()
         {
-            foreach (var hotUpdateAssembly in AssemblyUtility.GetHotUpdateAssemblies())
+            foreach (var hotUpdateAssembly in ServiceLocator.Get<IHotUpdateManager>().GetAssemblies())
             {
                 // 遍历当前执行程序集中的所有类型
                 foreach (var type in hotUpdateAssembly.GetTypes())

@@ -5,6 +5,7 @@ using Core.Config;
 using Core.Log;
 using Core.Service;
 using Core.Singleton;
+using Core.Tasks.Extensions;
 using Core.UI;
 using Core.UI.MVC;
 using Game.Objects;
@@ -42,7 +43,8 @@ namespace GameHotUpdate.UI
         {
 #if EDITOR_TEST_AB || !UNITY_EDITOR
             // 加载画布资源
-            var canvasObj = await ServiceLocator.Get<IAssetBundleManager>().LoadAssetAsync<GameObject>(EAssetBundleType.UI, ResKeyCollection.Canvas);
+            var uiAb = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(EAssetBundleType.UI);
+            var canvasObj = await uiAb.LoadAssetAsync<GameObject>(ResKeyCollection.Canvas).ToTask<GameObject>();
             // 实例化画布对象
             var canvasInstance = Object.Instantiate(canvasObj);
             // 记录画布对象
@@ -56,8 +58,9 @@ namespace GameHotUpdate.UI
             _botLayer = Canvas.transform.Find("Bot");   
             _systemLayer = Canvas.transform.Find("System");
 
+            var cameraAb = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(EAssetBundleType.UI);
             // 加载UI摄像机资源
-            var uiCameraObj = await ServiceLocator.Get<IAssetBundleManager>().LoadAssetAsync<GameObject>(EAssetBundleType.Camera, ResKeyCollection.UICamera);
+            var uiCameraObj = await cameraAb.LoadAssetAsync<GameObject>(ResKeyCollection.UICamera).ToTask<GameObject>();
             // 实例化摄像机对象
             var uiCameraInstance = Object.Instantiate(uiCameraObj);
             // 记录UI摄像机

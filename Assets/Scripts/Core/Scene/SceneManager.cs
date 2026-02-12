@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.Log;
@@ -9,7 +10,6 @@ using Core.Singleton;
 using Core.Utility;
 using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 namespace Core.Scene
@@ -19,6 +19,9 @@ namespace Core.Scene
     /// </summary>
     public class SceneManager : SingletonBase<SceneManager>, ISceneManager
     {
+        // 场景路径缓存
+        private List<string> _scenePaths;
+        
         /// <summary>
         /// 私有构造函数，确保单例模式下无法外部实例化
         /// </summary>
@@ -28,6 +31,15 @@ namespace Core.Scene
         }
 
         /// <summary>
+        /// 初始化场景管理器
+        /// </summary>
+        public async Task Init()
+        {
+            // 初始化场景包
+            await InitSceneBundle();
+        }
+        
+        /// <summary>
         /// 异步加载场景的方法
         /// </summary>
         /// <param name="scenePath">要加载的场景路径</param>
@@ -36,39 +48,50 @@ namespace Core.Scene
         /// <param name="completed">加载完成后执行的异步委托</param>
         public async void LoadSceneAsync(string scenePath, LoadSceneMode mode, [CanBeNull] Action<float> onLoadProgress, [CanBeNull] Func<Task> completed)
         {
-            // 加载场景对应的AssetBundle资源包
-            if (!await ServiceLocator.Get<IAssetBundleManager>().LoadSceneBundleAsync())
-            {
-                LogManager.LogError($"场景资源包加载失败：{scenePath}");
-                return;
-            }
-
-            // 检查AssetBundle中是否包含指定路径的场景
-            if (!ServiceLocator.Get<IAssetBundleManager>().ContainPath(scenePath))
-            {
-                LogManager.LogError($"AssetBundle中不存在该场景路径：{scenePath}");
-                return;
-            }
-            
-            // 异步加载场景（Unity原生接口）
-            var ao = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(scenePath, mode);
-            // 开启更新进度协程
-            ServiceLocator.Get<IMonoAdapter>().StartCoroutine(UpdateProgress_Cor(ao, onLoadProgress));
-            // 等待场景加载结束
-            await TaskUtility.WaitUntil(() => ao.isDone);
-            // 执行场景加载完成后的异步回调逻辑
-            await completed?.Invoke();
-            
             try
             {
-
+                // 检查是否包含指定路径的场景
+                if (!ContainPath(scenePath))
+                {
+                    LogManager.LogError($"不存在该场景路径：{scenePath}");
+                    return;
+                }
+                
+                // 异步加载场景
+                var ao = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(scenePath, mode);
+                // 开启更新进度协程
+                ServiceLocator.Get<IMonoAdapter>().StartCoroutine(UpdateProgress_Cor(ao, onLoadProgress));
+                // 等待场景加载结束
+                await TaskUtility.WaitUntil(() => ao != null && ao.isDone);
+                // 执行场景加载完成后的异步回调逻辑
+                await completed?.Invoke();
+                
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                LogManager.LogError($"{typeof(SceneManager).FullName}.{nameof(LoadSceneAsync)}：{e.Message}");
+                LogManager.LogError($"{typeof(SceneManager).FullName}.{nameof(LoadSceneAsync)}：{exception.Message}");
+                LogManager.LogError($"场景资源包加载失败：{scenePath}");
             }
         }
 
+        private async Task InitSceneBundle()
+        {
+            // 加载场景对应的AssetBundle资源包
+            var sceneBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(EAssetBundleType.Scene);
+            // 缓存所有场景路基
+            _scenePaths ??= new List<string>(sceneBundle.GetAllScenePaths());
+        }
+
+        /// <summary>
+        /// 是否包含该场景路径
+        /// </summary>
+        /// <param name="sceneName"></param>
+        /// <returns></returns>
+        public bool ContainPath(string sceneName)
+        {
+            return _scenePaths.Contains(sceneName);
+        }
+        
         /// <summary>
         /// 更新进度协程
         /// </summary>

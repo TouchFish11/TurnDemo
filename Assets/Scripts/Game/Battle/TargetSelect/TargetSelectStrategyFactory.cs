@@ -1,5 +1,7 @@
+using Core.HotUpdate;
 using Core.Log;
 using Core.Reflection;
+using Core.Service;
 using Core.Utility;
 
 namespace Game.Battle.TargetSelect
@@ -11,7 +13,7 @@ namespace Game.Battle.TargetSelect
     {
         void IFactory.InitFactory()
         {
-            FactoryUtility.ScanAllType(typeToInterfaceMap, AssemblyUtility.GetHotUpdateAssemblies());
+            FactoryUtility.ScanAllType(typeToInterfaceMap, ServiceLocator.Get<IHotUpdateManager>().GetAssemblies());
         }
         
         public ITargetSelectStrategy GetTargetSelectStrategy<TStrategy>()where TStrategy : class, ITargetSelectStrategy

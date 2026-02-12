@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.Service;
+using Core.Tasks.Extensions;
 using UnityEngine;
 
 namespace Core.DataPersistence.Binary
@@ -54,15 +55,16 @@ namespace Core.DataPersistence.Binary
         private async Task LoadTableAsync<T, K>()
         {
 #if EDITOR_TEST_AB || !UNITY_EDITOR
-        // 异步加载数据，资源名不需要后缀。.tInfo的后缀是txt
-        var tInfo = await ServiceLocator.Get<IAssetBundleManager>().LoadAssetAsync<TextAsset>(EAssetBundleType.GameConfig, $"{typeof(K).Name}");
+            // 异步加载数据，资源名不需要后缀。
+            var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(EAssetBundleType.GameConfig);
+            var config = await assetBundle.LoadAssetAsync<TextAsset>($"{typeof(K).Name}").ToTask<TextAsset>();
 #else
             // 加载编辑器数据
-            TextAsset tInfo = EditorResManager.Instance.LoadEditorAsset<TextAsset>($"{typeof(K).Name}");
+            TextAsset config = EditorResManager.Instance.LoadEditorAsset<TextAsset>($"{typeof(K).Name}");
             await Task.CompletedTask;
 #endif
             // 转换二进制到数据类
-            ConvertFrom<T, K>(tInfo);
+            ConvertFrom<T, K>(config);
         }
 
         /// <summary>

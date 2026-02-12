@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.Config;
 using Core.Loader;
+using Core.Loader.Sprites;
 using Core.Log;
 using Core.Pool;
 using Core.Reflection;
@@ -47,8 +48,7 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
         protected override async Task OnInit()
         {
             // 初始化界面背景
-            var backGround = await ServiceLocator.Get<IFactoryManager>().GetFactory<IAssetLoaderFactory, AssetLoaderFactory>().GetSpriteLoader()
-                .GetSpriteAsync(ResKeyCollection.Atlas_Activity,
+            var backGround = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(ResKeyCollection.Atlas_Activity,
                     this.activityInfo.f_bkUi_Res);
             _activityBkComponent.SetBackGround(backGround);
 

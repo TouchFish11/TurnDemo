@@ -2,6 +2,7 @@ using Core.AssetBundles.Management;
 using Core.Config;
 using Core.DataPersistence.Binary;
 using Core.Loader;
+using Core.Loader.Sprites;
 using Core.Pool;
 using Core.Reflection;
 using Core.Service;
@@ -29,8 +30,8 @@ namespace GameHotUpdate.Activity.UI.Base
             {
                 var activityUI = await ServiceLocator.Get<IObjectBuilder>().GetHotfixUIObject<ActivityUI>(EAssetBundleType.UI, ResKeyCollection.ActivityUI, view.SvActivityContent);
                 // 加载图标
-                var icon = await ServiceLocator.Get<IFactoryManager>().GetFactory<IAssetLoaderFactory, AssetLoaderFactory>().GetSpriteLoader()
-                    .GetSpriteAsync(ResKeyCollection.Atlas_Activity,
+                var icon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(
+                    ResKeyCollection.Atlas_Activity,
                         activityInfo.f_bkUi_Res);
                 // 初始化UI
                 activityUI.Init(icon, activityInfo, view.ActivityGroup, this);

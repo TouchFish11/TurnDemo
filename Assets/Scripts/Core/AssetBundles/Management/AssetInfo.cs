@@ -10,16 +10,19 @@ namespace Core.AssetBundles.Management
     {
         // 资源对象
         private readonly Object _asset;
+        // 所属AB包的名称
+        private string _assetBundleName;
 
-        public AssetInfo(string assetName, Object asset)
+        public AssetInfo(string assetBundleName, Object asset)
         {
-            AssetName = assetName;
+            _assetBundleName = assetBundleName;
             RefCount = 1;
             _asset = asset;
         }
 
         /// <summary>
         /// 卸载资源
+        /// 减少引用计数
         /// </summary>
         public void Unload()
         {
@@ -29,7 +32,7 @@ namespace Core.AssetBundles.Management
             }
             
             --RefCount;
-            LogManager.Log($"尝试卸载{AssetName}资源，引用数：{RefCount}");
+            LogManager.Log($"尝试卸载：{_assetBundleName}包的：{AssetName}资源，更新资源引用数为：{RefCount}");
         }
 
         /// <summary>
@@ -39,6 +42,7 @@ namespace Core.AssetBundles.Management
         public Object GetAsset()
         {
             ++RefCount;
+            //LogManager.Log($"{assetInfo.AssetName}资源被引用，{bundelName}包引用数：{RefCount}；资源引用数：{assetInfo.RefCount}");
             return _asset;
         }
 
@@ -50,6 +54,6 @@ namespace Core.AssetBundles.Management
         /// <summary>
         /// 资源名称
         /// </summary>
-        public string AssetName { get; }
+        public string AssetName => _asset.name;
     }
 }

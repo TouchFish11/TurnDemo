@@ -6,6 +6,7 @@ using Core.AssetBundles.Management;
 using Core.Log;
 using Core.Service;
 using Core.Singleton;
+using Core.Tasks.Extensions;
 using Core.Utility;
 using UnityEngine;
 using UnityEngine.Events;
@@ -69,13 +70,14 @@ namespace Core.Input.ActionAsset
             }
 
 #if EDITOR_TEST_AB || !UNITY_EDITOR
-            // 非编辑器/编辑器AB测试模式：从AssetBundle加载输入配置JSON
-            var json = await ServiceLocator.Get<IAssetBundleManager>().LoadAssetAsync<TextAsset>(EAssetBundleType.GameConfig, FileUtility.InputActionLocalFileName);
+            // 从AssetBundle加载输入配置JSON
+            var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(EAssetBundleType.GameConfig);
+            var json = await assetBundle.LoadAssetAsync<TextAsset>(FileUtility.InputActionLocalFileName).ToTask<TextAsset>();
             _jsonInputData = json.text;
             UpdateActions();
 #else
             // 编辑器模式：从编辑器资源管理器加载输入配置JSON
-            TextAsset json = EditorResManager.Instance.LoadEditorAsset<TextAsset>(FileUtility.InputActionLocalFileName, "None");
+            TextAsset json = ServiceLocator.Get<IEditorResManager>().LoadEditorAsset<TextAsset>(FileUtility.InputActionLocalFileName, "None");
             _jsonInputData = json.text;
             UpdateActions();
             await Task.CompletedTask;

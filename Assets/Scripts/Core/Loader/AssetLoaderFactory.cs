@@ -1,33 +1,34 @@
-using System;
-using Core.Loader.Loaders;
+using Core.HotUpdate;
+using Core.Loader.Audios;
+using Core.Loader.Sprites;
 using Core.Reflection;
-using Core.Utility;
+using Core.Service;
 
 namespace Core.Loader
 {
     /// <summary>
     /// 资源加载器工厂
+    /// 新增加载器时需要手动注册
     /// </summary>
-    public class AssetLoaderFactory : Factory<IAssetLoader>, IAssetLoaderFactory
+    public class AssetLoaderFactory : Factory<IAssetLoader>
     {
-        void IFactory.InitFactory()
+        public override void InitFactory()
         {
-            FactoryUtility.ScanAllType(typeToInterfaceMap, AssemblyUtility.GetCoreAssembly());
-        }
-        
-        /// <summary>
-        /// 获取精灵加载器
-        /// </summary>
-        /// <returns></returns>
-        public ISpriteLoader GetSpriteLoader()
-        {
-            Type loaderType = null;
-#if !UNITY_EDITOR || EDITOR_TEST_AB
-            loaderType = typeof(SpriteLoader);
-#else
-            loaderType = typeof(MockSpriteLoader);
-#endif
-            return typeToInterfaceMap[loaderType.ToIdentifier()] as ISpriteLoader;
+            FactoryUtility.ScanAllType(typeToInterfaceMap, ServiceLocator.Get<IHotUpdateManager>().GetCoreAssembly());
+            
+            // 注册加载器到全局定位器中
+            foreach (var assetLoader in typeToInterfaceMap.Values)
+            {
+                switch (assetLoader)
+                {
+                    case ISpriteLoader spriteLoader:
+                        ServiceLocator.Register(spriteLoader); 
+                        break;
+                    case IAudioLoader audioLoader:
+                        ServiceLocator.Register(audioLoader);
+                        break;
+                }
+            }
         }
     }
 }

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Core.AssetBundles.Management;
+using Core.Loader.Audios;
 using Core.Log;
 using Core.Mono;
 using Core.Pool;
@@ -91,9 +91,9 @@ namespace Core.Music
             }
 
             // 释放上次播放的音乐文件资源
-            ServiceLocator.Get<IAssetBundleManager>().UnloadAsset(EAssetBundleType.Music, _backgroundMusic.clip.name);
+            ServiceLocator.Get<IAudioLoader>().UnloadClip(_backgroundMusic.clip.name);
             // 从资源包异步加载背景音乐资源
-            var audioClip = await ServiceLocator.Get<IAssetBundleManager>().LoadAssetAsync<AudioClip>(EAssetBundleType.Music, musicName);
+            var audioClip = await ServiceLocator.Get<IAudioLoader>().LoadAudioClipAsync(musicName);
             // 配置背景音乐播放器参数
             _backgroundMusic.clip = audioClip;
             _backgroundMusic.loop = isLoop;
@@ -170,7 +170,7 @@ namespace Core.Music
         public async Task<int> CreateSoundAsync(string soundName, float Volume, bool open, bool isLoop = false)
         {
             // 从资源包异步加载音效资源
-            var audioClip = await ServiceLocator.Get<IAssetBundleManager>().LoadAssetAsync<AudioClip>(EAssetBundleType.Music, soundName);
+            var audioClip = await ServiceLocator.Get<IAudioLoader>().LoadAudioClipAsync(soundName);
             // 从对象池获取音效播放器
             var sound = ServiceLocator.Get<IPoolManager>().GetObj<AudioSource>($"Sound_{soundName}");
             // 配置音效播放器参数
@@ -289,7 +289,7 @@ namespace Core.Music
                 // 停止音效播放
                 source.Stop();
                 // 释放上次播放的音乐文件资源
-                ServiceLocator.Get<IAssetBundleManager>().UnloadAsset(EAssetBundleType.Music, source.clip.name);
+                ServiceLocator.Get<IAudioLoader>().UnloadClip(source.clip.name);
                 // 清空音频片段引用
                 source.clip = null;
                 // 将音效对象回收至对象池

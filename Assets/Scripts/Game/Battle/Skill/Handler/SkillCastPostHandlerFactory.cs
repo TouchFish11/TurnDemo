@@ -1,5 +1,7 @@
+using Core.HotUpdate;
 using Core.Log;
 using Core.Reflection;
+using Core.Service;
 using Core.Utility;
 
 namespace Game.Battle.Skill.Handler
@@ -14,7 +16,7 @@ namespace Game.Battle.Skill.Handler
         /// </summary>
         void IFactory.InitFactory()
         {
-            FactoryUtility.ScanAllType(typeToInterfaceMap, AssemblyUtility.GetHotUpdateAssemblies());
+            FactoryUtility.ScanAllType(typeToInterfaceMap, ServiceLocator.Get<IHotUpdateManager>().GetAssemblies());
         }
         
         public ISkillCastPostHandler GetSkillCastPostHandler<THandler>()where THandler : class, ISkillCastPostHandler

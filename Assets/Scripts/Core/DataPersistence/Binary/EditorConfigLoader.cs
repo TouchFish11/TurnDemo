@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.Service;
+using Core.Tasks.Extensions;
 using UnityEngine;
 
 namespace Core.DataPersistence.Binary
@@ -19,11 +20,7 @@ namespace Core.DataPersistence.Binary
 
         public override async Task LoadConfig()
         {
-            //await LoadTableAsync<xxxContainer, xxxInfo>();
-            // await LoadTableAsync<RoleInfoContainer, RoleInfo>();
-            // await LoadTableAsync<MonsterInfoContainer, MonsterInfo>();
-            // await LoadTableAsync<SkillInfoContainer, SkillInfo>();
-            // await LoadTableAsync<StatusInfoContainer, StatusInfo>();
+            // await LoadTableAsync<xxxContainer, xxxInfo>();
             await Task.CompletedTask;
         }
 
@@ -37,14 +34,15 @@ namespace Core.DataPersistence.Binary
         {
 #if EDITOR_TEST_AB || !UNITY_EDITOR
             // 异步加载数据
-            var tInfo = await ServiceLocator.Get<IAssetBundleManager>().LoadAssetAsync<TextAsset>(EAssetBundleType.GameConfig, $"{typeof(K).Name}");
+            var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(EAssetBundleType.GameConfig);
+            var config = await assetBundle.LoadAssetAsync<TextAsset>($"{typeof(K).Name}").ToTask<TextAsset>();
 #else
             // 加载编辑器数据
-            var tInfo = EditorResManager.Instance.LoadEditorAsset<TextAsset>($"{typeof(K).Name}", ".bytes");
+            var config = EditorResManager.Instance.LoadEditorAsset<TextAsset>($"{typeof(K).Name}", ".bytes");
             await Task.CompletedTask;
 #endif
             // 转换二进制到数据类
-            ConvertFrom<T, K>(tInfo);
+            ConvertFrom<T, K>(config);
         }
 
         public override T GetConfig<T>() where T : class

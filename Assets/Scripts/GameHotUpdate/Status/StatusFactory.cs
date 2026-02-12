@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Core.HotUpdate;
 using Core.Reflection;
+using Core.Service;
 using Core.Utility;
 using Game.Battle.Status;
 
@@ -54,7 +56,7 @@ namespace GameHotUpdate.Status
         private static void ScanAllStatu(Dictionary<int, Type> dic)
         {
             // 遍历所有热更新程序集（通过AssemblyUtility工具类获取）
-            foreach (var assembly in AssemblyUtility.GetHotUpdateAssemblies())
+            foreach (var assembly in ServiceLocator.Get<IHotUpdateManager>().GetAssemblies())
             {
                 // 遍历当前程序集中的所有类型
                 foreach (var type in assembly.GetTypes())

@@ -1,5 +1,7 @@
+using Core.HotUpdate;
 using Core.Log;
 using Core.Reflection;
+using Core.Service;
 using Core.Utility;
 
 namespace Game.Battle.Skill.Condition
@@ -11,7 +13,7 @@ namespace Game.Battle.Skill.Condition
     {
         void IFactory.InitFactory()
         {
-            FactoryUtility.ScanAllType(typeToInterfaceMap, AssemblyUtility.GetHotUpdateAssemblies());
+            FactoryUtility.ScanAllType(typeToInterfaceMap, ServiceLocator.Get<IHotUpdateManager>().GetAssemblies());
         }
         
         public ICastSkillCondition GetCastSkillCondition<TCondition>()where TCondition : class, ICastSkillCondition

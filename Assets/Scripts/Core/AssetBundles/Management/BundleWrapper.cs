@@ -1,3 +1,5 @@
+using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Core.Log;
 using Core.Tasks;
@@ -9,20 +11,32 @@ namespace Core.AssetBundles.Management
     /// <summary>
     /// 包包装器
     /// </summary>
-    public abstract class BundleWrapper
+    public class BundleWrapper
     {
-        // AssetBundle对象
-        protected AssetBundle assetBundle;
-        // AssetBundle名称
-        protected string bundelName;
-        // AssetBundle本地加载路径
-        protected string loadPath;
-        // AB包资源引用计数
-        protected uint refCount;
-        // // AB包加载任务
-        // protected Task<bool> assetBundleLoadTask;
-        // // AB包卸载任务
-        // protected Task<bool> assetBundleUnloadTask;
+        /// <summary>
+        /// AssetBundle对象
+        /// </summary>
+        public AssetBundle AssetBundle { get; private set; }
+        
+        /// <summary>
+        /// 包名称
+        /// </summary>
+        public string BundelName { get; }
+
+        /// <summary>
+        /// 包加载路径
+        /// </summary>
+        public string LoadPath { get; }
+        
+        /// <summary>
+        /// 包引用数
+        /// </summary>
+        public uint RefCount { get; private set; }
+        
+        /// <summary>
+        /// 上次使用的时间
+        /// </summary>
+        public DateTime LastUseTime { get; private set; }
         
         // AB包加载任务
         private AssetBundleCreateRequestTask _assetBundleCreateRequestTask;
@@ -34,17 +48,18 @@ namespace Core.AssetBundles.Management
         /// </summary>
         /// <param name="abName"></param>
         /// <param name="path"></param>
-        protected BundleWrapper(string abName, string path)
+        public BundleWrapper(string abName, string path)
         {
-            bundelName = abName;
-            loadPath = path;
+            BundelName = abName;
+            LoadPath = path;
         }
-        
+
         /// <summary>
         /// 从文件异步加载AssetBundle
         /// </summary>
+        /// <param name="token"></param>
         /// <returns></returns>
-        public async Task LoadFromFileAsync()
+        public async Task LoadFromFileAsync(CancellationToken token = default)
         {
             // 正在异步加载，返回任务
             if (_assetBundleCreateRequestTask != null)
@@ -53,47 +68,29 @@ namespace Core.AssetBundles.Management
             }
             
             // 已加载完成，直接返回，避免重复加载
-            if (assetBundle)
+            if (AssetBundle)
             {
+                RefCount += 1;
+                LastUseTime = DateTime.Now;
+                LogManager.Log($"{BundelName}包被引用，引用计数更新为：{RefCount}");
                 return;
             }
             
             // 异步加载AB包
-            assetBundle = await AssetBundle.LoadFromFileAsync(loadPath).AsTask();
-
-            // // 正在异步加载，返回任务
-            // if (assetBundleLoadTask != null)
-            // {
-            //     return assetBundleLoadTask;
-            // }
-            //
-
-            //
-            // // 已加载完成，返回缓存
-            // if (assetBundle != null)
-            // {
-            //     return Task.FromResult(true);
-            // }
-            //
-            // TaskCompletionSource<bool> source = TaskSourceBuilder.CreateTCS<bool>();
-            // assetBundleLoadTask = source.Task;
-            // // 异步加载AB包
-            // AssetBundleCreateRequest abcr = AssetBundle.LoadFromFileAsync(loadPath);
-            // abcr.completed += (asyncOperation) =>
-            // {
-            //     assetBundle = abcr.assetBundle;
-            //     source.SetResult(assetBundle != null);
-            // };
-            //
-            // return assetBundleLoadTask;
+            _assetBundleCreateRequestTask = AssetBundle.LoadFromFileAsync(LoadPath).ToTask(token);
+            AssetBundle = await _assetBundleCreateRequestTask;
+            RefCount += 1;
+            LastUseTime = DateTime.Now;
+            _assetBundleCreateRequestTask = null;
+            LogManager.Log($"{BundelName}包被引用，引用计数更新为：{RefCount}");
         }
 
         /// <summary>
-        /// 异步卸载AssetBundle
+        /// 异步卸载指定AssetBundle
         /// </summary>
         /// <param name="unloadAllLoadedObjects"></param>
         /// <returns></returns>
-        public virtual async Task UnloadAsync(bool unloadAllLoadedObjects)
+        public async Task UnloadAsync(bool unloadAllLoadedObjects)
         {
             // 正在异步卸载，返回
             if (_assetBundleUnloadTask != null)
@@ -102,61 +99,30 @@ namespace Core.AssetBundles.Management
             }
 
             // 卸载完成返回
-            if (!assetBundle)
+            if (!AssetBundle)
             {
                 return;
             }
             
-            // 异步卸载AB包
-            await assetBundle.UnloadAsync(unloadAllLoadedObjects).AsTask();
-            // 卸载完成后置空
-            assetBundle = null;
-            LogManager.Log($"{bundelName}包已被卸载");
+            if (RefCount > 0)
+            {
+                RefCount -= 1;
+            }
 
-            // var source = new TaskCompletionSource<bool>();
-            // assetBundleUnloadTask = source.Task;
-            //
-            // abuo.completed += (_) =>
-            // {
-            //     source.SetResult(true);
-            //     assetBundle = null;
-            //     LogManager.Log($"{bundelName}包已被卸载");
-            // };
-            // return source.Task;
+            if (RefCount == 0)
+            {
+                // 异步卸载AB包
+                _assetBundleUnloadTask = AssetBundle.UnloadAsync(unloadAllLoadedObjects).ToTask();
+                await _assetBundleUnloadTask;
+                // 卸载完成后置空
+                AssetBundle = null;
+                _assetBundleUnloadTask = null;
+                LogManager.Log($"{BundelName}包已被卸载，引用计数为：{RefCount}");
+            }
+            else
+            {
+                LogManager.Log($"尝试卸载：{BundelName}包，引用计数更新为：{RefCount}");
+            }
         }
-        
-        /// <summary>
-        /// 卸载所有已加载的AssetBundle
-        /// </summary>
-        /// <param name="unloadAllObjects"></param>
-        public static void UnloadAllAssetBundles(bool unloadAllObjects)
-        {
-            AssetBundle.UnloadAllAssetBundles(unloadAllObjects);
-        }
-        
-        /// <summary>
-        /// 转换为指定类型的包装器
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public T Convert<T>() where T : BundleWrapper
-        {
-            return this as T;
-        }
-
-        /// <summary>
-        /// 包名称
-        /// </summary>
-        public string BundelName => bundelName;
-
-        /// <summary>
-        /// 包加载路径
-        /// </summary>
-        public string LoadPath => loadPath;
-
-        /// <summary>
-        /// 包引用数
-        /// </summary>
-        public abstract uint RefCount { get; }
     }
 }

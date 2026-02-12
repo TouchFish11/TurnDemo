@@ -1,5 +1,6 @@
 using Core.AssetBundles.Management;
 using Core.Service;
+using Core.Tasks.Extensions;
 using Core.UI;
 using Core.Video;
 using GameHotUpdate.UI.MVC;
@@ -20,12 +21,14 @@ namespace GameHotUpdate.UI.Video
         
         public async void PlayVideo()
         {
+            var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(EAssetBundleType.Texture);
             // ������Ⱦ����
-            RenderTexture renderTexture = await ServiceLocator.Get<IAssetBundleManager>().LoadAssetAsync<RenderTexture>(EAssetBundleType.Texture, "VideoTexture");
+            var renderTexture = await assetBundle.LoadAssetAsync<RenderTexture>("VideoTexture").ToTask<RenderTexture>();
             // ��������
             model.RawImgVideo = renderTexture;
             // ������Ƶ
-            VideoClip videoClip = await ServiceLocator.Get<IAssetBundleManager>().LoadAssetAsync<VideoClip>(EAssetBundleType.Video, "���»�İ-������ߡ�-������(����)");
+            var videoAb = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(EAssetBundleType.Video);
+            var videoClip = await videoAb.LoadAssetAsync<VideoClip>("").ToTask<VideoClip>();
             // ������Ƶ
             VideoManager.Instance.OnPrePlay += OnPrePlay;
             VideoManager.Instance.PlayVideo(videoClip, renderTexture);

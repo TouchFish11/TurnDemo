@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using Core.HotUpdate;
 using Core.Log;
+using Core.Service;
 using Core.Types;
 using Core.Utility;
 
@@ -14,9 +16,9 @@ namespace Core.Reflection
         // 具体类型到接口的映射
         protected readonly Dictionary<TypeIdentifier, TIValue> typeToInterfaceMap = new();
 
-        void IFactory.InitFactory()
+        public virtual void InitFactory()
         {
-            FactoryUtility.ScanAllType(typeToInterfaceMap, AssemblyUtility.GetAssemblies());
+            FactoryUtility.ScanAllType(typeToInterfaceMap, ServiceLocator.Get<IHotUpdateManager>().GetAssemblies());
         }
 
         public virtual TInterface GetTypeInstance<TInterface, TInstance>() where TInterface : class where TInstance : TInterface

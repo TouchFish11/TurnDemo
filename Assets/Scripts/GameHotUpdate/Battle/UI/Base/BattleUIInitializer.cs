@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Core.AssetBundles.Management;
 using Core.Config;
 using Core.Loader;
+using Core.Loader.Sprites;
 using Core.Log;
 using Core.Reflection;
 using Core.Service;
@@ -82,10 +83,7 @@ namespace GameHotUpdate.Battle.UI.Base
                 // 根据战斗实体获取对应的图标名称
                 var iconName = BattleUIManager.GetIconByEntity(battleEntity);
                 // 从图集加载角色图标
-                var icon = await ServiceLocator.Get<IFactoryManager>()
-                    .GetFactory<IAssetLoaderFactory, AssetLoaderFactory>()
-                    .GetSpriteLoader()
-                    .GetSpriteAsync(ResKeyCollection.Atlas_Icon_BattleEntity, iconName);
+                var icon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(ResKeyCollection.Atlas_Icon_BattleEntity, iconName);
                 // 获取当前实体的玩家属性组件
                 var playerPropertyComponent = battleEntity.GetComponent<PlayerPropertyComponent>();
                 // 获取角色核心属性数据

@@ -5,6 +5,7 @@ using Core.AssetBundles.Management;
 using Core.Global;
 using Core.Service;
 using Core.Singleton;
+using Core.Tasks.Extensions;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -39,7 +40,6 @@ namespace Core.Pool
             return newObj.AddComponent<T>();
         }
         
-        // TODO：优化为只获取，不创建；对象该方法进行再次封装调用，外部判空后再用ab包加载
         public async Task<GameObject> GetAssetBundleObjAsync(EAssetBundleType assetBundleType, string assetName)
         {
             // 存在该对象就取出来使用
@@ -50,7 +50,8 @@ namespace Core.Pool
 
 #if EDITOR_TEST_AB || !UNITY_EDITOR
             // AB包异步加载
-            var obj = await ServiceLocator.Get<IAssetBundleManager>().LoadAssetAsync<GameObject>(assetBundleType, assetName);
+            var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(assetBundleType);
+            var obj = await assetBundle.LoadAssetAsync<GameObject>(assetName).ToTask<GameObject>();
             // 实例化预设体
             var instanceObj = Object.Instantiate(obj);
             // 避免实例化出的对象的名字后带有(Clone)

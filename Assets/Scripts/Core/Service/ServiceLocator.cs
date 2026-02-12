@@ -19,6 +19,7 @@ using Core.Reflection;
 using Core.Res;
 using Core.Scene;
 using Core.ScriptableObject;
+using Core.Systems.Memorys;
 using Core.Time;
 using Core.Video;
 
@@ -46,6 +47,7 @@ namespace Core.Service
             Register<IMonoAdapter>(MonoAdapter.Instance);
             Register<IQuitHandler>(QuitHandler.Instance);
             Register<IUWRManager>(UWRManager.Instance);
+            Register<IMemoryMonitor>(MemoryMonitor.Instance);
 
             // 不继承Mono
             Register<IAssetBundleManager>(AssetBundleManager.Instance);

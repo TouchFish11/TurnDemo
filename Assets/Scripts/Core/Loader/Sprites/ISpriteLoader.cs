@@ -1,7 +1,8 @@
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Core.Loader.Loaders
+namespace Core.Loader.Sprites
 {
     /// <summary>
     /// 精灵加载器接口
@@ -9,11 +10,14 @@ namespace Core.Loader.Loaders
     public interface ISpriteLoader : IAssetLoader
     {
         /// <summary>
-        /// 异步加载精灵图片
+        /// 异步加载Sprite
         /// </summary>
         /// <param name="atlasName"></param>
         /// <param name="assetName"></param>
+        /// <param name="token"></param>
         /// <returns></returns>
-        Task<Sprite> GetSpriteAsync(string atlasName, string assetName);
+        Task<Sprite> LoadSpriteAsync(string atlasName, string assetName, CancellationToken token = default);
+
+        void UnloadSpriteAsync(string atlasName, string spriteName, bool unloadAllLoadedObjects = false);
     }
 }

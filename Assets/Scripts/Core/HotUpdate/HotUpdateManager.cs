@@ -6,6 +6,7 @@ using Core.AssetBundles.Management;
 using Core.Log;
 using Core.Service;
 using Core.Singleton;
+using Core.Tasks.Extensions;
 using HybridCLR;
 using UnityEngine;
 
@@ -16,8 +17,8 @@ namespace Core.HotUpdate
     /// </summary>
     public class HotUpdateManager : SingletonBase<HotUpdateManager>, IHotUpdateManager
     {
-        // 缓存热更程序集
-        private readonly Dictionary<string, Assembly>  _nameToAssemblyMap = new();
+        // 缓存热更程序集名称
+        private readonly List<string>  _assemblyNames = new();
         
         private HotUpdateManager()
         {
@@ -26,64 +27,91 @@ namespace Core.HotUpdate
 
         public async Task LoadAssemblys()
         {
-            // 卸载原来的旧缓存
-            UnloadAll();
+            Clear();
+            
+            var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(EAssetBundleType.HotUpdate);
             // 加载热更新AB包资源
-            var dllTexts = await ServiceLocator.Get<IAssetBundleManager>().LoadAssetsAsync<TextAsset>(EAssetBundleType.HotUpdate);
+            var dllTexts = new List<TextAsset>();
+            await assetBundle.LoadAllAssetsAsync<TextAsset>().ToTask(dllTexts);
             foreach (var dllText in dllTexts)
             {
                 // Editor环境下，HotUpdate.dll.bytes已经被自动加载，不需要加载，重复加载反而会出问题。
 #if !UNITY_EDITOR
-                UnloadAssembly(dllText.name);
                 var assembly = Assembly.Load(dllText.bytes);
                 RuntimeApi.LoadMetadataForAOTAssembly(dllText.bytes, HomologousImageMode.SuperSet);
-                _nameToAssemblyMap.Add(assembly.GetName().Name, assembly);
+                _assemblyNames.Add(assembly.GetName().Name);
                 LogManager.Log($"已加载热更程序集，{assembly.GetName().Name}");
 #else
                 // Editor下无需加载，直接查找获得HotUpdate程序集
                 foreach (var assembly in System.AppDomain.CurrentDomain.GetAssemblies())
                 {
-                    if (assembly.GetName().Name == dllText.name.Substring(0, dllText.name.LastIndexOf('.')))
+                    if (assembly.GetName().Name != dllText.name.Substring(0, dllText.name.LastIndexOf('.')))
                     {
-                        _nameToAssemblyMap.Add(assembly.GetName().Name, assembly);
-                        LogManager.Log($"已缓存编辑器已自动加载热更程序集，{dllText.name}");
+                        continue;
                     }
+                    
+                    _assemblyNames.Add(assembly.GetName().Name);
+                    LogManager.Log($"已缓存编辑器加载热更程序集名称，{dllText.name}");
                 }
 #endif
             }
 
         }
-        
-        public async Task LoadAssembly(string assemblyName)
-        {
-            // 卸载原来的旧缓存
-            UnloadAssembly(assemblyName);
-            // 加载热更新AB包资源
-            var dllText = await ServiceLocator.Get<IAssetBundleManager>().LoadAssetAsync<TextAsset>(EAssetBundleType.HotUpdate, assemblyName);
-            // 通过字节数组加载程序集
-            var assembly = Assembly.Load(dllText.bytes);
-            // 缓存加载的程序集
-            _nameToAssemblyMap.Add(assembly.GetName().Name, assembly); 
-        }
 
         public Assembly GetAssembly(string assemblyName)
         {
-            return _nameToAssemblyMap.GetValueOrDefault(assemblyName);
+            return Assembly.Load(assemblyName);
         }
-
+        
+        public Assembly GetCoreAssembly()
+        {
+            return Assembly.Load("Assembly-CSharp-Core");
+        }
+        
+        public Assembly GetConfigAssembly()
+        {
+            return Assembly.Load("Assembly-CSharp-Config");
+        }
+        
+        public Assembly GetGameAssembly()
+        {
+            return Assembly.Load("Assembly-CSharp-Game");
+        }
+        
+        /// <summary>
+        /// 获取所有程序集
+        /// </summary>
+        /// <returns></returns>
         public Assembly[] GetAssemblies()
         {
-            return new List<Assembly>(_nameToAssemblyMap.Values).ToArray();
+            var assemblies = new List<Assembly>
+            {
+                GetCoreAssembly(),
+                GetConfigAssembly(),
+                GetGameAssembly(),
+            };
+            
+            // 获取所有热更后的程序集
+            assemblies.AddRange(ServiceLocator.Get<IHotUpdateManager>().GetHotAssemblies()); 
+            return assemblies.ToArray();
         }
 
-        public void UnloadAssembly(string assemblyName)
+        public Assembly[] GetHotAssemblies()
         {
-            _nameToAssemblyMap.Remove(assemblyName);
+            var assemblies = new List<Assembly>(_assemblyNames.Count);
+            foreach (var assemblyName in _assemblyNames)
+            {
+                assemblies.Add(Assembly.Load(assemblyName));
+            }
+            return assemblies.ToArray();
         }
-
-        public void UnloadAll()
+        
+        /// <summary>
+        /// 清理名称缓存
+        /// </summary>
+        private void Clear()
         {
-            _nameToAssemblyMap.Clear();
+            _assemblyNames.Clear();
         }
     }
 }

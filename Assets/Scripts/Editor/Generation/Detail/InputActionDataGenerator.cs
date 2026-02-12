@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
-using Core.Extension;
+using Core.Extensions;
 using Core.Input.ActionAsset;
 using Core.Res;
 using CustomEditor.ScriptGeneration;

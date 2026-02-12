@@ -16,9 +16,9 @@ namespace Core.Singleton
         {
             get
             {
-                if (_instance == null)
+                if (!_instance)
                 {
-                    GameObject autoSingletoObj = new GameObject(typeof(T).Name);
+                    var autoSingletoObj = new GameObject(typeof(T).Name);
                     _instance = autoSingletoObj.AddComponent<T>();
                     DontDestroyOnLoad(autoSingletoObj);
                 }

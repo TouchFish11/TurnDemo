@@ -1,8 +1,8 @@
 
-namespace Core.Extension
+namespace Core.Extensions
 {
     /// <summary>
-    /// String拓展
+    /// String拓展类
     /// </summary>
     public static class StringExtension
     {

@@ -1,5 +1,7 @@
+using Core.HotUpdate;
 using Core.Log;
 using Core.Reflection;
+using Core.Service;
 using Core.Utility;
 
 namespace Game.UI.Battle.SkillKey.Provider
@@ -11,7 +13,7 @@ namespace Game.UI.Battle.SkillKey.Provider
     {
         void IFactory.InitFactory()
         {
-            FactoryUtility.ScanAllType(typeToInterfaceMap, AssemblyUtility.GetHotUpdateAssemblies());
+            FactoryUtility.ScanAllType(typeToInterfaceMap, ServiceLocator.Get<IHotUpdateManager>().GetAssemblies());
         }
         
         public ISkillKeyUIDataProvider GetCastSkillCondition<TProvider>()where TProvider : class, ISkillKeyUIDataProvider

@@ -3,6 +3,7 @@ using Core.AssetBundles.Management;
 using Core.Config;
 using Core.DataPersistence.Binary;
 using Core.Loader;
+using Core.Loader.Sprites;
 using Core.Log;
 using Core.Reflection;
 using Core.Service;
@@ -39,9 +40,9 @@ namespace GameHotUpdate.Item
                     var itemInfo = ServiceLocator.Get<IBinaryDataManager>()
                         .GetConfig<ItemInfoContainer>(EConfigLoadType.Excel).dataDic[awardId];
                     // 加载图标
-                    var itemIcon = await ServiceLocator.Get<IFactoryManager>()
-                        .GetFactory<IAssetLoaderFactory, AssetLoaderFactory>().GetSpriteLoader()
-                        .GetSpriteAsync(ResKeyCollection.Atlas_Icon_Item, itemInfo.f_icon);
+                    var itemIcon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(
+                        ResKeyCollection.Atlas_Icon_Item, 
+                        itemInfo.f_icon);
                     // 初始化
                     itemGrid.Init(itemIcon, num, itemInfo.f_quality);
                     callback?.Invoke(itemGrid);
@@ -77,9 +78,7 @@ namespace GameHotUpdate.Item
                     var itemInfo = ServiceLocator.Get<IBinaryDataManager>()
                         .GetConfig<ItemInfoContainer>(EConfigLoadType.Excel).dataDic[awardId];
                     // 加载图标
-                    var itemIcon = await ServiceLocator.Get<IFactoryManager>()
-                        .GetFactory<IAssetLoaderFactory, AssetLoaderFactory>().GetSpriteLoader()
-                        .GetSpriteAsync(ResKeyCollection.Atlas_Icon_Item, itemInfo.f_icon);
+                    var itemIcon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(ResKeyCollection.Atlas_Icon_Item, itemInfo.f_icon);
                     // 初始化
                     itemGrid.Init(itemIcon, num, itemInfo.f_quality);
                     callback?.Invoke(itemGrid);

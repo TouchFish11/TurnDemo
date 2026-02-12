@@ -60,7 +60,7 @@ namespace Game.Main
             
                 const string mainTypeName = "GameHotUpdate.Main.HotfixGameMain";
                 // 通过游戏热更初始化
-                foreach (var hotUpdateAssembly in AssemblyUtility.GetHotUpdateAssemblies())
+                foreach (var hotUpdateAssembly in ServiceLocator.Get<IHotUpdateManager>().GetHotAssemblies())
                 {
                     var main = hotUpdateAssembly.GetType(mainTypeName);
                     if (main != null)

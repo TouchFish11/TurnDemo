@@ -45,12 +45,7 @@ namespace GameHotUpdate.UI.Begin
                 return;
             }
 
-            // ��ʼ��AB��
-            if (!await ServiceLocator.Get<IAssetBundleManager>().Init())
-            {
-                LogManager.Log($"AB����ʼ��ʧ��");
-                return;
-            }
+            await ServiceLocator.Get<IAssetBundleManager>().Init();
 
             // ������Ƶ
             PlayVideo();

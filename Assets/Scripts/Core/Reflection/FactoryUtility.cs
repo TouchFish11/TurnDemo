@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Core.Components;
+using Core.HotUpdate;
+using Core.Service;
 using Core.Types;
 using Core.Utility;
 
@@ -63,7 +65,7 @@ namespace Core.Reflection
         /// <param name="dic"></param>
         public static void ScanAllFactory<TValue>(Dictionary<TypeIdentifier, TValue> dic) where TValue : class, IFactory
         {
-            foreach (var assembly in AssemblyUtility.GetAssemblies())
+            foreach (var assembly in ServiceLocator.Get<IHotUpdateManager>().GetAssemblies())
             {
                 foreach (var type in assembly.GetTypes())
                 {
@@ -74,7 +76,6 @@ namespace Core.Reflection
                     var factory = Activator.CreateInstance(type) as TValue;
                     factory?.InitFactory();
                     dic.Add(type.ToIdentifier(), factory);
-                    // LogManager.Log($"{nameof(FactoryUtility)}，查找且缓存工厂：{factory}");
                 }
             }
         }
@@ -85,7 +86,7 @@ namespace Core.Reflection
         public static void ScanComponents(IDictionary<string, Type> components)
         {
             // 获取热更的程序集
-            foreach (var assembly in AssemblyUtility.GetHotUpdateAssemblies())
+            foreach (var assembly in ServiceLocator.Get<IHotUpdateManager>().GetHotAssemblies())
             {
                 foreach (var type in assembly.GetTypes())
                 {

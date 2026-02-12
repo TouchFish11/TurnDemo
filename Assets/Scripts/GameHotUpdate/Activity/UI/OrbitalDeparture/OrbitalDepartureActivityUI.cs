@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.Config;
 using Core.Loader;
+using Core.Loader.Sprites;
 using Core.Pool;
 using Core.Reflection;
 using Core.Service;
@@ -50,11 +51,12 @@ namespace GameHotUpdate.Activity.UI.OrbitalDeparture
             _awardPreviewComponent.Init(this, activityInfo, ActivityData);
             
             // 初始化界面背景
-            var backGround = await ServiceLocator.Get<IFactoryManager>().GetFactory<IAssetLoaderFactory, AssetLoaderFactory>().GetSpriteLoader()
-                .GetSpriteAsync(ResKeyCollection.Atlas_Activity,
-                    this.activityInfo.f_bkUi_Res);
+            var backGround = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(
+                ResKeyCollection.Atlas_Activity,
+                this.activityInfo.f_bkUi_Res);
+            // 设置界面背景
             _activityBkComponent.SetBackGround(backGround);
-
+            
             UpdateBtnJoin();
             // 监听按钮
             _activityJoinComponent.OnClickJoin += OnTriggerJoin;

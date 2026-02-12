@@ -10,20 +10,12 @@ namespace Core.HotUpdate
     {
         /// <summary>
         /// 加载所有热更程序集
-        /// 加载后会覆盖原来的缓存
         /// </summary>
         /// <returns></returns>
         Task LoadAssemblys();
-        
-        /// <summary>
-        /// 加载指定程序集
-        /// 加载后会覆盖原来的缓存
-        /// </summary>
-        /// <param name="assemblyName">程序集名称</param>
-        Task LoadAssembly(string assemblyName);
 
         /// <summary>
-        /// 获取加载的指定程序集
+        /// 获取加载的指定热更程序集
         /// </summary>
         /// <param name="assemblyName"></param>
         /// <returns></returns>
@@ -33,17 +25,16 @@ namespace Core.HotUpdate
         /// 获取所有加载的热更程序集
         /// </summary>
         /// <returns></returns>
-        Assembly[] GetAssemblies();
-        
-        /// <summary>
-        /// 卸载指定程序集
-        /// </summary>
-        /// <param name="assemblyName">程序集名称</param>
-        void UnloadAssembly(string assemblyName);
+        Assembly[] GetHotAssemblies();
 
         /// <summary>
-        /// 卸载所有程序集
+        /// 获取所有程序集
         /// </summary>
-        void UnloadAll();
+        /// <returns></returns>
+        Assembly[] GetAssemblies();
+
+        Assembly GetCoreAssembly();
+        Assembly GetConfigAssembly();
+        Assembly GetGameAssembly();
     }
 }
