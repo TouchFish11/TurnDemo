@@ -246,6 +246,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 1420841645}
+  canvas: {fileID: 706164207}
 --- !u!1 &706164203
 GameObject:
   m_ObjectHideFlags: 0

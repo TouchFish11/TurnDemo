@@ -6,9 +6,8 @@ using Game.Battle.Event;
 using Game.Battle.Objects;
 using Game.Battle.Skill.Interface;
 using Game.Battle.Status;
-using Game.Battle.TargetSelect;
-using Game.UI.Battle;
 using GameHotUpdate.Animation;
+using GameHotUpdate.Battle.Event.Skill;
 using GameHotUpdate.Skill.Component;
 using UnityEngine;
 
@@ -47,21 +46,14 @@ namespace GameHotUpdate.Battle.Skill.Skills
         {
             // 执行终结技释放前的预处理逻辑
             yield return OnPreUltimateCast();
-
             // 待技能组件确认释放（阻塞直到释放条件满足）
             yield return new WaitUntil(() => skillComponent.IsRelease);
-
             // 清空释放者当前能量（终结技消耗所有能量）
             PropertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentEnergy, 0);
-
             // 初始化技能目标（重置/筛选技能可作用的目标列表）
             ServiceLocator.Get<ISkillManager>().InitSkillTarget(this);
-
-            // 关闭目标选择（终结技释放时不再允许手动选择目标）
-            ServiceLocator.Get<ITargetSelectManager>().InActiveSelectTarget();
-            
-            ServiceLocator.Get<IBattleUIScheduler>().UltimateCasting();
-
+            // 终结释放通用逻辑
+            context.GetEventBus().TriggerEvent(new UltimateCastEvent(context));
             // 执行具体的终结技释放逻辑（子类实现）
             yield return OnUltimateCast(context);
         }

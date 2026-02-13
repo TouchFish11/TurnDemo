@@ -11,9 +11,7 @@ using Game.Battle.Skill.Handler;
 using Game.Battle.Status;
 using Game.Battle.TargetSelect;
 using Game.Property;
-using Game.UI.Battle;
 using Game.VFX;
-using GameHotUpdate.Battle.UI.Base;
 using GameHotUpdate.Property;
 using UnityEngine;
 
@@ -35,7 +33,7 @@ namespace GameHotUpdate.Battle.Skill
         // 技能附带的Buff/状态ID数组
         protected int[] statusIds;
         // 技能释放后等待时间（用于战斗UI/逻辑缓冲，单位：秒）
-        private readonly float waitTime = 0.85f;
+        private const float waitTime = 0.85f;
 
         /// <summary>
         /// 技能配置信息（从配置表加载的技能基础属性）
@@ -138,8 +136,6 @@ namespace GameHotUpdate.Battle.Skill
             yield return OnCast(context);
             // 等待缓冲时间，保证战斗UI/逻辑的稳定性
             yield return new WaitForSeconds(waitTime);
-            // 执行释放后处理逻辑
-            OnPostCast();
         }
 
         /// <summary>
@@ -149,16 +145,6 @@ namespace GameHotUpdate.Battle.Skill
         /// <param name="context">战斗上下文</param>
         /// <returns>协程迭代器</returns>
         protected abstract IEnumerator OnCast(IBattleContext context);
-
-        /// <summary>
-        /// 技能释放后处理逻辑
-        /// 负责清理战斗UI、更新累计伤害等收尾操作
-        /// </summary>
-        protected void OnPostCast()
-        {
-            // 更新累计伤害UI（参数1：是否强制刷新，参数2：重置数值为0）
-            ((BattleController)ServiceLocator.Get<IBattleUIScheduler>().BattleController).BattleUiManager.UpdateCumulativeDamage(false, 0);
-        }
 
         /// <summary>
         /// 技能释放后恢复能量（蓝量/怒气等）

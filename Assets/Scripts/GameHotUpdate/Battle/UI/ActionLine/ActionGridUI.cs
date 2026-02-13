@@ -12,7 +12,7 @@ namespace GameHotUpdate.Battle.UI.ActionLine
     /// 行动格子UI组件
     /// 负责战斗场景中行动格子的视觉表现、选中状态、闪烁动画、位移动画等逻辑
     /// </summary>
-    public class ActionGridUI : BaseUIBehaviour
+    public class ActionGridUI : UIBehaviourBase
     {
         // 选中状态的背景图片
         [Inject] private Image imgSelect;

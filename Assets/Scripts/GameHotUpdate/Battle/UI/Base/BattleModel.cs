@@ -2,11 +2,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Core.Pool;
 using Core.Service;
+using Core.UI.MVC;
 using GameHotUpdate.Battle.UI.ActionLine;
 using GameHotUpdate.Battle.UI.BattlePoint;
 using GameHotUpdate.Battle.UI.Role;
 using GameHotUpdate.Battle.UI.SkillKey;
-using GameHotUpdate.UI.MVC;
 
 namespace GameHotUpdate.Battle.UI.Base
 {

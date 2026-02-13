@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Core.AssetBundles.Management;
 using Core.Config;
+using Core.Loader.UI;
 using Core.Mono;
 using Core.Pool;
 using Core.Service;
@@ -13,6 +14,7 @@ using Game.Battle.Toughness;
 using Game.Objects;
 using GameHotUpdate.Battle.Event.General;
 using GameHotUpdate.Cameras;
+using GameHotUpdate.Manager;
 using GameHotUpdate.Objects;
 using GameHotUpdate.Property;
 using GameHotUpdate.Tasks;
@@ -25,7 +27,7 @@ namespace GameHotUpdate.Battle.UI.MonsterStateUI
     /// 普通怪物状态UI控制器
     /// 负责显示怪物的血量、韧性、弱点等状态，并跟随怪物位置更新UI
     /// </summary>
-    public class NormalMonsterStateUI : BaseUIBehaviour
+    public class NormalMonsterStateUI : UIBehaviourBase
     {
         // 血量渐变遮罩（用于血量变化时的渐变动画效果）
         [Inject] private Image imgFade;
@@ -115,7 +117,7 @@ namespace GameHotUpdate.Battle.UI.MonsterStateUI
             foreach (var elementType in toughnessComponent.WeakPropertys)
             {
                 // 从资源包加载弱点UI预制体，并挂载到弱点容器下
-                var weaknessIconObj = await ServiceLocator.Get<IObjectBuilder>().GetGameobject(EAssetBundleType.UI, ResKeyCollection.WeaknessUI, WeaknessBar);
+                var weaknessIconObj = await ServiceLocator.Get<IUiLoader>().GetUIGameobject(EAssetBundleType.UI, ResKeyCollection.WeaknessUI, WeaknessBar);
                 var weaknessIcon = weaknessIconObj.GetComponent<Image>();
                 // 设置弱点图标颜色（根据元素类型转换为对应颜色）
                 weaknessIcon.color = ((int)elementType).ToElementTypeColor();

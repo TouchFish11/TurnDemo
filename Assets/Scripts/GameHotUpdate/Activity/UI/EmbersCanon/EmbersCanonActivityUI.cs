@@ -2,13 +2,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.Config;
-using Core.Loader;
-using Core.Loader.Sprites;
+using Core.Loader.Sprite;
+using Core.Loader.UI;
 using Core.Log;
 using Core.Pool;
-using Core.Reflection;
 using Core.Service;
-using Game.Objects;
 using GameHotUpdate.Activity.Core;
 using GameHotUpdate.Activity.UI.Common;
 using GameHotUpdate.Item;
@@ -19,7 +17,7 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
     /// <summary>
     /// 余烬圣典活动UI
     /// </summary>
-    public class EmbersCanonActivityUI : ActivityBase
+    public class EmbersCanonActivityUI : ActivityUIBehaviourBase
     {
         private ActivityBkComponent _activityBkComponent;
         private ActivityJoinComponent _activityJoinComponent;
@@ -78,8 +76,8 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
         private async void OnTriggerJoin()
         {
             // 创建关卡界面到活动界面下
-            var subActivityUi  = await ServiceLocator.Get<IObjectBuilder>()
-                .GetHotfixUIObject<EmbersCanonSubActivityUI_01>(EAssetBundleType.UI, ResKeyCollection.EmbersCanonSubActivityUI_01,
+            var subActivityUi  = await ServiceLocator.Get<IUiLoader>()
+                .GetUIObject<EmbersCanonSubActivityUI_01>(EAssetBundleType.UI, ResKeyCollection.EmbersCanonSubActivityUI_01,
                     activityView);
             // 初始化关卡子界面
             subActivityUi.Init(ActivityData, activityInfo);

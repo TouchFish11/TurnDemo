@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Core.HotUpdate;
+using Core.Log;
 using Core.Reflection;
 using Core.Service;
-using Core.Utility;
 
 namespace GameHotUpdate.Activity.Core
 {
@@ -17,7 +17,7 @@ namespace GameHotUpdate.Activity.Core
         
         public void InitFactory()
         {
-            FactoryUtility.ScanAllType<IActivity, string, Type>(_activityDic, type => type.Name, type => type, assemblies: ServiceLocator.Get<IHotUpdateManager>().GetAssemblies());
+            FactoryUtility.ScanAllType<IActivity, string, Type>(_activityDic, type => type.Name, type => type, assemblies: ServiceLocator.Get<IHotUpdateManager>().GetHotAssemblies());
         }
 
         public Type GetActivity(string activityKey)

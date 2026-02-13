@@ -10,7 +10,7 @@ namespace GameHotUpdate.Activity.UI.Base
     /// <summary>
     /// 活动UI
     /// </summary>
-    public class ActivityUI : BaseUIBehaviour
+    public class ActivityUI : UIBehaviourBase
     {
         [Inject] private Image imgIcon;
         [Inject] private TextMeshProUGUI txtName;

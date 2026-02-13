@@ -355,6 +355,7 @@ GameObject:
   - component: {fileID: 4497460473388008380}
   - component: {fileID: 8575296676606332680}
   - component: {fileID: 5995207092651295279}
+  - component: {fileID: 4517111831446845777}
   m_Layer: 5
   m_Name: InteractUI
   m_TagString: Untagged
@@ -466,3 +467,15 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4517111831446845777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5993851114338974749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 738c01c996596af4f974053927e6c45c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -5,7 +5,7 @@ using Game.Battle.Event;
 namespace GameHotUpdate.Battle.Event.Turn
 {
     /// <summary>
-    /// �˳�ս���¼�
+    /// 战斗退出事件
     /// </summary>
     public class QuitBattleEvent : BattleEvent
     {

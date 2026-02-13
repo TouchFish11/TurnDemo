@@ -2,6 +2,7 @@ using System.Collections;
 using Game.Battle.Command;
 using Game.Battle.Context;
 using Game.Battle.Skill.Interface;
+using GameHotUpdate.Battle.Event.General;
 
 namespace GameHotUpdate.Battle.Command
 {
@@ -31,7 +32,8 @@ namespace GameHotUpdate.Battle.Command
         /// <returns></returns>
         public override IEnumerator Execute(IBattleContext context)
         {
-            return SkillData.Skill.Cast(context);
+            yield return SkillData.Skill.Cast(context);
+            Sender.Context.GetEventBus().TriggerEvent(new PostCastEvent(Sender.Context));
         }
 
         public override IEnumerator ExcutePostProcess(IBattleContext context)

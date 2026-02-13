@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Core.UI.MVC
 {
     [RequireComponent(typeof(CanvasGroup))]
-    public abstract class UIView : BaseUIBehaviour, IuiView
+    public abstract class UIView : UIBehaviourBase, IuiView
     {
         // 画布组
         protected CanvasGroup canvasGroup;
@@ -21,7 +21,7 @@ namespace Core.UI.MVC
         {
             base.Awake();
             canvasGroup = GetComponent<CanvasGroup>();
-            ViewObj = this.gameObject;
+            ViewObj = gameObject;
         }
 
         protected virtual void Update()

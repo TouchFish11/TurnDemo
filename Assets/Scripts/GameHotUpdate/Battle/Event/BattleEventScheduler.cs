@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using Core.DataPersistence.Binary;
 using Core.Log;
@@ -14,6 +13,8 @@ using Game.Battle.Objects;
 using Game.Battle.Skill.Enum;
 using Game.Battle.TargetSelect;
 using Game.UI.Battle.SkillKey.Provider;
+using GameHotUpdate.Battle.Event.General;
+using GameHotUpdate.Battle.Event.Skill;
 using GameHotUpdate.Battle.Event.Turn;
 using GameHotUpdate.Battle.Event.UI;
 using GameHotUpdate.Battle.UI.Base;
@@ -53,6 +54,12 @@ namespace GameHotUpdate.Battle.Event
             _context.GetEventBus().AddListener<TurnStartEvent>(TurnStartEventScheduler);
             // 监听角色技能选择事件
             _context.GetEventBus().AddListener<SelectSkillEvent>(SelectSkillEventScheduler);
+            // 监听技能释放后通用逻辑事件
+            _context.GetEventBus().AddListener<PostCastEvent>(OnPostCastDispatch);
+            // 监听技能释放后通用逻辑事件
+            _context.GetEventBus().AddListener<UltimateCastEvent>(OnUltimateCastDispatch);
+            // 监听更新等待队列事件
+            _context.GetEventBus().AddListener<UpdateWaitCmdEvent>(OnUpdateWaitCmdEvent);
         }
 
         /// <summary>
@@ -82,6 +89,41 @@ namespace GameHotUpdate.Battle.Event
                 .GetCastSkillCondition<UltimateSkillKeyUIDataProvider>();
             // 根据数据更新玩家操作按键，按键触发技能选择事件
             controller.BattleUiManager.UpdateOperator(caster, provider);
+        }
+
+        /// <summary>
+        /// 技能释放后处理逻辑
+        /// </summary>
+        /// <param name="postCastEvent"></param>
+        private void OnPostCastDispatch(PostCastEvent postCastEvent)
+        {
+            var controller = ServiceLocator.Get<IUIManager>().GetController<BattleController>();
+            // 更新累计伤害UI
+            controller.BattleUiManager.UpdateCumulativeDamage(false, 0);
+        }
+
+        /// <summary>
+        /// 终结技释放调度逻辑
+        /// 处理终结释放时的通用逻辑
+        /// </summary>
+        private void OnUltimateCastDispatch(UltimateCastEvent ultimateCastEvent)
+        {
+            // 关闭目标选择（终结技释放时不再允许手动选择目标）
+            ServiceLocator.Get<ITargetSelectManager>().InActiveSelectTarget();
+            var controller = ServiceLocator.Get<IUIManager>().GetController<BattleController>();
+            controller.BattleUiManager.ClearSelectMarker();
+            controller.BattleUiManager.SetOperator(null);
+            controller.BattleUiManager.SetActTipActive(E_ActTipType.Hide);
+        }
+
+        /// <summary>
+        /// 更新等待队列事件回调
+        /// </summary>
+        /// <param name="updateWaitCmdEvent"></param>
+        private void OnUpdateWaitCmdEvent(UpdateWaitCmdEvent updateWaitCmdEvent)
+        {
+            var controller = ServiceLocator.Get<IUIManager>().GetController<BattleController>();
+            controller.BattleUiManager.UpdateWaitingCommmand(updateWaitCmdEvent.BattleEntities);
         }
         
         /// <summary>

@@ -1,6 +1,7 @@
 using Core.HotUpdate;
 using Core.Loader.Audios;
-using Core.Loader.Sprites;
+using Core.Loader.Sprite;
+using Core.Loader.UI;
 using Core.Reflection;
 using Core.Service;
 
@@ -26,6 +27,9 @@ namespace Core.Loader
                         break;
                     case IAudioLoader audioLoader:
                         ServiceLocator.Register(audioLoader);
+                        break;
+                    case IUiLoader uiLoader:
+                        ServiceLocator.Register(uiLoader);
                         break;
                 }
             }

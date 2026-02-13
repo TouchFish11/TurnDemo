@@ -5,14 +5,14 @@
     "animation.assetbundle": {
       "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
       "PackageName": "animation.assetbundle",
-      "PackageSize": 903567,
-      "PackageMd5": "5ba88d324b258583f38312521954d391"
+      "PackageSize": 1666129,
+      "PackageMd5": "40cfc74531e87b17ff1806034fb2b0c3"
     },
     "animator.assetbundle": {
       "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
       "PackageName": "animator.assetbundle",
-      "PackageSize": 186764,
-      "PackageMd5": "c86405e01a4fa92de00a5efad7fd9c90"
+      "PackageSize": 500926,
+      "PackageMd5": "82c8996a59a2d7cce3ea8d19294f47f9"
     },
     "camera.assetbundle": {
       "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
@@ -29,8 +29,8 @@
     "hotupdate.assetbundle": {
       "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
       "PackageName": "hotupdate.assetbundle",
-      "PackageSize": 169361,
-      "PackageMd5": "3853fe75fcf68e69cbe0ec387010f794"
+      "PackageSize": 168607,
+      "PackageMd5": "9d2ab9577f90fb520256ff2c3b7b5c4b"
     },
     "material.assetbundle": {
       "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
@@ -47,44 +47,38 @@
     "PC.assetbundle": {
       "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
       "PackageName": "PC.assetbundle",
-      "PackageSize": 1974,
-      "PackageMd5": "696bcfb86401664f69db54cf5480f936"
+      "PackageSize": 1936,
+      "PackageMd5": "6446faed1880cc7e1876eb3297141130"
     },
     "prefab.assetbundle": {
       "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
       "PackageName": "prefab.assetbundle",
-      "PackageSize": 29034314,
-      "PackageMd5": "08d3f83cfeda76d9e8caf03fb86c7259"
+      "PackageSize": 42774554,
+      "PackageMd5": "84546166412ddaf8b7daa05192fc0a58"
     },
     "scene.assetbundle": {
       "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
       "PackageName": "scene.assetbundle",
-      "PackageSize": 14517861,
-      "PackageMd5": "e09a7f42cdc68127b61f25badca44d80"
+      "PackageSize": 31565192,
+      "PackageMd5": "8feb35cefee8228964f04da9a2752c02"
     },
     "spriteatlas.assetbundle": {
       "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
       "PackageName": "spriteatlas.assetbundle",
-      "PackageSize": 4952500,
-      "PackageMd5": "0317e36683d4b21743d5755c18eb7590"
-    },
-    "texture.assetbundle": {
-      "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
-      "PackageName": "texture.assetbundle",
-      "PackageSize": 267607,
-      "PackageMd5": "5fd7fc53ddf2fde5f9a6ae61d03a8945"
+      "PackageSize": 5001378,
+      "PackageMd5": "dcda0dc87e7ff07af6729bc68148c525"
     },
     "ui.assetbundle": {
       "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
       "PackageName": "ui.assetbundle",
-      "PackageSize": 14284530,
-      "PackageMd5": "1041f0eaf4cf59bc946cffd5d4b676a5"
+      "PackageSize": 14037695,
+      "PackageMd5": "b8a5ccee84d5a92d5bd9120609fbb6fd"
     },
     "vfx.assetbundle": {
       "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
       "PackageName": "vfx.assetbundle",
-      "PackageSize": 11048047,
-      "PackageMd5": "3a423235976d14b4fdbcf069ba2c1790"
+      "PackageSize": 11641914,
+      "PackageMd5": "e0b3df98dcc4ac3e5c539b77763df678"
     }
   }
 }

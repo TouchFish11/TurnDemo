@@ -13,6 +13,7 @@ using GameHotUpdate.Battle.Event.UI;
 using GameHotUpdate.Battle.UI.Base;
 using GameHotUpdate.Command;
 using GameHotUpdate.Condition;
+using GameHotUpdate.Manager;
 using GameHotUpdate.Objects;
 using GameHotUpdate.Property;
 
@@ -44,7 +45,7 @@ namespace GameHotUpdate.Battle.StateMeachine
             // 监听插入指令
             Context.GetEventBus().AddListener<InsertCommandEvent>(OnInsertCommand);
             // TODO：写死，后续根据配置优化
-            battleOverConditions.Add(new AllMonsterDeadCondition());
+            battleOverConditions.Add(new AllTurnOverCondition());
             battleOverConditions.Add(new AllPlayerDeadCondition());
             
             // 激活战斗界面显示
@@ -243,13 +244,13 @@ namespace GameHotUpdate.Battle.StateMeachine
                     return true;
                 }
             }
-            
             return false;
         }
 
         public override void Exit()
         {
-
+            // TODO：结束当前回合的循环
+            
         }
 
         public override void Dispose()

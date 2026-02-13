@@ -8,6 +8,7 @@ namespace Game.Battle.Event
     public interface IBattleEventScheduler
     {
         GameObject GameObject { get; }
+        
         void Init(IBattleContext context);
 
         /// <summary>

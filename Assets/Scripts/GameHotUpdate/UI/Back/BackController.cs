@@ -1,7 +1,7 @@
 using System;
 using Core.Service;
 using Core.UI;
-using GameHotUpdate.UI.MVC;
+using Core.UI.MVC;
 
 namespace GameHotUpdate.UI.Back
 {

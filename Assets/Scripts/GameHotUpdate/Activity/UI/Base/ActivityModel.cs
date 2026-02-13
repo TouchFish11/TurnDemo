@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using Core.Log;
 using Core.Pool;
 using Core.Service;
+using Core.UI.MVC;
 using GameHotUpdate.Activity.Core;
-using GameHotUpdate.UI.MVC;
 
 namespace GameHotUpdate.Activity.UI.Base
 {

@@ -2,11 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using Core.Log;
 using Core.Service;
+using Core.UI;
+using Core.Utility;
 using Game.Battle.Command;
 using Game.Battle.Objects;
-using Game.UI.Battle;
+using GameHotUpdate.Battle.Context;
+using GameHotUpdate.Battle.Event.General;
 using GameHotUpdate.Battle.StateMeachine;
 using GameHotUpdate.Battle.UI.Base;
+using GameHotUpdate.Battle.Utility;
+using GameHotUpdate.Cameras;
+using GameHotUpdate.Manager;
+using UnityEngine;
 
 namespace GameHotUpdate.Command
 {
@@ -58,8 +65,6 @@ namespace GameHotUpdate.Command
                 // 执行完成后清空当前命令
                 _command = null;
             }
-
-            // 注：此处可扩展战斗结束后的统一处理逻辑
         }
 
         /// <summary>
@@ -75,6 +80,39 @@ namespace GameHotUpdate.Command
             _isQuit = _turnLoopState.CheckBattleOver();
             // 过滤队列中无效的指令（如执行者已死亡的指令）
             FilterInvalidCommand();
+            if (!_isQuit)
+            {
+                // 当前波次是否结束，即判断当前怪物是否全部死亡
+                if (_turnLoopState.Context.GetAliveMonsterEntityCount() != 0)
+                {
+                    yield break;
+                }
+                
+                // 相机视角
+                yield return TaskUtility.WaitForTask(ServiceLocator.Get<IBattleCameraManager>()
+                    .CreateCamera(null, new Vector3(0, 1, -3.5f), Quaternion.identity));
+            
+                // 显示战斗开始协程
+                // TODO：可拓展ShowBattleStart方法，显示当前是第几回合的文本
+                var controller = ServiceLocator.Get<IUIManager>().GetController<BattleController>();
+                controller.BattleUiManager.ShowBattleStart();
+            
+                // 创建入场特效
+                // ...
+            
+                // 创建怪物并缓存
+                List<IBattleEntityObject> monsters = null;
+                yield return TaskUtility.WaitForTask(ServiceLocator.Get<IBattleManager>().GetTurnCreator().CreateWave(), list => monsters = list);
+                foreach (var battleEntityObject in monsters)
+                {
+                    _turnLoopState.Context.AddBattleEntity(battleEntityObject);
+                    _turnLoopState.Context.AddSceneMonster(battleEntityObject);
+                }
+            
+                // 初始化行动顺序
+                BattleUtility.InitOrder(_turnLoopState.Context);
+                yield return new WaitForSeconds(1f);
+            }
         }
 
         /// <summary>
@@ -93,7 +131,7 @@ namespace GameHotUpdate.Command
                 }
             }
             // 更新UI：刷新等待指令的显示列表
-            ((BattleController)ServiceLocator.Get<IBattleUIScheduler>().BattleController).BattleUiManager.UpdateWaitingCommmand(GetCommandSenders());
+            _turnLoopState.Context.GetEventBus().TriggerEvent(new UpdateWaitCmdEvent(_turnLoopState.Context, GetCommandSenders()));
         }
 
         /// <summary>
@@ -129,7 +167,7 @@ namespace GameHotUpdate.Command
             // 按指令优先级重新排序队列
             SortCommand();
             // 更新UI：刷新等待指令的显示列表
-            ((BattleController)ServiceLocator.Get<IBattleUIScheduler>().BattleController).BattleUiManager.UpdateWaitingCommmand(GetCommandSenders());
+            _turnLoopState.Context.GetEventBus().TriggerEvent(new UpdateWaitCmdEvent(_turnLoopState.Context, GetCommandSenders()));
         }
 
         /// <summary>
@@ -140,7 +178,7 @@ namespace GameHotUpdate.Command
         {
             _battleCommands.RemoveAt(0);
             // 更新UI：刷新等待指令的显示列表
-            ((BattleController)ServiceLocator.Get<IBattleUIScheduler>().BattleController).BattleUiManager.UpdateWaitingCommmand(GetCommandSenders());
+            _turnLoopState.Context.GetEventBus().TriggerEvent(new UpdateWaitCmdEvent(_turnLoopState.Context, GetCommandSenders()));
         }
 
         /// <summary>

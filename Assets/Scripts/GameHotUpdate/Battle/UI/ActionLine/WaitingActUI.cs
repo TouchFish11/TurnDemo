@@ -7,7 +7,7 @@ namespace GameHotUpdate.Battle.UI.ActionLine
     /// <summary>
     /// 等待行动UI
     /// </summary>
-    public class WaitingActUI : BaseUIBehaviour
+    public class WaitingActUI : UIBehaviourBase
     {
         [Inject] private Image imgIcon;
 

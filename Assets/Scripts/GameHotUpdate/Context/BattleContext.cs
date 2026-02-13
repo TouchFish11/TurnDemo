@@ -17,6 +17,7 @@ namespace GameHotUpdate.Context
 {
     /// <summary>
     /// 战斗上下文
+    /// TODO：只保存数据，通过服务类提供给外部使用
     /// </summary>
     public class BattleContext : IBattleContext
     {

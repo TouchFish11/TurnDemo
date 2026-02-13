@@ -4,15 +4,13 @@ using Config.ActivityConfigSO;
 using Core.AssetBundles.Management;
 using Core.Config;
 using Core.DataPersistence.Json;
-using Core.Loader;
-using Core.Loader.Sprites;
+using Core.Loader.Sprite;
+using Core.Loader.UI;
 using Core.Pool;
-using Core.Reflection;
 using Core.Service;
 using Core.Tasks.Extensions;
 using Core.UI;
 using Game.Manager;
-using Game.Objects;
 using GameHotUpdate.Activity.Core;
 using GameHotUpdate.Activity.Data;
 using UnityEngine;
@@ -23,7 +21,7 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
     /// <summary>
     /// 余烬圣典子界面UI01
     /// </summary>
-    public class EmbersCanonSubActivityUI_01 : ActivityBase
+    public class EmbersCanonSubActivityUI_01 : ActivityUIBehaviourBase
     {
         [Inject] private ScrollRect svLevel;
 
@@ -43,7 +41,7 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
             // 初始化关卡
             foreach (var battleConfigEntry in battleConfigEntryColletion.battleConfigs)
             {
-                var battleLevelUI = await ServiceLocator.Get<IObjectBuilder>().GetHotfixUIObject<BattleLevelUI>(EAssetBundleType.UI,
+                var battleLevelUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<BattleLevelUI>(EAssetBundleType.UI,
                     ResKeyCollection.BattleLevelUI, svLevel.content);
                 // 获取用户数据中的战斗关卡条目
                 var levelEntryData = embersCanonData.GetLevelData(battleConfigEntry.levelId);

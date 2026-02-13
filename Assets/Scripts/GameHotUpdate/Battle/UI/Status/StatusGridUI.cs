@@ -12,7 +12,7 @@ namespace GameHotUpdate.Battle.UI.Status
     /// <summary>
     /// ״̬����UI
     /// </summary>
-    public class StatusGridUI : BaseUIBehaviour
+    public class StatusGridUI : UIBehaviourBase
     {
         [Inject] private Image imgIcon;
         [Inject] private Image imgBuffOrDeBuff;

@@ -168,9 +168,13 @@ namespace Game.Battle.Context
         List<IBattleEntityObject> GetSceneMonsters();
         
         List<IBattleEntityObject> GetSceneRoles();
+        
         void AddSceneMonster(IBattleEntityObject battleEntity);
+        
         void AddSceneRole(IBattleEntityObject battleEntity);
+        
         void RemoveSceneMonster(IBattleEntityObject battleEntity);
+        
         void RemoveSceneRole(IBattleEntityObject battleEntity);
     }
 }

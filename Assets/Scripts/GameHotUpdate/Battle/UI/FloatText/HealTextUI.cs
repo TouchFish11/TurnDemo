@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace GameHotUpdate.Battle.UI.FloatText
 {
-    public class HealTextUI : BaseUIBehaviour
+    public class HealTextUI : UIBehaviourBase
     {
         // 治疗数值文本（如"1000"、"500"等）
         [Inject] private TextMeshProUGUI txtHealNum;

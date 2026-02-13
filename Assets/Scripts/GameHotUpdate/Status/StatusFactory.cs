@@ -4,7 +4,6 @@ using System.Reflection;
 using Core.HotUpdate;
 using Core.Reflection;
 using Core.Service;
-using Core.Utility;
 using Game.Battle.Status;
 
 namespace GameHotUpdate.Status

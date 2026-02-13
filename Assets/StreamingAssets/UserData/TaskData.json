@@ -1,6 +1,39 @@
 {
   "$type": "GameHotUpdate.Tasks.TaskDataCollection, Assembly-CSharp-Game-HotUpdate",
   "keyToValueMap": {
-    "$type": "System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[GameHotUpdate.Tasks.TaskData, Assembly-CSharp-Game-HotUpdate]], mscorlib"
+    "$type": "System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[GameHotUpdate.Tasks.TaskData, Assembly-CSharp-Game-HotUpdate]], mscorlib",
+    "1_1": {
+      "$type": "GameHotUpdate.Tasks.TaskData, Assembly-CSharp-Game-HotUpdate",
+      "currentTaskId": "1_1",
+      "currentPro": 1,
+      "isCompleted": true,
+      "isTracking": false,
+      "CurrentTaskId": "1_1",
+      "CurrentPro": 1,
+      "IsCompleted": true,
+      "IsTracking": false
+    },
+    "1_2": {
+      "$type": "GameHotUpdate.Tasks.TaskData, Assembly-CSharp-Game-HotUpdate",
+      "currentTaskId": "1_2",
+      "currentPro": 1,
+      "isCompleted": true,
+      "isTracking": false,
+      "CurrentTaskId": "1_2",
+      "CurrentPro": 1,
+      "IsCompleted": true,
+      "IsTracking": false
+    },
+    "2_1": {
+      "$type": "GameHotUpdate.Tasks.TaskData, Assembly-CSharp-Game-HotUpdate",
+      "currentTaskId": "2_1",
+      "currentPro": 0,
+      "isCompleted": false,
+      "isTracking": true,
+      "CurrentTaskId": "2_1",
+      "CurrentPro": 0,
+      "IsCompleted": false,
+      "IsTracking": true
+    }
   }
 }

@@ -12,8 +12,8 @@ using Core.Singleton;
 using Core.UI;
 using Core.Utility;
 using Game.Dialogue;
+using GameHotUpdate.Dialogue.UI;
 using GameHotUpdate.Tasks;
-using GameHotUpdate.UI.Dialogue;
 using UnityEngine;
 
 namespace GameHotUpdate.Dialogue

@@ -1,9 +1,7 @@
-using System;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.Pool;
 using Core.Service;
-using Core.UI;
 using Game.Objects;
 using UnityEngine;
 
@@ -37,34 +35,6 @@ namespace GameHotUpdate.Manager
             return hotfixObject;
         }
         
-        public async Task<T> GetHotfixUIObject<T>(EAssetBundleType assetBundleType, string assetName, Transform parent, bool worldPosStay = false) where T : BaseUIBehaviour
-        {
-            var cacheObj = await ServiceLocator.Get<IPoolManager>().GetAssetBundleObjAsync(assetBundleType, assetName);
-            cacheObj.transform.SetParent(parent, worldPosStay);
-
-            if (cacheObj.TryGetComponent(out T component))
-            {
-                return component;
-            }
-            
-            var uiObj = cacheObj.AddComponent<T>();
-            return uiObj;
-        }
-        
-        public async Task<Component> GetHotfixUIObject(EAssetBundleType assetBundleType, Type type, string assetName, Transform parent, bool worldPosStay = false)
-        {
-            var cacheObj = await ServiceLocator.Get<IPoolManager>().GetAssetBundleObjAsync(assetBundleType, assetName);
-            cacheObj.transform.SetParent(parent, worldPosStay);
-
-            if (cacheObj.TryGetComponent(type, out var component))
-            {
-                return component;
-            }
-            
-            var uiObj = cacheObj.AddComponent(type);
-            return uiObj;
-        }
-
         /// <summary>
         /// 获取对象
         /// </summary>

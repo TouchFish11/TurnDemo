@@ -8,9 +8,9 @@ namespace GameHotUpdate.Activity.UI.Base
     /// <summary>
     /// 活动UI组件
     /// </summary>
-    public abstract class ActivityUIComponent : BaseUIBehaviour, IComponent
+    public abstract class ActivityUIComponent : UIBehaviourBase, IComponent
     {
-        protected ActivityBase ActivityBase { get; private set; }
+        protected ActivityUIBehaviourBase ActivityUIBehaviourBase { get; private set; }
         protected ActivityInfo ActivityInfo { get; private set; }
         protected ActivityData ActivityData { get; private set; }
         
@@ -22,12 +22,12 @@ namespace GameHotUpdate.Activity.UI.Base
         /// <summary>
         /// 初始化UI组件
         /// </summary>
-        /// <param name="activityBase"></param>
+        /// <param name="activityUIBehaviourBase"></param>
         /// <param name="activityInfo"></param>
         /// <param name="activityData"></param>
-        public void Init(ActivityBase activityBase, ActivityInfo activityInfo, ActivityData activityData)
+        public void Init(ActivityUIBehaviourBase activityUIBehaviourBase, ActivityInfo activityInfo, ActivityData activityData)
         {
-            ActivityBase = activityBase;
+            ActivityUIBehaviourBase = activityUIBehaviourBase;
             ActivityInfo = activityInfo;
             ActivityData = activityData;
             

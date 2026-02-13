@@ -2,14 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Core.AssetBundles.Management;
 using Core.AssetBundles.Update.Collection;
 using Core.DataPersistence.Json;
-using Core.Service;
 using Core.Utility;
 using CustomEditor.ScriptGeneration;
 using Editor.Menu;
@@ -44,9 +43,14 @@ namespace Editor.AssetBundle
         /// <summary>
         /// AssetBundle压缩模式名称数组
         /// </summary>
-        private readonly string[] compressModeStrs = { "Uncompress", "LZ4"};
+        private readonly string[] compressModeStrs = { "Uncompress", "LZ4" };
 
         /// <summary>
+        /// 过滤的文件夹
+        /// </summary>
+        private readonly string[] filterDirectorys = { "Texture" };
+
+    /// <summary>
         /// 资源上传服务器地址
         /// </summary>
         private string serverIP = "http://...";
@@ -412,6 +416,11 @@ namespace Editor.AssetBundle
             var directoryInfos = directoryInfo.GetDirectories();
             foreach (var info in directoryInfos)
             {
+                if (filterDirectorys.Contains(info.Name))
+                {
+                    continue;
+                }
+                
                 // 获取目录下所有非过滤后缀的文件
                 var fileInfos = FileUtility.GetTotalFiles(info, new List<FileInfo>(), _filterSuffixes);
                 _fileInfoDic.Add(info.Name, fileInfos);
@@ -609,7 +618,7 @@ namespace Editor.AssetBundle
             foreach (var info in fileInfos)
             {
                 // 仅处理AB包文件
-                if (info.Extension != AssetBundleManager.Instance.AbSuffix)
+                if (info.Extension != FileUtility.AbSuffix)
                 {
                     continue;
                 }
@@ -686,7 +695,7 @@ namespace Editor.AssetBundle
             var uploadList = new List<FileInfo>();
             foreach (var fileInfo in fileInfos)
             {
-                if (fileInfo.Extension != AssetBundleManager.Instance.AbSuffix && fileInfo.Extension != ".json")
+                if (fileInfo.Extension != FileUtility.AbSuffix && fileInfo.Extension != ".json")
                     continue;
 
                 uploadList.Add(fileInfo);

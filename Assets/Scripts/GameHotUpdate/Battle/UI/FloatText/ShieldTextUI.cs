@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace GameHotUpdate.Battle.UI.FloatText
 {
-    public class ShieldTextUI : BaseUIBehaviour
+    public class ShieldTextUI : UIBehaviourBase
     {
         // 护盾数值文本（如"1000"、"500"等）
         [Inject] private TextMeshProUGUI txtShieldNum;

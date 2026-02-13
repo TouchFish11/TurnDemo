@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Dependence;
 using Core.Log;
 using Core.Service;
 using Core.Singleton;
@@ -58,20 +59,11 @@ namespace Core.AssetBundles.Management
 #endif
             }
         }
-
-        /// <summary>
-        /// AB包文件自定义后缀
-        /// </summary>
-        public string AbSuffix => ".assetbundle";
-
-        /// <summary>
-        /// 初始化
-        /// </summary>
-        /// <returns>是否初始化成功</returns>
+        
         public async Task Init()
         {
             // 构建主包信息
-            _mainWrapper = new BundleWrapper(AbMainName, PathUtility.GetAbLoadPath(AbMainName + AbSuffix));
+            _mainWrapper = new BundleWrapper(AbMainName, PathUtility.GetAbLoadPath($"{AbMainName}{FileUtility.AbSuffix}"));
             // 加载主包
             await _mainWrapper.LoadFromFileAsync();
 
@@ -89,8 +81,11 @@ namespace Core.AssetBundles.Management
             foreach (var abName in abNames)
             {
                 // 初始化包装器
-                _nameToWrapperMap.TryAdd(abName, new BundleWrapper(abName.ToLower(), PathUtility.GetAbLoadPath($"{abName}{AbSuffix}")));
+                _nameToWrapperMap.TryAdd(abName, new BundleWrapper(abName.ToLower(), PathUtility.GetAbLoadPath($"{abName}{FileUtility.AbSuffix}")));
             }
+            
+            // 
+            ServiceLocator.Get<IDependencyManager>().Notice(typeof(IAssetBundleManager));
         }
 
         /// <summary>
@@ -150,13 +145,7 @@ namespace Core.AssetBundles.Management
             // 加载目标包
             await _nameToWrapperMap[abName].LoadFromFileAsync(token);
         }
-
-        /// <summary>
-        /// 异步卸载指定AB包
-        /// </summary>
-        /// <param name="assetBundleType"></param>
-        /// <param name="unloadAllLoadedObjects"></param>
-        /// <returns></returns>
+        
         public void UnloadBundleAsync(EAssetBundleType assetBundleType, bool unloadAllLoadedObjects = false)
         {
             var abName = assetBundleType.ToString().ToLower();

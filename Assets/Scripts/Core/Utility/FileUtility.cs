@@ -67,6 +67,13 @@ namespace Core.Utility
         /// </value>
         public static string InputActionLocalFileName => "MainActionMap.json";
 
+        /// <summary>
+        /// AB包自定义后缀
+        /// </summary>
+        /// <value>
+        /// .assetbundle
+        /// </value>
+        public static string AbSuffix => ".assetbundle";
         #endregion
 
         /// <summary>

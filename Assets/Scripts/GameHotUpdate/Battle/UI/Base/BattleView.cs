@@ -16,6 +16,7 @@ namespace GameHotUpdate.Battle.UI.Base
         [Inject] private TextMeshProUGUI txtDmg;
         [Inject] private TextMeshProUGUI txtActingTip;
         [Inject] private TextMeshProUGUI txtUltimateTip;
+        [Inject] private TextMeshProUGUI txtTitle;
 
         [Inject] private Image imgActingIcon;
         [Inject] private Image imgIcon;
@@ -43,7 +44,7 @@ namespace GameHotUpdate.Battle.UI.Base
         /// <summary>
         /// ս����������
         /// </summary>
-        [Inject(1)] public RectTransform BattleOverArea { get; private set; }
+        [Inject(1)] public RectTransform BattleStateTipArea { get; private set; }
 
         /// <summary>
         /// ״̬�ı�����
@@ -99,7 +100,7 @@ namespace GameHotUpdate.Battle.UI.Base
         {
             base.Awake();
 
-            BattleOverArea.gameObject.SetActive(false);
+            BattleStateTipArea.gameObject.SetActive(false);
             TotalDmgArea.gameObject.SetActive(false);
             PaintingDisplayArea.gameObject.SetActive(false);
 
@@ -119,6 +120,16 @@ namespace GameHotUpdate.Battle.UI.Base
         public void UpdateTotalDmg(long dmg)
         {
             txtDmg.text = dmg.ToString();
+        }
+
+        /// <summary>
+        /// 设置战斗状态提示区域文本
+        /// 若是true则为战斗结束，否则为战斗开始
+        /// </summary>
+        /// <param name="isBattleOver"></param>
+        public void SetBattleStateTipAreaText(bool isBattleOver)
+        {
+            txtTitle.text = isBattleOver ? "结束战斗" : "战斗开始";
         }
 
         /// <summary>

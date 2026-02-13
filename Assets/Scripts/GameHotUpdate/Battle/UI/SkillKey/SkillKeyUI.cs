@@ -9,6 +9,7 @@ using Game.Battle.Skill.Enum;
 using Game.Battle.TargetSelect;
 using GameHotUpdate.Battle.Event.UI;
 using GameHotUpdate.Battle.TargetSelect.Strategys;
+using GameHotUpdate.Manager;
 using GameHotUpdate.Skill.Component;
 using GameHotUpdate.Tasks;
 using TMPro;
@@ -22,7 +23,7 @@ namespace GameHotUpdate.Battle.UI.SkillKey
     /// 技能按键UI组件
     /// 负责单个技能按键的显示、选中、触发等交互逻辑
     /// </summary>
-    public class SkillKeyUI : BaseUIBehaviour
+    public class SkillKeyUI : UIBehaviourBase
     {
         /// <summary>
         /// 技能触发阶段

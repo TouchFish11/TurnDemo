@@ -2802,6 +2802,7 @@ GameObject:
   - component: {fileID: 803687719153583918}
   - component: {fileID: 6417446483500396716}
   - component: {fileID: 8008935409753131439}
+  - component: {fileID: -4667589098862498832}
   m_Layer: 5
   m_Name: DialogueView
   m_TagString: Untagged
@@ -2881,6 +2882,18 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &-4667589098862498832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7092673675785808721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88447c73d88804b498da253848006ac4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7145753713895331874
 GameObject:
   m_ObjectHideFlags: 0

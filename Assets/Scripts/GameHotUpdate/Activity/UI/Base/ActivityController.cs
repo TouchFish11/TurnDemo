@@ -1,18 +1,19 @@
 using Core.AssetBundles.Management;
 using Core.Config;
 using Core.DataPersistence.Binary;
-using Core.Loader;
-using Core.Loader.Sprites;
+using Core.Loader.Sprite;
+using Core.Loader.UI;
+using Core.Log;
 using Core.Pool;
 using Core.Reflection;
 using Core.Service;
 using Core.UI;
+using Core.UI.MVC;
 using Game.Manager;
 using Game.Objects;
 using GameHotUpdate.Activity.Core;
 using GameHotUpdate.Activity.Data;
 using GameHotUpdate.Activity.UI.EmbersCanon;
-using GameHotUpdate.UI.MVC;
 
 namespace GameHotUpdate.Activity.UI.Base
 {
@@ -28,7 +29,7 @@ namespace GameHotUpdate.Activity.UI.Base
             // 创建UI
             foreach (var activityInfo in infoDic.Values)
             {
-                var activityUI = await ServiceLocator.Get<IObjectBuilder>().GetHotfixUIObject<ActivityUI>(EAssetBundleType.UI, ResKeyCollection.ActivityUI, view.SvActivityContent);
+                var activityUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<ActivityUI>(EAssetBundleType.UI, ResKeyCollection.ActivityUI, view.SvActivityContent);
                 // 加载图标
                 var icon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(
                     ResKeyCollection.Atlas_Activity,
@@ -68,8 +69,8 @@ namespace GameHotUpdate.Activity.UI.Base
             var activityDataCollection = ServiceLocator.Get<IGameManager>().GameDataManager.ActivityDataCollection as ActivityDataCollection;
             
             // 获取活动UI对象
-            var activityUIObj = await ServiceLocator.Get<IObjectBuilder>().GetGameobject(EAssetBundleType.UI, activityInfo.f_detailUI_res, view.ActivityDetailArea);
-            var activity = activityUIObj.GetComponent<IActivity>();
+            var activity = await ServiceLocator.Get<IUiLoader>().GetUIObject<IActivity>(EAssetBundleType.UI, activityInfo.f_detailUI_res,
+                view.ActivityDetailArea);
             // 初始化详细界面
             if (!activityDataCollection.TryGetValue(activityInfo.f_id, out var activityData))
             {

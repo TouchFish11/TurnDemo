@@ -146,6 +146,7 @@ GameObject:
   - component: {fileID: 7777213546654547632}
   - component: {fileID: 5010941159868613168}
   - component: {fileID: 727934520550215131}
+  - component: {fileID: -5986420277786676881}
   m_Layer: 5
   m_Name: MessageUI
   m_TagString: Untagged
@@ -237,3 +238,16 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &-5986420277786676881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7197894336967347611}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6198ae9797e0854eb31280257f12f40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 2.5

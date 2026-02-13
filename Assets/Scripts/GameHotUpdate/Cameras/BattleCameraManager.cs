@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.Config;
-using Core.Log;
 using Core.Mono;
 using Core.Pool;
 using Core.Service;

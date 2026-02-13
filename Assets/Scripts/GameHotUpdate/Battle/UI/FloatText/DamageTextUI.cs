@@ -11,7 +11,7 @@ namespace GameHotUpdate.Battle.UI.FloatText
     /// 伤害文字UI组件
     /// 负责显示伤害数值、伤害类型，控制文字的上浮、缩放、销毁逻辑
     /// </summary>
-    public class DamageTextUI : BaseUIBehaviour
+    public class DamageTextUI : UIBehaviourBase
     {
         // 伤害类型文本（如"暴击"、"普通攻击"等）
         [Inject] private TextMeshProUGUI txtDamageTip;

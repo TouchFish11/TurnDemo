@@ -2,16 +2,14 @@ using System;
 using System.Collections.Generic;
 using Core.AssetBundles.Management;
 using Core.Config;
-using Core.Loader;
-using Core.Loader.Sprites;
+using Core.Loader.Sprite;
+using Core.Loader.UI;
 using Core.Log;
-using Core.Reflection;
 using Core.Service;
 using Game.Battle.Objects;
 using Game.Battle.Property;
 using Game.Battle.Skill.Component;
 using Game.Battle.Skill.Enum;
-using Game.Objects;
 using GameHotUpdate.Battle.UI.MonsterStateUI;
 using GameHotUpdate.Battle.UI.Role;
 using GameHotUpdate.Property;
@@ -57,7 +55,7 @@ namespace GameHotUpdate.Battle.UI.Base
             {
                 // 从资源包加载角色状态UI预制体，并挂载到玩家UI区域
                 //var roleStateUI = await ObjectBuilder.GetObject<IRoleStateUI>(EAssetBundleType.UI, ResKeyCollection.RoleStateUI, _view.PlayerArea);
-                var roleStateUI = await ServiceLocator.Get<IObjectBuilder>().GetHotfixUIObject<RoleStateUI>(EAssetBundleType.UI, ResKeyCollection.RoleStateUI, _view.PlayerArea);
+                var roleStateUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<RoleStateUI>(EAssetBundleType.UI, ResKeyCollection.RoleStateUI, _view.PlayerArea);
                 LogManager.Log($"{nameof(InitPlayerUIs)}：{roleStateUI}-{roleStateUI}");
                 // 获取当前实体的技能组件，用于查找必杀技
                 var skillComponent = battleEntity.GetComponent<SkillComponent>();
@@ -114,7 +112,7 @@ namespace GameHotUpdate.Battle.UI.Base
                 foreach (var battleEntity in battleEntities)
                 {
                     // 从资源包加载怪物状态UI预制体，并挂载到怪物UI区域
-                    var monsterStateUI = await ServiceLocator.Get<IObjectBuilder>().GetHotfixUIObject<NormalMonsterStateUI>(EAssetBundleType.UI, ResKeyCollection.MonsterStateUI, _view.MonsterStateArea);
+                    var monsterStateUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<NormalMonsterStateUI>(EAssetBundleType.UI, ResKeyCollection.MonsterStateUI, _view.MonsterStateArea);
                     // 初始化怪物状态UI（传入战斗实体、UI挂载区域）
                     await monsterStateUI.Init(battleEntity, _view.MonsterStateArea);
                     // 将初始化后的怪物UI缓存

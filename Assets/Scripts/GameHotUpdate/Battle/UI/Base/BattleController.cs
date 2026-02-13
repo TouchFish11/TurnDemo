@@ -1,6 +1,6 @@
+using Core.UI.MVC;
 using Game.Battle.Context;
 using GameHotUpdate.Battle.UI.MonsterStateUI;
-using GameHotUpdate.UI.MVC;
 
 namespace GameHotUpdate.Battle.UI.Base
 {
@@ -30,15 +30,11 @@ namespace GameHotUpdate.Battle.UI.Base
         }
 
         /// <summary>
-        /// 初始化战斗UI
+        /// 初始化战斗控制器
         /// </summary>
         /// <param name="battleContext"></param>
-        public async System.Threading.Tasks.Task InitBattleUI(IBattleContext battleContext)
+        public void InitBattleController(IBattleContext battleContext)
         {
-            await UiInitializer.InitPlayerUIs(battleContext.GetAlivePlayerEntitys());
-            await UiInitializer.InitMonsterUIs(battleContext.GetAliveMonsterEntitys());
-            // 更新战机点数
-            await BattleUiManager.UpdateBattlePointCount(battleContext.CurentBattlePointCount, battleContext.MaxBattlePointCount);
             // 注册战斗相关事件
             EventProcessor.RegisterBattleEvents(battleContext.GetEventBus());
         }

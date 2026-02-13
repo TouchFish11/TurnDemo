@@ -6,7 +6,7 @@ namespace GameHotUpdate.Battle.UI.BattlePoint
     /// <summary>
     /// ս����UI
     /// </summary>
-    public class BattlePointUI : BaseUIBehaviour
+    public class BattlePointUI : UIBehaviourBase
     {
         [Inject] private Image imgHas;
 

@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 2465928829
+CRC: 1264283630
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 401e2913524045234826a38d25ee2cc7
+    Hash: ef43c62ae663ea76d8ac43a16f65165e
   TypeTreeHash:
     serializedVersion: 2
     Hash: 4c4a741bc998ac9508c2cbb90099a4d9
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 401e2913524045234826a38d25ee2cc7
+    Hash: ef43c62ae663ea76d8ac43a16f65165e
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -34,10 +34,14 @@ SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/Editor/ArtRes/Animation/Role/FireFly/FireFly_Ultimate_Anim.fbx
 - Assets/Editor/ArtRes/Animation/Role/Herta/Herta_Ultimate_Anim.fbx
+- Assets/Editor/ArtRes/Animation/Role/Priest/Priest_Attack_Anim.fbx
 - Assets/Editor/ArtRes/Animation/Role/FireFly/FireFly_BattleAttack_Anim.fbx
+- Assets/Editor/ArtRes/Animation/Role/Priest/Priest_Ultimate_02_Anim.fbx
 - Assets/Editor/ArtRes/Animation/Monster/TurtleShell_Attack_Anim.fbx
 - Assets/Editor/ArtRes/Animation/Role/FireFly/FireFly_Attack_Anim.fbx
 - Assets/Editor/ArtRes/Animation/Role/Herta/Herta_Attack_Anim.fbx
+- Assets/Editor/ArtRes/Animation/Role/Priest/Priest_BattleAttack_Anim.fbx
+- Assets/Editor/ArtRes/Animation/Role/Priest/Priest_Ultimate_01_Anim.fbx
 - Assets/Editor/ArtRes/Animation/Role/Herta/Herta_BattleAttack_Anim.fbx
 - Assets/Editor/ArtRes/Animation/Monster/Slime_Attack_Anim.fbx
 Dependencies: []

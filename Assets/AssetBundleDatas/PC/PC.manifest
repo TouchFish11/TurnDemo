@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 2221977756
+CRC: 2297147240
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -25,26 +25,22 @@ AssetBundleManifest:
     Info_6:
       Name: scene
       Dependencies:
-        Dependency_0: camera
-        Dependency_1: material
-        Dependency_2: ui
+        Dependency_0: animator
+        Dependency_1: camera
+        Dependency_2: material
+        Dependency_3: ui
     Info_7:
-      Name: texture
+      Name: ui
       Dependencies: {}
     Info_8:
-      Name: ui
-      Dependencies:
-        Dependency_0: texture
-    Info_9:
       Name: vfx
       Dependencies: {}
-    Info_10:
+    Info_9:
       Name: spriteatlas
-      Dependencies:
-        Dependency_0: texture
-    Info_11:
+      Dependencies: {}
+    Info_10:
       Name: gameconfig
       Dependencies: {}
-    Info_12:
+    Info_11:
       Name: hotupdate
       Dependencies: {}

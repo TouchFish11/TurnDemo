@@ -8,7 +8,7 @@ namespace GameHotUpdate.Item.UI
     /// <summary>
     /// 物品格子
     /// </summary>
-    public class ItemGrid : BaseUIBehaviour
+    public class ItemGrid : UIBehaviourBase
     {
         [Inject] private Image imgQuality;
         [Inject] private Image imgIcon;

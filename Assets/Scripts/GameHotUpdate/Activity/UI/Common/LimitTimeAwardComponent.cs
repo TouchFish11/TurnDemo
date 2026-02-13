@@ -9,7 +9,7 @@ namespace GameHotUpdate.Activity.UI.Common
     /// <summary>
     /// 限时奖励UI组件
     /// </summary>
-    public class LimitTimeAwardComponent : BaseUIBehaviour
+    public class LimitTimeAwardComponent : UIBehaviourBase
     {
         [Inject] private Image imgBk;
         [Inject] private TextMeshProUGUI txtAward;

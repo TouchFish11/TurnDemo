@@ -10,22 +10,9 @@ namespace Game.Battle.Turn
         /// </summary>
         /// <returns></returns>
         void StartBattle();
-
-        /// <summary>
-        /// 更新实体看向
-        /// </summary>
-        /// <param name="target"></param>
-        //void UpdateEntityLookAt(IBattleEntityObject target);
-
-        /// <summary>
-        /// 插入命令
-        /// </summary>
-        /// <param name="skill"></param>
-
-        //void InsertCommand(ICommand command);
         
         /// <summary>
-        /// 
+        /// 切换状态
         /// </summary>
         /// <param name="battlePhase"></param>
         void ChangeState(EBattlePhase battlePhase);

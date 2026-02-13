@@ -5,7 +5,7 @@ using Core.Log;
 using Core.Service;
 using Core.Singleton;
 using Game.Input;
-using GameHotUpdate.UI.Main;
+using GameHotUpdate.Main.UI;
 using UnityEngine;
 
 namespace GameHotUpdate.Input

@@ -1,10 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.Config;
-using Core.Loader;
-using Core.Loader.Sprites;
+using Core.Loader.Sprite;
 using Core.Pool;
-using Core.Reflection;
 using Core.Service;
 using GameHotUpdate.Activity.Core;
 using GameHotUpdate.Activity.UI.Common;
@@ -16,7 +14,7 @@ namespace GameHotUpdate.Activity.UI.OrbitalDeparture
     /// <summary>
     /// 星旅启航活动UI
     /// </summary>
-    public class OrbitalDepartureActivityUI : ActivityBase
+    public class OrbitalDepartureActivityUI : ActivityUIBehaviourBase
     {
         private ActivityBkComponent _activityBkComponent;
         private ActivityJoinComponent _activityJoinComponent;
@@ -73,7 +71,7 @@ namespace GameHotUpdate.Activity.UI.OrbitalDeparture
             // 解析奖励ID数组，获取物品格子
             ItemUtility.GetItemGrid(activityInfo.f_awardIds, grid =>
             {
-                if (grid != null)
+                if (grid)
                 {
                     _awardPreviewComponent.SetAward(grid);
                     _itemGrids.Add(grid);

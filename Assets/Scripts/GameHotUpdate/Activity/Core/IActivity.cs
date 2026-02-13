@@ -1,9 +1,10 @@
+using Core.UI;
 using GameHotUpdate.Activity.Data;
 using UnityEngine;
 
 namespace GameHotUpdate.Activity.Core
 {
-    public interface IActivity
+    public interface IActivity : IUiBehaviour
     {
         /// <summary>
         /// 活动游戏对象

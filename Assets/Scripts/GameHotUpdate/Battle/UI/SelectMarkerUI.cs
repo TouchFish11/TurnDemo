@@ -4,7 +4,6 @@ using Core.Mono;
 using Core.Service;
 using Core.UI;
 using Core.Utility;
-using Game.Battle;
 using Game.Battle.Objects;
 using Game.Battle.Skill.Enum;
 using GameHotUpdate.Cameras;
@@ -18,7 +17,7 @@ namespace GameHotUpdate.Battle.UI
     /// 选择标记UI组件
     /// 用于在战斗中显示选中目标的标记，包含跟随目标、旋转和缩放动画效果
     /// </summary>
-    public class SelectMarkerUI : BaseUIBehaviour
+    public class SelectMarkerUI : UIBehaviourBase
     {
         // 标记旋转速度（每秒旋转角度）
         private const float markerRotationSpeed = 40f;

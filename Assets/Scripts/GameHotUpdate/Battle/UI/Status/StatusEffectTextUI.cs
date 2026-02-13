@@ -13,7 +13,7 @@ namespace GameHotUpdate.Battle.UI.Status
     /// 负责显示战斗中角色的状态效果（如buff/debuff）文本与图标，
     /// 并处理文本的向上移动、自动回收逻辑
     /// </summary>
-    public class StatusEffectTextUI : BaseUIBehaviour
+    public class StatusEffectTextUI : UIBehaviourBase
     {
         // 状态效果图标图片组件
         [Inject] private Image imgIcon;

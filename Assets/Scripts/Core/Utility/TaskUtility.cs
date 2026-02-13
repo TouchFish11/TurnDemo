@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Threading.Tasks;
+using Core.Log;
 using UnityEngine;
 
 namespace Core.Utility
@@ -31,7 +32,8 @@ namespace Core.Utility
         }
 
         /// <summary>
-        /// �ȴ��������
+        /// 等待任务完成
+        /// Task转换为协程
         /// </summary>
         /// <param name="task"></param>
         /// <returns></returns>
@@ -44,7 +46,32 @@ namespace Core.Utility
 
             if (task.IsFaulted)
             {
-                Debug.LogError($"����ִ�д���: {task.Exception}");
+                LogManager.LogError($"{nameof(TaskUtility)}.{nameof(WaitForTask)}: {task.Exception}");
+            }
+        }
+        
+        /// <summary>
+        /// 等待任务完成
+        /// Task转换为协程
+        /// </summary>
+        /// <param name="task"></param>
+        /// <param name="callback"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static IEnumerator WaitForTask<T>(Task<T> task, Action<T> callback)
+        {
+            while (!task.IsCompleted)
+            {
+                yield return null;
+            }
+
+            if (task.IsFaulted)
+            {
+                LogManager.LogError($"{nameof(TaskUtility)}.{nameof(WaitForTask)}: {task.Exception}");
+            }
+            else
+            {
+                callback?.Invoke(task.Result);
             }
         }
     }

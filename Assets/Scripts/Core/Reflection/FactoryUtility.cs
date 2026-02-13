@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Core.Components;
 using Core.HotUpdate;
+using Core.Log;
 using Core.Service;
 using Core.Types;
 using Core.Utility;

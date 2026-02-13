@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 950587751
+CRC: 1381102860
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 2cf23f29a9cb1367ce7228152162395a
+    Hash: dae702f1239b8a0462091fd169c76a8b
   TypeTreeHash:
     serializedVersion: 2
-    Hash: c7a0a5002720edef175876ac6079bb7d
+    Hash: 8885e7c516123fc9278ce5a91e9666f0
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 2cf23f29a9cb1367ce7228152162395a
+    Hash: dae702f1239b8a0462091fd169c76a8b
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -25,6 +25,8 @@ ClassTypes:
 - Class: 48
   Script: {instanceID: 0}
 - Class: 96
+  Script: {instanceID: 0}
+- Class: 108
   Script: {instanceID: 0}
 - Class: 114
   Script: {fileID: 11500000, guid: 59c9d7ece60304a429efdc040fb18ef1, type: 3}
@@ -66,13 +68,17 @@ Assets:
 - Assets/Editor/ArtRes/VFX/General/Hit/VFX_MonsterHit.prefab
 - Assets/Editor/ArtRes/VFX/General/Status/VFX_Heal.prefab
 - Assets/Editor/ArtRes/VFX/General/VFX_SupportSkill_02.prefab
-- Assets/Editor/ArtRes/VFX/General/Status/VFX_Dot_Blue01.prefab
+- Assets/Editor/ArtRes/VFX/Role/Priest/VFX_Priest_NormalSkill.prefab
 - Assets/Editor/ArtRes/VFX/Unknow/VFX_Unkow02.prefab
+- Assets/Editor/ArtRes/VFX/Role/Priest/VFX_Priest_UltiamteSkill.prefab
+- Assets/Editor/ArtRes/VFX/General/Status/VFX_Dot_Blue01.prefab
 - Assets/Editor/ArtRes/VFX/General/VFX_SupportSkill_01.prefab
 - Assets/Editor/ArtRes/VFX/Role/FireFly/VFX_FireFlyBattleSkill.prefab
 - Assets/Editor/ArtRes/VFX/Monster/VFX_MonsterAttackSkill.prefab
 - Assets/Editor/ArtRes/VFX/Role/Herta/VFX_HertaNormalSkill.prefab
+- Assets/Editor/ArtRes/VFX/Role/Priest/VFX_Priest_UltimatePose.prefab
 - Assets/Editor/ArtRes/VFX/Role/FireFly/VFX_BlueHit.prefab
+- Assets/Editor/ArtRes/VFX/Role/Priest/VFX_Priest_BattleSkill.prefab
 - Assets/Editor/ArtRes/VFX/Role/Herta/VFX_HertaBattleSkill.prefab
 - Assets/Editor/ArtRes/VFX/Role/FireFly/VFX_FireFlyUltimatePose.prefab
 - Assets/Editor/ArtRes/VFX/Role/FireFly/VFX_FireFlyUltimateSkill.prefab

@@ -4,6 +4,7 @@ using Core.AssetBundles.Management;
 using Core.AssetBundles.Update;
 using Core.DataPersistence.Binary;
 using Core.DataPersistence.Json;
+using Core.Dependence;
 using Core.EditorRes;
 using Core.GlobalEvent;
 using Core.HotUpdate;
@@ -43,6 +44,8 @@ namespace Core.Service
         /// </summary>
         public static void InitService()
         {
+            Register<IDependencyManager>(DependencyManager.Instance);
+            
             // 继承Mono
             Register<IMonoAdapter>(MonoAdapter.Instance);
             Register<IQuitHandler>(QuitHandler.Instance);

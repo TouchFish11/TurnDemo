@@ -10,7 +10,7 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
     /// <summary>
     /// 活动战斗关卡UI
     /// </summary>
-    public class BattleLevelUI : BaseUIBehaviour
+    public class BattleLevelUI : UIBehaviourBase
     {
         [Inject] private Button btnEnter;
         [Inject] private TextMeshProUGUI txtName;

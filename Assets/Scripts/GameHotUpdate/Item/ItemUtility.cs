@@ -1,11 +1,11 @@
 using System;
+using System.Collections.Generic;
 using Core.AssetBundles.Management;
 using Core.Config;
 using Core.DataPersistence.Binary;
-using Core.Loader;
-using Core.Loader.Sprites;
+using Core.Loader.Sprite;
+using Core.Loader.UI;
 using Core.Log;
-using Core.Reflection;
 using Core.Service;
 using Core.Utility;
 using Game.Objects;
@@ -26,36 +26,42 @@ namespace GameHotUpdate.Item
         /// <param name="awardIds"></param>
         /// <param name="parent"></param>
         /// <param name="callback"></param>
-        public static void GetItemGrid(string awardIds, Transform parent, Action<ItemGrid> callback)
+        public static async void GetItemGrid(string awardIds, Transform parent, Action<ItemGrid> callback)
         {
-            // 解析奖励ID数组
-            TextUtility.SplitMultiple(awardIds, 1, 2, async (int awardId, int num) =>
+            try
             {
-                try
+                var itemInfos = new Dictionary<int, int>();
+                // 解析奖励ID数组
+                TextUtility.SplitMultiple(awardIds, 1, 2, async (int awardId, int num) =>
+                {
+                    itemInfos.Add(awardId, awardId);
+                });
+
+                foreach (var pair in itemInfos)
                 {
                     // 获取UI
-                    var itemGrid = await ServiceLocator.Get<IObjectBuilder>()
-                        .GetHotfixUIObject<ItemGrid>(EAssetBundleType.UI, ResKeyCollection.ItemGrid, parent);
+                    var itemGrid = await ServiceLocator.Get<IUiLoader>()
+                        .GetUIObject<ItemGrid>(EAssetBundleType.UI, ResKeyCollection.ItemGrid, parent);
                     // 读取配置
                     var itemInfo = ServiceLocator.Get<IBinaryDataManager>()
-                        .GetConfig<ItemInfoContainer>(EConfigLoadType.Excel).dataDic[awardId];
+                        .GetConfig<ItemInfoContainer>(EConfigLoadType.Excel).dataDic[pair.Key];
                     // 加载图标
                     var itemIcon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(
                         ResKeyCollection.Atlas_Icon_Item, 
                         itemInfo.f_icon);
                     // 初始化
-                    itemGrid.Init(itemIcon, num, itemInfo.f_quality);
+                    itemGrid.Init(itemIcon, pair.Value, itemInfo.f_quality);
                     callback?.Invoke(itemGrid);
                 }
-                catch (Exception e)
-                {
-                    LogManager.LogError($"{nameof(ItemUtility)}.{nameof(GetItemGrid)}：{e.Message}");
-                }
-                finally
-                {
-                    callback?.Invoke(null);
-                }
-            });
+            }
+            catch (Exception e)
+            {
+                LogManager.LogError($"{nameof(ItemUtility)}.{nameof(GetItemGrid)}：{e.Message}");
+            }
+            finally
+            {
+                callback?.Invoke(null);
+            }
         }
         
         /// <summary>
@@ -64,34 +70,40 @@ namespace GameHotUpdate.Item
         /// </summary>
         /// <param name="awardIds"></param>
         /// <param name="callback"></param>
-        public static void GetItemGrid(string awardIds, Action<ItemGrid> callback)
+        public static async void GetItemGrid(string awardIds, Action<ItemGrid> callback)
         {
-            // 解析奖励ID数组
-            TextUtility.SplitMultiple(awardIds, 1, 2, async (int awardId, int num) =>
+            try
             {
-                try
+                var itemInfos = new Dictionary<int, int>();
+                // 解析奖励ID数组
+                TextUtility.SplitMultiple(awardIds, 1, 2, async (int awardId, int num) =>
+                {
+                    itemInfos.Add(awardId, awardId);
+                });
+            
+                foreach (var pair in itemInfos)
                 {
                     // 获取UI
-                    var itemGrid = await ServiceLocator.Get<IObjectBuilder>()
-                        .GetHotfixUIObject<ItemGrid>(EAssetBundleType.UI, ResKeyCollection.ItemGrid, null);
+                    var itemGrid = await ServiceLocator.Get<IUiLoader>()
+                        .GetUIObject<ItemGrid>(EAssetBundleType.UI, ResKeyCollection.ItemGrid, null);
                     // 读取配置
                     var itemInfo = ServiceLocator.Get<IBinaryDataManager>()
-                        .GetConfig<ItemInfoContainer>(EConfigLoadType.Excel).dataDic[awardId];
+                        .GetConfig<ItemInfoContainer>(EConfigLoadType.Excel).dataDic[pair.Key];
                     // 加载图标
                     var itemIcon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(ResKeyCollection.Atlas_Icon_Item, itemInfo.f_icon);
                     // 初始化
-                    itemGrid.Init(itemIcon, num, itemInfo.f_quality);
+                    itemGrid.Init(itemIcon, pair.Value, itemInfo.f_quality);
                     callback?.Invoke(itemGrid);
                 }
-                catch (Exception e)
-                {
-                    LogManager.LogError($"{nameof(ItemUtility)}.{nameof(GetItemGrid)}：{e.Message}");
-                }
-                finally
-                {
-                    callback?.Invoke(null);
-                }
-            });
+            }
+            catch (Exception e)
+            {
+                LogManager.LogError($"{nameof(ItemUtility)}.{nameof(GetItemGrid)}：{e.Message}");
+            }
+            finally
+            {
+                callback?.Invoke(null);
+            }
         }
     }
 }

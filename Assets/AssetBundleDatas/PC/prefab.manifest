@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 3522546667
+CRC: 372070902
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 0e552772698c4ce9f6eedaa3a515a4db
+    Hash: 60ef9ca8faeda436ed272a72f0ca2b99
   TypeTreeHash:
     serializedVersion: 2
     Hash: fae95911f97e37d1fc37a8c78b726104
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 0e552772698c4ce9f6eedaa3a515a4db
+    Hash: 60ef9ca8faeda436ed272a72f0ca2b99
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -70,12 +70,6 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: Unity.TextMeshPro
   ClassName: TMPro.TMP_FontWeightPair
 - AssemblyName: Unity.TextMeshPro
-  ClassName: TMPro.TMP_GlyphAdjustmentRecord
-- AssemblyName: Unity.TextMeshPro
-  ClassName: TMPro.TMP_GlyphPairAdjustmentRecord
-- AssemblyName: Unity.TextMeshPro
-  ClassName: TMPro.TMP_GlyphValueRecord
-- AssemblyName: Unity.TextMeshPro
   ClassName: TMPro.VertexGradient
 - AssemblyName: UnityEngine.CoreModule
   ClassName: UnityEngine.Events.PersistentCallGroup
@@ -91,10 +85,14 @@ SerializeReferenceClassIdentifiers:
   ClassName: UnityEngine.UI.MaskableGraphic/CullStateChangedEvent
 Assets:
 - Assets/Editor/ArtRes/Prefab/Role/Main/Prefab_Main_FireFly.prefab
+- Assets/Editor/ArtRes/Prefab/Monster/Prefab_Chest.prefab
 - Assets/Editor/ArtRes/Prefab/UI/UI_3D_FloatingText.prefab
+- Assets/Editor/ArtRes/Prefab/Role/Battle/Prefab_Gunman.prefab
+- Assets/Editor/ArtRes/Prefab/Role/Battle/Prefab_Priest.prefab
 - Assets/Editor/ArtRes/Prefab/Role/Main/Prefab_Npc.prefab
 - Assets/Editor/ArtRes/Prefab/Monster/Prefab_TurtleShell.prefab
 - Assets/Editor/ArtRes/Prefab/Role/Battle/Prefab_FireFly.prefab
+- Assets/Editor/ArtRes/Prefab/Monster/Prefab_AbyssalMage.prefab
 - Assets/Editor/ArtRes/Prefab/Prefab_Player.prefab
 - Assets/Editor/ArtRes/Prefab/Monster/Prefab_Boss.prefab
 - Assets/Editor/ArtRes/Prefab/Monster/Prefab_Slime.prefab

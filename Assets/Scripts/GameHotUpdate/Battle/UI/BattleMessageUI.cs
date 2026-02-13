@@ -11,7 +11,7 @@ namespace GameHotUpdate.Battle.UI
     /// <summary>
     /// ս����ϢUI
     /// </summary>
-    public class BattleMessageUI : BaseUIBehaviour
+    public class BattleMessageUI : UIBehaviourBase
     {
         [Inject] private TextMeshProUGUI txtMsg;
         [Inject] private Image msg;

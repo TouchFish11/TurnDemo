@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Core.UI
 {
     /// <summary>
-    /// UI�������ӿ�
+    /// UI管理器接口
     /// </summary>
     public interface IUIManager
     {
@@ -29,7 +29,7 @@ namespace Core.UI
         /// <param name="panelName"></param>
         /// <returns></returns>
         Task<TController> CreateViewAsync<TView, TModel, TController>(E_UILayer layer, string panelName)
-            where TView : BaseUIBehaviour, IuiView where TModel : IuiModel, new() where TController : class, IuiController, new();
+            where TView : UIBehaviourBase, IuiView where TModel : IuiModel, new() where TController : class, IuiController, new();
 
         /// <summary>
         /// 销毁界面

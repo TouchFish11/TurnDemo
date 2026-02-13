@@ -1672,7 +1672,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2880252497438333421}
   m_Layer: 5
-  m_Name: BattleOverArea
+  m_Name: BattleStateTipArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1786,6 +1786,7 @@ GameObject:
   - component: {fileID: 7707006530792071595}
   - component: {fileID: 3761416556721229723}
   - component: {fileID: 8327654917911730071}
+  - component: {fileID: -3748988135606488371}
   m_Layer: 5
   m_Name: BattleView
   m_TagString: Untagged
@@ -1877,6 +1878,18 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &-3748988135606488371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4403554962906805450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ef8c498148f5204c9e84426c3e8ce37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4526231031633670432
 GameObject:
   m_ObjectHideFlags: 0

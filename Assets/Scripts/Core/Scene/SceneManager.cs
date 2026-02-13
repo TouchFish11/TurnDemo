@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
+using Core.Dependence;
 using Core.Log;
 using Core.Mono;
 using Core.Service;
@@ -17,35 +18,22 @@ namespace Core.Scene
     /// <summary>
     /// 场景管理类，负责场景的异步加载，继承单例基类并实现ISceneManager接口
     /// </summary>
-    public class SceneManager : SingletonBase<SceneManager>, ISceneManager
+    public class SceneManager : SingletonBase<SceneManager>, ISceneManager, IDependable
     {
         // 场景路径缓存
         private List<string> _scenePaths;
-        
-        /// <summary>
-        /// 私有构造函数，确保单例模式下无法外部实例化
-        /// </summary>
+
         private SceneManager()
         {
-
+            ServiceLocator.Get<IDependencyManager>().RegisterDependable(typeof(IAssetBundleManager), this);
         }
-
-        /// <summary>
-        /// 初始化场景管理器
-        /// </summary>
-        public async Task Init()
+        
+        public async Task OnDependcyInited()
         {
             // 初始化场景包
             await InitSceneBundle();
         }
         
-        /// <summary>
-        /// 异步加载场景的方法
-        /// </summary>
-        /// <param name="scenePath">要加载的场景路径</param>
-        /// <param name="mode">场景加载模式（叠加/替换）</param>
-        /// <param name="onLoadProgress">加载进度回调，参数为0~1的进度值</param>
-        /// <param name="completed">加载完成后执行的异步委托</param>
         public async void LoadSceneAsync(string scenePath, LoadSceneMode mode, [CanBeNull] Action<float> onLoadProgress, [CanBeNull] Func<Task> completed)
         {
             try
@@ -76,10 +64,23 @@ namespace Core.Scene
 
         private async Task InitSceneBundle()
         {
-            // 加载场景对应的AssetBundle资源包
-            var sceneBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(EAssetBundleType.Scene);
-            // 缓存所有场景路基
-            _scenePaths ??= new List<string>(sceneBundle.GetAllScenePaths());
+            // 缓存所有场景名称
+            if (_scenePaths == null)
+            {
+                // 加载场景对应的AssetBundle资源包
+                var sceneBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(EAssetBundleType.Scene);
+                _scenePaths = new List<string>();
+                foreach (var scenePath in sceneBundle.GetAllScenePaths())
+                {
+                    var sceneNames = scenePath.Split('/');
+                    var sceneName = sceneNames[sceneNames.Length - 1];
+                    _scenePaths.Add(sceneName.Substring(0, sceneName.LastIndexOf('.')));
+                }
+            }
+            else
+            {
+                LogManager.LogError($"{nameof(SceneManager)}.{nameof(InitSceneBundle)}；重复初始化");
+            }
         }
 
         /// <summary>
@@ -87,7 +88,7 @@ namespace Core.Scene
         /// </summary>
         /// <param name="sceneName"></param>
         /// <returns></returns>
-        public bool ContainPath(string sceneName)
+        private bool ContainPath(string sceneName)
         {
             return _scenePaths.Contains(sceneName);
         }

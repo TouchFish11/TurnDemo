@@ -11,7 +11,7 @@ namespace GameHotUpdate.Battle.UI
     /// 行动提示UI组件
     /// 负责显示我方/敌方行动中的提示文本，以及行动图标的摆动动画
     /// </summary>
-    public class ActingTipUI : BaseUIBehaviour
+    public class ActingTipUI : UIBehaviourBase
     {
         // 行动图标图片组件
         [Inject] private Image imgActingIcon;

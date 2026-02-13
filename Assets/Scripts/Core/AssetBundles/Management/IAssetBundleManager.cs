@@ -10,10 +10,18 @@ namespace Core.AssetBundles.Management
     /// </summary>
     public interface IAssetBundleManager : IMemoryListener
     {
-        string AbSuffix { get; }
-        
+        /// <summary>
+        /// 初始化
+        /// </summary>
+        /// <returns>是否初始化成功</returns>
         Task Init();
         
+        /// <summary>
+        /// 异步卸载指定AB包
+        /// </summary>
+        /// <param name="assetBundleType"></param>
+        /// <param name="unloadAllLoadedObjects"></param>
+        /// <returns></returns>
         void UnloadBundleAsync(EAssetBundleType assetBundleType, bool unloadAllLoadedObjects = false);
 
         /// <summary>

@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 1952042997
+CRC: 4003475004
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: f457dade7331aeae2e0041e837fdceaf
+    Hash: 65e0d3dfc9b15df58eba7ed90760999a
   TypeTreeHash:
     serializedVersion: 2
     Hash: dbbc9a4b12380cadbee5f2d67c73783d
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: f457dade7331aeae2e0041e837fdceaf
+    Hash: 65e0d3dfc9b15df58eba7ed90760999a
 HashAppended: 0
 ClassTypes:
 - Class: 74
@@ -24,7 +24,11 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
+- Assets/Editor/ArtRes/Animator/Monster/AbyssalMageAnimator.controller
+- Assets/Editor/ArtRes/Animator/Role/GunmanAnimator.controller
 - Assets/Editor/ArtRes/Animator/Monster/TurtleShellAnimtor.controller
+- Assets/Editor/ArtRes/Animator/Monster/ChestAnimator.controller
+- Assets/Editor/ArtRes/Animator/Role/PriestAnimator.controller
 - Assets/Editor/ArtRes/Animator/Monster/SlimeAnimtor.controller
 - Assets/Editor/ArtRes/Animator/Role/BaseRole.controller
 - Assets/Editor/ArtRes/Animator/PlayerController.controller

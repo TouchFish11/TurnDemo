@@ -12,9 +12,9 @@ using Game.Main;
 using Game.Manager;
 using Game.Objects;
 using GameHotUpdate.Cameras;
+using GameHotUpdate.Main.UI;
 using GameHotUpdate.Manager;
 using GameHotUpdate.Objects;
-using GameHotUpdate.UI.Main;
 using UnityEngine;
 using IGameManager = Game.Manager.IGameManager;
 using Object = UnityEngine.Object;
@@ -46,6 +46,8 @@ namespace GameHotUpdate.Main
                 //await ServiceLocator.Get<IServerManager>().TryAutoLogin();
                 // 初始化游戏场景（创建NPC、玩家、UI等核心游戏对象）
                 await InitScene();
+                // 初始化主界面
+                await InitMainView();
             }
             catch (Exception e)
             {
@@ -76,11 +78,17 @@ namespace GameHotUpdate.Main
             // 创建玩家对象（参数为玩家配置ID，对应玩家基础配置表）
             await ServiceLocator.Get<IPlayerManager>().CreatePlayer(1001);
             
-            // 创建主界面UI（MVC架构）：指定UI层级为中层，初始化MainView、MainModel、MainController
-            var mainController = await ServiceLocator.Get<IUIManager>().CreateViewAsync<MainView, MainModel, MainController>(E_UILayer.Mid, ResKeyCollection.MainView);
-            
             // 初始化飘字管理器
             ServiceLocator.Get<IFloatingTextManager>().Init();
+        }
+
+        /// <summary>
+        /// 初始化主界面
+        /// </summary>
+        private static async Task InitMainView()
+        {
+            // 创建主界面UI（MVC架构）：指定UI层级为中层，初始化MainView、MainModel、MainController
+            var mainController = await ServiceLocator.Get<IUIManager>().CreateViewAsync<MainView, MainModel, MainController>(E_UILayer.Mid, ResKeyCollection.MainView);
         }
         
         /// <summary>
