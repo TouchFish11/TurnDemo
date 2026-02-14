@@ -5,6 +5,7 @@ using Game.Battle.Context;
 using Game.Battle.Damage;
 using Game.Battle.Objects;
 using Game.Battle.Skill.Enum;
+using GameHotUpdate.Battle.Damage.Data;
 using GameHotUpdate.Battle.Damage.Strategys;
 using GameHotUpdate.Battle.Event.General;
 using GameHotUpdate.Tasks;
@@ -12,11 +13,11 @@ using GameHotUpdate.Tasks;
 namespace GameHotUpdate.Battle.Damage
 {
     /// <summary>
-    /// �˺����������
+    /// 伤害计算管理器
     /// </summary>
     public class DamageCalcManager : SingletonBase<DamageCalcManager>, IDamageCalcManager
     {
-        // �����ֵ�
+        // 伤害计算策略缓存
         private readonly Dictionary<E_DamageType, IDamageStrategy> _strategys = new();
 
         private DamageCalcManager()
@@ -27,97 +28,102 @@ namespace GameHotUpdate.Battle.Damage
         public void Init(IBattleContext context)
         {
             _strategys.Clear();
-            // ��ʼ���������
+            // 注册策略
             _strategys.Add(E_DamageType.Direct, new DirectDamageStrategy());
             _strategys.Add(E_DamageType.Dot, new DotDamageStrategy());
             _strategys.Add(E_DamageType.Break, new BreakDamageStrategy());
             _strategys.Add(E_DamageType.True, new TrueDamageStrategy());
 
-            // ������Ҫ�����˺����¼�
+            // 监听击破事件
             context.GetEventBus().AddListener<ToughnessBrokenEvent>(OnToughnessBrokenEvent);
+            // 监听Dot事件
+            context.GetEventBus().AddListener<CalcDotDamageEvent>(OnCalcDotDamageEvent);
         }
 
         /// <summary>
-        /// ���㼼���˺�
+        /// 计算技能伤害
         /// </summary>
-        /// <param name="source">������</param>
-        /// <param name="target">Ŀ��</param>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
         /// <param name="skillInfo"></param>
         /// <param name="damageResult"></param>
-        /// <returns>�����˺�</returns>
         public void CalcSkillDamage(IBattleEntityObject source, IBattleEntityObject target,SkillInfo skillInfo, out DamageResult damageResult)
         {
-            E_DamageType damageType = skillInfo.f_damageType.ToDamageType();
-            if (_strategys.TryGetValue(damageType, out IDamageStrategy strategy))
+            var damageType = skillInfo.f_damageType.ToDamageType();
+            if (_strategys.TryGetValue(damageType, out var strategy))
             {
-                //����ÿ�������˺�
                 strategy.CalcDamage(source, target, skillInfo, out damageResult);
-                // �ַ�Ӧ���˺��¼���ս�����������ʾ�˺��ı���
                 source.Context.GetEventBus().TriggerEvent(new ApplyDamageEvent(source.Context, damageResult));
             }
             else
             {
                 damageResult = default;
-                LogManager.LogError("δʵ�ֶ�Ӧ���˺�����");
+                LogManager.LogError($"{nameof(DamageCalcManager)}.{nameof(CalcBrokenDamage)}：未注册伤害策略，{damageType}");
             }
         }
 
         /// <summary>
-        /// �����¼��ص�
-        /// ��������˺�
+        /// 击破事件回调
         /// </summary>
         /// <param name="toughnessBrokenEvent"></param>
         private void OnToughnessBrokenEvent(ToughnessBrokenEvent toughnessBrokenEvent)
         {
-            CalcBrokenDamage(toughnessBrokenEvent.Breaker, toughnessBrokenEvent.Target, toughnessBrokenEvent.SkillInfo, out DamageResult result);
-            toughnessBrokenEvent.Target.TakeDamage(result);
+            CalcBrokenDamage(toughnessBrokenEvent.Breaker, toughnessBrokenEvent.Target, 
+                toughnessBrokenEvent.SkillId, toughnessBrokenEvent.ResilienceValue);
         }
 
-        private void CalcBrokenDamage(IBattleEntityObject source, IBattleEntityObject target, SkillInfo skillInfo, out DamageResult damageResult)
+        /// <summary>
+        /// 计算Dot伤害事件回调
+        /// </summary>
+        /// <param name="calcDotDamageEvent"></param>
+        private void OnCalcDotDamageEvent(CalcDotDamageEvent calcDotDamageEvent)
         {
-            if (_strategys.TryGetValue(E_DamageType.Break, out IDamageStrategy strategy))
+            CalcDotDamage(calcDotDamageEvent.DotDamageCalcData);
+        }
+
+        /// <summary>
+        /// 计算击破伤害
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        /// <param name="skillId"></param>
+        /// <param name="resilienceValue"></param>
+        private void CalcBrokenDamage(IBattleEntityObject source, IBattleEntityObject target, int skillId, int resilienceValue)
+        {
+            if (_strategys.TryGetValue(E_DamageType.Break, out var strategy))
             {
-                //����ÿ�������˺�
-                strategy.CalcDamage(source, target, skillInfo, out damageResult);
-                // �ַ�Ӧ���˺��¼���ս�����������ʾ�˺��ı���
+                // 转换成击破伤害计算策略
+                (strategy as BreakDamageStrategy).CalcBreakDamage(source, target, skillId, resilienceValue,
+                    out var damageResult);
+                // 应用伤害事件
                 source.Context.GetEventBus().TriggerEvent(new ApplyDamageEvent(source.Context, damageResult));
+                target.TakeDamage(damageResult);
             }
             else
             {
-                damageResult = default;
-                LogManager.LogError("δʵ�ֶ�Ӧ���˺�����");
+                LogManager.LogError($"{nameof(DamageCalcManager)}.{nameof(CalcBrokenDamage)}：未注册击破伤害策略");
             }
         }
-
-        ///// <summary>
-        ///// ����Dot�˺�
-        ///// </summary>
-        ///// <param name="attacker">������</param>
-        ///// <param name="target">Ŀ��</param>
-        ///// <param name="damageType">�˺�����</param>
-        ///// <param name="extraData"></param>
-        ///// <returns>�����˺�</returns>
-        //public void CalcDotDamage(IBattleEntityObject source, IBattleEntityObject target, IDotBuff dot)
-        //{
-        //    //if (_strategyDic.TryGetValue(E_DamageType.Dot, out IDamageStrategy strategy))
-        //    //{
-        //    //    UIMgr.Instance.GetPanel<BattlePanel>((panel) =>
-        //    //    {
-        //    //        //���������˺�
-        //    //        int tempDmg = dot.CalcSkillDamage();
-        //    //        target.ProcessDamage(new DamageResult());
-        //    //        //�ַ��¼�
-        //    //        //ServiceLocator.Get<IEventCenter>().EventTrigger(E_EventType.OnApplyDamage, new ApplyDamageEvent(attacker, target, tempDmg));
-        //    //        //��ʾ�˺�
-        //    //        CreateDamageText(tempDmg, target);
-        //    //        //��ʾ�ۼ��˺�
-        //    //        panel.UpdateCumulativeDamageText(dmg: _currentTotalDamage += tempDmg);
-        //    //    });
-        //    //}
-        //    //else
-        //    //{
-        //    //    DebugMgr.LogError("δʵ�ֶ�Ӧ�Ĳ���");
-        //    //}
-        //}
+        
+        /// <summary>
+        /// 计算Dot伤害
+        /// </summary>
+        /// <param name="dotDamageCalcData"></param>
+        public void CalcDotDamage(DotDamageCalcData dotDamageCalcData)
+        {
+            if (_strategys.TryGetValue(E_DamageType.Dot, out var strategy))
+            {
+                // 转换成击破伤害计算策略
+                (strategy as DotDamageStrategy).CalcDotDamage(dotDamageCalcData, out var damageResult);
+                // 应用伤害事件
+                var context = dotDamageCalcData.source.Context;
+                context.GetEventBus().TriggerEvent(new ApplyDamageEvent(context, damageResult));
+                dotDamageCalcData.target.TakeDamage(damageResult);
+            }
+            else
+            {
+                LogManager.LogError($"{nameof(DamageCalcManager)}.{nameof(CalcBrokenDamage)}：未注册Dot伤害策略");
+            }
+        }
     }
 }

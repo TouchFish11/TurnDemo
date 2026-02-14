@@ -13,9 +13,5 @@ namespace Game.Battle.Status.Enum
         /// ����Ч��
         /// </summary>
         Negative,
-        /// <summary>
-        /// �˺�Ч����������
-        /// </summary>
-        Damage,
     }
 }

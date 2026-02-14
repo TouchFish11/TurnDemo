@@ -1,5 +1,6 @@
 using Core.Service;
 using Game.Battle.Event;
+using Game.Battle.Input;
 using Game.Battle.Skill.Enum;
 using Game.Battle.TargetSelect;
 using GameHotUpdate.Battle.Event.General;
@@ -51,7 +52,7 @@ namespace GameHotUpdate.Battle.UI.Base
             eventBus.AddListener<ApplyHealEvent>(ApplyHealChanged);            // 提供治疗事件
             eventBus.AddListener<ShieldChangedEvent>(OnShieldChanged);       // 护盾值变化事件
             
-            
+            eventBus.AddListener<ClearCumulativeDamageEvent>(OnClearCumulativeDamageEvent);     // 清空累计伤害显示事件
             eventBus.AddListener<PlayerReleaseSkillEvent>(OnPlayerReleaseSkillEvent); // 玩家释放技能事件
             eventBus.AddListener<ActionBarSortPostEvent>(OnActionBarSortPostEvent); // 行动条排序完成事件
             eventBus.AddListener<TurnStartStatusChangedEvent>(OnTurnStartStatusChangedEvent); // 回合开始状态变化事件
@@ -113,6 +114,15 @@ namespace GameHotUpdate.Battle.UI.Base
         }
 
         /// <summary>
+        /// 清空累计伤害显示事件回调
+        /// </summary>
+        /// <param name="clearCumulativeDamageEvent"></param>
+        private void OnClearCumulativeDamageEvent(ClearCumulativeDamageEvent clearCumulativeDamageEvent)
+        {
+            _uiManager.UpdateCumulativeDamage(false, 0);
+        }
+
+        /// <summary>
         /// 受到伤害事件处理方法
         /// 显示伤害数值文本提示
         /// </summary>
@@ -162,6 +172,8 @@ namespace GameHotUpdate.Battle.UI.Base
         {
             // 关闭目标选择功能
             ServiceLocator.Get<ITargetSelectManager>().InActiveSelectTarget();
+            // 禁用输入
+            ServiceLocator.Get<IBattleInputHandler>().SetInputState(false);
             // 清除选中目标的标记UI
             _uiManager.ClearSelectMarker();
             // 清空操作面板

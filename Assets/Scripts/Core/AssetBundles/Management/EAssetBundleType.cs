@@ -11,7 +11,6 @@ namespace Core.AssetBundles.Management
 		GameConfig,
 		HotUpdate,
 		SpriteAtlas,
-		Texture,
 		// 生成类型
 		Animation,
 		Animator,

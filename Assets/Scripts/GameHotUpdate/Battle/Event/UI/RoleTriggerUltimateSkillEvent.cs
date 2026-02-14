@@ -4,7 +4,7 @@ using Game.Battle.Objects;
 namespace GameHotUpdate.Battle.Event.UI
 {
     /// <summary>
-    /// 角色终结技释放事件
+    /// 角色终结技触发事件
     /// </summary>
     public class RoleTriggerUltimateSkillEvent : RoleTriggerSkillEvent
     {

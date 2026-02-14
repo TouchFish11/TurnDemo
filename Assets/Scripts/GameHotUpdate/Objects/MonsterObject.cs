@@ -52,11 +52,21 @@ namespace GameHotUpdate.Objects
         public override void BattleInit(int monsterId, IBattleContext context)
         {
             base.BattleInit(monsterId, context);
-            
             // 初始化伤害链
             damageChain = DamageChainBuilder.GetMonsterDamageChain();
             // 根据配置的组件名称列表，为怪物添加对应的战斗组件（如韧性组件、动画组件等）
             AddComponents(TextUtility.Split(MonsterInfo.f_comNames, 2));
+        }
+
+        public override void ExecuteAction()
+        {
+            base.ExecuteAction();
+            // 随机从技能列表中选择一个技能ID
+            var skillIds = this.GetComponent<SkillComponent>().GetSkillIds();
+            // TODO：可以封装随机选择的策略类，用于玩家/怪物AI
+            var skillId = skillIds[Random.Range(0, skillIds.Count)];
+            // 释放选中的技能
+            CastSkill(skillId);
         }
 
         public override void CastSkill(int skillId)

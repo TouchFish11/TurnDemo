@@ -159,11 +159,8 @@ namespace Core.Config
 		public static string VFX_SupportSkill_01 => "VFX_SupportSkill_01";
 		public static string VFX_SupportSkill_02 => "VFX_SupportSkill_02";
 		public static string VFX_MonsterHit => "VFX_MonsterHit";
-		public static string VFX_Dot_Blue01 => "VFX_Dot_Blue01";
-		public static string VFX_Dot_Blue02 => "VFX_Dot_Blue02";
-		public static string VFX_Dot_Blue03 => "VFX_Dot_Blue03";
-		public static string VFX_Dot_Green01 => "VFX_Dot_Green01";
-		public static string VFX_Dot_Green02 => "VFX_Dot_Green02";
+		public static string VFX_Dot_IceErosion => "VFX_Dot_IceErosion";
+		public static string VFX_Dot_Weather => "VFX_Dot_Weather";
 		public static string VFX_Heal => "VFX_Heal";
 		public static string VFX_Shield => "VFX_Shield";
 		public static string VFX_MonsterAttackSkill => "VFX_MonsterAttackSkill";
@@ -183,6 +180,9 @@ namespace Core.Config
 		public static string VFX_Priest_NormalSkill => "VFX_Priest_NormalSkill";
 		public static string VFX_Priest_UltiamteSkill => "VFX_Priest_UltiamteSkill";
 		public static string VFX_Priest_UltimatePose => "VFX_Priest_UltimatePose";
+		public static string VFX_Dot_Blue01 => "VFX_Dot_Blue01";
+		public static string VFX_Dot_Blue03 => "VFX_Dot_Blue03";
+		public static string VFX_Dot_Green01 => "VFX_Dot_Green01";
 		public static string VFX_Unknow01 => "VFX_Unknow01";
 		public static string VFX_Unknow03 => "VFX_Unknow03";
 		public static string VFX_Unkow02 => "VFX_Unkow02";

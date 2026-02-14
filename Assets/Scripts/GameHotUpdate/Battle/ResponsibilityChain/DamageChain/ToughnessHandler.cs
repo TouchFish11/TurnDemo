@@ -12,7 +12,7 @@ namespace GameHotUpdate.Battle.ResponsibilityChain.DamageChain
         {
             // 获取韧性组件，根据伤害信息扣除对应韧性
             var monster = request.Target;
-            monster.GetComponent<IToughnessComponent>().ReduceToughness(request.Source, request.ElementType, request.SkillInfo);
+            monster.GetComponent<IToughnessComponent>().ReduceToughness(request.Source, request.ElementType, request.ResilienceValue, request.SkillId);
             successor.HandleRequest(request);
         }
     }

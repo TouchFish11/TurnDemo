@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Core.Mono;
 using Core.Service;
-using Core.UI;
 using Game.Battle.Condition;
 using Game.Battle.Context;
 using Game.Battle.Enum;
@@ -10,10 +9,9 @@ using Game.Battle.Objects;
 using Game.Battle.Turn;
 using GameHotUpdate.Battle.Event.Turn;
 using GameHotUpdate.Battle.Event.UI;
-using GameHotUpdate.Battle.UI.Base;
+using GameHotUpdate.Battle.Utility;
 using GameHotUpdate.Command;
 using GameHotUpdate.Condition;
-using GameHotUpdate.Manager;
 using GameHotUpdate.Objects;
 using GameHotUpdate.Property;
 
@@ -47,10 +45,6 @@ namespace GameHotUpdate.Battle.StateMeachine
             // TODO：写死，后续根据配置优化
             battleOverConditions.Add(new AllTurnOverCondition());
             battleOverConditions.Add(new AllPlayerDeadCondition());
-            
-            // 激活战斗界面显示
-            var controller =  ServiceLocator.Get<IUIManager>().GetController<BattleController>();
-            ServiceLocator.Get<IUIManager>().SetViewActive(controller, true);
             
             Execute();
         }
@@ -196,7 +190,7 @@ namespace GameHotUpdate.Battle.StateMeachine
         public void InsertOrder(IBattleEntityObject actEndEntity)
         {
             var speed = actEndEntity.GetComponent<PropertyComponent>().GetPropertyValue(E_DynamicPropertyType.CurrentSpeed);
-            actEndEntity.SetActionValue(CalcActionValue(speed));
+            actEndEntity.SetActionValue(BattleUtility.CalcActionValue(speed));
             var index = -1;
             foreach (var battleEntityObject in Context.GetAliveEntitys())
             {

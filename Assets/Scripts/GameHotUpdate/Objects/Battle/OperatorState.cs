@@ -1,27 +1,85 @@
 using System.Collections;
 using Game.Battle.Objects;
+using GameHotUpdate.Battle.Event.UI;
+using UnityEngine;
 
 namespace GameHotUpdate.Objects.Battle
 {
     /// <summary>
     /// 操作状态
     /// </summary>
-    public abstract class OperatorState : TurnState
+    public class OperatorState : TurnState
     {
-        protected OperatorState(IBattleEntityObject battleEntity) : base(battleEntity)
+        public OperatorState(IBattleEntityObject battleEntity) : base(battleEntity)
         { 
 
         }
 
         public override void Enter()
         {
-            BattleEntity.StartCoroutine(OnExceuteAction());
+            // 监听技能释放事件
+            PlayerObject.Context.GetEventBus().AddListener<RoleTriggerSkillEvent>(OnCastSkill);
+            PlayerObject.Context.GetEventBus().AddListener<RoleTriggerUltimateSkillEvent>(OnCastUltimateSkill);
+            PlayerObject.StartCoroutine(OnExceuteAction());
+        }
+
+        private IEnumerator OnExceuteAction()
+        {
+            // TODO：玩家自动逻辑预留
+            bool isAuto = false;
+
+            while (PlayerObject.CanAct)
+            {
+                if (!isAuto)
+                {
+                    yield return null;
+                }
+                else
+                {
+                    // 执行每个角色自己的自动选择技能策略
+                    
+                    yield break;
+                }
+            }
+        }
+        
+        /// <summary>
+        /// 释放技能事件回调
+        /// 点击技能按键后触发
+        /// </summary>
+        /// <param name="triggerSkillEvent"></param>
+        private void OnCastSkill(RoleTriggerSkillEvent triggerSkillEvent)
+        {
+            if ((Object)triggerSkillEvent.Caster != this.PlayerObject)
+            {
+                return;
+            }
+
+            PlayerObject.CastSkill(triggerSkillEvent.SkillId);
+            // 行动结束
+            // BattleEntity.CanAct = false;
         }
 
         /// <summary>
-        /// 执行具体行动逻辑
+        /// 释放终结技技能事件回调
+        /// 点击终结技技能按键后触发
         /// </summary>
-        /// <returns>协程迭代器（用于处理异步行动流程）</returns>
-        protected abstract IEnumerator OnExceuteAction();
+        /// <param name="roleTriggerUltimateSkillEvent"></param>
+        protected void OnCastUltimateSkill(RoleTriggerUltimateSkillEvent roleTriggerUltimateSkillEvent)
+        {
+            if ((BattleObject)roleTriggerUltimateSkillEvent.Caster != this.PlayerObject)
+            {
+                return;
+            }
+
+            PlayerObject.CastSkill(roleTriggerUltimateSkillEvent.SkillId);
+        }
+
+        public override void Exit()
+        {
+            // 移除事件监听
+            PlayerObject.Context.GetEventBus().RemoveListener<RoleTriggerSkillEvent>(OnCastSkill);
+            PlayerObject.Context.GetEventBus().RemoveListener<RoleTriggerUltimateSkillEvent>(OnCastUltimateSkill);
+        }
     }
 }

@@ -5,9 +5,11 @@ using Core.Utility;
 using Game.Battle.Command;
 using Game.Battle.Context;
 using Game.Battle.Toughness;
+using GameHotUpdate.Battle.Status;
 using GameHotUpdate.Battle.UI.Base;
 using GameHotUpdate.Cameras;
 using GameHotUpdate.Layer;
+using GameHotUpdate.Status;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Command
@@ -36,16 +38,59 @@ namespace GameHotUpdate.Battle.Command
 
         public override IEnumerator Execute(IBattleContext context)
         {
-            yield return RestoreToughness_Cor();
-
+            // buff结算
+            yield return UpdateStatus();
+            if (!Sender.CanAct)
+            {
+                yield break;
+            }
+            
+            // 韧性恢复
+            yield return RestoreToughness();
+            // 技能执行
             yield return _skillCommand.Execute(context);
+        }
+
+        /// <summary>
+        /// 状态更新协程
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerator UpdateStatus()
+        {
+            var statusComponent = Sender.GetComponent<StatusComponent>();
+            var hasDot = StatusUtility.ContainDot(statusComponent.GetStatuses());
+            if (hasDot)
+            {
+                // 隐藏其他怪物血量UI显示
+                ServiceLocator.Get<IUIManager>().GetController<BattleController>().MonsterStateUIManager.ActiveMonsterUI(Sender);
+                // 调整相机角度
+                var monsterPos = Sender.GameObject.transform.position;
+                monsterPos = new Vector3(monsterPos.x, 1, monsterPos.z);
+                var pos = monsterPos + Sender.GameObject.transform.forward * 4;
+                var rotation = Quaternion.LookRotation(monsterPos - pos);
+            
+                // 获取遮罩
+                var preMask = LayerGeter.GetPreBitLayer();
+                var mask = preMask | (1 << Sender.GameObject.layer);
+                // 创建相机
+                yield return TaskUtility.WaitForTask(ServiceLocator.Get<IBattleCameraManager>().CreateCamera(null, pos, rotation, mask));
+                // 调用组件方法
+                Sender.GetComponent<StatusComponent>().UpdateStatus();
+                // 等待Dot显示完成
+                yield return new WaitForSeconds(1.5f);
+            }
+            else
+            {
+                // 调用组件方法
+                Sender.GetComponent<StatusComponent>().UpdateStatus();
+            }
         }
         
         /// <summary>
         /// 韧性恢复协程
         /// </summary>
         /// <returns>协程迭代器</returns>
-        private IEnumerator RestoreToughness_Cor()
+        private IEnumerator RestoreToughness()
         {
             // 获取当前怪物的韧性组件
             var toughnessComponent = Sender.GetComponent<IToughnessComponent>();

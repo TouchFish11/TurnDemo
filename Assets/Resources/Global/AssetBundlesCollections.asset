@@ -118,19 +118,19 @@ MonoBehaviour:
       size: 1363
       name: ItemInfo.bytes
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\MonsterInfo.bytes
-      size: 441
+      size: 878
       name: MonsterInfo.bytes
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\NpcInfo.bytes
       size: 150
       name: NpcInfo.bytes
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\RoleInfo.bytes
-      size: 393
+      size: 767
       name: RoleInfo.bytes
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\SkillInfo.bytes
-      size: 1097
+      size: 1169
       name: SkillInfo.bytes
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\StatusInfo.bytes
-      size: 126
+      size: 304
       name: StatusInfo.bytes
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\TaskConditionInfo.bytes
       size: 64
@@ -144,7 +144,7 @@ MonoBehaviour:
   - assetBundleName: hotupdate
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\HotUpdate\Assembly-CSharp-Game-HotUpdate.dll.bytes
-      size: 348160
+      size: 348672
       name: Assembly-CSharp-Game-HotUpdate.dll.bytes
   - assetBundleName: material
     assetInfos:
@@ -203,7 +203,7 @@ MonoBehaviour:
       size: 8997
       name: BeginScene.unity
     - assetPath: Assets\Editor\ArtRes\Scene\LevelScene.unity
-      size: 75865
+      size: 102880
       name: LevelScene.unity
     - assetPath: Assets\Editor\ArtRes\Scene\MainScene.unity
       size: 49952
@@ -291,7 +291,7 @@ MonoBehaviour:
       size: 11503
       name: BattleMessageUI.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Battle\BattleView.prefab
-      size: 92246
+      size: 92250
       name: BattleView.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Battle\SelectMarkerUI.prefab
       size: 17123
@@ -388,21 +388,12 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\VFX\General\Hit\VFX_MonsterHit.prefab
       size: 237071
       name: VFX_MonsterHit.prefab
-    - assetPath: Assets\Editor\ArtRes\VFX\General\Status\VFX_Dot_Blue01.prefab
-      size: 596053
-      name: VFX_Dot_Blue01.prefab
-    - assetPath: Assets\Editor\ArtRes\VFX\General\Status\VFX_Dot_Blue02.prefab
-      size: 467847
-      name: VFX_Dot_Blue02.prefab
-    - assetPath: Assets\Editor\ArtRes\VFX\General\Status\VFX_Dot_Blue03.prefab
-      size: 596001
-      name: VFX_Dot_Blue03.prefab
-    - assetPath: Assets\Editor\ArtRes\VFX\General\Status\VFX_Dot_Green01.prefab
-      size: 595985
-      name: VFX_Dot_Green01.prefab
-    - assetPath: Assets\Editor\ArtRes\VFX\General\Status\VFX_Dot_Green02.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\General\Status\VFX_Dot_IceErosion.prefab
+      size: 467848
+      name: VFX_Dot_IceErosion.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\General\Status\VFX_Dot_Weather.prefab
       size: 467879
-      name: VFX_Dot_Green02.prefab
+      name: VFX_Dot_Weather.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\General\Status\VFX_Heal.prefab
       size: 708530
       name: VFX_Heal.prefab
@@ -460,6 +451,15 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\VFX\Role\Priest\VFX_Priest_UltimatePose.prefab
       size: 709612
       name: VFX_Priest_UltimatePose.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\Unknow\VFX_Dot_Blue01.prefab
+      size: 596053
+      name: VFX_Dot_Blue01.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\Unknow\VFX_Dot_Blue03.prefab
+      size: 596001
+      name: VFX_Dot_Blue03.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\Unknow\VFX_Dot_Green01.prefab
+      size: 595985
+      name: VFX_Dot_Green01.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\Unknow\VFX_Unknow01.prefab
       size: 350847
       name: VFX_Unknow01.prefab

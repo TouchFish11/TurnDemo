@@ -9,6 +9,8 @@ using Game.Battle.Input;
 using Game.Battle.Objects;
 using Game.Battle.TargetSelect;
 using Game.Objects;
+using GameHotUpdate.Battle.Event.Turn;
+using GameHotUpdate.Manager;
 using UnityEngine;
 
 namespace GameHotUpdate.Cameras
@@ -36,12 +38,11 @@ namespace GameHotUpdate.Cameras
         {
             ServiceLocator.Get<IBattleInputHandler>().OnDrag += OnDrag;
             ServiceLocator.Get<IBattleInputHandler>().OnRebound += OnRebound;
-
             ServiceLocator.Get<ITargetSelectManager>().OnSelectChanged += OnSelectChanged;
-            
             ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpdate);
+            ServiceLocator.Get<IBattleManager>().GetContext().GetEventBus().AddListener<BattleOverEvent>(OnBattleOverEvent);
         }
-
+        
         public async Task<Camera> CreateCamera(Transform cameraTrans, Vector3 localPos, Quaternion localRot)
         {
             if(CurrentActiveCamera)
@@ -160,9 +161,22 @@ namespace GameHotUpdate.Cameras
             }
         }
 
+        /// <summary>
+        /// 战斗结束事件回调
+        /// </summary>
+        /// <param name="quitBattleEvent"></param>
+        private void OnBattleOverEvent(BattleOverEvent quitBattleEvent)
+        {
+            ServiceLocator.Get<IBattleInputHandler>().OnDrag -= OnDrag;
+            ServiceLocator.Get<IBattleInputHandler>().OnRebound -= OnRebound;
+            ServiceLocator.Get<ITargetSelectManager>().OnSelectChanged -= OnSelectChanged;
+            ServiceLocator.Get<IMonoAdapter>().RemoveUpdateListener(OnUpdate);
+        }
+        
         protected override void OnDestroy()
         {
-            ServiceLocator.Get<IMonoAdapter>().RemoveUpdateListener(OnUpdate);
+            ServiceLocator.Get<IPoolManager>().PushObj(CurrentActiveCamera.gameObject);
+            CurrentActiveCamera = null;
             base.OnDestroy();
         }
     }

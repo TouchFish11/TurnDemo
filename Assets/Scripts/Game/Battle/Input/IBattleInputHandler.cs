@@ -38,5 +38,11 @@ namespace Game.Battle.Input
         void Init(IBattleContext context);
 
         event Action<bool> OnRebound;
+
+        /// <summary>
+        /// 设置输入状态
+        /// </summary>
+        /// <param name="activeInput"></param>
+        void SetInputState(bool activeInput);
     }
 }

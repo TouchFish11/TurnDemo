@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 1392239967
+CRC: 3855953322
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: f035c46718d76ff67fbb733970727db9
+    Hash: 8a0f33a369ac3f21cb5e2a001dab45f5
   TypeTreeHash:
     serializedVersion: 2
-    Hash: ab1fbe1f488357a2e058ba1169e8a635
+    Hash: cf23c24c637768f4a909a5c317781a90
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: f035c46718d76ff67fbb733970727db9
+    Hash: 8a0f33a369ac3f21cb5e2a001dab45f5
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -57,11 +57,11 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
 - Class: 114
-  Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-- Class: 114
   Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: d4d0f64f65ae7754bab2cce7e2a00690, type: 3}
 - Class: 114
@@ -141,4 +141,5 @@ Dependencies:
 - D:/UnityProject/TurnDemo/Assets/AssetBundleDatas/PC/animator
 - D:/UnityProject/TurnDemo/Assets/AssetBundleDatas/PC/camera
 - D:/UnityProject/TurnDemo/Assets/AssetBundleDatas/PC/material
+- D:/UnityProject/TurnDemo/Assets/AssetBundleDatas/PC/prefab
 - D:/UnityProject/TurnDemo/Assets/AssetBundleDatas/PC/ui

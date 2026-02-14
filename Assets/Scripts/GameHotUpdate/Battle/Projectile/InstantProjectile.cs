@@ -1,9 +1,12 @@
 using System.Collections;
 using Core.Config;
+using Core.Reflection;
 using Core.Service;
 using Game.Battle.Damage;
-using Game.Battle.Objects;
+using Game.Battle.Status;
+using Game.Battle.Status.Enum;
 using Game.VFX;
+using GameHotUpdate.Status;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Projectile
@@ -20,8 +23,18 @@ namespace GameHotUpdate.Battle.Projectile
 
         protected override void Trigger()
         {
-            foreach (IBattleEntityObject target in projectileData.targets)
+            foreach (var target in projectileData.targets)
             {
+                foreach (int id in statusIds)
+                {
+                    var status = ServiceLocator.Get<IFactoryManager>().GetFactory<IStatusFactory, StatusFactory>().GetStatus(id);
+                    status.InitStatus(projectileData.caster, target, id);
+                    if (status.StatusProperty.StatusInfo.f_statusType == (byte)E_StatusType.Negative)
+                    {
+                        target.GetComponent<StatusComponent>().AddStatus(status);
+                    }
+                }
+                
                 damageCalcManager.CalcSkillDamage(projectileData.caster, target, projectileData.skill.SkillInfo, out DamageResult result);
                 target.TakeDamage(result);
 

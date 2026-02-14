@@ -6,7 +6,6 @@ using Core.Log;
 using Core.Service;
 using Core.UI;
 using Core.UI.MVC;
-using Game.Battle;
 using GameHotUpdate.Activity.UI.Base;
 using GameHotUpdate.Battle.Turn;
 using GameHotUpdate.Main.UI.Logic;

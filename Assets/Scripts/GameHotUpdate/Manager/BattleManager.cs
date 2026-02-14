@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.Config;
@@ -9,13 +8,11 @@ using Core.Scene;
 using Core.Service;
 using Core.Singleton;
 using Core.UI;
-using Core.UI.MVC;
 using Game.Battle;
 using Game.Battle.Context;
 using Game.Battle.Damage;
 using Game.Battle.Event;
 using Game.Battle.Input;
-using Game.Battle.Objects;
 using Game.Battle.Skill.Interface;
 using Game.Battle.TargetSelect;
 using Game.Input;
@@ -26,11 +23,11 @@ using GameHotUpdate.Battle.Event;
 using GameHotUpdate.Battle.Event.Turn;
 using GameHotUpdate.Battle.Skill.Base;
 using GameHotUpdate.Battle.Turn;
-using GameHotUpdate.Battle.UI.Base;
 using GameHotUpdate.Cameras;
 using GameHotUpdate.Context;
 using GameHotUpdate.Input;
 using GameHotUpdate.Main;
+using GameHotUpdate.Main.UI;
 using GameHotUpdate.TargetSelect;
 using GameHotUpdate.UI.Back;
 using GameHotUpdate.UI.Loading.Battle;
@@ -120,7 +117,7 @@ namespace GameHotUpdate.Manager
             async () =>
             {
                 // 隐藏主界面
-                var controller = ServiceLocator.Get<IUIManager>().GetController<BattleController>();
+                var controller = ServiceLocator.Get<IUIManager>().GetController<MainController>();
                 ServiceLocator.Get<IUIManager>().SetViewActive(controller, false);
                 // 注册战斗点，依赖战斗场景加载完成
                 ServiceLocator.Register<IBattlePointProxy>(new BattlePointProxy());
@@ -135,28 +132,9 @@ namespace GameHotUpdate.Manager
                 // 创建回合创建器
                 _creator = ServiceLocator.Get<IPoolManager>().GetData<TurnCreator>();
                 _creator.Init(_context, turnData.TotalTurnNumber, turnData.Waves);
-                // 创建战斗实体对象，依赖战斗上下文、战斗点
-                var roles = await _creator.CreateRoles(1,2);
-                // 缓存实体
-                CacheEntitys(roles);
-                // 初始化角色战斗点，依赖战斗实体对象创建完成
-                ServiceLocator.Get<IBattlePointProxy>().InitProxy(_context, new List<IBattleEntityObject>(_context.GetAlivePlayerEntitys()));
                 // 开始战斗
                 _context.GetStateMachine().StartBattle();
             });
-        }
-
-        /// <summary>
-        /// 缓存实体到上下文
-        /// </summary>
-        /// <param name="roles"></param>
-        private void CacheEntitys(List<IBattleEntityObject> roles)
-        {
-            foreach (var battleEntityObject in roles)
-            {
-                _context.AddBattleEntity(battleEntityObject);
-                _context.AddSceneRole(battleEntityObject);
-            }
         }
         
         /// <summary>
@@ -243,8 +221,8 @@ namespace GameHotUpdate.Manager
                 ServiceLocator.Get<IMouseManager>().ForceInVisible();
                 
                 // 激活主界面
-                var controller = ServiceLocator.Get<IUIManager>().GetController<BattleController>();
-                ServiceLocator.Get<IUIManager>().SetViewActive(controller, false);
+                var controller = ServiceLocator.Get<IUIManager>().GetController<MainController>();
+                ServiceLocator.Get<IUIManager>().SetViewActive(controller, true);
                 
                 // 执行战斗结束回调
                 await OnBattleOver?.Invoke();

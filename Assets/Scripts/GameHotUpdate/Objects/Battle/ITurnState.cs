@@ -5,11 +5,9 @@ namespace GameHotUpdate.Objects.Battle
     /// </summary>
     public interface ITurnState
     {
-        BattleObject BattleEntity { get; }
+        PlayerObject PlayerObject { get; }
         
         void Enter();
-
-        void Execute();
         
         void Exit();
     }

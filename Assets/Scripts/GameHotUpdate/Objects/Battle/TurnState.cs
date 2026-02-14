@@ -7,16 +7,14 @@ namespace GameHotUpdate.Objects.Battle
     /// </summary>
     public abstract class TurnState : ITurnState
     {
-        public BattleObject BattleEntity { get; }
+        public PlayerObject PlayerObject { get; }
 
         protected TurnState(IBattleEntityObject battleEntity)
         {
-            BattleEntity = battleEntity as BattleObject;
+            PlayerObject = battleEntity as PlayerObject;
         }
         
         public abstract void Enter();
-        
-        public abstract void Execute();
         
         public abstract void Exit();
     }

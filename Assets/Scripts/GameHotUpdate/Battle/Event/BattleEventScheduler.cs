@@ -9,6 +9,7 @@ using Core.Utility;
 using Game.Battle;
 using Game.Battle.Context;
 using Game.Battle.Event;
+using Game.Battle.Input;
 using Game.Battle.Objects;
 using Game.Battle.Skill.Enum;
 using Game.Battle.TargetSelect;
@@ -51,7 +52,7 @@ namespace GameHotUpdate.Battle.Event
         private void ListenerBattleEvent()
         {
             // 监听回合开始事件
-            _context.GetEventBus().AddListener<TurnStartEvent>(TurnStartEventScheduler);
+            _context.GetEventBus().AddListener<TurnStartEvent>(OnTurnStartDispatch);
             // 监听角色技能选择事件
             _context.GetEventBus().AddListener<SelectSkillEvent>(SelectSkillEventScheduler);
             // 监听技能释放后通用逻辑事件
@@ -59,7 +60,7 @@ namespace GameHotUpdate.Battle.Event
             // 监听技能释放后通用逻辑事件
             _context.GetEventBus().AddListener<UltimateCastEvent>(OnUltimateCastDispatch);
             // 监听更新等待队列事件
-            _context.GetEventBus().AddListener<UpdateWaitCmdEvent>(OnUpdateWaitCmdEvent);
+            _context.GetEventBus().AddListener<UpdateWaitCmdEvent>(OnUpdateWaitCmdDispatch);
         }
 
         /// <summary>
@@ -75,6 +76,8 @@ namespace GameHotUpdate.Battle.Event
             yield return TaskUtility.WaitForTask(_context.GetProxy().UpdateCamera(caster));
             // 玩家回合：激活目标选择功能
             ServiceLocator.Get<ITargetSelectManager>().ActiveSelectTarget();
+            // 启用输入
+            ServiceLocator.Get<IBattleInputHandler>().SetInputState(true);
             // 更新UI
             var controller = ServiceLocator.Get<IUIManager>().GetController<BattleController>();
             // 隐藏行动提示
@@ -110,6 +113,8 @@ namespace GameHotUpdate.Battle.Event
         {
             // 关闭目标选择（终结技释放时不再允许手动选择目标）
             ServiceLocator.Get<ITargetSelectManager>().InActiveSelectTarget();
+            // 禁用输入
+            ServiceLocator.Get<IBattleInputHandler>().SetInputState(false);
             var controller = ServiceLocator.Get<IUIManager>().GetController<BattleController>();
             controller.BattleUiManager.ClearSelectMarker();
             controller.BattleUiManager.SetOperator(null);
@@ -120,7 +125,7 @@ namespace GameHotUpdate.Battle.Event
         /// 更新等待队列事件回调
         /// </summary>
         /// <param name="updateWaitCmdEvent"></param>
-        private void OnUpdateWaitCmdEvent(UpdateWaitCmdEvent updateWaitCmdEvent)
+        private void OnUpdateWaitCmdDispatch(UpdateWaitCmdEvent updateWaitCmdEvent)
         {
             var controller = ServiceLocator.Get<IUIManager>().GetController<BattleController>();
             controller.BattleUiManager.UpdateWaitingCommmand(updateWaitCmdEvent.BattleEntities);
@@ -130,11 +135,11 @@ namespace GameHotUpdate.Battle.Event
         /// 回合开始事件调度逻辑
         /// </summary>
         /// <param name="turnStartEvent"></param>
-        private async void TurnStartEventScheduler(TurnStartEvent turnStartEvent)
+        private async void OnTurnStartDispatch(TurnStartEvent turnStartEvent)
         {
             if (turnStartEvent.CurrentBattleEntity == null)
             {
-                LogManager.LogError($"{nameof(BattleEventScheduler)}.{nameof(TurnStartEventScheduler)}：当前战斗对象为null");
+                LogManager.LogError($"{nameof(BattleEventScheduler)}.{nameof(OnTurnStartDispatch)}：当前战斗对象为null");
                 return;
             }
 
@@ -153,6 +158,8 @@ namespace GameHotUpdate.Battle.Event
                 {
                     // 角色行动才激活怪物UI显示
                     controller.MonsterStateUIManager.ActiveMonsterUIs();
+                    // 启用输入
+                    ServiceLocator.Get<IBattleInputHandler>().SetInputState(true);
                     // 玩家回合：激活目标选择功能
                     ServiceLocator.Get<ITargetSelectManager>().ActiveSelectTarget();
                     // 隐藏行动提示

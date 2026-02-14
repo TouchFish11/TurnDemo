@@ -13,15 +13,11 @@ namespace GameHotUpdate.Objects.Battle
         public override void Enter()
         {
             // 触发回合开始事件
-            BattleEntity.Context.GetEventBus().TriggerEvent(new TurnStartEvent(BattleEntity.Context, BattleEntity));
+            PlayerObject.Context.GetEventBus().TriggerEvent(new TurnStartEvent(PlayerObject.Context, PlayerObject));
 
-            BattleEntity.ChangeState(EActPhase.Operator);
+            PlayerObject.ChangeState(EActPhase.Operator);
         }
         
-        public override void Execute()
-        {
-
-        }
 
         public override void Exit()
         {

@@ -16,17 +16,12 @@ namespace GameHotUpdate.Objects.Battle
         public override void Enter()
         {
             // 调用状态组件更新状态
-            BattleEntity.GetComponent<StatusComponent>().UpdateStatus();
+            PlayerObject.GetComponent<StatusComponent>().UpdateStatus();
             // 判断能否行动
-            if (BattleEntity.CanAct)
+            if (PlayerObject.CanAct)
             {
-                BattleEntity.ChangeState(EActPhase.TurnStart);
+                PlayerObject.ChangeState(EActPhase.TurnStart);
             }
-        }
-
-        public override void Execute()
-        {
-            
         }
 
         public override void Exit()

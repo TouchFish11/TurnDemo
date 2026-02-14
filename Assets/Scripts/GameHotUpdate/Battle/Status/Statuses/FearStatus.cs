@@ -5,7 +5,7 @@ using Game.Battle.Status;
 namespace GameHotUpdate.Battle.Status.Statuses
 {
     /// <summary>
-    /// �־�
+    /// 恐惧
     /// </summary>
     [StatusTypeId(20001)]
     public class FearStatus : Status

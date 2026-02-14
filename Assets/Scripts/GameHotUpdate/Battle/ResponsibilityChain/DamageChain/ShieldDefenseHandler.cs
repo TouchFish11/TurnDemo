@@ -29,14 +29,12 @@ namespace GameHotUpdate.Battle.ResponsibilityChain.DamageChain
                     // 传递剩余伤害
                     var damageResult = new DamageResult
                     (
-                        source:request.Source,
-                        target:request.Target,
-                        finalDamage:newFinalDmg,
-                        elementType:request.ElementType,
-                        damageType:request.DamageType,
-                        isCrit:request.IsCrit,
-                        skillInfo:request.SkillInfo
-                    );
+                        source: request.Source,
+                        target: request.Target,
+                        finalDamage: newFinalDmg,
+                        elementType: request.ElementType,
+                        damageType: request.DamageType,
+                        isCrit: request.IsCrit, skillId: request.SkillId, resilienceValue: request.ResilienceValue);
                     
                     successor.HandleRequest(damageResult);
                 }

@@ -51,8 +51,9 @@ namespace Game.Battle.Toughness
         /// </summary>
         /// <param name="reducer">发起韧性扣除的战斗实体（攻击者）</param>
         /// <param name="propertyType">触发韧性扣除的元素类型</param>
-        /// <param name="skillInfo">触发韧性扣除的技能信息</param>
-        void ReduceToughness(IBattleEntityObject reducer, E_ElementType propertyType, SkillInfo skillInfo);
+        /// <param name="resilienceValue"></param>
+        /// <param name="skillId"></param>
+        void ReduceToughness(IBattleEntityObject reducer, E_ElementType propertyType, int resilienceValue, int skillId);
 
         /// <summary>
         /// 直接设置韧性值

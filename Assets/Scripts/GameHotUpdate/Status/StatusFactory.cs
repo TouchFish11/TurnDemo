@@ -32,6 +32,7 @@ namespace GameHotUpdate.Status
         
         /// <summary>
         /// 根据状态ID创建对应的状态实例
+        /// TODO：加入初始化逻辑
         /// </summary>
         /// <param name="statusId">状态唯一标识ID</param>
         /// <returns>实现IStatus接口的状态实例；若未找到对应ID的状态类，返回null</returns>
@@ -55,7 +56,7 @@ namespace GameHotUpdate.Status
         private static void ScanAllStatu(Dictionary<int, Type> dic)
         {
             // 遍历所有热更新程序集（通过AssemblyUtility工具类获取）
-            foreach (var assembly in ServiceLocator.Get<IHotUpdateManager>().GetAssemblies())
+            foreach (var assembly in ServiceLocator.Get<IHotUpdateManager>().GetHotAssemblies())
             {
                 // 遍历当前程序集中的所有类型
                 foreach (var type in assembly.GetTypes())

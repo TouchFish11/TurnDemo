@@ -112,6 +112,8 @@ namespace GameHotUpdate.Command
                 // 初始化行动顺序
                 BattleUtility.InitOrder(_turnLoopState.Context);
                 yield return new WaitForSeconds(1f);
+                // 初始化怪物UI
+                yield return TaskUtility.WaitForTask(controller.UiInitializer.InitMonsterUIs(_turnLoopState.Context.GetAliveMonsterEntitys()));
             }
         }
 

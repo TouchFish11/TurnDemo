@@ -50,7 +50,7 @@ namespace Editor.AssetBundle
         /// </summary>
         private readonly string[] filterDirectorys = { "Texture" };
 
-    /// <summary>
+        /// <summary>
         /// 资源上传服务器地址
         /// </summary>
         private string serverIP = "http://...";
@@ -165,7 +165,7 @@ namespace Editor.AssetBundle
         // AssetBundle类型枚举默认名称（用于生成枚举脚本）
         private readonly string[] defaultNames = {
             "UI", "Scene", "Music", "Camera", "Video", "GameConfig", "HotUpdate",
-            "SpriteAtlas", "Texture"
+            "SpriteAtlas"
         };
 
         // AssetBundle类型枚举脚本生成路径
@@ -426,17 +426,36 @@ namespace Editor.AssetBundle
                 _fileInfoDic.Add(info.Name, fileInfos);
             }
 
+            var index = 0;
+            var total = 0;
+            foreach (var list in _fileInfoDic.Values)
+            {
+                total += list.Count;
+            }
+            
             // 为每个文件设置AB包标签，并记录到配置文件
             foreach (var abName in _fileInfoDic.Keys)
             {
                 var fileInfos = _fileInfoDic[abName];
                 foreach (var fileInfo in fileInfos)
                 {
+                    var isCancel = EditorUtility.DisplayCancelableProgressBar(
+                        "Setting AssetBundle Lable", 
+                        $"正在处理文件: {fileInfo.Name}",
+                        (float)index / (total - 1));
+
+                    if (isCancel)
+                    {
+                        Debug.Log($"已取消设置AB包标签操作");
+                        return;
+                    }
+                    
                     // 转换为Unity资源路径（相对路径）
                     var dataPath = fileInfo.FullName[fileInfo.FullName.IndexOf("Assets", StringComparison.Ordinal)..];
                     var importer = AssetImporter.GetAtPath(dataPath);
                     if (!importer)
                     {
+                        Debug.LogWarning($"路径不存在：{dataPath}");
                         continue;
                     }
                     
@@ -444,12 +463,17 @@ namespace Editor.AssetBundle
                     importer.assetBundleName = abName.ToLower();
                     // 将资源信息添加到配置文件
                     AssetBundlesCollections.Instance.Add(importer.assetBundleName, new AssetBundlesCollections.AssetInfo(dataPath, fileInfo.Length, fileInfo.Name));
+                    ++index;
                 }
             }
 
+            EditorUtility.ClearProgressBar();
+            
             // 生成AssetBundle类型枚举脚本
             IScriptGenerator scriptGenerator = new EnumGenerator(_fileInfoDic.Keys, defaultNames, _filePath, "Core.AssetBundles.Management");
             scriptGenerator.GenerateScript();
+
+            AssetDatabase.Refresh();
         }
 
         /// <summary>

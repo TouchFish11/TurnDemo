@@ -1,6 +1,7 @@
 using Core.Service;
 using Game.Battle.Condition;
 using Game.Battle.Context;
+using GameHotUpdate.Battle.Context;
 using GameHotUpdate.Manager;
 
 namespace GameHotUpdate.Condition
@@ -12,6 +13,12 @@ namespace GameHotUpdate.Condition
     {
         public bool CheckOver(IBattleContext context)
         {
+            // 当前波次是否结束，即判断当前怪物是否全部死亡
+            if (context.GetAliveMonsterEntityCount() != 0)
+            {
+                return false;
+            }
+            
             return ServiceLocator.Get<IBattleManager>().GetTurnCreator().CheckBattleOver();
         }
     }

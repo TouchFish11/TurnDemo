@@ -20,13 +20,6 @@ namespace GameHotUpdate.Battle.Damage.Strategys
         ////���ܱ�������
         //private int[] skillMuls;
 
-        /// <summary>
-        /// ����ֱ��
-        /// </summary>
-        /// <param name="attacker">������</param>
-        /// <param name="defender">������</param>
-        /// <param name="skill">��������</param>
-        /// <returns></returns>
         public void CalcDamage(IBattleEntityObject attacker, IBattleEntityObject defender, SkillInfo skillInfo, out DamageResult damageResult)
         {
             if (attacker == null || defender == null)
@@ -50,10 +43,10 @@ namespace GameHotUpdate.Battle.Damage.Strategys
             //finalDamage = CalcResistanceZone(finalDamage);
             //return finalDamage;
 
-            int critValue = attacker.GetComponent<PropertyComponent>().GetPropertyValue(E_DynamicPropertyType.TotalCrit);
-            float critRate = critValue / 100f;
-            bool isCrit = Random.Range(0, 1) < critRate;
-            damageResult = new DamageResult(attacker, defender, Random.Range(30, 70), skillInfo.f_elementType.ToElementType(), skillInfo.f_damageType.ToDamageType(), isCrit, skillInfo);
+            var critValue = attacker.GetComponent<PropertyComponent>().GetPropertyValue(E_DynamicPropertyType.TotalCrit);
+            var critRate = critValue / 100f;
+            var isCrit = Random.Range(0, 1) < critRate;
+            damageResult = new DamageResult(attacker, defender, Random.Range(30, 70), skillInfo.f_elementType.ToElementType(), skillInfo.f_damageType.ToDamageType(), isCrit, skillInfo.f_id, skillInfo.f_toughenValue);
         }
 
         ///// <summary>

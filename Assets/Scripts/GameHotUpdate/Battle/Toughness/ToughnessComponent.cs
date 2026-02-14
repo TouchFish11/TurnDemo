@@ -190,17 +190,18 @@ namespace GameHotUpdate.Battle.Toughness
         /// </summary>
         /// <param name="reducer">扣除韧性的发起者（如攻击方角色/技能）</param>
         /// <param name="propertyType">触发扣除的属性类型</param>
-        /// <param name="skillInfo">关联的技能信息（包含基础韧性扣除值等）</param>
-        public void ReduceToughness(IBattleEntityObject reducer, E_ElementType propertyType, SkillInfo skillInfo)
+        /// <param name="resilienceValue"></param>
+        /// <param name="skillId"></param>
+        public void ReduceToughness(IBattleEntityObject reducer, E_ElementType propertyType, int resilienceValue, int skillId)
         {
             // 前置判断：是否允许扣除韧性（已破韧/策略不允许则直接返回）
-            if (!CanReduceToughness(reducer, propertyType, skillInfo.f_toughenValue))
+            if (!CanReduceToughness(reducer, propertyType, resilienceValue))
             {
                 return;
             }
 
             // 计算最终要扣除的韧性值（叠加所有计算策略的结果）
-            var finalReduceValue = CalcToughness(reducer, propertyType, skillInfo.f_toughenValue);
+            var finalReduceValue = CalcToughness(reducer, propertyType, resilienceValue);
             // 计算扣除后剩余韧性值（最小为0，避免负数）
             var current = Mathf.Max(0, _toughness.CurrentToughnessValue - finalReduceValue);
             // 更新韧性值（同步最大值，当前最大值暂未动态修改）
@@ -219,7 +220,7 @@ namespace GameHotUpdate.Battle.Toughness
             // 判断是否触发破韧，若破韧则触发破韧事件（供眩晕、增伤等逻辑监听）
             if (IsToughnessBroken())
             {
-                BattleEntity.Context.GetEventBus().TriggerEvent(new ToughnessBrokenEvent(BattleEntity.Context, reducer, BattleEntity, skillInfo));
+                BattleEntity.Context.GetEventBus().TriggerEvent(new ToughnessBrokenEvent(BattleEntity.Context, reducer, BattleEntity, resilienceValue, skillId));
             }
         }
 

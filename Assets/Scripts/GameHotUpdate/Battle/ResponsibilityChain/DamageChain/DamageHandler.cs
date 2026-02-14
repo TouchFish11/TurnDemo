@@ -14,10 +14,10 @@ namespace GameHotUpdate.Battle.ResponsibilityChain.DamageChain
     {
         public override void HandleRequest(DamageResult request)
         {
-            if (request.Source == null || request.Target == null || request.SkillInfo == null)
+            if (request.Source == null || request.Target == null)
             {
                 LogManager.LogError($"{nameof(DamageHandler)}.{nameof(HandleRequest)}：伤害处理异常。" +
-                                    $"Source:{request.Source},Target:{request.Target},SkillInfo:{request.SkillInfo}");
+                                    $"Source:{request.Source},Target:{request.Target},技能ID:{request.SkillId}");
                 successor.HandleRequest(request);
                 return;
             }

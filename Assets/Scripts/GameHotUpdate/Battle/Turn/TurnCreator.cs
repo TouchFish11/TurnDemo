@@ -48,24 +48,21 @@ namespace GameHotUpdate.Battle.Turn
         /// <returns></returns>
         public bool CheckBattleOver()
         {
-            return _turnIndex == _totalTurnNum;
-        }
-        
-        /// <summary>
-        /// 下一回合
-        /// 当前波次结束后，才能进入下一个回合循环
-        /// 回合是重复波次
-        /// </summary>
-        /// <returns>下一回合的怪物列表</returns>
-        private async Task<List<IBattleEntityObject>> SwitchNextTurnAsync()
-        {
-            if (_turnIndex == _waves.Count)
+            // 存在剩余回合
+            while (_turnIndex < _totalTurnNum)
             {
-                return new List<IBattleEntityObject>();
+                if (_waveIndex < _waves.Count)
+                {
+                    return false;
+                }
+
+                // 当前回合的所有波次已经处理完毕，进入下一回合
+                ++_turnIndex;
+                // 重置波次索引
+                _waveIndex = 0;
             }
             
-            // 创建当前波次的怪物
-            return await CreateMonsters(_waves[_turnIndex++].ToArray());
+            return true;
         }
 
         /// <summary>
@@ -73,23 +70,8 @@ namespace GameHotUpdate.Battle.Turn
         /// </summary>
         public async Task<List<IBattleEntityObject>> CreateWave()
         {
-            // 存在剩余回合
-            while (_turnIndex < _totalTurnNum)
-            {
-                if (_waveIndex < _waves.Count)
-                {
-                    // 创建当前波次的怪物
-                    return await CreateMonsters(_waves[_waveIndex++].ToArray());
-                }
-
-                // 当前回合的所有波次已经处理完毕，进入下一回合
-                ++_turnIndex;
-                // 清空每回合波次索引
-                _waveIndex = 0;
-            }
-            
-            // 所有回合结束
-            return new List<IBattleEntityObject>();
+            // 创建当前波次的怪物
+            return await CreateMonsters(_waves[_waveIndex++].ToArray());
         }
 
         /// <summary>
@@ -113,6 +95,7 @@ namespace GameHotUpdate.Battle.Turn
                 playerObject.EntityPosIndex = i;
                 // 设置角色层级
                 LayerUtility.SetLayerRecursively(playerObject.GameObject, LayerGeter.GetRoleLayerByIndex(i));
+                roles.Add(playerObject);
             }
 
             return roles;

@@ -5,7 +5,7 @@ using Game.Battle.Status;
 namespace GameHotUpdate.Battle.Status.Statuses
 {
     /// <summary>
-    /// ����Ч��
+    /// 庇佑
     /// </summary>
     [StatusTypeId(10001)]
     public class ProtectStatus : Status
@@ -17,7 +17,6 @@ namespace GameHotUpdate.Battle.Status.Statuses
 
         protected override void OnTurnStart(IBattleEntityObject owner, IBattleContext context)
         {
-            // ����غ���
             StatusProperty.SetRemainingRound(StatusProperty.RemainingRound - 1);
         }
 

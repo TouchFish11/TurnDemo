@@ -28,9 +28,8 @@ namespace GameHotUpdate.Battle.Projectile
         /// <summary>
         /// ��ʼ��������
         /// </summary>
-        /// <param name="caster"></param>
-        /// <param name="mainTarget"></param>
-        /// <param name="targets"></param>
+        /// <param name="projectileData"></param>
+        /// <param name="vFXInfo"></param>
         public virtual void Init(ProjectileData projectileData, VFXInfo vFXInfo)
         {
             this.vFXInfo = vFXInfo;

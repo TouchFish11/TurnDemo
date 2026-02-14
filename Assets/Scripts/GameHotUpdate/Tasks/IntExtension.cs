@@ -73,7 +73,8 @@ namespace GameHotUpdate.Tasks
                 E_ElementType.Fire => Color.red,
                 E_ElementType.Ice => Color.blue,
                 E_ElementType.Physical => Color.white,
-                E_ElementType.Quantum => new Color(128, 0, 128),    // ��ɫ
+                E_ElementType.Quantum => new Color(128, 0, 128),
+                E_ElementType.Wind => Color.green,
                 _ => Color.white
             };
         }

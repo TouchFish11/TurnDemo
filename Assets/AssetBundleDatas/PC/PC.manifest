@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 2297147240
+CRC: 1364856394
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -28,7 +28,8 @@ AssetBundleManifest:
         Dependency_0: animator
         Dependency_1: camera
         Dependency_2: material
-        Dependency_3: ui
+        Dependency_3: prefab
+        Dependency_4: ui
     Info_7:
       Name: ui
       Dependencies: {}

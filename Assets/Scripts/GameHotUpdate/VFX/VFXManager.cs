@@ -27,7 +27,7 @@ namespace GameHotUpdate.VFX
         {
             for (var i = _activeVfxs.Count - 1; i >= 0; i--)
             {
-                // ��־ֹͣ���ǲ�����϶�Ҫ�Ƴ�
+                // 已停止或不是存活状态都要池化
                 if (_activeVfxs[i].IsStop || !_activeVfxs[i].ParticleSystem.IsAlive())
                 {
                     _activeVfxs[i].IsAlive = false;
@@ -66,6 +66,18 @@ namespace GameHotUpdate.VFX
             }
         }
 
+        public async void CreateVFX(string vfxName, Transform parent, Vector3 pos, Quaternion rot, VFXInfo vFXInfo)
+        {
+            var vfxObj = await ServiceLocator.Get<IPoolManager>().GetAssetBundleObjAsync(EAssetBundleType.VFX, vfxName);
+            vfxObj.transform.SetParent(parent, false);
+            vfxObj.transform.SetLocalPositionAndRotation(pos, rot);
+            if (vfxObj.TryGetComponent<ParticleSystem>(out var ps))
+            {
+                vFXInfo.ParticleSystem = ps;
+                _activeVfxs.Add(vFXInfo);
+            }
+        }
+        
         public void RemoveVFX(VFXInfo vFXInfo)
         {
             if (_activeVfxs.Contains(vFXInfo))

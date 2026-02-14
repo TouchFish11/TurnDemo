@@ -16,15 +16,10 @@ namespace GameHotUpdate.Objects.Battle
         public override void Enter()
         {
             // 触发回合结束事件（供外部监听）
-            BattleEntity.Context.GetEventBus().TriggerEvent(new TurnEndEvent(BattleEntity.Context, this.BattleEntity));
+            PlayerObject.Context.GetEventBus().TriggerEvent(new TurnEndEvent(PlayerObject.Context, this.PlayerObject));
             Exit();
         }
-
-        public override void Execute()
-        {
-
-        }
-
+        
         public override void Exit()
         {
 

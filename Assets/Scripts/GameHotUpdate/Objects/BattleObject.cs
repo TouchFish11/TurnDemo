@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using Game.Battle.Context;
 using Game.Battle.Damage;
 using Game.Battle.Enum;
@@ -8,7 +6,6 @@ using Game.Battle.Objects;
 using Game.Objects;
 using GameHotUpdate.Battle.Event.General;
 using GameHotUpdate.Battle.ResponsibilityChain;
-using GameHotUpdate.Objects.Battle;
 using GameHotUpdate.Property;
 using UnityEngine;
 
@@ -57,9 +54,6 @@ namespace GameHotUpdate.Objects
 
         // 伤害处理链
         protected Handler<DamageResult> damageChain;
-        
-        private readonly Dictionary<EActPhase, ITurnState> _turnStates = new();
-        private ITurnState _currentState;
 
         /// <summary>
         /// 基础初始化方法
@@ -84,52 +78,12 @@ namespace GameHotUpdate.Objects
             Context = context;
             // 赋值战斗实体ID
             BattleEntityId = battleEntityId;
-
-            AddState(EActPhase.SettlementBuff);
-            AddState(EActPhase.TurnStart);
-            AddState(EActPhase.Operator);
-            AddState(EActPhase.TurnEnd);
         }
 
-        /// <summary>
-        /// 添加状态方法
-        /// </summary>
-        /// <param name="phase"></param>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private void AddState(EActPhase phase)
-        {
-            switch (phase)
-            {
-                case EActPhase.SettlementBuff:
-                    _turnStates.TryAdd(EActPhase.SettlementBuff, new SettlementBuffState(this));
-                    break;
-                case EActPhase.TurnStart:
-                    _turnStates.TryAdd(EActPhase.TurnStart, new TurnStartState(this));
-                    break;
-                case EActPhase.Operator:
-                    _turnStates.TryAdd(EActPhase.Operator, this is PlayerObject ? new RoleOperatorState(this) : new MonsterOperatorState(this));
-                    break;
-                case EActPhase.TurnEnd:
-                    _turnStates.TryAdd(EActPhase.TurnEnd, new TurnEndState(this));
-                    break;
-                case EActPhase.None:
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(phase), phase, null);
-            }
-        }
-        
-        public void ChangeState(EActPhase eActPhase)
-        {
-            _currentState?.Exit();
-            _currentState = _turnStates[eActPhase];
-            _currentState.Enter();
-        }
-        
-        public void ExecuteAction()
+        public virtual void ExecuteAction()
         {
             // 重置标志
             CanAct = true;
-            ChangeState(EActPhase.SettlementBuff);
         }
         
         public void TakeHeal(int healAmount)

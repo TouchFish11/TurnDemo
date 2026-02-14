@@ -7,13 +7,13 @@ using Game.Battle.Status.Data;
 namespace GameHotUpdate.Battle.Status
 {
     /// <summary>
-    /// ״̬����
+    /// 状态基类
     /// </summary>
     public abstract class Status : IStatus, IPoolData
     {
-        // �Ƿ���Ч
+        // 是否有效
         private bool _isValid;
-        // �ӳ�����
+        // 加成数据
         protected StatusBonusData bonusData;
 
         public StatusProperty StatusProperty { get; protected set; }

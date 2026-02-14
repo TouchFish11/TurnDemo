@@ -23,14 +23,14 @@
     "gameconfig.assetbundle": {
       "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
       "PackageName": "gameconfig.assetbundle",
-      "PackageSize": 6665,
-      "PackageMd5": "6587339fc9db965205d251693a583674"
+      "PackageSize": 6987,
+      "PackageMd5": "bc17f3aa88e246e3a1bde50ecb9734b5"
     },
     "hotupdate.assetbundle": {
       "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
       "PackageName": "hotupdate.assetbundle",
-      "PackageSize": 168607,
-      "PackageMd5": "9d2ab9577f90fb520256ff2c3b7b5c4b"
+      "PackageSize": 168707,
+      "PackageMd5": "3677f08690ae47ec0ecd3da9f535884b"
     },
     "material.assetbundle": {
       "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
@@ -47,20 +47,20 @@
     "PC.assetbundle": {
       "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
       "PackageName": "PC.assetbundle",
-      "PackageSize": 1936,
-      "PackageMd5": "6446faed1880cc7e1876eb3297141130"
+      "PackageSize": 1938,
+      "PackageMd5": "52331a1df61c60a4b5302505ba198ec1"
     },
     "prefab.assetbundle": {
       "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
       "PackageName": "prefab.assetbundle",
-      "PackageSize": 42774554,
-      "PackageMd5": "84546166412ddaf8b7daa05192fc0a58"
+      "PackageSize": 42845446,
+      "PackageMd5": "24503088d1f4545ce087311276685593"
     },
     "scene.assetbundle": {
       "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
       "PackageName": "scene.assetbundle",
-      "PackageSize": 31565192,
-      "PackageMd5": "8feb35cefee8228964f04da9a2752c02"
+      "PackageSize": 31645807,
+      "PackageMd5": "67c56d4587baf8ca3dd3b142703736c8"
     },
     "spriteatlas.assetbundle": {
       "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
@@ -71,14 +71,14 @@
     "ui.assetbundle": {
       "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
       "PackageName": "ui.assetbundle",
-      "PackageSize": 14037695,
-      "PackageMd5": "b8a5ccee84d5a92d5bd9120609fbb6fd"
+      "PackageSize": 14110576,
+      "PackageMd5": "01a1948ad49b2136838f11d1b27248d9"
     },
     "vfx.assetbundle": {
       "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
       "PackageName": "vfx.assetbundle",
-      "PackageSize": 11641914,
-      "PackageMd5": "e0b3df98dcc4ac3e5c539b77763df678"
+      "PackageSize": 11642116,
+      "PackageMd5": "f36a7c26eb8bc7da62d088e830035f37"
     }
   }
 }

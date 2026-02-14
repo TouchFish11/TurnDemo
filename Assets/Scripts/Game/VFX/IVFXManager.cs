@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Game.VFX
 {
     /// <summary>
@@ -25,5 +27,7 @@ namespace Game.VFX
         /// �����Ч����
         /// </summary>
         void ClearVFXCache();
+
+        void CreateVFX(string vfxName, Transform parent, Vector3 pos, Quaternion rot, VFXInfo vFXInfo);
     }
 }

@@ -150,7 +150,7 @@ namespace GameHotUpdate.Battle.UI.Base
                 // 设置文本
                 _view.SetBattleStateTipAreaText(false);
                 
-                yield return new WaitForSeconds(2f);
+                yield return new WaitForSeconds(1.5f);
 
                 // 隐藏战斗结束UI区域
                 _view.BattleStateTipArea.gameObject.SetActive(false);
@@ -330,15 +330,15 @@ namespace GameHotUpdate.Battle.UI.Base
                 foreach (var battleEntity in battleEntities)
                 {
                     // 异步加载行动格子UI预制体
-                    var actionGridUIWrapper = await ServiceLocator.Get<IUiLoader>().GetUIObject<ActionGridUI>(EAssetBundleType.UI, ResKeyCollection.ActionGridUI, _view.ActionBarContent);
+                    var actionGridUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<ActionGridUI>(EAssetBundleType.UI, ResKeyCollection.ActionGridUI, _view.ActionBarContent);
                     // 获取实体对应的图标名称
                     var iconName = GetIconByEntity(battleEntity);
                     // 加载图标精灵
                     var icon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(ResKeyCollection.Atlas_Icon_BattleEntity, iconName);
                     // 初始化行动格子UI（图标、行动值、实体引用、是否第一个）
-                    actionGridUIWrapper.Init(icon, battleEntity.ActionValue, battleEntity, isFirst);
+                    actionGridUI.Init(icon, battleEntity.ActionValue, battleEntity, isFirst);
                     // 更新模型层的行动条UI数据
-                    _model.UpdateAcitonbar(actionGridUIWrapper);
+                    _model.UpdateAcitonbar(actionGridUI);
                     isFirst = false;
                 }
             }

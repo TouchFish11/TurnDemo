@@ -6,6 +6,7 @@ using Game.Battle.Status;
 using Game.Battle.Status.Data;
 using Game.Battle.Status.Enum;
 using GameHotUpdate.Battle.Event.UI;
+using GameHotUpdate.Battle.Status;
 
 namespace GameHotUpdate.Status
 {
@@ -31,11 +32,19 @@ namespace GameHotUpdate.Status
             statusTotalBonus = new StatusTotalBonusData();
         }
 
+        public List<IStatus> GetStatuses()
+        {
+            return _statuses;
+        }
+
         /// <summary>
         /// 更新状态
         /// </summary>
         public void UpdateStatus()
         {
+            var hasDot = StatusUtility.ContainDot(_statuses);
+            
+            
             // 处理所有有效状态的回合开始逻辑
             foreach (var status in _statuses)
             {

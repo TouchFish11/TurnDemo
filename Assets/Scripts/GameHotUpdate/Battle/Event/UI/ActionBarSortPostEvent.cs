@@ -6,8 +6,7 @@ using Game.Battle.Objects;
 namespace GameHotUpdate.Battle.Event.UI
 {
     /// <summary>
-    /// �ж���������¼�
-    /// ս����������ж�����ʾ
+    /// 行动轴排序后事件
     /// </summary>
     public class ActionBarSortPostEvent : BattleEvent
     {

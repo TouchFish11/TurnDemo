@@ -2,25 +2,38 @@
 namespace Game.Battle.Enum
 {
     /// <summary>
-    /// ��������
+    /// 属性类型
     /// </summary>
     public enum E_ElementType
     {
         /// <summary>
-        /// ��
+        /// 无
         /// </summary>
-        Fire =1,
+        None,
+        
         /// <summary>
-        /// ��
+        /// 火
+        /// </summary>
+        Fire,
+        
+        /// <summary>
+        /// 冰
         /// </summary>
         Ice,
+        
         /// <summary>
-        /// ����
+        /// 物理
         /// </summary>
         Physical,
+        
         /// <summary>
-        /// ����
+        /// 量子
         /// </summary>
         Quantum,
+        
+        /// <summary>
+        /// 风
+        /// </summary>
+        Wind,
     }
 }

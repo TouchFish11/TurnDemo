@@ -98,15 +98,9 @@ namespace GameHotUpdate.Battle.UI.Base
         /// 初始化怪物UI
         /// 为每个怪物实体创建并初始化普通怪物状态UI（如血条等），支持空参数传入
         /// </summary>
-        /// <param name="battleEntities">怪物战斗实体集合（可为null，为空时仅初始化空列表）</param>
+        /// <param name="battleEntities">怪物战斗实体集合</param>
         public async System.Threading.Tasks.Task InitMonsterUIs(IEnumerable<IBattleEntityObject> battleEntities)
         {
-            if (battleEntities == null)
-            {
-                LogManager.LogError($"{nameof(BattleUIInitializer)}.{nameof(InitMonsterUIs)}：怪物列表为null");
-                return;
-            }
-            
             try
             {
                 foreach (var battleEntity in battleEntities)

@@ -38,6 +38,8 @@ namespace GameHotUpdate.Input
         private float lastMouseX;          
         // 累计偏移量
         private float nowDeltaX;
+        // 能否输入
+        private bool _canInput;
         
         private Action _OnLeftDrag;
         private Action _OnRightDrag;
@@ -121,6 +123,15 @@ namespace GameHotUpdate.Input
         }
 
         /// <summary>
+        /// 设置输入状态
+        /// </summary>
+        /// <param name="activeInput"></param>
+        public void SetInputState(bool activeInput)
+        {
+            _canInput = activeInput;
+        }
+
+        /// <summary>
         /// 技能选择事件回调
         /// 接收并缓存选中的技能ID
         /// </summary>
@@ -136,6 +147,11 @@ namespace GameHotUpdate.Input
         /// </summary>
         private void OnUpdate()
         {
+            if (!_canInput)
+            {
+                return;
+            }
+            
             InputHandle();
         }
         

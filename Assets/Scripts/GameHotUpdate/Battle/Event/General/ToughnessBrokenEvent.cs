@@ -5,30 +5,37 @@ using Game.Battle.Objects;
 namespace GameHotUpdate.Battle.Event.General
 {
     /// <summary>
-    /// �����¼�
+    /// 击破事件
     /// </summary>
     public class ToughnessBrokenEvent : BattleEvent
     {
         /// <summary>
-        /// ������
+        /// 
         /// </summary>
         public IBattleEntityObject Breaker { get; }
 
         /// <summary>
-        /// �����͵�Ŀ��
+        /// 
         /// </summary>
         public IBattleEntityObject Target { get; }
-
+        
         /// <summary>
-        /// ��ɻ��Ƶļ�����Ϣ
+        /// 削韧量
+        /// 没有则为0
         /// </summary>
-        public SkillInfo SkillInfo { get; }
+        public int ResilienceValue { get; }
+        
+        /// <summary>
+        /// 技能ID
+        /// </summary>
+        public int SkillId { get; }
 
-        public ToughnessBrokenEvent(IBattleContext context, IBattleEntityObject breaker, IBattleEntityObject target, SkillInfo skillInfo) : base(context)
+        public ToughnessBrokenEvent(IBattleContext context, IBattleEntityObject breaker, IBattleEntityObject target, int resilienceValue, int skillId) : base(context)
         {
             Breaker = breaker;
             Target = target;
-            SkillInfo = skillInfo;
+            ResilienceValue = resilienceValue;
+            SkillId = skillId;
         }
     }
 }

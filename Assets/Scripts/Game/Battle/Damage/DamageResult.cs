@@ -41,12 +41,18 @@ namespace Game.Battle.Damage
         /// 标记本次伤害是否触发了暴击判定
         /// </summary>
         public bool IsCrit { get; }
-
+        
         /// <summary>
-        /// 技能信息
-        /// 关联本次伤害的技能元数据（如技能ID、技能等级、技能类型等）
+        /// 技能ID
+        /// 若是Buff造成的伤害，则为-1
         /// </summary>
-        public SkillInfo SkillInfo { get; }
+        public int SkillId { get; }
+        
+        /// <summary>
+        /// 削韧量
+        /// 没有则为0
+        /// </summary>
+        public int ResilienceValue { get; }
 
         /// <summary>
         /// 伤害结果结构体构造函数
@@ -57,8 +63,11 @@ namespace Game.Battle.Damage
         /// <param name="elementType">伤害元素类型</param>
         /// <param name="damageType">伤害类型</param>
         /// <param name="isCrit">是否为暴击伤害</param>
-        /// <param name="skillInfo">技能信息</param>
-        public DamageResult(IBattleEntityObject source, IBattleEntityObject target, int finalDamage, E_ElementType elementType, E_DamageType damageType, bool isCrit, SkillInfo skillInfo)
+        /// <param name="skillId"></param>
+        /// <param name="resilienceValue"></param>
+        public DamageResult(IBattleEntityObject source, IBattleEntityObject target, 
+            int finalDamage, E_ElementType elementType, E_DamageType damageType, 
+            bool isCrit, int skillId, int resilienceValue)
         {
             Source = source;
             Target = target;
@@ -66,7 +75,8 @@ namespace Game.Battle.Damage
             ElementType = elementType;
             DamageType = damageType;
             IsCrit = isCrit;
-            SkillInfo = skillInfo;
+            SkillId = skillId;
+            ResilienceValue = resilienceValue;
         }
     }
 }
