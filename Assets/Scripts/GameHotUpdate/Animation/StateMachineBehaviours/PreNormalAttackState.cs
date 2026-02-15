@@ -1,5 +1,5 @@
 using Game.Battle.Objects;
-using GameHotUpdate.Objects;
+using GameHotUpdate.Battle.Object;
 using UnityEngine;
 
 namespace GameHotUpdate.Animation.StateMachineBehaviours

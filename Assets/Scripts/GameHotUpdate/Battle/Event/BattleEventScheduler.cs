@@ -18,11 +18,11 @@ using GameHotUpdate.Battle.Event.General;
 using GameHotUpdate.Battle.Event.Skill;
 using GameHotUpdate.Battle.Event.Turn;
 using GameHotUpdate.Battle.Event.UI;
+using GameHotUpdate.Battle.Layer;
+using GameHotUpdate.Battle.Object;
 using GameHotUpdate.Battle.UI.Base;
 using GameHotUpdate.Battle.UI.SkillKey.Provider;
 using GameHotUpdate.Cameras;
-using GameHotUpdate.Layer;
-using GameHotUpdate.Objects;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Event
@@ -190,7 +190,7 @@ namespace GameHotUpdate.Battle.Event
         /// 角色技能选择事件调度逻辑
         /// </summary>
         /// <param name="selectSkillEvent"></param>
-        private void SelectSkillEventScheduler(SelectSkillEvent selectSkillEvent)
+        private async void SelectSkillEventScheduler(SelectSkillEvent selectSkillEvent)
         {
             if (selectSkillEvent.Caster is not PlayerObject playerObject)
             {
@@ -209,13 +209,13 @@ namespace GameHotUpdate.Battle.Event
                     break;
                 case E_SkillTargetType.Friend:
                     // 更新相机看向玩家
-                    // TODO：计算相机世界坐标的位置和看向，数据暂时写死；且终结技会复用
-                    var worldPos = new Vector3(0, 1, 0.5f);
+                    // TODO：计算相机世界坐标的位置和看向，数据暂时写死
+                    var worldPos = new Vector3(0, 1, 1.7f);
                     var rotation = Quaternion.Euler(0, 180, 0);
                     // 获取遮罩
                     var mask = LayerGeter.GetRoleBitLayer() | LayerGeter.GetPreBitLayer();
                     // 创建相机
-                    ServiceLocator.Get<IBattleCameraManager>().CreateCamera(null, worldPos, rotation, mask);
+                    await ServiceLocator.Get<IBattleCameraManager>().CreateCamera(null, worldPos, rotation, mask);
                     break;
                 case E_SkillTargetType.Enemy:
                     // 更新相机看向怪物
@@ -229,7 +229,7 @@ namespace GameHotUpdate.Battle.Event
                     {
                         mask2 |= 1 << roleLayers[i];
                     }
-                    ServiceLocator.Get<IBattleCameraManager>().CreateCamera(roleCameraParent, Vector3.zero, Quaternion.identity, mask2);
+                    await ServiceLocator.Get<IBattleCameraManager>().CreateCamera(roleCameraParent, Vector3.zero, Quaternion.identity, mask2);
                     break;
                 default:
                     return;

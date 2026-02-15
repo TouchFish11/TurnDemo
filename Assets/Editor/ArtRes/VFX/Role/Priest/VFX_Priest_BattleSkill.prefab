@@ -9787,6 +9787,7 @@ GameObject:
   - component: {fileID: 5660267935541568282}
   - component: {fileID: 196862733239119355}
   - component: {fileID: 4642892430567096565}
+  - component: {fileID: -564807566312973161}
   m_Layer: 12
   m_Name: VFX_Priest_BattleSkill
   m_TagString: Untagged
@@ -14611,6 +14612,18 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
+--- !u!114 &-564807566312973161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4930650843643709263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51e316fe5b307734ea8c84a046fd0b92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6750677852278314459
 GameObject:
   m_ObjectHideFlags: 0

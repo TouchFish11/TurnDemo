@@ -12,7 +12,7 @@ namespace GameHotUpdate.Activity.UI.Common
     {
         [Inject] private Image imgActivityBackground;
 
-        protected override async void OnInit()
+        protected override void OnInit()
         {
             
         }

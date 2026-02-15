@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 2785144900
+CRC: 435022655
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 78ddf01d25f5166ad2e5d44e58c70162
+    Hash: 8772af0286758133340afdc6e2f316f4
   TypeTreeHash:
     serializedVersion: 2
-    Hash: fae95911f97e37d1fc37a8c78b726104
+    Hash: 9cd7ed5d7d6cd6f05be95202cebf3a7b
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 78ddf01d25f5166ad2e5d44e58c70162
+    Hash: 8772af0286758133340afdc6e2f316f4
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -39,11 +39,17 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: a717dfae6d688324cacc24232cb93127, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: 998f1b9e94641584996b7151f503f835, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 1517df3647e8bd249923fe0376fc96b5, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: f40685e30ff2d8346b6df39c93873cf7, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 1a12bec5593a8a44ebd3d6aeeebae39a, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 128
@@ -84,18 +90,18 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: UnityEngine.UI
   ClassName: UnityEngine.UI.MaskableGraphic/CullStateChangedEvent
 Assets:
-- Assets/Editor/ArtRes/Prefab/Role/Main/Prefab_Main_FireFly.prefab
+- Assets/Editor/ArtRes/Prefab/Role/Main/Prefab_Main_Warrior.prefab
 - Assets/Editor/ArtRes/Prefab/Monster/Prefab_Chest.prefab
 - Assets/Editor/ArtRes/Prefab/UI/UI_3D_FloatingText.prefab
 - Assets/Editor/ArtRes/Prefab/Role/Battle/Prefab_Gunman.prefab
 - Assets/Editor/ArtRes/Prefab/Role/Battle/Prefab_Priest.prefab
 - Assets/Editor/ArtRes/Prefab/Role/Main/Prefab_Npc.prefab
 - Assets/Editor/ArtRes/Prefab/Monster/Prefab_TurtleShell.prefab
-- Assets/Editor/ArtRes/Prefab/Role/Battle/Prefab_FireFly.prefab
+- Assets/Editor/ArtRes/Prefab/Role/Battle/Prefab_Warrior.prefab
 - Assets/Editor/ArtRes/Prefab/Monster/Prefab_AbyssalMage.prefab
 - Assets/Editor/ArtRes/Prefab/Prefab_Player.prefab
 - Assets/Editor/ArtRes/Prefab/Monster/Prefab_Boss.prefab
 - Assets/Editor/ArtRes/Prefab/Monster/Prefab_Slime.prefab
-- Assets/Editor/ArtRes/Prefab/Role/Battle/Prefab_Herta.prefab
+- Assets/Editor/ArtRes/Prefab/Role/Battle/Prefab_Wizard.prefab
 Dependencies:
 - D:/UnityProject/TurnDemo/Assets/AssetBundleDatas/PC/animator

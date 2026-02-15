@@ -8,9 +8,9 @@ using Game.Battle.Enum;
 using Game.Battle.Objects;
 using Game.Battle.Toughness;
 using GameHotUpdate.Battle.Event.General;
+using GameHotUpdate.Battle.Object;
 using GameHotUpdate.Battle.Toughness.CalcStrategy;
 using GameHotUpdate.Battle.Toughness.ReduceStrategy;
-using GameHotUpdate.Objects;
 using GameHotUpdate.Tasks;
 using UnityEngine;
 

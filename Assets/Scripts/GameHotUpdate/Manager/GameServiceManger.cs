@@ -8,6 +8,7 @@ using Game.Manager;
 using Game.Objects;
 using Game.Tasks;
 using Game.VFX;
+using GameHotUpdate.Battle;
 using GameHotUpdate.Dialogue;
 using GameHotUpdate.FloatingText;
 using GameHotUpdate.Input;

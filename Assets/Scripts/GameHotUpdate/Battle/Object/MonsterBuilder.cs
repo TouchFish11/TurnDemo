@@ -3,8 +3,8 @@ using Core.AssetBundles.Management;
 using Core.Config;
 using Core.Service;
 using Game.Objects;
-using GameHotUpdate.Objects;
-using GameHotUpdate.Objects.Monsters;
+using GameHotUpdate.Battle.Object.Monster.Slime;
+using GameHotUpdate.Battle.Object.Monster.TurtleShell;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Object

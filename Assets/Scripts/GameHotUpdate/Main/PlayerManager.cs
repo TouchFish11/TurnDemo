@@ -7,54 +7,72 @@ using Core.Service;
 using Core.Singleton;
 using Game.Main;
 using Game.Objects;
-using GameHotUpdate.Objects.Roles;
+using GameHotUpdate.Battle.Object.Role.Warrior;
 using UnityEngine;
 
 namespace GameHotUpdate.Main
 {
     /// <summary>
-    /// ��ҹ�����
-    /// �������״̬
+    /// 玩家管理器
+    /// 负责玩家对象的创建、管理、销毁等核心逻辑
     /// </summary>
     public class PlayerManager : SingletonBase<PlayerManager>, IPlayerManager
     {
-        // uid���û�ʵ���ӳ��
+        // 字典：玩家UID映射到对应的实体对象，用于快速查找玩家
         private readonly Dictionary<uint, IEntityObject> uidToEntityMap = new();
 
+        // 主玩家对象（固定UID为1001）
         public IEntityObject MainPlayer => uidToEntityMap[1001];
 
+        // 私有构造函数（单例模式，禁止外部实例化）
         private PlayerManager()
         {
 
         }
 
+        /// <summary>
+        /// 创建玩家对象
+        /// </summary>
+        /// <param name="uid">玩家唯一标识</param>
         public async Task CreatePlayer(uint uid)
         {
+            // 创建玩家根节点GameObject
             var mainObj = new GameObject("Player");
+            // 设置玩家初始位置和旋转角度
             mainObj.transform.SetPositionAndRotation(new Vector3(0, 0, -5.6f), Quaternion.identity);
 
+            // 添加角色控制器组件（用于移动、碰撞等物理交互）
             var characterController = mainObj.AddComponent<CharacterController>();
-            characterController.center = new Vector3(0, 1, 0);
+            characterController.center = new Vector3(0, 1, 0); // 设置控制器中心偏移
 
+            // 添加主玩家核心逻辑组件
             var main = mainObj.AddComponent<MainPlayer>();
             
-            // ���ݱ��ر�����ݣ�������Ӧ�Ľ�ɫģ����Ϊ�ö�����Ӷ���
-            var fireFlyObj = await ServiceLocator.Get<IObjectBuilder>().GetGameobject(EAssetBundleType.Prefab, ResKeyCollection.Prefab_FireFly, main.transform);
-            main.AddEntity(fireFlyObj.AddComponent<FireFly>());
+            // 从资源包加载战士预制体，并挂载到玩家节点下
+            var warrior = await ServiceLocator.Get<IObjectBuilder>().GetGameobject(EAssetBundleType.Prefab, ResKeyCollection.Prefab_Main_Warrior, main.transform);
+            // 给战士预制体添加战士逻辑组件，并关联到主玩家
+            main.AddEntity(warrior.AddComponent<Warrior>());
             
+            // 初始化主玩家基础数据（参数1为示例配置ID）
             main.BaseInit(1);
+            // 将玩家对象加入字典管理
             uidToEntityMap.Add(uid, main);
         }
 
+        /// <summary>
+        /// 清理所有玩家对象
+        /// （场景切换/游戏退出时调用，释放资源）
+        /// </summary>
         public void Clear()
         {
-            // �������
+            // 遍历所有玩家实体，执行销毁逻辑
             foreach (var entity in uidToEntityMap.Values)
             {
-                entity.Destroy();
-                Object.Destroy(entity.GameObject);
+                entity.Destroy(); // 执行实体内部销毁逻辑
+                Object.Destroy(entity.GameObject); // 销毁GameObject对象
             }
 
+            // 清空字典，释放引用
             uidToEntityMap.Clear();
         }
     }

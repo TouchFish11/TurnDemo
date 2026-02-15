@@ -685,11 +685,20 @@ namespace Editor.AssetBundle
             {
                 return;
             }
-            
+
+            var totalCount = selAssets.Length / 2;
             // 拷贝选中的AB包文件到目标路径
-            foreach (var obj in selAssets)
+            for (var i = 0; i < selAssets.Length; i++)
             {
-                var assetPath = AssetDatabase.GetAssetPath(obj);
+                var isCancel = EditorUtility.DisplayCancelableProgressBar("Copying To StreamingAssets",
+                    $"Processing：{selAssets[i].name}", i / (float)totalCount);
+
+                if (isCancel)
+                {
+                    return;
+                }
+                
+                var assetPath = AssetDatabase.GetAssetPath(selAssets[i]);
                 var fileName = assetPath[(assetPath.LastIndexOf('/') + 1)..];
                 // 仅处理AB包文件
                 if (fileName.IndexOf(".assetbundle", StringComparison.Ordinal) == -1)
@@ -699,7 +708,9 @@ namespace Editor.AssetBundle
 
                 AssetDatabase.CopyAsset(assetPath, $"{AB_COPY_PATH}/{fileName}");
             }
-
+            
+            EditorUtility.ClearProgressBar();
+            
             // 更新StreamingAssets目录下的AB包清单文件
             CreateAssetBundleListFile(AB_COPY_PATH, AB_COPY_PATH, $"{AB_COPY_PATH}{FileUtility.ListFileDefaultName}");
         }

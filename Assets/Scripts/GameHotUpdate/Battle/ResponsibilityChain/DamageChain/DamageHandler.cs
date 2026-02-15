@@ -3,7 +3,7 @@ using Game.Animation;
 using Game.Battle.Damage;
 using Game.Battle.Enum;
 using GameHotUpdate.Animation;
-using GameHotUpdate.Property;
+using GameHotUpdate.Battle.Property;
 
 namespace GameHotUpdate.Battle.ResponsibilityChain.DamageChain
 {

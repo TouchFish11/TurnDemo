@@ -4,25 +4,27 @@ using UnityEngine;
 namespace GameHotUpdate.Battle.Projectile
 {
     /// <summary>
-    /// �켣������
+    /// 轨迹弹射物基类
     /// </summary>
     public abstract class TrajectProjectile : Projectile
     {
-
-        protected virtual IEnumerator PlayingVFX()
+        protected override IEnumerator PlayingVFX()
         {
             float nowTime = 0;
-            int index = 0;
-            while (particleSystem.IsAlive() && index < dmgTimes.Length)
+            var index = 0;
+            while (particleSystem.IsAlive() && index < triggerTimes.Length)
             {
                 nowTime += Time.deltaTime;
-                if (nowTime >= dmgTimes[index])
+                if (nowTime >= triggerTimes[index])
                 {
-                    Trigger();
+                    CauseDamageOnTrigger();
+                    CreateVFXOnTrigger();
                     index++;
                 }
                 yield return null;
             }
+            AddStatusOnTrigger();
+            HandleOtherOnTrigger();
         }
     }
 }

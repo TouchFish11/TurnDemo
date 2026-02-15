@@ -8,7 +8,7 @@ using Core.Singleton;
 using Game.FloatingText;
 using Game.Main;
 using Game.Objects;
-using GameHotUpdate.Objects;
+using GameHotUpdate.Battle.Object;
 using UnityEngine;
 
 namespace GameHotUpdate.FloatingText

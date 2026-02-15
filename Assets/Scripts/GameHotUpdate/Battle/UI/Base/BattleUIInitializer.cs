@@ -10,9 +10,9 @@ using Game.Battle.Objects;
 using Game.Battle.Property;
 using Game.Battle.Skill.Component;
 using Game.Battle.Skill.Enum;
+using GameHotUpdate.Battle.Property;
 using GameHotUpdate.Battle.UI.MonsterStateUI;
 using GameHotUpdate.Battle.UI.Role;
-using GameHotUpdate.Property;
 
 namespace GameHotUpdate.Battle.UI.Base
 {

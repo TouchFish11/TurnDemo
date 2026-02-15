@@ -6,8 +6,8 @@ using Core.UI;
 using Core.Utility;
 using Game.Battle.Objects;
 using Game.Battle.Skill.Enum;
+using GameHotUpdate.Battle.Object;
 using GameHotUpdate.Cameras;
-using GameHotUpdate.Objects;
 using UnityEngine;
 using UnityEngine.UI;
 

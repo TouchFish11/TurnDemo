@@ -6,7 +6,7 @@ using Game.Battle.Objects;
 using Game.Battle.Skill;
 using Game.Battle.Skill.Condition;
 using Game.Battle.Skill.Enum;
-using GameHotUpdate.Property;
+using GameHotUpdate.Battle.Property;
 
 namespace GameHotUpdate.Battle.Skill.Conditions
 {

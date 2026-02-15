@@ -7,6 +7,7 @@ using Core.Service;
 using Core.UI;
 using Core.UI.MVC;
 using GameHotUpdate.Activity.UI.Base;
+using GameHotUpdate.Battle;
 using GameHotUpdate.Battle.Turn;
 using GameHotUpdate.Main.UI.Logic;
 using GameHotUpdate.Manager;
@@ -79,8 +80,8 @@ namespace GameHotUpdate.Main.UI
                             TotalTurnNumber = 1,
                             Waves = new List<List<int>>
                             {
-                                new(){1,2},
-                                new(){1,2}
+                                new(){1,2,1},
+                                new(){1,2,1},
                             }
                         };
                         

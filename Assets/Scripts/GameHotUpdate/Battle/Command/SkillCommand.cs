@@ -3,6 +3,7 @@ using Game.Battle.Command;
 using Game.Battle.Context;
 using Game.Battle.Skill.Interface;
 using GameHotUpdate.Battle.Event.General;
+using GameHotUpdate.Battle.Event.Skill;
 
 namespace GameHotUpdate.Battle.Command
 {

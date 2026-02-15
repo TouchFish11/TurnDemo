@@ -127,10 +127,10 @@ MonoBehaviour:
       size: 767
       name: RoleInfo.bytes
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\SkillInfo.bytes
-      size: 1169
+      size: 1596
       name: SkillInfo.bytes
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\StatusInfo.bytes
-      size: 304
+      size: 833
       name: StatusInfo.bytes
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\TaskConditionInfo.bytes
       size: 64
@@ -176,21 +176,21 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Prefab_TurtleShell.prefab
       size: 37036
       name: Prefab_TurtleShell.prefab
-    - assetPath: Assets\Editor\ArtRes\Prefab\Role\Battle\Prefab_FireFly.prefab
-      size: 92487
-      name: Prefab_FireFly.prefab
     - assetPath: Assets\Editor\ArtRes\Prefab\Role\Battle\Prefab_Gunman.prefab
       size: 87144
       name: Prefab_Gunman.prefab
-    - assetPath: Assets\Editor\ArtRes\Prefab\Role\Battle\Prefab_Herta.prefab
-      size: 91420
-      name: Prefab_Herta.prefab
     - assetPath: Assets\Editor\ArtRes\Prefab\Role\Battle\Prefab_Priest.prefab
-      size: 81107
+      size: 81534
       name: Prefab_Priest.prefab
-    - assetPath: Assets\Editor\ArtRes\Prefab\Role\Main\Prefab_Main_FireFly.prefab
+    - assetPath: Assets\Editor\ArtRes\Prefab\Role\Battle\Prefab_Warrior.prefab
+      size: 92911
+      name: Prefab_Warrior.prefab
+    - assetPath: Assets\Editor\ArtRes\Prefab\Role\Battle\Prefab_Wizard.prefab
+      size: 91843
+      name: Prefab_Wizard.prefab
+    - assetPath: Assets\Editor\ArtRes\Prefab\Role\Main\Prefab_Main_Warrior.prefab
       size: 92501
-      name: Prefab_Main_FireFly.prefab
+      name: Prefab_Main_Warrior.prefab
     - assetPath: Assets\Editor\ArtRes\Prefab\Role\Main\Prefab_Npc.prefab
       size: 3581
       name: Prefab_Npc.prefab
@@ -203,13 +203,13 @@ MonoBehaviour:
       size: 8997
       name: BeginScene.unity
     - assetPath: Assets\Editor\ArtRes\Scene\LevelScene.unity
-      size: 102880
+      size: 113458
       name: LevelScene.unity
     - assetPath: Assets\Editor\ArtRes\Scene\MainScene.unity
       size: 49952
       name: MainScene.unity
     - assetPath: Assets\Editor\ArtRes\Scene\Test\RoleTestScene.unity
-      size: 336866
+      size: 325488
       name: RoleTestScene.unity
     - assetPath: Assets\Editor\ArtRes\Scene\Test\UniTaskTestScene.unity
       size: 17373
@@ -406,51 +406,51 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\VFX\Monster\Boss\VFX_MonsterDead.prefab
       size: 235605
       name: VFX_MonsterDead.prefab
-    - assetPath: Assets\Editor\ArtRes\VFX\Role\FireFly\VFX_BlueHit.prefab
-      size: 476733
-      name: VFX_BlueHit.prefab
-    - assetPath: Assets\Editor\ArtRes\VFX\Role\FireFly\VFX_FireFlyBattleSkill.prefab
-      size: 355820
-      name: VFX_FireFlyBattleSkill.prefab
-    - assetPath: Assets\Editor\ArtRes\VFX\Role\FireFly\VFX_FireFlyNormalSkill.prefab
-      size: 474203
-      name: VFX_FireFlyNormalSkill.prefab
-    - assetPath: Assets\Editor\ArtRes\VFX\Role\FireFly\VFX_FireFlyUltimatePose.prefab
-      size: 117000
-      name: VFX_FireFlyUltimatePose.prefab
-    - assetPath: Assets\Editor\ArtRes\VFX\Role\FireFly\VFX_FireFlyUltimateSkill.prefab
-      size: 364391
-      name: VFX_FireFlyUltimateSkill.prefab
-    - assetPath: Assets\Editor\ArtRes\VFX\Role\FireFly\VFX_NormalSkill_Wave.prefab
-      size: 236630
-      name: VFX_NormalSkill_Wave.prefab
-    - assetPath: Assets\Editor\ArtRes\VFX\Role\Herta\VFX_HeartUltimatePose.prefab
-      size: 118707
-      name: VFX_HeartUltimatePose.prefab
-    - assetPath: Assets\Editor\ArtRes\VFX\Role\Herta\VFX_HeartUltimateSkill.prefab
-      size: 839428
-      name: VFX_HeartUltimateSkill.prefab
-    - assetPath: Assets\Editor\ArtRes\VFX\Role\Herta\VFX_HertaBattleSkill.prefab
-      size: 1440046
-      name: VFX_HertaBattleSkill.prefab
-    - assetPath: Assets\Editor\ArtRes\VFX\Role\Herta\VFX_HertaNormalSkill.prefab
-      size: 717001
-      name: VFX_HertaNormalSkill.prefab
-    - assetPath: Assets\Editor\ArtRes\VFX\Role\Herta\VFX_HertaSkill.prefab
-      size: 1546513
-      name: VFX_HertaSkill.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\Role\Priest\VFX_Priest_BattleSkill.prefab
-      size: 708549
+      size: 708971
       name: VFX_Priest_BattleSkill.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\Role\Priest\VFX_Priest_NormalSkill.prefab
-      size: 1071448
+      size: 1071872
       name: VFX_Priest_NormalSkill.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\Role\Priest\VFX_Priest_UltiamteSkill.prefab
-      size: 707305
+      size: 707725
       name: VFX_Priest_UltiamteSkill.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\Role\Priest\VFX_Priest_UltimatePose.prefab
       size: 709612
       name: VFX_Priest_UltimatePose.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\Role\Warrior\VFX_BlueHit.prefab
+      size: 476733
+      name: VFX_BlueHit.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\Role\Warrior\VFX_NormalSkill_Wave.prefab
+      size: 236630
+      name: VFX_NormalSkill_Wave.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\Role\Warrior\VFX_WarriorBattleSkill.prefab
+      size: 355820
+      name: VFX_WarriorBattleSkill.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\Role\Warrior\VFX_WarriorNormalSkill.prefab
+      size: 474203
+      name: VFX_WarriorNormalSkill.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\Role\Warrior\VFX_WarriorUltimatePose.prefab
+      size: 117000
+      name: VFX_WarriorUltimatePose.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\Role\Warrior\VFX_WarriorUltimateSkill.prefab
+      size: 364391
+      name: VFX_WarriorUltimateSkill.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\Role\Wizard\VFX_WizardBattleSkill.prefab
+      size: 1440047
+      name: VFX_WizardBattleSkill.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\Role\Wizard\VFX_WizardNormalSkill.prefab
+      size: 717002
+      name: VFX_WizardNormalSkill.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\Role\Wizard\VFX_WizardSkill.prefab
+      size: 1546514
+      name: VFX_WizardSkill.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\Role\Wizard\VFX_WizardUltimatePose.prefab
+      size: 118708
+      name: VFX_WizardUltimatePose.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\Role\Wizard\VFX_WizardUltimateSkill.prefab
+      size: 839429
+      name: VFX_WizardUltimateSkill.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\Unknow\VFX_Dot_Blue01.prefab
       size: 596053
       name: VFX_Dot_Blue01.prefab

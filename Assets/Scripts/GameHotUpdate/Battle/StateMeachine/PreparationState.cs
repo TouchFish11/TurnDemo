@@ -33,7 +33,7 @@ namespace GameHotUpdate.Battle.StateMeachine
             battleController.InitBattleController(Context);
             
             // 创建战斗角色、怪物
-            var roles = await ServiceLocator.Get<IBattleManager>().GetTurnCreator().CreateRoles(1,2);
+            var roles = await ServiceLocator.Get<IBattleManager>().GetTurnCreator().CreateRoles(1,2,3);
             foreach (var battleEntityObject in roles)
             {
                 Context.AddBattleEntity(battleEntityObject);

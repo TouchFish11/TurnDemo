@@ -11,13 +11,14 @@ using Game.FloatingText;
 using Game.Main;
 using Game.Manager;
 using Game.Objects;
+using GameHotUpdate.Battle.Object;
 using GameHotUpdate.Cameras;
 using GameHotUpdate.Main.UI;
 using GameHotUpdate.Manager;
-using GameHotUpdate.Objects;
 using UnityEngine;
 using IGameManager = Game.Manager.IGameManager;
 using Object = UnityEngine.Object;
+// ReSharper disable UnusedMember.Local
 
 namespace GameHotUpdate.Main
 {

@@ -6,7 +6,7 @@ using Game.Battle.TargetSelect;
 using GameHotUpdate.Battle.Event.General;
 using GameHotUpdate.Battle.Event.Turn;
 using GameHotUpdate.Battle.Event.UI;
-using GameHotUpdate.Objects;
+using GameHotUpdate.Battle.Object;
 
 namespace GameHotUpdate.Battle.UI.Base
 {

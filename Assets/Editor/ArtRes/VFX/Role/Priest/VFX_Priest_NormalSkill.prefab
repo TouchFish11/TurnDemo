@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2014081562578967811}
   - component: {fileID: 140132862718677083}
   - component: {fileID: 2297874073201778801}
+  - component: {fileID: -5290802214841732677}
   m_Layer: 12
   m_Name: VFX_Priest_NormalSkill
   m_TagString: Untagged
@@ -4914,6 +4915,18 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &-5290802214841732677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1288246112675750268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 399688e105456af409637718f18d8610, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1333103207848567366
 GameObject:
   m_ObjectHideFlags: 0

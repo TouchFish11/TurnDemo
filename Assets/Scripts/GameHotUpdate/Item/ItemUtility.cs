@@ -10,6 +10,7 @@ using Core.Service;
 using Core.Utility;
 using GameHotUpdate.Item.UI;
 using UnityEngine;
+// ReSharper disable RedundantLambdaParameterType
 
 namespace GameHotUpdate.Item
 {
@@ -31,9 +32,9 @@ namespace GameHotUpdate.Item
             {
                 var itemInfos = new Dictionary<int, int>();
                 // 解析奖励ID数组
-                TextUtility.SplitMultiple(awardIds, 1, 2, async (int awardId, int num) =>
+                TextUtility.SplitMultiple(awardIds, 1, 2, (int awardId, int num) =>
                 {
-                    itemInfos.Add(awardId, awardId);
+                    itemInfos.Add(awardId, num);
                 });
 
                 foreach (var pair in itemInfos)
@@ -75,9 +76,9 @@ namespace GameHotUpdate.Item
             {
                 var itemInfos = new Dictionary<int, int>();
                 // 解析奖励ID数组
-                TextUtility.SplitMultiple(awardIds, 1, 2, async (int awardId, int num) =>
+                TextUtility.SplitMultiple(awardIds, 1, 2, (int awardId, int num) =>
                 {
-                    itemInfos.Add(awardId, awardId);
+                    itemInfos.Add(awardId, num);
                 });
             
                 foreach (var pair in itemInfos)

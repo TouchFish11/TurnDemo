@@ -1,7 +1,7 @@
 using Game.Battle.Context;
 using Game.Battle.Enum;
 using GameHotUpdate.Battle.Event.UI;
-using GameHotUpdate.Property;
+using GameHotUpdate.Battle.Property;
 
 namespace GameHotUpdate.Battle.Utility
 {

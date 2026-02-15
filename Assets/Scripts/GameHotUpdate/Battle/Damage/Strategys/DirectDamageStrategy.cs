@@ -2,7 +2,7 @@ using Core.Log;
 using Game.Battle.Damage;
 using Game.Battle.Enum;
 using Game.Battle.Objects;
-using GameHotUpdate.Property;
+using GameHotUpdate.Battle.Property;
 using GameHotUpdate.Tasks;
 using UnityEngine;
 

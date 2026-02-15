@@ -6,7 +6,7 @@ using Game.Battle.Objects;
 using Game.Battle.Skill.Enum;
 using Game.Components;
 using GameHotUpdate.Battle.Event.UI;
-using GameHotUpdate.Objects;
+using GameHotUpdate.Battle.Object;
 
 namespace GameHotUpdate.Animation
 {

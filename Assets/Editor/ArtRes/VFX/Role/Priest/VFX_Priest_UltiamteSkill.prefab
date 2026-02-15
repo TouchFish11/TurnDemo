@@ -4899,6 +4899,7 @@ GameObject:
   - component: {fileID: 9031662544479529215}
   - component: {fileID: 4905092212547386075}
   - component: {fileID: 5602148342979739044}
+  - component: {fileID: -49382589817697122}
   m_Layer: 12
   m_Name: VFX_Priest_UltiamteSkill
   m_TagString: Untagged
@@ -9721,6 +9722,18 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
+--- !u!114 &-49382589817697122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1176920861972767491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24ff21ed20404574db517537339130f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2294612723822786281
 GameObject:
   m_ObjectHideFlags: 0
