@@ -4,18 +4,18 @@ using Game.Battle.Objects;
 namespace Game.Battle.TargetSelect
 {
     /// <summary>
-    /// Ŀ��ѡ����Խӿ�
+    /// 技能目标选择策略
     /// </summary>
     public interface ITargetSelectStrategy
     {
         /// <summary>
-        /// ���ȼ�
-        /// Խ��Խ��ִ��
+        /// 优先级
+        /// 越高越先执行
         /// </summary>
         public int Priority { get; }
 
         /// <summary>
-        /// ѡ����Ŀ��
+        /// 选择主目标
         /// </summary>
         /// <param name="targets"></param>
         /// <param name="caster"></param>

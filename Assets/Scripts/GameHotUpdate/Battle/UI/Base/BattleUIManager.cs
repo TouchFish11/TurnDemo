@@ -69,13 +69,13 @@ namespace GameHotUpdate.Battle.UI.Base
         /// 伤害文本X轴偏移范围（随机）
         /// 控制伤害飘字的横向显示位置
         /// </summary>
-        private readonly Vector2 damageTextXOffsetRange = new(-40, 40);
+        private readonly Vector2 damageTextXOffsetRange = new(-0.5f, 0.5f);
 
         /// <summary>
         /// 伤害文本Y轴偏移范围（随机）
         /// 控制伤害飘字的纵向显示位置
         /// </summary>
-        private readonly Vector2 damageTextYOffsetRange = new(-10, 10);
+        private readonly Vector2 damageTextYOffsetRange = new(0.4f, 0.6f);
 
         /// <summary>
         /// 通用等待协程对象（0.5秒）
@@ -180,15 +180,19 @@ namespace GameHotUpdate.Battle.UI.Base
         public async void ShowDamageText(DamageResult damageResult)
         {
             // 从资源包异步加载伤害文本UI预制体
-            var damageTextUIWrapper = await ServiceLocator.Get<IUiLoader>().GetUIObject<DamageTextUI>(EAssetBundleType.UI, ResKeyCollection.DamageTextUI, null);
+            var damageTextUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<DamageTextUI>(EAssetBundleType.UI, ResKeyCollection.DamageTextUI, null);
             // 获取伤害文本的显示偏移位置（随机偏移）
             var dmgTextOffset = GetDamageTextUIPos(damageResult.Target, damageTextXOffsetRange, damageTextYOffsetRange);
             
             // 将世界坐标转换为UI本地坐标并设置文本位置
-            if (UIUtility.WorldToLocalPointInRectangle(ServiceLocator.Get<IBattleCameraManager>().CurrentActiveCamera, UIManager.Instance.UICamera, _view.ViewObj.transform, damageTextUIWrapper.gameObject, damageResult.Target.GameObject.transform.position, dmgTextOffset))
+            if (UIUtility.WorldToLocalPointInRectangle(
+                    ServiceLocator.Get<IBattleCameraManager>().CurrentActiveCamera, 
+                    UIManager.Instance.UICamera, _view.ViewObj.transform, 
+                    damageTextUI.gameObject, 
+                    damageResult.Target.GameObject.transform.position + dmgTextOffset))
             {
                 // 初始化伤害文本（元素颜色、伤害类型文本、最终伤害值）
-                damageTextUIWrapper.InitDamageText(((int)damageResult.ElementType).ToElementTypeColor(), GetDamgeTypeText(damageResult), damageResult.FinalDamage);
+                damageTextUI.InitDamageText(((int)damageResult.ElementType).ToElementTypeColor(), GetDamgeTypeText(damageResult), damageResult.FinalDamage);
             }
             
             // 更新累计伤害UI
@@ -209,7 +213,12 @@ namespace GameHotUpdate.Battle.UI.Base
             var dmgTextOffset = GetDamageTextUIPos(target, damageTextXOffsetRange, damageTextYOffsetRange);
             
             // 将世界坐标转换为UI本地坐标并设置文本位置
-            if (UIUtility.WorldToLocalPointInRectangle(ServiceLocator.Get<IBattleCameraManager>().CurrentActiveCamera, UIManager.Instance.UICamera, _view.ViewObj.transform, shieldTextUI.gameObject, target.GameObject.transform.position, dmgTextOffset))
+            if (UIUtility.WorldToLocalPointInRectangle(
+                    ServiceLocator.Get<IBattleCameraManager>().CurrentActiveCamera, 
+                    UIManager.Instance.UICamera, 
+                    _view.ViewObj.transform, 
+                    shieldTextUI.gameObject, 
+                    target.GameObject.transform.position + dmgTextOffset))
             {
                 // 初始化护盾文本
                 shieldTextUI.InitshieldText(sheilAmount);
@@ -230,10 +239,43 @@ namespace GameHotUpdate.Battle.UI.Base
             var dmgTextOffset = GetDamageTextUIPos(target, damageTextXOffsetRange, damageTextYOffsetRange);
             
             // 将世界坐标转换为UI本地坐标并设置文本位置
-            if (UIUtility.WorldToLocalPointInRectangle(ServiceLocator.Get<IBattleCameraManager>().CurrentActiveCamera, UIManager.Instance.UICamera, _view.ViewObj.transform, healTextUI.gameObject, target.GameObject.transform.position, dmgTextOffset))
+            if (UIUtility.WorldToLocalPointInRectangle(
+                    ServiceLocator.Get<IBattleCameraManager>().CurrentActiveCamera, 
+                    UIManager.Instance.UICamera, 
+                    _view.ViewObj.transform, 
+                    healTextUI.gameObject, 
+                    target.GameObject.transform.position + dmgTextOffset))
             {
                 // 初始化治疗文本
                 healTextUI.InitHealText(healAmount);
+            }
+        }
+        
+        /// <summary>
+        /// 显示状态效果文本（Buff/Debuff飘字）
+        /// 状态添加时显示对应的状态名称文本
+        /// </summary>
+        /// <param name="newStatus">新增的状态实例</param>
+        public async void ShowStatusText(IStatus newStatus)
+        {
+            try
+            {
+                // 从资源包异步加载状态文本UI预制体
+                var statusEffectTextUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<StatusEffectTextUI>(EAssetBundleType.UI, ResKeyCollection.StatusEffectTextUI, null);
+                // 计算状态文本显示位置
+                if (UIUtility.WorldToLocalPointInRectangle(
+                        ServiceLocator.Get<IBattleCameraManager>().CurrentActiveCamera, 
+                        ServiceLocator.Get<IUIManager>().UICamera,
+                        _view.BuffTextArea, statusEffectTextUI.gameObject, 
+                        newStatus.Owner.SubGameObject.transform.position + Vector3.up * 0.5f, Vector2.zero))
+                {
+                    // 初始化状态文本（显示状态名称）
+                    statusEffectTextUI.InitText(null, newStatus.StatusProperty.StatusInfo.f_name);
+                }
+            }
+            catch (Exception e)
+            {
+                LogManager.LogError($"{nameof(BattleUIManager)}.{nameof(ShowStatusText)}：{e.Message}");
             }
         }
 
@@ -249,36 +291,6 @@ namespace GameHotUpdate.Battle.UI.Base
             _view.TotalDmgArea.gameObject.SetActive(isShow);
             // 更新累计伤害数值（模型层计算+视图层刷新）
             _view.UpdateTotalDmg(_model.SetCumulativeDamage(dmg, !isShow));
-        }
-
-        /// <summary>
-        /// 显示状态效果文本（Buff/Debuff飘字）
-        /// 状态添加时显示对应的状态名称文本
-        /// </summary>
-        /// <param name="newStatus">新增的状态实例</param>
-        public async void ShowStatusText(IStatus newStatus)
-        {
-            try
-            {
-                // 从资源包异步加载状态文本UI预制体
-                var statusEffectTextUIWrapper = await ServiceLocator.Get<IUiLoader>().GetUIObject<StatusEffectTextUI>(EAssetBundleType.UI, ResKeyCollection.StatusEffectTextUI, null);
-            
-                // 计算状态文本显示位置（目标实体上方160像素）
-                if (UIUtility.WorldToLocalPointInRectangle(
-                        ServiceLocator.Get<IBattleCameraManager>().CurrentActiveCamera, 
-                        ServiceLocator.Get<IUIManager>().UICamera,
-                        _view.BuffTextArea, statusEffectTextUIWrapper.gameObject, 
-                        newStatus.Owner.SubGameObject.transform.position, 
-                        Vector2.up * 160))
-                {
-                    // 初始化状态文本（显示状态名称）
-                    statusEffectTextUIWrapper.InitText(null, newStatus.StatusProperty.StatusInfo.f_name);
-                }
-            }
-            catch (Exception e)
-            {
-                LogManager.LogError($"{nameof(BattleUIManager)}.{nameof(ShowStatusText)}：{e.Message}");
-            }
         }
         #endregion
 
@@ -601,18 +613,17 @@ namespace GameHotUpdate.Battle.UI.Base
         /// <param name="damageTextXOffsetRange">X轴随机偏移范围</param>
         /// <param name="damageTextYOffsetRange">Y轴随机偏移范围</param>
         /// <returns>伤害文本的最终偏移位置</returns>
-        public static Vector2 GetDamageTextUIPos(IBattleEntityObject dmgTarget, Vector2 damageTextXOffsetRange, Vector2 damageTextYOffsetRange)
+        public static Vector3 GetDamageTextUIPos(IBattleEntityObject dmgTarget, Vector2 damageTextXOffsetRange, Vector2 damageTextYOffsetRange)
         {
             // 生成随机偏移值
-            var x = Random.Range(damageTextXOffsetRange.x, damageTextYOffsetRange.y);
+            var x = Random.Range(damageTextXOffsetRange.x, damageTextXOffsetRange.y);
             var y = Random.Range(damageTextYOffsetRange.x, damageTextYOffsetRange.y);
             var dmgTextOffset = new Vector2(x, y);
 
             // 根据目标类型计算基础偏移
             var pos = dmgTarget switch
             {
-                MonsterObject monster => Vector2.up * monster.MonsterInfo.f_dmgTextYOffset + dmgTextOffset,
-                PlayerObject player => Vector2.up * player.RoleInfo.f_dmgTextYOffset + dmgTextOffset,
+                MonsterObject or PlayerObject => Vector3.one * dmgTextOffset,
                 _ => default
             };
 

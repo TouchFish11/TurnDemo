@@ -147,7 +147,7 @@ namespace GameHotUpdate.Battle.UI.Base
         /// <param name="applyHealEvent"></param>
         private void ApplyHealChanged(ApplyHealEvent applyHealEvent)
         {
-            _uiManager.ShowShieldText(applyHealEvent.Target, applyHealEvent.HealAmount);
+            _uiManager.ShowHealText(applyHealEvent.Target, applyHealEvent.HealAmount);
         }
         
         /// <summary>

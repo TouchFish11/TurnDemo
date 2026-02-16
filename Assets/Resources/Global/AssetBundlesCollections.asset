@@ -180,7 +180,7 @@ MonoBehaviour:
       size: 87144
       name: Prefab_Gunman.prefab
     - assetPath: Assets\Editor\ArtRes\Prefab\Role\Battle\Prefab_Priest.prefab
-      size: 81534
+      size: 81530
       name: Prefab_Priest.prefab
     - assetPath: Assets\Editor\ArtRes\Prefab\Role\Battle\Prefab_Warrior.prefab
       size: 92911
@@ -303,7 +303,7 @@ MonoBehaviour:
       size: 4839
       name: WaitingActUI.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Battle\Buff\StatusEffectTextUI.prefab
-      size: 12672
+      size: 12670
       name: StatusEffectTextUI.prefab
     - assetPath: Assets\Editor\ArtRes\UI\Battle\Buff\StatusGridUI.prefab
       size: 10978

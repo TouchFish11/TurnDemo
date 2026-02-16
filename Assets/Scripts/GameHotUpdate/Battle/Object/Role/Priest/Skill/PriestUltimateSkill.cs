@@ -2,6 +2,7 @@ using System.Collections;
 using Core.Config;
 using Core.Pool;
 using Core.Service;
+using Core.UI;
 using Core.Utility;
 using Game.Animation;
 using Game.Battle.Context;
@@ -11,6 +12,7 @@ using Game.VFX;
 using GameHotUpdate.Animation;
 using GameHotUpdate.Battle.Layer;
 using GameHotUpdate.Battle.Skill.Base;
+using GameHotUpdate.Battle.UI.Base;
 using GameHotUpdate.Cameras;
 using UnityEngine;
 
@@ -60,6 +62,9 @@ namespace GameHotUpdate.Battle.Object.Role.Priest.Skill
 
         private IEnumerator UpdateCamera_01()
         {
+            // 隐藏怪物UI
+            ServiceLocator.Get<IUIManager>().GetController<BattleController>().MonsterStateUIManager.InActiveMonsterUIs();
+            
             // 设置Mask，只看当前角色
             var mask = LayerGeter.GetPreBitLayer();
             mask |= 1 << Caster.GameObject.layer;
@@ -73,6 +78,9 @@ namespace GameHotUpdate.Battle.Object.Role.Priest.Skill
         
         private IEnumerator UpdateCamera_02()
         {
+            // 显示怪物UI
+            ServiceLocator.Get<IUIManager>().GetController<BattleController>().MonsterStateUIManager.ActiveMonsterUI(AllTargets.ToArray());
+            
             // 设置Mask，看向怪物主目标、渲染所有目标
             var mask = LayerGeter.GetPreBitLayer();
             foreach (var battleEntityObject in AllTargets)

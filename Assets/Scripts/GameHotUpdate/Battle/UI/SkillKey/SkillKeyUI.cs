@@ -9,7 +9,6 @@ using Game.Battle.TargetSelect;
 using GameHotUpdate.Battle.Event.UI;
 using GameHotUpdate.Battle.Skill.Component;
 using GameHotUpdate.Battle.TargetSelect.Strategys;
-using GameHotUpdate.Manager;
 using GameHotUpdate.Tasks;
 using TMPro;
 using UnityEngine;

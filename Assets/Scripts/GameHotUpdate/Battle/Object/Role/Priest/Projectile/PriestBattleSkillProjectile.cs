@@ -1,12 +1,9 @@
 using Core.Reflection;
 using Core.Service;
-using Game.Battle.Enum;
+using Core.Time;
 using Game.Battle.Status;
-using Game.VFX;
 using GameHotUpdate.Battle.Projectile;
-using GameHotUpdate.Battle.Property;
 using GameHotUpdate.Battle.Status;
-using UnityEngine;
 
 namespace GameHotUpdate.Battle.Object.Role.Priest.Projectile
 {
@@ -32,12 +29,7 @@ namespace GameHotUpdate.Battle.Object.Role.Priest.Projectile
         
         protected override void CreateVFXOnTrigger()
         {
-            foreach (var target in projectileData.targets)
-            {
-                var projectileTrans = new ProjectileTrans(target.GameObject.transform.position, Quaternion.identity);
-                vFXInfo = new VFXInfo();
-                //ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_BlueHit, projectileTrans, default, vFXInfo);
-            }
+            
         }
         
         protected override void CauseDamageOnTrigger()
@@ -45,15 +37,16 @@ namespace GameHotUpdate.Battle.Object.Role.Priest.Projectile
             // 回血
             foreach (var target in projectileData.targets)
             {
-                var newCurrentHp = target.GetComponent<PropertyComponent>()
-                    .GetPropertyValue(E_DynamicPropertyType.CurrentHp) + 100;
-                target.GetComponent<PropertyComponent>().SetPropertyValue(E_DynamicPropertyType.CurrentHp, newCurrentHp);
+                target.TakeHeal(100);
             }
         }
 
         protected override void HandleOtherOnTrigger()
         {
-            
+            ServiceLocator.Get<ITimerManager>().CreateTimer(false, 500, () =>
+            {
+                vFXInfo.IsStop = true;
+            });
         }
     }
 }

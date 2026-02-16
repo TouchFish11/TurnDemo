@@ -10,7 +10,6 @@ using GameHotUpdate.Activity.UI.Base;
 using GameHotUpdate.Battle;
 using GameHotUpdate.Battle.Turn;
 using GameHotUpdate.Main.UI.Logic;
-using GameHotUpdate.Manager;
 using GameHotUpdate.Tasks.UI;
 
 namespace GameHotUpdate.Main.UI

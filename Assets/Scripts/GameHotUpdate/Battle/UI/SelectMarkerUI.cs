@@ -1,12 +1,10 @@
 using System.Collections.Generic;
-using Core.Log;
 using Core.Mono;
 using Core.Service;
 using Core.UI;
 using Core.Utility;
 using Game.Battle.Objects;
 using Game.Battle.Skill.Enum;
-using GameHotUpdate.Battle.Object;
 using GameHotUpdate.Cameras;
 using UnityEngine;
 using UnityEngine.UI;
@@ -34,14 +32,12 @@ namespace GameHotUpdate.Battle.UI
         // 颜色定义 - 敌方标记红色
         private readonly Color enermyRed = Color.red;
         // 颜色定义 - 友方标记蓝色
-        private readonly Color friendBlue = Color.blue;
+        private readonly Color friendBlue = new(0.5686275f,0.937088f,0.943f);
 
         // 绑定的战斗实体（被标记的目标）
         private IBattleEntityObject battleEntity;
         // 选择标记的父节点（用于UI坐标计算）
         private Transform selectMarkerArea;
-        // 标记Y轴偏移
-        private float markerYOffset;
 
         /// <summary>
         /// 初始化组件（Awake生命周期）
@@ -87,7 +83,6 @@ namespace GameHotUpdate.Battle.UI
             // 绑定目标实体和父节点
             this.battleEntity = battleEntity;
             this.selectMarkerArea = selectMarkerArea;
-            this.markerYOffset = GetMarkerYOffset(battleEntity);
             
             // 根据目标类型选择标记颜色（敌方红/友方蓝）
             var color = skillTargetType == E_SkillTargetType.Enemy ? enermyRed : friendBlue;
@@ -135,8 +130,8 @@ namespace GameHotUpdate.Battle.UI
                 ServiceLocator.Get<IUIManager>().UICamera,                    // UI相机
                 selectMarkerArea,                                             // UI父节点
                 gameObject,                                                    // 当前标记UI对象
-                battleEntity.GameObject.transform.position,                    // 目标世界位置
-                Vector2.up * markerYOffset                               // 向上偏移
+                battleEntity.GameObject.transform.position + Vector3.up * 0.5f                    // 目标世界位置
+                //Vector2.up * markerYOffset                               // 向上偏移
             );
         }
 
@@ -161,25 +156,6 @@ namespace GameHotUpdate.Battle.UI
         {
             // 移除Update监听，停止动画和跟随逻辑
             ServiceLocator.Get<IMonoAdapter>().RemoveUpdateListener(OnUpdate);
-        }
-
-        /// <summary>
-        /// 获取标记Y轴偏移量
-        /// </summary>
-        /// <param name="entityObject"></param>
-        /// <returns></returns>
-        private static float GetMarkerYOffset(IBattleEntityObject entityObject)
-        {
-            switch (entityObject)
-            {
-                case MonsterObject monsterObject:
-                    return monsterObject.MonsterInfo.f_selMarkerYOffset;
-                case PlayerObject playerObject:
-                    return playerObject.RoleInfo.f_selMarkerYOffset;
-                default:
-                    LogManager.Log($"{nameof(SelectMarkerUI)}.{nameof(SelectMarkerUI)}：获取该类型对象标记偏移失败，{entityObject}");
-                    return 0;
-            }
         }
     }
 }

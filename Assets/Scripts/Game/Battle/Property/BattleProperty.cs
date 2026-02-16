@@ -43,7 +43,7 @@ namespace Game.Battle.Property
         public int BaseCritDmg => baseCritDmg;
 
         // 动态属性
-        public int CurrentHp { get => currentHp; set => currentHp = value; }
+        public int CurrentHp { get => currentHp; set => currentHp = Mathf.Clamp(value, 0, MaxHp); }
         public int MaxHp { get => maxHp; set => maxHp = value; }
         public int TotalAtk { get => totalAtk; set => totalAtk = value; }
         public int TotalDef { get => totalDef; set => totalDef = value; }

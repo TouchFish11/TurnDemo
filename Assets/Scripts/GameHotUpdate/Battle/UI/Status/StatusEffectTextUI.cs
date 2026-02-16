@@ -24,7 +24,7 @@ namespace GameHotUpdate.Battle.UI.Status
         [Inject(1)] private RectTransform Mover { get; set; }
 
         // 文本向上移动的速度（可在Inspector面板配置）
-        [SerializeField] private float upMoveSpeed = 2.5f;
+        [SerializeField] private float upMoveSpeed = 1f;
         // 文本显示后自动销毁/回收的时间（可在Inspector面板配置）
         [SerializeField] private float destroyTime = 0.85f;
 
@@ -54,6 +54,11 @@ namespace GameHotUpdate.Battle.UI.Status
             ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpadte);
         }
         
+        /// <summary>
+        /// 初始化文本
+        /// </summary>
+        /// <param name="icon"></param>
+        /// <param name="buffName"></param>
         public void InitText(Sprite icon, string buffName)
         {
             imgIcon.sprite = icon;

@@ -1,8 +1,12 @@
+using Core.Config;
+using Core.Pool;
+using Core.Service;
+using Core.Time;
 using Game.Battle.Context;
-using Game.Battle.Enum;
 using Game.Battle.Objects;
 using Game.Battle.Status;
-using GameHotUpdate.Battle.Property;
+using Game.VFX;
+using UnityEngine;
 
 namespace GameHotUpdate.Battle.Object.Role.Priest.Status
 {
@@ -15,8 +19,24 @@ namespace GameHotUpdate.Battle.Object.Role.Priest.Status
         protected override void OnTurnStart(IBattleEntityObject owner, IBattleContext context)
         {
             StatusProperty.SetRemainingRound(StatusProperty.RemainingRound - 1);
-            var newHp = owner.GetComponent<PropertyComponent>().GetPropertyValue(E_DynamicPropertyType.CurrentHp) + 20;
-            owner.GetComponent<PropertyComponent>().SetPropertyValue(E_DynamicPropertyType.CurrentHp, newHp);
+            owner.TakeHeal(20);
+            // 创建VFX
+            CreateVFX();
+        }
+
+        private void CreateVFX()
+        {
+            // 产生特效
+            var vfxInfo = ServiceLocator.Get<IPoolManager>().GetData<VFXInfo>();
+            var pos = Owner.GameObject.transform.position;
+            pos = new Vector3(pos.x, 0.5f, pos.z);
+            ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_Heal, 
+                null, pos, Quaternion.identity, vfxInfo);
+
+            ServiceLocator.Get<ITimerManager>().CreateTimer(false, 700, () =>
+            {
+                vfxInfo.IsStop = true;
+            });
         }
     }
 }

@@ -39,12 +39,12 @@ namespace Core.Utility
         /// <param name="uiObj">世界点</param>
         /// <param name="worldPoint">世界点</param>
         /// <param name="offset">UI坐标偏移</param>
-        public static bool WorldToLocalPointInRectangle(Camera world, Camera ui, Transform parent, GameObject uiObj, Vector3 worldPoint, Vector2 offset)
+        public static bool WorldToLocalPointInRectangle(Camera world, Camera ui, Transform parent, GameObject uiObj, Vector3 worldPoint, Vector2 offset = default)
         {
             // 世界转屏幕
             var screenPoint = RectTransformUtility.WorldToScreenPoint(world, worldPoint);
             // 屏幕转UI
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(parent as RectTransform, screenPoint, ui, out Vector2 localPoint))
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(parent as RectTransform, screenPoint, ui, out var localPoint))
             {
                 //设置父对象
                 uiObj.transform.SetParent(parent, false);

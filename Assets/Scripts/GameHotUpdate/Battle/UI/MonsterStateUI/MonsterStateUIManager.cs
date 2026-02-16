@@ -65,11 +65,21 @@ namespace GameHotUpdate.Battle.UI.MonsterStateUI
         /// 激活指定怪物血量UI显示
         /// 激活指定怪物UI，其它失活
         /// </summary>
-        public void ActiveMonsterUI(IBattleEntityObject moster)
+        public void ActiveMonsterUI(params IBattleEntityObject[] mosters)
         {
-            foreach (var mosterEntity in normalMonsterStateUIs.Keys)
+            // 先把所有 UI 设为隐藏
+            foreach (var stateUi in normalMonsterStateUIs.Values)
             {
-                normalMonsterStateUIs[mosterEntity].gameObject.SetActive(mosterEntity == moster);
+                stateUi.gameObject.SetActive(false);
+            }
+
+            // 再把匹配的设为显示
+            foreach (var monster in mosters)
+            {
+                if (normalMonsterStateUIs.TryGetValue(monster, out var stateUI))
+                {
+                    stateUI.gameObject.SetActive(true);
+                }
             }
         }
 
@@ -77,19 +87,29 @@ namespace GameHotUpdate.Battle.UI.MonsterStateUI
         /// 失活指定怪物血量UI显示
         /// 失活指定怪物UI，其它激活
         /// </summary>
-        /// <param name="moster"></param>
-        public void InActiveMonsterStateUI(IBattleEntityObject moster)
+        /// <param name="mosters"></param>
+        public void InActiveMonsterStateUI(params IBattleEntityObject[] mosters)
         {
-            foreach (var mosterEntity in normalMonsterStateUIs.Keys)
+            // 先把所有 UI 设为显示
+            foreach (var stateUi in normalMonsterStateUIs.Values)
             {
-                normalMonsterStateUIs[mosterEntity].gameObject.SetActive(mosterEntity != moster);
+                stateUi.gameObject.SetActive(true);
+            }
+
+            // 再把匹配的设为显示
+            foreach (var monster in mosters)
+            {
+                if (normalMonsterStateUIs.TryGetValue(monster, out var stateUI))
+                {
+                    stateUI.gameObject.SetActive(false);
+                }
             }
         }
 
         /// <summary>
         /// 移除所有血量UI
         /// </summary>
-        public void RemoveAllUi()
+        public void RemoveAll()
         {
             foreach (var normalMonsterStateUI in normalMonsterStateUIs.Values)
             {

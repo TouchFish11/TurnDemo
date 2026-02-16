@@ -11,7 +11,6 @@ using Game.Battle.TargetSelect;
 using Game.Objects;
 using GameHotUpdate.Battle;
 using GameHotUpdate.Battle.Event.Turn;
-using GameHotUpdate.Manager;
 using UnityEngine;
 
 namespace GameHotUpdate.Cameras
@@ -30,6 +29,16 @@ namespace GameHotUpdate.Cameras
         private const float reboundSpeed = 8f;
         // 当前相机旋转角度
         private float currentXAngle;
+        // 是否回弹
+        private bool isRebound;
+        // 当前相机的面朝向四元数
+        private Quaternion currentFwdRotation;  
+        // 基准旋转（看向目标的初始旋转）
+        private Quaternion baseRotation; 
+        // 上一次的滑动偏移
+        private float lastDeltaX;
+        // 相机起始角度
+        private Quaternion _originRot;
         
         public Camera CurrentActiveCamera { get; private set; }
         
@@ -59,6 +68,7 @@ namespace GameHotUpdate.Cameras
             
             // 初始化当前旋转角度为相机初始角度
             currentXAngle = 0;
+            _originRot = CurrentActiveCamera.transform.localRotation;
             return CurrentActiveCamera;
         }
 
@@ -76,10 +86,9 @@ namespace GameHotUpdate.Cameras
             CurrentActiveCamera.transform.SetLocalPositionAndRotation(localPos, localRot);
             // 设置遮罩
             SetMask(CurrentActiveCamera, mask);
-            // 更新相机角度
-            
             // 初始化当前旋转角度为相机初始角度
             currentXAngle = 0;
+            _originRot = CurrentActiveCamera.transform.localRotation;
             return CurrentActiveCamera;
         }
 
@@ -93,11 +102,6 @@ namespace GameHotUpdate.Cameras
             camera.cullingMask = 0;
             camera.cullingMask = mask;
         }
-
-        private bool isRebound;
-        private Quaternion currentFwdRotation;  // 当前相机的面朝向四元数
-        private Quaternion baseRotation; // 基准旋转（看向目标的初始旋转）
-        private float lastDeltaX;
         
         /// <summary>
         /// 滑动事件回调
@@ -109,14 +113,27 @@ namespace GameHotUpdate.Cameras
             {
                 return;
             }
-            lastDeltaX = deltaX;
 
+            lastDeltaX = deltaX;
             currentXAngle += deltaX;
-            // 限制最大范围
             currentXAngle = Mathf.Clamp(currentXAngle, minXAngle, maxXAngle);
             var targetRot = Quaternion.Euler(0f, currentXAngle, 0f);
-            // 应用旋转
-            CurrentActiveCamera.transform.localRotation = Quaternion.Slerp(CurrentActiveCamera.transform.localRotation, targetRot, Time.deltaTime * rotateSpeed);
+            
+            if (_originRot != Quaternion.identity)
+            {
+                // 以起始四元数为基准的偏移
+                targetRot *= _originRot;
+                // 应用旋转
+                CurrentActiveCamera.transform.localRotation = 
+                    Quaternion.Slerp(CurrentActiveCamera.transform.localRotation, targetRot, Time.deltaTime * rotateSpeed);
+            }
+            // 限制最大范围，对于单位四元数的角度可以这样处理
+            else
+            {
+                // 应用旋转
+                CurrentActiveCamera.transform.localRotation = 
+                    Quaternion.Slerp(CurrentActiveCamera.transform.localRotation, targetRot, Time.deltaTime * rotateSpeed);
+            }
         }
         
         /// <summary>

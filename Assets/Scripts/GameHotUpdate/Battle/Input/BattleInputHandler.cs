@@ -181,12 +181,12 @@ namespace GameHotUpdate.Battle.Input
                 // 处于拖拽状态时，处理拖拽偏移逻辑
                 if (_isDragging)
                 {
-                    // 1. 获取当前鼠标X，计算【本次帧内】的偏移增量（核心修正）
-                    float currentMouseX = UnityEngine.Input.mousePosition.x;
-                    float deltaX = currentMouseX - lastMouseX;
+                    // 获取当前鼠标X，计算【本次帧内】的偏移增量（核心修正）
+                    var currentMouseX = UnityEngine.Input.mousePosition.x;
+                    var deltaX = currentMouseX - lastMouseX;
                     lastMouseX = currentMouseX; // 更新上一帧鼠标X
 
-                    // 2. 累加帧内增量到总偏移
+                    // 累加帧内增量到总偏移
                     nowDeltaX += deltaX;
 
                     // 触发拖拽中事件，传递X轴偏移量
@@ -222,13 +222,6 @@ namespace GameHotUpdate.Battle.Input
                     return;
                 }
                 
-                // 校验技能ID有效性（避免空引用）
-                if (!ServiceLocator.Get<IBinaryDataManager>().GetConfig<SkillInfoContainer>(EConfigLoadType.Excel).dataDic.ContainsKey(skillId))
-                {
-                    LogManager.LogWarning($"技能ID {skillId} 不存在，无法获取技能配置");
-                    return;
-                }
-
                 // 根据选中的技能ID获取技能配置信息
                 var skillInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<SkillInfoContainer>(EConfigLoadType.Excel).dataDic[skillId];
                 // 将技能范围类型转换为技能目标类型（友方/敌方）
@@ -246,6 +239,7 @@ namespace GameHotUpdate.Battle.Input
                         // 检测怪物对象层级
                         layerMask = LayerGeter.GetMonsterBitLayer();
                         break;
+                    case E_SkillTargetType.None:
                     default:
                         LogManager.LogWarning($"未处理的技能目标类型：{targetType}");
                         return;

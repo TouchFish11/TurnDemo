@@ -24,7 +24,7 @@
       "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
       "PackageName": "gameconfig.assetbundle",
       "PackageSize": 20208,
-      "PackageMd5": "78befcad407d71454d4afc451e709751"
+      "PackageMd5": "f04b56dcf7d344d0e5668b8ca647a628"
     },
     "hotupdate.assetbundle": {
       "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
@@ -48,7 +48,7 @@
       "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
       "PackageName": "PC.assetbundle",
       "PackageSize": 4816,
-      "PackageMd5": "4c6b9441479e2fe88d48f9230df53378"
+      "PackageMd5": "e8d72148cba162483d78620b33e4eeea"
     },
     "prefab.assetbundle": {
       "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
@@ -60,19 +60,19 @@
       "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
       "PackageName": "scene.assetbundle",
       "PackageSize": 85969648,
-      "PackageMd5": "e22f65f1b0ac8e2bbd5f5b5ce5bc3b2a"
+      "PackageMd5": "db034365f9253522aba0ea3e0364b40b"
     },
     "spriteatlas.assetbundle": {
       "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
       "PackageName": "spriteatlas.assetbundle",
-      "PackageSize": 30608048,
-      "PackageMd5": "fd3e66cc2b38903e90c5d0ff9d89b8a3"
+      "PackageSize": 30608720,
+      "PackageMd5": "d19692249f5341aaf1d815aa22f79755"
     },
     "ui.assetbundle": {
       "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",
       "PackageName": "ui.assetbundle",
       "PackageSize": 26829280,
-      "PackageMd5": "6a3267377a49b5a4c2c40a487016fad8"
+      "PackageMd5": "ea5f53b64af3f95304c7cb470ffd4500"
     },
     "vfx.assetbundle": {
       "$type": "Core.AssetBundles.Update.Collection.ABPackageInfo, Assembly-CSharp-Core",

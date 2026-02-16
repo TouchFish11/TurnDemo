@@ -8,7 +8,6 @@ using Game.Battle.Objects;
 using Game.Battle.Turn;
 using GameHotUpdate.Battle.UI.Base;
 using GameHotUpdate.Battle.Utility;
-using GameHotUpdate.Manager;
 using GameHotUpdate.UI.Loading.Battle;
 
 namespace GameHotUpdate.Battle.StateMeachine

@@ -19,7 +19,6 @@ using GameHotUpdate.Battle.Event.UI;
 using GameHotUpdate.Battle.Object;
 using GameHotUpdate.Battle.Property;
 using GameHotUpdate.Battle.UI.Status;
-using GameHotUpdate.Manager;
 using GameHotUpdate.Tasks;
 using TMPro;
 using UnityEngine;

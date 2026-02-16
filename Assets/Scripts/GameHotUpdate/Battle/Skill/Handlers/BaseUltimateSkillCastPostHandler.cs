@@ -4,6 +4,7 @@ using Core.Reflection;
 using Core.Service;
 using Core.UI;
 using Core.Utility;
+using Game.Battle.Input;
 using Game.Battle.Objects;
 using Game.Battle.Skill;
 using Game.Battle.Skill.Component;
@@ -75,6 +76,8 @@ namespace GameHotUpdate.Battle.Skill.Handlers
             
             // 激活目标选择
             ServiceLocator.Get<ITargetSelectManager>().ActiveSelectTarget();
+            // 激活相机输入
+            ServiceLocator.Get<IBattleInputHandler>().SetInputState(true);
             // 执行目标选择逻辑
             ServiceLocator.Get<ITargetSelectManager>().SelectTarget(context, currentEntity, currentEntitySkillInfo, strategy);
             // 重新激活怪物UI的血量显示

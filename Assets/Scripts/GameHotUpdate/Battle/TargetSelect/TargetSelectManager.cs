@@ -71,7 +71,7 @@ namespace GameHotUpdate.Battle.TargetSelect
         private void OnSelectSkillEvent(SelectSkillEvent selectSkillEvent)
         {
             // 从配置表加载选中技能的详细配置
-            skillInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<SkillInfoContainer>(EConfigLoadType.Excel).dataDic[selectSkillEvent.SkillId];
+            var skillInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<SkillInfoContainer>(EConfigLoadType.Excel).dataDic[selectSkillEvent.SkillId];
             // 触发目标选择逻辑
             SelectTarget(selectSkillEvent.Context, selectSkillEvent.Caster, skillInfo, selectSkillEvent.TargetSelectStrategy);
         }
@@ -114,7 +114,11 @@ namespace GameHotUpdate.Battle.TargetSelect
         /// <param name="targetSelectStrategy">目标选择策略（决定如何选主目标）</param>
         public void SelectTarget(IBattleContext context, IBattleEntityObject caster, SkillInfo skillInfo, ITargetSelectStrategy targetSelectStrategy)
         {
+            // 缓存当前内容 
+            this.skillInfo = skillInfo;
+            this.caster = caster;
             currentSelectStrategy = targetSelectStrategy;
+            
             if (currentSelectStrategy == null)
             {
                 LogManager.LogError($"{nameof(TargetSelectManager)}.{nameof(SelectTarget)}：当前目标选择策略为null");
@@ -162,8 +166,6 @@ namespace GameHotUpdate.Battle.TargetSelect
         /// <param name="skillInfo">技能配置（影响目标选择规则）</param>
         private IBattleEntityObject SelectMainTarget(IBattleContext context, IBattleEntityObject caster, SkillInfo skillInfo)
         {
-            // 记录技能释放者，供后续范围目标计算使用
-            this.caster = caster;
             // 筛选出所有目标
             FilterTargets(context);
             // 委托给当前策略计算主目标
@@ -184,45 +186,29 @@ namespace GameHotUpdate.Battle.TargetSelect
                 // 施法者为玩家的情况
                 case PlayerObject:
                 {
-                    if (targetType == E_SkillTargetType.Enemy)
+                    _filterEntitys = targetType switch
                     {
-                        // 获取场景对象
-                        _filterEntitys = context.GetSceneMonsters();
-                    }
-                    else
-                    {
-                        // 技能目标为友方：查询战斗内所有存活的玩家实体
-                        _filterEntitys = context.GetSceneRoles();
-                    }
+                        E_SkillTargetType.Enemy => context.GetSceneMonsters(),
+                        E_SkillTargetType.Friend => context.GetSceneRoles(),
+                        _ => _filterEntitys
+                    };
                     break;
                 }
                 // 施法者为怪物的情况
                 case MonsterObject:
                 {
-                    if (targetType == E_SkillTargetType.Enemy)
+                    _filterEntitys = targetType switch
                     {
-                        // 技能目标为敌人：查询战斗内所有存活的玩家实体
-                        _filterEntitys = context.GetSceneRoles();
-                    }
-                    else
-                    {
-                        // 技能目标为友方：查询战斗内所有存活的怪物实体
-                        _filterEntitys = context.GetSceneMonsters();
-                    }
+                        E_SkillTargetType.Enemy => context.GetSceneRoles(),
+                        E_SkillTargetType.Friend => context.GetSceneMonsters(),
+                        _ => _filterEntitys
+                    };
                     break;
                 }
                 default:
                     LogManager.Log($"施法者不是：PlayerObject或MonsterObject");
                     break;
             }
-
-            // StringBuilder sb = new StringBuilder();
-            // foreach (var battleEntityObject in _filterEntitys)
-            // {
-            //     sb.AppendLine($"当前目标：{battleEntityObject}");
-            // }
-            //
-            // LogManager.Log($"{sb}");
         }
 
         /// <summary>

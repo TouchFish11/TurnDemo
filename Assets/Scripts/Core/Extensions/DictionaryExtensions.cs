@@ -18,5 +18,16 @@ namespace Core.Extensions
             
             return list.ToArray();
         }
+        
+        public static TReturn[] ToArray<TKey, TValue, TReturn>(this Dictionary<TKey,TValue>.KeyCollection keyCollection, Func<TKey, TReturn> func)
+        {
+            var list = new List<TReturn>(keyCollection.Count);
+            foreach (var value in keyCollection)
+            {
+                list.Add(func(value));
+            }
+            
+            return list.ToArray();
+        }
     }
 }

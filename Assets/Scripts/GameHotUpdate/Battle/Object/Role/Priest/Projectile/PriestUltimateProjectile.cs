@@ -1,4 +1,5 @@
 using Core.Config;
+using Core.Pool;
 using Core.Reflection;
 using Core.Service;
 using Game.Battle.Status;
@@ -45,14 +46,13 @@ namespace GameHotUpdate.Battle.Object.Role.Priest.Projectile
             foreach (var target in projectileData.targets)
             {
                 var projectileTrans = new ProjectileTrans(target.GameObject.transform.position, Quaternion.identity);
-                vFXInfo = new VFXInfo();
-                ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_BlueHit, projectileTrans, default, vFXInfo);
+                var newVFXInfo = ServiceLocator.Get<IPoolManager>().GetData<VFXInfo>();
+                ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_BlueHit, projectileTrans, default, newVFXInfo);
             }
         }
 
         protected override void HandleOtherOnTrigger()
         {
-            // TODO：没有效果
             vFXInfo.IsStop = true;
         }
     }

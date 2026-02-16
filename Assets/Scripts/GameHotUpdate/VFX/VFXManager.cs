@@ -11,38 +11,59 @@ using UnityEngine;
 namespace GameHotUpdate.VFX
 {
     /// <summary>
-    /// �Ӿ�Ч��������
+    /// 视觉特效（VFX）管理器
+    /// 负责VFX的创建、更新、移除、缓存清理等核心逻辑，基于对象池管理VFX资源
     /// </summary>
     public class VFXManager : SingletonBase<VFXManager>, IVFXManager
     {
-        // ������Ч�б�
-        private readonly List<VFXInfo> _activeVfxs = new List<VFXInfo>();
+        // 存储当前活跃的VFX信息列表
+        private readonly List<VFXInfo> _activeVfxs = new();
 
+        /// <summary>
+        /// 私有构造函数（单例模式），注册Update监听
+        /// </summary>
         private VFXManager()
         {
+            // 注册帧更新监听，用于检测VFX状态
             ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpdate);
         }
 
+        /// <summary>
+        /// 帧更新回调，检测并回收非活跃的VFX
+        /// </summary>
         private void OnUpdate()
         {
+            // 倒序遍历，避免移除元素导致的索引异常
             for (var i = _activeVfxs.Count - 1; i >= 0; i--)
             {
-                // 已停止或不是存活状态都要池化
+                // 已停止或粒子系统非存活状态，回收至对象池
                 if (_activeVfxs[i].IsStop || !_activeVfxs[i].ParticleSystem.IsAlive())
                 {
                     _activeVfxs[i].IsAlive = false;
                     _activeVfxs[i].ParticleSystem.Stop();
+                    // 将VFX对象归还至对象池
                     ServiceLocator.Get<IPoolManager>().PushObj(_activeVfxs[i].ParticleSystem.gameObject);
+                    // 从活跃列表移除
                     _activeVfxs.RemoveAt(i);
                 }
             }
         }
 
-        // 通过泛型加载对应脚本
+        /// <summary>
+        /// 创建投射物相关的VFX（异步）
+        /// </summary>
+        /// <param name="vfxName">VFX资源名称</param>
+        /// <param name="projectileTrans">投射物变换信息</param>
+        /// <param name="data">投射物数据</param>
+        /// <param name="vFXInfo">VFX信息载体</param>
         public async void CreateVFX(string vfxName, ProjectileTrans projectileTrans, ProjectileData data, VFXInfo vFXInfo)
         {
+            // 从对象池异步获取VFX资源
             var vfxObj = await ServiceLocator.Get<IPoolManager>().GetAssetBundleObjAsync(EAssetBundleType.VFX, vfxName);
+            // 设置VFX父物体
             vfxObj.transform.SetParent(projectileTrans.Parent, projectileTrans.WorldPositionStays);
+            
+            // 根据父物体是否存在，设置VFX的位置和旋转
             if (projectileTrans.Parent)
             {
                 vfxObj.transform.SetLocalPositionAndRotation(projectileTrans.LocalPos, projectileTrans.Rotation);
@@ -52,13 +73,13 @@ namespace GameHotUpdate.VFX
                 vfxObj.transform.SetPositionAndRotation(projectileTrans.WorldPos, projectileTrans.Rotation);
             }
 
-            // ���ڵ�����ű����ʼ��
+            // 如果VFX挂载了投射物组件，初始化投射物数据
             if (vfxObj.TryGetComponent<Projectile>(out var projectile))
             {
                 projectile.Init(data, vFXInfo);
             }
 
-            // �����Ч�Ƿ���ѭ����Ч
+            // 如果包含粒子系统，记录到活跃列表
             if (vfxObj.TryGetComponent<ParticleSystem>(out var ps))
             {
                 vFXInfo.ParticleSystem = ps;
@@ -66,11 +87,24 @@ namespace GameHotUpdate.VFX
             }
         }
 
+        /// <summary>
+        /// 创建指定父物体/位置的VFX（异步）
+        /// </summary>
+        /// <param name="vfxName">VFX资源名称</param>
+        /// <param name="parent">父物体Transform</param>
+        /// <param name="pos">本地位置</param>
+        /// <param name="rot">旋转</param>
+        /// <param name="vFXInfo">VFX信息载体</param>
         public async void CreateVFX(string vfxName, Transform parent, Vector3 pos, Quaternion rot, VFXInfo vFXInfo)
         {
+            // 从对象池异步获取VFX资源
             var vfxObj = await ServiceLocator.Get<IPoolManager>().GetAssetBundleObjAsync(EAssetBundleType.VFX, vfxName);
+            // 设置父物体并重置局部坐标
             vfxObj.transform.SetParent(parent, false);
+            // 设置VFX局部位置和旋转
             vfxObj.transform.SetLocalPositionAndRotation(pos, rot);
+            
+            // 如果包含粒子系统，记录到活跃列表
             if (vfxObj.TryGetComponent<ParticleSystem>(out var ps))
             {
                 vFXInfo.ParticleSystem = ps;
@@ -78,8 +112,13 @@ namespace GameHotUpdate.VFX
             }
         }
         
+        /// <summary>
+        /// 主动移除指定VFX
+        /// </summary>
+        /// <param name="vFXInfo">要移除的VFX信息</param>
         public void RemoveVFX(VFXInfo vFXInfo)
         {
+            // 检查是否在活跃列表中，存在则回收至对象池并移除
             if (_activeVfxs.Contains(vFXInfo))
             {
                 ServiceLocator.Get<IPoolManager>().PushObj(vFXInfo.ParticleSystem.gameObject);
@@ -87,12 +126,17 @@ namespace GameHotUpdate.VFX
             }
         }
 
+        /// <summary>
+        /// 清理所有VFX缓存（回收全部活跃VFX至对象池）
+        /// </summary>
         public void ClearVFXCache()
         {
+            // 遍历所有活跃VFX，逐一回收至对象池
             foreach (var vFXInfo in _activeVfxs)
             {
                 ServiceLocator.Get<IPoolManager>().PushObj(vFXInfo.ParticleSystem.gameObject);
             }
+            // 清空活跃列表
             _activeVfxs.Clear();
         }
     }

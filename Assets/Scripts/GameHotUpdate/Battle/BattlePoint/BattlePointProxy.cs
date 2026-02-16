@@ -85,6 +85,10 @@ namespace GameHotUpdate.Battle.BattlePoint
                     // 更新相机Mask
                     UpdateCameraMask(camera, battleEntity.EntityPosIndex);
                 }
+                else
+                {
+                    LogManager.LogError($"相机更新失败，当前实体为：{battleEntity}");
+                }
             }
             catch (Exception e)
             {
