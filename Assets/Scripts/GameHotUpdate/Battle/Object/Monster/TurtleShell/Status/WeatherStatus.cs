@@ -30,7 +30,7 @@ namespace GameHotUpdate.Battle.Object.Monster.TurtleShell.Status
         {
             var damageCalcData = new DotDamageCalcData
             {
-                Damage = 15,
+                Damage = 70,
                 ElementType = E_ElementType.Wind,
                 source = Sourcer,
                 target = Owner

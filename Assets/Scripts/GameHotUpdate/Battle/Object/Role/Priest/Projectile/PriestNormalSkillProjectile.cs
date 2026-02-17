@@ -1,6 +1,7 @@
 using Core.Config;
 using Core.Reflection;
 using Core.Service;
+using Core.Time;
 using Game.Battle.Status;
 using Game.VFX;
 using GameHotUpdate.Battle.Projectile;
@@ -45,8 +46,13 @@ namespace GameHotUpdate.Battle.Object.Role.Priest.Projectile
             foreach (var target in projectileData.targets)
             {
                 var projectileTrans = new ProjectileTrans(target.GameObject.transform.position, Quaternion.identity);
-                vFXInfo = new VFXInfo();
-                ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_BlueHit, projectileTrans, default, vFXInfo);
+                var newVFXInfo = new VFXInfo();
+                ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_WindPropertySkill_Hit, projectileTrans, default, newVFXInfo);
+                // 计时器计时
+                ServiceLocator.Get<ITimerManager>().CreateTimer(false, 500, () =>
+                {
+                    newVFXInfo.IsStop = true;
+                });
             }
         }
 

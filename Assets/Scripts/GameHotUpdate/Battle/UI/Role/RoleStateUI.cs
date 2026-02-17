@@ -126,7 +126,7 @@ namespace GameHotUpdate.Battle.UI.Role
 
             // 初始化护盾显示
             currentShield = maxShield = 0;
-            UpdateShield(currentShield, maxShield);
+            UpdateShield(currentShield);
         }
 
         /// <summary>
@@ -183,17 +183,19 @@ namespace GameHotUpdate.Battle.UI.Role
             }
 
             // 更新护盾显示
-            UpdateShield(onShieldChangedEvent.CurrentShield, onShieldChangedEvent.ReferenceShield);
+            UpdateShield(onShieldChangedEvent.CurrentShield);
         }
 
         /// <summary>
         /// 更新护盾显示
         /// </summary>
         /// <param name="currentShield">当前护盾值</param>
-        /// <param name="maxShield">最大护盾值</param>
-        private void UpdateShield(int currentShield, int maxShield)
+        private void UpdateShield(int currentShield)
         {
-            imgShield.fillAmount = maxShield == 0 ? 0 : currentShield / (float)maxShield;
+            // 已当前角色最大生命作为护盾的基准值
+            var referenceShield = battleEntity.GetComponent<PropertyComponent>()
+                .GetPropertyValue(E_DynamicPropertyType.MaxHp);
+            imgShield.fillAmount = currentShield / (float)referenceShield;
         }
 
         /// <summary>

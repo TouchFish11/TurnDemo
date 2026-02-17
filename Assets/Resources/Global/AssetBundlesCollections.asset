@@ -57,7 +57,7 @@ MonoBehaviour:
       size: 8201
       name: PlayerController.controller
     - assetPath: Assets\Editor\ArtRes\Animator\Monster\AbyssalMageAnimator.controller
-      size: 17067
+      size: 17146
       name: AbyssalMageAnimator.controller
     - assetPath: Assets\Editor\ArtRes\Animator\Monster\BaseMonster.controller
       size: 13384
@@ -127,10 +127,10 @@ MonoBehaviour:
       size: 767
       name: RoleInfo.bytes
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\SkillInfo.bytes
-      size: 1596
+      size: 2138
       name: SkillInfo.bytes
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\StatusInfo.bytes
-      size: 833
+      size: 1051
       name: StatusInfo.bytes
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\TaskConditionInfo.bytes
       size: 64
@@ -209,7 +209,7 @@ MonoBehaviour:
       size: 49952
       name: MainScene.unity
     - assetPath: Assets\Editor\ArtRes\Scene\Test\RoleTestScene.unity
-      size: 325488
+      size: 571677
       name: RoleTestScene.unity
     - assetPath: Assets\Editor\ArtRes\Scene\Test\UniTaskTestScene.unity
       size: 17373
@@ -388,6 +388,18 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\VFX\General\Hit\VFX_MonsterHit.prefab
       size: 237071
       name: VFX_MonsterHit.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\General\Hit\Property\VFX_FirePropertySkill_Hit.prefab
+      size: 474149
+      name: VFX_FirePropertySkill_Hit.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\General\Hit\Property\VFX_IcePropertySkill_Hit.prefab
+      size: 592681
+      name: VFX_IcePropertySkill_Hit.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\General\Hit\Property\VFX_WindPropertySkill_Hit.prefab
+      size: 474114
+      name: VFX_WindPropertySkill_Hit.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\General\Status\VFX_Dot_Burn.prefab
+      size: 474130
+      name: VFX_Dot_Burn.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\General\Status\VFX_Dot_IceErosion.prefab
       size: 467848
       name: VFX_Dot_IceErosion.prefab
@@ -400,12 +412,30 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\VFX\General\Status\VFX_Shield.prefab
       size: 350822
       name: VFX_Shield.prefab
-    - assetPath: Assets\Editor\ArtRes\VFX\Monster\VFX_MonsterAttackSkill.prefab
-      size: 354910
-      name: VFX_MonsterAttackSkill.prefab
-    - assetPath: Assets\Editor\ArtRes\VFX\Monster\Boss\VFX_MonsterDead.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\Monster\VFX_MonsterDead.prefab
       size: 235605
       name: VFX_MonsterDead.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\Monster\VFX_MonsterEnterBattle.prefab
+      size: 471161
+      name: VFX_MonsterEnterBattle.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\Monster\AbyssalMage\VFX_AbyssalMage_Pose.prefab
+      size: 469486
+      name: VFX_AbyssalMage_Pose.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\Monster\AbyssalMage\Skill\01\VFX_AbyssGiftSkillProjectile.prefab
+      size: 468719
+      name: VFX_AbyssGiftSkillProjectile.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\Monster\AbyssalMage\Skill\01\VFX_FrostfallSkillProjectile.prefab
+      size: 830377
+      name: VFX_FrostfallSkillProjectile.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\Monster\AbyssalMage\Skill\02\VFX_AbyssLockSkillProjectile.prefab
+      size: 125907
+      name: VFX_AbyssLockSkillProjectile.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\Monster\AbyssalMage\Skill\02\VFX_AshfallSkillProjectile.prefab
+      size: 1305609
+      name: VFX_AshfallSkillProjectile.prefab
+    - assetPath: Assets\Editor\ArtRes\VFX\Monster\SlimeAndTurtleShell\VFX_MonsterAttackSkill.prefab
+      size: 354910
+      name: VFX_MonsterAttackSkill.prefab
     - assetPath: Assets\Editor\ArtRes\VFX\Role\Priest\VFX_Priest_BattleSkill.prefab
       size: 708971
       name: VFX_Priest_BattleSkill.prefab

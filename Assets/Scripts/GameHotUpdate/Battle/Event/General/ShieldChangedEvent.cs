@@ -29,12 +29,6 @@ namespace GameHotUpdate.Battle.Event.General
         public int DeltaShield { get; }
 
         /// <summary>
-        /// 护盾参考值
-        /// 用于护盾相关计算的基准值，默认值为10000
-        /// </summary>
-        public int ReferenceShield => 10000;
-
-        /// <summary>
         /// 护盾变更事件构造函数
         /// </summary>
         /// <param name="context">战斗上下文，包含战斗场景的核心信息</param>

@@ -3,6 +3,7 @@ using Core.AssetBundles.Management;
 using Core.Config;
 using Core.Service;
 using Game.Objects;
+using GameHotUpdate.Battle.Object.Monster.AbyssalMage;
 using GameHotUpdate.Battle.Object.Monster.Slime;
 using GameHotUpdate.Battle.Object.Monster.TurtleShell;
 using UnityEngine;
@@ -17,6 +18,7 @@ namespace GameHotUpdate.Battle.Object
             {
                 1 => await ServiceLocator.Get<IObjectBuilder>().GetHotfixObject<Slime>(EAssetBundleType.Prefab, ResKeyCollection.Prefab_Slime, parent, stay),
                 2 => await ServiceLocator.Get<IObjectBuilder>().GetHotfixObject<TurtleShell>(EAssetBundleType.Prefab, ResKeyCollection.Prefab_TurtleShell, parent, stay),
+                4 => await ServiceLocator.Get<IObjectBuilder>().GetHotfixObject<AbyssalMage>(EAssetBundleType.Prefab, ResKeyCollection.Prefab_AbyssalMage, parent, stay),
                 _ => null
             };
         }

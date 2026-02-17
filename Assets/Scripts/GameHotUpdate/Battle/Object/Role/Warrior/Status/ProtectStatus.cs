@@ -1,6 +1,7 @@
 using Game.Battle.Context;
 using Game.Battle.Objects;
 using Game.Battle.Status;
+using JetBrains.Annotations;
 
 namespace GameHotUpdate.Battle.Object.Role.Warrior.Status
 {
@@ -12,7 +13,8 @@ namespace GameHotUpdate.Battle.Object.Role.Warrior.Status
     {
         protected override void OnAdd()
         {
-
+            bonusData.DefBuildBonus += 20;
+            Owner.TakeSheild(150);
         }
 
         protected override void OnTurnStart(IBattleEntityObject owner, IBattleContext context)
@@ -22,7 +24,7 @@ namespace GameHotUpdate.Battle.Object.Role.Warrior.Status
 
         protected override void OnPineChanged()
         {
-            bonusData.DefBuildBonus += 20;
+
         }
 
         protected override void OnRemove()

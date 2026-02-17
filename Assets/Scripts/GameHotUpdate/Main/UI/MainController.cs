@@ -79,8 +79,8 @@ namespace GameHotUpdate.Main.UI
                             TotalTurnNumber = 1,
                             Waves = new List<List<int>>
                             {
-                                new(){1,2,1},
-                                new(){1,2,1},
+                                new(){1,4,1},
+                                // new(){1,4,1},
                             }
                         };
                         

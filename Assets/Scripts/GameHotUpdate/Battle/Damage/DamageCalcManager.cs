@@ -53,7 +53,6 @@ namespace GameHotUpdate.Battle.Damage
             if (_strategys.TryGetValue(damageType, out var strategy))
             {
                 strategy.CalcDamage(source, target, skillInfo, out damageResult);
-                source.Context.GetEventBus().TriggerEvent(new ApplyDamageEvent(source.Context, damageResult));
             }
             else
             {
@@ -95,8 +94,6 @@ namespace GameHotUpdate.Battle.Damage
                 // 转换成击破伤害计算策略
                 (strategy as BreakDamageStrategy).CalcBreakDamage(source, target, skillId, resilienceValue,
                     out var damageResult);
-                // 应用伤害事件
-                source.Context.GetEventBus().TriggerEvent(new ApplyDamageEvent(source.Context, damageResult));
                 target.TakeDamage(damageResult);
             }
             else
@@ -115,9 +112,6 @@ namespace GameHotUpdate.Battle.Damage
             {
                 // 转换成击破伤害计算策略
                 (strategy as DotDamageStrategy).CalcDotDamage(dotDamageCalcData, out var damageResult);
-                // 应用伤害事件
-                var context = dotDamageCalcData.source.Context;
-                context.GetEventBus().TriggerEvent(new ApplyDamageEvent(context, damageResult));
                 dotDamageCalcData.target.TakeDamage(damageResult);
             }
             else

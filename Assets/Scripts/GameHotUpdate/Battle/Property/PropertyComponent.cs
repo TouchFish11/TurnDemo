@@ -53,7 +53,7 @@ namespace GameHotUpdate.Battle.Property
                     // 更新当前血量
                     battleProperty.CurrentHp = newValue;
                     // 触发血量变更事件（通知事件总线）
-                    battleContext.GetEventBus().TriggerEvent(new HpChangedEvent(battleContext, newValue, battleProperty.MaxHp, BattleEntity));
+                    battleContext.GetEventBus().TriggerEvent(new HpChangedEvent(battleContext, battleProperty.CurrentHp, battleProperty.MaxHp, BattleEntity));
                     break;
                 case E_DynamicPropertyType.MaxHp:
                     // 更新最大血量

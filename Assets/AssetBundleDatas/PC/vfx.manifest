@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 1824996523
+CRC: 2822841485
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: a64ffa9d65c3760d887fdcc8a48d5a78
+    Hash: 32347e590562c04c950ad1cb2bd77494
   TypeTreeHash:
     serializedVersion: 2
-    Hash: f212d51d43111dbb9941751c4c1a4db0
+    Hash: 2fc459b96c9a6ad173b3aeeb29fd4668
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: a64ffa9d65c3760d887fdcc8a48d5a78
+    Hash: 32347e590562c04c950ad1cb2bd77494
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -18,11 +18,17 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 21
   Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
 - Class: 28
+  Script: {instanceID: 0}
+- Class: 33
   Script: {instanceID: 0}
 - Class: 43
   Script: {instanceID: 0}
 - Class: 48
+  Script: {instanceID: 0}
+- Class: 64
   Script: {instanceID: 0}
 - Class: 96
   Script: {instanceID: 0}
@@ -31,9 +37,13 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: 59c9d7ece60304a429efdc040fb18ef1, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: 7bc5bc73084c1a0468421fc203321398, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: 2d6b8671949109744acec73e933cba7c, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 50376b98351e9c94cb4ef939b242c1da, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: dfe8438f81bf6bc4e8b81e32378bada2, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 24ff21ed20404574db517537339130f6, type: 3}
 - Class: 114
@@ -47,9 +57,13 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: 097e2bd265ee1d84cb47df5abf741ea0, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: 67995d9ae3352a641994f080298e41f6, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: 20a28525f89e3cd42879d392e2ee731d, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 484b196ff77ffb5458ce087a5c8d9353, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 8be15cb454fbda44198d58266f6a0d9a, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 198
@@ -60,8 +74,9 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/Editor/ArtRes/VFX/Monster/Boss/VFX_MonsterDead.prefab
+- Assets/Editor/ArtRes/VFX/Monster/VFX_MonsterDead.prefab
 - Assets/Editor/ArtRes/VFX/Role/Wizard/VFX_WizardUltimateSkill.prefab
+- Assets/Editor/ArtRes/VFX/Monster/AbyssalMage/Skill/02/VFX_AbyssLockSkillProjectile.prefab
 - Assets/Editor/ArtRes/VFX/General/VFX_Environment_Rain.prefab
 - Assets/Editor/ArtRes/VFX/Role/Warrior/VFX_WarriorNormalSkill.prefab
 - Assets/Editor/ArtRes/VFX/Role/Warrior/VFX_NormalSkill_Wave.prefab
@@ -71,24 +86,33 @@ Assets:
 - Assets/Editor/ArtRes/VFX/Role/Wizard/VFX_WizardUltimatePose.prefab
 - Assets/Editor/ArtRes/VFX/General/Status/VFX_Shield.prefab
 - Assets/Editor/ArtRes/VFX/General/Hit/VFX_MonsterHit.prefab
+- Assets/Editor/ArtRes/VFX/General/Hit/Property/VFX_IcePropertySkill_Hit.prefab
 - Assets/Editor/ArtRes/VFX/General/Status/VFX_Heal.prefab
-- Assets/Editor/ArtRes/VFX/General/VFX_SupportSkill_02.prefab
 - Assets/Editor/ArtRes/VFX/Role/Priest/VFX_Priest_NormalSkill.prefab
 - Assets/Editor/ArtRes/VFX/Unknow/VFX_Unkow02.prefab
 - Assets/Editor/ArtRes/VFX/Role/Priest/VFX_Priest_UltiamteSkill.prefab
 - Assets/Editor/ArtRes/VFX/Unknow/VFX_Dot_Blue01.prefab
+- Assets/Editor/ArtRes/VFX/Monster/AbyssalMage/Skill/02/VFX_AshfallSkillProjectile.prefab
 - Assets/Editor/ArtRes/VFX/General/VFX_SupportSkill_01.prefab
 - Assets/Editor/ArtRes/VFX/Role/Warrior/VFX_WarriorBattleSkill.prefab
-- Assets/Editor/ArtRes/VFX/Monster/VFX_MonsterAttackSkill.prefab
+- Assets/Editor/ArtRes/VFX/Monster/SlimeAndTurtleShell/VFX_MonsterAttackSkill.prefab
+- Assets/Editor/ArtRes/VFX/General/VFX_SupportSkill_02.prefab
 - Assets/Editor/ArtRes/VFX/Role/Wizard/VFX_WizardNormalSkill.prefab
 - Assets/Editor/ArtRes/VFX/Role/Priest/VFX_Priest_UltimatePose.prefab
 - Assets/Editor/ArtRes/VFX/General/Status/VFX_Dot_IceErosion.prefab
+- Assets/Editor/ArtRes/VFX/General/Hit/Property/VFX_WindPropertySkill_Hit.prefab
 - Assets/Editor/ArtRes/VFX/Role/Warrior/VFX_BlueHit.prefab
+- Assets/Editor/ArtRes/VFX/Monster/VFX_MonsterEnterBattle.prefab
 - Assets/Editor/ArtRes/VFX/Role/Priest/VFX_Priest_BattleSkill.prefab
+- Assets/Editor/ArtRes/VFX/General/Status/VFX_Dot_Burn.prefab
 - Assets/Editor/ArtRes/VFX/Role/Wizard/VFX_WizardBattleSkill.prefab
 - Assets/Editor/ArtRes/VFX/Role/Warrior/VFX_WarriorUltimatePose.prefab
 - Assets/Editor/ArtRes/VFX/Role/Warrior/VFX_WarriorUltimateSkill.prefab
+- Assets/Editor/ArtRes/VFX/Monster/AbyssalMage/Skill/01/VFX_AbyssGiftSkillProjectile.prefab
 - Assets/Editor/ArtRes/VFX/Unknow/VFX_Dot_Green01.prefab
+- Assets/Editor/ArtRes/VFX/General/Hit/Property/VFX_FirePropertySkill_Hit.prefab
+- Assets/Editor/ArtRes/VFX/Monster/AbyssalMage/VFX_AbyssalMage_Pose.prefab
 - Assets/Editor/ArtRes/VFX/Unknow/VFX_Unknow03.prefab
+- Assets/Editor/ArtRes/VFX/Monster/AbyssalMage/Skill/01/VFX_FrostfallSkillProjectile.prefab
 - Assets/Editor/ArtRes/VFX/General/Status/VFX_Dot_Weather.prefab
 Dependencies: []

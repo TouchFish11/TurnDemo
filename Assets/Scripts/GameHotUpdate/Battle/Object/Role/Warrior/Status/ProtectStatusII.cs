@@ -12,7 +12,7 @@ namespace GameHotUpdate.Battle.Object.Role.Warrior.Status
     {
         protected override void OnAdd()
         {
-
+            Owner.TakeSheild(250);
         }
 
         protected override void OnTurnStart(IBattleEntityObject owner, IBattleContext context)

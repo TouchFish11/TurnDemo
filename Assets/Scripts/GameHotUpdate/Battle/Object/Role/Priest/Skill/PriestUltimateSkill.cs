@@ -56,7 +56,7 @@ namespace GameHotUpdate.Battle.Object.Role.Priest.Skill
 
             CreateVFX();
             
-            // 等待动画播放到90%且特效已结束，确保技能流程完成
+            // 等待特效已结束，确保技能流程完成
             yield return new WaitUntil(() => !vFXInfo.IsAlive);
         }
 

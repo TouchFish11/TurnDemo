@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Reflection;
 using Core.AssetBundles.Management;
 using Core.AssetBundles.Update;
@@ -9,6 +10,7 @@ using Core.Service;
 using Core.Singleton;
 using Core.Utility;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace Game.Main
 {
@@ -83,6 +85,48 @@ namespace Game.Main
             catch (Exception e)
             {
                 LogManager.LogError($"{nameof(MainProxy)}.{nameof(Start)}: {e.Message}");
+            }
+        }
+        
+        public static void RestartGame()
+        {
+            if (Application.isEditor)
+            {
+                Debug.Log("Restart is disabled in Editor.");
+                return;
+            }
+
+            try
+            {
+                string exePath = Process.GetCurrentProcess().MainModule?.FileName;
+                if (string.IsNullOrEmpty(exePath)) return;
+
+                // 防止无限重启
+                if (Environment.CommandLine.Contains("--noRestart"))
+                    return;
+
+                // 构造新参数（保留原参数 + 添加防重入标记）
+                string originalArgs = Environment.CommandLine;
+                string argsWithoutExe = originalArgs
+                    .Substring(originalArgs.IndexOf('"', 1) + 1) // 跳过第一个引号包围的 exe 路径
+                    .Trim();
+                string newArgs = argsWithoutExe + " --noRestart";
+
+                var startInfo = new ProcessStartInfo
+                {
+                    FileName = exePath,
+                    Arguments = newArgs,
+                    UseShellExecute = true,      // 关键！
+                    CreateNoWindow = false
+                };
+
+                Process.Start(startInfo);
+                Application.Quit();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Failed to restart: {e}");
+                Application.Quit(); // 至少退出
             }
         }
     }

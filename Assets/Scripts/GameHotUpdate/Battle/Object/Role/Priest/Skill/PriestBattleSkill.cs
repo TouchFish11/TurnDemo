@@ -1,5 +1,6 @@
 using System.Collections;
 using Core.Config;
+using Core.Pool;
 using Core.Service;
 using Game.Animation;
 using Game.Battle.Context;
@@ -42,7 +43,7 @@ namespace GameHotUpdate.Battle.Object.Role.Priest.Skill
             // 初始化投射物位置（以主目标的位置为基准，旋转为默认）
             projectileTrans = new ProjectileTrans(MainTarget.GameObject.transform.position, Quaternion.identity);
             // 初始化特效信息容器（用于记录特效的生命周期等状态）
-            vFXInfo = new VFXInfo();
+            vFXInfo = ServiceLocator.Get<IPoolManager>().GetData<VFXInfo>();
         }
 
         /// <summary>

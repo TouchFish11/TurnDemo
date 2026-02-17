@@ -104,7 +104,7 @@ namespace GameHotUpdate.Battle.Object
             var propertyComponent = this.GetComponent<PropertyComponent>();
             var currentShield = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentShield);
             propertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentShield, currentShield + shieldAmount);
-            // 触发应用治疗事件
+            // 触发应用护盾件
             Context.GetEventBus().TriggerEvent(new ApplyShieldEvent(Context, this, shieldAmount));
         }
 

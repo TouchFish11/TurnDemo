@@ -3,6 +3,7 @@ using Game.Animation;
 using Game.Battle.Damage;
 using Game.Battle.Enum;
 using GameHotUpdate.Animation;
+using GameHotUpdate.Battle.Event.General;
 using GameHotUpdate.Battle.Property;
 
 namespace GameHotUpdate.Battle.ResponsibilityChain.DamageChain
@@ -23,9 +24,13 @@ namespace GameHotUpdate.Battle.ResponsibilityChain.DamageChain
             }
             
             var target = request.Target;
+
+            var context = request.Target.Context;
+            // 执行应用伤害事件，显示伤害文本，显示护盾处理后的最终伤害
+            context.GetEventBus().TriggerEvent(new ApplyDamageEvent(context, request));
+            
             // 播放受击动画
             target.GetComponent<BattleAnimationComponent>().SetAnimationState(E_AnimationType.Hit);
-            
             // 获取属性组件，处理血量扣减
             var propertyComponent = target.GetComponent<PropertyComponent>();
             // 获取当前血量

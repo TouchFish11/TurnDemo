@@ -66,16 +66,16 @@ namespace GameHotUpdate.Battle.UI.Base
         private readonly BattleController  _controller;
 
         /// <summary>
-        /// 伤害文本X轴偏移范围（随机）
+        /// 文本X轴偏移范围（随机）
         /// 控制伤害飘字的横向显示位置
         /// </summary>
-        private readonly Vector2 damageTextXOffsetRange = new(-0.5f, 0.5f);
+        private readonly Vector2 textXOffsetRange = new(-0.5f, 0.5f);
 
         /// <summary>
-        /// 伤害文本Y轴偏移范围（随机）
+        /// 文本Y轴偏移范围（随机）
         /// 控制伤害飘字的纵向显示位置
         /// </summary>
-        private readonly Vector2 damageTextYOffsetRange = new(0.4f, 0.6f);
+        private readonly Vector2 textYOffsetRange = new(0.45f, 0.55f);
 
         /// <summary>
         /// 通用等待协程对象（0.5秒）
@@ -182,12 +182,19 @@ namespace GameHotUpdate.Battle.UI.Base
             // 从资源包异步加载伤害文本UI预制体
             var damageTextUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<DamageTextUI>(EAssetBundleType.UI, ResKeyCollection.DamageTextUI, null);
             // 获取伤害文本的显示偏移位置（随机偏移）
-            var dmgTextOffset = GetDamageTextUIPos(damageResult.Target, damageTextXOffsetRange, damageTextYOffsetRange);
-            
+            var dmgTextOffset = GetDamageTextUIPos(damageResult.Target, textXOffsetRange, textYOffsetRange);
+
+            dmgTextOffset = damageResult.Target switch
+            {
+                PlayerObject => new Vector3(0, dmgTextOffset.y, dmgTextOffset.z),
+                _ => dmgTextOffset
+            };
+
             // 将世界坐标转换为UI本地坐标并设置文本位置
             if (UIUtility.WorldToLocalPointInRectangle(
                     ServiceLocator.Get<IBattleCameraManager>().CurrentActiveCamera, 
-                    UIManager.Instance.UICamera, _view.ViewObj.transform, 
+                    ServiceLocator.Get<IUIManager>().UICamera, 
+                    _view.ViewObj.transform, 
                     damageTextUI.gameObject, 
                     damageResult.Target.GameObject.transform.position + dmgTextOffset))
             {
@@ -207,21 +214,35 @@ namespace GameHotUpdate.Battle.UI.Base
         /// <param name="sheilAmount">护盾量</param>
         public async void ShowShieldText(IBattleEntityObject target, int sheilAmount)
         {
-            // 从资源包异步加载护盾文本UI预制体
-            var shieldTextUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<ShieldTextUI>(EAssetBundleType.UI, ResKeyCollection.DamageTextUI, null);
-            // 获取护盾文本的显示偏移位置（随机偏移）
-            var dmgTextOffset = GetDamageTextUIPos(target, damageTextXOffsetRange, damageTextYOffsetRange);
-            
-            // 将世界坐标转换为UI本地坐标并设置文本位置
-            if (UIUtility.WorldToLocalPointInRectangle(
-                    ServiceLocator.Get<IBattleCameraManager>().CurrentActiveCamera, 
-                    UIManager.Instance.UICamera, 
-                    _view.ViewObj.transform, 
-                    shieldTextUI.gameObject, 
-                    target.GameObject.transform.position + dmgTextOffset))
+            try
             {
-                // 初始化护盾文本
-                shieldTextUI.InitshieldText(sheilAmount);
+                // 从资源包异步加载护盾文本UI预制体
+                var shieldTextUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<ShieldTextUI>(EAssetBundleType.UI, ResKeyCollection.ShieldTextUI, null);
+                // 获取护盾文本的显示偏移位置（随机偏移）
+                var dmgTextOffset = GetDamageTextUIPos(target, textXOffsetRange, textYOffsetRange);
+            
+                // 角色创建护盾文本，x不偏移，避免随机到摄像机外，无法显示
+                dmgTextOffset = target switch
+                {
+                    PlayerObject => new Vector3(0, dmgTextOffset.y, dmgTextOffset.z),
+                    _ => dmgTextOffset
+                };
+                
+                // 将世界坐标转换为UI本地坐标并设置文本位置
+                if (UIUtility.WorldToLocalPointInRectangle(
+                        ServiceLocator.Get<IBattleCameraManager>().CurrentActiveCamera, 
+                        ServiceLocator.Get<IUIManager>().UICamera, 
+                        _view.ViewObj.transform, 
+                        shieldTextUI.gameObject, 
+                        target.SubGameObject.transform.position + dmgTextOffset))
+                {
+                    // 初始化护盾文本
+                    shieldTextUI.InitshieldText(sheilAmount);
+                }
+            }
+            catch (Exception e)
+            {
+                LogManager.LogError($"{nameof(BattleUIManager)}.{nameof(ShowShieldText)}：{e.Message}");
             }
         }
 
@@ -236,12 +257,19 @@ namespace GameHotUpdate.Battle.UI.Base
             // 从资源包异步加载治疗文本UI预制体
             var healTextUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<HealTextUI>(EAssetBundleType.UI, ResKeyCollection.HealTextUI, null);
             // 获取治疗文本的显示偏移位置（随机偏移）
-            var dmgTextOffset = GetDamageTextUIPos(target, damageTextXOffsetRange, damageTextYOffsetRange);
+            var dmgTextOffset = GetDamageTextUIPos(target, textXOffsetRange, textYOffsetRange);
+            
+            // 角色创建治疗文本，x不偏移，避免随机到摄像机外，无法显示
+            dmgTextOffset = target switch
+            {
+                PlayerObject => new Vector3(0, dmgTextOffset.y, dmgTextOffset.z),
+                _ => dmgTextOffset
+            };
             
             // 将世界坐标转换为UI本地坐标并设置文本位置
             if (UIUtility.WorldToLocalPointInRectangle(
                     ServiceLocator.Get<IBattleCameraManager>().CurrentActiveCamera, 
-                    UIManager.Instance.UICamera, 
+                    ServiceLocator.Get<IUIManager>().UICamera, 
                     _view.ViewObj.transform, 
                     healTextUI.gameObject, 
                     target.GameObject.transform.position + dmgTextOffset))

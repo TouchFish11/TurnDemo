@@ -56,7 +56,7 @@ namespace GameHotUpdate.Battle.UI.FloatText
             else if(shieldAmount < 0)
             {
                 // 设置护盾数值文本内容（转为字符串）
-                txtShieldNum.text = $"-{shieldAmount}";
+                txtShieldNum.text = $"{shieldAmount}";
             }
         }
         

@@ -61,13 +61,17 @@ namespace GameHotUpdate.Battle.Object
         public override void ExecuteAction()
         {
             base.ExecuteAction();
-            // 随机从技能列表中选择一个技能ID
-            var skillIds = this.GetComponent<SkillComponent>().GetSkillIds();
             // TODO：可以封装随机选择的策略类，用于玩家/怪物AI
-            var skillId = skillIds[Random.Range(0, skillIds.Count)];
+            var skillId = SelectSkill();
             // 释放选中的技能
             CastSkill(skillId);
         }
+
+        /// <summary>
+        /// 选择技能
+        /// </summary>
+        /// <returns></returns>
+        protected abstract int SelectSkill();
 
         public override void CastSkill(int skillId)
         {
