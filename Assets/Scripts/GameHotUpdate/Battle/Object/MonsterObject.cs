@@ -1,5 +1,4 @@
 using System.Collections;
-using Core.Config;
 using Core.DataPersistence.Binary;
 using Core.Reflection;
 using Core.Service;
@@ -15,6 +14,7 @@ using GameHotUpdate.Battle.Event.Turn;
 using GameHotUpdate.Battle.Event.UI;
 using GameHotUpdate.Battle.ResponsibilityChain.DamageChain;
 using GameHotUpdate.Battle.Toughness;
+using GameHotUpdate.Config;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Object
@@ -71,7 +71,7 @@ namespace GameHotUpdate.Battle.Object
         /// 选择技能
         /// </summary>
         /// <returns></returns>
-        protected abstract int SelectSkill();
+        public abstract int SelectSkill();
 
         public override void CastSkill(int skillId)
         {

@@ -1,4 +1,3 @@
-using Core.Config;
 using Core.Pool;
 using Core.Reflection;
 using Core.Service;
@@ -7,6 +6,7 @@ using Game.Battle.Status;
 using Game.VFX;
 using GameHotUpdate.Battle.Projectile;
 using GameHotUpdate.Battle.Status;
+using GameHotUpdate.Config;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Object.Monster.AbyssalMage.Projectile
@@ -58,10 +58,10 @@ namespace GameHotUpdate.Battle.Object.Monster.AbyssalMage.Projectile
             }
         }
 
-        protected override void HandleOtherOnTrigger()
+        protected override void HandleTiming()
         {
             // 计时器计时
-            ServiceLocator.Get<ITimerManager>().CreateTimer(false, 850, () =>
+            ServiceLocator.Get<ITimerManager>().CreateTimer(false, 1020, () =>
             {
                 vFXInfo.IsStop = true;
             });

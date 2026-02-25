@@ -1,5 +1,5 @@
 using System.Collections;
-using Core.Config;
+using Core.Pool;
 using Core.Service;
 using Game.Animation;
 using Game.Battle.Context;
@@ -8,6 +8,7 @@ using Game.Battle.Status;
 using Game.VFX;
 using GameHotUpdate.Animation;
 using GameHotUpdate.Battle.Skill.Base;
+using GameHotUpdate.Config;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Object.Role.Priest.Skill
@@ -41,7 +42,7 @@ namespace GameHotUpdate.Battle.Object.Role.Priest.Skill
             // 初始化投射物变换信息（位置为目标物体位置，旋转为默认）
             projectileTrans = new ProjectileTrans(MainTarget.GameObject.transform.position, Quaternion.identity);
             // 初始化特效信息对象
-            vFXInfo = new VFXInfo();
+            vFXInfo = ServiceLocator.Get<IPoolManager>().GetData<VFXInfo>();
         }
 
         /// <summary>

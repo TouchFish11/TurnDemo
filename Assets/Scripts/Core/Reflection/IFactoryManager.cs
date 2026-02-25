@@ -9,7 +9,7 @@ namespace Core.Reflection
         /// 初始化框架级工厂
         /// 通过反射创建所有工厂类型
         /// </summary>
-        void InitFactorys();
+        void InitHotFactorys();
 
         /// <summary>
         /// 获取工厂
@@ -18,5 +18,10 @@ namespace Core.Reflection
         /// <typeparam name="TFactory">继承具体接口类型</typeparam>
         /// <returns></returns>
         TISubFactory GetFactory<TISubFactory, TFactory>() where TISubFactory : class, IFactory where TFactory : TISubFactory;
+
+        /// <summary>
+        /// 初始化框架工厂
+        /// </summary>
+        void InitCoreFactorys();
     }
 }

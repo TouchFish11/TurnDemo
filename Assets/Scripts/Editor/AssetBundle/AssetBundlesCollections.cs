@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Core.Singleton;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Editor.AssetBundle
 {
@@ -49,16 +50,22 @@ namespace Editor.AssetBundle
             public string assetPath;
 
             /// <summary>
-            /// 资源的大小（单位：字节）
+            /// 资源的大小
             /// </summary>
             [Tooltip("资源大小（单位：字节）")]
             public long size;
 
             /// <summary>
-            /// 资源的名称（便于直观识别，如：Button）
+            /// 资源的名称
             /// </summary>
             [Tooltip("资源名称")]
             public string name;
+            
+            /// <summary>
+            /// 资源唯一标识
+            /// </summary>
+            [Tooltip("Hash字符串")]
+            public string hash;
 
             /// <summary>
             /// 构造函数：初始化资源的核心信息
@@ -66,16 +73,17 @@ namespace Editor.AssetBundle
             /// <param name="assetPath">资源路径</param>
             /// <param name="assetBundleSize">资源大小（字节）</param>
             /// <param name="name">资源名称</param>
-            public AssetInfo(string assetPath, long assetBundleSize, string name)
+            public AssetInfo(string assetPath, long assetBundleSize, string name, string hash)
             {
                 this.assetPath = assetPath;
                 this.size = assetBundleSize;
                 this.name = name;
+                this.hash = hash;
             }
         }
 
         // 所有AssetBundle信息的总列表，存储项目中所有AB包的信息
-        public List<AssetBundleInfo> assetBundleInfos = new List<AssetBundleInfo>();
+        public List<AssetBundleInfo> assetBundleInfos = new();
 
         /// <summary>
         /// 添加资源信息到指定AB包的信息列表中

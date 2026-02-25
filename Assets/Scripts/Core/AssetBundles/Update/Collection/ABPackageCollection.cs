@@ -1,3 +1,5 @@
+using Core.Collection;
+using Core.Log;
 using UnityEngine;
 
 namespace Core.AssetBundles.Update.Collection
@@ -6,7 +8,6 @@ namespace Core.AssetBundles.Update.Collection
     /// AssetBundle包集合类
     /// 继承自泛型集合，键为AB包标识字符串，值为AB包信息对象
     /// </summary>
-    //[Serializable]
     public class ABPackageCollection : Collection<string, ABPackageInfo>
     {
         /// <summary>
@@ -14,9 +15,9 @@ namespace Core.AssetBundles.Update.Collection
         /// 对比远程最新AB包集合与本地缓存的AB包信息，得出待下载的总数据量
         /// </summary>
         /// <param name="remoteCollection">远程服务器端的最新AB包集合</param>
-        /// <param name="localCacheCollection">本地已缓存的AB包下载记录集合</param>
+        /// <param name="waitDownloadCollection"></param>
         /// <returns>需要下载的总字节数（若无需下载则返回0）</returns>
-        public static long GetTotalDownLoadBytes(ABPackageCollection remoteCollection, AbPackageCacheCollection localCacheCollection)
+        public static long GetTotalDownLoadBytes(ABPackageCollection remoteCollection, AbPackageCacheCollection waitDownloadCollection)
         {
             // 初始化待下载总字节数为0
             long totalDownLoadBytes = 0;
@@ -26,16 +27,11 @@ namespace Core.AssetBundles.Update.Collection
                 // 获取当前遍历的远程AB包信息
                 var packageInfo = remoteCollection[pair.Key];
                 // 检查本地是否存在该AB包的缓存记录
-                if (localCacheCollection.TryGetValue(packageInfo.PackageName, out var cacheInfo))
+                if (waitDownloadCollection.TryGetValue(packageInfo.Name, out var waiDownloadInfo))
                 {
                     // 本地有缓存：计算需补充下载的字节数（确保数值非负）
                     // 若本地已下载字节数≥远程包大小，则补充下载量为0
-                    totalDownLoadBytes += (long)Mathf.Max(0, packageInfo.PackageSize - cacheInfo.DownloadedBytes);
-                }
-                else
-                {
-                    // 本地无缓存：需要下载该AB包的完整大小
-                    totalDownLoadBytes += packageInfo.PackageSize;
+                    totalDownLoadBytes += (long)Mathf.Max(0, packageInfo.Size - waiDownloadInfo.DownloadedBytes);
                 }
             }
 

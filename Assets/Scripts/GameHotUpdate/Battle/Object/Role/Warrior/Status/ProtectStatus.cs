@@ -1,7 +1,6 @@
 using Game.Battle.Context;
 using Game.Battle.Objects;
 using Game.Battle.Status;
-using JetBrains.Annotations;
 
 namespace GameHotUpdate.Battle.Object.Role.Warrior.Status
 {

@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using Core.AssetBundles.Management;
-using Core.Config;
 using Core.Loader.UI;
 using Core.Mono;
 using Core.Pool;
@@ -11,8 +9,10 @@ using Game.Battle.Enum;
 using Game.Battle.Objects;
 using Game.Battle.Toughness;
 using GameHotUpdate.Battle.Event.General;
+using GameHotUpdate.Battle.Object;
 using GameHotUpdate.Battle.Property;
 using GameHotUpdate.Cameras;
+using GameHotUpdate.Config;
 using GameHotUpdate.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
@@ -50,7 +50,7 @@ namespace GameHotUpdate.Battle.UI.MonsterStateUI
         // 上一帧的位置（暂未使用，预留用于位置平滑处理）
         private Vector3 lastPos;
         // 血条UI的Y轴偏移量（根据怪物配置调整血条在怪物上方的显示位置）
-        private const float _bloodUiYOffset = 1.75f;
+        private float _bloodUiYOffset;
 
         /// <summary>
         /// 初始化（Awake）：注册战斗事件监听
@@ -94,7 +94,8 @@ namespace GameHotUpdate.Battle.UI.MonsterStateUI
             // 绑定战斗实体和UI父节点
             BattleEntity = battleEntity;
             this.monsterStateArea = monsterStateArea;
-
+            _bloodUiYOffset = ((MonsterObject)battleEntity).MonsterInfo.f_statesUiY0ffset;
+            
             // 获取怪物属性组件，初始化血量显示
             var propertyComponent = BattleEntity.GetComponent<PropertyComponent>();
             float currentHp = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentHp);
@@ -111,7 +112,7 @@ namespace GameHotUpdate.Battle.UI.MonsterStateUI
             foreach (var elementType in toughnessComponent.WeakPropertys)
             {
                 // 从资源包加载弱点UI预制体，并挂载到弱点容器下
-                var weaknessIconObj = await ServiceLocator.Get<IUiLoader>().GetUIGameobject(EAssetBundleType.UI, ResKeyCollection.WeaknessUI, WeaknessBar);
+                var weaknessIconObj = await ServiceLocator.Get<IUiLoader>().GetUIGameobject(AbKeyCollection.Ui, ResKeyCollection.WeaknessUI, WeaknessBar);
                 var weaknessIcon = weaknessIconObj.GetComponent<Image>();
                 // 设置弱点图标颜色（根据元素类型转换为对应颜色）
                 weaknessIcon.color = ((int)elementType).ToElementTypeColor();

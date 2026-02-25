@@ -25,7 +25,7 @@ namespace GameHotUpdate.Battle.ResponsibilityChain.DamageChain
                 if (newFinalDmg > 0)
                 {
                     // 护盾为0
-                    propertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentEnergy, 0);
+                    propertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentShield, 0);
                     // 传递剩余伤害
                     var damageResult = new DamageResult
                     (

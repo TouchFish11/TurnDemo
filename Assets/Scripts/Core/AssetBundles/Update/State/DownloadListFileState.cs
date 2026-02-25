@@ -1,8 +1,11 @@
 using System.IO;
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Enum;
+using Core.AssetBundles.Update.Exception;
 using Core.Global;
-using Core.Log;
+using Core.Mono;
+using Core.Pool;
+using Core.Service;
 using Core.Utility;
 
 namespace Core.AssetBundles.Update.State
@@ -26,42 +29,44 @@ namespace Core.AssetBundles.Update.State
         /// 执行下载远程清单文件核心逻辑
         /// </summary>
         /// <returns>是否执行成功</returns>
-        public override async Task<bool> Execute()
+        public override async Task<UpdateResult> Execute()
         {
-            // 下载远程对比文件（清单文件）
-            IsSuceess = await DownloadCompareFile();
-
-            // 下载失败，终止更新
-            if (!IsSuceess)
+            try
             {
-                LogManager.LogError("远程对比文件下载失败");
-                FinishUpdate();
-                return IsSuceess;
-            }
+                await Task.Delay(1000);
+                
+                // 下载远程清单文件
+                await DownloadCompareFile();
 
-            // 解析远程清单文件内容
-            IsSuceess = await AnalyzeRemoteCompareFileInfo();
-            if (!IsSuceess)
+                // 解析远程清单文件内容
+                await AnalyzeRemoteCompareFileInfo();
+            }
+            catch (DownloadFailureException downloadFailureException)
             {
-                LogManager.LogError("AB远程对比文件解析失败");
-                FinishUpdate();
-                return IsSuceess;
+                return UpdateResult.CreateFailure("资源文件下载失败", downloadFailureException);
             }
-
-            // 切换状态到获取本地清单文件阶段
-            assetBundleUpdater.ChangeState(EUpdatePhase.GetLocalCompareFile);
-            return IsSuceess;
+            catch (FileNotFoundException fileNotFoundException)
+            {
+                return UpdateResult.CreateFailure("资源文件不存在", fileNotFoundException);
+            }
+            catch (System.Exception exception)
+            {
+                return UpdateResult.CreateFailure("更新失败，请重试",exception);
+            }
+            
+            return UpdateResult.CreateSuccess();
         }
 
         /// <summary>
-        /// 下载远程AssetBundle对比文件（清单文件）
+        /// 下载远程AssetBundle对比文件
         /// 支持配置重试次数，失败后重试
         /// </summary>
         /// <returns>是否下载成功</returns>
-        public async Task<bool> DownloadCompareFile()
+        public static async Task DownloadCompareFile()
         {
             // 创建清单文件下载请求器（无需MD5校验，清单文件本身由服务器保证正确性）
-            var aBWebRequester = new ABWebRequester(GlobalSettings.Instance.resServerIp, FileUtility.ListFileDefaultName, false, string.Empty, string.Empty);
+            var aBWebRequester = ServiceLocator.Get<IPoolManager>().
+                GetData<ABWebRequester>().Init(GlobalSettings.Instance.resServerIp, FileUtility.ListFileDefaultName, false, string.Empty, string.Empty);
             
             // 按配置的最大重试次数执行下载
             var maxRetry = GlobalSettings.Instance.reDownloadCompareFileMaxNum;
@@ -69,22 +74,18 @@ namespace Core.AssetBundles.Update.State
             {
                 var source = new TaskCompletionSource<bool>();
                 // 异步下载到临时清单文件路径
-                aBWebRequester.DownLoadAsync(PathUtility.GetAbLoadPath(FileUtility.TempListFileDefaultName), (isOver) =>
-                {
-                    IsSuceess = isOver;
-                    source.SetResult(IsSuceess);
-                });
-                await source.Task;
+                aBWebRequester.DownLoadAsync(PathUtility.GetAbLoadPath(FileUtility.TempListFileDefaultName), isOver => source.SetResult(isOver));
+                var isSuceess = await source.Task;
 
                 // 下载成功，终止重试
-                if (IsSuceess)
+                if (isSuceess)
                 {
-                    return true;
+                    return;
                 }
             }
 
             // 重试次数耗尽仍失败
-            return false;
+            throw new DownloadFailureException("服务器清单文件下载失败");
         }
 
         /// <summary>
@@ -92,19 +93,18 @@ namespace Core.AssetBundles.Update.State
         /// 将清单内容反序列化为远程包集合，供后续对比校验使用
         /// </summary>
         /// <returns>是否解析成功</returns>
-        public async Task<bool> AnalyzeRemoteCompareFileInfo()
+        public async Task AnalyzeRemoteCompareFileInfo()
         {
             var tempListPath = PathUtility.GetAbLoadPath(FileUtility.TempListFileDefaultName);
             // 检查临时清单文件是否存在
             if (!File.Exists(tempListPath))
             {
-                return false;
+                throw new FileNotFoundException($"未找到清单文件");
             }
             // 异步读取文件内容
             var listInfo = await File.ReadAllTextAsync(tempListPath);
             // 解析内容到远程包集合
             AnalyzeCompareFileInfo(listInfo, EFileAnalyzeType.Remote);
-            return true;
         }
 
         /// <summary>

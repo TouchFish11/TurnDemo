@@ -11,12 +11,14 @@ namespace Core.Loader.Sprite
         /// <summary>
         /// 异步加载Sprite
         /// </summary>
+        /// <param name="abName"></param>
         /// <param name="atlasName"></param>
         /// <param name="assetName"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        Task<UnityEngine.Sprite> LoadSpriteAsync(string atlasName, string assetName, CancellationToken token = default);
+        Task<UnityEngine.Sprite> LoadSpriteAsync(string abName, string atlasName, string assetName,
+            CancellationToken token = default);
 
-        void UnloadSpriteAsync(string atlasName, string spriteName, bool unloadAllLoadedObjects = false);
+        void UnloadSpriteAsync(string abName, string atlasName, string spriteName, bool unloadAllLoadedObjects = false);
     }
 }

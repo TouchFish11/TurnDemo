@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Core.AssetBundles.Update.Collection;
 using Core.DataPersistence.Json;
 using Core.Utility;
-using CustomEditor.ScriptGeneration;
+using Editor.Generation.Detail;
 using Editor.Menu;
 using Framework.Editor.Generation;
 using UnityEditor;
@@ -163,10 +163,10 @@ namespace Editor.AssetBundle
         private readonly string[] _filterSuffixes = { ".meta" };
 
         // AssetBundle类型枚举默认名称（用于生成枚举脚本）
-        private readonly string[] defaultNames = {
-            "UI", "Scene", "Music", "Camera", "Video", "GameConfig", "HotUpdate",
-            "SpriteAtlas"
-        };
+        // private readonly string[] defaultNames = {
+        //     "UI", "Scene", "Music", "Camera", "Video", "GameConfig", "HotUpdate",
+        //     "SpriteAtlas"
+        // };
 
         // AssetBundle类型枚举脚本生成路径
         private readonly string _filePath = $"{Application.dataPath}/Scripts/Core/AssetBundles/Management/EAssetBundleType.cs";
@@ -462,15 +462,16 @@ namespace Editor.AssetBundle
                     // 设置AB包名称（小写）
                     importer.assetBundleName = abName.ToLower();
                     // 将资源信息添加到配置文件
-                    AssetBundlesCollections.Instance.Add(importer.assetBundleName, new AssetBundlesCollections.AssetInfo(dataPath, fileInfo.Length, fileInfo.Name));
+                    // AssetBundlesCollections.Instance.Add(importer.assetBundleName, new AssetBundlesCollections.AssetInfo(dataPath, fileInfo.Length, fileInfo.Name, 
+                    //     gener));
                     ++index;
                 }
             }
 
             EditorUtility.ClearProgressBar();
             
-            // 生成AssetBundle类型枚举脚本
-            IScriptGenerator scriptGenerator = new EnumGenerator(_fileInfoDic.Keys, defaultNames, _filePath, "Core.AssetBundles.Management");
+            // 生成AssetBundle类型键脚本
+            IScriptGenerator scriptGenerator = new AbKeyCollectionClassGenerator(_fileInfoDic.Keys);
             scriptGenerator.GenerateScript();
 
             AssetDatabase.Refresh();
@@ -648,8 +649,8 @@ namespace Editor.AssetBundle
                 }
 
                 // 创建AB包信息对象（名称、大小、MD5）
-                var packageInfo = new ABPackageInfo(info.Name, info.Length, GetMD5(info.FullName));
-                collection.TryAdd(info.Name, packageInfo);
+                //var packageInfo = new ABPackageInfo(info.Name, info.Length, GetMD5(info.FullName));
+                //collection.TryAdd(info.Name, packageInfo);
             }
 
             // 保存为JSON文件
@@ -836,7 +837,7 @@ namespace Editor.AssetBundle
                                 var responseText = sr.ReadToEnd();
                                 if (!string.IsNullOrEmpty(responseText))
                                 {
-                                    Debug.Log($"服务器响应：{responseText}");
+                                    //Debug.Log($"服务器响应：{responseText}");
                                 }
                             }
 

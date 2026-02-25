@@ -1,4 +1,3 @@
-using Core.Config;
 using Core.Pool;
 using Core.Service;
 using Core.Time;
@@ -10,6 +9,7 @@ using Game.VFX;
 using GameHotUpdate.Battle.Damage.Data;
 using GameHotUpdate.Battle.Event.General;
 using GameHotUpdate.Battle.Event.UI;
+using GameHotUpdate.Config;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Object.Monster.AbyssalMage.Status

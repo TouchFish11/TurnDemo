@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Core.AssetBundles.Management;
-using Core.Config;
 using Core.DataPersistence.Binary;
 using Core.Loader.UI;
 using Core.Mono;
@@ -19,6 +17,7 @@ using GameHotUpdate.Battle.Event.UI;
 using GameHotUpdate.Battle.Object;
 using GameHotUpdate.Battle.Property;
 using GameHotUpdate.Battle.UI.Status;
+using GameHotUpdate.Config;
 using GameHotUpdate.Tasks;
 using TMPro;
 using UnityEngine;
@@ -46,7 +45,6 @@ namespace GameHotUpdate.Battle.UI.Role
 
         // 护盾相关变量
         private int currentShield;  // 当前护盾值
-        private int maxShield;      // 最大护盾值
 
         // 能量条透明度
         private const float nonFullAhpha = 0.35f;  // 能量未满时的透明度
@@ -125,7 +123,7 @@ namespace GameHotUpdate.Battle.UI.Role
             UpdateStatus();
 
             // 初始化护盾显示
-            currentShield = maxShield = 0;
+            currentShield = 0;
             UpdateShield(currentShield);
         }
 
@@ -238,7 +236,7 @@ namespace GameHotUpdate.Battle.UI.Role
             if (!hasStatus)
             {
                 // 创建新的状态图标
-                var statusGridUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<StatusGridUI>(EAssetBundleType.UI, ResKeyCollection.StatusGridUI, svBuffBox.content);
+                var statusGridUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<StatusGridUI>(AbKeyCollection.Ui, ResKeyCollection.StatusGridUI, svBuffBox.content);
                 statusGridUI.Init(status);
                 statusGridUIs.Add(statusGridUI);
             }
@@ -251,7 +249,7 @@ namespace GameHotUpdate.Battle.UI.Role
         private async void OnConflict_Lonel(IStatus newStatus)
         {
             // 直接创建新的状态图标（独占类型总是创建新的）
-            var statusGridUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<StatusGridUI>(EAssetBundleType.UI, ResKeyCollection.StatusGridUI, svBuffBox.content);
+            var statusGridUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<StatusGridUI>(AbKeyCollection.Ui, ResKeyCollection.StatusGridUI, svBuffBox.content);
             statusGridUI.Init(newStatus);
             statusGridUIs.Add(statusGridUI);
         }
@@ -272,7 +270,7 @@ namespace GameHotUpdate.Battle.UI.Role
             }
             
             // 创建新的状态图标
-            var statusGridUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<StatusGridUI>(EAssetBundleType.UI, ResKeyCollection.StatusGridUI, svBuffBox.content);
+            var statusGridUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<StatusGridUI>(AbKeyCollection.Ui, ResKeyCollection.StatusGridUI, svBuffBox.content);
             statusGridUI.Init(newStatus);
             statusGridUIs.Add(statusGridUI);
         }

@@ -1,12 +1,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Core.AssetBundles.Management;
-using Core.Config;
+using Core.Loader.Object;
 using Core.Loader.UI;
 using Core.Log;
 using Core.Service;
 using Core.Singleton;
-using Core.Tasks.Extensions;
 using Core.UI.MVC;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -28,6 +26,8 @@ namespace Core.UI
         private Transform _botLayer;
         // 系统层
         private Transform _systemLayer;
+        // ui加载器
+        private IUiLoader _uiLoader;
 
         private UIManager()
         {
@@ -37,36 +37,27 @@ namespace Core.UI
         /// <summary>
         /// 异步初始化UI管理器
         /// </summary>
+        /// <param name="defaultAbName"></param>
+        /// <param name="canvasName"></param>
+        /// <param name="uiCameraName"></param>
         /// <returns></returns>
-        public async Task InitUIManagerAsync()
+        public async Task InitUIManagerAsync(string defaultAbName, string canvasName, string uiCameraName)
         {
+            _uiLoader = ServiceLocator.Get<IUiLoader>();
 #if EDITOR_TEST_AB || !UNITY_EDITOR
-            // 加载画布资源
-            var uiAb = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(EAssetBundleType.UI);
-            var canvasObj = await uiAb.LoadAssetAsync<GameObject>(ResKeyCollection.Canvas).ToTask<GameObject>();
-            // 实例化画布对象
-            var canvasInstance = Object.Instantiate(canvasObj);
-            // 记录画布对象
-            Canvas = canvasInstance.GetComponent<Canvas>();
-            // 过场景不移除
-            Object.DontDestroyOnLoad(canvasInstance);
+            // 创建画布实例
+            Canvas = await ServiceLocator.Get<IUiLoader>().GetUIObject<Canvas>(defaultAbName, canvasName, null);
+            Object.DontDestroyOnLoad(Canvas.gameObject);
 
             // 获取对应层级对象位置
             _topLayer = Canvas.transform.Find("Top");
             _midLayer = Canvas.transform.Find("Mid");
             _botLayer = Canvas.transform.Find("Bot");   
             _systemLayer = Canvas.transform.Find("System");
-
-            var cameraAb = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(EAssetBundleType.Camera);
-            // 加载UI摄像机资源
-            var uiCameraObj = await cameraAb.LoadAssetAsync<GameObject>(ResKeyCollection.UICamera).ToTask<GameObject>();
-            LogManager.Log($"{uiCameraObj}");
-            // 实例化摄像机对象
-            var uiCameraInstance = Object.Instantiate(uiCameraObj);
-            // 记录UI摄像机
-            UICamera = uiCameraInstance.GetComponent<Camera>();
-            // 过场景不移除
-            Object.DontDestroyOnLoad(uiCameraInstance);
+            
+            // 创建UI相机实例
+            UICamera = await ServiceLocator.Get<IPrefabLoader>().GetObject<Camera>(defaultAbName, uiCameraName, null);
+            Object.DontDestroyOnLoad(UICamera.gameObject);
             // 设置UI摄像机
             Canvas.worldCamera = UICamera;
 #else
@@ -121,15 +112,16 @@ namespace Core.UI
         /// <typeparam name="TView">热更类型</typeparam>
         /// <typeparam name="TModel"></typeparam>
         /// <typeparam name="TController"></typeparam>
+        /// <param name="abName"></param>
         /// <param name="layer"></param>
         /// <param name="panelName"></param>
         /// <returns></returns>
-        public async Task<TController> CreateViewAsync<TView, TModel, TController>(E_UILayer layer, string panelName)
+        public async Task<TController> CreateViewAsync<TView, TModel, TController>(string abName, E_UILayer layer, string panelName)
             where TView : UIBehaviourBase, IuiView where TModel : IuiModel, new() where TController : class, IuiController, new()
         {
 #if EDITOR_TEST_AB || !UNITY_EDITOR
             // 获取面板
-            var view = await ServiceLocator.Get<IUiLoader>().GetUIObject<TView>(EAssetBundleType.UI, panelName, GetLayer(layer));
+            var view = await ServiceLocator.Get<IUiLoader>().GetUIObject<TView>(abName, panelName, GetLayer(layer));
             view.Show();
             var model = new TModel();
             var controller = new TController();
@@ -153,7 +145,7 @@ namespace Core.UI
             // 存在工厂
             var factory = iFactory as UIControllerFactory<TView, TModel, TController>;
             // 获取面板
-            var view = await ObjectBuilder.GetObject<TView>(EAssetBundleType.UI, assetName, GetLayer(layer));
+            var view = await ObjectBuilder.GetObject<TView>(AbKeyCollection.Ui, assetName, GetLayer(layer));
             // 调用显示函数
             view.Show();
             // 创建数据
@@ -178,7 +170,7 @@ namespace Core.UI
         /// 销毁界面
         /// 指定实例销毁
         /// </summary>
-        public void DestroyView(IuiController controller)
+        public void DestroyView(string abName, IuiController controller)
         {
             for (var i = _panels.Count - 1; i >= 0; i--)
             {
@@ -193,6 +185,8 @@ namespace Core.UI
                 _panels[i].UiController.Destroy();
                 // 销毁预设体
                 Object.Destroy(_panels[i].UiView.ViewObj);
+                // 释放该UI的资源
+                _uiLoader.RealseAsset(abName, _panels[i].UiView.ViewObj.name);
                 // 从缓存中移除
                 _panels.RemoveAt(i);
             }
@@ -246,6 +240,25 @@ namespace Core.UI
             }
             LogManager.LogError($"控制器未找到“{typeof(TController)}");
             return default;
+        }
+        
+        public void Clear(string abName)
+        {
+            // 销毁画布和摄像机
+            ServiceLocator.Get<IUiLoader>().RealseAsset(abName, Canvas.name);
+            Object.Destroy(Canvas.gameObject);
+            Canvas = null;
+            
+            ServiceLocator.Get<IPrefabLoader>().RealseAsset(abName, UICamera.name);
+            Object.Destroy(UICamera.gameObject);
+            UICamera = null;
+            
+            // 销毁所有界面
+            foreach (var panelInfo in _panels)
+            {
+                DestroyView(abName, panelInfo.UiController);
+            }
+            _panels.Clear();
         }
 
         /// <summary>

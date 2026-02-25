@@ -1,4 +1,6 @@
 
+using Core.Collection;
+
 namespace Core.AssetBundles.Update.Collection
 {
     /// <summary>

@@ -17,7 +17,7 @@ namespace Core.DataPersistence.Json
     {
         public static JsonSerializerSettings DefaultSettings => new()
         {
-            TypeNameHandling = TypeNameHandling.All,
+            TypeNameHandling = TypeNameHandling.None,
             NullValueHandling = NullValueHandling.Ignore,
             Formatting = Formatting.Indented,
             Converters = new List<JsonConverter>

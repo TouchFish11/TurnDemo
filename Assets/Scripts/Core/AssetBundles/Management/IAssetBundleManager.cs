@@ -15,22 +15,23 @@ namespace Core.AssetBundles.Management
         /// </summary>
         /// <returns>是否初始化成功</returns>
         Task Init();
-        
+
         /// <summary>
-        /// 异步卸载指定AB包
+        /// 卸载指定AB包
+        /// 减少引用计数
         /// </summary>
-        /// <param name="assetBundleType"></param>
+        /// <param name="abName"></param>
         /// <param name="unloadAllLoadedObjects"></param>
         /// <returns></returns>
-        void UnloadBundleAsync(EAssetBundleType assetBundleType, bool unloadAllLoadedObjects = false);
+        void UnloadBundle(string abName, bool unloadAllLoadedObjects = false);
 
         /// <summary>
         /// 异步加载指定AB包
         /// </summary>
-        /// <param name="assetBundleType"></param>
+        /// <param name="abName"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        Task<AssetBundle> LoadBundleAsync(EAssetBundleType assetBundleType, CancellationToken token = default);
+        Task<AssetBundle> LoadBundleAsync(string abName, CancellationToken token = default);
 
         /// <summary>
         /// 卸载所有已加载的AssetBundle
@@ -38,5 +39,17 @@ namespace Core.AssetBundles.Management
         /// </summary>
         /// <param name="unloadAllObjects"></param>
         Task UnloadAllBundles(bool unloadAllObjects);
+
+        /// <summary>
+        /// 初始化默认包
+        /// 更新使用
+        /// </summary>
+        /// <param name="defaultName"></param>
+        Task InitDefault(string defaultName);
+
+        /// <summary>
+        /// 强制卸载未使用的AB包
+        /// </summary>
+        Task ForceUnloadUnuseBundle();
     }
 }

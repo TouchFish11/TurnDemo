@@ -1,11 +1,11 @@
 using System.Collections;
-using Core.Config;
 using Core.Reflection;
 using Core.Service;
 using Game.Battle.Status;
 using Game.VFX;
 using GameHotUpdate.Battle.Projectile;
 using GameHotUpdate.Battle.Status;
+using GameHotUpdate.Config;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Object.Monster.Slime.Projectile
@@ -29,7 +29,8 @@ namespace GameHotUpdate.Battle.Object.Monster.Slime.Projectile
             AddStatusOnTrigger();
             CauseDamageOnTrigger();
             CreateVFXOnTrigger();
-            HandleOtherOnTrigger();
+            HandleTiming();
+            vFXInfo.IsStop = true;
         }
 
         protected override void AddStatusOnTrigger()
@@ -66,9 +67,9 @@ namespace GameHotUpdate.Battle.Object.Monster.Slime.Projectile
             }
         }
 
-        protected override void HandleOtherOnTrigger()
+        protected override void HandleTiming()
         {
-            vFXInfo.IsStop = true;
+            
         }
     }
 }

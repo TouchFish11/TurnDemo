@@ -1,5 +1,6 @@
 using System;
 using Core.AssetBundles.Update.Collection;
+using Core.Collection;
 using Game.Activity;
 
 namespace GameHotUpdate.Activity.Data

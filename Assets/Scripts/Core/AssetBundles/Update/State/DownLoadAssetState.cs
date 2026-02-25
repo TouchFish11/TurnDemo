@@ -1,14 +1,21 @@
 using System;
+using System.Collections;
 using System.IO;
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Collection;
 using Core.AssetBundles.Update.Enum;
+using Core.Extensions;
 using Core.Global;
 using Core.Log;
+using Core.Mono;
+using Core.Pool;
+using Core.Service;
 using Core.Utility;
 
 namespace Core.AssetBundles.Update.State
 {
+    using Time = UnityEngine.Time;
+
     /// <summary>
     /// 资源下载状态类
     /// 负责批量下载待更新的AssetBundle资源，支持并发下载、进度回调、下载速度更新
@@ -35,34 +42,31 @@ namespace Core.AssetBundles.Update.State
         /// 执行资源下载核心逻辑
         /// </summary>
         /// <returns>是否下载成功</returns>
-        public override async Task<bool> Execute()
+        public override async Task<UpdateResult> Execute()
         {
-            // 获取需要下载的总字节数
-            var downLoadTotalBytes = ABPackageCollection.GetTotalDownLoadBytes(
-                assetBundleUpdater.GetContext().RemotePackageCollection, 
-                assetBundleUpdater.GetContext().CachePackageCollection
-            );
-            // 初始化下载速度更新
-            UpdateSpeed();
-            // 异步下载资源，传入进度回调
-            IsSuceess = await DownLoadAssetsAsync((bytesPerFrame) =>
+            try
             {
-                // 更新下载进度（已下载字节数/总字节数）
-                assetBundleUpdater.GetContext().UpdateProgress(bytesPerFrame, downLoadTotalBytes);
-            });
-
-            // 标记下载结束
-            _isDownloading = false;
-            if (!IsSuceess)
-            {
-                LogManager.Log("资源下载未完成");
-                FinishUpdate(); // 终止更新流程
-                return IsSuceess;
+                // 获取需要下载的总字节数
+                var downLoadTotalBytes = (ulong)ABPackageCollection.GetTotalDownLoadBytes(
+                    assetBundleUpdater.GetContext().RemotePackageCollection,
+                    assetBundleUpdater.GetContext().WaitDownloadCollection
+                );
+                
+                // 初始化下载速度更新
+                ServiceLocator.Get<IMonoAdapter>().StartCoroutine(UpdateSpeed());
+                
+                // 异步下载资源，传入进度回调，更新下载进度
+                await DownLoadAssetsAsync(bytesPerFrame => assetBundleUpdater.GetContext().UpdateProgress(bytesPerFrame, downLoadTotalBytes));
+                
+                // 标记下载结束
+                _isDownloading = false;
             }
-
-            // 切换状态到资源完整性校验阶段
-            assetBundleUpdater.ChangeState(EUpdatePhase.CheckAssetsIntegrity);
-            return IsSuceess;
+            catch (System.Exception exception)
+            {
+                return UpdateResult.CreateFailure("资源下载未完成", exception);
+            }
+            
+            return UpdateResult.CreateSuccess();
         }
 
         /// <summary>
@@ -71,7 +75,7 @@ namespace Core.AssetBundles.Update.State
         /// </summary>
         /// <param name="proCallBack">下载进度回调（参数：本次帧下载的字节数）</param>
         /// <returns>是否全部下载成功</returns>
-        public async Task<bool> DownLoadAssetsAsync(Action<long> proCallBack)
+        public async Task DownLoadAssetsAsync(Action<ulong> proCallBack)
         {
             // 获取资源服务器IP
             var serverIp = GlobalSettings.Instance.resServerIp;
@@ -82,8 +86,9 @@ namespace Core.AssetBundles.Update.State
             foreach (var pair in waitDownloadCollection)
             {
                 var cacheInfo = waitDownloadCollection[pair.Key];
-                // 创建AB包下载请求器（支持断点续传、MD5校验）
-                var abWebRequester = new ABWebRequester(serverIp, cacheInfo.AbName, true, cacheInfo.AbName, cacheInfo.Md5);
+                // 创建AB包下载请求器
+                var abWebRequester = ServiceLocator.Get<IPoolManager>().GetData<ABWebRequester>();
+                abWebRequester.Init(serverIp, cacheInfo.AbName, true, cacheInfo.AbName, cacheInfo.Md5);
                 // 绑定下载进度回调
                 abWebRequester.OnDownloadProgress += proCallBack;
                 // 将请求器加入待下载队列
@@ -96,13 +101,12 @@ namespace Core.AssetBundles.Update.State
 
             /*
              * 下载循环逻辑：
-             * 1. 未暂停下载且存在待下载/正在下载的请求时，持续执行
-             * 2. 控制并发数，待下载队列有请求且并发数未达上限时，启动新下载
-             * 3. 处理下载失败的请求，更新失败队列
+             * 未暂停下载且存在待下载/正在下载的请求时，持续执行
+             * 控制并发数，待下载队列有请求且并发数未达上限时，启动新下载
+             * 处理下载失败的请求，更新失败队列
              */
             while (!context.IsPauseDownload && 
-                   (context.WaitListCount > 0 || context.LoadListCount > 0 ||
-                   !(context.WaitListCount == 0 && context.LoadListCount == 0 && context.FailListCount >= 0)))
+                   (context.WaitListCount > 0 || context.LoadListCount > 0 || !(context.WaitListCount == 0 && context.LoadListCount == 0 && context.FailListCount >= 0)))
             {
                 // 启动新的下载请求（控制并发数）
                 while (context.LoadListCount < maxConcurrencyNum && context.WaitListCount > 0)
@@ -111,8 +115,8 @@ namespace Core.AssetBundles.Update.State
                     var requester = context.GetFirstRequester();
                     // 加入正在下载队列
                     context.AddRequesterToLoad(requester);
-                    // 异步执行下载（保存路径 + 完成回调）
-                    requester.DownLoadAsync(PathUtility.GetAbLoadPath(requester.FileName), (isOver) =>
+                    // 异步执行下载
+                    requester.DownLoadAsync(PathUtility.GetAbLoadPath(requester.FileName), isOver =>
                     {
                         // 下载完成后，从正在下载队列移除
                         context.RemoveRequesterFromLoad(requester);
@@ -122,8 +126,8 @@ namespace Core.AssetBundles.Update.State
                             LogManager.Log($"下载成功：{requester.FileName}");
                             // 获取下载后的文件信息
                             var fileInfo = new FileInfo(PathUtility.GetAbLoadPath(requester.FileName));
-                            // 更新缓存信息（MD5、文件大小、下载状态）
-                            var cacheInfo = new AbPackageCacheInfo(requester.FileName, context.RemotePackageCollection[requester.FileName].PackageMd5, fileInfo.Length);
+                            // 更新缓存信息
+                            var cacheInfo = new AbPackageCacheInfo(requester.FileName, context.RemotePackageCollection[requester.FileName].Hash, fileInfo.Length);
                             assetBundleUpdater.GetContext().UpdateCacheFile(cacheInfo);
                         }
                         // 下载失败，加入失败队列
@@ -132,7 +136,7 @@ namespace Core.AssetBundles.Update.State
                             context.AddRequesterToFail(requester);
                         }
                     });
-
+                    
                     await Task.Yield(); // 帧间等待，避免阻塞主线程
                 }
 
@@ -148,50 +152,51 @@ namespace Core.AssetBundles.Update.State
                 await Task.Yield(); // 帧间等待
             }
 
-            LogManager.Log("下载流程结束");
+            await CheckDownloadSuccess(context);
+        }
 
+        /// <summary>
+        /// 检查下载是否成功
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        private static async Task CheckDownloadSuccess(ABUpdateContext context)
+        {
             // 校验所有缓存包是否下载成功
-            var isAllSuccess = true;
-            foreach (var pair in context.CachePackageCollection)
+            foreach (var condition in context.CachePackageCollection.Values.MeetConditions(info => info.IsSuccess))
             {
-                var cacheInfo = context.CachePackageCollection[pair.Key];
-                if (!cacheInfo.IsSuccess)
+                if (condition)
                 {
-                    isAllSuccess = false;
-                    break;
+                    await Task.Yield();
                 }
-                await Task.Yield();
+                else
+                {
+                    throw new System.Exception("下载不完整，存在缺失资源");
+                }
             }
-
-            return isAllSuccess;
         }
 
         /// <summary>
         /// 循环更新下载速度
         /// 按配置的间隔时间，持续更新当前下载速度到上下文
         /// </summary>
-        private async void UpdateSpeed()
+        private IEnumerator UpdateSpeed()
         {
-            try
-            {
-                // 初始化上次更新时间为当前时间
-                _lastSpeedUpdateTime = UnityEngine.Time.realtimeSinceStartup;
-                _isDownloading = true;
+            // 初始化上次更新时间为当前时间
+            _lastSpeedUpdateTime = Time.realtimeSinceStartup;
+            _isDownloading = true;
             
-                while (_isDownloading)
-                {
-                    // 达到速度更新间隔，执行更新
-                    if (UnityEngine.Time.realtimeSinceStartup - _lastSpeedUpdateTime >= _speedUpdateInterval)
-                    {
-                        assetBundleUpdater.GetContext().UpdateSpeed();
-                        _lastSpeedUpdateTime = UnityEngine.Time.realtimeSinceStartup;
-                    }
-                    await Task.Yield(); // 帧间等待
-                }
-            }
-            catch (Exception e)
+            while (_isDownloading)
             {
-                LogManager.LogError($"下载速度更新异常，{e.Message}");
+                // 达到速度更新间隔，执行更新
+                if (Time.realtimeSinceStartup - _lastSpeedUpdateTime >= _speedUpdateInterval)
+                {
+                    assetBundleUpdater.GetContext().UpdateSpeed();
+                    _lastSpeedUpdateTime = Time.realtimeSinceStartup;
+                }
+
+                yield return null;
             }
         }
 

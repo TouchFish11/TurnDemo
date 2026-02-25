@@ -4,7 +4,7 @@ using System.Linq;
 using Framework.Editor.Generation;
 using UnityEditor;
 
-namespace CustomEditor.ScriptGeneration
+namespace Editor.Generation.Detail
 {
     /// <summary>
     /// 枚举生成器

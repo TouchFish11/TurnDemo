@@ -17,7 +17,7 @@ namespace GameHotUpdate.Battle.Object.Monster.Slime
             GetComponent<SkillComponent>().InitSkills(MonsterInfo.f_skillIds, new SlimeSkillFactory());
         }
 
-        protected override int SelectSkill()
+        public override int SelectSkill()
         {
             // 随机从技能列表中选择一个技能ID
             var skillIds = this.GetComponent<SkillComponent>().GetSkillIds();

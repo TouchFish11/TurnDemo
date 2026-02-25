@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using Core.HotUpdate;
 using Core.Log;
+using Core.Service;
 using Core.Singleton;
 using Core.Types;
 using Core.Utility;
@@ -19,10 +21,20 @@ namespace Core.Reflection
         {
 
         }
-
-        public void InitFactorys()
+        
+        /// <summary>
+        /// 初始化框架工厂
+        /// </summary>
+        public void InitCoreFactorys()
         {
-            FactoryUtility.ScanAllFactory(typeToFactoryMap);
+            var coreAssembly = ServiceLocator.Get<IHotUpdateManager>().GetCoreAssembly();
+            FactoryUtility.ScanAllFactory(typeToFactoryMap, coreAssembly);
+        }
+
+        public void InitHotFactorys()
+        {
+            var hotAssemblies = ServiceLocator.Get<IHotUpdateManager>().GetHotAssemblies();
+            FactoryUtility.ScanAllFactory(typeToFactoryMap, hotAssemblies);
         }
         
         public TISubFactory GetFactory<TISubFactory, TFactory>() where TISubFactory : class, IFactory where TFactory : TISubFactory

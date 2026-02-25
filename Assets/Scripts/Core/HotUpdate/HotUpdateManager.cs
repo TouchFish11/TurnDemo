@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
@@ -25,11 +24,11 @@ namespace Core.HotUpdate
             
         }
 
-        public async Task LoadAssemblys()
+        public async Task LoadAssemblys(string abName)
         {
             Clear();
             
-            var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(EAssetBundleType.HotUpdate);
+            var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(abName);
             // 加载热更新AB包资源
             var dllTexts = new List<TextAsset>();
             await assetBundle.LoadAllAssetsAsync<TextAsset>().ToTask(dllTexts);

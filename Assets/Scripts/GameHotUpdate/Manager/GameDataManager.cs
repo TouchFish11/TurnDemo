@@ -11,6 +11,7 @@ using Game.Activity;
 using Game.Manager;
 using Game.Tasks;
 using GameHotUpdate.Activity.Data;
+using GameHotUpdate.Config;
 using GameHotUpdate.Tasks;
 
 namespace GameHotUpdate.Manager
@@ -22,8 +23,24 @@ namespace GameHotUpdate.Manager
     {
         public async Task InitData()
         {
+            ServiceLocator.Get<IBinaryDataManager>().AddConfig(EConfigLoadType.Excel, async loader =>
+            {
+                await loader.LoadConfigAsync<RoleInfoContainer, RoleInfo>();
+                await loader.LoadConfigAsync<MonsterInfoContainer, MonsterInfo>();
+                await loader.LoadConfigAsync<SkillInfoContainer, SkillInfo>();
+                await loader.LoadConfigAsync<StatusInfoContainer, StatusInfo>();
+                await loader.LoadConfigAsync<DialogueInfoContainer, DialogueInfo>();
+                await loader.LoadConfigAsync<BranchInfoContainer, BranchInfo>();
+                await loader.LoadConfigAsync<TaskInfoContainer, TaskInfo>();
+                await loader.LoadConfigAsync<TaskConditionInfoContainer, TaskConditionInfo>();
+                await loader.LoadConfigAsync<NpcInfoContainer, NpcInfo>();
+            
+                await loader.LoadConfigAsync<ActivityInfoContainer,ActivityInfo>();
+                await loader.LoadConfigAsync<ItemInfoContainer,ItemInfo>();
+            });
+            
             // 加载二进制配置
-            await ServiceLocator.Get<IBinaryDataManager>().LoadConfig();
+            await ServiceLocator.Get<IBinaryDataManager>().LoadConfig(AbKeyCollection.Gameconfig);
             LogManager.Log($"配置数据加载成功");
             
             // 读取本地音乐数据

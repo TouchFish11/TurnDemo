@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using Core.AssetBundles.Management;
 using Core.Mono;
 using Core.Pool;
 using Core.Service;
 using Core.Singleton;
 using Game.VFX;
 using GameHotUpdate.Battle.Projectile;
+using GameHotUpdate.Config;
 using UnityEngine;
 
 namespace GameHotUpdate.VFX
@@ -59,7 +59,7 @@ namespace GameHotUpdate.VFX
         public async void CreateVFX(string vfxName, ProjectileTrans projectileTrans, ProjectileData data, VFXInfo vFXInfo)
         {
             // 从对象池异步获取VFX资源
-            var vfxObj = await ServiceLocator.Get<IPoolManager>().GetAssetBundleObjAsync(EAssetBundleType.VFX, vfxName);
+            var vfxObj = await ServiceLocator.Get<IPoolManager>().GetAssetBundleObjAsync(AbKeyCollection.Vfx, vfxName);
             // 设置VFX父物体
             vfxObj.transform.SetParent(projectileTrans.Parent, projectileTrans.WorldPositionStays);
             
@@ -98,7 +98,7 @@ namespace GameHotUpdate.VFX
         public async void CreateVFX(string vfxName, Transform parent, Vector3 pos, Quaternion rot, VFXInfo vFXInfo)
         {
             // 从对象池异步获取VFX资源
-            var vfxObj = await ServiceLocator.Get<IPoolManager>().GetAssetBundleObjAsync(EAssetBundleType.VFX, vfxName);
+            var vfxObj = await ServiceLocator.Get<IPoolManager>().GetAssetBundleObjAsync(AbKeyCollection.Vfx, vfxName);
             // 设置父物体并重置局部坐标
             vfxObj.transform.SetParent(parent, false);
             // 设置VFX局部位置和旋转

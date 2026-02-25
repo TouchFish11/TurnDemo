@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -14,7 +15,7 @@ namespace Core.DataPersistence.Binary
     public class BinaryDataManager : SingletonBase<BinaryDataManager>, IBinaryDataManager
     {
         // 配置加载类型到加载器的映射
-        private readonly Dictionary<EConfigLoadType, IConfigLoader> typeToLoaderMap = new Dictionary<EConfigLoadType, IConfigLoader>();
+        private readonly Dictionary<EConfigLoadType, IConfigLoader> typeToLoaderMap = new();
 
         private BinaryDataManager()
         {
@@ -22,17 +23,23 @@ namespace Core.DataPersistence.Binary
             typeToLoaderMap.Add(EConfigLoadType.Editor, new EditorConfigLoader());
         }
         
-        public async Task LoadConfig()
+        public async Task LoadConfig(string abName)
         {
             foreach (var loader in typeToLoaderMap.Values)
             {
-                await loader.LoadConfig();
+                await loader.LoadConfig(abName);
             }
         }
         
         public T GetConfig<T>(EConfigLoadType loadType) where T : class
         {
             return typeToLoaderMap[loadType].GetConfig<T>();
+        }
+
+        public void AddConfig(EConfigLoadType loadType, Func<IConfigLoader, Task> onConfigLoaded)
+        {
+            var loader = typeToLoaderMap[loadType];
+            loader.OnConfigLoaded += onConfigLoaded;
         }
         
         public void Save(string fileName, object obj)

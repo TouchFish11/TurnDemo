@@ -24,7 +24,7 @@ namespace GameHotUpdate.Battle.Projectile
                 yield return null;
             }
             AddStatusOnTrigger();
-            HandleOtherOnTrigger();
+            HandleTiming();
         }
     }
 }

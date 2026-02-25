@@ -16,12 +16,6 @@ namespace Core.AssetBundles.Update
         EUpdatePhase UpdatePhase { get; }
 
         /// <summary>
-        /// 当前阶段是否执行成功
-        /// 用于标记该状态节点的执行结果，供流程管理器判断是否进入下一阶段
-        /// </summary>
-        bool IsSuceess { get; set; }
-
-        /// <summary>
         /// 进入状态
         /// 状态激活时的初始化逻辑，如资源初始化、参数重置等
         /// </summary>
@@ -32,7 +26,7 @@ namespace Core.AssetBundles.Update
         /// 包含该更新阶段的主要业务逻辑（异步执行）
         /// </summary>
         /// <returns>异步执行结果，true表示执行完成且无异常，false表示执行异常</returns>
-        Task<bool> Execute();
+        Task<UpdateResult> Execute();
 
         /// <summary>
         /// 退出状态

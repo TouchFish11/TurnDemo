@@ -40,7 +40,7 @@ namespace Core.Pool
             return newObj.AddComponent<T>();
         }
         
-        public async Task<GameObject> GetAssetBundleObjAsync(EAssetBundleType assetBundleType, string assetName)
+        public async Task<GameObject> GetAssetBundleObjAsync(string abName, string assetName)
         {
             // 存在该对象就取出来使用
             if (_poolObjDic.ContainsKey(assetName) && _poolObjDic[assetName].UnUsedCount > 0)
@@ -50,7 +50,7 @@ namespace Core.Pool
 
 #if EDITOR_TEST_AB || !UNITY_EDITOR
             // AB包异步加载
-            var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(assetBundleType);
+            var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(abName);
             var obj = await assetBundle.LoadAssetAsync<GameObject>(assetName).ToTask<GameObject>();
             // 实例化预设体
             var instanceObj = Object.Instantiate(obj);

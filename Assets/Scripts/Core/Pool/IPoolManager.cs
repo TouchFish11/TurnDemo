@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using Core.AssetBundles.Management;
 using UnityEngine;
 
 namespace Core.Pool
@@ -13,10 +12,10 @@ namespace Core.Pool
         /// <summary>
         /// 异步获取来自AB包的缓存对象
         /// </summary>
-        /// <param name="assetBundleType">AB包类型</param>
+        /// <param name="abName"></param>
         /// <param name="assetName">资源名称</param>
         /// <returns></returns>
-        Task<GameObject> GetAssetBundleObjAsync(EAssetBundleType assetBundleType, string assetName);
+        Task<GameObject> GetAssetBundleObjAsync(string abName, string assetName);
         
         /// <summary>
         /// 获取未继承Mono的对象

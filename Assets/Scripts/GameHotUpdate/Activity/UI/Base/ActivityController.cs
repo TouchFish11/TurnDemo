@@ -1,5 +1,3 @@
-using Core.AssetBundles.Management;
-using Core.Config;
 using Core.DataPersistence.Binary;
 using Core.Loader.Sprite;
 using Core.Loader.UI;
@@ -12,6 +10,7 @@ using Game.Manager;
 using GameHotUpdate.Activity.Core;
 using GameHotUpdate.Activity.Data;
 using GameHotUpdate.Activity.UI.EmbersCanon;
+using GameHotUpdate.Config;
 
 namespace GameHotUpdate.Activity.UI.Base
 {
@@ -27,10 +26,9 @@ namespace GameHotUpdate.Activity.UI.Base
             // 创建UI
             foreach (var activityInfo in infoDic.Values)
             {
-                var activityUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<ActivityUI>(EAssetBundleType.UI, ResKeyCollection.ActivityUI, view.SvActivityContent);
+                var activityUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<ActivityUI>(AbKeyCollection.Ui, ResKeyCollection.ActivityUI, view.SvActivityContent);
                 // 加载图标
-                var icon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(
-                    ResKeyCollection.Atlas_Activity,
+                var icon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Activity,
                         activityInfo.f_bkUi_Res);
                 // 初始化UI
                 activityUI.Init(icon, activityInfo, view.ActivityGroup, this);
@@ -47,7 +45,7 @@ namespace GameHotUpdate.Activity.UI.Base
             switch (btnName)
             {
                 case nameof(view.btnClose):
-                    ServiceLocator.Get<IUIManager>().DestroyView(this);
+                    ServiceLocator.Get<IUIManager>().DestroyView(AbKeyCollection.Ui, this);
                     break;
             }
         }
@@ -67,7 +65,7 @@ namespace GameHotUpdate.Activity.UI.Base
             var activityDataCollection = ServiceLocator.Get<IGameManager>().GameDataManager.ActivityDataCollection as ActivityDataCollection;
             
             // 获取活动UI对象
-            var activity = await ServiceLocator.Get<IUiLoader>().GetUIObject<IActivity>(EAssetBundleType.UI, activityInfo.f_detailUI_res,
+            var activity = await ServiceLocator.Get<IUiLoader>().GetUIObject<IActivity>(AbKeyCollection.Ui, activityInfo.f_detailUI_res,
                 view.ActivityDetailArea);
             // 初始化详细界面
             if (!activityDataCollection.TryGetValue(activityInfo.f_id, out var activityData))

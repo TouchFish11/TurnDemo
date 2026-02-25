@@ -17,24 +17,12 @@ namespace Core.DataPersistence.Binary
     {
         // 存储所有表数据的字典，键：容器名  值：容器
         private readonly Dictionary<string, object> _tableDic = new();
-
-        public override async Task LoadConfig()
-        {
-            // await LoadTableAsync<xxxContainer, xxxInfo>();
-            await Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// 加载表配置信息
-        /// </summary>
-        /// <typeparam name="T">容器类名</typeparam>
-        /// <typeparam name="K">数据结构类名</typeparam>
-        /// <returns></returns>
-        private async Task LoadTableAsync<T, K>()
+        
+        public override async Task LoadConfigAsync<T, K>()
         {
 #if EDITOR_TEST_AB || !UNITY_EDITOR
             // 异步加载数据
-            var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(EAssetBundleType.GameConfig);
+            var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(assetbundleName);
             var config = await assetBundle.LoadAssetAsync<TextAsset>($"{typeof(K).Name}").ToTask<TextAsset>();
 #else
             // 加载编辑器数据

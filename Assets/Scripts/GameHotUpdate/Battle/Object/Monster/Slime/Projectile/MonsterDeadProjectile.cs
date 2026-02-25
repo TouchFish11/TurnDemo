@@ -42,7 +42,7 @@ namespace GameHotUpdate.Battle.Object.Monster.Slime.Projectile
             
         }
 
-        protected override void HandleOtherOnTrigger()
+        protected override void HandleTiming()
         {
             
         }

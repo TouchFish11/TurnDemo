@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Text;
-using Core.Config;
 using Core.Log;
 using Core.Pool;
 using Core.Service;
@@ -11,6 +10,7 @@ using Game.Battle.Status;
 using Game.VFX;
 using GameHotUpdate.Animation;
 using GameHotUpdate.Battle.Skill.Base;
+using GameHotUpdate.Config;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Object.Monster.TurtleShell.Skill
@@ -47,6 +47,9 @@ namespace GameHotUpdate.Battle.Object.Monster.TurtleShell.Skill
         /// </summary>
         protected override void InitProjectile()
         {
+            // 更新战斗相机视角
+            Caster.Context.GetProxy().UpdateCamera(MainTarget);
+            
             // 获取主目标位置（仅保留XZ平面，忽略Y轴高度）
             var mainTarget = MainTarget.GameObject.transform.position;
             mainTarget = new Vector3(mainTarget.x, 0, mainTarget.z);

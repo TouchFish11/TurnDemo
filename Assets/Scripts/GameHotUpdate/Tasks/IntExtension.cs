@@ -17,9 +17,9 @@ namespace GameHotUpdate.Tasks
             E_TaskType taskType = (E_TaskType)i;
             return taskType switch
             {
-                E_TaskType.MainStory => "����",
-                E_TaskType.SideStroy => "֧��",
-                _ => "ת��ʧ��"
+                E_TaskType.MainStory => "主线",
+                E_TaskType.SideStroy => "֧支线",
+                _ => ""
             };
         }
 
@@ -43,9 +43,9 @@ namespace GameHotUpdate.Tasks
             E_SkillRangeType skillRangeType = (E_SkillRangeType)i;
             return skillRangeType switch
             {
-                E_SkillRangeType.Single => "����",
-                E_SkillRangeType.Diffusion => "��ɢ",
-                E_SkillRangeType.All => "ȫ��",
+                E_SkillRangeType.Single => "单体",
+                E_SkillRangeType.Diffusion => "扩散",
+                E_SkillRangeType.All => "全体",
                 _ => "None"
             };
         }

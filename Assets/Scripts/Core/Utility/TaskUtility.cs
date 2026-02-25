@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Threading.Tasks;
 using Core.Log;
-using UnityEngine;
 
 namespace Core.Utility
 {
@@ -26,7 +25,6 @@ namespace Core.Utility
 
             while (!condition())
             {
-                // �ȴ�һ֡��������ͬ��Э�̵� yield return null
                 await Task.Yield();
             }
         }

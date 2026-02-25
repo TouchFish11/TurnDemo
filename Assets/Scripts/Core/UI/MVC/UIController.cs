@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Core.GlobalEvent;
 using Core.GlobalEvent.Events;
 using Core.Service;
@@ -11,16 +12,18 @@ namespace Core.UI.MVC
     {
         protected TView view;
         protected TModel model;
+        protected IUIManager uiManager;
 
         protected UIController()
         {
-
+            this.uiManager = ServiceLocator.Get<IUIManager>();
         }
 
-        public async System.Threading.Tasks.Task Init(IuiView view, IuiModel model)
+        public async Task Init(IuiView view, IuiModel model)
         {
             this.view = (TView)view;
             this.model = (TModel)model;
+            
             view.Show();
             
             view.GetBinder().OnButtonClick += ButtonOnClick;

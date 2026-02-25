@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
-using Core.AssetBundles.Management;
-using Core.Config;
 using Core.GlobalEvent;
 using Core.Loader.UI;
 using Core.Log;
 using Core.Service;
 using Game.Interact;
+using GameHotUpdate.Config;
 using GameHotUpdate.Interact.UI;
 
 namespace GameHotUpdate.Main.UI.Logic
@@ -64,9 +63,9 @@ namespace GameHotUpdate.Main.UI.Logic
                 foreach (var interactable in interactables)
                 {
                     // 从UI资源包中异步加载交互UI预制体并实例化
-                    // EAssetBundleType.UI：指定资源包类型为UI
+                    // AbKeyCollection.Ui：指定资源包类型为UI
                     // ResKeyCollection.InteractUI：交互UI的资源标识键
-                    var interactUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<InteractUI>(EAssetBundleType.UI, ResKeyCollection.InteractUI, mainView.InteractContent);
+                    var interactUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<InteractUI>(AbKeyCollection.Ui, ResKeyCollection.InteractUI, mainView.InteractContent);
                     LogManager.Log($"{nameof(InteractLogic)}.{nameof(CreateInteract)}: {interactUI}");
                     // 初始化交互UI的显示数据（设置发言者/交互对象名称）
                     interactUI.Init(interactable.NpcInfo.f_speakerName);

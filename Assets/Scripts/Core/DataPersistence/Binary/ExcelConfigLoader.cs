@@ -16,26 +16,7 @@ namespace Core.DataPersistence.Binary
     public class ExcelConfigLoader : ConfigLoader
     {
         // 存储所有表数据的字典，键：容器名  值：容器
-        private readonly Dictionary<string, object> _tableDic = new Dictionary<string, object>();
-
-        public override async Task LoadConfig()
-        {
-            //await LoadTableAsync<xxxContainer, xxxInfo>();
-            //...
-            await LoadTableAsync<RoleInfoContainer, RoleInfo>();
-            await LoadTableAsync<MonsterInfoContainer, MonsterInfo>();
-            await LoadTableAsync<SkillInfoContainer, SkillInfo>();
-            await LoadTableAsync<StatusInfoContainer, StatusInfo>();
-            await LoadTableAsync<DialogueInfoContainer, DialogueInfo>();
-            await LoadTableAsync<BranchInfoContainer, BranchInfo>();
-            await LoadTableAsync<TaskInfoContainer, TaskInfo>();
-            await LoadTableAsync<TaskConditionInfoContainer, TaskConditionInfo>();
-            await LoadTableAsync<NpcInfoContainer, NpcInfo>();
-            
-            await LoadTableAsync<ActivityInfoContainer,ActivityInfo>();
-            await LoadTableAsync<ItemInfoContainer,ItemInfo>();
-            await Task.FromResult(true);
-        }
+        private readonly Dictionary<string, object> _tableDic = new();
 
         public override T GetConfig<T>() where T : class
         {
@@ -45,18 +26,12 @@ namespace Core.DataPersistence.Binary
             }
             return null;
         }
-
-        /// <summary>
-        /// 加载表配置信息
-        /// </summary>
-        /// <typeparam name="T">容器类名</typeparam>
-        /// <typeparam name="K">数据结构类名</typeparam>
-        /// <returns></returns>
-        private async Task LoadTableAsync<T, K>()
+        
+        public override async Task LoadConfigAsync<T, K>()
         {
 #if EDITOR_TEST_AB || !UNITY_EDITOR
             // 异步加载数据，资源名不需要后缀。
-            var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(EAssetBundleType.GameConfig);
+            var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(assetbundleName);
             var config = await assetBundle.LoadAssetAsync<TextAsset>($"{typeof(K).Name}").ToTask<TextAsset>();
 #else
             // 加载编辑器数据
@@ -66,7 +41,7 @@ namespace Core.DataPersistence.Binary
             // 转换二进制到数据类
             ConvertFrom<T, K>(config);
         }
-
+        
         /// <summary>
         /// 从二进制中转换
         /// </summary>

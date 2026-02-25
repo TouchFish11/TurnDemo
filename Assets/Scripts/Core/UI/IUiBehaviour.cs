@@ -1,5 +1,3 @@
-using UnityEngine.EventSystems;
-
 namespace Core.UI
 {
     /// <summary>

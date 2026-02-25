@@ -11,8 +11,9 @@ namespace Core.HotUpdate
         /// <summary>
         /// 加载所有热更程序集
         /// </summary>
+        /// <param name="abName"></param>
         /// <returns></returns>
-        Task LoadAssemblys();
+        Task LoadAssemblys(string abName);
 
         /// <summary>
         /// 获取加载的指定热更程序集

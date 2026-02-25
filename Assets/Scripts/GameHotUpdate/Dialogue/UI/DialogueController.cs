@@ -1,13 +1,12 @@
 using System;
 using System.Collections;
-using Core.AssetBundles.Management;
-using Core.Config;
 using Core.Loader.UI;
 using Core.Log;
 using Core.Mono;
 using Core.Service;
 using Core.UI.MVC;
 using Game.Dialogue;
+using GameHotUpdate.Config;
 using UnityEngine;
 
 namespace GameHotUpdate.Dialogue.UI
@@ -179,7 +178,7 @@ namespace GameHotUpdate.Dialogue.UI
             {
                 // 从资源包异步加载分支选项UI预制体，并挂载到对话框节点下
                 var optUIWrapper = await ServiceLocator.Get<IUiLoader>().GetUIObject<DialogueOptUI>(
-                    EAssetBundleType.UI, 
+                    AbKeyCollection.Ui, 
                     ResKeyCollection.DialogueOptUI, 
                     view.DialogueOptBox
                 );

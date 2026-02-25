@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Core.Tasks.Extensions
 {
@@ -54,6 +55,17 @@ namespace Core.Tasks.Extensions
         public static AssetBundleUnloadOperationTask ToTask(this AssetBundleUnloadOperation req)
         {
             return TaskFactory.Create(req);
+        }
+
+        /// <summary>
+        /// 将UnityWebRequestAsyncOperation操作封装为可等待的Task
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public static UnityWebRequestAsyncOperationTask ToTask(this UnityWebRequestAsyncOperation req, CancellationToken token = default)
+        {
+            return TaskFactory.Create(req, token);
         }
     }
 }

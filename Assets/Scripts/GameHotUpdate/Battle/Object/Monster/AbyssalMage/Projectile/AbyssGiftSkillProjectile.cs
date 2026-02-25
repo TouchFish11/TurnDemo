@@ -14,17 +14,14 @@ namespace GameHotUpdate.Battle.Object.Monster.AbyssalMage.Projectile
     {
         protected override void AddStatusOnTrigger()
         {
-            foreach (var target in projectileData.targets)
+            foreach (var statusId in statusIds)
             {
-                foreach (var statusId in statusIds)
-                {
-                    // 获取状态实例
-                    var status = ServiceLocator.Get<IFactoryManager>().GetFactory<IStatusFactory, StatusFactory>().
-                        GetStatus(projectileData.caster, target, statusId);
-                    // 添加状态
-                    target.GetComponent<StatusComponent>().AddStatus(status);
-                } 
-            }
+                // 获取状态实例
+                var status = ServiceLocator.Get<IFactoryManager>().GetFactory<IStatusFactory, StatusFactory>().
+                    GetStatus(projectileData.caster, projectileData.caster, statusId);
+                // 添加状态
+                projectileData.caster.GetComponent<StatusComponent>().AddStatus(status);
+            } 
         }
 
         protected override void CauseDamageOnTrigger()
@@ -37,9 +34,9 @@ namespace GameHotUpdate.Battle.Object.Monster.AbyssalMage.Projectile
 
         }
 
-        protected override void HandleOtherOnTrigger()
+        protected override void HandleTiming()
         {
-            ServiceLocator.Get<ITimerManager>().CreateTimer(false, 500, () =>
+            ServiceLocator.Get<ITimerManager>().CreateTimer(false, 1500, () =>
             {
                 vFXInfo.IsStop = true;
             });

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Core.AssetBundles.Update.Collection;
 using Core.AssetBundles.Update.Enum;
 using Core.DataPersistence.Json;
-using Core.Log;
 using Core.Service;
 using Core.Utility;
 
@@ -22,37 +21,37 @@ namespace Core.AssetBundles.Update.State
         /// <param name="updater">AssetBundle更新器实例</param>
         public CompareContrastState(AssetBundleUpdater updater) : base(updater)
         {
-
         }
 
         /// <summary>
         /// 执行对比校验核心逻辑
         /// </summary>
         /// <returns>是否执行成功</returns>
-        public override async Task<bool> Execute()
+        public override async Task<UpdateResult> Execute()
         {
-            // 执行对比校验逻辑
-            IsSuceess = await CompareContrastFileInfo();
-            if (!IsSuceess)
+            try
             {
-                LogManager.LogError("资源对比校验失败");
-                FinishUpdate(); // 终止更新流程
-                return IsSuceess;
+                await Task.Delay(1000);
+                
+                // 执行对比校验逻辑
+                await CompareContrastFileInfo();
             }
-
-            // 切换状态到资源下载阶段
-            assetBundleUpdater.ChangeState(EUpdatePhase.DownLoadAssets);
-            return IsSuceess;
+            catch (System.Exception exception)
+            {
+                return UpdateResult.CreateFailure("资源对比校验失败", exception);
+            }
+            
+            return UpdateResult.CreateSuccess();
         }
 
         /// <summary>
         /// 对比校验AssetBundle文件信息
-        /// 1. 对比本地与远程包信息，标记需要下载的包
-        /// 2. 删除本地冗余的AssetBundle文件
-        /// 3. 加载缓存文件并校验已下载资源的有效性
+        /// 对比本地与远程包信息，标记需要下载的包
+        /// 删除本地冗余的AssetBundle文件
+        /// 加载缓存文件并校验已下载资源的有效性
         /// </summary>
         /// <returns>对比校验是否成功</returns>
-        public async Task<bool> CompareContrastFileInfo()
+        public async Task CompareContrastFileInfo()
         {
             // 获取上下文各类包集合
             var remoteCollection = assetBundleUpdater.GetContext().RemotePackageCollection; // 远程包信息集合
@@ -67,9 +66,9 @@ namespace Core.AssetBundles.Update.State
                 if (localCollection.ContainsKey(abName))
                 {
                     // MD5不一致，说明远程包有更新，加入待下载集合
-                    if (localCollection[abName].PackageMd5 != abPackageInfo.PackageMd5)
+                    if (localCollection[abName].Hash != abPackageInfo.Hash)
                     {
-                        waitDownloadCollection.TryAdd(abName, new AbPackageCacheInfo(abName, abPackageInfo.PackageMd5, abPackageInfo.PackageSize));
+                        waitDownloadCollection.TryAdd(abName, new AbPackageCacheInfo(abName, abPackageInfo.Hash, 0));
                     }
                     // 对比完成后移除本地该包信息（避免后续误判为冗余）
                     localCollection.Remove(abName);
@@ -77,7 +76,7 @@ namespace Core.AssetBundles.Update.State
                 // 本地不存在该AB包，直接标记为待下载
                 else
                 {
-                    waitDownloadCollection.TryAdd(abName, new AbPackageCacheInfo(abName, abPackageInfo.PackageMd5, abPackageInfo.PackageSize));
+                    waitDownloadCollection.TryAdd(abName, new AbPackageCacheInfo(abName, abPackageInfo.Hash, 0));
                 }
             }
 
@@ -97,19 +96,11 @@ namespace Core.AssetBundles.Update.State
             var cacheContent = await File.ReadAllTextAsync(cacheFilePath);
             if (!string.IsNullOrEmpty(cacheContent))
             {
-                try
+                // 反序列化缓存文件到缓存集合
+                var abCacheCollection = ServiceLocator.Get<IJsonManager>().FromJson<AbPackageCacheCollection>(cacheContent);
+                foreach (var (abName, abPackageCacheInfo) in abCacheCollection)
                 {
-                    // 反序列化缓存文件到缓存集合
-                    var abCacheCollection = ServiceLocator.Get<IJsonManager>().FromJson<AbPackageCacheCollection>(cacheContent);
-                    foreach (var (abName, abPackageCacheInfo) in abCacheCollection)
-                    {
-                        cachePackageCollection.TryAdd(abName, abPackageCacheInfo);
-                    }
-                }
-                catch
-                {
-                    LogManager.LogError("缓存文件解析失败");
-                    return false;
+                    cachePackageCollection.TryAdd(abName, abPackageCacheInfo);
                 }
             }
 
@@ -148,8 +139,6 @@ namespace Core.AssetBundles.Update.State
             {
                 waitDownloadCollection.Remove(abFileName);
             }
-
-            return true;
         }
 
         /// <summary>

@@ -41,7 +41,7 @@ namespace GameHotUpdate.Battle.Object.Role.Priest.Projectile
             }
         }
 
-        protected override void HandleOtherOnTrigger()
+        protected override void HandleTiming()
         {
             ServiceLocator.Get<ITimerManager>().CreateTimer(false, 500, () =>
             {

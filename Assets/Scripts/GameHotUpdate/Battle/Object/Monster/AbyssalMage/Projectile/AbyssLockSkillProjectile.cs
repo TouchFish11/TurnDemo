@@ -1,5 +1,6 @@
 using Core.Reflection;
 using Core.Service;
+using Core.Time;
 using Game.Battle.Status;
 using GameHotUpdate.Battle.Projectile;
 using GameHotUpdate.Battle.Status;
@@ -36,9 +37,13 @@ namespace GameHotUpdate.Battle.Object.Monster.AbyssalMage.Projectile
 
         }
 
-        protected override void HandleOtherOnTrigger()
+        protected override void HandleTiming()
         {
-
+            // 计时器计时
+            ServiceLocator.Get<ITimerManager>().CreateTimer(false, 1500, () =>
+            {
+                vFXInfo.IsStop = true;
+            });
         }
     }
 }

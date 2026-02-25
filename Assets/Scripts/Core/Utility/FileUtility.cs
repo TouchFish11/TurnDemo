@@ -39,7 +39,7 @@ namespace Core.Utility
         /// AB包清单文件默认名称
         /// </summary>
         /// <value>
-        /// AssetBundleCompareInfo.json
+        /// AssetBundleListInfo.json
         /// </value>
         public static string ListFileDefaultName => "AssetBundleListInfo.json";
 
@@ -47,7 +47,7 @@ namespace Core.Utility
         /// AB包临时清单文件默认名称
         /// </summary>
         /// <value>
-        /// ABCompareInfo_Temp.json
+        /// ABListInfo_Temp.json
         /// </value>
         public static string TempListFileDefaultName => "ABListInfo_Temp.json";
 

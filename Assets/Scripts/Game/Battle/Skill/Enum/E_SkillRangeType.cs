@@ -1,20 +1,20 @@
 namespace Game.Battle.Skill.Enum
 {
     /// <summary>
-    /// ���ܷ�Χ����
+    /// 技能范围类型
     /// </summary>
     public enum E_SkillRangeType : byte
     {
         /// <summary>
-        /// ����
+        /// 单体
         /// </summary>
         Single = 1,
         /// <summary>
-        /// ��ɢ
+        /// 扩散
         /// </summary>
         Diffusion,
         /// <summary>
-        /// ȫ��
+        /// 全体
         /// </summary>
         All,
     }

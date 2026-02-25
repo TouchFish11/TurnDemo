@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Core.Config;
 using Core.Service;
 using Core.UI;
 using Game.Battle;
@@ -8,6 +7,7 @@ using Game.Battle.Objects;
 using Game.Battle.Turn;
 using GameHotUpdate.Battle.UI.Base;
 using GameHotUpdate.Battle.Utility;
+using GameHotUpdate.Config;
 using GameHotUpdate.UI.Loading.Battle;
 
 namespace GameHotUpdate.Battle.StateMeachine
@@ -27,7 +27,7 @@ namespace GameHotUpdate.Battle.StateMeachine
         public override async void Execute()
         {
             // 创建战斗界面
-            var battleController = await ServiceLocator.Get<IUIManager>().CreateViewAsync<BattleView, BattleModel,BattleController>(E_UILayer.Mid, ResKeyCollection.BattleView);
+            var battleController = await ServiceLocator.Get<IUIManager>().CreateViewAsync<BattleView, BattleModel,BattleController>(AbKeyCollection.Ui, E_UILayer.Mid, ResKeyCollection.BattleView);
             // 初始化战斗控制器
             battleController.InitBattleController(Context);
             
@@ -60,7 +60,7 @@ namespace GameHotUpdate.Battle.StateMeachine
             BattleUtility.InitOrder(Context);
             // 销毁战斗加载界面
             var loadingController = ServiceLocator.Get<IUIManager>().GetController<BattleLoadingController>();
-            ServiceLocator.Get<IUIManager>().DestroyView(loadingController);
+            ServiceLocator.Get<IUIManager>().DestroyView(AbKeyCollection.Ui, loadingController);
             
             BattleStateMachine.ChangeState(EBattlePhase.EnterAnimation);
         }

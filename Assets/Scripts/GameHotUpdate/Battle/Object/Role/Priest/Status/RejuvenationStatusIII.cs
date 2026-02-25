@@ -1,4 +1,3 @@
-using Core.Config;
 using Core.Pool;
 using Core.Service;
 using Core.Time;
@@ -6,6 +5,7 @@ using Game.Battle.Context;
 using Game.Battle.Objects;
 using Game.Battle.Status;
 using Game.VFX;
+using GameHotUpdate.Config;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Object.Role.Priest.Status

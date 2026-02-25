@@ -39,9 +39,6 @@ namespace GameHotUpdate.Battle.Skill.Base
             // 初始化技能目标数据，将选中的目标绑定到当前技能实例
             ServiceLocator.Get<ISkillManager>().InitSkillTarget(this);
             
-            // 更新战斗相机视角
-            context.GetProxy().UpdateCamera(MainTarget);
-            
             // 关闭目标选择状态，避免技能释放过程中重复选目标
             ServiceLocator.Get<ITargetSelectManager>().InActiveSelectTarget();
             

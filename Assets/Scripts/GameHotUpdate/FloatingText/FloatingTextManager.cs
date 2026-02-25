@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using Core.AssetBundles.Management;
-using Core.Config;
 using Core.Mono;
 using Core.Pool;
 using Core.Service;
@@ -9,6 +7,7 @@ using Game.FloatingText;
 using Game.Main;
 using Game.Objects;
 using GameHotUpdate.Battle.Object;
+using GameHotUpdate.Config;
 using UnityEngine;
 
 namespace GameHotUpdate.FloatingText
@@ -62,7 +61,7 @@ namespace GameHotUpdate.FloatingText
                     if (!npcObject.IsShowFloatingText)
                     {
                         npcObject.IsShowFloatingText = true;
-                        var floatingTextObj = await ServiceLocator.Get<IObjectBuilder>().GetHotfixObject<FloatingTextObj>(EAssetBundleType.Prefab, ResKeyCollection.UI_3D_FloatingText, null);
+                        var floatingTextObj = await ServiceLocator.Get<IObjectBuilder>().GetHotfixObject<FloatingTextObj>(AbKeyCollection.Prefab, ResKeyCollection.UI_3D_FloatingText, null);
                         floatingTextObj.Init(npcObject.transform, player, npcObject.NpcInfo.f_speakerName, npcObject.NpcInfo.f_identity);
                         npcToTextMap.TryAdd(npcObject, floatingTextObj);
                     }

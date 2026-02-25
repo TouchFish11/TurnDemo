@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
-using Core.AssetBundles.Management;
-using Core.Config;
 using Core.DataPersistence.Binary;
 using Core.Loader.Sprite;
 using Core.Loader.UI;
 using Core.Log;
 using Core.Service;
 using Core.Utility;
+using GameHotUpdate.Config;
 using GameHotUpdate.Item.UI;
 using UnityEngine;
 // ReSharper disable RedundantLambdaParameterType
@@ -41,13 +40,12 @@ namespace GameHotUpdate.Item
                 {
                     // 获取UI
                     var itemGrid = await ServiceLocator.Get<IUiLoader>()
-                        .GetUIObject<ItemGrid>(EAssetBundleType.UI, ResKeyCollection.ItemGrid, parent);
+                        .GetUIObject<ItemGrid>(AbKeyCollection.Ui, ResKeyCollection.ItemGrid, parent);
                     // 读取配置
                     var itemInfo = ServiceLocator.Get<IBinaryDataManager>()
                         .GetConfig<ItemInfoContainer>(EConfigLoadType.Excel).dataDic[pair.Key];
                     // 加载图标
-                    var itemIcon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(
-                        ResKeyCollection.Atlas_Icon_Item, 
+                    var itemIcon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync("TODO", ResKeyCollection.Atlas_Icon_Item, 
                         itemInfo.f_icon);
                     // 初始化
                     itemGrid.Init(itemIcon, pair.Value, itemInfo.f_quality);
@@ -85,12 +83,12 @@ namespace GameHotUpdate.Item
                 {
                     // 获取UI
                     var itemGrid = await ServiceLocator.Get<IUiLoader>()
-                        .GetUIObject<ItemGrid>(EAssetBundleType.UI, ResKeyCollection.ItemGrid, null);
+                        .GetUIObject<ItemGrid>(AbKeyCollection.Ui, ResKeyCollection.ItemGrid, null);
                     // 读取配置
                     var itemInfo = ServiceLocator.Get<IBinaryDataManager>()
                         .GetConfig<ItemInfoContainer>(EConfigLoadType.Excel).dataDic[pair.Key];
                     // 加载图标
-                    var itemIcon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(ResKeyCollection.Atlas_Icon_Item, itemInfo.f_icon);
+                    var itemIcon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync("TODO", ResKeyCollection.Atlas_Icon_Item, itemInfo.f_icon);
                     // 初始化
                     itemGrid.Init(itemIcon, pair.Value, itemInfo.f_quality);
                     callback?.Invoke(itemGrid);

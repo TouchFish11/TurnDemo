@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Text;
-using Core.Config;
 using Core.DataPersistence.Binary;
 using Core.Global;
 using Core.GlobalEvent;
@@ -12,6 +11,7 @@ using Core.Singleton;
 using Core.UI;
 using Core.Utility;
 using Game.Dialogue;
+using GameHotUpdate.Config;
 using GameHotUpdate.Dialogue.UI;
 using GameHotUpdate.Tasks;
 using UnityEngine;
@@ -72,7 +72,7 @@ namespace GameHotUpdate.Dialogue
             }
 
             // ��ȡ�Ի����������
-            dialogueController = await ServiceLocator.Get<IUIManager>().CreateViewAsync<DialogueView, DialogueModel, DialogueController>(E_UILayer.Mid, ResKeyCollection.DialogueView);
+            dialogueController = await ServiceLocator.Get<IUIManager>().CreateViewAsync<DialogueView, DialogueModel, DialogueController>(AbKeyCollection.Ui, E_UILayer.Mid, ResKeyCollection.DialogueView);
             // �Ի���
             IsDialogueActive = true;
             // �������Ի���ʼ���¼�
@@ -191,7 +191,7 @@ namespace GameHotUpdate.Dialogue
             // ���ñ�־
             IsDialogueActive = false;
             // ���ضԻ�UI
-            ServiceLocator.Get<IUIManager>().DestroyView(dialogueController);
+            ServiceLocator.Get<IUIManager>().DestroyView(AbKeyCollection.Ui, dialogueController);
             // �ַ��Ի������¼�
             ServiceLocator.Get<IEventCenter>().TriggerEvent(new DialogueEvent() { NpcId = npcInfo.f_id });
             // �������Ի��������¼�

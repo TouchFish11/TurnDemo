@@ -3,6 +3,7 @@ using Core.Service;
 using Core.Service.Login;
 using Core.UI;
 using Core.UI.MVC;
+using GameHotUpdate.Config;
 
 namespace GameHotUpdate.Login.UI
 {
@@ -57,7 +58,7 @@ namespace GameHotUpdate.Login.UI
                     OnLoginClick();
                     break;
                 case "btnClose":
-                    ServiceLocator.Get<IUIManager>().DestroyView(this);
+                    ServiceLocator.Get<IUIManager>().DestroyView(AbKeyCollection.Ui, this);
                     break;
             }
         }
@@ -118,7 +119,7 @@ namespace GameHotUpdate.Login.UI
         {
             LogManager.Log($"��¼�ɹ�");
             // ���ص�¼����
-            ServiceLocator.Get<IUIManager>().DestroyView(this);
+            ServiceLocator.Get<IUIManager>().DestroyView(AbKeyCollection.Ui, this);
             // ��ʾ��ʼ����
             //BeginController beginController = await UIManager.Instance.CreateViewAsync<BeginView, BeginModel, BeginController>(E_UILayer.Mid, );
             // ������

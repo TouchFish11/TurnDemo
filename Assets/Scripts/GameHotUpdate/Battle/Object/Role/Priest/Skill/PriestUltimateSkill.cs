@@ -1,5 +1,4 @@
 using System.Collections;
-using Core.Config;
 using Core.Pool;
 using Core.Service;
 using Core.UI;
@@ -14,6 +13,7 @@ using GameHotUpdate.Battle.Layer;
 using GameHotUpdate.Battle.Skill.Base;
 using GameHotUpdate.Battle.UI.Base;
 using GameHotUpdate.Cameras;
+using GameHotUpdate.Config;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Object.Role.Priest.Skill

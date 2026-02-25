@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -7,7 +8,6 @@ using Core.DataPersistence.Json;
 using Core.Log;
 using Core.Service;
 using Core.Utility;
-using UnityEngine.Events;
 
 namespace Core.AssetBundles.Update
 {
@@ -45,25 +45,25 @@ namespace Core.AssetBundles.Update
         /// 存储未完成下载的AB包名称列表
         /// 记录所有下载中断/未完成的AB包名称，用于断点续传或重试逻辑
         /// </summary>
-        private readonly List<string> _incompleteABList = new List<string>();
+        private readonly List<string> _incompleteABList = new();
 
         /// <summary>
         /// 存储等待下载的网络请求队列
         /// 待执行的AB包下载请求，按添加顺序排队执行
         /// </summary>
-        private readonly LinkedList<ABWebRequester> _requesterWaitList = new LinkedList<ABWebRequester>();
+        private readonly LinkedList<ABWebRequester> _requesterWaitList = new();
 
         /// <summary>
         /// 存储下载失败的网络请求队列
         /// 下载失败的请求，用于重试逻辑处理
         /// </summary>
-        private readonly LinkedList<ABWebRequester> _requesterFailList = new LinkedList<ABWebRequester>();
+        private readonly LinkedList<ABWebRequester> _requesterFailList = new();
 
         /// <summary>
         /// 存储正在下载的网络请求队列
         /// 正在执行的AB包下载请求，用于监控下载状态、取消下载等操作
         /// </summary>
-        private readonly LinkedList<ABWebRequester> _requesterLoadingList = new LinkedList<ABWebRequester>();
+        private readonly LinkedList<ABWebRequester> _requesterLoadingList = new();
 
         /// <summary>
         /// 是否暂停下载
@@ -93,7 +93,7 @@ namespace Core.AssetBundles.Update
         /// 未完成队列中的请求数量
         /// 只读属性，返回未完成下载的请求总数（同下载中队列数量）
         /// </summary>
-        public int IncompleteListCount => _requesterLoadingList.Count;
+        public int IncompleteListCount => _incompleteABList.Count;
 
         /// <summary>
         /// 下载进度回调事件
@@ -101,7 +101,7 @@ namespace Core.AssetBundles.Update
         /// long: 已下载的总字节数
         /// long: 需下载的总字节数
         /// </summary>
-        public event UnityAction<long, long> OnProgress;
+        public event Action<ulong, ulong> OnProgress;
 
         /// <summary>
         /// 资源检查进度回调事件
@@ -109,34 +109,38 @@ namespace Core.AssetBundles.Update
         /// int: 当前检查完成的AB包数量
         /// int: 需检查的AB包总数量
         /// </summary>
-        public event UnityAction<int, int> OnCheckProgress;
+        public event Action<int, int> OnCheckProgress;
 
         /// <summary>
         /// 更新阶段变更回调事件
         /// 参数说明：
         /// E_UpdatePhase: 当前更新所处的阶段（检查、下载、完成等）
         /// </summary>
-        public event UnityAction<EUpdatePhase> OnUpdatePhase;
+        public event Action<EUpdatePhase> OnUpdatePhase;
 
         /// <summary>
         /// 下载速度回调事件
         /// 参数说明：
         /// long: 本次回调周期内的下载字节数（用于计算下载速度）
         /// </summary>
-        public event UnityAction<long> OnUpdateSpeed;
+        public event Action<ulong> OnUpdateSpeed;
 
         /// <summary>
         /// 更新完成回调事件
         /// 所有AB包下载/检查完成后触发
         /// </summary>
-        public event UnityAction OnUpdateFinish;
+        public event Action OnUpdateFinish;
+        
+        /// <summary>
+        /// 更新失败结果事件
+        /// </summary>
+        public event Action<UpdateResult> OnUpdateFailResult;
 
         // 当前已下载的字节数（累计）
-        private long cuurentDownloadedBytes;
-
+        private ulong currentDownloadedBytes;
         // 当前帧下载的总字节数（用于计算下载速度）
-        private long _currentDownloadTotalSizes;
-
+        private ulong _currentDownloadTotalSizes;
+        
         /// <summary>
         /// 构造函数
         /// 初始化所有AB包信息集合和缓存集合
@@ -147,6 +151,11 @@ namespace Core.AssetBundles.Update
             LocalPackageCollection = new ABPackageCollection();
             WaitDownloadCollection = new AbPackageCacheCollection();
             CachePackageCollection = new AbPackageCacheCollection();
+        }
+
+        public void UpdateFailed(UpdateResult updateResult)
+        {
+            OnUpdateFailResult?.Invoke(updateResult);
         }
 
         /// <summary>
@@ -260,14 +269,14 @@ namespace Core.AssetBundles.Update
         /// </summary>
         /// <param name="bytesPerFrame">当前帧下载的字节数</param>
         /// <param name="downLoadTotalBytes">需要下载的总字节数</param>
-        public void UpdateProgress(long bytesPerFrame, long downLoadTotalBytes)
+        public void UpdateProgress(ulong bytesPerFrame, ulong downLoadTotalBytes)
         {
             // 累计当前帧下载字节数（用于计算下载速度）
             _currentDownloadTotalSizes += bytesPerFrame;
             // 累计总已下载字节数
-            cuurentDownloadedBytes += bytesPerFrame;
+            currentDownloadedBytes += bytesPerFrame;
             // 触发进度回调
-            OnProgress?.Invoke(cuurentDownloadedBytes, downLoadTotalBytes);
+            OnProgress?.Invoke(currentDownloadedBytes, downLoadTotalBytes);
         }
 
         /// <summary>
@@ -328,10 +337,10 @@ namespace Core.AssetBundles.Update
 
         /// <summary>
         /// 取消所有下载请求并保存缓存信息
-        /// 1. 标记暂停下载
-        /// 2. 终止所有正在下载的请求
-        /// 3. 保存未完成下载的AB包缓存信息（断点续传）
-        /// 4. 将缓存信息写入本地文件
+        /// 标记暂停下载
+        /// 终止所有正在下载的请求
+        /// 保存未完成下载的AB包缓存信息（断点续传）
+        /// 将缓存信息写入本地文件
         /// </summary>
         /// <returns>异步任务</returns>
         public async Task CancelDownload()
@@ -390,12 +399,12 @@ namespace Core.AssetBundles.Update
                 aBPackageCacheInfo.Md5 = cacheInfo.Md5;
                 aBPackageCacheInfo.DownloadedBytes = cacheInfo.DownloadedBytes;
                 // 标记是否下载完成（已下载字节数等于远程包总大小）
-                aBPackageCacheInfo.IsSuccess = cacheInfo.DownloadedBytes == RemotePackageCollection[cacheInfo.AbName].PackageSize;
+                aBPackageCacheInfo.IsSuccess = cacheInfo.DownloadedBytes == RemotePackageCollection[cacheInfo.AbName].Size;
             }
             else
             {
                 // 标记是否下载完成
-                cacheInfo.IsSuccess = cacheInfo.DownloadedBytes == RemotePackageCollection[cacheInfo.AbName].PackageSize;
+                cacheInfo.IsSuccess = cacheInfo.DownloadedBytes == RemotePackageCollection[cacheInfo.AbName].Size;
                 // 添加新缓存信息到集合
                 CachePackageCollection.TryAdd(cacheInfo.AbName, cacheInfo);
             }
@@ -436,10 +445,19 @@ namespace Core.AssetBundles.Update
             OnCheckProgress = null;
             OnUpdatePhase = null;
             OnUpdateSpeed = null;
+            OnUpdateFinish = null;
 
             // 重置下载计数和状态
-            cuurentDownloadedBytes = 0;
+            currentDownloadedBytes = 0;
             IsPauseDownload = false;
+        }
+        
+        ulong totalBytes;
+
+        public void AddBytesTest(ulong totalBytes)
+        {
+            this.totalBytes += totalBytes;
+            LogManager.Log($"下载总量：{this.totalBytes}");
         }
     }
 }

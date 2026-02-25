@@ -23,7 +23,6 @@ namespace GameHotUpdate.Manager
         {
             // 测试
             ServiceLocator.Register<IObjectBuilder>(new ObjectBuilder()); 
-            ServiceLocator.Register<IUIManager>(UIManager.Instance);
             
             // 注册游戏相关服务、管理器
             ServiceLocator.Register<IMouseManager>(MouseManager.Instance);

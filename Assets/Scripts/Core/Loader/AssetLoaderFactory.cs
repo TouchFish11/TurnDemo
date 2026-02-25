@@ -1,5 +1,6 @@
 using Core.HotUpdate;
-using Core.Loader.Audios;
+using Core.Loader.Audio;
+using Core.Loader.Object;
 using Core.Loader.Sprite;
 using Core.Loader.UI;
 using Core.Reflection;
@@ -30,6 +31,9 @@ namespace Core.Loader
                         break;
                     case IUiLoader uiLoader:
                         ServiceLocator.Register(uiLoader);
+                        break;
+                    case IPrefabLoader prefabLoader:
+                        ServiceLocator.Register(prefabLoader);
                         break;
                 }
             }

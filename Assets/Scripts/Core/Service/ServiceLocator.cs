@@ -4,7 +4,6 @@ using Core.AssetBundles.Management;
 using Core.AssetBundles.Update;
 using Core.DataPersistence.Binary;
 using Core.DataPersistence.Json;
-using Core.Dependence;
 using Core.EditorRes;
 using Core.GlobalEvent;
 using Core.HotUpdate;
@@ -22,6 +21,7 @@ using Core.Scene;
 using Core.ScriptableObject;
 using Core.Systems.Memorys;
 using Core.Time;
+using Core.UI;
 using Core.Video;
 
 namespace Core.Service
@@ -44,8 +44,6 @@ namespace Core.Service
         /// </summary>
         public static void InitService()
         {
-            Register<IDependencyManager>(DependencyManager.Instance);
-            
             // 继承Mono
             Register<IMonoAdapter>(MonoAdapter.Instance);
             Register<IQuitHandler>(QuitHandler.Instance);
@@ -53,6 +51,7 @@ namespace Core.Service
             Register<IMemoryMonitor>(MemoryMonitor.Instance);
 
             // 不继承Mono
+            Register<IUIManager>(UIManager.Instance);
             Register<IAssetBundleManager>(AssetBundleManager.Instance);
             Register<IAssetBundleUpdater>(AssetBundleUpdater.Instance);
             Register<IBinaryDataManager>(BinaryDataManager.Instance);

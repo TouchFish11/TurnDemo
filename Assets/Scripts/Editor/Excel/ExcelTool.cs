@@ -194,7 +194,7 @@ namespace Editor.Excel
                                 fs.Write(BitConverter.GetBytes(bool.Parse(row[j].ToString())), 0, 1);
                                 break;
                             case "string":
-                                byte[] bytes = Encoding.UTF8.GetBytes(row[j] == null ? "" : row[j].ToString());
+                                var bytes = Encoding.UTF8.GetBytes(row[j] == null ? "" : row[j].ToString());
                                 fs.Write(BitConverter.GetBytes(bytes.Length), 0, 4);
                                 fs.Write(bytes, 0, bytes.Length);
                                 break;

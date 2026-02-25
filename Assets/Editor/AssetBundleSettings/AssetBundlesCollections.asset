@@ -1,0 +1,697 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cf0b5756d01ec443bcbe5dc864aad70, type: 3}
+  m_Name: AssetBundlesCollections
+  m_EditorClassIdentifier: 
+  assetBundleInfos:
+  - assetBundleName: animation
+    assetInfos:
+    - assetPath: Assets\Editor\ArtRes\Animation\Monster\Slime_Attack_Anim.fbx
+      size: 198000
+      name: Slime_Attack_Anim.fbx
+      hash: b2bd7f8e2ad3b6b525ab6cf5ba21e0ad868e1318c6842860a1015508f8c702ef
+    - assetPath: Assets\Editor\ArtRes\Animation\Monster\TurtleShell_Attack_Anim.fbx
+      size: 313888
+      name: TurtleShell_Attack_Anim.fbx
+      hash: 0e011881b8df9fe9f22ccbf133395be3a27d5b169a5fb958b4aae491b68c14e8
+    - assetPath: Assets\Editor\ArtRes\Animation\Role\FireFly\FireFly_Attack_Anim.fbx
+      size: 910992
+      name: FireFly_Attack_Anim.fbx
+      hash: e8543fcd036c84c9a9f60f382bd94ad5c898de3b060a3d78bfb6a163a2b8be20
+    - assetPath: Assets\Editor\ArtRes\Animation\Role\FireFly\FireFly_BattleAttack_Anim.fbx
+      size: 910944
+      name: FireFly_BattleAttack_Anim.fbx
+      hash: f1c03c788de8dc0abef51e38dbf65e4397a72d9779f089721a04d20eaaaf8390
+    - assetPath: Assets\Editor\ArtRes\Animation\Role\FireFly\FireFly_Ultimate_Anim.fbx
+      size: 910736
+      name: FireFly_Ultimate_Anim.fbx
+      hash: e6e44de06e979578dfa94d1a6afd1d517f00a7b10d884e90d5c4d4467c80f429
+    - assetPath: Assets\Editor\ArtRes\Animation\Role\Herta\Herta_Attack_Anim.fbx
+      size: 910992
+      name: Herta_Attack_Anim.fbx
+      hash: e8543fcd036c84c9a9f60f382bd94ad5c898de3b060a3d78bfb6a163a2b8be20
+    - assetPath: Assets\Editor\ArtRes\Animation\Role\Herta\Herta_BattleAttack_Anim.fbx
+      size: 910944
+      name: Herta_BattleAttack_Anim.fbx
+      hash: f1c03c788de8dc0abef51e38dbf65e4397a72d9779f089721a04d20eaaaf8390
+    - assetPath: Assets\Editor\ArtRes\Animation\Role\Herta\Herta_Ultimate_Anim.fbx
+      size: 910736
+      name: Herta_Ultimate_Anim.fbx
+      hash: e6e44de06e979578dfa94d1a6afd1d517f00a7b10d884e90d5c4d4467c80f429
+    - assetPath: Assets\Editor\ArtRes\Animation\Role\Priest\Priest_Attack_Anim.fbx
+      size: 646448
+      name: Priest_Attack_Anim.fbx
+      hash: 8e818f96f17602cc13b71c8df09da4da7506823950ce125f2e8f3fa9e074561a
+    - assetPath: Assets\Editor\ArtRes\Animation\Role\Priest\Priest_BattleAttack_Anim.fbx
+      size: 677408
+      name: Priest_BattleAttack_Anim.fbx
+      hash: 13556b626f0c77f3887e3df8460f5b1e015e77e0c3e36136b9a34c968fcd0bc3
+    - assetPath: Assets\Editor\ArtRes\Animation\Role\Priest\Priest_Ultimate_01_Anim.fbx
+      size: 677328
+      name: Priest_Ultimate_01_Anim.fbx
+      hash: 2dd0641afc589ae68c6b71872e54b9d031ae4f734328f0e910ed42f303a6c534
+    - assetPath: Assets\Editor\ArtRes\Animation\Role\Priest\Priest_Ultimate_02_Anim.fbx
+      size: 646384
+      name: Priest_Ultimate_02_Anim.fbx
+      hash: 23772141f433d59b5d9466354673ccc976794d208745536fbf3771a9a6310033
+  - assetBundleName: animator
+    assetInfos:
+    - assetPath: Assets\Editor\ArtRes\Animator\PlayerController.controller
+      size: 8201
+      name: PlayerController.controller
+      hash: 179133e7fa2ae977d9dbfc1a3559f2d6d5c198d0db69c8f609024c6b2c37e2f6
+    - assetPath: Assets\Editor\ArtRes\Animator\Monster\AbyssalMageAnimator.controller
+      size: 17146
+      name: AbyssalMageAnimator.controller
+      hash: cd06c595bff4a14d5eb61034a5b6609147c1e160122154a880d84b0aac156482
+    - assetPath: Assets\Editor\ArtRes\Animator\Monster\BaseMonster.controller
+      size: 13384
+      name: BaseMonster.controller
+      hash: f47918c8dd1b37bde3884ff8e23a13004b7cfe89dd5befc61fbce688f7d8a589
+    - assetPath: Assets\Editor\ArtRes\Animator\Monster\ChestAnimator.controller
+      size: 17050
+      name: ChestAnimator.controller
+      hash: 450e7d8443dc44af61d6f1f68254a2f12618bb05a9282d6563c9454ca9b1aabd
+    - assetPath: Assets\Editor\ArtRes\Animator\Monster\SlimeAnimtor.controller
+      size: 15641
+      name: SlimeAnimtor.controller
+      hash: c0d1a3df3d9a5a4da0bdfc0ce04ef03f36683016ecfdb6909a303eb60c0f86af
+    - assetPath: Assets\Editor\ArtRes\Animator\Monster\TurtleShellAnimtor.controller
+      size: 15654
+      name: TurtleShellAnimtor.controller
+      hash: 4b38631be92b3c28c214d4ec3d2dba3791daeff927f53dd7ad74bd9d5fd78653
+    - assetPath: Assets\Editor\ArtRes\Animator\Role\BaseRole.controller
+      size: 28762
+      name: BaseRole.controller
+      hash: 88a8b9e8e2dac26ecafc7c67e00ab56d1b677518ea1cc439d06618b9cc6d1713
+    - assetPath: Assets\Editor\ArtRes\Animator\Role\FireFlyAnimtor.controller
+      size: 35982
+      name: FireFlyAnimtor.controller
+      hash: 77cb4b134606031b0c86b61b9fc096fb17421364a0b18610a51675a722f14729
+    - assetPath: Assets\Editor\ArtRes\Animator\Role\GunmanAnimator.controller
+      size: 33691
+      name: GunmanAnimator.controller
+      hash: 5121291e047f18246076acc4fbee7f1632bcc9b8b6be1bc9f6ebdf5969c5e388
+    - assetPath: Assets\Editor\ArtRes\Animator\Role\HertaAnimtor.controller
+      size: 33886
+      name: HertaAnimtor.controller
+      hash: ce682ba238196ab3c2c411d822b265a404a6eed255dbfb98d19621a8bdc69cb6
+    - assetPath: Assets\Editor\ArtRes\Animator\Role\PriestAnimator.controller
+      size: 35970
+      name: PriestAnimator.controller
+      hash: c85521b2edc80a8411e477f1494d4ee3fe13fce80c6ebee07f4c112d6ae5958e
+  - assetBundleName: camera
+    assetInfos:
+    - assetPath: Assets\Editor\ArtRes\Camera\BattleCamera.prefab
+      size: 2123
+      name: BattleCamera.prefab
+      hash: 556df893f1975848a107c70d550e00dded58ce575226f6270268d526085e9843
+    - assetPath: Assets\Editor\ArtRes\Camera\MainCamera.prefab
+      size: 2433
+      name: MainCamera.prefab
+      hash: b2eafcc61d2365eb5699eed3ff0c5b7cae5250e2334b8c386ab2b79ff80e22e8
+  - assetBundleName: default
+    assetInfos:
+    - assetPath: Assets\Editor\ArtRes\Default\Camera\UICamera.prefab
+      size: 2122
+      name: UICamera.prefab
+      hash: 6fc51e187324de2384e51aa67c27e3c50946fc47800f21722d4ba8202e1600e0
+    - assetPath: Assets\Editor\ArtRes\Default\CubeMap\CubemapStars.cubemap
+      size: 201327799
+      name: CubemapStars.cubemap
+      hash: 97a5ed68862d9d45cdedaffb145b38c2ff28bbca743a52a5e5a8ecedfd4576a4
+    - assetPath: Assets\Editor\ArtRes\Default\Material\StarSkybox.mat
+      size: 3061
+      name: StarSkybox.mat
+      hash: 22080f92b43b90ab32e18bbf2823bf0766bed462197affbe8220e05582130aab
+    - assetPath: Assets\Editor\ArtRes\Default\SpriteAtlas\Atlas_Default.spriteatlasv2
+      size: 394
+      name: Atlas_Default.spriteatlasv2
+      hash: c75d4b2c1813d8b8fe2a2aec17ec440d6f74e4b50ab099135fc5fbb02515e0b6
+    - assetPath: Assets\Editor\ArtRes\Default\Texture\StarSkybox041.png
+      size: 88847
+      name: StarSkybox041.png
+      hash: d7622d43c79c7e92d1ff8df8053f3f49469890ed68a47f1e6832d56a4b451b35
+    - assetPath: Assets\Editor\ArtRes\Default\Texture\StarSkybox042.png
+      size: 84085
+      name: StarSkybox042.png
+      hash: 58aed169a5de4b18092c51acdb3ff1b07ccf5f3216f762617413cca19311140a
+    - assetPath: Assets\Editor\ArtRes\Default\Texture\StarSkybox043.png
+      size: 119154
+      name: StarSkybox043.png
+      hash: 02d19351b142d1d3a2bd838434a2ae8c5253f5a7bf3a778496df9274fe9da9ad
+    - assetPath: Assets\Editor\ArtRes\Default\Texture\StarSkybox044.png
+      size: 127505
+      name: StarSkybox044.png
+      hash: c2fc952193de0a9c6f351e8b465bf438fa2da31d382e03b09ffef0e842b12095
+    - assetPath: Assets\Editor\ArtRes\Default\Texture\StarSkybox045.png
+      size: 110262
+      name: StarSkybox045.png
+      hash: 6f1fc7214df6164ca2889214f4b546fbd4b78c87eb9b1110b122f2fa08ef7e77
+    - assetPath: Assets\Editor\ArtRes\Default\Texture\StarSkybox046.png
+      size: 139147
+      name: StarSkybox046.png
+      hash: dc0b20db005d6c93f6bea3632549448c5d4c58b97f4eaf3b8131f9f6b37a9bf2
+    - assetPath: Assets\Editor\ArtRes\Default\UI\BeginView.prefab
+      size: 45110
+      name: BeginView.prefab
+      hash: f1a5064b83d922f6c2fbdbe0bd1923dcb0a3a354d505de86f552ab5a8ac3b5cd
+    - assetPath: Assets\Editor\ArtRes\Default\UI\Canvas.prefab
+      size: 13454
+      name: Canvas.prefab
+      hash: c87aab09ee33e6c83a1914e71cf7502e6d2b4f9742c02bce8381102203000a10
+    - assetPath: Assets\Editor\ArtRes\Default\UI\UpdateTipView.prefab
+      size: 17728
+      name: UpdateTipView.prefab
+      hash: 902d350f6ee4d5522527dec65dd684b94703568db0d6e1a733fd173368f676aa
+  - assetBundleName: gameconfig
+    assetInfos:
+    - assetPath: Assets\Editor\ArtRes\GameConfig\BattleActivityConfig.json
+      size: 1383
+      name: BattleActivityConfig.json
+      hash: 02f33ff6a1933a333b38b5cdf5fde2c23571818e4355c461c362077675e8e017
+    - assetPath: Assets\Editor\ArtRes\GameConfig\Editor\NewInfo.bytes
+      size: 33
+      name: NewInfo.bytes
+      hash: 58837203371e8fe49ec6194c2bf392884535ab5ad5efc6c7538b6728cfcb536a
+    - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\ActivityInfo.bytes
+      size: 955
+      name: ActivityInfo.bytes
+      hash: 542d9ca0201f4b16befdda9b4cf3baa7a2d19cdc169907caa2de39d5866e06a8
+    - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\BranchInfo.bytes
+      size: 159
+      name: BranchInfo.bytes
+      hash: 862cccb644a8cb0e89bce50fab43b6fb236fb98f85d84d45518f6c668ed8859a
+    - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\DialogueInfo.bytes
+      size: 384
+      name: DialogueInfo.bytes
+      hash: ec711fb9b864eea54ea4789065b5a02e0f94d24f398dcab8cc72210e08119243
+    - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\ItemInfo.bytes
+      size: 1363
+      name: ItemInfo.bytes
+      hash: a4f6ed67bcfb77a8ac3d9fda0f8155e9ff44ceec7a7541483a0dd5fc4506e7ed
+    - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\MonsterInfo.bytes
+      size: 878
+      name: MonsterInfo.bytes
+      hash: c0d99fc8d119c525af37f4f0aaabca0ea015d2c0dde49881bde1270fe78dec3c
+    - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\NpcInfo.bytes
+      size: 150
+      name: NpcInfo.bytes
+      hash: 8f34a7ebdca8de87c411dcdf9a48af8fddab624ede33e79a86259df51dab53ee
+    - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\RoleInfo.bytes
+      size: 767
+      name: RoleInfo.bytes
+      hash: 9b4fd89c3773b83ea1c88061290d890a5aed7edca27e8bc3c71552b0f6af46cf
+    - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\SkillInfo.bytes
+      size: 2138
+      name: SkillInfo.bytes
+      hash: 7c21d0aac276d1b42957be7543f3364460f23e91c1f4b64fa3c1bf313adc56de
+    - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\StatusInfo.bytes
+      size: 1051
+      name: StatusInfo.bytes
+      hash: 172427755316807d0e6895e6d87a153eb2830b956f61eca0d88fc4d6d72fb483
+    - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\TaskConditionInfo.bytes
+      size: 64
+      name: TaskConditionInfo.bytes
+      hash: 0d66c5449cb35a7d52b31770e0bc397c1090cb151399aa388479885662ac2d1d
+    - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\TaskInfo.bytes
+      size: 249
+      name: TaskInfo.bytes
+      hash: 606990f2df2da3911bc0cdbf24a53829325fc81037e7eaebab95101f692f42cd
+    - assetPath: Assets\Editor\ArtRes\GameConfig\InputConfig\MainActionMap.json
+      size: 6638
+      name: MainActionMap.json
+      hash: d681626eb25ae26f8a2a3e05bf1cc490fefad15470612193bace7674988ca194
+  - assetBundleName: hotupdate
+    assetInfos:
+    - assetPath: Assets\Editor\ArtRes\HotUpdate\Assembly-CSharp-Game-HotUpdate.dll.bytes
+      size: 348672
+      name: Assembly-CSharp-Game-HotUpdate.dll.bytes
+      hash: cc9ccf21ea464de423868b7a6ced4795f248243f29ec4b8b90af6b13809e971f
+  - assetBundleName: material
+    assetInfos:
+    - assetPath: Assets\Editor\ArtRes\Material\Ground.mat
+      size: 2213
+      name: Ground.mat
+      hash: 005f65a3875259a92f7679f6a4e285a3c31456930ea2812d2eb335147f209a3e
+  - assetBundleName: mesh
+    assetInfos:
+    - assetPath: Assets\Editor\ArtRes\Mesh\MergedMesh.asset
+      size: 87977
+      name: MergedMesh.asset
+      hash: 3616e8d14de9488578933757cafd072ccbf9320237643a6eedcf62d9728657df
+  - assetBundleName: prefab
+    assetInfos:
+    - assetPath: Assets\Editor\ArtRes\Prefab\Prefab_Player.prefab
+      size: 80476
+      name: Prefab_Player.prefab
+      hash: 7b9921066df45474efee9b0766024e44b0893104a73667565a4133b2e6350f66
+    - assetPath: Assets\Editor\ArtRes\Prefab\Main\Prefab_Main_Warrior.prefab
+      size: 92501
+      name: Prefab_Main_Warrior.prefab
+      hash: d940305765191588a3125f8d2d8c87e77c6bb04d2b2128c1b809426e5bc188f6
+    - assetPath: Assets\Editor\ArtRes\Prefab\Main\Prefab_Npc.prefab
+      size: 3581
+      name: Prefab_Npc.prefab
+      hash: 56e028b9f0479b238df7d3d3d565f8da72a2790548ebd39406649f3fa02f28f5
+    - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Prefab_AbyssalMage.prefab
+      size: 28357
+      name: Prefab_AbyssalMage.prefab
+      hash: 9e8bb6ccfe6f923347a0c994fb451a9a1e100fe5de514d3c6bec3448cdade587
+    - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Prefab_Boss.prefab
+      size: 81157
+      name: Prefab_Boss.prefab
+      hash: 2053373b3f918a24ec78af616e90feed1a965b91937a6ba9a4915123796be547
+    - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Prefab_Chest.prefab
+      size: 28511
+      name: Prefab_Chest.prefab
+      hash: e625eb32c556f3b842bd4042b5001ce9652b2e72e91a660ea39597dbfbdfb096
+    - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Prefab_Slime.prefab
+      size: 16617
+      name: Prefab_Slime.prefab
+      hash: 89c161c6c1a796c24fb8c132ed2321a37d3d7e774a263ed9dadf846de91f4253
+    - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Prefab_TurtleShell.prefab
+      size: 37036
+      name: Prefab_TurtleShell.prefab
+      hash: 2864f65a01d11e96d00f1dc3e88ee1426d4fb7a3e059b123193c1d01c4514e1e
+    - assetPath: Assets\Editor\ArtRes\Prefab\Role\Prefab_Gunman.prefab
+      size: 87144
+      name: Prefab_Gunman.prefab
+      hash: b1b044b8977567b777828e83c14a9ceba995ed2e35e57c6c856b1867986a6733
+    - assetPath: Assets\Editor\ArtRes\Prefab\Role\Prefab_Priest.prefab
+      size: 81530
+      name: Prefab_Priest.prefab
+      hash: 2a0c09f3164f4421aa4b1c4ea0a3ef787c29292df6a9b6cc14aadecbdc1babee
+    - assetPath: Assets\Editor\ArtRes\Prefab\Role\Prefab_Warrior.prefab
+      size: 92911
+      name: Prefab_Warrior.prefab
+      hash: be56ecff8785c92aedf89163ba93d8e862e03c44ffb0f861983d35e120d2b0c4
+    - assetPath: Assets\Editor\ArtRes\Prefab\Role\Prefab_Wizard.prefab
+      size: 91843
+      name: Prefab_Wizard.prefab
+      hash: bdca6f9e31198c952281373d2bc68c22a70c3f0da146fa2d1a26ceaa89694bc3
+    - assetPath: Assets\Editor\ArtRes\Prefab\UI\UI_3D_FloatingText.prefab
+      size: 10674
+      name: UI_3D_FloatingText.prefab
+      hash: 8b43d4b7b956810328e301a60cb5625bc04b03fc2b43ccb56861f1f934fea43a
+  - assetBundleName: scene
+    assetInfos:
+    - assetPath: Assets\Editor\ArtRes\Scene\BeginScene.unity
+      size: 21771
+      name: BeginScene.unity
+      hash: 66b1e6149e820ce51751291bfb7f6e3f21695e025fd4ef904f3a08c38282b965
+    - assetPath: Assets\Editor\ArtRes\Scene\LevelScene.unity
+      size: 113538
+      name: LevelScene.unity
+      hash: abb82ce6f3fc2fc3cf042d0e848c7ea44e10d8338a738d8ed595fda00253962b
+    - assetPath: Assets\Editor\ArtRes\Scene\MainScene.unity
+      size: 49952
+      name: MainScene.unity
+      hash: d5ff41bd211a105ee868f1bed217826acdbadbc202e5c905f5f233fe5ec6d8b7
+    - assetPath: Assets\Editor\ArtRes\Scene\Test\RoleTestScene.unity
+      size: 571677
+      name: RoleTestScene.unity
+      hash: 4a7e3c46ed3af9d6bdfb9f9a05c6bd657d98990aa2fd00c5a95e9bf5987d060a
+    - assetPath: Assets\Editor\ArtRes\Scene\Test\UniTaskTestScene.unity
+      size: 17373
+      name: UniTaskTestScene.unity
+      hash: bda8800bab40a9435bd47102eaa9d20af786e8c81a1041276d28b76f53959dcf
+  - assetBundleName: spriteatlas
+    assetInfos:
+    - assetPath: Assets\Editor\ArtRes\SpriteAtlas\Atlas_Activity.spriteatlasv2
+      size: 394
+      name: Atlas_Activity.spriteatlasv2
+      hash: fbbba0c583a077bc1c02a9231f57919ed7fea44518b364474b2cb74d97677df0
+    - assetPath: Assets\Editor\ArtRes\SpriteAtlas\Atlas_Generic.spriteatlasv2
+      size: 465
+      name: Atlas_Generic.spriteatlasv2
+      hash: b2b35b8089d10ce6ab8faec8183e96975d1771ef8a25b623828bb03841359850
+    - assetPath: Assets\Editor\ArtRes\SpriteAtlas\Atlas_SelTarget.spriteatlasv2
+      size: 2290
+      name: Atlas_SelTarget.spriteatlasv2
+      hash: 297d158df3fdce551fa64bf53b7253ec05064491b3665e3e5b01e275a683220a
+    - assetPath: Assets\Editor\ArtRes\SpriteAtlas\Icon\Atlas_Icon_BattleEntity.spriteatlasv2
+      size: 469
+      name: Atlas_Icon_BattleEntity.spriteatlasv2
+      hash: f2422d83ab4620191f1ba916d9ce0dd4389d128bd979ef737c383c1973545c31
+    - assetPath: Assets\Editor\ArtRes\SpriteAtlas\Icon\Atlas_Icon_Common.spriteatlasv2
+      size: 394
+      name: Atlas_Icon_Common.spriteatlasv2
+      hash: cdc0587c55e4bf94ff3785a5d2d4cd15077f695a9b846a604a90a8c4d988e9e9
+    - assetPath: Assets\Editor\ArtRes\SpriteAtlas\Icon\Atlas_Icon_Item.spriteatlasv2
+      size: 394
+      name: Atlas_Icon_Item.spriteatlasv2
+      hash: 05a395ced15cb8b24eb57247c95339cfda36d602b8735d9f2b5a31ee4388761b
+  - assetBundleName: ui
+    assetInfos:
+    - assetPath: Assets\Editor\ArtRes\UI\Activity\ActivityUI.prefab
+      size: 17209
+      name: ActivityUI.prefab
+      hash: a697e797d2a0d6a1750b344b6884fe98370d3ad4cac9fd5ef4b1f29ab6116203
+    - assetPath: Assets\Editor\ArtRes\UI\Activity\ActivityView.prefab
+      size: 27731
+      name: ActivityView.prefab
+      hash: 8c23ad6fd41e8df51f7078270558d645ea8209e69db635cd2216f390ed860cfd
+    - assetPath: Assets\Editor\ArtRes\UI\Activity\Common\ActivityBkComponent.prefab
+      size: 3644
+      name: ActivityBkComponent.prefab
+      hash: 5a59a339c44edb28519b0cd665885d1b5c0cf4b26bc45b11edb20d5f693bab40
+    - assetPath: Assets\Editor\ArtRes\UI\Activity\Common\ActivityDescritionComponent.prefab
+      size: 6607
+      name: ActivityDescritionComponent.prefab
+      hash: 52c8ac4a8b6c4c3730ccc54bd2e434b1358f50723e072998729cc95fd20d8569
+    - assetPath: Assets\Editor\ArtRes\UI\Activity\Common\ActivityJoinComponent.prefab
+      size: 9128
+      name: ActivityJoinComponent.prefab
+      hash: 2dfa0194bb86f9677de50e72b239f88c091474dcd35cd18139365c46c3844fa3
+    - assetPath: Assets\Editor\ArtRes\UI\Activity\Common\ActivityNameComponent.prefab
+      size: 6598
+      name: ActivityNameComponent.prefab
+      hash: 688833ad3ea3ccb977333dc90adb3e59ef4576b08e2751c66d94ee1de9002b2d
+    - assetPath: Assets\Editor\ArtRes\UI\Activity\Common\ActivityTemplateUI.prefab
+      size: 37477
+      name: ActivityTemplateUI.prefab
+      hash: 7cc12007965c4e8245e0193807455ee3e43a3508a8b5add7a6d7be5577e5fcef
+    - assetPath: Assets\Editor\ArtRes\UI\Activity\Common\ActvityTimeComponent.prefab
+      size: 9476
+      name: ActvityTimeComponent.prefab
+      hash: 815ed9039c2a4ceafbb83404dd8ada1136117a1e2537e6cf5a5a4fbae5a0ecaf
+    - assetPath: Assets\Editor\ArtRes\UI\Activity\Common\AwardPreviewComponent.prefab
+      size: 18956
+      name: AwardPreviewComponent.prefab
+      hash: 9d7407482427dacdf522fad087466770a280a40696e965303450e2f8ca79f2f0
+    - assetPath: Assets\Editor\ArtRes\UI\Activity\Common\LimitTimeAwardComponent.prefab
+      size: 11322
+      name: LimitTimeAwardComponent.prefab
+      hash: cf36436876df9cd07eb28726b692b9d49de420e884335ec463ce0332caedd947
+    - assetPath: Assets\Editor\ArtRes\UI\Activity\Details\EmbersCanonActivity\EmbersCanonActivityUI.prefab
+      size: 67577
+      name: EmbersCanonActivityUI.prefab
+      hash: a1f2e4d23de433ee6123d6538e810ca90163cadf6c52bfca462139f6b00126c7
+    - assetPath: Assets\Editor\ArtRes\UI\Activity\Details\EmbersCanonActivity\EmbersCanonSubActivityUI_01\BattleLevelUI.prefab
+      size: 11317
+      name: BattleLevelUI.prefab
+      hash: dc0fe4e4c98627c22e9fb1116901b08d5ccab17a3849bc0101d5dc5f4b90d954
+    - assetPath: Assets\Editor\ArtRes\UI\Activity\Details\EmbersCanonActivity\EmbersCanonSubActivityUI_01\EmbersCanonSubActivityUI_01.prefab
+      size: 28311
+      name: EmbersCanonSubActivityUI_01.prefab
+      hash: 2642c025f8268c57388b81da359ec258986cd3071d81a9330ddf5949e8e9f04f
+    - assetPath: Assets\Editor\ArtRes\UI\Activity\Details\OrbitalDepartureActivity\OrbitalDepartureActivityUI.prefab
+      size: 56288
+      name: OrbitalDepartureActivityUI.prefab
+      hash: ff407375b9e38bb4529b0a062bbfa7fdefff3ef45674e61cdba6fb2bd0828568
+    - assetPath: Assets\Editor\ArtRes\UI\Back\BackView.prefab
+      size: 3001
+      name: BackView.prefab
+      hash: 8d01858134ee14c7ece72d5897995778504d16e33bd4a42c37f7467d93ce6a2a
+    - assetPath: Assets\Editor\ArtRes\UI\Battle\BattleMessageUI.prefab
+      size: 11503
+      name: BattleMessageUI.prefab
+      hash: d4adef4129a947cfdbb8cbe8f5a422d38e98828e39bf4ea336ec910a116fbd9f
+    - assetPath: Assets\Editor\ArtRes\UI\Battle\BattleView.prefab
+      size: 92250
+      name: BattleView.prefab
+      hash: 596f636ce2736be0d83f66629c5aee976fc32d1c5144ede058ae83cacf7e668c
+    - assetPath: Assets\Editor\ArtRes\UI\Battle\SelectMarkerUI.prefab
+      size: 17123
+      name: SelectMarkerUI.prefab
+      hash: 40fb01220ac4ae1212a5c0764d740e2ceb7770909b38b934f90a39754e7f2c07
+    - assetPath: Assets\Editor\ArtRes\UI\Battle\ActionLine\ActionGridUI.prefab
+      size: 24487
+      name: ActionGridUI.prefab
+      hash: 9e9525277b2d4d9e19e4eba8517ae63eb01d7d1529f382a8211811595993a5c4
+    - assetPath: Assets\Editor\ArtRes\UI\Battle\ActionLine\WaitingActUI.prefab
+      size: 4839
+      name: WaitingActUI.prefab
+      hash: d7a86e45c78beb512efb8e0544f434ef46feaf2278edeab5c0ac1fa63534e9dd
+    - assetPath: Assets\Editor\ArtRes\UI\Battle\Buff\StatusEffectTextUI.prefab
+      size: 12670
+      name: StatusEffectTextUI.prefab
+      hash: d125ddd3e439f547caacc061e94fbc8d20a0fff1502128f97fca2275845e606e
+    - assetPath: Assets\Editor\ArtRes\UI\Battle\Buff\StatusGridUI.prefab
+      size: 10978
+      name: StatusGridUI.prefab
+      hash: cba2c8cfb7e8cafc272abb9e6be1b9c1153e4171d5f9dce8f66c1a551bb3d3a4
+    - assetPath: Assets\Editor\ArtRes\UI\Battle\Float\DamageTextUI.prefab
+      size: 10414
+      name: DamageTextUI.prefab
+      hash: 347191d33e56e211551cece53d1b238b2219d2f36d6a147db9f5727a844c1f51
+    - assetPath: Assets\Editor\ArtRes\UI\Battle\Float\HealTextUI.prefab
+      size: 9907
+      name: HealTextUI.prefab
+      hash: 0ed9ae1b17a4e04c98dcec61a95e0fecfe71dd4f3a850b6f00f5aa99a2a9fc57
+    - assetPath: Assets\Editor\ArtRes\UI\Battle\Float\ShieldTextUI.prefab
+      size: 9881
+      name: ShieldTextUI.prefab
+      hash: 9a4d7de0fc50aecfa6c4b2c13954991c085c167ee591b62a78cfe9558f442875
+    - assetPath: Assets\Editor\ArtRes\UI\Battle\Monster\MonsterStateUI.prefab
+      size: 18110
+      name: MonsterStateUI.prefab
+      hash: 506cd8c383c590279f880f4ff425876b4236315cf9f911062d8e1e70c8c92335
+    - assetPath: Assets\Editor\ArtRes\UI\Battle\Monster\WeaknessUI.prefab
+      size: 2166
+      name: WeaknessUI.prefab
+      hash: 0777fb2cc8084aae783a8f900430222eed41de04c91977d513cd3b7592f66e47
+    - assetPath: Assets\Editor\ArtRes\UI\Battle\Role\BattlePointUI.prefab
+      size: 4888
+      name: BattlePointUI.prefab
+      hash: 10b73b9a9ce36ba7eafa9e1f6835e1e0a5ae912d5bbf8d3127818c5440ad65cf
+    - assetPath: Assets\Editor\ArtRes\UI\Battle\Role\RoleStateUI.prefab
+      size: 33928
+      name: RoleStateUI.prefab
+      hash: 05b3d1fa633783488ad929d9ae826e9a1669be9f576706ca9a79d4672199c07d
+    - assetPath: Assets\Editor\ArtRes\UI\Battle\Role\SkillKeyUI.prefab
+      size: 9176
+      name: SkillKeyUI.prefab
+      hash: 62744b8485890b6c51524e30675a2dae8f0920a261fa2305746c86c0ff716c08
+    - assetPath: Assets\Editor\ArtRes\UI\Dialogue\DialogueOptUI.prefab
+      size: 17107
+      name: DialogueOptUI.prefab
+      hash: 6e2bd625e796a1f6595f0160065d7c97cc8ffc2866c357ff5d0fdef96a766c8f
+    - assetPath: Assets\Editor\ArtRes\UI\Dialogue\DialogueReviewUI.prefab
+      size: 5770
+      name: DialogueReviewUI.prefab
+      hash: 3453203f2d6a2bd2d2f5110b0703e259808395fd5ee5b920c8402004947cd585
+    - assetPath: Assets\Editor\ArtRes\UI\Dialogue\DialogueView.prefab
+      size: 99719
+      name: DialogueView.prefab
+      hash: 8bf0c9eab36317bcf3c61c09505001181da315883dfd95b710461d16e5ca4de1
+    - assetPath: Assets\Editor\ArtRes\UI\Global\GlobalMessageView.prefab
+      size: 9870
+      name: GlobalMessageView.prefab
+      hash: 0c5253f8a3540039cffa2656277fd7758a0a6db065b5c1829874749dc2452074
+    - assetPath: Assets\Editor\ArtRes\UI\Global\MessageUI.prefab
+      size: 7288
+      name: MessageUI.prefab
+      hash: 3d3c461bae8bb62414f5d9688d0c8e87395fb846b5e4873d3ceac09ae86f2b1a
+    - assetPath: Assets\Editor\ArtRes\UI\Inreract\InteractUI.prefab
+      size: 14211
+      name: InteractUI.prefab
+      hash: bf5680bfbde04e366ea1fa43e57a9201db6b5df2b2c5763d232301fca7d39cb7
+    - assetPath: Assets\Editor\ArtRes\UI\Item\ItemGrid.prefab
+      size: 11898
+      name: ItemGrid.prefab
+      hash: 49408328ea48b9f00a7ec547c48ef021101f6dd66b00ce0f5f84954dbe5d7b31
+    - assetPath: Assets\Editor\ArtRes\UI\Loading\BattleLoadingView.prefab
+      size: 15153
+      name: BattleLoadingView.prefab
+      hash: 106e26cbf69c3b80dd390c2de0fe7037a6963763e7146d4cb2d0ee1ca3be5591
+    - assetPath: Assets\Editor\ArtRes\UI\Login\LoginView.prefab
+      size: 37587
+      name: LoginView.prefab
+      hash: 5ee6e2a627a59b3a90b4fbc798b22d67a1d71109b560d7658a9e633d0a5714aa
+    - assetPath: Assets\Editor\ArtRes\UI\Main\MainView.prefab
+      size: 78047
+      name: MainView.prefab
+      hash: 61fb1874b5dd44e4d260c115986534aa0725c663fb693f607a7561420cd78ee5
+    - assetPath: Assets\Editor\ArtRes\UI\Task\TaskItem.prefab
+      size: 13632
+      name: TaskItem.prefab
+      hash: 5e1c89f005b1ed7980ad08cdeb19c244a7b47a4d1d79cbc255a629a83bdd556f
+    - assetPath: Assets\Editor\ArtRes\UI\Task\TaskTypeContainer.prefab
+      size: 12043
+      name: TaskTypeContainer.prefab
+      hash: e729dc8ee5926adf37e640abf718f8755f5f22923599b83926fbd8f408ca47f3
+    - assetPath: Assets\Editor\ArtRes\UI\Task\TaskView.prefab
+      size: 57013
+      name: TaskView.prefab
+      hash: bfc14884368ddb94f43a869ea765d6772bcd553734fb9a1c4d217806f6fd954d
+    - assetPath: Assets\Editor\ArtRes\UI\Tip\BaseTipView.prefab
+      size: 11726
+      name: BaseTipView.prefab
+      hash: 540d57a22100fa886f156612bd6e7e365a11ca5ac6e7c09ec900724c153800c7
+  - assetBundleName: vfx
+    assetInfos:
+    - assetPath: Assets\Editor\ArtRes\VFX\General\VFX_Environment_Rain.prefab
+      size: 235328
+      name: VFX_Environment_Rain.prefab
+      hash: 246128e9a8559a1e75a36b087bfe40ab9a4648fee2c62a0aecd586be8ff328d1
+    - assetPath: Assets\Editor\ArtRes\VFX\General\VFX_SupportSkill_01.prefab
+      size: 707289
+      name: VFX_SupportSkill_01.prefab
+      hash: 0eb04ed250a0e4c25b621dfa9d7c7b27d631cac32205db476fe4a0125ee53fa9
+    - assetPath: Assets\Editor\ArtRes\VFX\General\VFX_SupportSkill_02.prefab
+      size: 235386
+      name: VFX_SupportSkill_02.prefab
+      hash: 371404d4e81c5724c8d975c5f3f24c0fb0f197d2053cab5491351f7f27fa3053
+    - assetPath: Assets\Editor\ArtRes\VFX\General\Hit\VFX_MonsterHit.prefab
+      size: 237071
+      name: VFX_MonsterHit.prefab
+      hash: bbdfcc11d881f4a2261f8186de447e7c9ef11f1daf5f4a5b60dbc095e222225b
+    - assetPath: Assets\Editor\ArtRes\VFX\General\Hit\Property\VFX_FirePropertySkill_Hit.prefab
+      size: 474149
+      name: VFX_FirePropertySkill_Hit.prefab
+      hash: dee8ce37957a287474f42f1523e51f1aec1e596513f059f2cd2288d66b4ca6bd
+    - assetPath: Assets\Editor\ArtRes\VFX\General\Hit\Property\VFX_IcePropertySkill_Hit.prefab
+      size: 592681
+      name: VFX_IcePropertySkill_Hit.prefab
+      hash: 8a60b1b6cb45cb9ec79540e3941a62dfd5131bcb3d111e3a25745e7afcd5771e
+    - assetPath: Assets\Editor\ArtRes\VFX\General\Hit\Property\VFX_WindPropertySkill_Hit.prefab
+      size: 474114
+      name: VFX_WindPropertySkill_Hit.prefab
+      hash: dc2c3336feee13b72f1ebe4b6b31be8df2e98c48f0f669e2ffdc9b586d64c14d
+    - assetPath: Assets\Editor\ArtRes\VFX\General\Status\VFX_Dot_Burn.prefab
+      size: 474130
+      name: VFX_Dot_Burn.prefab
+      hash: fc341dd27762d4c6da539250c0da37ebd8f11b1a8415d06cb8336e86514f3215
+    - assetPath: Assets\Editor\ArtRes\VFX\General\Status\VFX_Dot_IceErosion.prefab
+      size: 467848
+      name: VFX_Dot_IceErosion.prefab
+      hash: 1dcc7995bcba63981abb4730f560cc51ae33a6163a0f225af36b53f43b528981
+    - assetPath: Assets\Editor\ArtRes\VFX\General\Status\VFX_Dot_Weather.prefab
+      size: 467879
+      name: VFX_Dot_Weather.prefab
+      hash: 85fb2fc2926e2b71821a21129a37c2d238dc855c7a36c56d8e0847c35769ed43
+    - assetPath: Assets\Editor\ArtRes\VFX\General\Status\VFX_Heal.prefab
+      size: 708530
+      name: VFX_Heal.prefab
+      hash: cfdd59286d229a0e861fe82f4c5d63334f17081e99c9eb7293fdc47f97edf6d2
+    - assetPath: Assets\Editor\ArtRes\VFX\General\Status\VFX_Shield.prefab
+      size: 350822
+      name: VFX_Shield.prefab
+      hash: f142f3f36e1000acc929e10bfa5626d1edb5028633849de111c569c5211322e7
+    - assetPath: Assets\Editor\ArtRes\VFX\Monster\VFX_MonsterDead.prefab
+      size: 235605
+      name: VFX_MonsterDead.prefab
+      hash: a9d6baaa619b57b00436382a6c53c042cc2a52c06c3d475eabb5731f7f633e1b
+    - assetPath: Assets\Editor\ArtRes\VFX\Monster\VFX_MonsterEnterBattle.prefab
+      size: 471161
+      name: VFX_MonsterEnterBattle.prefab
+      hash: 2edb13a670b34bdc2b925f10957b1e68a8f6f37b5f6cafa6c957b94b3da1c9fb
+    - assetPath: Assets\Editor\ArtRes\VFX\Monster\AbyssalMage\VFX_AbyssalMage_Pose.prefab
+      size: 469486
+      name: VFX_AbyssalMage_Pose.prefab
+      hash: a5f2060b78666ccb089a0c634d0f62c021232d3f28c7efa4b5cb0bdb28bc2248
+    - assetPath: Assets\Editor\ArtRes\VFX\Monster\AbyssalMage\Skill\01\VFX_AbyssGiftSkillProjectile.prefab
+      size: 468719
+      name: VFX_AbyssGiftSkillProjectile.prefab
+      hash: 0adb90debc8504496b909ed2e79cd5a7458fa588125e0dea31a21283a639ceba
+    - assetPath: Assets\Editor\ArtRes\VFX\Monster\AbyssalMage\Skill\01\VFX_FrostfallSkillProjectile.prefab
+      size: 830377
+      name: VFX_FrostfallSkillProjectile.prefab
+      hash: ff190e182bf916203130aed51ecabf05678c9f9bc6713acc2748a5a26526d138
+    - assetPath: Assets\Editor\ArtRes\VFX\Monster\AbyssalMage\Skill\02\VFX_AbyssLockSkillProjectile.prefab
+      size: 125907
+      name: VFX_AbyssLockSkillProjectile.prefab
+      hash: ef5daa7cb87dff82d65721358519abb61fc3d1ef2dfd2076005bbbdafb683151
+    - assetPath: Assets\Editor\ArtRes\VFX\Monster\AbyssalMage\Skill\02\VFX_AshfallSkillProjectile.prefab
+      size: 1305609
+      name: VFX_AshfallSkillProjectile.prefab
+      hash: cd05a1039d439ee11ce2c828b43f274cae0e99be377fb1d97cda5101431f55e6
+    - assetPath: Assets\Editor\ArtRes\VFX\Monster\SlimeAndTurtleShell\VFX_MonsterAttackSkill.prefab
+      size: 354910
+      name: VFX_MonsterAttackSkill.prefab
+      hash: 797bb8c07f3278327361d28367f5f6ebe898a4fb0cb6b593f8e730d3f22dd084
+    - assetPath: Assets\Editor\ArtRes\VFX\Role\Priest\VFX_Priest_BattleSkill.prefab
+      size: 708971
+      name: VFX_Priest_BattleSkill.prefab
+      hash: 742450af4c9127865222076c297e93ef63262e70477b60d725737b60b43ec20c
+    - assetPath: Assets\Editor\ArtRes\VFX\Role\Priest\VFX_Priest_NormalSkill.prefab
+      size: 1071872
+      name: VFX_Priest_NormalSkill.prefab
+      hash: abcb76b7e56b571a9cf0e08088c219cb1a810c5e9a1a9631552dd6c10e96191c
+    - assetPath: Assets\Editor\ArtRes\VFX\Role\Priest\VFX_Priest_UltiamteSkill.prefab
+      size: 707725
+      name: VFX_Priest_UltiamteSkill.prefab
+      hash: ea844e8092b17e459b1d0e10b052b5a2c4498b2596a5f0a3873aed7a322b7bae
+    - assetPath: Assets\Editor\ArtRes\VFX\Role\Priest\VFX_Priest_UltimatePose.prefab
+      size: 709612
+      name: VFX_Priest_UltimatePose.prefab
+      hash: 2b6848417870c8d2dea933f83b546e49e6199e7af20c1c1fbe688340cdbfe814
+    - assetPath: Assets\Editor\ArtRes\VFX\Role\Warrior\VFX_BlueHit.prefab
+      size: 476733
+      name: VFX_BlueHit.prefab
+      hash: 399a3086de14349dd3399c0fdaea7d6b8aff3a6edb94a84c2073c5413c4c6142
+    - assetPath: Assets\Editor\ArtRes\VFX\Role\Warrior\VFX_NormalSkill_Wave.prefab
+      size: 236630
+      name: VFX_NormalSkill_Wave.prefab
+      hash: 0cd2ede1163d908990fedf48f424c880a2a5087ad6a6a55242daf1fb6f7bfe15
+    - assetPath: Assets\Editor\ArtRes\VFX\Role\Warrior\VFX_WarriorBattleSkill.prefab
+      size: 355820
+      name: VFX_WarriorBattleSkill.prefab
+      hash: 757c3361738d6b9d4c1b9ea084881123ade01eb484661f760f8661a462b8746a
+    - assetPath: Assets\Editor\ArtRes\VFX\Role\Warrior\VFX_WarriorNormalSkill.prefab
+      size: 474203
+      name: VFX_WarriorNormalSkill.prefab
+      hash: d55a845f712c7c0fa0e4fd683e8a1d8ccbbeb13f791cbc0704e0c1b1f1f2a86d
+    - assetPath: Assets\Editor\ArtRes\VFX\Role\Warrior\VFX_WarriorUltimatePose.prefab
+      size: 117000
+      name: VFX_WarriorUltimatePose.prefab
+      hash: c58269a449119746979288d4f39b9085780e8862c84e8cca5a24edc9c5c8a331
+    - assetPath: Assets\Editor\ArtRes\VFX\Role\Warrior\VFX_WarriorUltimateSkill.prefab
+      size: 364391
+      name: VFX_WarriorUltimateSkill.prefab
+      hash: f3143489b34feeea3c36c820b7b731a876505d50a9b5db1fdec420a379cd2442
+    - assetPath: Assets\Editor\ArtRes\VFX\Role\Wizard\VFX_WizardBattleSkill.prefab
+      size: 1440047
+      name: VFX_WizardBattleSkill.prefab
+      hash: 21b9203838cd4192d85d55a9c9c5814a2264977ac252542700038146a619126c
+    - assetPath: Assets\Editor\ArtRes\VFX\Role\Wizard\VFX_WizardNormalSkill.prefab
+      size: 717002
+      name: VFX_WizardNormalSkill.prefab
+      hash: c8fcad081418fbd4e014e940e7962694d6b783f3ce8ebaaeea8a0a849ad1e648
+    - assetPath: Assets\Editor\ArtRes\VFX\Role\Wizard\VFX_WizardSkill.prefab
+      size: 1546514
+      name: VFX_WizardSkill.prefab
+      hash: 1be9079334d4672769aa38ef6806e657f155ea5ec715f2e3110f8cd1cb20dc9d
+    - assetPath: Assets\Editor\ArtRes\VFX\Role\Wizard\VFX_WizardUltimatePose.prefab
+      size: 118708
+      name: VFX_WizardUltimatePose.prefab
+      hash: 98999bd860fa4aa81f204287cc853d3bb2a7a81549e7933341d935a6c3fdbbac
+    - assetPath: Assets\Editor\ArtRes\VFX\Role\Wizard\VFX_WizardUltimateSkill.prefab
+      size: 839429
+      name: VFX_WizardUltimateSkill.prefab
+      hash: cb816b07bfd7ae15b3fa3f9d94f286adae7b26c071c9cb831b3de7be1c68b80c
+    - assetPath: Assets\Editor\ArtRes\VFX\Unknow\VFX_Dot_Blue01.prefab
+      size: 596053
+      name: VFX_Dot_Blue01.prefab
+      hash: 60befcef420fb064e7495c31297db82440d56ed66ba399122e55a8d1c420105b
+    - assetPath: Assets\Editor\ArtRes\VFX\Unknow\VFX_Dot_Blue03.prefab
+      size: 596001
+      name: VFX_Dot_Blue03.prefab
+      hash: 67a02adf57ed78654e1613dafe4b9013ea35424a0ac7036ee730842c2aedbfa0
+    - assetPath: Assets\Editor\ArtRes\VFX\Unknow\VFX_Dot_Green01.prefab
+      size: 595985
+      name: VFX_Dot_Green01.prefab
+      hash: f123ec5de15156084d538dd61ea7200be12911aad3a8b4d989b40d818c38af8e
+    - assetPath: Assets\Editor\ArtRes\VFX\Unknow\VFX_Unknow01.prefab
+      size: 350847
+      name: VFX_Unknow01.prefab
+      hash: 89a75ab4ef925307944d8087677d6a265af2f7c5ce5d89e0013c70a1fb728742
+    - assetPath: Assets\Editor\ArtRes\VFX\Unknow\VFX_Unknow03.prefab
+      size: 1071433
+      name: VFX_Unknow03.prefab
+      hash: b6c8c9cc956b9f7a336a58bc0095c82acc1739422ea893a1cb667c27513e3044
+    - assetPath: Assets\Editor\ArtRes\VFX\Unknow\VFX_Unkow02.prefab
+      size: 597213
+      name: VFX_Unkow02.prefab
+      hash: 6f4c45645f40712cc64aad86f178ac00542e33cd85ee57507955789af55a1470

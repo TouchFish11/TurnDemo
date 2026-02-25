@@ -3,6 +3,7 @@ using Core.Service;
 using Game.Battle.Objects;
 using Game.Battle.Skill.Handler;
 using Game.Battle.Skill.Interface;
+using GameHotUpdate.Battle.Object.Monster.AbyssalMage.Skill.Handler;
 using GameHotUpdate.Battle.Skill.Base;
 using GameHotUpdate.Battle.Skill.Handlers;
 
@@ -29,6 +30,18 @@ namespace GameHotUpdate.Battle.Object.Monster.AbyssalMage.Skill
                         GetSkillCastPostHandler<BaseSkillCastPostHandler>();
                     
                     return new SkillData(new AshfallSkill(caster, skillId, null), handler);
+                case 105:
+                    handler = ServiceLocator.Get<IFactoryManager>().
+                        GetFactory<ISkillCastPostHandlerFactory, SkillCastPostHandlerFactory>().
+                        GetSkillCastPostHandler<AbyssalMageSkillCastPostHandler>();
+                    
+                    return new SkillData(new AbyssGiftSkill(caster, skillId, null), handler);
+                case 106:
+                    handler = ServiceLocator.Get<IFactoryManager>().
+                        GetFactory<ISkillCastPostHandlerFactory, SkillCastPostHandlerFactory>().
+                        GetSkillCastPostHandler<AbyssalMageSkillCastPostHandler>();
+                    
+                    return new SkillData(new AbyssLockSkill(caster, skillId, null), handler);
                 default:
                     return null;
             }

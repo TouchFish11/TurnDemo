@@ -1,7 +1,5 @@
 using System.Threading.Tasks;
-using Core.AssetBundles.Management;
-using Core.AssetBundles.Update.Collection;
-using Core.Config;
+using Core.Collection;
 using Core.DataPersistence.Binary;
 using Core.Loader.UI;
 using Core.Pool;
@@ -9,6 +7,7 @@ using Core.Service;
 using Core.UI;
 using Core.UI.MVC;
 using Game.Tasks;
+using GameHotUpdate.Config;
 using GameHotUpdate.Item;
 
 namespace GameHotUpdate.Tasks.UI
@@ -28,7 +27,7 @@ namespace GameHotUpdate.Tasks.UI
         /// 完成任务数据初始化、视图状态初始化等核心初始化逻辑
         /// </summary>
         /// <returns>异步任务</returns>
-        protected override async System.Threading.Tasks.Task OnInit()
+        protected override async Task OnInit()
         {
             // 初始化所有任务数据和UI展示
             await InitTasks();
@@ -83,7 +82,7 @@ namespace GameHotUpdate.Tasks.UI
             {
                 case "btnClose":
                     // 关闭任务UI视图
-                    ServiceLocator.Get<IUIManager>().DestroyView(this);
+                    ServiceLocator.Get<IUIManager>().DestroyView(AbKeyCollection.Ui, this);
                     break;
                 case "btnAcceptTask":
                     // 切换任务追踪状态（接受/取消追踪）
@@ -109,7 +108,7 @@ namespace GameHotUpdate.Tasks.UI
         /// 加载任务配置、筛选任务状态、创建任务分类和任务项UI
         /// </summary>
         /// <returns>异步任务</returns>
-        private async System.Threading.Tasks.Task InitTasks()
+        private async Task InitTasks()
         {
             // 临时设置任务分组允许取消选中，避免初始化过程中Toggle无法响应事件
             view.TaskItemGroup.allowSwitchOff = true;
@@ -168,7 +167,7 @@ namespace GameHotUpdate.Tasks.UI
         private async Task<TaskTypeContainer> CreateTaskTypeContainer(TaskInfo taskInfo)
         {
             // 从资源包中异步加载任务类型容器预制体并创建实例
-            var taskTypeContainerWrapper = await ServiceLocator.Get<IUiLoader>().GetUIObject<TaskTypeContainer>(EAssetBundleType.UI, ResKeyCollection.TaskTypeContainer, view.TaskContent);
+            var taskTypeContainerWrapper = await ServiceLocator.Get<IUiLoader>().GetUIObject<TaskTypeContainer>(AbKeyCollection.Ui, ResKeyCollection.TaskTypeContainer, view.TaskContent);
             // 初始化任务类型容器（设置对应的任务类型）
             taskTypeContainerWrapper.Init(taskInfo.f_taskType);
             // 将创建的容器添加到模型中管理
@@ -182,18 +181,16 @@ namespace GameHotUpdate.Tasks.UI
         /// <param name="taskInfo">任务信息（配置数据）</param>
         /// <param name="container">该任务项所属的任务类型容器</param>
         /// <returns>异步任务</returns>
-        private async System.Threading.Tasks.Task CreateTaskItem(TaskInfo taskInfo, TaskTypeContainer container)
+        private async Task CreateTaskItem(TaskInfo taskInfo, TaskTypeContainer container)
         {
             // 从资源包中异步加载任务项预制体，并挂载到对应任务类型容器的Transform下
-            var taskItemWrapper = await ServiceLocator.Get<IUiLoader>().GetUIObject<TaskItem>(EAssetBundleType.UI, ResKeyCollection.TaskItem, container.transform);
+            var taskItem = await ServiceLocator.Get<IUiLoader>().GetUIObject<TaskItem>(AbKeyCollection.Ui, ResKeyCollection.TaskItem, container.transform);
             // 注册任务项选中事件，选中时更新任务详情展示
-            taskItemWrapper.OnSelectedTask += UpdateTaskDetail;
-            // 尝试从任务数据集合中获取该任务的状态数据
-            //((Collection<string, TaskData>)taskDataCollection).TryGetValue(taskInfo.f_id, out var _);
+            taskItem.OnSelectedTask += UpdateTaskDetail;
             // 初始化任务项UI（传入任务信息和任务分组组件）
-            taskItemWrapper.Init(taskInfo, view.TaskItemGroup);
+            taskItem.Init(taskInfo, view.TaskItemGroup);
             // 将任务项添加到所属的任务类型容器中管理
-            container.AddItem(taskItemWrapper);
+            container.AddItem(taskItem);
         }
 
         /// <summary>
@@ -222,25 +219,7 @@ namespace GameHotUpdate.Tasks.UI
             // 解析奖励ID数组，获取物品格子
             ItemUtility.GetItemGrid(selectTaskInfo.f_taskRewrardIds, view.RewardBox, grid => model.AddItemGrid(grid));
             
-            // // 解析奖励ID数组
-            // TextUtility.SplitMultiple(selectTaskInfo.f_taskRewrardIds, 1, 2, async (int awardId, int num) =>
-            // {
-            //     // 获取UI
-            //     var itemGrid = await ServiceLocator.Get<IUiLoader>().GetUIObject<ItemGrid>(EAssetBundleType.UI, ResKeyCollection.ItemGrid, view.RewardBox);
-            //     // 读取配置
-            //     var itemInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<ItemInfoContainer>(EConfigLoadType.Excel).dataDic[awardId];
-            //     // 加载图标
-            //     var itemIcon = await ServiceLocator.Get<IFactoryManager>()
-            //         .GetFactory<IAssetLoaderFactory, AssetLoaderFactory>().GetSpriteLoader()
-            //         .GetSpriteAsync(ResKeyCollection.Atlas_Icon, itemInfo.f_icon);
-            //     // 初始化
-            //     itemGrid.Init(itemIcon, num, itemInfo.f_quality);
-            //     // 缓存
-            //     model.AddItemGrid(itemGrid);
-            // });
-            
             // 同步任务追踪状态：从任务数据集合中获取当前任务的追踪标记
-            
             if (((Collection<string, TaskData>)taskDataCollection).TryGetValue(id, out var taskData))
             {
                 model.IsFollowingTask = taskData.isTracking;

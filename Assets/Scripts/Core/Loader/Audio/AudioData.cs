@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Core.Loader.Audios
+namespace Core.Loader.Audio
 {
     public struct AudioData
     {

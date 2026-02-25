@@ -24,11 +24,12 @@ namespace Core.Loader.Sprite
         /// <summary>
         /// 异步加载Sprite
         /// </summary>
+        /// <param name="abName"></param>
         /// <param name="atlasName"></param>
         /// <param name="assetName"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async Task<UnityEngine.Sprite> LoadSpriteAsync(string atlasName, string assetName, CancellationToken token = default)
+        public async Task<UnityEngine.Sprite> LoadSpriteAsync(string abName, string atlasName, string assetName, CancellationToken token = default)
         {
             // 存在图集
             if (_atlasDatas.TryGetValue(atlasName, out var atlasData))
@@ -54,7 +55,7 @@ namespace Core.Loader.Sprite
             else
             {
                 // 加载图集包
-                var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(EAssetBundleType.SpriteAtlas, token);
+                var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(abName, token);
                 // 加载指定图集
                 var atlas = await assetBundle.LoadAssetAsync<SpriteAtlas>(atlasName).ToTask<SpriteAtlas>(token);
                 // 图集加载失败，则返回默认精灵
@@ -84,7 +85,7 @@ namespace Core.Loader.Sprite
             }
         }
         
-        public void UnloadSpriteAsync(string atlasName, string spriteName, bool unloadAllLoadedObjects = false)
+        public void UnloadSpriteAsync(string abName, string atlasName, string spriteName, bool unloadAllLoadedObjects = false)
         {
             if (!_atlasDatas.TryGetValue(atlasName, out var atlasData))
             {
@@ -95,11 +96,7 @@ namespace Core.Loader.Sprite
             if(atlasData.GetRefCount() == 0)
             {
                 _atlasDatas.Remove(atlasName);
-            }
-
-            if (_atlasDatas.Count == 0)
-            {
-                ServiceLocator.Get<IAssetBundleManager>().UnloadBundleAsync(EAssetBundleType.SpriteAtlas, unloadAllLoadedObjects);
+                ServiceLocator.Get<IAssetBundleManager>().UnloadBundle(abName, unloadAllLoadedObjects);
             }
         }
     }

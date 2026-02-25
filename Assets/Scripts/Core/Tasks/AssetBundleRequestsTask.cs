@@ -120,12 +120,6 @@ namespace Core.Tasks
         /// <param name="operation">异步操作对象（AssetBundleRequest）</param>
         private void OnRequestCompleted(AsyncOperation operation)
         {
-            // 防止重复调用（原生回调可能存在重复触发风险）
-            if (_isCompleted)
-            {
-                return;
-            }
-            
             try
             {
                 // 仅当未触发取消请求时，才获取加载结果
@@ -135,18 +129,19 @@ namespace Core.Tasks
                     {
                         _result.Add(asset as T);
                     }
+                    
+                    // 无论是否异常，都标记任务完成
+                    _isCompleted = true;
+                    // 执行延续回调，通知任务完成
+                    _continuation?.Invoke();
                 }
             }
             finally
             {
-                // 无论是否异常，都标记任务完成
-                _isCompleted = true;
                 // 移除原生回调，避免内存泄漏
                 _abr.completed -= OnRequestCompleted;
                 // 释放取消令牌注册器，取消监听
                 _cancellationTokenRegistration.Dispose();
-                // 执行延续回调，通知任务完成
-                _continuation?.Invoke();
             }
         }
         

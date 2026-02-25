@@ -1,6 +1,4 @@
 using System.Threading.Tasks;
-using Core.AssetBundles.Management;
-using Core.Config;
 using Core.Mono;
 using Core.Pool;
 using Core.Service;
@@ -11,6 +9,7 @@ using Game.Battle.TargetSelect;
 using Game.Objects;
 using GameHotUpdate.Battle;
 using GameHotUpdate.Battle.Event.Turn;
+using GameHotUpdate.Config;
 using UnityEngine;
 
 namespace GameHotUpdate.Cameras
@@ -62,7 +61,7 @@ namespace GameHotUpdate.Cameras
             }
             
             var cameraObj = await ServiceLocator.Get<IObjectBuilder>()
-                .GetGameobject(EAssetBundleType.Camera, ResKeyCollection.BattleCamera, cameraTrans);
+                .GetGameobject(AbKeyCollection.Camera, ResKeyCollection.BattleCamera, cameraTrans);
             CurrentActiveCamera = cameraObj.GetComponent<Camera>();
             CurrentActiveCamera.transform.SetLocalPositionAndRotation(localPos, localRot);
             
@@ -81,7 +80,7 @@ namespace GameHotUpdate.Cameras
             }
             
             var cameraObj = await ServiceLocator.Get<IObjectBuilder>()
-                .GetGameobject(EAssetBundleType.Camera, ResKeyCollection.BattleCamera, cameraTrans);
+                .GetGameobject(AbKeyCollection.Camera, ResKeyCollection.BattleCamera, cameraTrans);
             CurrentActiveCamera = cameraObj.GetComponent<Camera>();
             CurrentActiveCamera.transform.SetLocalPositionAndRotation(localPos, localRot);
             // 设置遮罩

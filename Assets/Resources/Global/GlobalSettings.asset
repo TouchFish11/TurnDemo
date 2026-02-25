@@ -16,13 +16,12 @@ MonoBehaviour:
   filterLevel: 255
   writeLogMaxIntervalTime: 30
   isOpenLayout: 1
-  uploadServerIp: http://ip:port/...
-  resServerIp: http://ip:port/...
+  uploadServerIp: 
+  resServerIp: http://192.168.0.28:8080/Http_Server/
   reDownloadCompareFileMaxNum: 5
   reDownloadAbMaxNum: 5
   maxConcurrencyNum: 8
-  connectTimeout: 60
-  downloadTimeout: 60
+  connectTimeout: 0
   maxRetryCount: 5
   maxRetryWaitSeconds: 5
   speedUpdateInterval: 1

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Core.AssetBundles.Update.Collection
@@ -8,53 +10,66 @@ namespace Core.AssetBundles.Update.Collection
     /// 用于存储单个AB包的核心信息（名称、大小、MD5值），支持序列化
     /// </summary>
     [Serializable]
+    [JsonObject(MemberSerialization.OptIn)]
     public class ABPackageInfo
     {
         /// <summary>
-        /// AB包名称（包含相对路径或唯一标识）
+        /// AB包名称
         /// </summary>
-        [SerializeField]
-        private string packageName;
+        [JsonProperty]
+        private string name;
 
         /// <summary>
         /// AB包文件大小（单位：字节）
         /// </summary>
-        [SerializeField]
-        private long packageSize;
+        [JsonProperty]
+        private long size;
 
         /// <summary>
-        /// AB包的MD5校验值
+        /// AB包的Hash
         /// 用于校验AB包文件的完整性和唯一性，防止文件损坏或篡改
         /// </summary>
-        [SerializeField]
-        private string packageMD5;
+        [JsonProperty]
+        private string hash;
+
+        /// <summary>
+        /// AB包依赖项
+        /// </summary>
+        [JsonProperty] private string[] dependencies;
 
         /// <summary>
         /// 构造函数：初始化AB包信息
         /// </summary>
-        /// <param name="packageName">AB包名称</param>
-        /// <param name="packageSize">AB包大小（字节）</param>
-        /// <param name="packageMD5">AB包MD5校验字符串</param>
-        public ABPackageInfo(string packageName, long packageSize, string packageMD5)
+        /// <param name="name">AB包名称</param>
+        /// <param name="size">AB包大小（字节）</param>
+        /// <param name="hash">AB包Hash字符串</param>
+        /// <param name="dependencies">AB包依赖项</param>
+        public ABPackageInfo(string name, long size, string hash, string[] dependencies)
         {
-            this.packageName = packageName;
-            this.packageSize = packageSize;
-            this.packageMD5 = packageMD5;
+            this.name = name;
+            this.size = size;
+            this.hash = hash;
+            this.dependencies = dependencies;
         }
 
         /// <summary>
-        /// 只读属性：获取AB包名称
+        /// 获取AB包名称
         /// </summary>
-        public string PackageName => packageName;
+        public string Name => name;
 
         /// <summary>
-        /// 只读属性：获取AB包大小（字节）
+        /// 获取AB包大小（字节）
         /// </summary>
-        public long PackageSize => packageSize;
+        public long Size => size;
 
         /// <summary>
-        /// 只读属性：获取AB包的MD5校验值
+        /// 获取AB包的Hash值
         /// </summary>
-        public string PackageMd5 => packageMD5;
+        public string Hash => hash;
+        
+        /// <summary>
+        /// 依赖项
+        /// </summary>
+        public string[] Dependencies => dependencies;
     }
 }

@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Core.Utility;
-using CustomEditor.ScriptGeneration;
 using UnityEditor;
 using UnityEngine;
 
@@ -79,12 +78,11 @@ namespace Editor.Generation.Detail
         private const string staticModifier = "static";
 
         /// <summary>生成的C#脚本文件保存路径</summary>
-        /// <value>默认指向 Assets/Scripts/Core/Config/ResKeyCollection.cs</value>
-        private readonly string filePath = $"{Application.dataPath}/Scripts/Core/Config/ResKeyCollection.cs";
+        private readonly string filePath = $"{Application.dataPath}/Scripts/GameHotUpdate/Config/ResKeyCollection.cs";
         
         /// <summary>生成类的命名空间</summary>
         /// <value>固定为Core命名空间</value>
-        protected override string NameSpace => "Core.Config";
+        protected override string NameSpace => "GameHotUpdate.Config";
         
         /// <summary>生成类的注释描述</summary>
         protected override string Note { get; set; }

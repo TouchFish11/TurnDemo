@@ -12,7 +12,7 @@ namespace Core.AssetBundles.Update.State
     /// </summary>
     public abstract class UpdateState : IUpdateState
     {
-        // 持有AssetBundle更新器实例（用于访问上下文、切换状态）
+        // 持有AssetBundle更新器实例
         protected readonly AssetBundleUpdater assetBundleUpdater;
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace Core.AssetBundles.Update.State
         }
 
         /// <summary>
-        /// 进入状态时的回调（默认实现：更新当前阶段标识）
+        /// 进入状态时的回调
         /// </summary>
         public virtual void Enter()
         {
@@ -33,25 +33,17 @@ namespace Core.AssetBundles.Update.State
         }
 
         /// <summary>
-        /// 执行状态核心逻辑（抽象方法，子类实现）
+        /// 执行状态核心逻辑
         /// </summary>
         /// <returns>是否执行成功</returns>
-        public abstract Task<bool> Execute();
+        public abstract Task<UpdateResult> Execute();
 
         /// <summary>
-        /// 退出状态时的回调（默认空实现，子类可重写）
+        /// 退出状态时的回调
         /// </summary>
         public virtual void Exit()
         {
 
-        }
-
-        /// <summary>
-        /// 终止更新流程（切换到完成状态）
-        /// </summary>
-        protected void FinishUpdate()
-        {
-            assetBundleUpdater.ChangeState(EUpdatePhase.Finished);
         }
 
         /// <summary>
@@ -83,13 +75,8 @@ namespace Core.AssetBundles.Update.State
         }
 
         /// <summary>
-        /// 当前状态对应的更新阶段（抽象属性，子类实现）
+        /// 当前状态对应的更新阶段
         /// </summary>
         public abstract EUpdatePhase UpdatePhase { get; }
-
-        /// <summary>
-        /// 状态执行是否成功
-        /// </summary>
-        public bool IsSuceess { get; set; }
     }
 }

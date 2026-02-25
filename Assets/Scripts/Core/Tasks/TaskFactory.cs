@@ -3,6 +3,7 @@ using System.Threading;
 using Core.Pool;
 using Core.Service;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Core.Tasks
 {
@@ -64,6 +65,19 @@ namespace Core.Tasks
             var assetBundleUnloadOperationTask = ServiceLocator.Get<IPoolManager>().GetData<AssetBundleUnloadOperationTask>();
             assetBundleUnloadOperationTask.Init(req);
             return assetBundleUnloadOperationTask;
+        }
+        
+        /// <summary>
+        /// 创建UnityWebRequest异步操作任务
+        /// </summary>
+        /// <param name="req">UnityWebRequest异步操作</param>
+        /// <param name="token">取消令牌</param>
+        /// <returns>UnityWebRequest异步操作任务实例</returns>
+        public static UnityWebRequestAsyncOperationTask Create(UnityWebRequestAsyncOperation req, CancellationToken token = default)
+        {
+            var unityWebRequestAsyncOperationTask = ServiceLocator.Get<IPoolManager>().GetData<UnityWebRequestAsyncOperationTask>();
+            unityWebRequestAsyncOperationTask.Init(req, token);
+            return unityWebRequestAsyncOperationTask;
         }
     }
 }

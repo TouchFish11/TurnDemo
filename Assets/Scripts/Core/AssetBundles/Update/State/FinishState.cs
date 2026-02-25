@@ -1,5 +1,7 @@
+using System.IO;
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Enum;
+using Core.Utility;
 
 namespace Core.AssetBundles.Update.State
 {
@@ -22,21 +24,19 @@ namespace Core.AssetBundles.Update.State
         /// 执行更新完成收尾逻辑
         /// </summary>
         /// <returns>是否执行成功（固定返回true）</returns>
-        public override Task<bool> Execute()
+        public override async Task<UpdateResult> Execute()
         {
-            IsSuceess = true;
-            // 【注释保留】可选逻辑：删除缓存文件
-            //if (File.Exists(PathUtility.GetAbLoadPath(FileUtility.CacheDefaultName)))
-            //{
-            //    File.Delete(PathUtility.GetAbLoadPath(FileUtility.CacheDefaultName));
-            //}
+            await Task.Delay(1000);
+            
+            // 删除缓存文件
+            if (File.Exists(PathUtility.GetAbLoadPath(FileUtility.CacheDefaultName)))
+            {
+                File.Delete(PathUtility.GetAbLoadPath(FileUtility.CacheDefaultName));
+            }
             
             // 触发更新完成回调
             assetBundleUpdater.GetContext().UpdateFinish();
-
-            // 切换到空状态（更新流程结束）
-            assetBundleUpdater.ChangeState(EUpdatePhase.NullState);
-            return Task.FromResult(IsSuceess);
+            return UpdateResult.CreateSuccess();
         }
 
         /// <summary>

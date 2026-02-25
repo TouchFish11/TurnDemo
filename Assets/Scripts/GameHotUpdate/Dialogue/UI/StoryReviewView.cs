@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
-using Core.AssetBundles.Management;
-using Core.Config;
 using Core.DataPersistence.Binary;
 using Core.Loader.UI;
 using Core.Log;
 using Core.Pool;
 using Core.Service;
 using Core.UI;
+using GameHotUpdate.Config;
 using UnityEngine.UI;
 
 namespace GameHotUpdate.Dialogue.UI
@@ -88,7 +87,7 @@ namespace GameHotUpdate.Dialogue.UI
             {
                 // 从资源包异步加载对话回顾UI预制体，并挂载到滚动容器的内容节点下
                 var dialogueReviewUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<DialogueReviewUI>(
-                    EAssetBundleType.UI, 
+                    AbKeyCollection.Ui, 
                     ResKeyCollection.DialogueReviewUI, 
                     svReview.content);
                 

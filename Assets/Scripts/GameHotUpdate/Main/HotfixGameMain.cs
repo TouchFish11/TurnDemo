@@ -1,10 +1,9 @@
 using System;
 using System.Threading.Tasks;
-using Core.AssetBundles.Management;
-using Core.Config;
 using Core.Log;
 using Core.Pool;
 using Core.Reflection;
+using Core.Scene;
 using Core.Service;
 using Core.UI;
 using Game.FloatingText;
@@ -13,9 +12,11 @@ using Game.Manager;
 using Game.Objects;
 using GameHotUpdate.Battle.Object;
 using GameHotUpdate.Cameras;
+using GameHotUpdate.Config;
 using GameHotUpdate.Main.UI;
 using GameHotUpdate.Manager;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using IGameManager = Game.Manager.IGameManager;
 using Object = UnityEngine.Object;
 // ReSharper disable UnusedMember.Local
@@ -35,20 +36,24 @@ namespace GameHotUpdate.Main
         {
             try
             {
-                // 初始化工厂
-                ServiceLocator.Get<IFactoryManager>().InitFactorys();
-                // 注册游戏业务层管理器到服务容器（供全局调用）
-                ServiceLocator.Register<IGameManager>(GameManager.Instance);
-                // 初始化游戏数据、服务
-                await ServiceLocator.Get<IGameManager>().Init(new GameDataManager(), new GameServiceManger());
-                // 初始化UI管理器，创建画布和UI相机
-                await ServiceLocator.Get<IUIManager>().InitUIManagerAsync();
-                // 自动登录逻辑（暂注释，可根据业务开启）
-                //await ServiceLocator.Get<IServerManager>().TryAutoLogin();
-                // 初始化游戏场景（创建NPC、玩家、UI等核心游戏对象）
-                await InitScene();
-                // 初始化主界面
-                await InitMainView();
+                // 切换场景
+                ServiceLocator.Get<ISceneManager>().LoadSceneAsync(ResKeyCollection.MainScene, LoadSceneMode.Single, null,
+                async () =>
+                {
+                    // 初始化热更工厂
+                    ServiceLocator.Get<IFactoryManager>().InitHotFactorys();
+                    // 注册游戏业务层管理器到服务容器（供全局调用）
+                    ServiceLocator.Register<IGameManager>(GameManager.Instance);
+                    // 初始化游戏数据、服务
+                    await ServiceLocator.Get<IGameManager>().Init(new GameDataManager(), new GameServiceManger());
+
+                    // 自动登录逻辑（暂注释，可根据业务开启）
+                    //await ServiceLocator.Get<IServerManager>().TryAutoLogin();
+                    // 初始化游戏场景（创建NPC、玩家、UI等核心游戏对象）
+                    await InitScene();
+                    // 初始化主界面
+                    await InitMainView();
+                });
             }
             catch (Exception e)
             {
@@ -65,14 +70,14 @@ namespace GameHotUpdate.Main
             // 创建村民NPC对象
             // 参数说明：资源类型（预制体）、预制体资源键、生成位置、旋转角度
             var villager = await ServiceLocator.Get<IObjectBuilder>().
-                GetHotfixObject<NpcObject>(EAssetBundleType.Prefab, ResKeyCollection.Prefab_Npc, null);
+                GetHotfixObject<NpcObject>(AbKeyCollection.Prefab, ResKeyCollection.Prefab_Npc, null);
             villager.transform.SetPositionAndRotation(new Vector3(0, 1, 8.39f), Quaternion.identity);
             // 初始化NPC基础属性（参数为NPC配置ID，对应配置表）
             villager.BaseInit(1);
 
             // 创建流浪汉NPC对象
             var Vagrant = await ServiceLocator.Get<IObjectBuilder>().
-                GetHotfixObject<NpcObject>(EAssetBundleType.Prefab, ResKeyCollection.Prefab_Npc,null);
+                GetHotfixObject<NpcObject>(AbKeyCollection.Prefab, ResKeyCollection.Prefab_Npc,null);
             Vagrant.transform.SetPositionAndRotation(new Vector3(6.94f, 1, 8.39f), Quaternion.identity);
             Vagrant.BaseInit(2);
             
@@ -89,7 +94,7 @@ namespace GameHotUpdate.Main
         private static async Task InitMainView()
         {
             // 创建主界面UI（MVC架构）：指定UI层级为中层，初始化MainView、MainModel、MainController
-            var mainController = await ServiceLocator.Get<IUIManager>().CreateViewAsync<MainView, MainModel, MainController>(E_UILayer.Mid, ResKeyCollection.MainView);
+            var mainController = await ServiceLocator.Get<IUIManager>().CreateViewAsync<MainView, MainModel, MainController>(AbKeyCollection.Ui, E_UILayer.Mid, ResKeyCollection.MainView);
         }
         
         /// <summary>

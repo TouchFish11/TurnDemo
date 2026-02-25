@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Core.AssetBundles.Management;
 using Core.Components;
-using Core.Config;
 using Core.Service;
 using Core.Singleton;
 using Game.Main;
 using Game.Objects;
 using GameHotUpdate.Battle.Object.Role.Warrior;
+using GameHotUpdate.Config;
 using UnityEngine;
 
 namespace GameHotUpdate.Main
@@ -49,7 +48,7 @@ namespace GameHotUpdate.Main
             var main = mainObj.AddComponent<MainPlayer>();
             
             // 从资源包加载战士预制体，并挂载到玩家节点下
-            var warrior = await ServiceLocator.Get<IObjectBuilder>().GetGameobject(EAssetBundleType.Prefab, ResKeyCollection.Prefab_Main_Warrior, main.transform);
+            var warrior = await ServiceLocator.Get<IObjectBuilder>().GetGameobject(AbKeyCollection.Prefab, ResKeyCollection.Prefab_Main_Warrior, main.transform);
             // 给战士预制体添加战士逻辑组件，并关联到主玩家
             main.AddEntity(warrior.AddComponent<Warrior>());
             

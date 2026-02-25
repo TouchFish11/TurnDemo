@@ -1,5 +1,4 @@
 using System.IO;
-using Core.Config;
 using Core.Global;
 using Editor.Generation.Detail;
 using Framework.Editor.Generation;

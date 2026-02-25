@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Core.AssetBundles.Update.Collection
@@ -18,13 +19,14 @@ namespace Core.AssetBundles.Update.Collection
         //AB包是否下载成功
         [SerializeField] private bool _isSuccess;
 
+        [JsonConstructor]
         public AbPackageCacheInfo(string abName, string md5, long downloadedBytes)
         {
             _abName = abName;
             _md5 = md5;
             _downloadedBytes = downloadedBytes;
         }
-
+        
         public AbPackageCacheInfo(string abName, string md5, long downloadedBytes, bool isSuccess)
         {
             _abName = abName;

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
-using Core.Dependence;
 using Core.Log;
 using Core.Mono;
 using Core.Service;
@@ -18,20 +17,24 @@ namespace Core.Scene
     /// <summary>
     /// 场景管理类，负责场景的异步加载，继承单例基类并实现ISceneManager接口
     /// </summary>
-    public class SceneManager : SingletonBase<SceneManager>, ISceneManager, IDependable
+    public class SceneManager : SingletonBase<SceneManager>, ISceneManager
     {
         // 场景路径缓存
         private List<string> _scenePaths;
 
         private SceneManager()
         {
-            ServiceLocator.Get<IDependencyManager>().RegisterDependable(typeof(IAssetBundleManager), this);
+
         }
-        
-        public async Task OnDependcyInited()
+
+        /// <summary>
+        /// 初始化场景管理器
+        /// </summary>
+        /// <param name="abName"></param>
+        public async Task Init(string abName)
         {
             // 初始化场景包
-            await InitSceneBundle();
+            await InitSceneBundle(abName);
         }
         
         public async void LoadSceneAsync(string scenePath, LoadSceneMode mode, [CanBeNull] Action<float> onLoadProgress, [CanBeNull] Func<Task> completed)
@@ -62,13 +65,13 @@ namespace Core.Scene
             }
         }
 
-        private async Task InitSceneBundle()
+        private async Task InitSceneBundle(string abName)
         {
             // 缓存所有场景名称
             if (_scenePaths == null)
             {
                 // 加载场景对应的AssetBundle资源包
-                var sceneBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(EAssetBundleType.Scene);
+                var sceneBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(abName);
                 _scenePaths = new List<string>();
                 foreach (var scenePath in sceneBundle.GetAllScenePaths())
                 {

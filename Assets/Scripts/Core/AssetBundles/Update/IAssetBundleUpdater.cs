@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Core.AssetBundles.Update.Enum;
 
 namespace Core.AssetBundles.Update
 {
@@ -8,9 +7,10 @@ namespace Core.AssetBundles.Update
     /// </summary>
     public interface IAssetBundleUpdater
     {
-        void ChangeState(EUpdatePhase updatePhase);
-        Task<bool> CheckUpdate();
+        Task CheckUpdate();
+        
         ABUpdateContext GetContext();
+        
         void Init();
     }
 }

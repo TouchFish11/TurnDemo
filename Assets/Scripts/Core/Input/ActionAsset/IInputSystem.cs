@@ -14,7 +14,8 @@ namespace Core.Input.ActionAsset
         void EditInput(E_MainActionMap keyMap, Key oldKey, UnityAction<E_KeyConflict> overCallBack);
         void EnableInput();
         InputAction GetInputAction(string actionName);
-        Task InitPlayerInput(PlayerInput playerInput, MainActionMapDataContainer container, Action<InputAction.CallbackContext> onActionTrigger);
+        Task InitPlayerInput(string abName, PlayerInput playerInput, MainActionMapDataContainer container,
+            Action<InputAction.CallbackContext> onActionTrigger);
         void InvokeExchangeKey();
         void UpdateActions(PlayerInput playerInput = null);
     }

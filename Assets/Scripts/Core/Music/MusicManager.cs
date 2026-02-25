@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Core.Loader.Audios;
+using Core.Loader.Audio;
 using Core.Log;
 using Core.Mono;
 using Core.Pool;
@@ -75,11 +75,12 @@ namespace Core.Music
         /// <summary>
         /// 创建新背景音乐
         /// </summary>
+        /// <param name="abName"></param>
         /// <param name="musicName">背景音乐名称（对应资源包内的音频文件名）</param>
         /// <param name="Volume">音量值（0~1）</param>
         /// <param name="open">是否开启播放（true=播放，false=静音）</param>
         /// <param name="isLoop">是否循环播放（默认=true）</param>
-        public async Task CreateBackgroundMusic(string musicName, float Volume, bool open, bool isLoop = true)
+        public async Task CreateBackgroundMusic(string abName, string musicName, float Volume, bool open, bool isLoop = true)
         {
             // 初始化背景音乐播放器对象（首次播放时创建）
             if (_backgroundMusic == null)
@@ -91,7 +92,7 @@ namespace Core.Music
             }
 
             // 释放上次播放的音乐文件资源
-            ServiceLocator.Get<IAudioLoader>().UnloadClip(_backgroundMusic.clip.name);
+            ServiceLocator.Get<IAudioLoader>().UnloadClip(abName, _backgroundMusic.clip.name);
             // 从资源包异步加载背景音乐资源
             var audioClip = await ServiceLocator.Get<IAudioLoader>().LoadAudioClipAsync(musicName);
             // 配置背景音乐播放器参数
@@ -282,14 +283,15 @@ namespace Core.Music
         /// 清空所有音效
         /// 停止播放、清空音频片段、回收对象到池、清空音效列表
         /// </summary>
-        public void ClearSound()
+        /// <param name="abName"></param>
+        public void ClearSound(string abName)
         {
             foreach (var source in _sounds.Values)
             {
                 // 停止音效播放
                 source.Stop();
                 // 释放上次播放的音乐文件资源
-                ServiceLocator.Get<IAudioLoader>().UnloadClip(source.clip.name);
+                ServiceLocator.Get<IAudioLoader>().UnloadClip(abName, source.clip.name);
                 // 清空音频片段引用
                 source.clip = null;
                 // 将音效对象回收至对象池

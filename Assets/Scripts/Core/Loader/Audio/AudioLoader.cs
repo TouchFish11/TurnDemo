@@ -6,7 +6,7 @@ using Core.Service;
 using Core.Tasks.Extensions;
 using UnityEngine;
 
-namespace Core.Loader.Audios
+namespace Core.Loader.Audio
 {
     /// <summary>
     /// 音频加载器
@@ -24,7 +24,7 @@ namespace Core.Loader.Audios
             }
             
             // 加载音频包
-            var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(EAssetBundleType.Music);
+            var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync("music");
             // 加载音频资源
             var audioClip = await assetBundle.LoadAssetAsync<AudioClip>(assetName).ToTask<AudioClip>();
 
@@ -39,7 +39,7 @@ namespace Core.Loader.Audios
             return audioClip;
         }
 
-        public void UnloadClip(string assetName)
+        public void UnloadClip(string abName, string assetName)
         {
             if (!_audioDatas.TryGetValue(assetName, out var data))
             {
@@ -54,7 +54,7 @@ namespace Core.Loader.Audios
             }
             
             // 卸载音频包
-            ServiceLocator.Get<IAssetBundleManager>().UnloadBundleAsync(EAssetBundleType.Music);
+            ServiceLocator.Get<IAssetBundleManager>().UnloadBundle(abName);
             _audioDatas.Remove(assetName);
         }
     }

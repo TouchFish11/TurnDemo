@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using Framework.Editor.Generation;
-using UnityEngine;
 
-namespace CustomEditor.ScriptGeneration
+namespace Editor.Generation
 {
     /// <summary>
     /// ��������

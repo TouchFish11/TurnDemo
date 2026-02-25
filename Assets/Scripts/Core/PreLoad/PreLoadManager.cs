@@ -25,8 +25,8 @@ namespace Core.PreLoad
         {
             foreach (var preLoadData in preLoadDatas)
             {
-                var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(preLoadData.assetBundleType);
-                await assetBundle.LoadAssetAsync(preLoadData.assetName, preLoadData.assetType).ToTask<Object>();
+                var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(preLoadData.AbName);
+                await assetBundle.LoadAssetAsync(preLoadData.AssetName, preLoadData.AssetType).ToTask<Object>();
             }
         }
     }

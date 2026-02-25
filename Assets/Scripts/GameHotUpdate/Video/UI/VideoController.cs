@@ -4,6 +4,7 @@ using Core.Tasks.Extensions;
 using Core.UI;
 using Core.UI.MVC;
 using Core.Video;
+using GameHotUpdate.Config;
 using UnityEngine.Video;
 
 namespace GameHotUpdate.Video.UI
@@ -26,7 +27,7 @@ namespace GameHotUpdate.Video.UI
             // ��������
             //model.RawImgVideo = renderTexture;
             // ������Ƶ
-            var videoAb = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(EAssetBundleType.Video);
+            var videoAb = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync("TODO");
             var videoClip = await videoAb.LoadAssetAsync<VideoClip>("").ToTask<VideoClip>();
             // ������Ƶ
             VideoManager.Instance.OnPrePlay += OnPrePlay;
@@ -36,7 +37,7 @@ namespace GameHotUpdate.Video.UI
         private void OnPrePlay()
         {
             // ����
-            ServiceLocator.Get<IUIManager>().DestroyView(this);
+            ServiceLocator.Get<IUIManager>().DestroyView(AbKeyCollection.Ui, this);
         }
     }
 }

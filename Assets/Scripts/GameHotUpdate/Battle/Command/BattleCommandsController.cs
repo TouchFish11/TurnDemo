@@ -25,7 +25,7 @@ namespace GameHotUpdate.Battle.Command
         // 战斗指令队列：存储待执行的战斗指令
         private readonly List<ICommand> _battleCommands = new();
         // 回合循环状态
-        private TurnLoopState _turnLoopState;
+        private readonly TurnLoopState _turnLoopState;
         // 是否退出战斗：标记战斗是否结束，用于终止指令执行循环
         private bool _isQuit;
         // 当前正在执行的指令

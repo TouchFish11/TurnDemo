@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Core.AssetBundles.Management;
-using Core.Config;
 using Core.Service;
 using Game.Battle.Objects;
 using Game.Objects;
 using GameHotUpdate.Animation;
 using GameHotUpdate.Cameras;
+using GameHotUpdate.Config;
 using GameHotUpdate.Dialogue;
 using GameHotUpdate.Input;
 using GameHotUpdate.Interact;
@@ -87,7 +86,7 @@ namespace GameHotUpdate.Main
         {
             // 通过对象构建器从指定资源包加载主相机
                 var hotfixOrbitCameraController = await ServiceLocator.Get<IObjectBuilder>()
-                .GetHotfixObject<OrbitCameraController>(EAssetBundleType.Camera, ResKeyCollection.MainCamera,
+                .GetHotfixObject<OrbitCameraController>(AbKeyCollection.Camera, ResKeyCollection.MainCamera,
                     null);
                 return hotfixOrbitCameraController;
         }

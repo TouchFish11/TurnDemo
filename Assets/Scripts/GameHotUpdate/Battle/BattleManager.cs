@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Core.AssetBundles.Management;
-using Core.Config;
 using Core.Pool;
 using Core.PreLoad;
 using Core.Scene;
@@ -27,6 +25,7 @@ using GameHotUpdate.Battle.Skill.Base;
 using GameHotUpdate.Battle.TargetSelect;
 using GameHotUpdate.Battle.Turn;
 using GameHotUpdate.Cameras;
+using GameHotUpdate.Config;
 using GameHotUpdate.Main;
 using GameHotUpdate.Main.UI;
 using GameHotUpdate.UI.Back;
@@ -107,7 +106,7 @@ namespace GameHotUpdate.Battle
             // 缓存回调
             this.OnBattleOver = onBattleOver;
             // 创建战斗加载界面
-            var battleLoadingController = await ServiceLocator.Get<IUIManager>().CreateViewAsync<BattleLoadingView, BattleLoadingModel, BattleLoadingController>(E_UILayer.Bot, ResKeyCollection.BattleLoadingView);
+            var battleLoadingController = await ServiceLocator.Get<IUIManager>().CreateViewAsync<BattleLoadingView, BattleLoadingModel, BattleLoadingController>(AbKeyCollection.Ui, E_UILayer.Bot, ResKeyCollection.BattleLoadingView);
             // 清理场景内容缓存
             HotfixGameMain.ClearScene();
             // 加载战斗场景
@@ -145,23 +144,23 @@ namespace GameHotUpdate.Battle
             var preLoadDatas = new PreLoadData[]
             {
                 // GameObject
-                new(EAssetBundleType.Prefab, ResKeyCollection.Prefab_Warrior, typeof(GameObject)),
-                new(EAssetBundleType.Prefab, ResKeyCollection.Prefab_Wizard, typeof(GameObject)),
-                new(EAssetBundleType.Prefab, ResKeyCollection.Prefab_Slime, typeof(GameObject)),
-                new(EAssetBundleType.Prefab, ResKeyCollection.Prefab_TurtleShell, typeof(GameObject)),
-                new(EAssetBundleType.Prefab, ResKeyCollection.Prefab_TurtleShell, typeof(GameObject)),
+                new(AbKeyCollection.Prefab, ResKeyCollection.Prefab_Warrior, typeof(GameObject)),
+                new(AbKeyCollection.Prefab, ResKeyCollection.Prefab_Wizard, typeof(GameObject)),
+                new(AbKeyCollection.Prefab, ResKeyCollection.Prefab_Slime, typeof(GameObject)),
+                new(AbKeyCollection.Prefab, ResKeyCollection.Prefab_TurtleShell, typeof(GameObject)),
+                new(AbKeyCollection.Prefab, ResKeyCollection.Prefab_TurtleShell, typeof(GameObject)),
                 
                 // UI
-                new(EAssetBundleType.UI, ResKeyCollection.SelectMarkerUI, typeof(GameObject)),
-                new(EAssetBundleType.UI, ResKeyCollection.MonsterStateUI, typeof(GameObject)),
-                new(EAssetBundleType.UI, ResKeyCollection.RoleStateUI, typeof(GameObject)),
-                new(EAssetBundleType.UI, ResKeyCollection.ActionGridUI, typeof(GameObject)),
-                new(EAssetBundleType.UI, ResKeyCollection.WaitingActUI, typeof(GameObject)),
-                new(EAssetBundleType.UI, ResKeyCollection.SkillKeyUI, typeof(GameObject)),
+                new(AbKeyCollection.Ui, ResKeyCollection.SelectMarkerUI, typeof(GameObject)),
+                new(AbKeyCollection.Ui, ResKeyCollection.MonsterStateUI, typeof(GameObject)),
+                new(AbKeyCollection.Ui, ResKeyCollection.RoleStateUI, typeof(GameObject)),
+                new(AbKeyCollection.Ui, ResKeyCollection.ActionGridUI, typeof(GameObject)),
+                new(AbKeyCollection.Ui, ResKeyCollection.WaitingActUI, typeof(GameObject)),
+                new(AbKeyCollection.Ui, ResKeyCollection.SkillKeyUI, typeof(GameObject)),
                 
                 // SpriteAtlas
-                new(EAssetBundleType.SpriteAtlas, ResKeyCollection.Atlas_Icon_BattleEntity, typeof(SpriteAtlas)),
-                new(EAssetBundleType.SpriteAtlas, ResKeyCollection.BrightIcons, typeof(SpriteAtlas)),
+                new(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Icon_BattleEntity, typeof(SpriteAtlas)),
+                new(AbKeyCollection.Spriteatlas, ResKeyCollection.BrightIcons, typeof(SpriteAtlas)),
             };
             
             await ServiceLocator.Get<IPreLoadManager>().PreLoads(preLoadDatas);
@@ -195,7 +194,7 @@ namespace GameHotUpdate.Battle
             UnregisterManager();
 
             // 销毁战斗界面
-            ServiceLocator.Get<IUIManager>().DestroyView(quitBattleEvent.BattleUIController);
+            ServiceLocator.Get<IUIManager>().DestroyView(AbKeyCollection.Ui, quitBattleEvent.BattleUIController);
             // 回到主场景
             BackMain();
         }
@@ -206,7 +205,7 @@ namespace GameHotUpdate.Battle
         private async void BackMain()
         {
             // 创建黑背景界面遮挡
-            var backController = await ServiceLocator.Get<IUIManager>().CreateViewAsync<BackView, BackModel, BackController>(E_UILayer.Bot, ResKeyCollection.BackView);
+            var backController = await ServiceLocator.Get<IUIManager>().CreateViewAsync<BackView, BackModel, BackController>(AbKeyCollection.Ui, E_UILayer.Bot, ResKeyCollection.BackView);
             
             ServiceLocator.Get<ISceneManager>().LoadSceneAsync(ResKeyCollection.MainScene, UnityEngine.SceneManagement.LoadSceneMode.Single, null, 
             async () =>
@@ -214,7 +213,7 @@ namespace GameHotUpdate.Battle
                 // 初始化场景
                 await HotfixGameMain.InitScene();
                 // 销毁黑背景界面
-                ServiceLocator.Get<IUIManager>().DestroyView(backController);
+                ServiceLocator.Get<IUIManager>().DestroyView(AbKeyCollection.Ui, backController);
                 
                 // 强制不可见，暂时这样处理，正常流程Bug：battleLoadingController销毁时未正确释放
                 ServiceLocator.Get<IMouseManager>().ForceInVisible();

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using Core.Components;
 using Core.HotUpdate;
-using Core.Log;
 using Core.Service;
 using Core.Types;
 using Core.Utility;
@@ -64,9 +63,10 @@ namespace Core.Reflection
         /// </summary>
         /// <typeparam name="TValue"></typeparam>
         /// <param name="dic"></param>
-        public static void ScanAllFactory<TValue>(Dictionary<TypeIdentifier, TValue> dic) where TValue : class, IFactory
+        /// <param name="assemblies"></param>
+        public static void ScanAllFactory<TValue>(Dictionary<TypeIdentifier, TValue> dic, params Assembly[] assemblies) where TValue : class, IFactory
         {
-            foreach (var assembly in ServiceLocator.Get<IHotUpdateManager>().GetAssemblies())
+            foreach (var assembly in assemblies)
             {
                 foreach (var type in assembly.GetTypes())
                 {

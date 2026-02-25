@@ -13,4 +13,5 @@ public class MonsterInfo
 	public int f_baseSpeed;
 	public int f_baseToughness;
 	public string f_weaknesses;
+	public float f_statesUiY0ffset;
 }

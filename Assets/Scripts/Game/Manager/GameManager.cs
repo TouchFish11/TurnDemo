@@ -27,10 +27,12 @@ namespace Game.Manager
             GameDataManager = gameDataManager;
             GameServiceManger = gameServiceManger;
             
+            gameServiceManger.InitService();
+            await gameDataManager.InitData();
+            
             try
             {
-                gameServiceManger.InitService();
-                await gameDataManager.InitData();
+
             }
             catch (Exception ex)
             {

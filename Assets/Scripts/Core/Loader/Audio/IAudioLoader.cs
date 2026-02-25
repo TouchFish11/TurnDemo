@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Core.Loader.Audios
+namespace Core.Loader.Audio
 {
     public interface IAudioLoader : IAssetLoader
     {
@@ -15,8 +15,8 @@ namespace Core.Loader.Audios
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="abName"></param>
         /// <param name="assetName"></param>
-        /// <returns></returns>
-        void UnloadClip(string assetName);
+        void UnloadClip(string abName, string assetName);
     }
 }

@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Config.ActivityConfigSO;
 using Core.AssetBundles.Management;
-using Core.Config;
 using Core.DataPersistence.Json;
 using Core.Loader.Sprite;
 using Core.Loader.UI;
@@ -13,6 +12,7 @@ using Core.UI;
 using Game.Manager;
 using GameHotUpdate.Activity.Core;
 using GameHotUpdate.Activity.Data;
+using GameHotUpdate.Config;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -34,14 +34,14 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
             // 获取该活动数据
             var embersCanonData = activityDataCollection[activityInfo.f_id] as EmbersCanonData;
             // AB包加载配置
-            var configAb = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(EAssetBundleType.GameConfig);
+            var configAb = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync("TODO");
             var textAsset = await configAb.LoadAssetAsync<TextAsset>(ResKeyCollection.BattleActivityConfig).ToTask<TextAsset>();
             // 解析该活动的关卡配置
             var battleConfigEntryColletion = ServiceLocator.Get<IJsonManager>().FromJson<BattleConfigEntryColletion>(textAsset.text);
             // 初始化关卡
             foreach (var battleConfigEntry in battleConfigEntryColletion.battleConfigs)
             {
-                var battleLevelUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<BattleLevelUI>(EAssetBundleType.UI,
+                var battleLevelUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<BattleLevelUI>(AbKeyCollection.Ui,
                     ResKeyCollection.BattleLevelUI, svLevel.content);
                 // 获取用户数据中的战斗关卡条目
                 var levelEntryData = embersCanonData.GetLevelData(battleConfigEntry.levelId);
@@ -55,7 +55,7 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
                 // 根据是否完成使用不同的Sprite
                 var levelTipIconRes = levelEntryData.isComplete ? ResKeyCollection.Icon_Common_Check : ResKeyCollection.Icon_Common_Battle;
                 
-                var icon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(ResKeyCollection.Atlas_Icon_Common, levelTipIconRes);
+                var icon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync("TODO", ResKeyCollection.Atlas_Icon_Common, levelTipIconRes);
                 // 初始化关卡UI
                 battleLevelUI.Init(battleConfigEntry.levelName, icon, battleConfigEntry);
                 // 缓存UI

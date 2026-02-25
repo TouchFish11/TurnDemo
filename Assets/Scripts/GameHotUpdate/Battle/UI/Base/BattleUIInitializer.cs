@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Core.AssetBundles.Management;
-using Core.Config;
 using Core.Loader.Sprite;
 using Core.Loader.UI;
 using Core.Log;
@@ -13,6 +11,7 @@ using Game.Battle.Skill.Enum;
 using GameHotUpdate.Battle.Property;
 using GameHotUpdate.Battle.UI.MonsterStateUI;
 using GameHotUpdate.Battle.UI.Role;
+using GameHotUpdate.Config;
 
 namespace GameHotUpdate.Battle.UI.Base
 {
@@ -54,8 +53,8 @@ namespace GameHotUpdate.Battle.UI.Base
             foreach (var battleEntity in battleEntities)
             {
                 // 从资源包加载角色状态UI预制体，并挂载到玩家UI区域
-                //var roleStateUI = await ObjectBuilder.GetObject<IRoleStateUI>(EAssetBundleType.UI, ResKeyCollection.RoleStateUI, _view.PlayerArea);
-                var roleStateUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<RoleStateUI>(EAssetBundleType.UI, ResKeyCollection.RoleStateUI, _view.PlayerArea);
+                //var roleStateUI = await ObjectBuilder.GetObject<IRoleStateUI>(AbKeyCollection.Ui, ResKeyCollection.RoleStateUI, _view.PlayerArea);
+                var roleStateUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<RoleStateUI>(AbKeyCollection.Ui, ResKeyCollection.RoleStateUI, _view.PlayerArea);
                 LogManager.Log($"{nameof(InitPlayerUIs)}：{roleStateUI}-{roleStateUI}");
                 // 获取当前实体的技能组件，用于查找必杀技
                 var skillComponent = battleEntity.GetComponent<SkillComponent>();
@@ -81,7 +80,7 @@ namespace GameHotUpdate.Battle.UI.Base
                 // 根据战斗实体获取对应的图标名称
                 var iconName = BattleUIManager.GetIconByEntity(battleEntity);
                 // 从图集加载角色图标
-                var icon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(ResKeyCollection.Atlas_Icon_BattleEntity, iconName);
+                var icon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync("TODO", ResKeyCollection.Atlas_Icon_BattleEntity, iconName);
                 // 获取当前实体的玩家属性组件
                 var playerPropertyComponent = battleEntity.GetComponent<PlayerPropertyComponent>();
                 // 获取角色核心属性数据
@@ -106,7 +105,7 @@ namespace GameHotUpdate.Battle.UI.Base
                 foreach (var battleEntity in battleEntities)
                 {
                     // 从资源包加载怪物状态UI预制体，并挂载到怪物UI区域
-                    var monsterStateUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<NormalMonsterStateUI>(EAssetBundleType.UI, ResKeyCollection.MonsterStateUI, _view.MonsterStateArea);
+                    var monsterStateUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<NormalMonsterStateUI>(AbKeyCollection.Ui, ResKeyCollection.MonsterStateUI, _view.MonsterStateArea);
                     // 初始化怪物状态UI（传入战斗实体、UI挂载区域）
                     await monsterStateUI.Init(battleEntity, _view.MonsterStateArea);
                     // 将初始化后的怪物UI缓存

@@ -35,10 +35,5 @@ namespace Core.AssetBundles.Update.Enum
         /// 完成
         /// </summary>
         Finished,
-
-        /// <summary>
-        /// null状态
-        /// </summary>
-        NullState,
     }
 }

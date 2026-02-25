@@ -10,6 +10,7 @@ using Core.Service;
 using Game.Components;
 using Game.Input;
 using Game.Manager;
+using GameHotUpdate.Config;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -72,7 +73,7 @@ namespace GameHotUpdate.Input
                 inputSystem = ServiceLocator.Get<IInputSystem>();
                 // 初始化玩家输入，并注册输入动作触发回调
                 var container = ServiceLocator.Get<IGameManager>().GameDataManager.InputActionContainer;
-                await inputSystem.InitPlayerInput(EntityObject.GetComponent<PlayerInputComponent>().PlayerInput, container, OnActionTrigger);
+                await inputSystem.InitPlayerInput(AbKeyCollection.Gameconfig, EntityObject.GetComponent<PlayerInputComponent>().PlayerInput, container, OnActionTrigger);
                 // 添加帧更新监听，处理每帧的输入逻辑
                 ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpdate);
             }

@@ -1,7 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
-using Core.Config;
 using Core.Loader.Sprite;
 using Core.Loader.UI;
 using Core.Log;
@@ -9,6 +8,7 @@ using Core.Reflection;
 using Core.Service;
 using Core.Tasks.Extensions;
 using Core.UI;
+using GameHotUpdate.Config;
 using GameHotUpdate.UI.Back;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,15 +29,15 @@ namespace GameHotUpdate.Test
             ServiceLocator.InitService();
             await ServiceLocator.Get<IAssetBundleManager>().Init();
             // 初始化工厂
-            ServiceLocator.Get<IFactoryManager>().InitFactorys();
+            ServiceLocator.Get<IFactoryManager>().InitHotFactorys();
             //ServiceLocator.Register<IUIManager>(UIManager.Instance);
 
-            var backView = await ServiceLocator.Get<IUiLoader>().GetUIObject<BackView>(EAssetBundleType.UI, ResKeyCollection.BackView, canvas);
+            var backView = await ServiceLocator.Get<IUiLoader>().GetUIObject<BackView>(AbKeyCollection.Ui, ResKeyCollection.BackView, canvas);
             LogManager.Log($"{backView}");
             
-            await ServiceLocator.Get<IUIManager>().InitUIManagerAsync();
+            await ServiceLocator.Get<IUIManager>().InitUIManagerAsync("TODO", "TODO", "TODO");
 
-            await ServiceLocator.Get<IUIManager>().CreateViewAsync<BackView, BackModel, BackController>(E_UILayer.Bot, ResKeyCollection.BackView);
+            await ServiceLocator.Get<IUIManager>().CreateViewAsync<BackView, BackModel, BackController>(AbKeyCollection.Ui, E_UILayer.Bot, ResKeyCollection.BackView);
 
             //await SingleTest();
 
@@ -48,12 +48,12 @@ namespace GameHotUpdate.Test
         {
             await ServiceLocator.Get<IAssetBundleManager>().Init();
             // 初始化工厂
-            ServiceLocator.Get<IFactoryManager>().InitFactorys();
+            ServiceLocator.Get<IFactoryManager>().InitHotFactorys();
             
-            var sprite = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(ResKeyCollection.Atlas_Icon_Common, ResKeyCollection.Icon_Common_Battle);
+            var sprite = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync("TODO", ResKeyCollection.Atlas_Icon_Common, ResKeyCollection.Icon_Common_Battle);
             image.sprite = sprite;
 
-            ServiceLocator.Get<ISpriteLoader>().UnloadSpriteAsync(ResKeyCollection.Atlas_Icon_Common,
+            ServiceLocator.Get<ISpriteLoader>().UnloadSpriteAsync(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Icon_Common,
                 ResKeyCollection.Icon_Common_Battle);
         }
 

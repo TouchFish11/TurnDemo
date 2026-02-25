@@ -1,4 +1,3 @@
-using Core.Log;
 using Game.Battle.Context;
 using Game.Battle.Skill.Component;
 using GameHotUpdate.Battle.Object.Monster.AbyssalMage.Skill;
@@ -10,7 +9,14 @@ namespace GameHotUpdate.Battle.Object.Monster.AbyssalMage
     /// </summary>
     public class AbyssalMage : MonsterObject
     {
-        private int currrentIndex;
+        private int rowIndex;
+        private int colIndex;
+
+        private readonly int[][] skillIdGroups =
+        {
+            new []{105, 103},
+            new []{106, 104},
+        };
         
         public override void BattleInit(int monsterId, IBattleContext context)
         {
@@ -19,22 +25,22 @@ namespace GameHotUpdate.Battle.Object.Monster.AbyssalMage
             GetComponent<SkillComponent>().InitSkills(MonsterInfo.f_skillIds, new AbyssalMageSkillFactory());
         }
         
-        protected override int SelectSkill()
+        public override int SelectSkill()
         {
-            // 随机从技能列表中选择一个技能ID
-            var skillIds = this.GetComponent<SkillComponent>().GetSkillIds();
-            LogManager.Log($"技能数量：{skillIds.Count}");
+            var ids = skillIdGroups[rowIndex];
             
-            
-            var skillId = skillIds[currrentIndex];
-            LogManager.Log($"当选择的技能ID：{skillId}");
-            
-            ++currrentIndex;
-            if (currrentIndex >= skillIds.Count)
+            var skillId = ids[colIndex];
+            ++colIndex;
+            if (colIndex == ids.Length)
             {
-                currrentIndex = 0;
+                colIndex = 0;
+                ++rowIndex;
+                if (rowIndex == skillIdGroups.Length)
+                {
+                    rowIndex = 0;
+                }
             }
-
+            
             return skillId;
         }
     }

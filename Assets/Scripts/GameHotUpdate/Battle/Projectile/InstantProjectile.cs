@@ -16,6 +16,7 @@ namespace GameHotUpdate.Battle.Projectile
         protected override IEnumerator PlayingVFX()
         {
             AddStatusOnTrigger();
+            HandleTiming();
             float nowTime = 0;
             var index = 0;
             while (particleSystem.IsAlive() && index < triggerTimes.Length)
@@ -29,7 +30,6 @@ namespace GameHotUpdate.Battle.Projectile
                 }
                 yield return null;
             }
-            HandleOtherOnTrigger();
         }
     }
 }

@@ -108,8 +108,8 @@ namespace GameHotUpdate.Battle.Projectile
         protected abstract void CreateVFXOnTrigger();
 
         /// <summary>
-        /// 在触发时处理其它逻辑
+        /// 处理计时逻辑
         /// </summary>
-        protected abstract void HandleOtherOnTrigger();
+        protected abstract void HandleTiming();
     }
 }

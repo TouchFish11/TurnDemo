@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Core.Config;
 using Core.Log;
 using Core.Service;
 using Core.UI;
@@ -9,6 +8,7 @@ using Core.UI.MVC;
 using GameHotUpdate.Activity.UI.Base;
 using GameHotUpdate.Battle;
 using GameHotUpdate.Battle.Turn;
+using GameHotUpdate.Config;
 using GameHotUpdate.Main.UI.Logic;
 using GameHotUpdate.Tasks.UI;
 
@@ -60,7 +60,7 @@ namespace GameHotUpdate.Main.UI
                 switch (btnName)
                 {
                     case "btnActivity":
-                        await ServiceLocator.Get<IUIManager>().CreateViewAsync<ActivityView, ActivityModel, ActivityController>(E_UILayer.Mid, ResKeyCollection.ActivityView);
+                        await ServiceLocator.Get<IUIManager>().CreateViewAsync<ActivityView, ActivityModel, ActivityController>(AbKeyCollection.Ui, E_UILayer.Mid, ResKeyCollection.ActivityView);
                         break;
                     case "btnJourney":
                         
@@ -70,7 +70,7 @@ namespace GameHotUpdate.Main.UI
                         break;
                     // 任务按钮点击：打开任务界面
                     case "btnTask":
-                        await ServiceLocator.Get<IUIManager>().CreateViewAsync<TaskView, TaskModel, TaskController>(E_UILayer.Mid, ResKeyCollection.TaskView);
+                        await ServiceLocator.Get<IUIManager>().CreateViewAsync<TaskView, TaskModel, TaskController>(AbKeyCollection.Ui, E_UILayer.Mid, ResKeyCollection.TaskView);
                         break;
                     // 战斗测试按钮点击：启动战斗
                     case "btnBattleTest":

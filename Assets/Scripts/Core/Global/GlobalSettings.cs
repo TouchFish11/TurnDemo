@@ -1,3 +1,4 @@
+using System;
 using Core.Log;
 using Core.Singleton;
 using UnityEngine;
@@ -91,15 +92,8 @@ namespace Core.Global
         /// 连接超时（s）
         /// </summary>
         [Header("连接超时")]
-        [Tooltip("建立服务器连接的最大等待时间（s）")]
+        [Tooltip("建立服务器连接的最大等待时间（s），0为无限制")]
         public int connectTimeout = 60;
-
-        /// <summary>
-        /// 下载超时（s）
-        /// </summary>
-        [Header("下载超时")]
-        [Tooltip("数据传输阶段的最大无进展时间（s）")]
-        public int downloadTimeout = 60;
 
         /// <summary>
         /// 单文件最大重试次数

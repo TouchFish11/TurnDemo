@@ -51,11 +51,12 @@ namespace Core.Input.ActionAsset
         /// <summary>
         /// 初始化玩家输入组件
         /// </summary>
+        /// <param name="abName"></param>
         /// <param name="playerInput">玩家输入组件实例</param>
         /// <param name="container"></param>
         /// <param name="onActionTrigger">输入动作触发时的回调方法</param>
         /// <returns>异步任务</returns>
-        public async Task InitPlayerInput(PlayerInput playerInput, MainActionMapDataContainer container, Action<InputAction.CallbackContext> onActionTrigger)
+        public async Task InitPlayerInput(string abName, PlayerInput playerInput, MainActionMapDataContainer container, Action<InputAction.CallbackContext> onActionTrigger)
         {
             // 缓存玩家输入组件引用
             _playerInput = playerInput;
@@ -71,7 +72,7 @@ namespace Core.Input.ActionAsset
 
 #if EDITOR_TEST_AB || !UNITY_EDITOR
             // 从AssetBundle加载输入配置JSON
-            var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(EAssetBundleType.GameConfig);
+            var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(abName);
             var json = await assetBundle.LoadAssetAsync<TextAsset>(FileUtility.InputActionLocalFileName).ToTask<TextAsset>();
             _jsonInputData = json.text;
             UpdateActions();

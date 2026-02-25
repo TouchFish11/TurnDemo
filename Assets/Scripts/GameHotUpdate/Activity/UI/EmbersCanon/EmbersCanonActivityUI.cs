@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Core.AssetBundles.Management;
-using Core.Config;
 using Core.Loader.Sprite;
 using Core.Loader.UI;
 using Core.Log;
@@ -9,6 +7,7 @@ using Core.Pool;
 using Core.Service;
 using GameHotUpdate.Activity.Core;
 using GameHotUpdate.Activity.UI.Common;
+using GameHotUpdate.Config;
 using GameHotUpdate.Item;
 using GameHotUpdate.Item.UI;
 
@@ -46,7 +45,7 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
         protected override async Task OnInit()
         {
             // 初始化界面背景
-            var backGround = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(ResKeyCollection.Atlas_Activity,
+            var backGround = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync("TODO", ResKeyCollection.Atlas_Activity,
                     this.activityInfo.f_bkUi_Res);
             _activityBkComponent.SetBackGround(backGround);
 
@@ -77,7 +76,7 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
         {
             // 创建关卡界面到活动界面下
             var subActivityUi  = await ServiceLocator.Get<IUiLoader>()
-                .GetUIObject<EmbersCanonSubActivityUI_01>(EAssetBundleType.UI, ResKeyCollection.EmbersCanonSubActivityUI_01,
+                .GetUIObject<EmbersCanonSubActivityUI_01>(AbKeyCollection.Ui, ResKeyCollection.EmbersCanonSubActivityUI_01,
                     activityView);
             // 初始化关卡子界面
             subActivityUi.Init(ActivityData, activityInfo);

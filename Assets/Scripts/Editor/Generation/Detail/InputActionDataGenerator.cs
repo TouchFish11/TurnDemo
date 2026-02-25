@@ -6,7 +6,6 @@ using System.Text;
 using Core.Extensions;
 using Core.Input.ActionAsset;
 using Core.Res;
-using CustomEditor.ScriptGeneration;
 using Framework.Editor.Generation;
 using UnityEditor;
 using UnityEngine;

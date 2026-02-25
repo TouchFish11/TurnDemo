@@ -1,4 +1,3 @@
-using Core.Config;
 using Core.Reflection;
 using Core.Service;
 using Core.Time;
@@ -6,6 +5,7 @@ using Game.Battle.Status;
 using Game.VFX;
 using GameHotUpdate.Battle.Projectile;
 using GameHotUpdate.Battle.Status;
+using GameHotUpdate.Config;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Object.Role.Priest.Projectile
@@ -56,7 +56,7 @@ namespace GameHotUpdate.Battle.Object.Role.Priest.Projectile
             }
         }
 
-        protected override void HandleOtherOnTrigger()
+        protected override void HandleTiming()
         {
             
         }

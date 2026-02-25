@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Core.Config;
 using Core.Loader.Sprite;
 using Core.Pool;
 using Core.Service;
 using GameHotUpdate.Activity.Core;
 using GameHotUpdate.Activity.UI.Common;
+using GameHotUpdate.Config;
 using GameHotUpdate.Item;
 using GameHotUpdate.Item.UI;
 
@@ -50,7 +50,7 @@ namespace GameHotUpdate.Activity.UI.OrbitalDeparture
             
             // 初始化界面背景
             var backGround = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(
-                ResKeyCollection.Atlas_Activity,
+                AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Activity,
                 this.activityInfo.f_bkUi_Res);
             // 设置界面背景
             _activityBkComponent.SetBackGround(backGround);

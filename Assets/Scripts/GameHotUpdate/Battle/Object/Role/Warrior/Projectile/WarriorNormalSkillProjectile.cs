@@ -1,10 +1,12 @@
-using Core.Config;
+using Core.Pool;
 using Core.Reflection;
 using Core.Service;
+using Core.Time;
 using Game.Battle.Status;
 using Game.VFX;
 using GameHotUpdate.Battle.Projectile;
 using GameHotUpdate.Battle.Status;
+using GameHotUpdate.Config;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Object.Role.Warrior.Projectile
@@ -45,12 +47,17 @@ namespace GameHotUpdate.Battle.Object.Role.Warrior.Projectile
             foreach (var target in projectileData.targets)
             {
                 var projectileTrans = new ProjectileTrans(target.GameObject.transform.position, Quaternion.identity);
-                vFXInfo = new VFXInfo();
-                ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_BlueHit, projectileTrans, default, vFXInfo);
+                var newVFXInfo = ServiceLocator.Get<IPoolManager>().GetData<VFXInfo>();
+                ServiceLocator.Get<IVFXManager>().CreateVFX(ResKeyCollection.VFX_FirePropertySkill_Hit, projectileTrans, default, newVFXInfo);
+                // 计时器计时
+                ServiceLocator.Get<ITimerManager>().CreateTimer(false, 500, () =>
+                {
+                    newVFXInfo.IsStop = true;
+                });
             }
         }
 
-        protected override void HandleOtherOnTrigger()
+        protected override void HandleTiming()
         {
             
         }

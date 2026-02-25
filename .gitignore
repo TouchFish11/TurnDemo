@@ -76,3 +76,12 @@ crashlytics-build.properties
 
 # HyBridCLR文件夹
 /HybridCLRData
+
+#资源文件夹
+Assets/ImportRes/
+
+#AB包
+Assets/StreamingAssets/
+Assets/ServerData/
+Assets/AssetBundles/
+Assets/Editor/ArtRes/

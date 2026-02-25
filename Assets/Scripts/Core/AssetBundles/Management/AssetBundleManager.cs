@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Core.Dependence;
 using Core.Log;
 using Core.Service;
 using Core.Singleton;
@@ -26,11 +25,14 @@ namespace Core.AssetBundles.Management
         private BundleWrapper _mainWrapper;
         // 主包清单信息
         private AssetBundleManifest _abManifest;
+        // 内存监听器
+        private IMemoryMonitor _memoryMonitor;
 
         private void Awake()
         {
+            _memoryMonitor = ServiceLocator.Get<IMemoryMonitor>();
             // 注册事件
-            ServiceLocator.Get<IMemoryMonitor>().Register(this);
+            _memoryMonitor.Register(this);
         }
 
         /// <summary>
@@ -59,11 +61,16 @@ namespace Core.AssetBundles.Management
 #endif
             }
         }
-        
-        public async Task Init()
+
+        /// <summary>
+        /// 初始化默认包
+        /// 更新使用
+        /// </summary>
+        /// <param name="defaultName"></param>
+        public async Task InitDefault(string defaultName)
         {
             // 构建主包信息
-            _mainWrapper = new BundleWrapper(AbMainName, PathUtility.GetAbLoadPath($"{AbMainName}{FileUtility.AbSuffix}"));
+            _mainWrapper = new BundleWrapper(AbMainName, PathUtility.GetAbLoadPath($"{AbMainName}{FileUtility.AbSuffix}"), this);
             // 加载主包
             await _mainWrapper.LoadFromFileAsync();
 
@@ -75,29 +82,45 @@ namespace Core.AssetBundles.Management
                 LogManager.LogError($"主包依赖文件加载失败");
                 return;
             }
+            
+            _nameToWrapperMap.TryAdd(defaultName, new BundleWrapper(defaultName, PathUtility.GetAbLoadPath($"{defaultName}{FileUtility.AbSuffix}"), this));
+        }
+        
+        public async Task Init()
+        {
+            // 先卸载原来的默认包
+            await UnloadAllBundles(false);
+            
+            // 构建主包信息
+            _mainWrapper = new BundleWrapper(AbMainName, PathUtility.GetAbLoadPath($"{AbMainName}{FileUtility.AbSuffix}"), this);
+            // 加载主包
+            await _mainWrapper.LoadFromFileAsync();
+
+            // 加载依赖文件
+            _abManifest = await _mainWrapper.AssetBundle.LoadAssetAsync<AssetBundleManifest>(nameof(AssetBundleManifest)).ToTask<AssetBundleManifest>();
+            if (!_abManifest)
+            {
+                LogManager.LogError($"主包依赖文件加载失败");
+                return;
+            }
 
             // 构建全部AB包信息
             var abNames = _abManifest.GetAllAssetBundles();
             foreach (var abName in abNames)
             {
                 // 初始化包装器
-                _nameToWrapperMap.TryAdd(abName, new BundleWrapper(abName.ToLower(), PathUtility.GetAbLoadPath($"{abName}{FileUtility.AbSuffix}")));
+                _nameToWrapperMap.TryAdd(abName, new BundleWrapper(abName.ToLower(), PathUtility.GetAbLoadPath($"{abName}{FileUtility.AbSuffix}"), this));
             }
-            
-            // 
-            ServiceLocator.Get<IDependencyManager>().Notice(typeof(IAssetBundleManager));
         }
 
         /// <summary>
         /// 异步加载指定AB包
         /// </summary>
-        /// <param name="assetBundleType"></param>
+        /// <param name="abName"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async Task<AssetBundle> LoadBundleAsync(EAssetBundleType assetBundleType, CancellationToken token = default)
+        public async Task<AssetBundle> LoadBundleAsync(string abName, CancellationToken token = default)
         {
-            var abName = assetBundleType.ToString().ToLower();
-            
             // 先检查未使用缓存是否有
             if (_nameToNonRefWrapperMap.TryGetValue(abName, out var unUserWrapper))
             {
@@ -107,7 +130,7 @@ namespace Core.AssetBundles.Management
             
             if (!_nameToWrapperMap.TryGetValue(abName, out var wrapper))
             {
-                LogManager.LogError($"AB包：{assetBundleType}不存在");
+                LogManager.LogError($"AB包：{abName}不存在");
                 return null;
             }
 
@@ -146,13 +169,19 @@ namespace Core.AssetBundles.Management
             await _nameToWrapperMap[abName].LoadFromFileAsync(token);
         }
         
-        public void UnloadBundleAsync(EAssetBundleType assetBundleType, bool unloadAllLoadedObjects = false)
+        public void UnloadBundle(string abName, bool unloadAllLoadedObjects = false)
         {
-            var abName = assetBundleType.ToString().ToLower();
             if (_nameToWrapperMap.TryGetValue(abName, out var wrapper))
             {
-                PushUnUseBundle(wrapper);
-                _nameToWrapperMap.Remove(abName);
+                wrapper.Unload();
+            }
+        }
+        
+        public async Task ForceUnloadUnuseBundle()
+        {
+            foreach (var bundleWrapper in _nameToNonRefWrapperMap.Values)
+            {
+                await bundleWrapper.TryUnloadAsync(false);
             }
         }
 
@@ -160,7 +189,7 @@ namespace Core.AssetBundles.Management
         /// 缓存未使用的包
         /// </summary>
         /// <param name="bundleWrapper"></param>
-        private void PushUnUseBundle(BundleWrapper bundleWrapper)
+        public void PushUnUseBundle(BundleWrapper bundleWrapper)
         {
             _nameToNonRefWrapperMap.Add(bundleWrapper.BundelName, bundleWrapper);
         }
@@ -172,11 +201,14 @@ namespace Core.AssetBundles.Management
         /// <param name="unloadAllObjects"></param>
         public async Task UnloadAllBundles(bool unloadAllObjects)
         {
+            // 先释放未使用的AB包
+            await ForceUnloadUnuseBundle();
+            
             foreach (var bundleWrapper in _nameToWrapperMap.Values)
             {
                 if (bundleWrapper.RefCount == 0)
                 {
-                    await bundleWrapper.UnloadAsync(unloadAllObjects);
+                    await bundleWrapper.TryUnloadAsync(false);
                 }
                 else
                 {
@@ -186,12 +218,15 @@ namespace Core.AssetBundles.Management
             
             // 清空缓存
             _nameToWrapperMap.Clear();
+            _nameToNonRefWrapperMap.Clear();
+            // 卸载依赖文件
+            _mainWrapper.Unload();
+            _abManifest = null;
             // 卸载主包
-            await _mainWrapper.UnloadAsync(unloadAllObjects);
+            await _mainWrapper.TryUnloadAsync(unloadAllObjects);
+            _mainWrapper = null;
             // 卸载所有AB包
             AssetBundle.UnloadAllAssetBundles(unloadAllObjects);
-            _mainWrapper = null;
-            _abManifest = null;
             GC.Collect();
         }
         
@@ -207,13 +242,14 @@ namespace Core.AssetBundles.Management
                 }
             }
             
-            await unUsebundleWrapper?.UnloadAsync(true);
+            await unUsebundleWrapper?.TryUnloadAsync(false);
         }
 
         protected override void OnDestroy()
         {
             // 注销事件
-            ServiceLocator.Get<IMemoryMonitor>().Unregister(this);
+            _memoryMonitor.Unregister(this);
+            _memoryMonitor = null;
         }
     }
 }
