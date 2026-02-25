@@ -1,7 +1,7 @@
 using System.IO;
 using Core.Global;
+using Editor.Generation;
 using Editor.Generation.Detail;
-using Framework.Editor.Generation;
 using UnityEditor;
 using UnityEngine;
 

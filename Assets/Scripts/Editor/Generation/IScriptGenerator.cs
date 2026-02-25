@@ -1,4 +1,4 @@
-namespace Framework.Editor.Generation
+namespace Editor.Generation
 {
     /// <summary>
     /// 脚本器生成接口

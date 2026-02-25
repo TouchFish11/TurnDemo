@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Core.Input.ActionAsset;
-using Framework.Editor.Generation;
 using UnityEditor;
 
 namespace Editor.Generation.Detail

@@ -1,14 +1,10 @@
 {
   "keyToValueMap": {
     "default.assetbundle": {
-      "PackageName": "default.assetbundle",
-      "PackageSize": 24546022,
-      "PackageMd5": "9b557f99f8e683ac9c97da773ea04540"
-    },
-    "StandaloneWindows.assetbundle": {
-      "PackageName": "StandaloneWindows.assetbundle",
-      "PackageSize": 1999,
-      "PackageMd5": "f7a8b9bfed724d2dc90502cf33ad8fc5"
+      "name": "default.assetbundle",
+      "size": 196574208,
+      "hash": "8a6dca54264911913020f872a233c3a48b63afaa03374eccfeeb2f12b055d08c",
+      "dependencies": []
     }
   }
 }

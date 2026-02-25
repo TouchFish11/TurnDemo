@@ -18,8 +18,7 @@ namespace Core.Collection
     public abstract class Collection<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>>, ISerializationCallbackReceiver, ICollection<TKey, TValue>
     {
         // 核心键值映射容器，用于高效的键值对查找、添加、删除操作
-        [JsonProperty]
-        protected readonly Dictionary<TKey, TValue> keyToValueMap = new();
+        [JsonProperty] protected readonly Dictionary<TKey, TValue> keyToValueMap = new();
         // 序列化用的键列表，与values列表一一对应
         [SerializeField] private List<TKey> keys = new();
         // 序列化用的值列表，与keys列表一一对应
@@ -64,11 +63,9 @@ namespace Core.Collection
             {
                 return true;
             }
-            else
-            {
-                LogManager.Log($"已存在键{key}，值为{value}，添加失败");
-                return false;
-            }
+
+            LogManager.Log($"已存在键{key}，值为{value}，添加失败");
+            return false;
         }
 
         /// <summary>
@@ -155,7 +152,7 @@ namespace Core.Collection
             var count = Mathf.Min(keys.Count, values.Count);
             for (var i = 0; i < count; i++)
             {
-                keyToValueMap.Add(keys[i], values[i]);
+                keyToValueMap.TryAdd(keys[i], values[i]);
             }
 
             // 键列表和值列表长度不一致时输出错误日志

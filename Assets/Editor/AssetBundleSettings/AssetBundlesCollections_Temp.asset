@@ -129,10 +129,10 @@ MonoBehaviour:
       size: 201327799
       name: CubemapStars.cubemap
       hash: 97a5ed68862d9d45cdedaffb145b38c2ff28bbca743a52a5e5a8ecedfd4576a4
-    - assetPath: Assets\Editor\ArtRes\Default\Material\StarSkybox.mat
-      size: 3061
-      name: StarSkybox.mat
-      hash: 22080f92b43b90ab32e18bbf2823bf0766bed462197affbe8220e05582130aab
+    - assetPath: Assets\Editor\ArtRes\Default\Material\StarSkybox_1.mat
+      size: 3063
+      name: StarSkybox_1.mat
+      hash: 70f5d6e5cf653d71a79e20c259e0916ffa5a54e4eb4873566394b28f3a4da2b2
     - assetPath: Assets\Editor\ArtRes\Default\SpriteAtlas\Atlas_Default.spriteatlasv2
       size: 394
       name: Atlas_Default.spriteatlasv2

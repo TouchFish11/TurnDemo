@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Framework.Editor.Generation;
 using UnityEditor;
 
 namespace Editor.Generation.Detail

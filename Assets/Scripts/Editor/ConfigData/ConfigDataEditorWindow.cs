@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using Editor.Generation;
 using Editor.Generation.Detail;
-using Framework.Editor.Generation;
 using UnityEditor;
 using UnityEngine;
 

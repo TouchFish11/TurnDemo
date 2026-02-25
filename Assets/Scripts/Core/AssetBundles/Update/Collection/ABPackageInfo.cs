@@ -15,6 +15,7 @@ namespace Core.AssetBundles.Update.Collection
     {
         /// <summary>
         /// AB包名称
+        /// 包含拓展名
         /// </summary>
         [JsonProperty]
         private string name;
@@ -54,22 +55,23 @@ namespace Core.AssetBundles.Update.Collection
 
         /// <summary>
         /// 获取AB包名称
+        /// 包含拓展名
         /// </summary>
-        public string Name => name;
+        public string Name {get => name; set => name = value; }
 
         /// <summary>
         /// 获取AB包大小（字节）
         /// </summary>
-        public long Size => size;
+        public long Size {get => size; set => size = value; }
 
         /// <summary>
         /// 获取AB包的Hash值
         /// </summary>
-        public string Hash => hash;
+        public string Hash {get => hash; set => hash = value; }
         
         /// <summary>
         /// 依赖项
         /// </summary>
-        public string[] Dependencies => dependencies;
+        public string[] Dependencies {get => dependencies; set => dependencies = value; }
     }
 }
