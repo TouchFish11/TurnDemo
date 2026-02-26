@@ -1,13 +1,11 @@
 using System;
-using System.Collections.Generic;
 using Newtonsoft.Json;
-using UnityEngine;
 
 namespace Core.AssetBundles.Update.Collection
 {
     /// <summary>
     /// AssetBundle包信息实体类
-    /// 用于存储单个AB包的核心信息（名称、大小、MD5值），支持序列化
+    /// 用于存储单个AB包的核心信息（名称、大小、Hash值），支持序列化
     /// </summary>
     [Serializable]
     [JsonObject(MemberSerialization.OptIn)]

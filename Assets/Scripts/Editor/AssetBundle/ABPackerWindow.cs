@@ -77,7 +77,7 @@ namespace Editor.AssetBundle
         private const string _assetCollectionName_Release = "AssetBundlesCollections.asset";
         private readonly string serverDataPath = $"{Application.dataPath}/ServerData/";     // 服务器数据编辑器路径
         
-        [MenuItem("Tools/AssetBundle Packer")]
+        [MenuItem("GameTool/AssetBundle/AssetBundle Packer")]
         public static void ShowWindow()
         {
             GetWindow<ABPackerWindow>("AssetBundle Packer");
@@ -113,8 +113,8 @@ namespace Editor.AssetBundle
         #region 左侧区域视图
         private void OnDrawLeftArea()
         {
-            // --- AB包构建配置 ---
-            //DrawConfigSettingsView();
+            // --- 资源键生成 ---
+            DrawReskeyView();
 
             // --- 热更新 ---
             DrawHotUpdateView();
@@ -381,7 +381,7 @@ namespace Editor.AssetBundle
                         AssetDatabase.SaveAssets();
                         AssetDatabase.Refresh();
                         
-                        AppendToLog($"Override Success!\n");
+                        AppendToLog($"Override Success!");
                         
                         // 生成脚本
                         var textInfo = CultureInfo.CurrentCulture.TextInfo;
@@ -448,6 +448,13 @@ namespace Editor.AssetBundle
                 }
                 else
                 {
+                    // 差异日志
+                    Dictionary<string, List<AssetBundlesCollections.AssetInfo>> log_NewAdd_Bundles = new();
+                    Dictionary<string, List<AssetBundlesCollections.AssetInfo>> log_Unuesed_Bundles = new();
+                    Dictionary<string, List<AssetBundlesCollections.AssetInfo>> log_Unuesed_Assets = new();
+                    Dictionary<string, List<AssetBundlesCollections.AssetInfo>> log_NewAdd_Assets = new();
+                    Dictionary<string, List<AssetBundlesCollections.AssetInfo>> log_Changed_Assets = new();
+                    
                     AppendToLog($"--- Starting Handle Difference---");
                     // 移除发布版配置无用的包
                     for (var i = _assetsCollection_Release.assetBundleInfos.Count - 1; i >= 0; i--)
@@ -457,8 +464,12 @@ namespace Editor.AssetBundle
                         // 发布版配置中的包在最新版配置中没有找到，说明不需要这个包，需要在发布版中移除这个包
                         if (info == null)
                         {
+                            // ---日志记录
+                            if (!log_Unuesed_Bundles.ContainsKey(abInfo_Realese.assetBundleName))
+                                log_Unuesed_Bundles.Add(abInfo_Realese.assetBundleName, abInfo_Realese.assetInfos);
+                            // ---
+                            
                             waitRemoveAbNames.Add(abInfo_Realese.assetBundleName);
-                            AppendToLog($"Found Unuesed Bundle：{abInfo_Realese.assetBundleName}，Include Assets：[{string.Join(',', abInfo_Realese.assetInfos.ConvertAll(assetInfo => assetInfo.name))}]");
                         }
                     }
                     
@@ -466,26 +477,58 @@ namespace Editor.AssetBundle
                     for (var i = _assetsCollection_Release.assetBundleInfos.Count - 1; i >= 0; i--)
                     {
                         var abInfo_Release = _assetsCollection_Release.assetBundleInfos[i];
+                        // 处理其中一个包的资源
                         var abInfo_Temp = _assetsColletion_Temp.assetBundleInfos.Find(abInfo => abInfo.assetBundleName == abInfo_Release.assetBundleName);
                         if (abInfo_Temp != null)
                         {
                             for (var j = abInfo_Release.assetInfos.Count - 1; j >= 0; j--)
                             {
                                 var assetInfo_Release =  abInfo_Release.assetInfos[j];
-                                // 判断旧发布版配置中的资源在最新配置中是否存在，不存在则删除发布版本的该资源
+                                // 判断旧发布版配置中的资源在最新配置中是否存在，不存在则删除发布版本的该资源，这个包也要重新打包
                                 var index = abInfo_Temp.assetInfos.FindIndex(assetInfo => assetInfo.name == assetInfo_Release.name);
                                 if (index == -1)
                                 {
+                                    // ---日志记录
+                                    if (log_Unuesed_Assets.ContainsKey(abInfo_Release.assetBundleName))
+                                        log_Unuesed_Assets[abInfo_Release.assetBundleName].Add(assetInfo_Release);
+                                    else
+                                        log_Unuesed_Assets.TryAdd(abInfo_Release.assetBundleName, new List<AssetBundlesCollections.AssetInfo> {assetInfo_Release});
+                                    // ---
+                                    
                                     if (waitRemoveAssetInfos.ContainsKey(abInfo_Release.assetBundleName))
                                     {
-                                        waitRemoveAssetInfos[abInfo_Release.assetBundleName].Add(assetInfo_Release);
+                                        var delAssetInfo = new AssetBundlesCollections.AssetInfo(assetInfo_Release.assetPath, assetInfo_Release.size, assetInfo_Release.name, assetInfo_Release.hash);
+                                        waitRemoveAssetInfos[abInfo_Release.assetBundleName].Add(delAssetInfo);
+                                        // 若删除的资源在差异字典中存在，就要从中移除
+                                        if (abNameToDifferenceInfos.TryGetValue(abInfo_Release.assetBundleName, out var infos))
+                                        {
+                                            var info = infos.Find(info => info.name == delAssetInfo.name);
+                                            if (info != null)
+                                            {
+                                                infos.Remove(info);
+                                            }
+                                        }
                                     }
                                     else
                                     {
+                                        // 添加到待移除的资源容器
                                         waitRemoveAssetInfos.Add(abInfo_Release.assetBundleName, new List<AssetBundlesCollections.AssetInfo> { assetInfo_Release });
+
+                                        var assetsInfos = new List<AssetBundlesCollections.AssetInfo>();
+                                        // 这个包的所有资源都要重新打包
+                                        foreach (var assetInfo in abInfo_Release.assetInfos)
+                                        {
+                                            if (assetInfo.name == assetInfo_Release.name)
+                                            {
+                                                continue;
+                                            }
+                                            
+                                            var reAssetInfo = new AssetBundlesCollections.AssetInfo(assetInfo.assetPath, assetInfo.size, assetInfo.name, assetInfo.hash);
+                                            assetsInfos.Add(reAssetInfo);
+                                        }
+                                        
+                                        abNameToDifferenceInfos.Add(abInfo_Release.assetBundleName, assetsInfos);
                                     }
-                                    
-                                    AppendToLog($"Found Unuesed Asset：{assetInfo_Release.name} in '{abInfo_Release.assetBundleName}'");
                                 }
                             }
                         }
@@ -496,22 +539,27 @@ namespace Editor.AssetBundle
                     {
                         // 获取单个包信息
                         var assetBundleInfo_Temp = _assetsColletion_Temp.assetBundleInfos[i];
+                        
+                        var isCancel = EditorUtility.DisplayCancelableProgressBar("Compare Differences", $"Handing：{assetBundleInfo_Temp.assetBundleName}", 
+                            (float)i / _assetsColletion_Temp.assetBundleInfos.Count);
+                        if(isCancel) break;
+                        
                         var abInfo_Realese = _assetsCollection_Release.assetBundleInfos.Find(abInfo => abInfo.assetBundleName == assetBundleInfo_Temp.assetBundleName);
                         // 没有这个包
                         if (abInfo_Realese == null)
                         {
-                            // 发布版的配置需要新增这个包信息，包含所有资源信息
-                            //_assetsCollection_Release.assetBundleInfos.Add(assetBundleInfo_Temp);
                             // 加入字典，这个包的所有资源都要被打包
                             abNameToDifferenceInfos.Add(assetBundleInfo_Temp.assetBundleName, assetBundleInfo_Temp.assetInfos);
                             
-                            var assetNames = assetBundleInfo_Temp.assetInfos.ConvertAll(info => info.name);
-                            AppendToLog($"Add NewBundle：{assetBundleInfo_Temp.assetBundleName}，Include Assets：[{string.Join(',', assetNames)}]");
+                            // ---日志记录
+                            if (log_NewAdd_Bundles.ContainsKey(assetBundleInfo_Temp.assetBundleName))
+                                log_NewAdd_Bundles[assetBundleInfo_Temp.assetBundleName].AddRange(assetBundleInfo_Temp.assetInfos);
+                            // ---
                         }
                         // 发布版的配置有这个包
                         else
                         {
-                            // 判断有没有变化的资源
+                            // 判断有没有变化的资源，发布版和最新版都有、或最新版多于发布版的情况
                             for (var k = 0; k < assetBundleInfo_Temp.assetInfos.Count; k++)
                             {
                                 var assetInfo_Temp = assetBundleInfo_Temp.assetInfos[k];
@@ -520,22 +568,48 @@ namespace Editor.AssetBundle
                                 // 不存在，直接添加
                                 if (assetInfo_Realese == null)
                                 {
-                                    // 把该资源添加到发布版配置中
-                                    //abInfo_Realese.assetInfos.Add(assetInfo_Temp);
+                                    // ---日志记录
+                                    if (log_NewAdd_Assets.ContainsKey(assetBundleInfo_Temp.assetBundleName))
+                                        log_NewAdd_Assets[assetBundleInfo_Temp.assetBundleName].Add(assetInfo_Temp);
+                                    else
+                                        log_NewAdd_Assets.TryAdd(assetBundleInfo_Temp.assetBundleName, new List<AssetBundlesCollections.AssetInfo> {assetInfo_Temp});
+                                    
                                     // 添加到字典中
                                     // 若字典存在这个包名，说明之前已经添加了这个包的所有资源了，只需添加这个资源即可，避免重复添加
                                     if (abNameToDifferenceInfos.ContainsKey(assetBundleInfo_Temp.assetBundleName))
                                     {
+                                        // 添加新资源到差异字典中
                                         abNameToDifferenceInfos[assetBundleInfo_Temp.assetBundleName].Add(assetInfo_Temp);
-                                        AppendToLog($"Add NewAsset：{assetInfo_Temp.name} at {assetBundleInfo_Temp.assetBundleName} bundle");
                                     }
                                     // 若不存在于字典，说明是第一次处理该包，把这个包的所有资源添加进去
                                     else
                                     {
-                                        abNameToDifferenceInfos.Add(assetBundleInfo_Temp.assetBundleName, assetBundleInfo_Temp.assetInfos);
+                                        var newInfos = new List<AssetBundlesCollections.AssetInfo>
+                                        {
+                                            // 添加新资源到差异字典中
+                                            new(assetInfo_Temp.assetPath, assetInfo_Temp.size, assetInfo_Temp.name, assetInfo_Temp.hash)
+                                        };
                                         
-                                        var assetNames = assetBundleInfo_Temp.assetInfos.ConvertAll(info => info.name);
-                                        AppendToLog($"Rebuild Bundle：{assetBundleInfo_Temp.assetBundleName}，Include Assets：[{string.Join(',', assetNames)}]");
+                                        foreach (var assetInfo in abInfo_Realese.assetInfos)
+                                        {
+                                            // 新资源的名称和旧配置的一致，也要跳过，上述newInfos.Add已经添加过了，避免重复添加
+                                            if (assetInfo.name == assetInfo_Temp.name)
+                                            {
+                                                continue;
+                                            }
+                                                
+                                            // 配置的资源信息在待移除容器中，也要跳过
+                                            var index = waitRemoveAssetInfos[abInfo_Realese.assetBundleName].FindIndex(info => info.name == assetInfo.name);
+                                            if (index != -1)
+                                            {
+                                                continue;
+                                            }
+                                                
+                                            newInfos.Add(new AssetBundlesCollections.AssetInfo(assetInfo.assetPath, assetInfo.size, assetInfo.name,  assetInfo.hash));
+                                        }
+                                        
+                                        // 这个资源所在的AB包，对应发布版配置的AB包，添加发布版配置的该AB包中的所有资源
+                                        abNameToDifferenceInfos.Add(assetBundleInfo_Temp.assetBundleName, newInfos);
                                     }
                                 }
                                 // 存在判断是否相等
@@ -557,10 +631,16 @@ namespace Editor.AssetBundle
                                         assetInfo_Realese.assetPath != assetInfo_Temp.assetPath)
                                     {
                                         assetInfo_Realese.assetPath = assetInfo_Temp.assetPath;
-                                        AppendToLog($"Update AssetPath：{assetInfo_Temp.name} at {assetBundleInfo_Temp.assetBundleName} bundle");
+                                        
+                                        // ---日志记录
+                                        if (log_Changed_Assets.ContainsKey(assetBundleInfo_Temp.assetBundleName))
+                                            log_Changed_Assets[assetBundleInfo_Temp.assetBundleName].Add(assetInfo_Temp);
+                                        else
+                                            log_Changed_Assets.Add(assetBundleInfo_Temp.assetBundleName, new List<AssetBundlesCollections.AssetInfo> {assetInfo_Temp});
+                                        // ---
                                     }
-                                    // 其它情况都要打包
-                                    else
+                                    // 只处理名称相同的资源,其它情况都要打包
+                                    else if(assetInfo_Realese.name == assetInfo_Temp.name)
                                     {
                                         // 先将旧资源信息放入待移除容器，只处理名称相同的资源，名称不同的资源已在[移除发布版配置无用的资源]中排除
                                         if (waitRemoveAssetInfos.ContainsKey(abInfo_Realese.assetBundleName))
@@ -575,35 +655,125 @@ namespace Editor.AssetBundle
                                         // 字典不存在该包，说明第一次添加该包的资源，也要添加这个包的所有资源进去
                                         if (!abNameToDifferenceInfos.ContainsKey(abInfo_Realese.assetBundleName))
                                         {
-                                            var newInfos =  new List<AssetBundlesCollections.AssetInfo>();
+                                            AssetBundlesCollections.AssetInfo newInfo = new(assetInfo_Temp.assetPath,
+                                                assetInfo_Temp.size,
+                                                assetInfo_Temp.name, assetInfo_Temp.hash);
                                             // 添加新资源信息
-                                            newInfos.Add(new AssetBundlesCollections.AssetInfo(assetInfo_Temp.assetPath, assetInfo_Temp.size, assetInfo_Temp.name, assetInfo_Temp.hash));
+                                            var newInfos = new List<AssetBundlesCollections.AssetInfo> { newInfo };
+
                                             foreach (var assetInfo in abInfo_Realese.assetInfos)
                                             {
+                                                // 新资源的名称和旧配置的一致，也要跳过，上述newInfos.Add已经添加过了，避免重复添加
+                                                if (assetInfo.name == assetInfo_Temp.name)
+                                                {
+                                                    continue;
+                                                }
+                                                
+                                                // 配置的资源信息在待移除容器中，也要跳过
+                                                var index = waitRemoveAssetInfos[abInfo_Realese.assetBundleName].FindIndex(info => info.name == assetInfo.name);
+                                                if (index != -1)
+                                                {
+                                                    continue;
+                                                }
+                                                
                                                 newInfos.Add(new AssetBundlesCollections.AssetInfo(assetInfo.assetPath, assetInfo.size, assetInfo.name,  assetInfo.hash));
                                             }
                                             
                                             abNameToDifferenceInfos.Add(abInfo_Realese.assetBundleName, newInfos);
                                             
-                                            // 记录日志
-                                            var assetNames = abInfo_Realese.assetInfos.ConvertAll(info => info.name);
-                                            AppendToLog($"Rebuild Bundle：{abInfo_Realese.assetBundleName}，Include Assets：[{string.Join(',', assetNames)}]");
+                                            // ---日志记录
+                                            if (log_Changed_Assets.ContainsKey(assetBundleInfo_Temp.assetBundleName))
+                                                log_Changed_Assets[assetBundleInfo_Temp.assetBundleName].Add(newInfo);
+                                            else
+                                                log_Changed_Assets.Add(assetBundleInfo_Temp.assetBundleName, new List<AssetBundlesCollections.AssetInfo> {newInfo});
+                                            // ---
                                         }
                                         // 存在该包，添加新资源信息
                                         else
                                         {
                                             var newInfo = new AssetBundlesCollections.AssetInfo(assetInfo_Temp.assetPath, assetInfo_Temp.size, assetInfo_Temp.name, assetInfo_Temp.hash);
+                                            // 判断差异字典中是否有相同名称的资源
+                                            var info = abNameToDifferenceInfos[abInfo_Realese.assetBundleName].Find(info => info.name == newInfo.name);
+                                            if (info != null)
+                                            {
+                                                // 有就说明被添加过了（上述[移除发布版配置无用的资源]逻辑可能会添加），需要移除旧的资源信息，添加新的信息
+                                                abNameToDifferenceInfos[abInfo_Realese.assetBundleName].Remove(info);
+                                            }
+                                            
                                             abNameToDifferenceInfos[abInfo_Realese.assetBundleName].Add(newInfo);
+                                            
+                                            // ---日志记录
+                                            if (log_Changed_Assets.ContainsKey(assetBundleInfo_Temp.assetBundleName))
+                                                log_Changed_Assets[assetBundleInfo_Temp.assetBundleName].Add(newInfo);
+                                            else
+                                                log_Changed_Assets.Add(assetBundleInfo_Temp.assetBundleName, new List<AssetBundlesCollections.AssetInfo> {newInfo});
+                                            // ---
                                         }
                                     }
                                 }
                             }
                         }
                     }
+                    
+                    EditorUtility.ClearProgressBar();
 
                     if (abNameToDifferenceInfos.Count == 0 && waitRemoveAbNames.Count == 0 && waitRemoveAssetInfos.Count == 0)
                     {
                         AppendToLog($"No Differences");
+                    }
+                    else
+                    {
+                        // 打印未使用（待移除）的包
+                        foreach (var logUnuesedBundle in log_Unuesed_Bundles)
+                        {
+                            AppendToLog($"Found Unuesed Bundle：{logUnuesedBundle.Key}，" +
+                                        $"Include Assets：[{string.Join('、', logUnuesedBundle.Value.ConvertAll(assetInfo => assetInfo.name))}]");
+                        }
+
+                        AppendToLog("");
+                        
+                        // 打印新增包
+                        foreach (var logNewAddBundle in log_NewAdd_Bundles)
+                        {
+                            AppendToLog($"Found NewAdd Bundle：{logNewAddBundle.Key}，" +
+                                        $"Include Assets：[{string.Join('、', logNewAddBundle.Value.ConvertAll(assetInfo => assetInfo.name))}]");
+                        }
+                        
+                        AppendToLog("");
+                        
+                        // 打印每个包的变化
+                        foreach (var abNameToDifferenceInfo in abNameToDifferenceInfos)
+                        {
+                            var newAddAssets_log = "";
+                            if (log_NewAdd_Assets.TryGetValue(abNameToDifferenceInfo.Key, out var assets))
+                            {
+                                var assetNames = assets.ConvertAll(info => info.name);
+                                newAddAssets_log = $"[{string.Join('、', assetNames)}]";
+                            }
+
+                            var changedAssets_log = "";
+                            if (log_Changed_Assets.TryGetValue(abNameToDifferenceInfo.Key, out var asset2s))
+                            {
+                                var assetNames = asset2s.ConvertAll(info => info.name);
+                                changedAssets_log = $"[{string.Join('、', assetNames)}]";
+                            }
+
+                            var unusedAssets_log = "";
+                            if (log_Unuesed_Assets.TryGetValue(abNameToDifferenceInfo.Key, out var asset3s))
+                            {
+                                var assetNames = asset3s.ConvertAll(info => info.name);
+                                unusedAssets_log = $"[{string.Join('、', assetNames)}]";
+                            }
+
+                            var inculdeAssets = abNameToDifferenceInfo.Value.ConvertAll(info => info.name);
+                            var inculdeAssets_Log = $"[{string.Join('、', inculdeAssets)}]";
+                            
+                            AppendToLog($"// {abNameToDifferenceInfo.Key}\n" +
+                                        $"Found Unuesed Assets：{unusedAssets_log}\n" + 
+                                        $"Found NewAdd Assets：{newAddAssets_log}\n" + 
+                                        $"Found Changed Assets：{changedAssets_log}\n" + 
+                                        $"Rebuild Bundle：{abNameToDifferenceInfo.Key}，Include Assets：{inculdeAssets_Log}\n");
+                        }
                     }
                     
                     AppendToLog($"--- End Handle Difference---\n");
@@ -651,24 +821,24 @@ namespace Editor.AssetBundle
             
             GUILayout.EndHorizontal();
         }
-        
-        private void DrawConfigSettingsView()
+
+        private void DrawReskeyView()
         {
             EditorGUILayout.Space();
-            GUILayout.Label("Config Settings", EditorStyles.boldLabel);
+            GUILayout.Label("Asset Key Generate", EditorStyles.boldLabel);
             
             GUILayout.BeginHorizontal();
             
             EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.TextField("Config Path", $"{_abSettingsSavePath}AssetBundlesCollections.asset");
+            EditorGUILayout.TextField("Generate Path", $"{Application.dataPath}/Scripts/GameHotUpdate/Config/ResKeyCollection.cs");
             EditorGUI.EndDisabledGroup();
             
-            // 创建AB包配置文件按钮
-            if (GUILayout.Button("Create Config", GUILayout.Width(120)))
+            if (GUILayout.Button("Generate Script Code", GUILayout.Width(200)))
             {
-                CreateCollection(_abSettingsSavePath, "AssetBundlesCollections.asset");
+                IScriptGenerator scriptGenerator = new ResKeyCollectionClassGenerator();
+                scriptGenerator.GenerateScript();
+                AppendToLog($"ResKeyCollection Generate At：{Application.dataPath}/Scripts/GameHotUpdate/Config/ResKeyCollection.cs\n");
             }
-            
             GUILayout.EndHorizontal();
         }
         #endregion
@@ -690,6 +860,10 @@ namespace Editor.AssetBundle
             if (GUILayout.Button("Open Output Directory"))
             {
                 OpenOutputDirectory();
+            }
+            if (GUILayout.Button("Open ServerData Directory"))
+            {
+                OpenServerDataDirectory();
             }
             if (GUILayout.Button("Clear Log"))
             {
@@ -993,8 +1167,7 @@ namespace Editor.AssetBundle
 
             if (waitRemoveAbNames.Count > 0)
             {
-                AppendToLog($"Exist Will Remove AssetBundle Labels：[{string.Join(',', waitRemoveAbNames)}].\n");
-                return;
+                AppendToLog($"Exist Will Remove AssetBundle Labels：[{string.Join('、', waitRemoveAbNames)}].\n");
             }
 
             // abNameToDifferenceInfos和_assetsCollection_Release.assetBundleInfos相同情况，第一次全量打包或全量更新（所有包都变化）
@@ -1037,7 +1210,7 @@ namespace Editor.AssetBundle
                     }
                 }
             
-                AppendToLog($"Setting Lables：[{string.Join(',', abNameToDifferenceInfos.Keys)}]");
+                AppendToLog($"Setting Lables：[{string.Join('、', abNameToDifferenceInfos.Keys)}]\n");
                 
                 EditorUtility.ClearProgressBar();
             }
@@ -1060,7 +1233,7 @@ namespace Editor.AssetBundle
                     total += list.Count;
                 }
                 
-                // 遍历发布配置
+                // 遍历旧发布版配置
                 foreach (var assetBundleInfo in _assetsCollection_Release.assetBundleInfos)
                 {
                     // 若差异字典中存在该AB包名称，说明这个包需要重新打包
@@ -1077,6 +1250,7 @@ namespace Editor.AssetBundle
                             if (isCancel)
                             {
                                 Debug.Log($"已取消设置AB包标签操作");
+                                EditorUtility.ClearProgressBar();
                                 return;
                             }
                     
@@ -1099,6 +1273,11 @@ namespace Editor.AssetBundle
                         foreach (var assetInfo in assetInfos)
                         {
                             var importer = AssetImporter.GetAtPath(assetInfo.assetPath);
+                            // 遍历旧的发布配置，可能出现在新配置中资源被删除的情况，所以需要判断是否为null，null说明在新配置中删除了某个资源，但是旧配置没有暂时更新。
+                            if (!importer)
+                            {
+                                continue;
+                            }
                             if (importer.assetBundleName != "")
                             {
                                 importer.assetBundleName = "";
@@ -1340,7 +1519,7 @@ namespace Editor.AssetBundle
             {
                 AppendToLog($"Build successful! Took {duration.TotalSeconds:F2} seconds.");
                 AppendToLog($"Build Count：{manifest.GetAllAssetBundles().Length}");
-                AppendToLog($"Build Include：{string.Join(',', manifest.GetAllAssetBundles())}.");
+                AppendToLog($"Build Include：{string.Join('、', manifest.GetAllAssetBundles())}.");
             }
             else
             {
@@ -1431,7 +1610,20 @@ namespace Editor.AssetBundle
                             // 更新清单信息
                             serverAbInfo.Size = outPutAbInfo.Size;
                             serverAbInfo.Hash = outPutAbInfo.Hash;
-                            serverAbInfo.Dependencies = outPutAbInfo.Dependencies;
+                            // 不能直接覆盖依赖项，因为当前构建只会记录当前构建的所有包的依赖，不会记录之前的旧依赖，所以应该合并依赖，而不是覆盖
+                            var dependencies = new List<string>(serverAbInfo.Dependencies);
+                            foreach (var dependency in outPutAbInfo.Dependencies)
+                            {
+                                if (dependencies.Contains(dependency))
+                                {
+                                    continue;
+                                }
+                                
+                                // 添加该包的新依赖项
+                                dependencies.Add(dependency);
+                            }
+                            
+                            serverAbInfo.Dependencies = dependencies.ToArray();
                             AppendToLog($"Update Info：{outPutAbInfo.Name}");
                         }
                         // 新增的情况
@@ -1463,12 +1655,24 @@ namespace Editor.AssetBundle
                         }
                     }
 
-                    foreach (var abName in waitRemoveAbInfo)
+                    foreach (var abNameWithEx in waitRemoveAbInfo)
                     {
-                        serverCollections.Remove(abName);
-                        AppendToLog($"Remove Info：{abName}");
+                        var abName = abNameWithEx.Substring(0,  abNameWithEx.LastIndexOf('.'));
+                        // 移除其它包对该包的依赖
+                        foreach (var serverCollectionsValue in serverCollections.Values)
+                        {
+                            var newDependencies = serverCollectionsValue.Dependencies.ToList();
+                            if (newDependencies.Contains(abName))
+                            {
+                                newDependencies.Remove(abName);
+                            }
+                            serverCollectionsValue.Dependencies = newDependencies.ToArray();
+                        }
+                        
+                        serverCollections.Remove(abNameWithEx);
+                        AppendToLog($"Remove Info：{abNameWithEx}");
                         // 移除包
-                        File.Delete($"{serverDataPath}{abName}");
+                        File.Delete($"{serverDataPath}{abNameWithEx}");
                     }
                 }
                 
@@ -1567,6 +1771,18 @@ namespace Editor.AssetBundle
             else
             {
                 EditorUtility.DisplayDialog("Error", $"Directory does not exist:\n{_outputPath}", "OK");
+            }
+        }
+
+        private void OpenServerDataDirectory()
+        {
+            if (Directory.Exists(serverDataPath))
+            {
+                EditorUtility.RevealInFinder(serverDataPath);
+            }
+            else
+            {
+                EditorUtility.DisplayDialog("Error", $"Directory does not exist:\n{serverDataPath}", "OK");
             }
         }
 

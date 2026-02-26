@@ -32,6 +32,7 @@ namespace GameHotUpdate.Config
 		public static string MainCamera => "MainCamera";
 		public static string UICamera => "UICamera";
 		public static string CubemapStars => "CubemapStars";
+		public static string StarSkybox => "StarSkybox";
 		public static string Atlas_Default => "Atlas_Default";
 		public static string StarSkybox041 => "StarSkybox041";
 		public static string StarSkybox042 => "StarSkybox042";
@@ -45,9 +46,10 @@ namespace GameHotUpdate.Config
 		public static string BattleActivityConfig => "BattleActivityConfig";
 		public static string MainActionMap => "MainActionMap";
 		public static string Ground => "Ground";
-		public static string StarSkybox04 => "StarSkybox04";
 		public static string MergedMesh => "MergedMesh";
 		public static string Prefab_Player => "Prefab_Player";
+		public static string Prefab_Main_Warrior => "Prefab_Main_Warrior";
+		public static string Prefab_Npc => "Prefab_Npc";
 		public static string Prefab_AbyssalMage => "Prefab_AbyssalMage";
 		public static string Prefab_Boss => "Prefab_Boss";
 		public static string Prefab_Chest => "Prefab_Chest";
@@ -57,8 +59,6 @@ namespace GameHotUpdate.Config
 		public static string Prefab_Priest => "Prefab_Priest";
 		public static string Prefab_Warrior => "Prefab_Warrior";
 		public static string Prefab_Wizard => "Prefab_Wizard";
-		public static string Prefab_Main_Warrior => "Prefab_Main_Warrior";
-		public static string Prefab_Npc => "Prefab_Npc";
 		public static string UI_3D_FloatingText => "UI_3D_FloatingText";
 		public static string BeginScene => "BeginScene";
 		public static string LevelScene => "LevelScene";

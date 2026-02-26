@@ -80,7 +80,7 @@ namespace GameHotUpdate.Battle.UI.Base
                 // 根据战斗实体获取对应的图标名称
                 var iconName = BattleUIManager.GetIconByEntity(battleEntity);
                 // 从图集加载角色图标
-                var icon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync("TODO", ResKeyCollection.Atlas_Icon_BattleEntity, iconName);
+                var icon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Icon_BattleEntity, iconName);
                 // 获取当前实体的玩家属性组件
                 var playerPropertyComponent = battleEntity.GetComponent<PlayerPropertyComponent>();
                 // 获取角色核心属性数据

@@ -35,7 +35,7 @@ namespace Core.DataPersistence.Json
             
         }
         
-        public T FromJson<T>(string json, E_JsonType jsonType = E_JsonType.Newtonsoft) where T : new()
+        public T FromJson<T>(string json, E_JsonType jsonType = E_JsonType.Newtonsoft, JsonSerializerSettings settings = null) where T : new()
         {
             // 空值校验：JSON字符串为空时返回默认实例
             if (string.IsNullOrEmpty(json))
@@ -47,12 +47,12 @@ namespace Core.DataPersistence.Json
             return jsonType switch
             {
                 E_JsonType.JsonUtlity => JsonUtility.FromJson<T>(json),
-                E_JsonType.Newtonsoft => JsonConvert.DeserializeObject<T>(json, DefaultSettings),
+                E_JsonType.Newtonsoft => JsonConvert.DeserializeObject<T>(json, settings ?? DefaultSettings),
                 _ => new T() // 未知解析器类型时返回默认实例
             };
         }
         
-        public async Task<T> FromJsonAsync<T>(string path, E_JsonType jsonType = E_JsonType.Newtonsoft) where T : new()
+        public async Task<T> FromJsonAsync<T>(string path, E_JsonType jsonType = E_JsonType.Newtonsoft, JsonSerializerSettings settings = null) where T : new()
         {
             // 文件存在性校验：文件不存在时返回默认实例
             if (!File.Exists(path))
@@ -72,37 +72,37 @@ namespace Core.DataPersistence.Json
             return jsonType switch
             {
                 E_JsonType.JsonUtlity => JsonUtility.FromJson<T>(json),
-                E_JsonType.Newtonsoft => JsonConvert.DeserializeObject<T>(json, DefaultSettings),
+                E_JsonType.Newtonsoft => JsonConvert.DeserializeObject<T>(json, settings ?? DefaultSettings),
                 _ => new T() // 未知解析器类型时返回默认实例
             };
         }
         
-        public void SaveToJson(object data, string saveFilePath, E_JsonType type = E_JsonType.Newtonsoft)
+        public void SaveToJson(object data, string saveFilePath, E_JsonType type = E_JsonType.Newtonsoft, JsonSerializerSettings settings = null)
         {
             // 根据序列化器类型执行序列化（格式化输出）
-            var jsonStr = type switch
-            {
-                E_JsonType.JsonUtlity => JsonUtility.ToJson(data, true),
-                E_JsonType.Newtonsoft => JsonConvert.SerializeObject(data, DefaultSettings),
-                _ => ""
-            };
-
+            var jsonStr = ToJson(data, type, settings);
             // 同步写入文件
             File.WriteAllText(saveFilePath, jsonStr);
         }
         
-        public async Task SaveToJsonAsync(object data, string saveFilePath, E_JsonType type = E_JsonType.Newtonsoft)
+        public async Task SaveToJsonAsync(object data, string saveFilePath, E_JsonType type = E_JsonType.Newtonsoft, JsonSerializerSettings settings = null)
+        {
+            // 根据序列化器类型执行序列化（格式化输出）
+            var jsonStr = ToJson(data, type, settings);
+            // 异步写入文件
+            await File.WriteAllTextAsync(saveFilePath, jsonStr);
+        }
+        
+        public string ToJson(object data, E_JsonType type = E_JsonType.Newtonsoft, JsonSerializerSettings settings = null)
         {
             // 根据序列化器类型执行序列化（格式化输出）
             var jsonStr = type switch
             {
                 E_JsonType.JsonUtlity => JsonUtility.ToJson(data, true),
-                E_JsonType.Newtonsoft => JsonConvert.SerializeObject(data, DefaultSettings),
+                E_JsonType.Newtonsoft => JsonConvert.SerializeObject(data, settings ?? DefaultSettings),
                 _ => ""
             };
-
-            // 异步写入文件
-            await File.WriteAllTextAsync(saveFilePath, jsonStr);
+            return jsonStr;
         }
     }
 }

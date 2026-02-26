@@ -43,8 +43,8 @@ namespace Core.AssetBundles.Update
         /// <param name="fileName">要下载的文件名（包含扩展名）</param>
         /// <param name="isAppend">是否断点续传：true-追加写入；false-覆盖写入</param>
         /// <param name="abName">对应的AssetBundle包名</param>
-        /// <param name="md5">文件MD5校验值</param>
-        public ABWebRequester Init(string url, string fileName, bool isAppend, string abName, string md5)
+        /// <param name="hash">文件Hash校验值</param>
+        public ABWebRequester Init(string url, string fileName, bool isAppend, string abName, string hash)
         {
             _monoAdapter = ServiceLocator.Get<IMonoAdapter>();
             _updater = ServiceLocator.Get<IAssetBundleUpdater>();
@@ -56,7 +56,7 @@ namespace Core.AssetBundles.Update
             // 初始化重试次数为全局配置的最大重试次数
             CurrentRetryCount = GlobalSettings.Instance.maxRetryCount;
             AbName = abName;
-            MD5 = md5;
+            Hash = hash;
             return this;
         }
 
@@ -223,16 +223,16 @@ namespace Core.AssetBundles.Update
         public string AbName { get; private set; }
 
         /// <summary>
-        /// 获取文件MD5校验值
+        /// 获取文件Hash校验值
         /// </summary>
-        public string MD5 { get; private set; }
+        public string Hash { get; private set; }
 
         public void ResetData()
         {
             OnDownloadProgress = null;
             _request = null;
             AbName = string.Empty;
-            MD5 = string.Empty;
+            Hash = string.Empty;
             FileName = string.Empty;
             Url = string.Empty;
             IsAppend = false;

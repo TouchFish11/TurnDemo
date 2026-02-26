@@ -18,7 +18,7 @@ namespace GameHotUpdate.Tasks
             return taskType switch
             {
                 E_TaskType.MainStory => "主线",
-                E_TaskType.SideStroy => "֧支线",
+                E_TaskType.SideStroy => "支线",
                 _ => ""
             };
         }

@@ -88,11 +88,12 @@ namespace Core.AssetBundles.Update.State
                 var cacheInfo = waitDownloadCollection[pair.Key];
                 // 创建AB包下载请求器
                 var abWebRequester = ServiceLocator.Get<IPoolManager>().GetData<ABWebRequester>();
-                abWebRequester.Init(serverIp, cacheInfo.AbName, true, cacheInfo.AbName, cacheInfo.Md5);
+                abWebRequester.Init(serverIp, cacheInfo.AbName, true, cacheInfo.AbName, cacheInfo.Hash);
                 // 绑定下载进度回调
                 abWebRequester.OnDownloadProgress += proCallBack;
                 // 将请求器加入待下载队列
                 assetBundleUpdater.GetContext().AddRequesterToWait(abWebRequester);
+                LogManager.Log($"{abWebRequester.AbName}资源，即将下载");
             }
 
             // 获取最大并发下载数

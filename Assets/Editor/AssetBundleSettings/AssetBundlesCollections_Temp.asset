@@ -129,10 +129,10 @@ MonoBehaviour:
       size: 201327799
       name: CubemapStars.cubemap
       hash: 97a5ed68862d9d45cdedaffb145b38c2ff28bbca743a52a5e5a8ecedfd4576a4
-    - assetPath: Assets\Editor\ArtRes\Default\Material\StarSkybox_1.mat
-      size: 3063
-      name: StarSkybox_1.mat
-      hash: 70f5d6e5cf653d71a79e20c259e0916ffa5a54e4eb4873566394b28f3a4da2b2
+    - assetPath: Assets\Editor\ArtRes\Default\Material\StarSkybox.mat
+      size: 3061
+      name: StarSkybox.mat
+      hash: 22080f92b43b90ab32e18bbf2823bf0766bed462197affbe8220e05582130aab
     - assetPath: Assets\Editor\ArtRes\Default\SpriteAtlas\Atlas_Default.spriteatlasv2
       size: 394
       name: Atlas_Default.spriteatlasv2
@@ -176,9 +176,9 @@ MonoBehaviour:
   - assetBundleName: gameconfig
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\GameConfig\BattleActivityConfig.json
-      size: 1383
+      size: 1086
       name: BattleActivityConfig.json
-      hash: 02f33ff6a1933a333b38b5cdf5fde2c23571818e4355c461c362077675e8e017
+      hash: f85531484fa84495faebbb192f4776f0c76ea2d7962e5c69df72b41332c4c7b2
     - assetPath: Assets\Editor\ArtRes\GameConfig\Editor\NewInfo.bytes
       size: 33
       name: NewInfo.bytes
@@ -224,9 +224,9 @@ MonoBehaviour:
       name: TaskConditionInfo.bytes
       hash: 0d66c5449cb35a7d52b31770e0bc397c1090cb151399aa388479885662ac2d1d
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\TaskInfo.bytes
-      size: 249
+      size: 263
       name: TaskInfo.bytes
-      hash: 606990f2df2da3911bc0cdbf24a53829325fc81037e7eaebab95101f692f42cd
+      hash: c8f3e49dbd2046471ab07bd2b9b8a1b276e648ff98b3877bb173f0c9fde4b2a8
     - assetPath: Assets\Editor\ArtRes\GameConfig\InputConfig\MainActionMap.json
       size: 6638
       name: MainActionMap.json
@@ -234,9 +234,9 @@ MonoBehaviour:
   - assetBundleName: hotupdate
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\HotUpdate\Assembly-CSharp-Game-HotUpdate.dll.bytes
-      size: 348672
+      size: 431616
       name: Assembly-CSharp-Game-HotUpdate.dll.bytes
-      hash: cc9ccf21ea464de423868b7a6ced4795f248243f29ec4b8b90af6b13809e971f
+      hash: c1d6822c0bc14977285cc41ccc5aaba6e54605e65ec77fc657af46c39547f1ff
   - assetBundleName: material
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\Material\Ground.mat

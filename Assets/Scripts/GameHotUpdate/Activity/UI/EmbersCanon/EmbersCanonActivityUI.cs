@@ -45,7 +45,7 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
         protected override async Task OnInit()
         {
             // 初始化界面背景
-            var backGround = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync("TODO", ResKeyCollection.Atlas_Activity,
+            var backGround = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Activity,
                     this.activityInfo.f_bkUi_Res);
             _activityBkComponent.SetBackGround(backGround);
 

@@ -34,7 +34,7 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
             // 获取该活动数据
             var embersCanonData = activityDataCollection[activityInfo.f_id] as EmbersCanonData;
             // AB包加载配置
-            var configAb = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync("TODO");
+            var configAb = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(AbKeyCollection.Gameconfig);
             var textAsset = await configAb.LoadAssetAsync<TextAsset>(ResKeyCollection.BattleActivityConfig).ToTask<TextAsset>();
             // 解析该活动的关卡配置
             var battleConfigEntryColletion = ServiceLocator.Get<IJsonManager>().FromJson<BattleConfigEntryColletion>(textAsset.text);
@@ -55,7 +55,7 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
                 // 根据是否完成使用不同的Sprite
                 var levelTipIconRes = levelEntryData.isComplete ? ResKeyCollection.Icon_Common_Check : ResKeyCollection.Icon_Common_Battle;
                 
-                var icon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync("TODO", ResKeyCollection.Atlas_Icon_Common, levelTipIconRes);
+                var icon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Icon_Common, levelTipIconRes);
                 // 初始化关卡UI
                 battleLevelUI.Init(battleConfigEntry.levelName, icon, battleConfigEntry);
                 // 缓存UI

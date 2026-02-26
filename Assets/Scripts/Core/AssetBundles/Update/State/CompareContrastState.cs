@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Core.AssetBundles.Update.Collection;
 using Core.AssetBundles.Update.Enum;
 using Core.DataPersistence.Json;
+using Core.Log;
 using Core.Service;
 using Core.Utility;
 
@@ -62,10 +63,10 @@ namespace Core.AssetBundles.Update.State
             // 遍历远程AB包信息集合，对比本地包信息
             foreach (var (abName, abPackageInfo) in remoteCollection)
             {
-                // 本地存在该AB包，校验MD5是否一致（不一致则标记为待下载）
+                // 本地存在该AB包，校验Hash是否一致（不一致则标记为待下载）
                 if (localCollection.ContainsKey(abName))
                 {
-                    // MD5不一致，说明远程包有更新，加入待下载集合
+                    // Hash不一致，说明远程包有更新，加入待下载集合
                     if (localCollection[abName].Hash != abPackageInfo.Hash)
                     {
                         waitDownloadCollection.TryAdd(abName, new AbPackageCacheInfo(abName, abPackageInfo.Hash, 0));
@@ -116,16 +117,31 @@ namespace Core.AssetBundles.Update.State
                     continue;
                 }
 
-                // 缓存中该包MD5与待下载包不一致，说明需要更新，跳过（保留待下载）
-                if (cachePackageCollection[waitPair.Key].Md5 != waitPair.Value.Md5)
+                // 缓存中该包Hash与待下载包不一致，说明需要更新，跳过（保留待下载）
+                if (cachePackageCollection[waitPair.Key].Hash != waitPair.Value.Hash)
                 {
                     continue;
                 }
 
-                // 缓存中该包MD5一致，且已下载完成，标记为无需下载（加入移除列表）
+                // TODO：考虑移除IsSuccess，通过对比字节数来判断是否下载完成，IsSuccess可能没用及时更新
+                // 缓存中该包Hash一致，且已下载完成，标记为无需下载（加入移除列表）
                 if (cachePackageCollection[waitPair.Key].IsSuccess)
                 {
                     waitRemoveABFileList.Add(waitPair.Key);
+                }
+                // 多下载了，重新下载该包
+                else if(cachePackageCollection[waitPair.Key].DownloadedBytes > remoteCollection[waitPair.Key].Size)
+                {
+                    LogManager.Log($"{waitPair.Key}资源缓存异常，文件大小：{cachePackageCollection[waitPair.Key].DownloadedBytes}" +
+                                   $"大于实际大小：{remoteCollection[waitPair.Key].Size}，需要重新下载");
+                    
+                    // TODO：暂时写在这里
+                    // 需要删除文件
+                    if (File.Exists(PathUtility.GetAbLoadPath(waitPair.Key)))
+                    {
+                        File.Delete(PathUtility.GetAbLoadPath(waitPair.Key));
+                    }
+                    cachePackageCollection[waitPair.Key].DownloadedBytes = 0;
                 }
                 // 缓存中该包未下载完成，继承已下载的字节数（断点续传）
                 else
@@ -138,6 +154,15 @@ namespace Core.AssetBundles.Update.State
             foreach (var abFileName in waitRemoveABFileList)
             {
                 waitDownloadCollection.Remove(abFileName);
+            }
+            
+            // 若本地存在待下载的包，需要删除、
+            foreach (var abKey in waitDownloadCollection.Keys)
+            {
+                if (File.Exists(PathUtility.GetAbLoadPath(abKey)))
+                {
+                    File.Delete(PathUtility.GetAbLoadPath(abKey));
+                }
             }
         }
 

@@ -8,7 +8,7 @@ namespace Core.AssetBundles.Update.State
 {
     /// <summary>
     /// 资源完整性校验状态类
-    /// 校验已下载的AssetBundle资源的大小和MD5是否与远程一致，处理冗余文件，完成后持久化缓存信息
+    /// 校验已下载的AssetBundle资源的大小和Hash是否与远程一致，处理冗余文件，完成后持久化缓存信息
     /// </summary>
     public class CheckAssetIntegrityState : UpdateState
     {
@@ -41,10 +41,7 @@ namespace Core.AssetBundles.Update.State
             
                 // 删除临时清单文件
                 File.Delete(tempListPath);
-            
-                // 删除缓存文件
-                //File.Delete(PathUtility.GetAbLoadPath(FileUtility.CacheDefaultName));
-            
+                
                 // 持久化缓存文件（记录已下载的AssetBundle信息）
                 await assetBundleUpdater.GetContext().WriteCacheFile();
             }
@@ -58,7 +55,7 @@ namespace Core.AssetBundles.Update.State
 
         /// <summary>
         /// 校验AssetBundle资源完整性
-        /// 对比已下载资源的大小、MD5与远程清单是否一致，标记不完整资源
+        /// 对比已下载资源的大小、Hash与远程清单是否一致，标记不完整资源
         /// </summary>
         /// <param name="onCheckProgress">校验进度回调（当前校验数/总校验数）</param>
         /// <returns>是否所有资源都完整</returns>
@@ -86,9 +83,9 @@ namespace Core.AssetBundles.Update.State
 
                 await Task.Yield(); // 帧间等待，避免阻塞主线程
 
-                // 校验条件：已下载字节数 == 远程包大小 且 MD5一致
+                // 校验条件：已下载字节数 == 远程包大小 且 Hash一致
                 if (remoteCollection[cachePair.Key].Size == cachePair.Value.DownloadedBytes &&
-                    remoteCollection[cachePair.Key].Hash == cachePair.Value.Md5)
+                    remoteCollection[cachePair.Key].Hash == cachePair.Value.Hash)
                 {
                     continue;
                 }

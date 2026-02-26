@@ -1,5 +1,6 @@
 using System.IO;
 using Config.ActivityConfigSO;
+using Core.DataPersistence.Json;
 using UnityEditor;
 using UnityEngine;
 
@@ -21,7 +22,7 @@ namespace Editor.Json
             if (selected is BattleActivityConfig battleActivityConfig)
             {
                 // 序列化数据
-                json = JsonUtility.ToJson(battleActivityConfig.BattleConfigEntryColletion, true);  // true表示格式化
+                json = JsonManager.Instance.ToJson(battleActivityConfig.BattleConfigEntryColletion);
             }
             else
             {
@@ -32,7 +33,7 @@ namespace Editor.Json
             // 保存到文件
             var path = EditorUtility.SaveFilePanel(
                 "保存JSON文件",
-                Application.dataPath + "/Editor/ArtRes/GameConfig/",
+                $"{Application.dataPath}/Editor/ArtRes/GameConfig/",
                 $"{selected.GetType()}",
                 "json");
 

@@ -1,5 +1,8 @@
+using System;
+using System.Collections.Generic;
 using Core.Collection;
 using Core.Log;
+using Core.Utility;
 using UnityEngine;
 
 namespace Core.AssetBundles.Update.Collection
@@ -10,6 +13,18 @@ namespace Core.AssetBundles.Update.Collection
     /// </summary>
     public class ABPackageCollection : Collection<string, ABPackageInfo>
     {
+        public override bool TryGetValue(string key, out ABPackageInfo value)
+        {
+            var abKey = !key.Contains(FileUtility.AbSuffix) ? $"{key}{FileUtility.AbSuffix}" : key;
+            return base.TryGetValue(abKey, out value);
+        }
+        
+        public string[] GetAllDependencies(string abName)
+        {
+            var abKey = !abName.Contains(FileUtility.AbSuffix) ? $"{abName}{FileUtility.AbSuffix}" : abName;
+            return base.TryGetValue(abKey, out var abPackageInfo) ? abPackageInfo.Dependencies : Array.Empty<string>();
+        }
+
         /// <summary>
         /// 计算需要下载的AB包总字节数
         /// 对比远程最新AB包集合与本地缓存的AB包信息，得出待下载的总数据量

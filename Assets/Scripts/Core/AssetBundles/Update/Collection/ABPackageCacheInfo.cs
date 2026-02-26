@@ -1,6 +1,7 @@
 using System;
 using Newtonsoft.Json;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Core.AssetBundles.Update.Collection
 {
@@ -12,25 +13,25 @@ namespace Core.AssetBundles.Update.Collection
     {
         //AB包名
         [SerializeField] private string _abName;
-        //AB包MD5
-        [SerializeField] private string _md5;
+        //AB包Hash
+        [SerializeField] private string _hash;
         //已下载的字节数
         [SerializeField] private long _downloadedBytes;
         //AB包是否下载成功
         [SerializeField] private bool _isSuccess;
 
         [JsonConstructor]
-        public AbPackageCacheInfo(string abName, string md5, long downloadedBytes)
+        public AbPackageCacheInfo(string abName, string hash, long downloadedBytes)
         {
             _abName = abName;
-            _md5 = md5;
+            _hash = hash;
             _downloadedBytes = downloadedBytes;
         }
         
-        public AbPackageCacheInfo(string abName, string md5, long downloadedBytes, bool isSuccess)
+        public AbPackageCacheInfo(string abName, string hash, long downloadedBytes, bool isSuccess)
         {
             _abName = abName;
-            _md5 = md5;
+            _hash = hash;
             _downloadedBytes = downloadedBytes;
             _isSuccess = isSuccess;
         }
@@ -41,9 +42,9 @@ namespace Core.AssetBundles.Update.Collection
         public string AbName => _abName;
 
         /// <summary>
-        /// AB包MD5
+        /// AB包Hash
         /// </summary>
-        public string Md5 { get { return _md5; } set { _md5 = value; } }
+        public string Hash { get { return _hash; } set { _hash = value; } }
 
         /// <summary>
         /// AB包是否下载完成

@@ -1,3 +1,24 @@
 {
-  "keyToValueMap": {}
+  "keyToValueMap": {
+    "1_1": {
+      "currentTaskId": "1_1",
+      "currentPro": 0,
+      "isCompleted": false,
+      "isTracking": false,
+      "CurrentTaskId": "1_1",
+      "CurrentPro": 0,
+      "IsCompleted": false,
+      "IsTracking": false
+    },
+    "2_1": {
+      "currentTaskId": "2_1",
+      "currentPro": 0,
+      "isCompleted": false,
+      "isTracking": false,
+      "CurrentTaskId": "2_1",
+      "CurrentPro": 0,
+      "IsCompleted": false,
+      "IsTracking": false
+    }
+  }
 }

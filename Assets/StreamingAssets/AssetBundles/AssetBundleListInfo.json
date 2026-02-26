@@ -1,9 +1,93 @@
 {
   "keyToValueMap": {
+    "animation.assetbundle": {
+      "name": "animation.assetbundle",
+      "size": 3390000,
+      "hash": "ea12a57060a228fe5186ec43626a5f33f8c02e0e77a57af628e1ad7b2445a252",
+      "dependencies": []
+    },
+    "animator.assetbundle": {
+      "name": "animator.assetbundle",
+      "size": 949136,
+      "hash": "e9914c3eba0d2022266b3374a4acd5d323f518e1867fd40dd5199577c0963496",
+      "dependencies": [
+        "animation"
+      ]
+    },
+    "camera.assetbundle": {
+      "name": "camera.assetbundle",
+      "size": 7696,
+      "hash": "264cc47850b0ce994da34ed0542671d07e6643b82e429c8d11a14afd08ced633",
+      "dependencies": []
+    },
     "default.assetbundle": {
       "name": "default.assetbundle",
-      "size": 196574208,
-      "hash": "8a6dca54264911913020f872a233c3a48b63afaa03374eccfeeb2f12b055d08c",
+      "size": 196607536,
+      "hash": "6dd266ec153c0611268752393761a73aa586d50ea8383be75f3d72f87334c610",
+      "dependencies": []
+    },
+    "gameconfig.assetbundle": {
+      "name": "gameconfig.assetbundle",
+      "size": 20672,
+      "hash": "5fe3057784c0ab0fd9b4c72dcde9584d7e375425e85c71458a7c6217538c8367",
+      "dependencies": []
+    },
+    "hotupdate.assetbundle": {
+      "name": "hotupdate.assetbundle",
+      "size": 434608,
+      "hash": "f7eaebb558304d5c0d8d71cf13f6e2e649e0914734c57c6f4b930a6018ea00dc",
+      "dependencies": []
+    },
+    "material.assetbundle": {
+      "name": "material.assetbundle",
+      "size": 133680,
+      "hash": "6fdcb0ed732cc3a85619636aeb176e0ccd619088097530c3ba5746e1c40227a8",
+      "dependencies": []
+    },
+    "mesh.assetbundle": {
+      "name": "mesh.assetbundle",
+      "size": 54144,
+      "hash": "021ed69a9e1da9e7e0cba958ea0dfa22b2f618ddfada13e01a640a459bced44b",
+      "dependencies": []
+    },
+    "prefab.assetbundle": {
+      "name": "prefab.assetbundle",
+      "size": 84977856,
+      "hash": "b2462cef477d1226bed20bcadc2ac1a635e02141856da2bfd50a82eb567d29cf",
+      "dependencies": [
+        "animation",
+        "animator"
+      ]
+    },
+    "scene.assetbundle": {
+      "name": "scene.assetbundle",
+      "size": 86107776,
+      "hash": "c983f61296ef54923634adc39112cf5f4ae71ebf7160b4e8130951eebc649c22",
+      "dependencies": [
+        "animation",
+        "animator",
+        "default",
+        "material",
+        "prefab",
+        "ui"
+      ]
+    },
+    "spriteatlas.assetbundle": {
+      "name": "spriteatlas.assetbundle",
+      "size": 30575504,
+      "hash": "ab5b994729b04db01ffe22f84c33712c0e559d95a5c4adbef4086d7dcbdc0b34",
+      "dependencies": []
+    },
+    "ui.assetbundle": {
+      "name": "ui.assetbundle",
+      "size": 24711104,
+      "hash": "874c7eab5fe69ce31d079d3d754cd3302bc166e9eb7d2894f5f75c380dcd5755",
+      "dependencies": []
+    },
+    "vfx.assetbundle": {
+      "name": "vfx.assetbundle",
+      "size": 52214640,
+      "hash": "40365a783da0501d498e287154efcb867d4d5c5b554d973233f41cd72cd408f8",
       "dependencies": []
     }
   }

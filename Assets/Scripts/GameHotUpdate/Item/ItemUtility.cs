@@ -45,7 +45,7 @@ namespace GameHotUpdate.Item
                     var itemInfo = ServiceLocator.Get<IBinaryDataManager>()
                         .GetConfig<ItemInfoContainer>(EConfigLoadType.Excel).dataDic[pair.Key];
                     // 加载图标
-                    var itemIcon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync("TODO", ResKeyCollection.Atlas_Icon_Item, 
+                    var itemIcon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Icon_Item, 
                         itemInfo.f_icon);
                     // 初始化
                     itemGrid.Init(itemIcon, pair.Value, itemInfo.f_quality);
@@ -55,10 +55,6 @@ namespace GameHotUpdate.Item
             catch (Exception e)
             {
                 LogManager.LogError($"{nameof(ItemUtility)}.{nameof(GetItemGrid)}：{e.Message}");
-            }
-            finally
-            {
-                callback?.Invoke(null);
             }
         }
         
@@ -88,7 +84,7 @@ namespace GameHotUpdate.Item
                     var itemInfo = ServiceLocator.Get<IBinaryDataManager>()
                         .GetConfig<ItemInfoContainer>(EConfigLoadType.Excel).dataDic[pair.Key];
                     // 加载图标
-                    var itemIcon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync("TODO", ResKeyCollection.Atlas_Icon_Item, itemInfo.f_icon);
+                    var itemIcon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Icon_Item, itemInfo.f_icon);
                     // 初始化
                     itemGrid.Init(itemIcon, pair.Value, itemInfo.f_quality);
                     callback?.Invoke(itemGrid);

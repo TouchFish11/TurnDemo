@@ -64,7 +64,7 @@ namespace Core.AssetBundles.Update.State
         /// <returns>是否下载成功</returns>
         public static async Task DownloadCompareFile()
         {
-            // 创建清单文件下载请求器（无需MD5校验，清单文件本身由服务器保证正确性）
+            // 创建清单文件下载请求器（无需Hash校验，清单文件本身由服务器保证正确性）
             var aBWebRequester = ServiceLocator.Get<IPoolManager>().
                 GetData<ABWebRequester>().Init(GlobalSettings.Instance.resServerIp, FileUtility.ListFileDefaultName, false, string.Empty, string.Empty);
             

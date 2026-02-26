@@ -1,6 +1,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Enum;
+using Core.Log;
 using Core.Utility;
 
 namespace Core.AssetBundles.Update.State
@@ -32,6 +33,7 @@ namespace Core.AssetBundles.Update.State
             if (File.Exists(PathUtility.GetAbLoadPath(FileUtility.CacheDefaultName)))
             {
                 File.Delete(PathUtility.GetAbLoadPath(FileUtility.CacheDefaultName));
+                LogManager.Log($"已删除缓存文件");
             }
             
             // 触发更新完成回调

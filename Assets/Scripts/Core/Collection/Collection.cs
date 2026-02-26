@@ -46,7 +46,7 @@ namespace Core.Collection
         /// </summary>
         /// <param name="key">要检查的键</param>
         /// <returns>存在返回true，不存在返回false</returns>
-        public bool ContainsKey(TKey key)
+        public virtual bool ContainsKey(TKey key)
         {
             return keyToValueMap.ContainsKey(key);
         }
@@ -57,7 +57,7 @@ namespace Core.Collection
         /// <param name="key">要添加的键</param>
         /// <param name="value">要添加的值</param>
         /// <returns>添加成功返回true；若键已存在，打印日志并返回false</returns>
-        public bool TryAdd(TKey key, TValue value)
+        public virtual bool TryAdd(TKey key, TValue value)
         {
             if (keyToValueMap.TryAdd(key, value))
             {
@@ -73,7 +73,7 @@ namespace Core.Collection
         /// </summary>
         /// <param name="key">要移除的键</param>
         /// <returns>移除成功返回true；键不存在返回false</returns>
-        public bool Remove(TKey key)
+        public virtual bool Remove(TKey key)
         {
             return keyToValueMap.Remove(key);
         }
@@ -84,7 +84,7 @@ namespace Core.Collection
         /// <param name="key">要查找的键</param>
         /// <param name="value">输出参数，找到则为对应值，未找到则为类型默认值</param>
         /// <returns>找到键返回true，未找到返回false</returns>
-        public bool TryGetValue(TKey key, out TValue value)
+        public virtual bool TryGetValue(TKey key, out TValue value)
         {
             if (keyToValueMap.TryGetValue(key, out var findValue))
             {
@@ -99,7 +99,7 @@ namespace Core.Collection
         /// <summary>
         /// 清空集合中所有的键值对
         /// </summary>
-        public void Clear()
+        public virtual void Clear()
         {
             keyToValueMap.Clear();
         }

@@ -1,62 +1,62 @@
 {
-    "battleConfigs": [
-        {
-            "levelId": 1001,
-            "levelName": "关卡1",
-            "battleSceneId": 0,
-            "battleWave": 1,
-            "monsterIds": [
-                1
-            ],
-            "winConditionId": 0
-        },
-        {
-            "levelId": 1002,
-            "levelName": "关卡2",
-            "battleSceneId": 0,
-            "battleWave": 1,
-            "monsterIds": [
-                2
-            ],
-            "winConditionId": 0
-        },
-        {
-            "levelId": 1003,
-            "levelName": "关卡3",
-            "battleSceneId": 0,
-            "battleWave": 1,
-            "monsterIds": [
-                1,
-                2,
-                1
-            ],
-            "winConditionId": 0
-        },
-        {
-            "levelId": 1004,
-            "levelName": "关卡4",
-            "battleSceneId": 0,
-            "battleWave": 1,
-            "monsterIds": [
-                2,
-                1,
-                2
-            ],
-            "winConditionId": 0
-        },
-        {
-            "levelId": 1005,
-            "levelName": "关卡5",
-            "battleSceneId": 0,
-            "battleWave": 1,
-            "monsterIds": [
-                1,
-                2,
-                1,
-                2,
-                1
-            ],
-            "winConditionId": 0
-        }
-    ]
+  "battleConfigs": [
+    {
+      "levelId": 1001,
+      "levelName": "关卡1",
+      "battleSceneId": 0,
+      "battleWave": 1,
+      "monsterIds": [
+        1
+      ],
+      "winConditionId": 0
+    },
+    {
+      "levelId": 1002,
+      "levelName": "关卡2",
+      "battleSceneId": 0,
+      "battleWave": 1,
+      "monsterIds": [
+        2
+      ],
+      "winConditionId": 0
+    },
+    {
+      "levelId": 1003,
+      "levelName": "关卡3",
+      "battleSceneId": 0,
+      "battleWave": 1,
+      "monsterIds": [
+        1,
+        2,
+        1
+      ],
+      "winConditionId": 0
+    },
+    {
+      "levelId": 1004,
+      "levelName": "关卡4",
+      "battleSceneId": 0,
+      "battleWave": 1,
+      "monsterIds": [
+        2,
+        1,
+        2
+      ],
+      "winConditionId": 0
+    },
+    {
+      "levelId": 1005,
+      "levelName": "关卡5",
+      "battleSceneId": 0,
+      "battleWave": 1,
+      "monsterIds": [
+        1,
+        2,
+        1,
+        2,
+        1
+      ],
+      "winConditionId": 0
+    }
+  ]
 }

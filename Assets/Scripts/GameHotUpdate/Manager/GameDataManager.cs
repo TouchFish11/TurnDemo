@@ -13,6 +13,7 @@ using Game.Tasks;
 using GameHotUpdate.Activity.Data;
 using GameHotUpdate.Config;
 using GameHotUpdate.Tasks;
+using Newtonsoft.Json;
 
 namespace GameHotUpdate.Manager
 {
@@ -21,6 +22,12 @@ namespace GameHotUpdate.Manager
     /// </summary>
     public class GameDataManager : IGameDataManager
     {
+        private readonly JsonSerializerSettings activitySettings = new()
+        {
+            TypeNameHandling = TypeNameHandling.All,
+            Formatting = Formatting.Indented,
+        };
+        
         public async Task InitData()
         {
             ServiceLocator.Get<IBinaryDataManager>().AddConfig(EConfigLoadType.Excel, async loader =>
@@ -56,7 +63,10 @@ namespace GameHotUpdate.Manager
             LogManager.Log($"任务数据加载成功，{TaskDataCollection}");
             
             // 活动数据
-            ActivityDataCollection = await ServiceLocator.Get<IJsonManager>().FromJsonAsync<ActivityDataCollection>(PathUtility.GetUserDataLocalSavePath(FileUtility.LocalActivityDataFileName));
+            ActivityDataCollection = await ServiceLocator.Get<IJsonManager>()
+                .FromJsonAsync<ActivityDataCollection>(
+                    PathUtility.GetUserDataLocalSavePath(FileUtility.LocalActivityDataFileName),
+                    settings: activitySettings);
             LogManager.Log($"活动数据加载成功，{ActivityDataCollection}");
         }
 
@@ -75,7 +85,9 @@ namespace GameHotUpdate.Manager
             LogManager.Log($"输入数据保存成功，{InputActionContainer}");
             
             // 活动数据
-            await ServiceLocator.Get<IJsonManager>().SaveToJsonAsync(ActivityDataCollection, PathUtility.GetUserDataLocalSavePath(FileUtility.LocalActivityDataFileName));
+            await ServiceLocator.Get<IJsonManager>().SaveToJsonAsync(ActivityDataCollection,
+                PathUtility.GetUserDataLocalSavePath(FileUtility.LocalActivityDataFileName),
+                settings: activitySettings);
             LogManager.Log($"活动数据保存成功，{ActivityDataCollection}");
         }
         

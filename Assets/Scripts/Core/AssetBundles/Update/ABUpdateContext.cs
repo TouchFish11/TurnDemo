@@ -19,7 +19,7 @@ namespace Core.AssetBundles.Update
     {
         /// <summary>
         /// 存储远程服务器端的AB包信息集合
-        /// 包含所有需要更新的AB包的元数据（名称、MD5、大小等）
+        /// 包含所有需要更新的AB包的元数据（名称、Hash、大小等）
         /// </summary>
         public ABPackageCollection RemotePackageCollection { get; }
 
@@ -31,7 +31,7 @@ namespace Core.AssetBundles.Update
 
         /// <summary>
         /// 存储已缓存的AB包信息集合
-        /// 记录AB包的下载缓存状态（已下载字节数、MD5、是否下载完成等）
+        /// 记录AB包的下载缓存状态（已下载字节数、Hash、是否下载完成等）
         /// </summary>
         public AbPackageCacheCollection CachePackageCollection { get; }
 
@@ -327,8 +327,8 @@ namespace Core.AssetBundles.Update
             {
                 // 获取AB包本地加载路径对应的文件信息
                 var fileInfo = new FileInfo(PathUtility.GetAbLoadPath(node.Value.FileName));
-                // 封装缓存信息（名称、MD5、已下载字节数）
-                var cacheInfo = new AbPackageCacheInfo(node.Value.AbName, node.Value.MD5, fileInfo.Length);
+                // 封装缓存信息（名称、Hash、已下载字节数）
+                var cacheInfo = new AbPackageCacheInfo(node.Value.AbName, node.Value.Hash, fileInfo.Length);
                 // 移动到下一个失败请求节点
                 node = node.Next;
                 yield return cacheInfo;
@@ -375,7 +375,7 @@ namespace Core.AssetBundles.Update
                 // 获取本地文件信息
                 var fileInfo = new FileInfo(abLoadPath);
                 // 封装缓存信息
-                var cacheInfo = new AbPackageCacheInfo(abWebRequester.AbName, abWebRequester.MD5, fileInfo.Length);
+                var cacheInfo = new AbPackageCacheInfo(abWebRequester.AbName, abWebRequester.Hash, fileInfo.Length);
                 // 更新缓存集合
                 UpdateCacheFile(cacheInfo);
             }
@@ -386,7 +386,7 @@ namespace Core.AssetBundles.Update
 
         /// <summary>
         /// 更新AB包缓存信息
-        /// 若缓存集合中已存在该AB包，则更新MD5、已下载字节数、完成状态；
+        /// 若缓存集合中已存在该AB包，则更新Hash、已下载字节数、完成状态；
         /// 若不存在，则添加新的缓存信息到集合
         /// </summary>
         /// <param name="cacheInfo">待更新的AB包缓存信息</param>
@@ -396,7 +396,7 @@ namespace Core.AssetBundles.Update
             if (CachePackageCollection.TryGetValue(cacheInfo.AbName, out var aBPackageCacheInfo))
             {
                 // 更新已有缓存信息
-                aBPackageCacheInfo.Md5 = cacheInfo.Md5;
+                aBPackageCacheInfo.Hash = cacheInfo.Hash;
                 aBPackageCacheInfo.DownloadedBytes = cacheInfo.DownloadedBytes;
                 // 标记是否下载完成（已下载字节数等于远程包总大小）
                 aBPackageCacheInfo.IsSuccess = cacheInfo.DownloadedBytes == RemotePackageCollection[cacheInfo.AbName].Size;
