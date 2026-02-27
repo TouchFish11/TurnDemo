@@ -122,8 +122,7 @@ namespace Core.AssetBundles.Update.State
                 {
                     continue;
                 }
-
-                // TODO：考虑移除IsSuccess，通过对比字节数来判断是否下载完成，IsSuccess可能没用及时更新
+                
                 // 缓存中该包Hash一致，且已下载完成，标记为无需下载（加入移除列表）
                 if (cachePackageCollection[waitPair.Key].IsSuccess)
                 {
@@ -157,13 +156,14 @@ namespace Core.AssetBundles.Update.State
             }
             
             // 若本地存在待下载的包，需要删除、
-            foreach (var abKey in waitDownloadCollection.Keys)
-            {
-                if (File.Exists(PathUtility.GetAbLoadPath(abKey)))
-                {
-                    File.Delete(PathUtility.GetAbLoadPath(abKey));
-                }
-            }
+            // foreach (var abKey in waitDownloadCollection.Keys)
+            // {
+            //     if (File.Exists(PathUtility.GetAbLoadPath(abKey)))
+            //     {
+            //         File.Delete(PathUtility.GetAbLoadPath(abKey));
+            //         LogManager.Log($"本地包：{abKey}，已被删除，将重新下载");
+            //     }
+            // }
         }
 
         /// <summary>

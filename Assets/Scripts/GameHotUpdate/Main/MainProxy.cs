@@ -39,8 +39,6 @@ namespace GameHotUpdate.Main
                 ServiceLocator.Get<IQuitHandler>().ActiveHandler();
                 // 初始化框架工厂
                 ServiceLocator.Get<IFactoryManager>().InitCoreFactorys();
-                // 初始化AB包更新器
-                ServiceLocator.Get<IAssetBundleUpdater>().Init();
                 // 初始化默认AB包
                 await ServiceLocator.Get<IAssetBundleManager>().InitDefault(AbKeyCollection.Default);
                 // 初始化UI管理器，创建画布和UI相机
@@ -49,10 +47,7 @@ namespace GameHotUpdate.Main
                 
                 // 显示开始界面
                 var controller = await ServiceLocator.Get<IUIManager>().CreateViewAsync<BeginView, BeginModel, BeginController>(AbKeyCollection.Default, E_UILayer.Mid, ResKeyCollection.BeginView);
-                // 检查更新
-                await controller.CheckUpdate();
-
-                controller.OnEnterGame += async () =>
+                controller.OnClickEnterGame += async () =>
                 {
                     // 更新成功，初始化AB包管理器，加载本地AB包资源
                     await ServiceLocator.Get<IAssetBundleManager>().Init();
@@ -71,6 +66,9 @@ namespace GameHotUpdate.Main
                     InitHotUpdateGameMain();
                 };
                 
+                // 检查更新
+                controller.CheckUpdate();
+                
                 {
                     // 
                     // ...
@@ -86,7 +84,7 @@ namespace GameHotUpdate.Main
             }
             catch (Exception e)
             {
-                LogManager.LogError($"{nameof(MainProxy)}.{nameof(Start)}: {e.Message}");
+                LogManager.LogError($"{nameof(MainProxy)}.{nameof(Start)}: {e.Message}，StackTrace：{e.StackTrace}");
             }
         }
 

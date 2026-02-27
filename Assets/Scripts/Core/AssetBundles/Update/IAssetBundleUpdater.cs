@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Core.AssetBundles.Update.Enum;
 
 namespace Core.AssetBundles.Update
 {
@@ -7,10 +8,18 @@ namespace Core.AssetBundles.Update
     /// </summary>
     public interface IAssetBundleUpdater
     {
-        Task CheckUpdate();
+        void CheckUpdate();
         
         ABUpdateContext GetContext();
-        
+
+        /// <summary>
+        ///  更新阶段
+        /// </summary>
+        EUpdatePhase UpdatePhase { get; }
+
+        /// <summary>
+        /// 初始化更新管理器
+        /// </summary>
         void Init();
     }
 }

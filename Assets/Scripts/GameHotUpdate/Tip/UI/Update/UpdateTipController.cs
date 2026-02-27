@@ -8,6 +8,9 @@ namespace GameHotUpdate.Tip.UI.Update
 {
     public class UpdateTipController : TipController<UpdateTipView, UpdateTipModel>
     {
+        /// <summary>
+        /// 确认事件
+        /// </summary>
         public event Action OnSure;
         
         protected override Task OnInit()
@@ -15,16 +18,26 @@ namespace GameHotUpdate.Tip.UI.Update
             return Task.CompletedTask;
         }
 
-        public void SetMessage(string message)
+        public void SetUpdateMessage(string message)
         {
-            view.SetTip(message);
+            view.SetUpdateTip(message);
+        }
+
+        /// <summary>
+        /// 设置提示信息
+        /// </summary>
+        /// <param name="isActive">false则隐藏，tip忽略；true则显示tip的内容</param>
+        /// <param name="tip">显示的文本</param>
+        public void SetTipActive(bool isActive, string tip = "")
+        {
+            view.SetTipActive(isActive, tip);
         }
 
         protected override void ButtonOnClick(string btnName)
         {
             if (btnName == nameof(view.btnSure))
             {
-                ServiceLocator.Get<IUIManager>().DestroyView(AbKeyCollection.Ui, this);
+                uiManager.DestroyView(AbKeyCollection.Ui, this);
                 OnSure?.Invoke();
                 OnSure = null;
             }

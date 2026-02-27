@@ -32,7 +32,7 @@ namespace Core.Service
     public class ServiceLocator
     {
         // 服务类型到实例映射
-        private static readonly Dictionary<Type, object> TypeToServerMap = new Dictionary<Type, object>();
+        private static readonly Dictionary<Type, object> TypeToServerMap = new();
 
         private ServiceLocator()
         {
@@ -51,6 +51,7 @@ namespace Core.Service
             Register<IMemoryMonitor>(MemoryMonitor.Instance);
 
             // 不继承Mono
+            Register<IPoolManager>(PoolManager.Instance);
             Register<IUIManager>(UIManager.Instance);
             Register<IAssetBundleManager>(AssetBundleManager.Instance);
             Register<IAssetBundleUpdater>(AssetBundleUpdater.Instance);
@@ -60,7 +61,6 @@ namespace Core.Service
             Register<IInputSystem>(InputSystem.Instance);
             Register<IJsonManager>(JsonManager.Instance);
             Register<IMusicManager>(MusicManager.Instance);
-            Register<IPoolManager>(PoolManager.Instance);
             Register<IResourcesManager>(ResourcesManager.Instance);
             Register<IScriptableObjectManager>(ScriptableObjectManager.Instance);
             Register<IServerManager>(ServerManager.Instance);

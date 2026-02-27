@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Core.AssetBundles.Update.Collection;
 using Core.AssetBundles.Update.Enum;
 using Core.DataPersistence.Json;
+using Core.Pool;
 using Core.Service;
 
 namespace Core.AssetBundles.Update.State
@@ -14,6 +15,8 @@ namespace Core.AssetBundles.Update.State
     {
         // 持有AssetBundle更新器实例
         protected readonly AssetBundleUpdater assetBundleUpdater;
+        // 对象池管理器接口
+        protected readonly IPoolManager poolManager;
 
         /// <summary>
         /// 构造函数
@@ -22,6 +25,7 @@ namespace Core.AssetBundles.Update.State
         protected UpdateState(AssetBundleUpdater updater)
         {
             assetBundleUpdater = updater;
+            poolManager = ServiceLocator.Get<IPoolManager>();
         }
 
         /// <summary>

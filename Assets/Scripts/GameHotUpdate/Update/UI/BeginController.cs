@@ -19,38 +19,78 @@ namespace GameHotUpdate.Update.UI
     {
         private readonly IAssetBundleUpdater _assetBundleUpdater;
         private string _speed;
-        public event Func<Task> OnEnterGame;
+        
+        /// <summary>
+        /// 点击进入游戏事件
+        /// </summary>
+        public event Func<Task> OnClickEnterGame;
 
         public BeginController()
         {
-            _assetBundleUpdater =  ServiceLocator.Get<IAssetBundleUpdater>();
+            _assetBundleUpdater = ServiceLocator.Get<IAssetBundleUpdater>();
         }
         
         protected override Task OnInit()
         {
-            _assetBundleUpdater.GetContext().OnUpdatePhase += OnUpdatePhase;
-            _assetBundleUpdater.GetContext().OnProgress += OnProgress;
-            _assetBundleUpdater.GetContext().OnUpdateSpeed += OnUpdateSpeed;
-            _assetBundleUpdater.GetContext().OnCheckProgress += OnCheckProgress;
-            _assetBundleUpdater.GetContext().OnUpdateFinish += OnUpdateFinish;
-            _assetBundleUpdater.GetContext().OnUpdateFailResult += OnUpdateFailResult;
-
-            OnUpdatePhase(EUpdatePhase.None);
-            view.SetUpdateAreaActive(true);
-            view.SetSliderProgress(0);
-            view.SetTextProgress($"{TextUtility.FloatToStr(0, 2)}%");
-            view.SetDownloadSizeAndSpeedText(string.Empty);
+            _assetBundleUpdater.Init();
+            RegisterUpdateEvent();
+            ResetData();
             return Task.CompletedTask;
         }
 
         /// <summary>
         /// 检查更新
         /// </summary>
-        public async Task CheckUpdate()
+        public void CheckUpdate()
         {
-            await ServiceLocator.Get<IAssetBundleUpdater>().CheckUpdate();
+            _assetBundleUpdater.CheckUpdate();
         }
 
+        /// <summary>
+        /// 注册更新事件回调
+        /// </summary>
+        private void RegisterUpdateEvent()
+        {
+            _assetBundleUpdater.GetContext().OnUpdatePhase += OnUpdatePhase;
+            _assetBundleUpdater.GetContext().OnProgress += OnProgress;
+            _assetBundleUpdater.GetContext().OnUpdateSpeed += OnUpdateSpeed;
+            _assetBundleUpdater.GetContext().OnCheckProgress += OnCheckProgress;
+            _assetBundleUpdater.GetContext().OnUpdateOver += OnUpdateOver;
+        }
+        
+        /// <summary>
+        /// 注销更新事件回调
+        /// </summary>
+        private void UnRegisterUpdateEvent()
+        {
+            _assetBundleUpdater.GetContext().OnUpdatePhase -= OnUpdatePhase;
+            _assetBundleUpdater.GetContext().OnProgress -= OnProgress;
+            _assetBundleUpdater.GetContext().OnUpdateSpeed -= OnUpdateSpeed;
+            _assetBundleUpdater.GetContext().OnCheckProgress -= OnCheckProgress;
+            _assetBundleUpdater.GetContext().OnUpdateOver -= OnUpdateOver;
+        }
+
+        /// <summary>
+        /// 重置数据
+        /// </summary>
+        private void ResetData()
+        {
+            OnUpdatePhase(EUpdatePhase.None);
+            view.SetStopButtonActive(false);
+            // 先移除
+            view.SetUpdateAreaActive(false);
+            // 再添加
+            view.SetUpdateAreaActive(true);
+            view.SetEnterAreaActive(false);
+            view.SetSliderProgress(0);
+            view.SetTextProgress($"{TextUtility.FloatToStr(0, 2)}%");
+            view.SetDownloadSizeAndSpeedText(string.Empty);
+        }
+        
+        /// <summary>
+        /// 更新阶段事件回调
+        /// </summary>
+        /// <param name="updatePhase"></param>
         private void OnUpdatePhase(EUpdatePhase updatePhase)
         {
             switch (updatePhase)
@@ -68,9 +108,16 @@ namespace GameHotUpdate.Update.UI
                     view.SetTextPhase("对比资源差异...");
                     break;
                 case EUpdatePhase.DownLoadAssets:
+                    view.SetDownloadSizeAndSpeedActive(true);
+                    // 显示取消按钮
+                    view.SetStopButtonActive(true);
                     view.SetTextPhase("正在下载资源...");
                     break;
                 case EUpdatePhase.CheckAssetsIntegrity:
+                    // 隐藏取消按钮
+                    view.SetStopButtonActive(false);
+                    // 隐藏部分UI
+                    view.SetDownloadSizeAndSpeedActive(false);
                     view.SetTextPhase("正在校验资源完整性...");
                     break;
                 case EUpdatePhase.Finished:
@@ -79,6 +126,11 @@ namespace GameHotUpdate.Update.UI
             }
         }
 
+        /// <summary>
+        /// 下载进度、速度回调
+        /// </summary>
+        /// <param name="currentloadedBytes"></param>
+        /// <param name="totalBytes"></param>
         private void OnProgress(ulong currentloadedBytes, ulong totalBytes)
         {
             var downloadSizeAndSpeed = $"{TextUtility.ToByteUnit(currentloadedBytes)}/{TextUtility.ToByteUnit(totalBytes)} {_speed}";
@@ -87,38 +139,59 @@ namespace GameHotUpdate.Update.UI
             view.SetDownloadSizeAndSpeedText(downloadSizeAndSpeed);
         }
 
+        /// <summary>
+        /// 检查完整性进度回调
+        /// </summary>
+        /// <param name="current"></param>
+        /// <param name="total"></param>
         private void OnCheckProgress(int current, int total)
         {
             view.SetSliderProgress(current / (float)total);
             view.SetTextProgress($"{TextUtility.FloatToStr(current / (float)total * 100, 2)}%");
         }
 
+        /// <summary>
+        /// 更新速度回调
+        /// </summary>
+        /// <param name="currentBytes"></param>
         private void OnUpdateSpeed(ulong currentBytes)
         {
             _speed = $"{TextUtility.ToByteUnit(currentBytes)}/s";
         }
 
-        private void OnUpdateFinish()
+        /// <summary>
+        /// 更新结束回调
+        /// </summary>
+        /// <param name="updateResult"></param>
+        private async void OnUpdateOver(UpdateResult updateResult)
         {
-            LogManager.Log($"下载完成");
-            view.SetUpdateAreaActive(false);
-            view.SetEnterAreaActive(true);
-        }
-
-        private async void OnUpdateFailResult(UpdateResult updateResult)
-        {
-            // 更新失败，提示
-            var controller = await uiManager.CreateViewAsync<UpdateTipView, UpdateTipModel, UpdateTipController>(AbKeyCollection.Default,
-                E_UILayer.Mid, ResKeyCollection.UpdateTipView);
-
-            controller.OnSure += () =>
+            UnRegisterUpdateEvent();
+            // 更新成功
+            if (updateResult.Success)
             {
-                uiManager.DestroyView(AbKeyCollection.Default, controller);
-            };
-            // 设置消息
-            controller.SetMessage(updateResult.ErrorMessage);
+                view.SetUpdateAreaActive(false);
+                view.SetEnterAreaActive(true);
+            }
+            // 更新失败
+            else
+            {
+                // 更新失败
+                var controller = await uiManager.CreateViewAsync<UpdateTipView, UpdateTipModel, UpdateTipController>(AbKeyCollection.Default, E_UILayer.Mid, ResKeyCollection.UpdateTipView);
+                // 设置消息
+                controller.SetUpdateMessage(updateResult.ErrorMessage);
+                controller.SetTipActive(true, "点击确认后将重新下载");
+                controller.OnSure += () =>
+                {
+                    ResetData();
+                    
+                    _assetBundleUpdater.Init();
+                    RegisterUpdateEvent();
+                    _assetBundleUpdater.CheckUpdate();
+                    uiManager.DestroyView(AbKeyCollection.Default, controller);
+                };
+            }
         }
-
+        
         protected override async void ButtonOnClick(string btnName)
         {
             if (btnName == nameof(view.btnStop))
@@ -133,12 +206,7 @@ namespace GameHotUpdate.Update.UI
 
         public override void Destroy()
         {
-            _assetBundleUpdater.GetContext().OnUpdatePhase -= OnUpdatePhase;
-            _assetBundleUpdater.GetContext().OnProgress -= OnProgress;
-            _assetBundleUpdater.GetContext().OnUpdateSpeed -= OnUpdateSpeed;
-            _assetBundleUpdater.GetContext().OnCheckProgress -= OnCheckProgress;
-            _assetBundleUpdater.GetContext().OnUpdateFinish -= OnUpdateFinish;
-            _assetBundleUpdater.GetContext().OnUpdateFailResult -= OnUpdateFailResult;
+            UnRegisterUpdateEvent();
             base.Destroy();
         }
 
@@ -149,8 +217,8 @@ namespace GameHotUpdate.Update.UI
             // 清空UI管理器
             uiManager.Clear(AbKeyCollection.Default);
             
-            await OnEnterGame?.Invoke();
-            OnEnterGame = null;
+            await OnClickEnterGame?.Invoke();
+            OnClickEnterGame = null;
         }
     }
 }

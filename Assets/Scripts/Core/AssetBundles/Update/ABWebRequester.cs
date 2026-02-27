@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Threading;
+using Core.AssetBundles.Update.Handler;
 using Core.Global;
 using Core.Log;
 using Core.Mono;
@@ -73,19 +74,18 @@ namespace Core.AssetBundles.Update
                 _request = UnityWebRequest.Get($"{Url}{FileName}");
                 // 设置连接超时时间
                 _request.timeout = GlobalSettings.Instance.connectTimeout;
-                // 设置下载处理器：将数据写入指定路径，指定是否追加
-                _request.downloadHandler = new DownloadHandlerFile(savePath, IsAppend);
-
                 // 断点续传预处理：如果本地已存在文件，读取文件大小作为已下载字节数
                 if (File.Exists(savePath))
                 {
                     var fileInfo = new FileInfo(savePath);
                     DownloadedBytes = fileInfo.Length;
                 }
-
+                // 设置自定义流下载处理器
+                _request.downloadHandler = new DownloadHandlerStream(savePath, IsAppend, DownloadedBytes);
                 // 设置请求头：Range指定从已下载字节数的位置开始下载
-                _request?.SetRequestHeader("Range", "bytes=" + DownloadedBytes + "-");
-
+                _request?.SetRequestHeader("Range", $"bytes={(IsAppend ? DownloadedBytes : 0)}-");
+ 
+                // 发送请求
                 var asyncOperation = _request?.SendWebRequest();
                 // 更新进度协程
                 _monoAdapter.StartCoroutine(UpdateDownloadProgress(asyncOperation));
@@ -96,7 +96,7 @@ namespace Core.AssetBundles.Update
                 if (_request?.result != UnityWebRequest.Result.Success)
                 {
                     // 请求失败：打印错误日志（包含错误信息、响应码），触发失败回调
-                    LogManager.LogError($"{FileName}下载失败：错误信息={_request?.error}，响应码={_request?.responseCode}");
+                    LogManager.LogError($"{FileName}下载失败：错误信息={_request?.error}，结果={_request?.result}，响应码={_request?.responseCode}");
                     overCallback?.Invoke(false);
                 }
                 else
@@ -107,7 +107,7 @@ namespace Core.AssetBundles.Update
             }
             catch (System.Exception e)
             {
-                LogManager.LogError($"下载异常，{e.Message}");
+                LogManager.LogError($"下载异常，{e.Message}，StackTrace：{e.StackTrace}");
                 overCallback?.Invoke(false);
             }
         }
@@ -125,7 +125,7 @@ namespace Core.AssetBundles.Update
             // 获取下载上下文
             var context = _updater.GetContext();
             // 下载循环：请求未完成、未暂停时持续轮询
-            while (_request != null && !context.IsPauseDownload && !ao.isDone)
+            while (_request != null && !_isAbout && !ao.isDone)
             {
                 currentFrameDownloadBytes = _request.downloadedBytes;
                 // 计算差值
@@ -172,23 +172,45 @@ namespace Core.AssetBundles.Update
         /// </summary>
         public void Abort()
         {
-            _request?.Abort();
-            _request?.downloadHandler.Dispose();
-            _isAbout = true;
+            if (_request.downloadHandler is DownloadHandlerStream handlerStream)
+            {
+                handlerStream.Pause();
+            }
+            
             _cancellationTokenSource.Cancel();
-            OnDownloadProgress = null;
-        }
-
-        /// <summary>
-        /// 释放资源
-        /// 释放UnityWebRequest对象，避免内存泄漏
-        /// </summary>
-        public void Dispose()
-        {
+            _cancellationTokenSource = null;
+            
+            _request?.Abort();
             _request?.Dispose();
+            
+            _isAbout = true;
+            OnDownloadProgress = null;
+            
             _request = null;
         }
+        
+        public void ResetData()
+        {
+            _cancellationTokenSource = null;
+            OnDownloadProgress = null;
+            AbName = string.Empty;
+            Hash = string.Empty;
+            FileName = string.Empty;
+            Url = string.Empty;
+            IsAppend = false;
+            _isAbout = false;
+            DownloadedBytes = 0;
+            CurrentRetryCount = 0;
 
+            if (_request != null)
+            {
+                _request?.Abort();
+                _request?.downloadHandler.Dispose();
+                _request?.Dispose();
+                _request = null;
+            }
+        }
+        
         /// <summary>
         /// 获取要下载的文件名
         /// 包含拓展名
@@ -226,19 +248,5 @@ namespace Core.AssetBundles.Update
         /// 获取文件Hash校验值
         /// </summary>
         public string Hash { get; private set; }
-
-        public void ResetData()
-        {
-            OnDownloadProgress = null;
-            _request = null;
-            AbName = string.Empty;
-            Hash = string.Empty;
-            FileName = string.Empty;
-            Url = string.Empty;
-            IsAppend = false;
-            _isAbout = false;
-            DownloadedBytes = 0;
-            CurrentRetryCount = 0;
-        }
     }
 }

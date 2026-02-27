@@ -41,7 +41,7 @@ namespace Core.AssetBundles.Update
             result.ErrorMessage = errorMsg;
             
             // 记录日志
-            LogManager.LogError($"错误消息：{errorMsg}；异常：{exception.Message}");
+            LogManager.LogError($"{nameof(UpdateResult)}.{nameof(CreateFailure)}：错误：{errorMsg}；异常：{exception.Message}");
             return result;
         }
 

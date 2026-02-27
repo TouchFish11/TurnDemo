@@ -4,8 +4,10 @@ using System.IO;
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Collection;
 using Core.AssetBundles.Update.Enum;
+using Core.Collection;
 using Core.DataPersistence.Json;
 using Core.Log;
+using Core.Pool;
 using Core.Service;
 using Core.Utility;
 
@@ -15,7 +17,7 @@ namespace Core.AssetBundles.Update
     /// AssetBundle 更新上下文类
     /// 负责管理AB包更新过程中的所有状态、数据、请求队列及事件回调
     /// </summary>
-    public class ABUpdateContext
+    public class ABUpdateContext : IPoolData
     {
         /// <summary>
         /// 存储远程服务器端的AB包信息集合
@@ -126,20 +128,18 @@ namespace Core.AssetBundles.Update
         public event Action<ulong> OnUpdateSpeed;
 
         /// <summary>
-        /// 更新完成回调事件
-        /// 所有AB包下载/检查完成后触发
+        /// 更新结束回调事件
         /// </summary>
-        public event Action OnUpdateFinish;
-        
-        /// <summary>
-        /// 更新失败结果事件
-        /// </summary>
-        public event Action<UpdateResult> OnUpdateFailResult;
+        public event Action<UpdateResult> OnUpdateOver;
 
         // 当前已下载的字节数（累计）
         private ulong currentDownloadedBytes;
         // 当前帧下载的总字节数（用于计算下载速度）
         private ulong _currentDownloadTotalSizes;
+        // AB包更新器
+        private IAssetBundleUpdater _assetBundleUpdater;
+        // Json管理器
+        private readonly IJsonManager _jsonManager;
         
         /// <summary>
         /// 构造函数
@@ -147,15 +147,13 @@ namespace Core.AssetBundles.Update
         /// </summary>
         public ABUpdateContext()
         {
+            _assetBundleUpdater = ServiceLocator.Get<IAssetBundleUpdater>();
+            _jsonManager = ServiceLocator.Get<IJsonManager>();
+            
             RemotePackageCollection = new ABPackageCollection();
             LocalPackageCollection = new ABPackageCollection();
             WaitDownloadCollection = new AbPackageCacheCollection();
             CachePackageCollection = new AbPackageCacheCollection();
-        }
-
-        public void UpdateFailed(UpdateResult updateResult)
-        {
-            OnUpdateFailResult?.Invoke(updateResult);
         }
 
         /// <summary>
@@ -309,9 +307,10 @@ namespace Core.AssetBundles.Update
         /// 触发更新完成回调事件
         /// 所有AB包下载/检查逻辑完成后调用
         /// </summary>
-        public void UpdateFinish()
+        /// <param name="updateResult"></param>
+        public void UpdateOver(UpdateResult updateResult)
         {
-            OnUpdateFinish?.Invoke();
+            OnUpdateOver?.Invoke(updateResult);
         }
 
         /// <summary>
@@ -347,23 +346,23 @@ namespace Core.AssetBundles.Update
         {
             // 标记暂停下载
             IsPauseDownload = true;
+            
+            LogManager.Log($"正在下载的请求数：{_requesterLoadingList.Count}");
             // 终止并释放所有正在下载的请求
-            var node = _requesterLoadingList.First;
-            while (node != null)
+            HandleLinkedList(_requesterLoadingList, requester =>
             {
-                node.Value.Abort(); // 终止下载请求
-                node.Value.Dispose(); // 释放请求资源
-                node = node.Next;
-            }
-
+                requester.Abort(); // 终止下载请求
+                LogManager.Log($"已终止：{requester.AbName}");
+            });
+            
             // 临时收集所有未完成的请求（失败、下载中、等待）
-            var tempList = new List<ABWebRequester>();
-            tempList.AddRange(_requesterFailList);
-            tempList.AddRange(_requesterLoadingList);
-            tempList.AddRange(_requesterWaitList);
+            var uniList = CollectionUtil.GetUniList<ABWebRequester>();
+            uniList.List.AddRange(_requesterFailList);
+            uniList.List.AddRange(_requesterLoadingList);
+            uniList.List.AddRange(_requesterWaitList);
 
             // 遍历临时列表，保存未完成AB包的缓存信息
-            foreach (var abWebRequester in tempList)
+            foreach (var abWebRequester in uniList.List)
             {
                 var abLoadPath = PathUtility.GetAbLoadPath(abWebRequester.AbName);
                 // 本地文件不存在则跳过（未开始下载）
@@ -380,8 +379,10 @@ namespace Core.AssetBundles.Update
                 UpdateCacheFile(cacheInfo);
             }
 
-            // 将缓存信息写入本地文件（持久化，用于断点续传）
+            // 将缓存信息写入本地文件
             await WriteCacheFile();
+            // 使用完毕，回收
+            CollectionUtil.CollectUniList(uniList);
         }
 
         /// <summary>
@@ -418,7 +419,7 @@ namespace Core.AssetBundles.Update
         public async Task WriteCacheFile()
         {
             var cacheFilePath = PathUtility.GetAbLoadPath(FileUtility.CacheDefaultName);
-            await ServiceLocator.Get<IJsonManager>().SaveToJsonAsync(CachePackageCollection, cacheFilePath);
+            await _jsonManager.SaveToJsonAsync(CachePackageCollection, cacheFilePath);
         }
 
         /// <summary>
@@ -445,19 +446,31 @@ namespace Core.AssetBundles.Update
             OnCheckProgress = null;
             OnUpdatePhase = null;
             OnUpdateSpeed = null;
-            OnUpdateFinish = null;
+            OnUpdateOver = null;
 
             // 重置下载计数和状态
             currentDownloadedBytes = 0;
             IsPauseDownload = false;
         }
         
-        ulong totalBytes;
-
-        public void AddBytesTest(ulong totalBytes)
+        /// <summary>
+        /// 处理链表
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="action"></param>
+        /// <typeparam name="T"></typeparam>
+        private static void HandleLinkedList<T>(LinkedList<T> list, Action<T> action)
         {
-            this.totalBytes += totalBytes;
-            LogManager.Log($"下载总量：{this.totalBytes}");
+            var node = list.First;
+            while (node != null)
+            {
+                // 先保存下一个节点（在处理当前节点前！）
+                var nextNode = node.Next; 
+                
+                action?.Invoke(node.Value);
+                node = nextNode;
+                LogManager.Log($"下一节点：{node}");
+            }
         }
     }
 }

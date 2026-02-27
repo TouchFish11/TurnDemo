@@ -1,12 +1,13 @@
+using System.Collections;
 using System.IO;
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Enum;
 using Core.AssetBundles.Update.Exception;
 using Core.Global;
 using Core.Mono;
-using Core.Pool;
 using Core.Service;
 using Core.Utility;
+using UnityEngine;
 
 namespace Core.AssetBundles.Update.State
 {
@@ -16,6 +17,9 @@ namespace Core.AssetBundles.Update.State
     /// </summary>
     public class DownloadListFileState : UpdateState
     {
+        private ABWebRequester _abWebRequester;
+        private Coroutine _coroutine;
+        
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -62,11 +66,12 @@ namespace Core.AssetBundles.Update.State
         /// 支持配置重试次数，失败后重试
         /// </summary>
         /// <returns>是否下载成功</returns>
-        public static async Task DownloadCompareFile()
+        public async Task DownloadCompareFile()
         {
             // 创建清单文件下载请求器（无需Hash校验，清单文件本身由服务器保证正确性）
-            var aBWebRequester = ServiceLocator.Get<IPoolManager>().
-                GetData<ABWebRequester>().Init(GlobalSettings.Instance.resServerIp, FileUtility.ListFileDefaultName, false, string.Empty, string.Empty);
+            _abWebRequester = poolManager.GetData<ABWebRequester>().Init(GlobalSettings.Instance.resServerIp, FileUtility.ListFileDefaultName, false, string.Empty, string.Empty);
+
+            _coroutine = ServiceLocator.Get<IMonoAdapter>().StartCoroutine(CheckCancel());
             
             // 按配置的最大重试次数执行下载
             var maxRetry = GlobalSettings.Instance.reDownloadCompareFileMaxNum;
@@ -74,18 +79,30 @@ namespace Core.AssetBundles.Update.State
             {
                 var source = new TaskCompletionSource<bool>();
                 // 异步下载到临时清单文件路径
-                aBWebRequester.DownLoadAsync(PathUtility.GetAbLoadPath(FileUtility.TempListFileDefaultName), isOver => source.SetResult(isOver));
+                _abWebRequester.DownLoadAsync(PathUtility.GetAbLoadPath(FileUtility.TempListFileDefaultName), isOver => source.SetResult(isOver));
                 var isSuceess = await source.Task;
 
                 // 下载成功，终止重试
                 if (isSuceess)
                 {
+                    ServiceLocator.Get<IMonoAdapter>().StopCoroutine(_coroutine);
+                    _abWebRequester.Abort();
+                    _abWebRequester = null;
                     return;
                 }
             }
 
             // 重试次数耗尽仍失败
             throw new DownloadFailureException("服务器清单文件下载失败");
+        }
+
+        private IEnumerator CheckCancel()
+        {
+            while (!assetBundleUpdater.GetContext().IsPauseDownload)
+            {
+                yield return null;
+            }
+            _abWebRequester.Abort();
         }
 
         /// <summary>

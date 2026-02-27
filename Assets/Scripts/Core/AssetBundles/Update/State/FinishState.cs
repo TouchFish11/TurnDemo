@@ -37,8 +37,9 @@ namespace Core.AssetBundles.Update.State
             }
             
             // 触发更新完成回调
-            assetBundleUpdater.GetContext().UpdateFinish();
-            return UpdateResult.CreateSuccess();
+            var result = UpdateResult.CreateSuccess();
+            assetBundleUpdater.GetContext().UpdateOver(result);
+            return result;
         }
 
         /// <summary>

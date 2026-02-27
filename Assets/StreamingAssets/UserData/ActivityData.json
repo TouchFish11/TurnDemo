@@ -5,8 +5,8 @@
     "1001": {
       "$type": "GameHotUpdate.Activity.Data.ActivityData, Assembly-CSharp-Game-HotUpdate",
       "ActivityId": 1001,
-      "IsComplete": false,
-      "CurrentPro": 0
+      "IsComplete": true,
+      "CurrentPro": 1
     },
     "1002": {
       "$type": "GameHotUpdate.Activity.UI.EmbersCanon.EmbersCanonData, Assembly-CSharp-Game-HotUpdate",

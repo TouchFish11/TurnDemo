@@ -25,25 +25,38 @@ namespace GameHotUpdate.Update.UI
         [Inject(1)] public RectTransform EnterArea { get; private set; }
 
         [SerializeField] private float _rotateSpeed = 300f;
+        private IMonoAdapter _monoAdapter;
         
         protected override void Awake()
         {
             base.Awake();
-            UpdateArea.gameObject.SetActive(false);
+            _monoAdapter = ServiceLocator.Get<IMonoAdapter>();
+            SetUpdateAreaActive(false);
             SetEnterAreaActive(false);
+            SetStopButtonActive(false);
         }
 
         public void SetUpdateAreaActive(bool isActive)
         {
             if (isActive)
             {
-                ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpdate);
+                _monoAdapter.AddUpdateListener(OnUpdate);
             }
             else
             {
-                ServiceLocator.Get<IMonoAdapter>().RemoveUpdateListener(OnUpdate);
+                _monoAdapter.RemoveUpdateListener(OnUpdate);
             }
             UpdateArea.gameObject.SetActive(isActive);
+        }
+
+        public void SetDownloadSizeAndSpeedActive(bool isActive)
+        {
+            txtDownloadSizeAndSpeed.gameObject.SetActive(isActive);
+        }
+
+        public void SetStopButtonActive(bool isActive)
+        {
+            btnStop.gameObject.SetActive(isActive);
         }
 
         public void SetEnterAreaActive(bool isActive)

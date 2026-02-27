@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Collection;
 using Core.DataPersistence.Json;
@@ -1428,8 +1429,8 @@ namespace Editor.AssetBundle
                                     //Debug.Log($"服务器响应：{responseText}");
                                 }
                             }
-
-                            AppendToLog($"{fileName}：Upload Success，Progress：{++nowUpLoadFinishedNum}/{upLoadmaxNum}");
+                            
+                            AppendToLog($"{fileName}：Upload Success，Progress：{Interlocked.Increment(ref nowUpLoadFinishedNum)}/{upLoadmaxNum}");
                         }
                         else
                         {
@@ -1440,7 +1441,7 @@ namespace Editor.AssetBundle
                     }
                     catch (Exception e)
                     {
-                        ++nowUpLoadFinishedNum;
+                        Interlocked.Increment(ref nowUpLoadFinishedNum);
                         AppendToLog($"Upload error file：{fileName}，Exception：{e.Message}");
                     }
                 });

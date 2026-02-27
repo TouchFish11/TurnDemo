@@ -43,7 +43,7 @@ namespace Core.UI.MVC
         /// <summary>
         /// 初始化逻辑（子类实现）
         /// </summary>
-        protected abstract System.Threading.Tasks.Task OnInit();
+        protected abstract Task OnInit();
 
         /// <summary>
         /// 按钮点击监听

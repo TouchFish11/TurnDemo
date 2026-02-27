@@ -170,9 +170,9 @@ MonoBehaviour:
       name: Canvas.prefab
       hash: c87aab09ee33e6c83a1914e71cf7502e6d2b4f9742c02bce8381102203000a10
     - assetPath: Assets\Editor\ArtRes\Default\UI\UpdateTipView.prefab
-      size: 17728
+      size: 24049
       name: UpdateTipView.prefab
-      hash: 902d350f6ee4d5522527dec65dd684b94703568db0d6e1a733fd173368f676aa
+      hash: cd68208ca558926c1dec11a2f89c661b6250746aa91f4abe7b12e2a86e467285
   - assetBundleName: gameconfig
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\GameConfig\BattleActivityConfig.json
@@ -224,9 +224,9 @@ MonoBehaviour:
       name: TaskConditionInfo.bytes
       hash: 0d66c5449cb35a7d52b31770e0bc397c1090cb151399aa388479885662ac2d1d
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\TaskInfo.bytes
-      size: 263
+      size: 275
       name: TaskInfo.bytes
-      hash: c8f3e49dbd2046471ab07bd2b9b8a1b276e648ff98b3877bb173f0c9fde4b2a8
+      hash: 18205e5432a248d0a32b27edc16e8f810512e3ab8318432f4a73dcca59421b92
     - assetPath: Assets\Editor\ArtRes\GameConfig\InputConfig\MainActionMap.json
       size: 6638
       name: MainActionMap.json

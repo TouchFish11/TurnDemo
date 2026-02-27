@@ -87,8 +87,7 @@ namespace Core.AssetBundles.Update.State
             {
                 var cacheInfo = waitDownloadCollection[pair.Key];
                 // 创建AB包下载请求器
-                var abWebRequester = ServiceLocator.Get<IPoolManager>().GetData<ABWebRequester>();
-                abWebRequester.Init(serverIp, cacheInfo.AbName, true, cacheInfo.AbName, cacheInfo.Hash);
+                var abWebRequester = poolManager.GetData<ABWebRequester>().Init(serverIp, cacheInfo.AbName, true, cacheInfo.AbName, cacheInfo.Hash);
                 // 绑定下载进度回调
                 abWebRequester.OnDownloadProgress += proCallBack;
                 // 将请求器加入待下载队列
@@ -121,10 +120,10 @@ namespace Core.AssetBundles.Update.State
                     {
                         // 下载完成后，从正在下载队列移除
                         context.RemoveRequesterFromLoad(requester);
+                        LogManager.Log($"移除请求：{requester.AbName}");
                         // 下载成功
                         if (isOver)
                         {
-                            LogManager.Log($"下载成功：{requester.FileName}");
                             // 获取下载后的文件信息
                             var fileInfo = new FileInfo(PathUtility.GetAbLoadPath(requester.FileName));
                             // 更新缓存信息
@@ -188,7 +187,7 @@ namespace Core.AssetBundles.Update.State
             _lastSpeedUpdateTime = Time.realtimeSinceStartup;
             _isDownloading = true;
             
-            while (_isDownloading)
+            while (_isDownloading && !assetBundleUpdater.GetContext().IsPauseDownload)
             {
                 // 达到速度更新间隔，执行更新
                 if (Time.realtimeSinceStartup - _lastSpeedUpdateTime >= _speedUpdateInterval)
