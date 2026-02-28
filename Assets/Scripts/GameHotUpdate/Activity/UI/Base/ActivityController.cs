@@ -1,16 +1,16 @@
-using Core.DataPersistence.Binary;
 using Core.Loader.Sprite;
 using Core.Loader.UI;
 using Core.Pool;
 using Core.Reflection;
+using Core.Serialize.Binary;
 using Core.Service;
 using Core.UI;
 using Core.UI.MVC;
-using Game.Manager;
 using GameHotUpdate.Activity.Core;
 using GameHotUpdate.Activity.Data;
 using GameHotUpdate.Activity.UI.EmbersCanon;
 using GameHotUpdate.Config;
+using GameHotUpdate.Manager;
 
 namespace GameHotUpdate.Activity.UI.Base
 {

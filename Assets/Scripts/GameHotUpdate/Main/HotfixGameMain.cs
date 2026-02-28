@@ -8,17 +8,16 @@ using Core.Service;
 using Core.UI;
 using Game.FloatingText;
 using Game.Main;
-using Game.Manager;
-using Game.Objects;
 using GameHotUpdate.Battle.Object;
 using GameHotUpdate.Cameras;
 using GameHotUpdate.Config;
 using GameHotUpdate.Main.UI;
 using GameHotUpdate.Manager;
+using GameHotUpdate.Object;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using IGameManager = Game.Manager.IGameManager;
-using Object = UnityEngine.Object;
+using IGameManager = GameHotUpdate.Manager.IGameManager;
+
 // ReSharper disable UnusedMember.Local
 
 namespace GameHotUpdate.Main
@@ -32,18 +31,19 @@ namespace GameHotUpdate.Main
         /// <summary>
         /// 游戏启动入口方法
         /// </summary>
-        private static async void Init()
+        private static void Init()
         {
             try
             {
+                // 注册游戏业务层管理器到服务容器
+                ServiceLocator.Register<IGameManager>(GameManager.Instance);
+                // 初始化热更工厂
+                ServiceLocator.Get<IFactoryManager>().InitHotFactorys();
+                
                 // 切换场景
                 ServiceLocator.Get<ISceneManager>().LoadSceneAsync(ResKeyCollection.MainScene, LoadSceneMode.Single, null,
                 async () =>
                 {
-                    // 初始化热更工厂
-                    ServiceLocator.Get<IFactoryManager>().InitHotFactorys();
-                    // 注册游戏业务层管理器到服务容器（供全局调用）
-                    ServiceLocator.Register<IGameManager>(GameManager.Instance);
                     // 初始化游戏数据、服务
                     await ServiceLocator.Get<IGameManager>().Init(new GameDataManager(), new GameServiceManger());
 
@@ -104,7 +104,7 @@ namespace GameHotUpdate.Main
         public static void ClearScene()
         {
             // 1. 销毁轨道相机对象（场景核心相机）
-            Object.Destroy(OrbitCameraController.Instance.gameObject);
+            UnityEngine.Object.Destroy(OrbitCameraController.Instance.gameObject);
 
             // 2. 清理玩家数据和对象（移除玩家实例、重置玩家状态）
             ServiceLocator.Get<IPlayerManager>().Clear();

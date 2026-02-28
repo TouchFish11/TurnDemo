@@ -36,18 +36,17 @@ namespace GameHotUpdate.Login.UI
 
         }
 
-        protected override System.Threading.Tasks.Task OnInit()
+        protected override async System.Threading.Tasks.Task OnInit()
         {
             // ��ȡ��¼����ʵ��
             _loginService = ServerManager.Instance.GetService<LoginService>();
             // ע���Զ���¼����¼�
             _loginService.OnAutoLoginCompleted += OnAutoLoginCompleted;
             // ��ʼ����¼����
-            model.LoginData = _loginService.LoadLoginData();
+            model.LoginData = await _loginService.LoadLoginData();
             model.IsLoginBtnEnabled = true;
             // ���ص�¼��
             ShowLoginBox(false);
-            return System.Threading.Tasks.Task.CompletedTask;
         }
 
         protected override void ButtonOnClick(string btnName)

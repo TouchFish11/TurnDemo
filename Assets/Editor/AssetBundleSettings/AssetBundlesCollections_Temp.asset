@@ -258,7 +258,7 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\Prefab\Main\Prefab_Main_Warrior.prefab
       size: 92501
       name: Prefab_Main_Warrior.prefab
-      hash: d940305765191588a3125f8d2d8c87e77c6bb04d2b2128c1b809426e5bc188f6
+      hash: f23befbf93dc7a3115819dd6e64ba4ddb1dad4075626192bb2449965202c0d52
     - assetPath: Assets\Editor\ArtRes\Prefab\Main\Prefab_Npc.prefab
       size: 3581
       name: Prefab_Npc.prefab
@@ -306,9 +306,9 @@ MonoBehaviour:
   - assetBundleName: scene
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\Scene\BeginScene.unity
-      size: 21771
+      size: 21522
       name: BeginScene.unity
-      hash: 66b1e6149e820ce51751291bfb7f6e3f21695e025fd4ef904f3a08c38282b965
+      hash: f6d29e00fe5a395fb3a896bb236c49190c7603435d0e5c8ab3881694b95e5c3e
     - assetPath: Assets\Editor\ArtRes\Scene\LevelScene.unity
       size: 113538
       name: LevelScene.unity

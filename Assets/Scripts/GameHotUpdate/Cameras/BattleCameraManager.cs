@@ -6,10 +6,10 @@ using Core.Singleton;
 using Game.Battle.Input;
 using Game.Battle.Objects;
 using Game.Battle.TargetSelect;
-using Game.Objects;
 using GameHotUpdate.Battle;
 using GameHotUpdate.Battle.Event.Turn;
 using GameHotUpdate.Config;
+using GameHotUpdate.Object;
 using UnityEngine;
 
 namespace GameHotUpdate.Cameras

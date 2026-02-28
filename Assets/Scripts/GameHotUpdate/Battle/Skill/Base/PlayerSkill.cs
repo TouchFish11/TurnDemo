@@ -19,8 +19,7 @@ namespace GameHotUpdate.Battle.Skill.Base
         /// </summary>
         /// <param name="caster">施法者战斗实体对象</param>
         /// <param name="skillId">技能唯一标识ID</param>
-        /// <param name="statusAddStrategy">状态添加策略接口</param>
-        protected PlayerSkill(IBattleEntityObject caster, int skillId, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, statusAddStrategy)
+        protected PlayerSkill(IBattleEntityObject caster, int skillId) : base(caster, skillId)
         {
 
         }

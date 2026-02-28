@@ -9,7 +9,7 @@ namespace Core.Service
     public interface IServerManager
     {
         ILoginService GetService<T>() where T : class, new();
-        LoginData LoadLoginData();
+        Task<LoginData> LoadLoginData();
         Task TryAutoLogin();
     }
 }

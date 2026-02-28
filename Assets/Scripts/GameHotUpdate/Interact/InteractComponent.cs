@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using Core.Components;
 using Core.GlobalEvent;
 using Core.Service;
-using Game.Components;
 using Game.Dialogue;
 using Game.Interact;
+using GameHotUpdate.Components;
 using GameHotUpdate.Input;
 
 namespace GameHotUpdate.Interact

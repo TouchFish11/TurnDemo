@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Core.Pool;
 using Core.Service;
-using Game.Objects;
+using GameHotUpdate.Object;
 using UnityEngine;
 
 namespace GameHotUpdate.Manager

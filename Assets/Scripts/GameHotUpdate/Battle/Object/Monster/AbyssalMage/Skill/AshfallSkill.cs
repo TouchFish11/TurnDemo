@@ -23,7 +23,7 @@ namespace GameHotUpdate.Battle.Object.Monster.AbyssalMage.Skill
         /// </summary>
         public static string Attack02 => "Attack02";
 
-        public AshfallSkill(IBattleEntityObject caster, int skillId, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, statusAddStrategy)
+        public AshfallSkill(IBattleEntityObject caster, int skillId) : base(caster, skillId)
         {
         }
 

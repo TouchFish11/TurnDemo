@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Core.AssetBundles.Update.Collection;
 using Core.AssetBundles.Update.Enum;
 using Core.Collection;
-using Core.DataPersistence.Json;
 using Core.Log;
 using Core.Pool;
+using Core.Serialize.Json;
 using Core.Service;
 using Core.Utility;
 

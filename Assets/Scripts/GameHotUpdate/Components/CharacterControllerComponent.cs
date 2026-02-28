@@ -1,7 +1,7 @@
 using Core.Components;
 using UnityEngine;
 
-namespace Game.Components
+namespace GameHotUpdate.Components
 {
     /// <summary>
     /// 角色控制器组件

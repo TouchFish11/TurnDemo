@@ -69,7 +69,7 @@ namespace Core.AssetBundles.Update.State
         public async Task DownloadCompareFile()
         {
             // 创建清单文件下载请求器（无需Hash校验，清单文件本身由服务器保证正确性）
-            _abWebRequester = poolManager.GetData<ABWebRequester>().Init(GlobalSettings.Instance.resServerIp, FileUtility.ListFileDefaultName, false, string.Empty, string.Empty);
+            _abWebRequester = poolManager.GetData<ABWebRequester>().Init(GlobalSettings.Instance.resServerIp, FileUtility.ListFileDefaultName, false, string.Empty, string.Empty, 0);
 
             _coroutine = ServiceLocator.Get<IMonoAdapter>().StartCoroutine(CheckCancel());
             

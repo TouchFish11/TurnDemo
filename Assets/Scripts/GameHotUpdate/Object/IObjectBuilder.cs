@@ -1,8 +1,7 @@
 using System.Threading.Tasks;
-using Core.AssetBundles.Management;
 using UnityEngine;
 
-namespace Game.Objects
+namespace GameHotUpdate.Object
 {
     public interface IObjectBuilder
     {

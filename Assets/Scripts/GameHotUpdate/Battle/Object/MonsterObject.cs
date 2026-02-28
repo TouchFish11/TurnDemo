@@ -1,6 +1,6 @@
 using System.Collections;
-using Core.DataPersistence.Binary;
 using Core.Reflection;
+using Core.Serialize.Binary;
 using Core.Service;
 using Core.Utility;
 using Game.Animation;

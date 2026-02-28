@@ -1,4 +1,4 @@
-using Core.DataPersistence.Binary;
+using Core.Serialize.Binary;
 using Core.Service;
 
 namespace Game.Battle.Property

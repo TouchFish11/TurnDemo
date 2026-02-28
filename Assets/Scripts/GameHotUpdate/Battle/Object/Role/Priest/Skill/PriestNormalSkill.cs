@@ -27,8 +27,7 @@ namespace GameHotUpdate.Battle.Object.Role.Priest.Skill
         /// </summary>
         /// <param name="caster">施法者战斗实体</param>
         /// <param name="skillId">技能ID</param>
-        /// <param name="statusAddStrategy">状态添加策略</param>
-        public PriestNormalSkill(IBattleEntityObject caster, int skillId, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, statusAddStrategy)
+        public PriestNormalSkill(IBattleEntityObject caster, int skillId) : base(caster, skillId)
         {
         }
         

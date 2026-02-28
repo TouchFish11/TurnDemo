@@ -20,8 +20,7 @@ namespace GameHotUpdate.Battle.Skill.Base
         /// </summary>
         /// <param name="caster">施法者（当前释放技能的怪物实体）</param>
         /// <param name="skillId">技能ID，用于标识不同技能</param>
-        /// <param name="statusAddStrategy">状态添加策略，处理技能附带的状态效果</param>
-        protected MonsterSkill(IBattleEntityObject caster, int skillId, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, statusAddStrategy)
+        protected MonsterSkill(IBattleEntityObject caster, int skillId) : base(caster, skillId)
         {
             
         }

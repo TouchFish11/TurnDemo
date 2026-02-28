@@ -85,15 +85,6 @@ namespace GameHotUpdate.Battle.Status
         }
 
         /// <summary>
-        /// 移除状态
-        /// </summary>
-        /// <param name="removalStrategy">移除策略</param>
-        public void RemoveStatus(IStatusRemovalStrategy removalStrategy)
-        {
-            removalStrategy.HandleRemove(_statuses);
-        }
-
-        /// <summary>
         /// 更新状态加成数据
         /// </summary>
         private void UpdateStatusBonus()

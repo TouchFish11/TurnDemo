@@ -27,8 +27,7 @@ namespace GameHotUpdate.Battle.Object.Role.Priest.Skill
         /// </summary>
         /// <param name="caster">施法者实体（当前释放技能的牧师）</param>
         /// <param name="skillId">技能ID（用于读取技能配置）</param>
-        /// <param name="statusAddStrategy">状态添加策略（处理技能附带的状态效果）</param>
-        public PriestBattleSkill(IBattleEntityObject caster, int skillId, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, statusAddStrategy)
+        public PriestBattleSkill(IBattleEntityObject caster, int skillId) : base(caster, skillId)
         {
         }
         

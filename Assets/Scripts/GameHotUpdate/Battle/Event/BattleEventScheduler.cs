@@ -1,7 +1,7 @@
 using System.Collections;
-using Core.DataPersistence.Binary;
 using Core.Log;
 using Core.Reflection;
+using Core.Serialize.Binary;
 using Core.Service;
 using Core.Singleton;
 using Core.UI;

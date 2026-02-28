@@ -2,7 +2,7 @@ using Core.Components;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Game.Components
+namespace GameHotUpdate.Components
 {
     [RequireComponent(typeof(PlayerInput))]
     public class PlayerInputComponent : MonoBehaviour, IComponent

@@ -2,9 +2,9 @@ using Core.Components;
 using Core.Input.ActionAsset;
 using Core.Service;
 using Game.Animation;
-using Game.Components;
 using Game.Dialogue;
 using GameHotUpdate.Animation;
+using GameHotUpdate.Components;
 using GameHotUpdate.Input;
 using GameHotUpdate.Move;
 

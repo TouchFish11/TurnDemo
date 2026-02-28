@@ -29,6 +29,6 @@ namespace Core.Service.Login
         /// <summary>
         /// ���ص�¼����
         /// </summary>
-        LoginData LoadLoginData();
+        Task<LoginData> LoadLoginData();
     }
 }

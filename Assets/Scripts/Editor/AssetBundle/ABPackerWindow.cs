@@ -9,8 +9,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Collection;
-using Core.DataPersistence.Json;
 using Core.Global;
+using Core.Serialize.Json;
 using Core.Utility;
 using Editor.Generation;
 using Editor.Generation.Detail;
@@ -19,6 +19,7 @@ using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 using Object = UnityEngine.Object;
+// ReSharper disable CanSimplifyDictionaryLookupWithTryGetValue
 
 namespace Editor.AssetBundle
 {
@@ -287,30 +288,6 @@ namespace Editor.AssetBundle
             if (GUILayout.Button("Move AssetBundle To StreamingAssets",  GUILayout.Width(300)))
             {
                 MoveABToStreamingAssets();
-            }
-            
-            GUILayout.EndHorizontal();
-        }
-
-        private void DrawListSettingsView()
-        {
-            EditorGUILayout.Space();
-            GUILayout.Label("Asset List", EditorStyles.boldLabel);
-            
-            GUILayout.BeginHorizontal();
-            
-            EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.TextField("List Path", $"{serverDataPath}AssetBundleListInfo.json");
-            EditorGUI.EndDisabledGroup();
-            
-            // 生成AB包清单文件按钮
-            if (GUILayout.Button("Create ABListFile", GUILayout.Width(250)))
-            {
-                CreateAssetBundleListFile
-                (
-                    serverDataPath, 
-                    $"{serverDataPath}{FileUtility.ListFileDefaultName}"
-                );
             }
             
             GUILayout.EndHorizontal();
@@ -1799,7 +1776,7 @@ namespace Editor.AssetBundle
         /// </summary>
         /// <param name="filePath">文件路径</param>
         /// <returns>SHA256 哈希值的十六进制字符串</returns>
-        public static string GenerateFileSHA256Hash(string filePath)
+        public string GenerateFileSHA256Hash(string filePath)
         {
             using var sha256 = SHA256.Create();
             using var fileStream = File.OpenRead(filePath);

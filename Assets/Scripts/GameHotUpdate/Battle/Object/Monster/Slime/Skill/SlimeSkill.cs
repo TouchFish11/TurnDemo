@@ -32,8 +32,7 @@ namespace GameHotUpdate.Battle.Object.Monster.Slime.Skill
         /// </summary>
         /// <param name="caster">施法者（史莱姆实体）</param>
         /// <param name="skillId">技能ID</param>
-        /// <param name="statusAddStrategy">状态添加策略</param>
-        public SlimeSkill(IBattleEntityObject caster, int skillId, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, statusAddStrategy)
+        public SlimeSkill(IBattleEntityObject caster, int skillId) : base(caster, skillId)
         {
             // 注册动画攻击事件回调
             Caster.GetComponentInChildren<AnimationTrigger>().OnAttack += OnAttack;

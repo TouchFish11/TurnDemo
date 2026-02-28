@@ -81,18 +81,21 @@ namespace Core.AssetBundles.Update.State
             var serverIp = GlobalSettings.Instance.resServerIp;
             // 获取待下载的AssetBundle集合
             var waitDownloadCollection = assetBundleUpdater.GetContext().WaitDownloadCollection;
+            var remotePackageCollection = assetBundleUpdater.GetContext().RemotePackageCollection;
             
             // 初始化所有待下载资源的请求器
             foreach (var pair in waitDownloadCollection)
             {
                 var cacheInfo = waitDownloadCollection[pair.Key];
+                
+                // hash不同说明要重新下载，不追加；hash相同说明是续传，追加
+                var isAppend = waitDownloadCollection[pair.Key].Hash == remotePackageCollection[pair.Key].Hash;
                 // 创建AB包下载请求器
-                var abWebRequester = poolManager.GetData<ABWebRequester>().Init(serverIp, cacheInfo.AbName, true, cacheInfo.AbName, cacheInfo.Hash);
+                var abWebRequester = poolManager.GetData<ABWebRequester>().Init(serverIp, cacheInfo.AbName, isAppend, cacheInfo.AbName, cacheInfo.Hash, cacheInfo.DownloadedBytes);
                 // 绑定下载进度回调
                 abWebRequester.OnDownloadProgress += proCallBack;
                 // 将请求器加入待下载队列
                 assetBundleUpdater.GetContext().AddRequesterToWait(abWebRequester);
-                LogManager.Log($"{abWebRequester.AbName}资源，即将下载");
             }
 
             // 获取最大并发下载数
@@ -120,7 +123,6 @@ namespace Core.AssetBundles.Update.State
                     {
                         // 下载完成后，从正在下载队列移除
                         context.RemoveRequesterFromLoad(requester);
-                        LogManager.Log($"移除请求：{requester.AbName}");
                         // 下载成功
                         if (isOver)
                         {

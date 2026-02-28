@@ -59,9 +59,9 @@ namespace Core.Service
         /// ���ص�¼����
         /// </summary>
         /// <returns></returns>
-        public LoginData LoadLoginData()
+        public async Task<LoginData> LoadLoginData()
         {
-            return (_typeToSeverMap[typeof(LoginService)] as ILoginService).LoadLoginData();
+            return await (_typeToSeverMap[typeof(LoginService)] as ILoginService).LoadLoginData();
         }
 
         /// <summary>

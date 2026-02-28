@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using Core.AssetBundles.Update.Handler;
@@ -45,7 +46,8 @@ namespace Core.AssetBundles.Update
         /// <param name="isAppend">是否断点续传：true-追加写入；false-覆盖写入</param>
         /// <param name="abName">对应的AssetBundle包名</param>
         /// <param name="hash">文件Hash校验值</param>
-        public ABWebRequester Init(string url, string fileName, bool isAppend, string abName, string hash)
+        /// <param name="downloadedBytes"></param>
+        public ABWebRequester Init(string url, string fileName, bool isAppend, string abName, string hash, long downloadedBytes)
         {
             _monoAdapter = ServiceLocator.Get<IMonoAdapter>();
             _updater = ServiceLocator.Get<IAssetBundleUpdater>();
@@ -58,6 +60,7 @@ namespace Core.AssetBundles.Update
             CurrentRetryCount = GlobalSettings.Instance.maxRetryCount;
             AbName = abName;
             Hash = hash;
+            DownloadedBytes = downloadedBytes;
             return this;
         }
 
@@ -78,12 +81,13 @@ namespace Core.AssetBundles.Update
                 if (File.Exists(savePath))
                 {
                     var fileInfo = new FileInfo(savePath);
-                    DownloadedBytes = fileInfo.Length;
+                    LogManager.Log($"文件：{AbName}，缓存大小与记录大小相等：{DownloadedBytes == fileInfo.Length}");
                 }
+                
                 // 设置自定义流下载处理器
                 _request.downloadHandler = new DownloadHandlerStream(savePath, IsAppend, DownloadedBytes);
                 // 设置请求头：Range指定从已下载字节数的位置开始下载
-                _request?.SetRequestHeader("Range", $"bytes={(IsAppend ? DownloadedBytes : 0)}-");
+                _request?.SetRequestHeader("Range", $"bytes={DownloadedBytes}-");
  
                 // 发送请求
                 var asyncOperation = _request?.SendWebRequest();

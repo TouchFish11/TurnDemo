@@ -1,4 +1,4 @@
-using Core.DataPersistence.Json;
+using Core.Serialize.Json;
 using Core.Service;
 using Core.Singleton;
 

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using Core.AssetBundles.Management;
 using Core.AssetBundles.Update;
-using Core.DataPersistence.Binary;
-using Core.DataPersistence.Json;
 using Core.EditorRes;
 using Core.GlobalEvent;
 using Core.HotUpdate;
@@ -19,6 +17,8 @@ using Core.Reflection;
 using Core.Res;
 using Core.Scene;
 using Core.ScriptableObject;
+using Core.Serialize.Binary;
+using Core.Serialize.Json;
 using Core.Systems.Memorys;
 using Core.Time;
 using Core.UI;

@@ -1,5 +1,5 @@
 using System;
-using Core.DataPersistence.Binary;
+using Core.Serialize.Binary;
 using Core.Service;
 using Game.Data;
 using UnityEngine;

@@ -26,8 +26,7 @@ namespace GameHotUpdate.Battle.Object.Role.Wizard.Skill
         /// </summary>
         /// <param name="caster">技能释放者（战斗实体）</param>
         /// <param name="skillId">技能ID</param>
-        /// <param name="statusAddStrategy">状态添加策略（如附加buff/debuff）</param>
-        public WizardBattleSkill(IBattleEntityObject caster, int skillId, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, statusAddStrategy)
+        public WizardBattleSkill(IBattleEntityObject caster, int skillId) : base(caster, skillId)
         {
         }
 

@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
-using Core.DataPersistence.Binary;
 using Core.GlobalEvent;
 using Core.Log;
+using Core.Serialize.Binary;
 using Core.Service;
 using Core.Singleton;
 using Core.Utility;
-using Game.Manager;
 using Game.Tasks;
+using GameHotUpdate.Manager;
 
 namespace GameHotUpdate.Tasks
 {

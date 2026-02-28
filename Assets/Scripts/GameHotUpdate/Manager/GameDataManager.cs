@@ -1,14 +1,13 @@
 using System.Threading.Tasks;
-using Core.DataPersistence.Binary;
-using Core.DataPersistence.Json;
 using Core.Input.ActionAsset;
 using Core.Input.CoreListen;
 using Core.Log;
 using Core.Music;
+using Core.Serialize.Binary;
+using Core.Serialize.Json;
 using Core.Service;
 using Core.Utility;
 using Game.Activity;
-using Game.Manager;
 using Game.Tasks;
 using GameHotUpdate.Activity.Data;
 using GameHotUpdate.Config;
@@ -22,15 +21,24 @@ namespace GameHotUpdate.Manager
     /// </summary>
     public class GameDataManager : IGameDataManager
     {
+        private readonly IBinaryDataManager _binaryDataManager;
+        private readonly IJsonManager _jsonManager;
+        
         private readonly JsonSerializerSettings activitySettings = new()
         {
             TypeNameHandling = TypeNameHandling.All,
             Formatting = Formatting.Indented,
         };
+
+        public GameDataManager()
+        {
+            _binaryDataManager = ServiceLocator.Get<IBinaryDataManager>();
+            _jsonManager = ServiceLocator.Get<IJsonManager>();
+        }
         
         public async Task InitData()
         {
-            ServiceLocator.Get<IBinaryDataManager>().AddConfig(EConfigLoadType.Excel, async loader =>
+            _binaryDataManager.AddConfig(EConfigLoadType.Excel, async loader =>
             {
                 await loader.LoadConfigAsync<RoleInfoContainer, RoleInfo>();
                 await loader.LoadConfigAsync<MonsterInfoContainer, MonsterInfo>();
@@ -47,45 +55,43 @@ namespace GameHotUpdate.Manager
             });
             
             // 加载二进制配置
-            await ServiceLocator.Get<IBinaryDataManager>().LoadConfig(AbKeyCollection.Gameconfig);
+            await _binaryDataManager.LoadConfigAsync(AbKeyCollection.Gameconfig);
             LogManager.Log($"配置数据加载成功");
             
             // 读取本地音乐数据
-            MusicData = ServiceLocator.Get<IBinaryDataManager>().Load<MusicData>(FileUtility.LocalMusicDataFileName);
+            MusicData = await _binaryDataManager.LoadAsync<MusicData>(FileUtility.LocalMusicDataFileName);
             LogManager.Log($"本地音乐数据加载成功，{MusicData}");
             
             // 读取本地输入数据
-            InputActionContainer = ServiceLocator.Get<IBinaryDataManager>().Load<MainActionMapDataContainer>(FileUtility.LocalInputDataFileName);
+            InputActionContainer = await _binaryDataManager.LoadAsync<MainActionMapDataContainer>(FileUtility.LocalInputDataFileName);
             LogManager.Log($"本地输入数据加载成功，{InputActionContainer}");
             
             // 读取任务数据
-            TaskDataCollection = await ServiceLocator.Get<IJsonManager>().FromJsonAsync<TaskDataCollection>(PathUtility.GetUserDataLocalSavePath(FileUtility.LocalTaskDataFileName));
+            TaskDataCollection = await _jsonManager.FromJsonAsync<TaskDataCollection>(PathUtility.GetUserDataLocalSavePath(FileUtility.LocalTaskDataFileName));
             LogManager.Log($"任务数据加载成功，{TaskDataCollection}");
             
             // 活动数据
-            ActivityDataCollection = await ServiceLocator.Get<IJsonManager>()
-                .FromJsonAsync<ActivityDataCollection>(
-                    PathUtility.GetUserDataLocalSavePath(FileUtility.LocalActivityDataFileName),
+            ActivityDataCollection = await _jsonManager.FromJsonAsync<ActivityDataCollection>(PathUtility.GetUserDataLocalSavePath(FileUtility.LocalActivityDataFileName),
                     settings: activitySettings);
             LogManager.Log($"活动数据加载成功，{ActivityDataCollection}");
         }
 
-        public async Task SaveData()
+        public async Task SaveDataAsync()
         {
             // 保存任务数据
-            await ServiceLocator.Get<IJsonManager>().SaveToJsonAsync(TaskDataCollection, PathUtility.GetUserDataLocalSavePath(FileUtility.LocalTaskDataFileName));
+            await _jsonManager.SaveToJsonAsync(TaskDataCollection, PathUtility.GetUserDataLocalSavePath(FileUtility.LocalTaskDataFileName));
             LogManager.Log($"任务数据保存成功，{TaskDataCollection}");
             
             // 保存音乐数据
-            ServiceLocator.Get<IBinaryDataManager>().Save(FileUtility.LocalMusicDataFileName, MusicData);
+            await _binaryDataManager.SaveAsync(FileUtility.LocalMusicDataFileName, MusicData);
             LogManager.Log($"音乐数据保存成功，{MusicData}");
             
             // 保存输入数据
-            ServiceLocator.Get<IBinaryDataManager>().Save(FileUtility.LocalInputDataFileName, InputActionContainer);
+            await _binaryDataManager.SaveAsync(FileUtility.LocalInputDataFileName, InputActionContainer);
             LogManager.Log($"输入数据保存成功，{InputActionContainer}");
             
             // 活动数据
-            await ServiceLocator.Get<IJsonManager>().SaveToJsonAsync(ActivityDataCollection,
+            await _jsonManager.SaveToJsonAsync(ActivityDataCollection,
                 PathUtility.GetUserDataLocalSavePath(FileUtility.LocalActivityDataFileName),
                 settings: activitySettings);
             LogManager.Log($"活动数据保存成功，{ActivityDataCollection}");

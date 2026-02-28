@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Core.DataPersistence.Binary;
 using Core.Log;
+using Core.Serialize.Binary;
 using Core.Service;
 using Core.Singleton;
 using Game.Battle.Context;

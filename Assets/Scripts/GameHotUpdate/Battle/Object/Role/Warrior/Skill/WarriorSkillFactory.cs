@@ -4,6 +4,7 @@ using Game.Battle.Objects;
 using Game.Battle.Skill.Handler;
 using Game.Battle.Skill.Interface;
 using GameHotUpdate.Battle.Skill.Base;
+using GameHotUpdate.Battle.Skill.Factory;
 using GameHotUpdate.Battle.Skill.Handlers;
 
 namespace GameHotUpdate.Battle.Object.Role.Warrior.Skill
@@ -22,19 +23,19 @@ namespace GameHotUpdate.Battle.Object.Role.Warrior.Skill
                         GetFactory<ISkillCastPostHandlerFactory, SkillCastPostHandlerFactory>().
                         GetSkillCastPostHandler<BaseSkillCastPostHandler>();
                     
-                    return new SkillData(new WarriorNormalSkill(caster, skillId, null), handler);
+                    return new SkillData(new WarriorNormalSkill(caster, skillId), handler);
                 case 11:
                     handler = ServiceLocator.Get<IFactoryManager>().
                         GetFactory<ISkillCastPostHandlerFactory, SkillCastPostHandlerFactory>().
                         GetSkillCastPostHandler<BaseSkillCastPostHandler>();
                     
-                    return new SkillData(new WarriorBattleSkill(caster, skillId, null), handler);
+                    return new SkillData(new WarriorBattleSkill(caster, skillId), handler);
                 case 12:
                     handler = ServiceLocator.Get<IFactoryManager>().
                         GetFactory<ISkillCastPostHandlerFactory, SkillCastPostHandlerFactory>().
                         GetSkillCastPostHandler<BaseUltimateSkillCastPostHandler>();
                     
-                    return new SkillData(new WarriorUltimateSkill(caster, skillId, null), handler);
+                    return new SkillData(new WarriorUltimateSkill(caster, skillId), handler);
                 default:
                     return null;
             }

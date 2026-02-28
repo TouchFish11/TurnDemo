@@ -4,6 +4,7 @@ using Game.Battle.Objects;
 using Game.Battle.Skill.Handler;
 using Game.Battle.Skill.Interface;
 using GameHotUpdate.Battle.Skill.Base;
+using GameHotUpdate.Battle.Skill.Factory;
 using GameHotUpdate.Battle.Skill.Handlers;
 
 namespace GameHotUpdate.Battle.Object.Monster.Slime.Skill
@@ -23,8 +24,7 @@ namespace GameHotUpdate.Battle.Object.Monster.Slime.Skill
                         GetFactory<ISkillCastPostHandlerFactory, SkillCastPostHandlerFactory>().
                         GetSkillCastPostHandler<BaseSkillCastPostHandler>();
                     
-                    //var strategy = IFactory.GetTypeInstance<IStatusAddStrategyFactory, StatusAddStrategyFactory, TurtleShellSkillStatusStrategy>()
-                    return new SkillData(new SlimeSkill(caster, skillId, null), handler);
+                    return new SkillData(new SlimeSkill(caster, skillId), handler);
                 default:
                     return null;
             }

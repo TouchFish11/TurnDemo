@@ -1,14 +1,12 @@
-using System;
 using System.Collections.Generic;
 using Core.Components;
 using Core.Log;
 using Core.Types;
 using Core.Utility;
-using Game.Components;
 using GameHotUpdate.Components;
 using UnityEngine;
 
-namespace Game.Objects
+namespace GameHotUpdate.Object
 {
     /// <summary>
     /// 实体对象抽象基类

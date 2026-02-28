@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Collection;
 using Core.AssetBundles.Update.Enum;
-using Core.DataPersistence.Json;
 using Core.Pool;
+using Core.Serialize.Json;
 using Core.Service;
 
 namespace Core.AssetBundles.Update.State

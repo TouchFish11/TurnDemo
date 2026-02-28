@@ -2,7 +2,7 @@ using Core.AssetBundles.Update.Collection;
 using Core.Collection;
 using Core.Log;
 using Core.Service;
-using Game.Manager;
+using GameHotUpdate.Manager;
 
 namespace GameHotUpdate.Tasks
 {

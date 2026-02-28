@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using System.Reflection;
 using Core.AssetBundles.Management;
-using Core.AssetBundles.Update;
 using Core.HotUpdate;
 using Core.Log;
 using Core.Quit;
@@ -160,7 +159,7 @@ namespace GameHotUpdate.Main
                 Process.Start(startInfo);
                 Application.Quit();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Application.Quit(); // 至少退出
             }

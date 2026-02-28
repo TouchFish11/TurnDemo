@@ -1,7 +1,7 @@
 using Core.Components;
 using UnityEngine;
 
-namespace Game.Components
+namespace GameHotUpdate.Components
 {
     /// <summary>
     /// 所有实体组件的基类，定义组件的核心生命周期与实体关联逻辑

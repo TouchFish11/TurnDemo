@@ -4,9 +4,9 @@ using Core.Components;
 using Core.Service;
 using Core.Singleton;
 using Game.Main;
-using Game.Objects;
 using GameHotUpdate.Battle.Object.Role.Warrior;
 using GameHotUpdate.Config;
+using GameHotUpdate.Object;
 using UnityEngine;
 
 namespace GameHotUpdate.Main
@@ -68,7 +68,7 @@ namespace GameHotUpdate.Main
             foreach (var entity in uidToEntityMap.Values)
             {
                 entity.Destroy(); // 执行实体内部销毁逻辑
-                Object.Destroy(entity.GameObject); // 销毁GameObject对象
+                UnityEngine.Object.Destroy(entity.GameObject); // 销毁GameObject对象
             }
 
             // 清空字典，释放引用

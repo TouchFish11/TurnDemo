@@ -26,7 +26,7 @@ namespace GameHotUpdate.Battle.Object.Role.Priest.Skill
         private const string Priest_Ultimate_01 = nameof(Priest_Ultimate_01);
         private const string Priest_Ultimate_02 = nameof(Priest_Ultimate_02);
         
-        public PriestUltimateSkill(IBattleEntityObject caster, int skillId, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, statusAddStrategy)
+        public PriestUltimateSkill(IBattleEntityObject caster, int skillId) : base(caster, skillId)
         {
         }
 

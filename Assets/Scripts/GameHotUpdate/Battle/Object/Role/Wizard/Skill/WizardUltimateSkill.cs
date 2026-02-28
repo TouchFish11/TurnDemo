@@ -26,8 +26,7 @@ namespace GameHotUpdate.Battle.Object.Role.Wizard.Skill
         /// </summary>
         /// <param name="caster">释放技能的实体（黑塔）</param>
         /// <param name="skillId">技能ID</param>
-        /// <param name="statusAddStrategy">状态添加策略</param>
-        public WizardUltimateSkill(IBattleEntityObject caster, int skillId, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, statusAddStrategy)
+        public WizardUltimateSkill(IBattleEntityObject caster, int skillId) : base(caster, skillId)
         {
         }
 

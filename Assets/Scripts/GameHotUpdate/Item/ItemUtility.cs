@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Core.DataPersistence.Binary;
 using Core.Loader.Sprite;
 using Core.Loader.UI;
 using Core.Log;
+using Core.Serialize.Binary;
 using Core.Service;
 using Core.Utility;
 using GameHotUpdate.Config;

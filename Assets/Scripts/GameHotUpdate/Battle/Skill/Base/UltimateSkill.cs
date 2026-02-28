@@ -30,8 +30,7 @@ namespace GameHotUpdate.Battle.Skill.Base
         /// </summary>
         /// <param name="caster">技能释放者（战斗实体）</param>
         /// <param name="skillId">技能ID</param>
-        /// <param name="statusAddStrategy">状态添加策略（用于处理技能附加状态）</param>
-        protected UltimateSkill(IBattleEntityObject caster, int skillId, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, statusAddStrategy)
+        protected UltimateSkill(IBattleEntityObject caster, int skillId) : base(caster, skillId)
         {
             // 从释放者身上获取技能组件，用于后续判断释放状态
             skillComponent = Caster.GetComponent<PlayerSkillComponent>();

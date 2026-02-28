@@ -31,11 +31,6 @@ namespace Core.AssetBundles.Update.Handler
                 {
                     _fileStream.Seek(downloadedBytes, SeekOrigin.Begin);
                 }
-                else
-                {
-                    // 如果断点无效，自动调整
-                    _fileStream.Seek(0, SeekOrigin.End);
-                }   
             }
             else
             {
@@ -94,7 +89,7 @@ namespace Core.AssetBundles.Update.Handler
                 return;
             }
             
-            _fileStream.Flush();
+            _fileStream.Flush(true);
             _fileStream.Close();
             _fileStream.Dispose();
             _fileStream = null;

@@ -3,8 +3,8 @@ using System.IO;
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Collection;
 using Core.AssetBundles.Update.Enum;
-using Core.DataPersistence.Json;
 using Core.Log;
+using Core.Serialize.Json;
 using Core.Service;
 using Core.Utility;
 
@@ -127,20 +127,6 @@ namespace Core.AssetBundles.Update.State
                 if (cachePackageCollection[waitPair.Key].IsSuccess)
                 {
                     waitRemoveABFileList.Add(waitPair.Key);
-                }
-                // 多下载了，重新下载该包
-                else if(cachePackageCollection[waitPair.Key].DownloadedBytes > remoteCollection[waitPair.Key].Size)
-                {
-                    LogManager.Log($"{waitPair.Key}资源缓存异常，文件大小：{cachePackageCollection[waitPair.Key].DownloadedBytes}" +
-                                   $"大于实际大小：{remoteCollection[waitPair.Key].Size}，需要重新下载");
-                    
-                    // TODO：暂时写在这里
-                    // 需要删除文件
-                    if (File.Exists(PathUtility.GetAbLoadPath(waitPair.Key)))
-                    {
-                        File.Delete(PathUtility.GetAbLoadPath(waitPair.Key));
-                    }
-                    cachePackageCollection[waitPair.Key].DownloadedBytes = 0;
                 }
                 // 缓存中该包未下载完成，继承已下载的字节数（断点续传）
                 else

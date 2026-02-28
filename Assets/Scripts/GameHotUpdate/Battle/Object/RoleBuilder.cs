@@ -1,11 +1,11 @@
 using System.Threading.Tasks;
 using Core.Service;
 using Game.Battle.Objects;
-using Game.Objects;
 using GameHotUpdate.Battle.Object.Role.Priest;
 using GameHotUpdate.Battle.Object.Role.Warrior;
 using GameHotUpdate.Battle.Object.Role.Wizard;
 using GameHotUpdate.Config;
+using GameHotUpdate.Object;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Object

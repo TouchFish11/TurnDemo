@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.Service;
 using Game.Battle.Objects;
-using Game.Objects;
 using GameHotUpdate.Animation;
 using GameHotUpdate.Cameras;
 using GameHotUpdate.Config;
@@ -10,6 +9,7 @@ using GameHotUpdate.Dialogue;
 using GameHotUpdate.Input;
 using GameHotUpdate.Interact;
 using GameHotUpdate.Move;
+using GameHotUpdate.Object;
 
 namespace GameHotUpdate.Main
 {

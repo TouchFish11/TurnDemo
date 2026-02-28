@@ -1,7 +1,10 @@
 using System;
 using System.IO;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Enum;
+using Core.Log;
 using Core.Utility;
 
 namespace Core.AssetBundles.Update.State
@@ -83,12 +86,15 @@ namespace Core.AssetBundles.Update.State
 
                 await Task.Yield(); // 帧间等待，避免阻塞主线程
 
+                var hash = await GenerateFileSHA256Hash(PathUtility.GetAbLoadPath(cachePair.Value.AbName));
+                var hashSame = remoteCollection[cachePair.Key].Hash == hash;
                 // 校验条件：已下载字节数 == 远程包大小 且 Hash一致
-                if (remoteCollection[cachePair.Key].Size == cachePair.Value.DownloadedBytes &&
-                    remoteCollection[cachePair.Key].Hash == cachePair.Value.Hash)
+                if (remoteCollection[cachePair.Key].Size == cachePair.Value.DownloadedBytes && hashSame)
                 {
                     continue;
                 }
+
+                LogManager.LogError($"{remoteCollection[cachePair.Key].Name}待修复" + $"下载后的hash与实际hash相等：{hashSame}");
 
                 // 校验失败，标记为不完整资源
                 context.AddABNameToIncomplete(cachePair.Key);
@@ -99,6 +105,28 @@ namespace Core.AssetBundles.Update.State
             {
                 throw new System.Exception($"资源不完整，AB包数量：{context.IncompleteListCount}");
             }
+        }
+        
+        /// <summary>
+        /// 计算文件内容的 SHA256 哈希值
+        /// </summary>
+        /// <param name="filePath">文件路径</param>
+        /// <returns>SHA256 哈希值的十六进制字符串</returns>
+        private static async Task<string> GenerateFileSHA256Hash(string filePath)
+        {
+            return await Task.Run(() =>
+            {
+                StringBuilder sb = new();
+                using var sha256 = SHA256.Create();
+                using var fileStream = File.OpenRead(filePath);
+                var hashBytes = sha256.ComputeHash(fileStream);
+            
+                foreach (var b in hashBytes)
+                {
+                    sb.Append(b.ToString("x2"));
+                }
+                return sb.ToString();
+            });
         }
 
         /// <summary>

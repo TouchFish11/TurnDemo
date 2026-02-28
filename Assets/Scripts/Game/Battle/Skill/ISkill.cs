@@ -37,11 +37,6 @@ namespace Game.Battle.Skill
         /// �������
         /// </summary>
         IPropertyComponent PropertyComponent { get; }
-
-        /// <summary>
-        /// ״̬���Ӳ���
-        /// </summary>
-        IStatusAddStrategy StatusAddStrategy { get; }
         
         /// <summary>
         /// Ŀ��ѡ�����

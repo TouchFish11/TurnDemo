@@ -1,6 +1,6 @@
 using Core.UI.MVC;
 
-namespace GameHotUpdate.Tip
+namespace GameHotUpdate.Tip.UI
 {
     /// <summary>
     /// 提示界面基类

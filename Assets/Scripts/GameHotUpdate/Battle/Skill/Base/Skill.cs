@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Core.DataPersistence.Binary;
+using Core.Serialize.Binary;
 using Core.Service;
 using Core.Utility;
 using Game.Battle.Context;
@@ -66,11 +66,6 @@ namespace GameHotUpdate.Battle.Skill.Base
         public ISkillCastPostHandler SkillCastPostHandler { get; private set; }
 
         /// <summary>
-        /// 状态添加策略（定义如何给目标添加Buff/DeBuff等状态）
-        /// </summary>
-        public IStatusAddStrategy StatusAddStrategy { get; private set; }
-
-        /// <summary>
         /// 目标选择策略（定义技能如何选择作用目标）
         /// </summary>
         public ITargetSelectStrategy TargetSelectStrategy { get; private set; }
@@ -80,8 +75,7 @@ namespace GameHotUpdate.Battle.Skill.Base
         /// </summary>
         /// <param name="caster">技能释放者</param>
         /// <param name="skillId">技能ID（用于从配置表加载技能信息）</param>
-        /// <param name="statusAddStrategy">状态添加策略实例</param>
-        protected Skill(IBattleEntityObject caster, int skillId, IStatusAddStrategy statusAddStrategy)
+        protected Skill(IBattleEntityObject caster, int skillId)
         {
             // 初始化释放者
             Caster = caster;
@@ -89,8 +83,6 @@ namespace GameHotUpdate.Battle.Skill.Base
             SkillInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<SkillInfoContainer>(EConfigLoadType.Excel).dataDic[skillId];
             // 解析技能配置中的状态ID（分割字符串为int数组，分隔符为2？注：此处需确认分割规则，2为自定义分隔符标识）
             statusIds = TextUtility.SplitToIntArr(SkillInfo.f_statusId, 2);
-            // 初始化状态添加策略
-            StatusAddStrategy = statusAddStrategy;
             // 获取释放者的属性组件
             PropertyComponent = Caster.GetComponent<PropertyComponent>();
         }

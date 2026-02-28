@@ -104,10 +104,7 @@ namespace Core.AssetBundles.Management
             {
                 _assetBundleManager.PushUnUseBundle(this);
             }
-            else
-            {
-                LogManager.Log($"{BundelName}包，引用计数减少，更新为：{RefCount}");
-            }
+            LogManager.Log($"{BundelName}包，引用计数减少，更新为：{RefCount}");
         }
 
         /// <summary>

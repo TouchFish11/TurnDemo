@@ -5,9 +5,9 @@ using Core.Service;
 using Core.Singleton;
 using Game.FloatingText;
 using Game.Main;
-using Game.Objects;
 using GameHotUpdate.Battle.Object;
 using GameHotUpdate.Config;
+using GameHotUpdate.Object;
 using UnityEngine;
 
 namespace GameHotUpdate.FloatingText

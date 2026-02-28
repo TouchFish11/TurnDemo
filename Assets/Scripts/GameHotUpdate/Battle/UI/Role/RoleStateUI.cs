@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using Core.DataPersistence.Binary;
 using Core.Loader.UI;
 using Core.Mono;
 using Core.Pool;
+using Core.Serialize.Binary;
 using Core.Service;
 using Core.UI;
 using Game.Battle.Context;

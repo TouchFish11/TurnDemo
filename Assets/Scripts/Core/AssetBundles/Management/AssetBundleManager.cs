@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Collection;
-using Core.DataPersistence.Json;
 using Core.Log;
+using Core.Serialize.Json;
 using Core.Service;
 using Core.Singleton;
 using Core.Systems.Memorys;
@@ -185,13 +185,17 @@ namespace Core.AssetBundles.Management
             
             foreach (var bundleWrapper in _nameToWrapperMap.Values)
             {
-                if (bundleWrapper.RefCount == 0)
+                await bundleWrapper.TryUnloadAsync(unloadAllObjects);
+                if (unloadAllObjects)
                 {
-                    await bundleWrapper.TryUnloadAsync(false);
+                    if (bundleWrapper.RefCount != 0)
+                    {
+                        LogManager.LogWarning($"{bundleWrapper.BundelName}包和已加载资源已卸载，剩余引用计数：{bundleWrapper.RefCount}，可能导致引用丢失");
+                    }
                 }
                 else
                 {
-                    LogManager.LogWarning($"{bundleWrapper.BundelName}包，剩余引用计数：{bundleWrapper.RefCount}，无法卸载");
+                    LogManager.Log($"{bundleWrapper.BundelName}包已卸载，剩余引用计数：{bundleWrapper.RefCount}");
                 }
             }
             

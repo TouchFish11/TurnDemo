@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Core.DataPersistence.Binary;
 using Core.Reflection;
+using Core.Serialize.Binary;
 using Core.Service;
 using Core.Utility;
 using Game.Animation;

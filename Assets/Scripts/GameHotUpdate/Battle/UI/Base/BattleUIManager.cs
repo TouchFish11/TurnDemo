@@ -18,6 +18,7 @@ using GameHotUpdate.Battle.Event.Turn;
 using GameHotUpdate.Battle.Object;
 using GameHotUpdate.Battle.UI.ActionLine;
 using GameHotUpdate.Battle.UI.FloatText;
+using GameHotUpdate.Battle.UI.SkillKey.Provider;
 using GameHotUpdate.Battle.UI.Status;
 using GameHotUpdate.Cameras;
 using GameHotUpdate.Config;

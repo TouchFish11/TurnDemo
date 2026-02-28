@@ -1,12 +1,12 @@
 using Core.Components;
-using Core.DataPersistence.Binary;
+using Core.Serialize.Binary;
 using Core.Service;
 using Game.Animation;
 using Game.Battle.Objects;
 using Game.Battle.Skill.Enum;
-using Game.Components;
 using GameHotUpdate.Battle.Event.UI;
 using GameHotUpdate.Battle.Object;
+using GameHotUpdate.Components;
 
 namespace GameHotUpdate.Animation
 {

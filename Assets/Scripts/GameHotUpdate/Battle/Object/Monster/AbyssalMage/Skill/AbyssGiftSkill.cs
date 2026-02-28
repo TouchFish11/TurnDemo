@@ -27,7 +27,7 @@ namespace GameHotUpdate.Battle.Object.Monster.AbyssalMage.Skill
         /// </summary>
         public static string Attack01 => "Attack01";
         
-        public AbyssGiftSkill(IBattleEntityObject caster, int skillId, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, statusAddStrategy)
+        public AbyssGiftSkill(IBattleEntityObject caster, int skillId) : base(caster, skillId)
         {
         }
 

@@ -1,11 +1,11 @@
 using System;
 using System.Collections;
 using System.Text;
-using Core.DataPersistence.Binary;
 using Core.Global;
 using Core.GlobalEvent;
 using Core.Mono;
 using Core.Pool;
+using Core.Serialize.Binary;
 using Core.Service;
 using Core.Singleton;
 using Core.UI;

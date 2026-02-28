@@ -1,7 +1,7 @@
 using Core.Components;
 using Core.Log;
 using Game.Animation;
-using Game.Components;
+using GameHotUpdate.Components;
 using UnityEngine;
 
 namespace GameHotUpdate.Animation

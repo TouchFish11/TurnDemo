@@ -3,10 +3,10 @@ using Game.Battle.Context;
 using Game.Battle.Damage;
 using Game.Battle.Enum;
 using Game.Battle.Objects;
-using Game.Objects;
 using GameHotUpdate.Battle.Event.General;
 using GameHotUpdate.Battle.Property;
 using GameHotUpdate.Battle.ResponsibilityChain;
+using GameHotUpdate.Object;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Object

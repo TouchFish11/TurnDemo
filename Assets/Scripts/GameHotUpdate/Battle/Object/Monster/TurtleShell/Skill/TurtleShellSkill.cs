@@ -26,7 +26,7 @@ namespace GameHotUpdate.Battle.Object.Monster.TurtleShell.Skill
         /// </summary>
         public static string Attack => "Attack";
 
-        public TurtleShellSkill(IBattleEntityObject caster, int skillId, IStatusAddStrategy statusAddStrategy) : base(caster, skillId, statusAddStrategy)
+        public TurtleShellSkill(IBattleEntityObject caster, int skillId) : base(caster, skillId)
         {
             Caster.GetComponentInChildren<AnimationTrigger>().OnAttack += OnAttack;
         }

@@ -59,8 +59,7 @@ namespace Core.Loader.UI
                 return;
             }
             
-            --_nameToUiRef[assetName];
-            if (_nameToUiRef[assetName] != 0)
+            if (--_nameToUiRef[assetName] != 0)
             {
                 return;
             }

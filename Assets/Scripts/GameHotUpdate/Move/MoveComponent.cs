@@ -1,7 +1,7 @@
 using Core.Components;
 using Game.Battle.Camera;
-using Game.Components;
 using GameHotUpdate.Cameras;
+using GameHotUpdate.Components;
 using GameHotUpdate.Input;
 using UnityEngine;
 

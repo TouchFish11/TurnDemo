@@ -34,7 +34,7 @@ namespace GameHotUpdate.Update.UI
         {
             _assetBundleUpdater.Init();
             RegisterUpdateEvent();
-            ResetData();
+            ResetState();
             return Task.CompletedTask;
         }
 
@@ -71,9 +71,9 @@ namespace GameHotUpdate.Update.UI
         }
 
         /// <summary>
-        /// 重置数据
+        /// 重置状态
         /// </summary>
-        private void ResetData()
+        private void ResetState()
         {
             OnUpdatePhase(EUpdatePhase.None);
             view.SetStopButtonActive(false);
@@ -182,12 +182,12 @@ namespace GameHotUpdate.Update.UI
                 controller.SetTipActive(true, "点击确认后将重新下载");
                 controller.OnSure += () =>
                 {
-                    ResetData();
+                    uiManager.DestroyView(AbKeyCollection.Default, controller);
                     
+                    ResetState();
                     _assetBundleUpdater.Init();
                     RegisterUpdateEvent();
                     _assetBundleUpdater.CheckUpdate();
-                    uiManager.DestroyView(AbKeyCollection.Default, controller);
                 };
             }
         }

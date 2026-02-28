@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
 using Core.Service;
-using Game.Objects;
 using GameHotUpdate.Battle.Object.Monster.AbyssalMage;
 using GameHotUpdate.Battle.Object.Monster.Slime;
 using GameHotUpdate.Battle.Object.Monster.TurtleShell;
 using GameHotUpdate.Config;
+using GameHotUpdate.Object;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Object

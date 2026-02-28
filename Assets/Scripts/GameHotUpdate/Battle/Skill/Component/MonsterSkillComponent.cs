@@ -6,6 +6,7 @@ using Game.Battle.Skill.Component;
 using Game.Battle.Skill.Condition;
 using Game.Battle.TargetSelect;
 using GameHotUpdate.Battle.Skill.Conditions;
+using GameHotUpdate.Battle.Skill.Factory;
 using GameHotUpdate.Battle.TargetSelect.Strategys;
 
 namespace GameHotUpdate.Battle.Skill.Component
