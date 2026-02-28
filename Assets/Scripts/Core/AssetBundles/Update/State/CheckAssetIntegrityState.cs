@@ -29,6 +29,7 @@ namespace Core.AssetBundles.Update.State
         public override void Enter()
         {
             _abBrokenInfos.Clear();
+            base.Enter();
         }
 
         /// <summary>
@@ -93,13 +94,11 @@ namespace Core.AssetBundles.Update.State
                 var hash = await HashUtility.GenerateFileSHA256HashAsync(PathUtility.GetAbLoadPath(cachePair.Value.AbName));
                 var hashSame = remoteCollection[cachePair.Key].Hash == hash;
                 // 校验条件：已下载字节数 == 远程包大小 且 Hash一致
-                if (remoteCollection[cachePair.Key].Size == cachePair.Value.DownloadedBytes && hashSame)
+                if (remoteCollection[cachePair.Key].Size != cachePair.Value.DownloadedBytes || !hashSame)
                 {
-                    continue;
+                    // 校验失败，标记为损坏包
+                    AddBrokenInfo(cachePair.Key,  cachePair.Value.DownloadedBytes, hashSame);
                 }
-                
-                // 校验失败，标记为损坏包
-                AddBrokenInfo(cachePair.Key,  cachePair.Value.DownloadedBytes, hashSame);
                 
                 // 触发校验进度回调
                 ++currentProgress;
