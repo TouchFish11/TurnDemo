@@ -1,7 +1,5 @@
 using System;
 using System.Collections;
-using System.Diagnostics;
-using System.IO;
 using System.Threading;
 using Core.AssetBundles.Update.Handler;
 using Core.Global;
@@ -77,13 +75,6 @@ namespace Core.AssetBundles.Update
                 _request = UnityWebRequest.Get($"{Url}{FileName}");
                 // 设置连接超时时间
                 _request.timeout = GlobalSettings.Instance.connectTimeout;
-                // 断点续传预处理：如果本地已存在文件，读取文件大小作为已下载字节数
-                if (File.Exists(savePath))
-                {
-                    var fileInfo = new FileInfo(savePath);
-                    LogManager.Log($"文件：{AbName}，缓存大小与记录大小相等：{DownloadedBytes == fileInfo.Length}");
-                }
-                
                 // 设置自定义流下载处理器
                 _request.downloadHandler = new DownloadHandlerStream(savePath, IsAppend, DownloadedBytes);
                 // 设置请求头：Range指定从已下载字节数的位置开始下载

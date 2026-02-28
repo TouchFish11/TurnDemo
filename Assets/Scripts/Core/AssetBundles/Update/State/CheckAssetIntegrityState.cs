@@ -1,7 +1,5 @@
 using System;
 using System.IO;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Enum;
 using Core.Log;
@@ -32,8 +30,6 @@ namespace Core.AssetBundles.Update.State
         {
             try
             {
-                await Task.Delay(1000);
-                
                 // 执行完整性校验，传入进度回调
                 await CheckAssetsIntegrity((cureent, total) => assetBundleUpdater.GetContext().UpdateCheckProgress(cureent, total));
                 
@@ -80,13 +76,7 @@ namespace Core.AssetBundles.Update.State
             // 遍历所有缓存包，校验完整性
             foreach (var cachePair in cacheCollection)
             {
-                currentProgress++;
-                // 触发校验进度回调
-                onCheckProgress?.Invoke(currentProgress, cacheCollection.Count);
-
-                await Task.Yield(); // 帧间等待，避免阻塞主线程
-
-                var hash = await GenerateFileSHA256Hash(PathUtility.GetAbLoadPath(cachePair.Value.AbName));
+                var hash = await HashUtility.GenerateFileSHA256HashAsync(PathUtility.GetAbLoadPath(cachePair.Value.AbName));
                 var hashSame = remoteCollection[cachePair.Key].Hash == hash;
                 // 校验条件：已下载字节数 == 远程包大小 且 Hash一致
                 if (remoteCollection[cachePair.Key].Size == cachePair.Value.DownloadedBytes && hashSame)
@@ -94,10 +84,14 @@ namespace Core.AssetBundles.Update.State
                     continue;
                 }
 
-                LogManager.LogError($"{remoteCollection[cachePair.Key].Name}待修复" + $"下载后的hash与实际hash相等：{hashSame}");
+                LogManager.LogError($"{remoteCollection[cachePair.Key].Name}异常，下载后的hash与实际hash相等：{hashSame}");
 
                 // 校验失败，标记为不完整资源
                 context.AddABNameToIncomplete(cachePair.Key);
+                
+                ++currentProgress;
+                // 触发校验进度回调
+                onCheckProgress?.Invoke(currentProgress, cacheCollection.Count);
             }
 
             // 最终校验结果：不完整资源列表为空则通过
@@ -107,28 +101,6 @@ namespace Core.AssetBundles.Update.State
             }
         }
         
-        /// <summary>
-        /// 计算文件内容的 SHA256 哈希值
-        /// </summary>
-        /// <param name="filePath">文件路径</param>
-        /// <returns>SHA256 哈希值的十六进制字符串</returns>
-        private static async Task<string> GenerateFileSHA256Hash(string filePath)
-        {
-            return await Task.Run(() =>
-            {
-                StringBuilder sb = new();
-                using var sha256 = SHA256.Create();
-                using var fileStream = File.OpenRead(filePath);
-                var hashBytes = sha256.ComputeHash(fileStream);
-            
-                foreach (var b in hashBytes)
-                {
-                    sb.Append(b.ToString("x2"));
-                }
-                return sb.ToString();
-            });
-        }
-
         /// <summary>
         /// 当前更新阶段标识
         /// </summary>

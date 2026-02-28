@@ -929,7 +929,7 @@ namespace Editor.AssetBundle
                     }
                     
                     // 创建单个资源信息
-                    var assetInfo = new AssetBundlesCollections.AssetInfo(dataPath, fileInfo.Length, fileInfo.Name, GenerateFileSHA256Hash(fileInfo.FullName));
+                    var assetInfo = new AssetBundlesCollections.AssetInfo(dataPath, fileInfo.Length, fileInfo.Name, HashUtility.GenerateFileSHA256Hash(fileInfo.FullName));
                     // 将资源信息添加到配置文件
                     _assetsColletion_Temp.Add(abName.ToLower(), assetInfo);
                 }
@@ -1051,7 +1051,7 @@ namespace Editor.AssetBundle
                         // 获取依赖包
                         var dependencies = manifest.GetAllDependencies(abInfo.Name.Substring(0, abInfo.Name.LastIndexOf('.')));
                         // 创建AB包信息对象（名称、大小、Hash）
-                        var packageInfo = new ABPackageInfo(abInfo.Name, abInfo.Length, GenerateFileSHA256Hash(abInfo.FullName), dependencies);
+                        var packageInfo = new ABPackageInfo(abInfo.Name, abInfo.Length, HashUtility.GenerateFileSHA256Hash(abInfo.FullName), dependencies);
                         collection.TryAdd(abInfo.Name, packageInfo);
                     }
                 }
@@ -1769,25 +1769,6 @@ namespace Editor.AssetBundle
             _buildLog += $"{message}\n";
             // 自动滚动到底部
             _scrollPos.y = float.MaxValue;
-        }
-        
-        /// <summary>
-        /// 计算文件内容的 SHA256 哈希值
-        /// </summary>
-        /// <param name="filePath">文件路径</param>
-        /// <returns>SHA256 哈希值的十六进制字符串</returns>
-        public string GenerateFileSHA256Hash(string filePath)
-        {
-            using var sha256 = SHA256.Create();
-            using var fileStream = File.OpenRead(filePath);
-            var hashBytes = sha256.ComputeHash(fileStream);
-
-            var sb = new StringBuilder();
-            foreach (var b in hashBytes)
-            {
-                sb.Append(b.ToString("x2"));
-            }
-            return sb.ToString();
         }
     }
 }

@@ -1,7 +1,6 @@
 using System;
 using Newtonsoft.Json;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Core.AssetBundles.Update.Collection
 {

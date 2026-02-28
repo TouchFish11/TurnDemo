@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Core.AssetBundles.Update.Enum;
 
 namespace Core.AssetBundles.Update

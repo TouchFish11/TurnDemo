@@ -3,7 +3,6 @@ using System.IO;
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Collection;
 using Core.AssetBundles.Update.Enum;
-using Core.Log;
 using Core.Serialize.Json;
 using Core.Service;
 using Core.Utility;
@@ -11,7 +10,7 @@ using Core.Utility;
 namespace Core.AssetBundles.Update.State
 {
     /// <summary>
-    /// 对比校验状态类
+    /// 对比差异状态类
     /// 负责对比本地与远程AssetBundle包信息，确定需要下载/删除的资源，同时处理缓存文件校验
     /// </summary>
     public class CompareContrastState : UpdateState
@@ -32,14 +31,12 @@ namespace Core.AssetBundles.Update.State
         {
             try
             {
-                await Task.Delay(1000);
-                
                 // 执行对比校验逻辑
                 await CompareContrastFileInfo();
             }
             catch (System.Exception exception)
             {
-                return UpdateResult.CreateFailure("资源对比校验失败", exception);
+                return UpdateResult.CreateFailure("资源对比差异失败", exception);
             }
             
             return UpdateResult.CreateSuccess();
@@ -140,16 +137,6 @@ namespace Core.AssetBundles.Update.State
             {
                 waitDownloadCollection.Remove(abFileName);
             }
-            
-            // 若本地存在待下载的包，需要删除、
-            // foreach (var abKey in waitDownloadCollection.Keys)
-            // {
-            //     if (File.Exists(PathUtility.GetAbLoadPath(abKey)))
-            //     {
-            //         File.Delete(PathUtility.GetAbLoadPath(abKey));
-            //         LogManager.Log($"本地包：{abKey}，已被删除，将重新下载");
-            //     }
-            // }
         }
 
         /// <summary>

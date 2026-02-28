@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using Core.Collection;
-using Core.Log;
 using Core.Utility;
 using UnityEngine;
 
