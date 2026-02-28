@@ -36,7 +36,7 @@ namespace Core.AssetBundles.Update.State
             }
             catch (System.Exception exception)
             {
-                return UpdateResult.CreateFailure("资源对比差异失败", exception);
+                return UpdateResult.CreateFailure(UpdateResult.EUpdateError.AnalyzeAssetBundle, exception);
             }
             
             return UpdateResult.CreateSuccess();

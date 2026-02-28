@@ -7,6 +7,10 @@ namespace Core.AssetBundles.Update.Enum
     {
         None,
         /// <summary>
+        /// 检查设备存储
+        /// </summary>
+        CheckDeviceStorage,
+        /// <summary>
         /// 下载远端清单文件
         /// </summary>
         DownLoadRemoteListFile,

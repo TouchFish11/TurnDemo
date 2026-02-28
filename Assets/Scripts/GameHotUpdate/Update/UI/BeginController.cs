@@ -178,7 +178,9 @@ namespace GameHotUpdate.Update.UI
                 // 更新失败
                 var controller = await uiManager.CreateViewAsync<UpdateTipView, UpdateTipModel, UpdateTipController>(AbKeyCollection.Default, E_UILayer.Mid, ResKeyCollection.UpdateTipView);
                 // 设置消息
-                controller.SetUpdateMessage(updateResult.ErrorMessage);
+                controller.SetUpdateMessage(GetErrorMessage(updateResult.UpdateError));
+                
+                // 暂时这样处理，可根据枚举类型决定如何处理按钮点击逻辑
                 controller.SetTipActive(true, "点击确认后将重新下载");
                 controller.OnSure += () =>
                 {
@@ -190,6 +192,39 @@ namespace GameHotUpdate.Update.UI
                     _assetBundleUpdater.CheckUpdate();
                 };
             }
+        }
+
+        /// <summary>
+        /// 获取错误消息
+        /// </summary>
+        /// <param name="updateError"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        private static string GetErrorMessage(UpdateResult.EUpdateError updateError)
+        {
+            return updateError switch
+            {
+                UpdateResult.EUpdateError.DownloadFailure => "下载错误",
+                UpdateResult.EUpdateError.AssetBunleBroken => "资源异常",
+                UpdateResult.EUpdateError.LocalListFile => "读取资源文件异常",
+                UpdateResult.EUpdateError.AnalyzeAssetBundle => "分析资源差异异常",
+                UpdateResult.EUpdateError.DriveStorage => "设备空间不足，请清理后重试",
+                UpdateResult.EUpdateError.AssetBunleIncomplete => "资源下载不完整",
+                UpdateResult.EUpdateError.Unknown => "未知错误",
+                UpdateResult.EUpdateError.None or _ => string.Empty
+            };
+        }
+        
+        
+        private async void EnterMain()
+        {
+            // 销毁界面
+            uiManager.DestroyView(AbKeyCollection.Default, this);
+            // 清空UI管理器
+            uiManager.Clear(AbKeyCollection.Default);
+            
+            await OnClickEnterGame?.Invoke();
+            OnClickEnterGame = null;
         }
         
         protected override async void ButtonOnClick(string btnName)
@@ -208,17 +243,6 @@ namespace GameHotUpdate.Update.UI
         {
             UnRegisterUpdateEvent();
             base.Destroy();
-        }
-
-        private async void EnterMain()
-        {
-            // 销毁界面
-            uiManager.DestroyView(AbKeyCollection.Default, this);
-            // 清空UI管理器
-            uiManager.Clear(AbKeyCollection.Default);
-            
-            await OnClickEnterGame?.Invoke();
-            OnClickEnterGame = null;
         }
     }
 }

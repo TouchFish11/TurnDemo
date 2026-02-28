@@ -5,6 +5,7 @@ using Core.AssetBundles.Update.Enum;
 using Core.AssetBundles.Update.Exception;
 using Core.Global;
 using Core.Mono;
+using Core.Pool;
 using Core.Service;
 using Core.Utility;
 using UnityEngine;
@@ -26,7 +27,6 @@ namespace Core.AssetBundles.Update.State
         /// <param name="updater">AssetBundle更新器实例</param>
         public DownloadListFileState(AssetBundleUpdater updater) : base(updater)
         {
-
         }
 
         /// <summary>
@@ -37,25 +37,22 @@ namespace Core.AssetBundles.Update.State
         {
             try
             {
-                await Task.Delay(1000);
-                
                 // 下载远程清单文件
                 await DownloadCompareFile();
-
                 // 解析远程清单文件内容
                 await AnalyzeRemoteCompareFileInfo();
             }
             catch (DownloadFailureException downloadFailureException)
             {
-                return UpdateResult.CreateFailure("资源文件下载失败", downloadFailureException);
+                return UpdateResult.CreateFailure(UpdateResult.EUpdateError.DownloadFailure, downloadFailureException);
             }
             catch (FileNotFoundException fileNotFoundException)
             {
-                return UpdateResult.CreateFailure("资源文件不存在", fileNotFoundException);
+                return UpdateResult.CreateFailure(UpdateResult.EUpdateError.LocalListFile, fileNotFoundException);
             }
             catch (System.Exception exception)
             {
-                return UpdateResult.CreateFailure("更新失败，请重试",exception);
+                return UpdateResult.CreateFailure(UpdateResult.EUpdateError.Unknown, exception);
             }
             
             return UpdateResult.CreateSuccess();
@@ -83,17 +80,20 @@ namespace Core.AssetBundles.Update.State
                 var isSuceess = await source.Task;
 
                 // 下载成功，终止重试
-                if (isSuceess)
+                if (!isSuceess)
                 {
-                    ServiceLocator.Get<IMonoAdapter>().StopCoroutine(_coroutine);
-                    _abWebRequester.Abort();
-                    _abWebRequester = null;
-                    return;
+                    continue;
                 }
+                
+                ServiceLocator.Get<IMonoAdapter>().StopCoroutine(_coroutine);
+                _abWebRequester.Abort();
+                ServiceLocator.Get<IPoolManager>().PushData(_abWebRequester);
+                _abWebRequester = null;
+                return;
             }
 
             // 重试次数耗尽仍失败
-            throw new DownloadFailureException("服务器清单文件下载失败");
+            throw new DownloadFailureException($"服务器清单文件下载失败，最大重试次数：{maxRetry}");
         }
 
         private IEnumerator CheckCancel()
@@ -116,7 +116,7 @@ namespace Core.AssetBundles.Update.State
             // 检查临时清单文件是否存在
             if (!File.Exists(tempListPath))
             {
-                throw new FileNotFoundException($"未找到清单文件");
+                throw new FileNotFoundException($"未找到本地清单文件，路径：{tempListPath}");
             }
             // 异步读取文件内容
             var listInfo = await File.ReadAllTextAsync(tempListPath);

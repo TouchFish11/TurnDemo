@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Enum;
-using Core.Log;
+using Core.AssetBundles.Update.Exception;
 using Core.Utility;
 
 namespace Core.AssetBundles.Update.State
@@ -13,6 +15,8 @@ namespace Core.AssetBundles.Update.State
     /// </summary>
     public class CheckAssetIntegrityState : UpdateState
     {
+        private readonly List<(string abName, long downloadedBytes, bool hashSame)> _abBrokenInfos = new();
+        
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -20,6 +24,11 @@ namespace Core.AssetBundles.Update.State
         public CheckAssetIntegrityState(AssetBundleUpdater updater) : base(updater)
         {
 
+        }
+
+        public override void Enter()
+        {
+            _abBrokenInfos.Clear();
         }
 
         /// <summary>
@@ -31,22 +40,27 @@ namespace Core.AssetBundles.Update.State
             try
             {
                 // 执行完整性校验，传入进度回调
-                await CheckAssetsIntegrity((cureent, total) => assetBundleUpdater.GetContext().UpdateCheckProgress(cureent, total));
-                
+                await CheckAssetsIntegrity((cureent, total) =>
+                    assetBundleUpdater.GetContext().UpdateCheckProgress(cureent, total));
+
                 // 替换正式清单文件
                 var tempListPath = PathUtility.GetAbLoadPath(FileUtility.TempListFileDefaultName);
                 var formalListPath = PathUtility.GetAbLoadPath(FileUtility.ListFileDefaultName);
                 File.Copy(tempListPath, formalListPath, true);
-            
+
                 // 删除临时清单文件
                 File.Delete(tempListPath);
-                
+
                 // 持久化缓存文件（记录已下载的AssetBundle信息）
                 await assetBundleUpdater.GetContext().WriteCacheFile();
             }
+            catch (AssetBunleBrokenException assetBunleBrokenException)
+            {
+                return UpdateResult.CreateFailure(UpdateResult.EUpdateError.AssetBunleBroken, assetBunleBrokenException);
+            }
             catch (System.Exception exception)
             {
-                return UpdateResult.CreateFailure("资源完整性校验失败", exception);
+                return UpdateResult.CreateFailure(UpdateResult.EUpdateError.Unknown, exception);
             }
             
             return UpdateResult.CreateSuccess();
@@ -83,22 +97,36 @@ namespace Core.AssetBundles.Update.State
                 {
                     continue;
                 }
-
-                LogManager.LogError($"{remoteCollection[cachePair.Key].Name}异常，下载后的hash与实际hash相等：{hashSame}");
-
-                // 校验失败，标记为不完整资源
-                context.AddABNameToIncomplete(cachePair.Key);
                 
-                ++currentProgress;
+                // 校验失败，标记为损坏包
+                AddBrokenInfo(cachePair.Key,  cachePair.Value.DownloadedBytes, hashSame);
+                
                 // 触发校验进度回调
+                ++currentProgress;
                 onCheckProgress?.Invoke(currentProgress, cacheCollection.Count);
             }
 
-            // 最终校验结果：不完整资源列表为空则通过
-            if (context.IncompleteListCount != 0)
+            // 抛出AB包损坏异常
+            if (_abBrokenInfos.Count != 0)
             {
-                throw new System.Exception($"资源不完整，AB包数量：{context.IncompleteListCount}");
+                throw new AssetBunleBrokenException(GetAssetBunleBrokenExceptionMessage());
             }
+        }
+
+        private void AddBrokenInfo(string abName, long downloadedBytes, bool hashSame)
+        {
+            var info = (abName, downloadedBytes, hashSame);
+            _abBrokenInfos.Add(info);
+        }
+
+        private string GetAssetBunleBrokenExceptionMessage()
+        {
+            var sb = new StringBuilder();
+            foreach (var abBrokenInfo in _abBrokenInfos)
+            {
+                sb.AppendLine($"包名：{abBrokenInfo.abName}，已下载字节数：{abBrokenInfo.downloadedBytes}，Hash是否相等{abBrokenInfo.hashSame}");
+            }
+            return sb.ToString();
         }
         
         /// <summary>

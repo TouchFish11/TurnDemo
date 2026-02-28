@@ -25,7 +25,7 @@ MonoBehaviour:
   maxRetryCount: 5
   maxRetryWaitSeconds: 5
   speedUpdateInterval: 1
-  abLoadPath: 0
+  abLoadPath: 1
   userDataPath: 0
   udpReceiveBufferSize: 8192
   tcpReceiveTempBufferSize: 1024

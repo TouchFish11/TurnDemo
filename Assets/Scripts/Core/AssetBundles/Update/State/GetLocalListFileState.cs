@@ -1,6 +1,8 @@
 using System.IO;
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Enum;
+using Core.AssetBundles.Update.Exception;
+using Core.Tasks.Extensions;
 using Core.Utility;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -29,14 +31,16 @@ namespace Core.AssetBundles.Update.State
         {
             try
             {
-                await Task.Delay(1000);
-                
                 // 加载本地对比文件
                 await GetLocalCompareFileInfo();
             }
+            catch (LocalListFileHandleException localListFileHandleException)
+            {
+                return UpdateResult.CreateFailure(UpdateResult.EUpdateError.LocalListFile, localListFileHandleException);
+            }
             catch (System.Exception exception)
             {
-                return UpdateResult.CreateFailure("本地资源文件获取失败", exception);
+                return UpdateResult.CreateFailure(UpdateResult.EUpdateError.Unknown, exception);
             }
             
             return UpdateResult.CreateSuccess();
@@ -85,28 +89,16 @@ namespace Core.AssetBundles.Update.State
             // 创建UnityWebRequest请求读取文件
             var req = UnityWebRequest.Get(localFilePath);
             // 等待请求完成
-            await WaitForTask(req.SendWebRequest());
+            await req.SendWebRequest().ToTask();
             // 请求失败，抛出异常
             if (req.result != UnityWebRequest.Result.Success)
             {
-                throw new System.Exception($"{req.result}，{req.error}");
+                throw new LocalListFileHandleException($"读取本地清单文件失败，{req.result}，{req.error}，{req.responseCode}");
             }
             
             // 解析清单内容到本地包集合
             AnalyzeCompareFileInfo(req.downloadHandler.text, EFileAnalyzeType.Local);
             return;
-        }
-
-        /// <summary>
-        /// 等待Unity异步操作完成（封装为Task）
-        /// </summary>
-        /// <param name="asyncOperation">Unity异步操作（如WebRequest.SendWebRequest）</param>
-        /// <returns>Task对象</returns>
-        public static Task WaitForTask(AsyncOperation asyncOperation)
-        {
-            var source = new TaskCompletionSource<bool>();
-            asyncOperation.completed += _ => source.SetResult(true);
-            return source.Task;
         }
 
         /// <summary>

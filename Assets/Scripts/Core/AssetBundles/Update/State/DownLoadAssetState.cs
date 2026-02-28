@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Collection;
 using Core.AssetBundles.Update.Enum;
+using Core.AssetBundles.Update.Exception;
 using Core.Extensions;
 using Core.Global;
 using Core.Mono;
@@ -49,19 +51,23 @@ namespace Core.AssetBundles.Update.State
                     assetBundleUpdater.GetContext().RemotePackageCollection,
                     assetBundleUpdater.GetContext().WaitDownloadCollection
                 );
-                
                 // 初始化下载速度更新
                 ServiceLocator.Get<IMonoAdapter>().StartCoroutine(UpdateSpeed());
-                
+
                 // 异步下载资源，传入进度回调，更新下载进度
-                await DownLoadAssetsAsync(bytesPerFrame => assetBundleUpdater.GetContext().UpdateProgress(bytesPerFrame, downLoadTotalBytes));
-                
+                await DownLoadAssetsAsync(bytesPerFrame =>
+                    assetBundleUpdater.GetContext().UpdateProgress(bytesPerFrame, downLoadTotalBytes));
+
                 // 标记下载结束
                 _isDownloading = false;
             }
+            catch (AssetBunleIncompleteException assetBunleIncompleteException)
+            {
+                return UpdateResult.CreateFailure(UpdateResult.EUpdateError.AssetBunleIncomplete, assetBunleIncompleteException);
+            }
             catch (System.Exception exception)
             {
-                return UpdateResult.CreateFailure("资源下载未完成", exception);
+                return UpdateResult.CreateFailure(UpdateResult.EUpdateError.Unknown, exception);
             }
             
             return UpdateResult.CreateSuccess();
@@ -152,19 +158,18 @@ namespace Core.AssetBundles.Update.State
                 await Task.Yield(); // 帧间等待
             }
 
-            await CheckDownloadSuccess(context);
+            await CheckDownloadComplete();
         }
 
         /// <summary>
-        /// 检查下载是否成功
+        /// 检查下载是否完整
         /// </summary>
-        /// <param name="context"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        private static async Task CheckDownloadSuccess(ABUpdateContext context)
+        private async Task CheckDownloadComplete()
         {
             // 校验所有缓存包是否下载成功
-            foreach (var condition in context.CachePackageCollection.Values.MeetConditions(info => info.IsSuccess))
+            foreach (var condition in assetBundleUpdater.GetContext().CachePackageCollection.Values.MeetConditions(info => info.IsSuccess))
             {
                 if (condition)
                 {
@@ -172,7 +177,7 @@ namespace Core.AssetBundles.Update.State
                 }
                 else
                 {
-                    throw new System.Exception("下载不完整，存在缺失资源");
+                    throw new AssetBunleIncompleteException(GetAssetBunleIncompleteExceptionMessage());
                 }
             }
         }
@@ -198,6 +203,28 @@ namespace Core.AssetBundles.Update.State
 
                 yield return null;
             }
+        }
+
+        private string GetAssetBunleIncompleteExceptionMessage()
+        {
+            var sb = new StringBuilder();
+            foreach (var info in assetBundleUpdater.GetContext().CachePackageCollection.Values)
+            {
+                sb.AppendLine($"AB包：{info.AbName}未下载完整，已下载字节数：{info.DownloadedBytes}");
+            }
+
+            // 计算已下载数
+            var currentCount = 0;
+            foreach (var abPackageCacheInfo in assetBundleUpdater.GetContext().CachePackageCollection.Values)
+            {
+                if (abPackageCacheInfo.IsSuccess)
+                {
+                    ++currentCount;
+                }
+            }
+            
+            sb.AppendLine($"当前下载数：{currentCount}，总下载数：{assetBundleUpdater.GetContext().CachePackageCollection.Count}");
+            return sb.ToString();
         }
 
         /// <summary>

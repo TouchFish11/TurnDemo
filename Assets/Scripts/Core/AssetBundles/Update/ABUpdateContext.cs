@@ -44,12 +44,6 @@ namespace Core.AssetBundles.Update
         public AbPackageCacheCollection WaitDownloadCollection { get; }
 
         /// <summary>
-        /// 存储未完成下载的AB包名称列表
-        /// 记录所有下载中断/未完成的AB包名称，用于断点续传或重试逻辑
-        /// </summary>
-        private readonly List<string> _incompleteABList = new();
-
-        /// <summary>
         /// 存储等待下载的网络请求队列
         /// 待执行的AB包下载请求，按添加顺序排队执行
         /// </summary>
@@ -90,12 +84,6 @@ namespace Core.AssetBundles.Update
         /// 只读属性，返回下载失败的请求总数
         /// </summary>
         public int FailListCount => _requesterFailList.Count;
-
-        /// <summary>
-        /// 未完成队列中的请求数量
-        /// 只读属性，返回未完成下载的请求总数（同下载中队列数量）
-        /// </summary>
-        public int IncompleteListCount => _incompleteABList.Count;
 
         /// <summary>
         /// 下载进度回调事件
@@ -181,15 +169,6 @@ namespace Core.AssetBundles.Update
         public void AddRequesterToFail(ABWebRequester requester)
         {
             _requesterFailList.AddLast(new LinkedListNode<ABWebRequester>(requester));
-        }
-
-        /// <summary>
-        /// 将AB包名称添加到未完成下载列表
-        /// </summary>
-        /// <param name="abName">未完成下载的AB包名称</param>
-        public void AddABNameToIncomplete(string abName)
-        {
-            _incompleteABList.Add(abName);
         }
 
         /// <summary>
@@ -435,8 +414,7 @@ namespace Core.AssetBundles.Update
             WaitDownloadCollection.Clear();
             CachePackageCollection.Clear();
 
-            // 清空各类队列
-            _incompleteABList.Clear();
+            // 清空各类链表
             _requesterWaitList.Clear();
             _requesterLoadingList.Clear();
             _requesterFailList.Clear();

@@ -5,6 +5,9 @@ namespace Core.AssetBundles.Update.Exception
     /// </summary>
     public abstract class UpdateException : System.Exception
     {
-        protected UpdateException(string message) : base(message) { }
+        protected UpdateException(string message) : base(message)
+        {
+            
+        }
     }
 }
