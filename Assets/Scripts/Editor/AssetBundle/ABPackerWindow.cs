@@ -4,7 +4,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,32 +14,12 @@ using Core.Utility;
 using Editor.Generation;
 using Editor.Generation.Detail;
 using UnityEditor;
-using UnityEditor.Build;
-using UnityEditor.Build.Reporting;
 using UnityEngine;
 using Object = UnityEngine.Object;
 // ReSharper disable CanSimplifyDictionaryLookupWithTryGetValue
 
 namespace Editor.AssetBundle
 {
-    // 自定义 Build 时的回调，用于在构建前后执行操作
-    public class ABPackerBuildHook : IPreprocessBuildWithReport, IPostprocessBuildWithReport
-    {
-        public int callbackOrder => 0;
-
-        public void OnPreprocessBuild(BuildReport report)
-        {
-            // 可以在这里添加构建前的准备工作
-            Debug.Log($"[ABPackerHook] Starting build for target: {report.summary.platform}");
-        }
-
-        public void OnPostprocessBuild(BuildReport report)
-        {
-            // 可以在这里添加构建后的清理或通知工作
-            Debug.Log($"[ABPackerHook] Build finished for target: {report.summary.platform}, Duration: {report.summary.totalTime.TotalSeconds:F2}s");
-        }
-    }
-    
     public class ABPackerWindow : EditorWindow
     {
         // --- GUI 状态 ---
@@ -50,7 +29,8 @@ namespace Editor.AssetBundle
         // --- 配置参数 ---
         private BuildTarget _targetPlatform = BuildTarget.StandaloneWindows; // 默认平台
         private BuildAssetBundleOptions _buildOptions = BuildAssetBundleOptions.None; // 构建选项
-        private string _AssemblyhotUpdateTargetPath;  // 热更新程序集目标路径
+        private string _AssemblyhotUpdateTargetPath_game;  // 热更新程序集目标路径
+        private string _AssemblyhotUpdateTargetPath_conifg;
         private string _outputPath; // 输出路径
         private const string AB_COPY_PATH = "Assets/StreamingAssets/AssetBundles/";     // AssetBundle拷贝到StreamingAssets的目标路径
         private string _mainBundlePath = "";  // 用于依赖分析的主包路径
@@ -64,7 +44,8 @@ namespace Editor.AssetBundle
         private uint maxBytesCapacity = 4096;   // 单次上传的最大字节数（自定义模式下生效）
         private static int upLoadmaxNum;    // 待上传文件总数
         private static int nowUpLoadFinishedNum;    // 已完成上传的文件数
-        private const string targetPath = @"D:\UnityProject\TurnDemo\Assets\Editor\ArtRes\HotUpdate\Assembly-CSharp-Game-HotUpdate.dll.bytes";
+        private const string targetPath_game = @"D:\UnityProject\TurnDemo\Assets\Editor\ArtRes\HotUpdate\Assembly-CSharp-Game-HotUpdate.dll.bytes";
+        private const string targetPath_config = @"D:\UnityProject\TurnDemo\Assets\Editor\ArtRes\HotUpdate\Assembly-CSharp-Config-HotUpdate.dll.bytes";
         private const string AssetsInputPath = "Assets/Editor/ArtRes/";     // 待打包资源的输入根路径
         private readonly Dictionary<string, List<FileInfo>> _fileInfoDic = new();   // 存储待处理文件信息的字典：Key为目录名，Value为该目录下的文件列表
         private readonly string[] filterDirectorys = { "Texture" };     // 过滤的文件夹
@@ -89,7 +70,9 @@ namespace Editor.AssetBundle
         {
             // 初始化时设置默认输出路径
             _outputPath = Path.Combine(Application.dataPath, "AssetBundles", EditorUserBuildSettings.activeBuildTarget.ToString());
-            _AssemblyhotUpdateTargetPath = targetPath;
+            _AssemblyhotUpdateTargetPath_game = targetPath_game;
+            _AssemblyhotUpdateTargetPath_conifg = targetPath_config;
+            
             minSize = new Vector2(1389, 725);
         }
 
@@ -575,14 +558,17 @@ namespace Editor.AssetBundle
                                             {
                                                 continue;
                                             }
-                                                
-                                            // 配置的资源信息在待移除容器中，也要跳过
-                                            var index = waitRemoveAssetInfos[abInfo_Realese.assetBundleName].FindIndex(info => info.name == assetInfo.name);
-                                            if (index != -1)
+
+                                            if (waitRemoveAssetInfos.TryGetValue(abInfo_Realese.assetBundleName, out var list))
                                             {
-                                                continue;
+                                                // 配置的资源信息在待移除容器中，也要跳过
+                                                var index = waitRemoveAssetInfos[abInfo_Realese.assetBundleName].FindIndex(info => info.name == assetInfo.name);
+                                                if (index != -1)
+                                                {
+                                                    continue;
+                                                }
                                             }
-                                                
+                                            
                                             newInfos.Add(new AssetBundlesCollections.AssetInfo(assetInfo.assetPath, assetInfo.size, assetInfo.name,  assetInfo.hash));
                                         }
                                         
@@ -787,17 +773,13 @@ namespace Editor.AssetBundle
             EditorGUILayout.Space();
             GUILayout.Label("Assembly HotUpdate", EditorStyles.boldLabel);
             
-            GUILayout.BeginHorizontal();
-            
-            _AssemblyhotUpdateTargetPath = EditorGUILayout.TextField("Target Path", _AssemblyhotUpdateTargetPath, GUILayout.ExpandWidth(true));
-            
+            _AssemblyhotUpdateTargetPath_game = EditorGUILayout.TextField("Game Target Path", _AssemblyhotUpdateTargetPath_game, GUILayout.ExpandWidth(true));
+            _AssemblyhotUpdateTargetPath_conifg = EditorGUILayout.TextField("Config Target Path", _AssemblyhotUpdateTargetPath_conifg, GUILayout.ExpandWidth(true));
             // 拷贝热更新程序集
-            if (GUILayout.Button("Copy HotUpdate Assembly", GUILayout.Width(200)))
+            if (GUILayout.Button("Copy HotUpdate Assembly"))
             {
                 MoveHotUpdateAssembly();
             }
-            
-            GUILayout.EndHorizontal();
         }
 
         private void DrawReskeyView()
@@ -1458,8 +1440,10 @@ namespace Editor.AssetBundle
         /// </summary>
         private static void MoveHotUpdateAssembly()
         {
-            const string sourcesPath = @"D:\UnityProject\TurnDemo\HybridCLRData\HotUpdateDlls\StandaloneWindows\Assembly-CSharp-Game-HotUpdate.dll";
-            File.Copy(sourcesPath,  targetPath, true);
+            const string sourcesPath_game = @"D:\UnityProject\TurnDemo\HybridCLRData\HotUpdateDlls\StandaloneWindows\Assembly-CSharp-Game-HotUpdate.dll";
+            const string sourcesPath_config = @"D:\UnityProject\TurnDemo\HybridCLRData\HotUpdateDlls\StandaloneWindows\Assembly-CSharp-Config-HotUpdate.dll";
+            File.Copy(sourcesPath_game,  targetPath_game, true);
+            File.Copy(sourcesPath_config,  targetPath_config, true);
             AssetDatabase.Refresh();
         }
         

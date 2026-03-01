@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Core.Singleton;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using UnityEngine;
 
 namespace Core.Serialize.Json
 {
@@ -46,7 +45,7 @@ namespace Core.Serialize.Json
             // 根据解析器类型执行反序列化
             return jsonType switch
             {
-                E_JsonType.JsonUtlity => JsonUtility.FromJson<T>(json),
+                E_JsonType.JsonUtlity => UnityEngine.JsonUtility.FromJson<T>(json),
                 E_JsonType.Newtonsoft => JsonConvert.DeserializeObject<T>(json, settings ?? DefaultSettings),
                 _ => new T() // 未知解析器类型时返回默认实例
             };
@@ -71,7 +70,7 @@ namespace Core.Serialize.Json
             // 根据解析器类型执行反序列化
             return jsonType switch
             {
-                E_JsonType.JsonUtlity => JsonUtility.FromJson<T>(json),
+                E_JsonType.JsonUtlity => UnityEngine.JsonUtility.FromJson<T>(json),
                 E_JsonType.Newtonsoft => JsonConvert.DeserializeObject<T>(json, settings ?? DefaultSettings),
                 _ => new T() // 未知解析器类型时返回默认实例
             };
@@ -98,7 +97,7 @@ namespace Core.Serialize.Json
             // 根据序列化器类型执行序列化（格式化输出）
             var jsonStr = type switch
             {
-                E_JsonType.JsonUtlity => JsonUtility.ToJson(data, true),
+                E_JsonType.JsonUtlity => UnityEngine.JsonUtility.ToJson(data, true),
                 E_JsonType.Newtonsoft => JsonConvert.SerializeObject(data, settings ?? DefaultSettings),
                 _ => ""
             };

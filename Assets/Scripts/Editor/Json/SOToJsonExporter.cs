@@ -18,17 +18,8 @@ namespace Editor.Json
                 return;
             }
 
-            string json;
-            if (selected is BattleActivityConfig battleActivityConfig)
-            {
-                // 序列化数据
-                json = JsonManager.Instance.ToJson(battleActivityConfig.BattleConfigEntryColletion);
-            }
-            else
-            {
-                Debug.LogError($"不存在该类型的SO：{selected}");
-                return;
-            }
+            // 序列化数据
+            var json = JsonManager.Instance.ToJson(selected, settings: Core.Utility.NewtonsoftJsonUtility.SerializerSettings);
             
             // 保存到文件
             var path = EditorUtility.SaveFilePanel(

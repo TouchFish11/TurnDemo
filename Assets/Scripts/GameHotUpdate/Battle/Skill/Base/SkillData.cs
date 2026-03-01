@@ -1,6 +1,5 @@
-using Game.Battle.Skill;
-using Game.Battle.Skill.Handler;
-using Game.Battle.Skill.Interface;
+using GameHotUpdate.Battle.Skill.Handler;
+using GameHotUpdate.Battle.Skill.Interface;
 
 namespace GameHotUpdate.Battle.Skill.Base
 {

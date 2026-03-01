@@ -1,6 +1,6 @@
 using System;
 using Core.Components;
-using Game.Battle.Objects;
+using GameHotUpdate.Battle.Object;
 
 namespace GameHotUpdate.Battle.Relic.Relics.Quantum
 {

@@ -1,9 +1,8 @@
 using System.Collections.Generic;
-using Game.Battle.Objects;
-using Game.Battle.Skill;
-using Game.Battle.Skill.Component;
-using Game.Battle.Skill.Enum;
-using Game.UI.Battle.SkillKey.Provider;
+using GameHotUpdate.Battle.Object;
+using GameHotUpdate.Battle.Skill.Base;
+using GameHotUpdate.Battle.Skill.Component;
+using GameHotUpdate.Battle.Skill.Enum;
 
 namespace GameHotUpdate.Battle.UI.SkillKey.Provider
 {

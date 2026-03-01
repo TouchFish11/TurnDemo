@@ -1,62 +1,91 @@
 {
-  "battleConfigs": [
-    {
-      "levelId": 1001,
-      "levelName": "关卡1",
-      "battleSceneId": 0,
-      "battleWave": 1,
-      "monsterIds": [
-        1
-      ],
-      "winConditionId": 0
-    },
-    {
-      "levelId": 1002,
-      "levelName": "关卡2",
-      "battleSceneId": 0,
-      "battleWave": 1,
-      "monsterIds": [
-        2
-      ],
-      "winConditionId": 0
-    },
-    {
-      "levelId": 1003,
-      "levelName": "关卡3",
-      "battleSceneId": 0,
-      "battleWave": 1,
-      "monsterIds": [
-        1,
-        2,
-        1
-      ],
-      "winConditionId": 0
-    },
-    {
-      "levelId": 1004,
-      "levelName": "关卡4",
-      "battleSceneId": 0,
-      "battleWave": 1,
-      "monsterIds": [
-        2,
-        1,
-        2
-      ],
-      "winConditionId": 0
-    },
-    {
-      "levelId": 1005,
-      "levelName": "关卡5",
-      "battleSceneId": 0,
-      "battleWave": 1,
-      "monsterIds": [
-        1,
-        2,
-        1,
-        2,
-        1
-      ],
-      "winConditionId": 0
+  "$type": "ConfigHotUpdate.BattleActivityConfig, Assembly-CSharp-Config-HotUpdate",
+  "BattleConfigEntryColletion": {
+    "$type": "ConfigHotUpdate.BattleConfigEntryColletion, Assembly-CSharp-Config-HotUpdate",
+    "battleConfigs": {
+      "$type": "System.Collections.Generic.List`1[[ConfigHotUpdate.BattleConfigEntry, Assembly-CSharp-Config-HotUpdate]], mscorlib",
+      "$values": [
+        {
+          "$type": "ConfigHotUpdate.BattleConfigEntry, Assembly-CSharp-Config-HotUpdate",
+          "levelId": 1001,
+          "levelName": "关卡1",
+          "battleSceneId": 0,
+          "battleWave": 1,
+          "monsterIds": {
+            "$type": "System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib",
+            "$values": [
+              1
+            ]
+          },
+          "winConditionId": 0
+        },
+        {
+          "$type": "ConfigHotUpdate.BattleConfigEntry, Assembly-CSharp-Config-HotUpdate",
+          "levelId": 1002,
+          "levelName": "关卡2",
+          "battleSceneId": 0,
+          "battleWave": 1,
+          "monsterIds": {
+            "$type": "System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib",
+            "$values": [
+              2
+            ]
+          },
+          "winConditionId": 0
+        },
+        {
+          "$type": "ConfigHotUpdate.BattleConfigEntry, Assembly-CSharp-Config-HotUpdate",
+          "levelId": 1003,
+          "levelName": "关卡3",
+          "battleSceneId": 0,
+          "battleWave": 1,
+          "monsterIds": {
+            "$type": "System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib",
+            "$values": [
+              1,
+              2,
+              1
+            ]
+          },
+          "winConditionId": 0
+        },
+        {
+          "$type": "ConfigHotUpdate.BattleConfigEntry, Assembly-CSharp-Config-HotUpdate",
+          "levelId": 1004,
+          "levelName": "关卡4",
+          "battleSceneId": 0,
+          "battleWave": 1,
+          "monsterIds": {
+            "$type": "System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib",
+            "$values": [
+              2,
+              1,
+              2
+            ]
+          },
+          "winConditionId": 0
+        },
+        {
+          "$type": "ConfigHotUpdate.BattleConfigEntry, Assembly-CSharp-Config-HotUpdate",
+          "levelId": 1005,
+          "levelName": "关卡5",
+          "battleSceneId": 0,
+          "battleWave": 1,
+          "monsterIds": {
+            "$type": "System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib",
+            "$values": [
+              1,
+              2,
+              1,
+              2,
+              1
+            ]
+          },
+          "winConditionId": 0
+        }
+      ]
     }
-  ]
+  },
+  "name": "BattleActivityConfig",
+  "hideFlags": 0
 }

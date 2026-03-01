@@ -1,8 +1,7 @@
 using Core.Log;
-using Game.Animation;
-using Game.Battle.Damage;
-using Game.Battle.Enum;
 using GameHotUpdate.Animation;
+using GameHotUpdate.Animation.Component;
+using GameHotUpdate.Battle.Damage.Data;
 using GameHotUpdate.Battle.Event.General;
 using GameHotUpdate.Battle.Property;
 

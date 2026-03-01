@@ -1,5 +1,4 @@
-using Game.Battle.Context;
-using Game.Battle.Enum;
+using GameHotUpdate.Battle.Context;
 using GameHotUpdate.Battle.Event.UI;
 using GameHotUpdate.Battle.Property;
 

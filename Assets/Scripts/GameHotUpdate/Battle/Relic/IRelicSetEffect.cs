@@ -1,5 +1,5 @@
-using Game.Battle.Component;
-using Game.Battle.Objects;
+using GameHotUpdate.Battle.Core;
+using GameHotUpdate.Battle.Object;
 
 namespace GameHotUpdate.Battle.Relic
 {

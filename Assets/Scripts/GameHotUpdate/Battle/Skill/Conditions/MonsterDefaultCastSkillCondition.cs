@@ -1,8 +1,8 @@
-using Game.Battle.Objects;
-using Game.Battle.Skill;
-using Game.Battle.Skill.Condition;
-using Game.Battle.Skill.Enum;
-using GameHotUpdate.Tasks;
+using GameHotUpdate.Battle.Object;
+using GameHotUpdate.Battle.Skill.Base;
+using GameHotUpdate.Battle.Skill.Enum;
+using GameHotUpdate.Extension;
+using GameHotUpdate.Task;
 
 namespace GameHotUpdate.Battle.Skill.Conditions
 {

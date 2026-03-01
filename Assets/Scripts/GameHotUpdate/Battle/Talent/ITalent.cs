@@ -1,5 +1,5 @@
-using Game.Battle.Event;
-using Game.Battle.Objects;
+using GameHotUpdate.Battle.Event;
+using GameHotUpdate.Battle.Object;
 
 namespace GameHotUpdate.Battle.Talent
 {

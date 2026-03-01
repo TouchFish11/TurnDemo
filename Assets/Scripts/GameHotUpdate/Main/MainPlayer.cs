@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.Service;
-using Game.Battle.Objects;
-using GameHotUpdate.Animation;
-using GameHotUpdate.Cameras;
+using GameHotUpdate.Animation.Component;
+using GameHotUpdate.Battle.Object;
+using GameHotUpdate.Camera;
 using GameHotUpdate.Config;
 using GameHotUpdate.Dialogue;
 using GameHotUpdate.Input;
 using GameHotUpdate.Interact;
-using GameHotUpdate.Move;
-using GameHotUpdate.Object;
+using GameHotUpdate.Main.Move;
+using GameHotUpdate.Main.Object;
 
 namespace GameHotUpdate.Main
 {

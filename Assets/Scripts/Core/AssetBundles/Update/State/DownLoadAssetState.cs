@@ -9,6 +9,8 @@ using Core.AssetBundles.Update.Exception;
 using Core.Extensions;
 using Core.Global;
 using Core.Mono;
+using Core.Pool;
+using Core.Serialize.Json;
 using Core.Service;
 using Core.Utility;
 
@@ -28,12 +30,8 @@ namespace Core.AssetBundles.Update.State
         private readonly float _speedUpdateInterval;
         // 是否正在下载中
         private bool _isDownloading;
-
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="updater">AssetBundle更新器实例</param>
-        public DownLoadAssetState(AssetBundleUpdater updater) : base(updater)
+        
+        public DownLoadAssetState(IAssetBundleUpdater assetBundleUpdater, IPoolManager poolManager, IJsonManager jsonManager) : base(assetBundleUpdater, poolManager, jsonManager)
         {
             _speedUpdateInterval = GlobalSettings.Instance.speedUpdateInterval;
         }
@@ -85,17 +83,15 @@ namespace Core.AssetBundles.Update.State
             var serverIp = GlobalSettings.Instance.resServerIp;
             // 获取待下载的AssetBundle集合
             var waitDownloadCollection = assetBundleUpdater.GetContext().WaitDownloadCollection;
-            var remotePackageCollection = assetBundleUpdater.GetContext().RemotePackageCollection;
-            
             // 初始化所有待下载资源的请求器
             foreach (var pair in waitDownloadCollection)
             {
-                var cacheInfo = waitDownloadCollection[pair.Key];
+                var waitDownloadInfo = waitDownloadCollection[pair.Key];
                 
-                // hash不同说明要重新下载，不追加；hash相同说明是续传，追加
-                var isAppend = waitDownloadCollection[pair.Key].Hash == remotePackageCollection[pair.Key].Hash;
+                // DownloadedBytes不为0说明是续传，追加
+                var isAppend = waitDownloadCollection[pair.Key].DownloadedBytes != 0;
                 // 创建AB包下载请求器
-                var abWebRequester = poolManager.GetData<ABWebRequester>().Init(serverIp, cacheInfo.AbName, isAppend, cacheInfo.AbName, cacheInfo.Hash, cacheInfo.DownloadedBytes);
+                var abWebRequester = poolManager.GetData<ABWebRequester>().Init(serverIp, waitDownloadInfo.AbName, isAppend, waitDownloadInfo.AbName, string.Empty, waitDownloadInfo.DownloadedBytes);
                 // 绑定下载进度回调
                 abWebRequester.OnDownloadProgress += proCallBack;
                 // 将请求器加入待下载队列
@@ -127,13 +123,12 @@ namespace Core.AssetBundles.Update.State
                     {
                         // 下载完成后，从正在下载队列移除
                         context.RemoveRequesterFromLoad(requester);
-                        // 下载成功
                         if (isOver)
                         {
                             // 获取下载后的文件信息
                             var fileInfo = new FileInfo(PathUtility.GetAbLoadPath(requester.FileName));
                             // 更新缓存信息
-                            var cacheInfo = new AbPackageCacheInfo(requester.FileName, context.RemotePackageCollection[requester.FileName].Hash, fileInfo.Length);
+                            var cacheInfo = new AbPackageCacheInfo(requester.FileName, requester.Hash, fileInfo.Length);
                             assetBundleUpdater.GetContext().UpdateCacheFile(cacheInfo);
                         }
                         // 下载失败，加入失败队列
@@ -157,7 +152,8 @@ namespace Core.AssetBundles.Update.State
 
                 await Task.Yield(); // 帧间等待
             }
-
+            
+            // 检查下载是否完整
             await CheckDownloadComplete();
         }
 
@@ -168,7 +164,12 @@ namespace Core.AssetBundles.Update.State
         /// <exception cref="Exception"></exception>
         private async Task CheckDownloadComplete()
         {
-            // 校验所有缓存包是否下载成功
+            if (assetBundleUpdater.GetContext().FailListCount != 0)
+            {
+                throw new AssetBunleIncompleteException(GetAssetBunleIncompleteExceptionMessage());
+            }
+            
+            // 校验所有缓存包是否下载完整，只判断IsSuccess标识，不在这里处理校验
             foreach (var condition in assetBundleUpdater.GetContext().CachePackageCollection.Values.MeetConditions(info => info.IsSuccess))
             {
                 if (condition)

@@ -1,6 +1,6 @@
 using System.Collections;
-using Game.Battle.Skill;
-using Game.Battle.Skill.Handler;
+using GameHotUpdate.Battle.Skill.Base;
+using GameHotUpdate.Battle.Skill.Handler;
 
 namespace GameHotUpdate.Battle.Object.Monster.AbyssalMage.Skill.Handler
 {

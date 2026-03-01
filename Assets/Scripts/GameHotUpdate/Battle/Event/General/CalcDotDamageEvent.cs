@@ -1,5 +1,4 @@
-using Game.Battle.Context;
-using Game.Battle.Event;
+using GameHotUpdate.Battle.Context;
 using GameHotUpdate.Battle.Damage.Data;
 
 namespace GameHotUpdate.Battle.Event.General

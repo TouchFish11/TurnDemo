@@ -1,16 +1,16 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Core.Components;
 using Core.Service;
 using Core.Singleton;
-using Game.Main;
 using GameHotUpdate.Battle.Object.Role.Warrior;
 using GameHotUpdate.Config;
-using GameHotUpdate.Object;
+using GameHotUpdate.Main.Object;
 using UnityEngine;
 
 namespace GameHotUpdate.Main
 {
+    using Task = System.Threading.Tasks.Task;
+    
     /// <summary>
     /// 玩家管理器
     /// 负责玩家对象的创建、管理、销毁等核心逻辑

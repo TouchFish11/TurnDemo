@@ -2,11 +2,10 @@ using System.Collections;
 using Core.Service;
 using Core.UI;
 using Core.Utility;
-using Game.Battle.Objects;
 using GameHotUpdate.Battle.Layer;
 using GameHotUpdate.Battle.Status;
 using GameHotUpdate.Battle.UI.Base;
-using GameHotUpdate.Cameras;
+using GameHotUpdate.Camera;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Object.StateMeachine

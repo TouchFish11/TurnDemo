@@ -1,5 +1,5 @@
 using Core.UI.MVC;
-using Game.Battle.Context;
+using GameHotUpdate.Battle.Context;
 using GameHotUpdate.Battle.UI.MonsterStateUI;
 
 namespace GameHotUpdate.Battle.UI.Base

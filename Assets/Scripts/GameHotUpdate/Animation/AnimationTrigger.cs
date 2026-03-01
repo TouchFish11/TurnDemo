@@ -1,6 +1,6 @@
 using System;
 using Core.Components;
-using GameHotUpdate.Components;
+using GameHotUpdate.Component;
 using UnityEngine;
 
 namespace GameHotUpdate.Animation

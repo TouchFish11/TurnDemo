@@ -1,8 +1,6 @@
 using Core.Components;
-using Game.Battle.Enum;
-using Game.Battle.Objects;
-using Game.Battle.Property;
 using GameHotUpdate.Battle.Event.General;
+using GameHotUpdate.Battle.Object;
 
 namespace GameHotUpdate.Battle.Property
 {

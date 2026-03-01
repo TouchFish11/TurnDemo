@@ -101,26 +101,15 @@ namespace GameHotUpdate.Main
         /// </summary>
         private static void InitHotUpdateGameMain()
         {
-            const string mainTypeName = "GameHotUpdate.Main.HotfixGameMain";
             // 通过游戏热更初始化
-            foreach (var hotUpdateAssembly in ServiceLocator.Get<IHotUpdateManager>().GetHotAssemblies())
+            var methodInfo = typeof(HotfixGameMain).GetMethod("Init", BindingFlags.Static | BindingFlags.NonPublic);
+            if (methodInfo != null)
             {
-                var main = hotUpdateAssembly.GetType(mainTypeName);
-                if (main != null)
-                {
-                    var methodInfo = main.GetMethod("Init", BindingFlags.Static | BindingFlags.NonPublic);
-                    if (methodInfo != null)
-                    {
-                        methodInfo.Invoke(null, null);
-                    }
-                    else
-                    {
-                        LogManager.LogError($"未找到方法：Init");
-                    }
-                    break;
-                }
-
-                LogManager.LogError($"未找到类型：{mainTypeName}");
+                methodInfo.Invoke(null, null);
+            }
+            else
+            {
+                LogManager.LogError($"未找到方法：Init");
             }
         }
         

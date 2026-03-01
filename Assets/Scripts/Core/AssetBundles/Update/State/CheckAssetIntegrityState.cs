@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Enum;
 using Core.AssetBundles.Update.Exception;
+using Core.Pool;
+using Core.Serialize.Json;
 using Core.Utility;
 
 namespace Core.AssetBundles.Update.State
@@ -15,15 +17,11 @@ namespace Core.AssetBundles.Update.State
     /// </summary>
     public class CheckAssetIntegrityState : UpdateState
     {
-        private readonly List<(string abName, long downloadedBytes, bool hashSame)> _abBrokenInfos = new();
+        // 损坏的AB包信息列表
+        private readonly List<(string abName, long downloadedBytes, bool hashSame, string badHash)> _abBrokenInfos = new();
         
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="updater">AssetBundle更新器实例</param>
-        public CheckAssetIntegrityState(AssetBundleUpdater updater) : base(updater)
+        public CheckAssetIntegrityState(IAssetBundleUpdater assetBundleUpdater, IPoolManager poolManager, IJsonManager jsonManager) : base(assetBundleUpdater, poolManager, jsonManager)
         {
-
         }
 
         public override void Enter()
@@ -77,12 +75,6 @@ namespace Core.AssetBundles.Update.State
         {
             var context = assetBundleUpdater.GetContext();
             
-            // 先更新失败队列中的缓存信息（标记为未完成）
-            foreach (var cacheInfo in context.GetCacheInfosFromFail())
-            {
-                context.UpdateCacheFile(cacheInfo);
-            }
-
             // 获取远程包集合和缓存包集合
             var remoteCollection = context.RemotePackageCollection;
             var cacheCollection = context.CachePackageCollection;
@@ -97,8 +89,11 @@ namespace Core.AssetBundles.Update.State
                 if (remoteCollection[cachePair.Key].Size != cachePair.Value.DownloadedBytes || !hashSame)
                 {
                     // 校验失败，标记为损坏包
-                    AddBrokenInfo(cachePair.Key,  cachePair.Value.DownloadedBytes, hashSame);
+                    AddBrokenInfo(cachePair.Key,  cachePair.Value.DownloadedBytes, hashSame, hash);
                 }
+                
+                // 更新缓存hash信息
+                cachePair.Value.Hash = hash;
                 
                 // 触发校验进度回调
                 ++currentProgress;
@@ -112,9 +107,9 @@ namespace Core.AssetBundles.Update.State
             }
         }
 
-        private void AddBrokenInfo(string abName, long downloadedBytes, bool hashSame)
+        private void AddBrokenInfo(string abName, long downloadedBytes, bool hashSame, string badHash)
         {
-            var info = (abName, downloadedBytes, hashSame);
+            var info = (abName, downloadedBytes, hashSame, badHash);
             _abBrokenInfos.Add(info);
         }
 
@@ -123,7 +118,8 @@ namespace Core.AssetBundles.Update.State
             var sb = new StringBuilder();
             foreach (var abBrokenInfo in _abBrokenInfos)
             {
-                sb.AppendLine($"包名：{abBrokenInfo.abName}，已下载字节数：{abBrokenInfo.downloadedBytes}，Hash是否相等{abBrokenInfo.hashSame}");
+                sb.AppendLine($"包名：{abBrokenInfo.abName}，已下载字节数：{abBrokenInfo.downloadedBytes}，Hash是否相等{abBrokenInfo.hashSame}，" +
+                              $"损坏包hash：{abBrokenInfo.badHash}");
             }
             return sb.ToString();
         }

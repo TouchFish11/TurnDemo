@@ -1,7 +1,6 @@
 using System;
 using Core.Serialize.Binary;
 using Core.Service;
-using Game.Data;
 using UnityEngine;
 
 namespace GameHotUpdate.Activity.Data
@@ -11,7 +10,7 @@ namespace GameHotUpdate.Activity.Data
     /// 存储用户活动相关数据
     /// </summary>
     [Serializable]
-    public class ActivityData : IData
+    public class ActivityData : IActivityData
     {
         [SerializeField] private int activityId;
         [SerializeField] private bool isComplete;

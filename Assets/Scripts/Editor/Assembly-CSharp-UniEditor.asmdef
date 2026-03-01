@@ -1,0 +1,20 @@
+{
+    "name": "Assembly-CSharp-UniEditor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:a4a6af4070a88c44295e96802cdc9fef",
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:6c7920db87306da4386da7c0e25c5e84"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

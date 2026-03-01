@@ -1,12 +1,10 @@
 using Core.Reflection;
 using Core.Service;
-using Game.Battle.Objects;
-using Game.Battle.Skill.Handler;
-using Game.Battle.Skill.Interface;
 using GameHotUpdate.Battle.Object.Monster.AbyssalMage.Skill.Handler;
 using GameHotUpdate.Battle.Skill.Base;
 using GameHotUpdate.Battle.Skill.Factory;
-using GameHotUpdate.Battle.Skill.Handlers;
+using GameHotUpdate.Battle.Skill.Handler;
+using GameHotUpdate.Battle.Skill.Interface;
 
 namespace GameHotUpdate.Battle.Object.Monster.AbyssalMage.Skill
 {

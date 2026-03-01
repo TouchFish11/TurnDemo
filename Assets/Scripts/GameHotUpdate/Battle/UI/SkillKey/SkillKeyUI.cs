@@ -2,14 +2,16 @@ using Core.Reflection;
 using Core.Service;
 using Core.UI;
 using Core.Utility;
-using Game.Battle.Context;
-using Game.Battle.Objects;
-using Game.Battle.Skill.Enum;
-using Game.Battle.TargetSelect;
+using GameHotUpdate.Battle.Context;
+using GameHotUpdate.Battle.Core;
 using GameHotUpdate.Battle.Event.UI;
+using GameHotUpdate.Battle.Object;
 using GameHotUpdate.Battle.Skill.Component;
+using GameHotUpdate.Battle.Skill.Enum;
+using GameHotUpdate.Battle.TargetSelect;
 using GameHotUpdate.Battle.TargetSelect.Strategys;
-using GameHotUpdate.Tasks;
+using GameHotUpdate.Extension;
+using GameHotUpdate.Task;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -123,7 +125,7 @@ namespace GameHotUpdate.Battle.UI.SkillKey
             // 绑定战斗实体
             this.battleEntity = battleEntity;
             // 从工厂获取玩家基础目标选择策略（目标选择的规则逻辑）
-            this._targetSelectStrategy = ServiceLocator.Get<IFactoryManager>()
+            _targetSelectStrategy = ServiceLocator.Get<IFactoryManager>()
                 .GetFactory<ITargetSelectStrategyFactory, TargetSelectStrategyFactory>()
                 .GetTargetSelectStrategy<PlayerBaseTargetSelectStrategy>();
             

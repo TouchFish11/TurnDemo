@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
 using Core.Singleton;
-using Game.Animation;
-using Game.Battle.Objects;
+using GameHotUpdate.Animation.Component;
+using GameHotUpdate.Battle.Object;
 using UnityEngine;
 
 namespace GameHotUpdate.Animation

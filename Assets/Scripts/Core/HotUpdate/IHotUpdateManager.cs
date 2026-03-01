@@ -35,7 +35,7 @@ namespace Core.HotUpdate
         Assembly[] GetAssemblies();
 
         Assembly GetCoreAssembly();
+        
         Assembly GetConfigAssembly();
-        Assembly GetGameAssembly();
     }
 }

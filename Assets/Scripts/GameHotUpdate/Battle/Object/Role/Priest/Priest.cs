@@ -1,6 +1,6 @@
-using Game.Battle.Context;
-using Game.Battle.Skill.Component;
+using GameHotUpdate.Battle.Context;
 using GameHotUpdate.Battle.Object.Role.Priest.Skill;
+using GameHotUpdate.Battle.Skill.Component;
 
 namespace GameHotUpdate.Battle.Object.Role.Priest
 {

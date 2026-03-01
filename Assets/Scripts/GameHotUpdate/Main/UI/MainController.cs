@@ -1,19 +1,20 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Core.Log;
 using Core.Service;
 using Core.UI;
 using Core.UI.MVC;
 using GameHotUpdate.Activity.UI.Base;
-using GameHotUpdate.Battle;
+using GameHotUpdate.Battle.Core;
 using GameHotUpdate.Battle.Turn;
 using GameHotUpdate.Config;
 using GameHotUpdate.Main.UI.Logic;
-using GameHotUpdate.Tasks.UI;
+using GameHotUpdate.Task.UI;
 
 namespace GameHotUpdate.Main.UI
 {
+    using Task = System.Threading.Tasks.Task;
+    
     /// <summary>
     /// 主界面控制器核心类
     /// 职责：处理主界面的业务逻辑、事件订阅/取消、按钮点击、状态初始化等
@@ -34,7 +35,7 @@ namespace GameHotUpdate.Main.UI
         /// 职责：订阅事件、注册回调、初始化状态
         /// </summary>
         /// <returns>异步任务</returns>
-        protected override System.Threading.Tasks.Task OnInit()
+        protected override Task OnInit()
         {
             // 初始化交互逻辑实例并加入字典
             mainLogics.Add(typeof(InteractLogic), new InteractLogic(this, model, view));
@@ -45,7 +46,7 @@ namespace GameHotUpdate.Main.UI
             // 初始化所有子逻辑模块的状态
             InitState();
 
-            return System.Threading.Tasks.Task.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -60,7 +61,7 @@ namespace GameHotUpdate.Main.UI
                 switch (btnName)
                 {
                     case "btnActivity":
-                        await ServiceLocator.Get<IUIManager>().CreateViewAsync<ActivityView, ActivityModel, ActivityController>(AbKeyCollection.Ui, E_UILayer.Mid, ResKeyCollection.ActivityView);
+                        await uiManager.CreateViewAsync<ActivityView, ActivityModel, ActivityController>(AbKeyCollection.Ui, E_UILayer.Mid, ResKeyCollection.ActivityView);
                         break;
                     case "btnJourney":
                         
@@ -70,7 +71,7 @@ namespace GameHotUpdate.Main.UI
                         break;
                     // 任务按钮点击：打开任务界面
                     case "btnTask":
-                        await ServiceLocator.Get<IUIManager>().CreateViewAsync<TaskView, TaskModel, TaskController>(AbKeyCollection.Ui, E_UILayer.Mid, ResKeyCollection.TaskView);
+                        await uiManager.CreateViewAsync<TaskView, TaskModel, TaskController>(AbKeyCollection.Ui, E_UILayer.Mid, ResKeyCollection.TaskView);
                         break;
                     // 战斗测试按钮点击：启动战斗
                     case "btnBattleTest":

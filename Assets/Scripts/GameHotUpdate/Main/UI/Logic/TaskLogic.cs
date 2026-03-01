@@ -1,5 +1,7 @@
 using Core.Service;
-using Game.Tasks;
+using GameHotUpdate.Task;
+using GameHotUpdate.Task.Core;
+using GameHotUpdate.Task.Data;
 
 namespace GameHotUpdate.Main.UI.Logic
 {

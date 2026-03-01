@@ -1,8 +1,7 @@
 using Core.Pool;
-using Game.Battle.Context;
-using Game.Battle.Objects;
-using Game.Battle.Status;
-using Game.Battle.Status.Data;
+using GameHotUpdate.Battle.Context;
+using GameHotUpdate.Battle.Object;
+using GameHotUpdate.Battle.Status.Data;
 
 namespace GameHotUpdate.Battle.Status
 {

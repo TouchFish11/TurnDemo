@@ -3,18 +3,17 @@ using Core.Reflection;
 using Core.Serialize.Binary;
 using Core.Service;
 using Core.Utility;
-using Game.Animation;
-using Game.Battle.Command;
-using Game.Battle.Context;
-using Game.Battle.Skill.Component;
-using Game.VFX;
 using GameHotUpdate.Animation;
+using GameHotUpdate.Animation.Component;
 using GameHotUpdate.Battle.Command;
+using GameHotUpdate.Battle.Context;
 using GameHotUpdate.Battle.Event.Turn;
 using GameHotUpdate.Battle.Event.UI;
 using GameHotUpdate.Battle.ResponsibilityChain.DamageChain;
+using GameHotUpdate.Battle.Skill.Component;
 using GameHotUpdate.Battle.Toughness;
 using GameHotUpdate.Config;
+using GameHotUpdate.VFX;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Object
@@ -75,7 +74,7 @@ namespace GameHotUpdate.Battle.Object
 
         public override void CastSkill(int skillId)
         {
-            var skillComponent = this.GetComponent<SkillComponent>();
+            var skillComponent = GetComponent<SkillComponent>();
             // 能否释放
             if (!skillComponent.CanCast(skillId))
             {
@@ -84,7 +83,7 @@ namespace GameHotUpdate.Battle.Object
             
             // 获取技能数据
             var skillData = skillComponent.GetSkillData(skillId);
-            var toughnessComponent = this.GetComponent<ToughnessComponent>();
+            var toughnessComponent = GetComponent<ToughnessComponent>();
             // 获取怪物行动指令
             var actCommand = ServiceLocator.Get<IFactoryManager>().GetFactory<ICommandFactory, CommandFactory>()
                 .GetMonsterActCommand(toughnessComponent, skillData);

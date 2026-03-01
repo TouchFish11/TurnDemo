@@ -1,12 +1,11 @@
 using System.Collections;
-using Game.Battle.Context;
-using Game.Battle.Damage;
-using Game.Battle.Enum;
-using Game.Battle.Objects;
+using GameHotUpdate.Battle.Context;
+using GameHotUpdate.Battle.Damage;
+using GameHotUpdate.Battle.Damage.Data;
 using GameHotUpdate.Battle.Event.General;
 using GameHotUpdate.Battle.Property;
 using GameHotUpdate.Battle.ResponsibilityChain;
-using GameHotUpdate.Object;
+using GameHotUpdate.Main.Object;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Object
@@ -88,7 +87,7 @@ namespace GameHotUpdate.Battle.Object
         
         public void TakeHeal(int healAmount)
         {
-            var propertyComponent = this.GetComponent<PropertyComponent>();
+            var propertyComponent = GetComponent<PropertyComponent>();
             var currentHp = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentHp);
             propertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentHp, currentHp + healAmount);
             // 触发应用治疗事件
@@ -101,7 +100,7 @@ namespace GameHotUpdate.Battle.Object
         /// <param name="shieldAmount">护盾量</param>
         public void TakeSheild(int shieldAmount)
         {
-            var propertyComponent = this.GetComponent<PropertyComponent>();
+            var propertyComponent = GetComponent<PropertyComponent>();
             var currentShield = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentShield);
             propertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentShield, currentShield + shieldAmount);
             // 触发应用护盾件

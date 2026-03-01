@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using Game.Battle.Objects;
-using Game.Battle.Skill.Enum;
-using Game.Battle.TargetSelect;
+using GameHotUpdate.Battle.Object;
+using GameHotUpdate.Battle.Skill.Enum;
 using LogManager = Core.Log.LogManager;
 
 namespace GameHotUpdate.Battle.TargetSelect.Strategys

@@ -4,14 +4,12 @@ using Core.Mono;
 using Core.Serialize.Binary;
 using Core.Service;
 using Core.Singleton;
-using Game.Battle.Context;
-using Game.Battle.Input;
-using Game.Battle.Objects;
-using Game.Battle.Skill.Enum;
+using GameHotUpdate.Battle.Context;
 using GameHotUpdate.Battle.Event.UI;
 using GameHotUpdate.Battle.Layer;
 using GameHotUpdate.Battle.Object;
-using GameHotUpdate.Cameras;
+using GameHotUpdate.Battle.Skill.Enum;
+using GameHotUpdate.Camera;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -108,7 +106,7 @@ namespace GameHotUpdate.Battle.Input
         /// </summary>
         public event Action<bool> OnRebound;
 
-        public GameObject GameObject => this.gameObject;
+        public GameObject GameObject => gameObject;
         
         /// <summary>
         /// 初始化

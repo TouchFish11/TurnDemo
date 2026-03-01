@@ -1,10 +1,9 @@
 using Core.Components;
 using Core.Serialize.Binary;
 using Core.Service;
-using Game.Dialogue;
-using Game.Interact;
+using GameHotUpdate.Dialogue;
 using GameHotUpdate.Interact;
-using GameHotUpdate.Object;
+using GameHotUpdate.Main.Object;
 
 namespace GameHotUpdate.Battle.Object
 {

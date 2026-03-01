@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using Core.Log;
 using Core.Singleton;
-using Game.Battle.Context;
-using Game.Battle.Damage;
-using Game.Battle.Objects;
-using Game.Battle.Skill.Enum;
+using GameHotUpdate.Battle.Context;
 using GameHotUpdate.Battle.Damage.Data;
 using GameHotUpdate.Battle.Damage.Strategys;
 using GameHotUpdate.Battle.Event.General;
-using GameHotUpdate.Tasks;
+using GameHotUpdate.Battle.Object;
+using GameHotUpdate.Battle.Skill.Enum;
+using GameHotUpdate.Extension;
+using GameHotUpdate.Task;
 
 namespace GameHotUpdate.Battle.Damage
 {

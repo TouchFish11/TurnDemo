@@ -1,15 +1,14 @@
 using System.Collections;
-using Game.Battle.Command;
-using Game.Battle.Context;
-using Game.Battle.Skill.Interface;
+using GameHotUpdate.Battle.Context;
 using GameHotUpdate.Battle.Event.Skill;
+using GameHotUpdate.Battle.Skill.Interface;
 
 namespace GameHotUpdate.Battle.Command
 {
     /// <summary>
     /// 技能指令
     /// </summary>
-    public class SkillCommand : Game.Battle.Command.Command, ISkillCommand
+    public class SkillCommand : Command, ISkillCommand
     {
         public override int Priority { get; protected set; }
         
@@ -22,7 +21,7 @@ namespace GameHotUpdate.Battle.Command
         public void Init(ISkillData skillData)
         {
             Sender = skillData.Skill.Caster;
-            this.SkillData = skillData;
+            SkillData = skillData;
         }
         
         /// <summary>

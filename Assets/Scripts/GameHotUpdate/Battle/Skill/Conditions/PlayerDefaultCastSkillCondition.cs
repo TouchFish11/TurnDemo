@@ -1,12 +1,10 @@
 using Core.GlobalEvent;
 using Core.GlobalEvent.Events;
 using Core.Service;
-using Game.Battle.Enum;
-using Game.Battle.Objects;
-using Game.Battle.Skill;
-using Game.Battle.Skill.Condition;
-using Game.Battle.Skill.Enum;
+using GameHotUpdate.Battle.Object;
 using GameHotUpdate.Battle.Property;
+using GameHotUpdate.Battle.Skill.Base;
+using GameHotUpdate.Battle.Skill.Enum;
 
 namespace GameHotUpdate.Battle.Skill.Conditions
 {

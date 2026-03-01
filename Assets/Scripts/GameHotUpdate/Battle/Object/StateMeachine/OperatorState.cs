@@ -1,5 +1,4 @@
 using System.Collections;
-using Game.Battle.Objects;
 using GameHotUpdate.Battle.Event.UI;
 
 namespace GameHotUpdate.Battle.Object.StateMeachine
@@ -49,7 +48,7 @@ namespace GameHotUpdate.Battle.Object.StateMeachine
         /// <param name="triggerSkillEvent"></param>
         private void OnCastSkill(RoleTriggerSkillEvent triggerSkillEvent)
         {
-            if ((UnityEngine.Object)triggerSkillEvent.Caster != this.PlayerObject)
+            if ((UnityEngine.Object)triggerSkillEvent.Caster != PlayerObject)
             {
                 return;
             }
@@ -66,7 +65,7 @@ namespace GameHotUpdate.Battle.Object.StateMeachine
         /// <param name="roleTriggerUltimateSkillEvent"></param>
         protected void OnCastUltimateSkill(RoleTriggerUltimateSkillEvent roleTriggerUltimateSkillEvent)
         {
-            if ((BattleObject)roleTriggerUltimateSkillEvent.Caster != this.PlayerObject)
+            if ((BattleObject)roleTriggerUltimateSkillEvent.Caster != PlayerObject)
             {
                 return;
             }

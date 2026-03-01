@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using Game.Battle.Context;
-using Game.Battle.Event;
-using Game.Battle.Skill;
+using GameHotUpdate.Battle.Context;
+using GameHotUpdate.Battle.Skill.Base;
 
 namespace GameHotUpdate.Battle.Event.UI
 {

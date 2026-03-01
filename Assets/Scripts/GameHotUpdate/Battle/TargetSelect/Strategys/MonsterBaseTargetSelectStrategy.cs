@@ -1,6 +1,5 @@
 using System.Collections.Generic;
-using Game.Battle.Objects;
-using Game.Battle.TargetSelect;
+using GameHotUpdate.Battle.Object;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.TargetSelect.Strategys

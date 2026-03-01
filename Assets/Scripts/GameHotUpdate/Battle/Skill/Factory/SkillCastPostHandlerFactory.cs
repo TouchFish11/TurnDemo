@@ -3,7 +3,7 @@ using Core.Log;
 using Core.Reflection;
 using Core.Service;
 using Core.Utility;
-using Game.Battle.Skill.Handler;
+using GameHotUpdate.Battle.Skill.Handler;
 
 namespace GameHotUpdate.Battle.Skill.Factory
 {

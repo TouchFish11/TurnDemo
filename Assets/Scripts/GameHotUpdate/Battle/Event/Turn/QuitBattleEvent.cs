@@ -1,6 +1,5 @@
 using Core.UI.MVC;
-using Game.Battle.Context;
-using Game.Battle.Event;
+using GameHotUpdate.Battle.Context;
 
 namespace GameHotUpdate.Battle.Event.Turn
 {

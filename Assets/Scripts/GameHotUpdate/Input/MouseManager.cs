@@ -4,7 +4,6 @@ using Core.GlobalEvent.Events;
 using Core.Log;
 using Core.Service;
 using Core.Singleton;
-using Game.Input;
 using GameHotUpdate.Main.UI;
 using UnityEngine;
 

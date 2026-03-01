@@ -137,7 +137,7 @@ namespace GameHotUpdate.Battle.UI.Base
         /// <param name="selectMarkerUI"></param>
         public void AddSelectMarker(SelectMarkerUI selectMarkerUI)
         {
-            this.selectMarkerUIs.Add(selectMarkerUI);
+            selectMarkerUIs.Add(selectMarkerUI);
         }
         
         /// <summary>

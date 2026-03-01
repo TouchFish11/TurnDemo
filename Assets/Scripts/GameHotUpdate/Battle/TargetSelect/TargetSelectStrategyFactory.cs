@@ -3,8 +3,9 @@ using Core.Log;
 using Core.Reflection;
 using Core.Service;
 using Core.Utility;
+using GameHotUpdate.Battle.TargetSelect.Strategys;
 
-namespace Game.Battle.TargetSelect
+namespace GameHotUpdate.Battle.TargetSelect
 {
     /// <summary>
     /// 目标选择策略工厂

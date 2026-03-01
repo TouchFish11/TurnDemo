@@ -5,7 +5,6 @@ using Core.Log;
 using Core.Mono;
 using Core.Service;
 using Core.UI.MVC;
-using Game.Dialogue;
 using GameHotUpdate.Config;
 using UnityEngine;
 

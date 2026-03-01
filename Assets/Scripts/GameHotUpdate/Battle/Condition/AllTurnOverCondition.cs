@@ -1,7 +1,6 @@
 using Core.Service;
-using Game.Battle.Condition;
-using Game.Battle.Context;
 using GameHotUpdate.Battle.Context;
+using GameHotUpdate.Battle.Core;
 
 namespace GameHotUpdate.Battle.Condition
 {

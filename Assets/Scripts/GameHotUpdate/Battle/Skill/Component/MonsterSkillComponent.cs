@@ -1,12 +1,10 @@
 using Core.Components;
 using Core.Reflection;
 using Core.Service;
-using Game.Battle.Objects;
-using Game.Battle.Skill.Component;
-using Game.Battle.Skill.Condition;
-using Game.Battle.TargetSelect;
+using GameHotUpdate.Battle.Object;
 using GameHotUpdate.Battle.Skill.Conditions;
 using GameHotUpdate.Battle.Skill.Factory;
+using GameHotUpdate.Battle.TargetSelect;
 using GameHotUpdate.Battle.TargetSelect.Strategys;
 
 namespace GameHotUpdate.Battle.Skill.Component

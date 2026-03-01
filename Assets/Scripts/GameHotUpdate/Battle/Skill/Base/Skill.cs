@@ -3,16 +3,12 @@ using System.Collections.Generic;
 using Core.Serialize.Binary;
 using Core.Service;
 using Core.Utility;
-using Game.Battle.Context;
-using Game.Battle.Enum;
-using Game.Battle.Objects;
-using Game.Battle.Skill;
-using Game.Battle.Skill.Handler;
-using Game.Battle.Status;
-using Game.Battle.TargetSelect;
-using Game.Property;
-using Game.VFX;
+using GameHotUpdate.Battle.Context;
+using GameHotUpdate.Battle.Object;
 using GameHotUpdate.Battle.Property;
+using GameHotUpdate.Battle.Skill.Handler;
+using GameHotUpdate.Battle.TargetSelect.Strategys;
+using GameHotUpdate.VFX;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Skill.Base

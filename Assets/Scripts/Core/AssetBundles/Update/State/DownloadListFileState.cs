@@ -6,6 +6,7 @@ using Core.AssetBundles.Update.Exception;
 using Core.Global;
 using Core.Mono;
 using Core.Pool;
+using Core.Serialize.Json;
 using Core.Service;
 using Core.Utility;
 using UnityEngine;
@@ -21,11 +22,7 @@ namespace Core.AssetBundles.Update.State
         private ABWebRequester _abWebRequester;
         private Coroutine _coroutine;
         
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="updater">AssetBundle更新器实例</param>
-        public DownloadListFileState(AssetBundleUpdater updater) : base(updater)
+        public DownloadListFileState(IAssetBundleUpdater assetBundleUpdater, IPoolManager poolManager, IJsonManager jsonManager) : base(assetBundleUpdater, poolManager, jsonManager)
         {
         }
 

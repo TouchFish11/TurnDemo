@@ -1,4 +1,3 @@
-using Game.Battle.Objects;
 using GameHotUpdate.Battle.Event.Turn;
 
 namespace GameHotUpdate.Battle.Object.StateMeachine
@@ -16,7 +15,7 @@ namespace GameHotUpdate.Battle.Object.StateMeachine
         public override void Enter()
         {
             // 触发回合结束事件（供外部监听）
-            PlayerObject.Context.GetEventBus().TriggerEvent(new TurnEndEvent(PlayerObject.Context, this.PlayerObject));
+            PlayerObject.Context.GetEventBus().TriggerEvent(new TurnEndEvent(PlayerObject.Context, PlayerObject));
             Exit();
         }
         

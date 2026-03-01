@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Collection;
 using Core.AssetBundles.Update.Enum;
+using Core.Pool;
 using Core.Serialize.Json;
 using Core.Service;
 using Core.Utility;
@@ -15,11 +16,7 @@ namespace Core.AssetBundles.Update.State
     /// </summary>
     public class CompareContrastState : UpdateState
     {
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="updater">AssetBundle更新器实例</param>
-        public CompareContrastState(AssetBundleUpdater updater) : base(updater)
+        public CompareContrastState(IAssetBundleUpdater assetBundleUpdater, IPoolManager poolManager, IJsonManager jsonManager) : base(assetBundleUpdater, poolManager, jsonManager)
         {
         }
 
@@ -114,21 +111,29 @@ namespace Core.AssetBundles.Update.State
                     continue;
                 }
 
-                // 缓存中该包Hash与待下载包不一致，说明需要更新，跳过（保留待下载）
-                if (cachePackageCollection[waitPair.Key].Hash != waitPair.Value.Hash)
+                // 说明这个包没有下载完成，没有开始下载或下载未完成
+                if (waitPair.Value.Hash == string.Empty && waitPair.Value.DownloadedBytes < remoteCollection[waitPair.Key].Size)
                 {
-                    continue;
+                    waitPair.Value.DownloadedBytes = cachePackageCollection[waitPair.Key].DownloadedBytes;
                 }
-                
-                // 缓存中该包Hash一致，且已下载完成，标记为无需下载（加入移除列表）
-                if (cachePackageCollection[waitPair.Key].IsSuccess)
+                // 下载完成了，但是没有进行校验，那就不用下载了
+                else if(waitPair.Value.Hash == string.Empty && waitPair.Value.DownloadedBytes == remoteCollection[waitPair.Key].Size)
                 {
                     waitRemoveABFileList.Add(waitPair.Key);
                 }
-                // 缓存中该包未下载完成，继承已下载的字节数（断点续传）
-                else
+                else if(waitPair.Value.Hash != string.Empty)
                 {
-                    waitPair.Value.DownloadedBytes = cachePackageCollection[waitPair.Key].DownloadedBytes;
+                    // 缓存中该包Hash与待下载包不一致，说明需要更新，跳过（保留待下载）
+                    if (cachePackageCollection[waitPair.Key].Hash != waitPair.Value.Hash)
+                    {
+                        continue;
+                    }
+                    
+                    // 缓存中该包Hash一致，且已下载完成，标记为无需下载（加入移除列表）
+                    if (cachePackageCollection[waitPair.Key].IsSuccess)
+                    {
+                        waitRemoveABFileList.Add(waitPair.Key);
+                    }
                 }
             }
 

@@ -1,15 +1,14 @@
 using Core.Pool;
 using Core.Service;
 using Core.Time;
-using Game.Battle.Context;
-using Game.Battle.Enum;
-using Game.Battle.Objects;
-using Game.Battle.Status;
-using Game.VFX;
+using GameHotUpdate.Battle.Context;
 using GameHotUpdate.Battle.Damage.Data;
 using GameHotUpdate.Battle.Event.General;
 using GameHotUpdate.Battle.Event.UI;
+using GameHotUpdate.Battle.Property;
+using GameHotUpdate.Battle.Status;
 using GameHotUpdate.Config;
+using GameHotUpdate.VFX;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Object.Monster.TurtleShell.Status

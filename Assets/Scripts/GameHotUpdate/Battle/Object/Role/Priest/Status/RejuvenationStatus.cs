@@ -1,11 +1,10 @@
 using Core.Pool;
 using Core.Service;
 using Core.Time;
-using Game.Battle.Context;
-using Game.Battle.Objects;
-using Game.Battle.Status;
-using Game.VFX;
+using GameHotUpdate.Battle.Context;
+using GameHotUpdate.Battle.Status;
 using GameHotUpdate.Config;
+using GameHotUpdate.VFX;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Object.Role.Priest.Status

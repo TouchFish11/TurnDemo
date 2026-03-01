@@ -1,5 +1,4 @@
-using Game.Battle.Damage;
-using Game.Battle.Enum;
+using GameHotUpdate.Battle.Damage.Data;
 using GameHotUpdate.Battle.Property;
 
 namespace GameHotUpdate.Battle.ResponsibilityChain.DamageChain

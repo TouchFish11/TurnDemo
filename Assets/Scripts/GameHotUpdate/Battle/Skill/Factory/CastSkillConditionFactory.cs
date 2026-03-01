@@ -3,7 +3,7 @@ using Core.Log;
 using Core.Reflection;
 using Core.Service;
 using Core.Utility;
-using Game.Battle.Skill.Condition;
+using GameHotUpdate.Battle.Skill.Conditions;
 
 namespace GameHotUpdate.Battle.Skill.Factory
 {

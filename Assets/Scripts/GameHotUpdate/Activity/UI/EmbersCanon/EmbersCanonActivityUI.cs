@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Core.Loader.Sprite;
 using Core.Loader.UI;
 using Core.Log;
@@ -13,6 +12,8 @@ using GameHotUpdate.Item.UI;
 
 namespace GameHotUpdate.Activity.UI.EmbersCanon
 {
+    using Task = System.Threading.Tasks.Task;
+    
     /// <summary>
     /// 余烬圣典活动UI
     /// </summary>
@@ -33,20 +34,20 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
         protected override void Awake()
         {
             base.Awake();
-            _activityBkComponent = this.GetComponentInChildren<ActivityBkComponent>();
-            _activityJoinComponent = this.GetComponentInChildren<ActivityJoinComponent>();
-            _activityDescritionComponent = this.GetComponentInChildren<ActivityDescritionComponent>();
-            _activityNameComponent = this.GetComponentInChildren<ActivityNameComponent>();
-            _activityTimeComponent = this.GetComponentInChildren<ActivityTimeComponent>();
-            _awardPreviewComponent = this.GetComponentInChildren<AwardPreviewComponent>();
-            _limitTimeAwardComponent = this.GetComponentInChildren<LimitTimeAwardComponent>();
+            _activityBkComponent = GetComponentInChildren<ActivityBkComponent>();
+            _activityJoinComponent = GetComponentInChildren<ActivityJoinComponent>();
+            _activityDescritionComponent = GetComponentInChildren<ActivityDescritionComponent>();
+            _activityNameComponent = GetComponentInChildren<ActivityNameComponent>();
+            _activityTimeComponent = GetComponentInChildren<ActivityTimeComponent>();
+            _awardPreviewComponent = GetComponentInChildren<AwardPreviewComponent>();
+            _limitTimeAwardComponent = GetComponentInChildren<LimitTimeAwardComponent>();
         }
         
         protected override async Task OnInit()
         {
             // 初始化界面背景
             var backGround = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Activity,
-                    this.activityInfo.f_bkUi_Res);
+                    activityInfo.f_bkUi_Res);
             _activityBkComponent.SetBackGround(backGround);
 
             _activityJoinComponent.OnClickJoin += OnTriggerJoin;

@@ -1,12 +1,11 @@
 using Core.Components;
 using Core.Input.ActionAsset;
 using Core.Service;
-using Game.Animation;
-using Game.Dialogue;
 using GameHotUpdate.Animation;
-using GameHotUpdate.Components;
+using GameHotUpdate.Animation.Component;
+using GameHotUpdate.Component;
 using GameHotUpdate.Input;
-using GameHotUpdate.Move;
+using GameHotUpdate.Main.Move;
 
 namespace GameHotUpdate.Dialogue
 {

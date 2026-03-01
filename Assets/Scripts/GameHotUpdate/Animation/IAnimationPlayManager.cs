@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
-using Game.Animation;
-using Game.Battle.Objects;
+using GameHotUpdate.Animation.Component;
+using GameHotUpdate.Battle.Object;
 
 namespace GameHotUpdate.Animation
 {

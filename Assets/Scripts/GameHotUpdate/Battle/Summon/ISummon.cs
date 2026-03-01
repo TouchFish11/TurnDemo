@@ -1,4 +1,4 @@
-using Game.Battle.Objects;
+using GameHotUpdate.Battle.Object;
 
 namespace GameHotUpdate.Battle.Summon
 {

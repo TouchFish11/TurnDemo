@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Game.Battle.Enum;
+using GameHotUpdate.Battle.Property;
 
 namespace GameHotUpdate.Battle.Toughness
 {

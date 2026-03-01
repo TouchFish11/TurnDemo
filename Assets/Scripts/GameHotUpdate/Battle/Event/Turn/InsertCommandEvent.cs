@@ -1,6 +1,5 @@
-using Game.Battle.Command;
-using Game.Battle.Context;
-using Game.Battle.Event;
+using GameHotUpdate.Battle.Command;
+using GameHotUpdate.Battle.Context;
 
 namespace GameHotUpdate.Battle.Event.Turn
 {

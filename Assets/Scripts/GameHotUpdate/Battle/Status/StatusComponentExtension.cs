@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Game.Battle.Status;
 
 namespace GameHotUpdate.Battle.Status
 {

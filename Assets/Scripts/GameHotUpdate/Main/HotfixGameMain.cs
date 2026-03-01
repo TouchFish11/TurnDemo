@@ -1,27 +1,26 @@
 using System;
-using System.Threading.Tasks;
 using Core.Log;
 using Core.Pool;
 using Core.Reflection;
 using Core.Scene;
 using Core.Service;
 using Core.UI;
-using Game.FloatingText;
-using Game.Main;
 using GameHotUpdate.Battle.Object;
-using GameHotUpdate.Cameras;
+using GameHotUpdate.Camera;
 using GameHotUpdate.Config;
+using GameHotUpdate.Main.FloatingText;
+using GameHotUpdate.Main.Manager;
+using GameHotUpdate.Main.Object;
 using GameHotUpdate.Main.UI;
-using GameHotUpdate.Manager;
-using GameHotUpdate.Object;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using IGameManager = GameHotUpdate.Manager.IGameManager;
 
 // ReSharper disable UnusedMember.Local
 
 namespace GameHotUpdate.Main
 {
+    using Task = System.Threading.Tasks.Task;
+    
     /// <summary>
     /// 游戏主入口类
     /// 继承单例MonoBehaviour，保证全局唯一实例，负责游戏初始化、场景加载/清理等核心流程

@@ -1,5 +1,5 @@
-using Game.Battle.Context;
-using Game.Battle.Turn;
+using GameHotUpdate.Battle.Context;
+using GameHotUpdate.Battle.Turn;
 
 namespace GameHotUpdate.Battle.StateMeachine
 {

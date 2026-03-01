@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Core.Loader.Sprite;
 using Core.Pool;
 using Core.Service;
@@ -11,6 +10,8 @@ using GameHotUpdate.Item.UI;
 
 namespace GameHotUpdate.Activity.UI.OrbitalDeparture
 {
+    using Task = System.Threading.Tasks.Task;
+    
     /// <summary>
     /// 星旅启航活动UI
     /// </summary>
@@ -30,12 +31,12 @@ namespace GameHotUpdate.Activity.UI.OrbitalDeparture
         protected override void Awake()
         {
             base.Awake();
-            _activityBkComponent = this.GetComponentInChildren<ActivityBkComponent>();
-            _activityJoinComponent = this.GetComponentInChildren<ActivityJoinComponent>();
-            _activityDescritionComponent = this.GetComponentInChildren<ActivityDescritionComponent>();
-            _activityNameComponent = this.GetComponentInChildren<ActivityNameComponent>();
-            _activityTimeComponent = this.GetComponentInChildren<ActivityTimeComponent>();
-            _awardPreviewComponent = this.GetComponentInChildren<AwardPreviewComponent>();
+            _activityBkComponent = GetComponentInChildren<ActivityBkComponent>();
+            _activityJoinComponent = GetComponentInChildren<ActivityJoinComponent>();
+            _activityDescritionComponent = GetComponentInChildren<ActivityDescritionComponent>();
+            _activityNameComponent = GetComponentInChildren<ActivityNameComponent>();
+            _activityTimeComponent = GetComponentInChildren<ActivityTimeComponent>();
+            _awardPreviewComponent = GetComponentInChildren<AwardPreviewComponent>();
         }
 
         protected override async Task OnInit()
@@ -51,7 +52,7 @@ namespace GameHotUpdate.Activity.UI.OrbitalDeparture
             // 初始化界面背景
             var backGround = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(
                 AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Activity,
-                this.activityInfo.f_bkUi_Res);
+                activityInfo.f_bkUi_Res);
             // 设置界面背景
             _activityBkComponent.SetBackGround(backGround);
             

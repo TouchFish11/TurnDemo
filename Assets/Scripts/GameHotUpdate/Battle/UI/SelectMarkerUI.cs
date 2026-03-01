@@ -3,9 +3,9 @@ using Core.Mono;
 using Core.Service;
 using Core.UI;
 using Core.Utility;
-using Game.Battle.Objects;
-using Game.Battle.Skill.Enum;
-using GameHotUpdate.Cameras;
+using GameHotUpdate.Battle.Object;
+using GameHotUpdate.Battle.Skill.Enum;
+using GameHotUpdate.Camera;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -145,7 +145,7 @@ namespace GameHotUpdate.Battle.UI
             transform.Rotate(Vector3.forward, markerRotationSpeed * Time.deltaTime);
             
             // 缩放
-            this.transform.localScale = Vector3.Lerp(this.transform.localScale, endScale, Time.deltaTime * markerScaleSpeed);
+            transform.localScale = Vector3.Lerp(transform.localScale, endScale, Time.deltaTime * markerScaleSpeed);
         }
 
         /// <summary>

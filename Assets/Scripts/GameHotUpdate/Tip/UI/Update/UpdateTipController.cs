@@ -1,11 +1,10 @@
 using System;
-using System.Threading.Tasks;
-using Core.Service;
-using Core.UI;
 using GameHotUpdate.Config;
 
 namespace GameHotUpdate.Tip.UI.Update
 {
+    using Task = System.Threading.Tasks.Task;
+    
     public class UpdateTipController : TipController<UpdateTipView, UpdateTipModel>
     {
         /// <summary>

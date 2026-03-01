@@ -1,5 +1,5 @@
 using GameHotUpdate.Main;
-using GameHotUpdate.Move;
+using GameHotUpdate.Main.Move;
 using UnityEngine;
 
 namespace GameHotUpdate.Animation.StateMachineBehaviours

@@ -1,6 +1,5 @@
 using Core.Components;
-using Game.Battle.Objects;
-using Game.Battle.Property;
+using GameHotUpdate.Battle.Object;
 
 namespace GameHotUpdate.Battle.Property
 {

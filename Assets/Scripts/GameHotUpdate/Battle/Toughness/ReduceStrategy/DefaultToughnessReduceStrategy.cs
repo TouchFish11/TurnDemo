@@ -1,6 +1,5 @@
-using Game.Battle.Enum;
-using Game.Battle.Objects;
-using Game.Battle.Toughness;
+using GameHotUpdate.Battle.Object;
+using GameHotUpdate.Battle.Property;
 
 namespace GameHotUpdate.Battle.Toughness.ReduceStrategy
 {

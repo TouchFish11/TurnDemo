@@ -1,5 +1,5 @@
 
-using Game.Battle.Component;
+using GameHotUpdate.Battle.Core;
 
 namespace GameHotUpdate.Battle.Talent
 {

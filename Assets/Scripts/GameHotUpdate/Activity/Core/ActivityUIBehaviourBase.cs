@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using Core.Log;
 using Core.UI;
 using Core.Utility;
@@ -9,6 +8,8 @@ using UnityEngine;
 
 namespace GameHotUpdate.Activity.Core
 {
+    using Task = System.Threading.Tasks.Task;
+    
     /// <summary>
     /// 活动基类
     /// </summary>
@@ -26,7 +27,7 @@ namespace GameHotUpdate.Activity.Core
         protected override void Awake()
         {
             base.Awake();
-            GameObject = this.gameObject;
+            GameObject = gameObject;
         }
         
         public async void Init(ActivityData activityData, ActivityInfo activityInfo)
@@ -35,7 +36,7 @@ namespace GameHotUpdate.Activity.Core
             {
                 ActivityData = activityData;
                 this.activityInfo = activityInfo;
-                activityView = this.transform.GetComponentInParent<ActivityView>().transform;
+                activityView = transform.GetComponentInParent<ActivityView>().transform;
                 // 初始化具体活动界面
                 await OnInit();
             }

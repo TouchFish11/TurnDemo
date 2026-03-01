@@ -1,12 +1,9 @@
 using System.Collections.Generic;
 using Core.Log;
-using Game.Battle.Component;
-using Game.Battle.Context;
-using Game.Battle.Enum;
-using Game.Battle.Objects;
-using Game.Battle.Property;
-using Game.Property;
+using GameHotUpdate.Battle.Context;
+using GameHotUpdate.Battle.Core;
 using GameHotUpdate.Battle.Event.General;
+using GameHotUpdate.Battle.Object;
 
 namespace GameHotUpdate.Battle.Property
 {

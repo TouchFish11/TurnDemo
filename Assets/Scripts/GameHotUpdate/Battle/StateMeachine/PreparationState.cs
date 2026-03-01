@@ -1,14 +1,15 @@
 using System.Collections.Generic;
 using Core.Service;
 using Core.UI;
-using Game.Battle;
-using Game.Battle.Context;
-using Game.Battle.Objects;
-using Game.Battle.Turn;
+using GameHotUpdate.Battle.Context;
+using GameHotUpdate.Battle.Core;
+using GameHotUpdate.Battle.Object;
+using GameHotUpdate.Battle.Point;
+using GameHotUpdate.Battle.Turn;
 using GameHotUpdate.Battle.UI.Base;
 using GameHotUpdate.Battle.Utility;
 using GameHotUpdate.Config;
-using GameHotUpdate.UI.Loading.Battle;
+using GameHotUpdate.Main.Loading.Battle;
 
 namespace GameHotUpdate.Battle.StateMeachine
 {

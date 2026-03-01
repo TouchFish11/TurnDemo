@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Game.Battle.Event;
 
 namespace GameHotUpdate.Battle.Event
 {

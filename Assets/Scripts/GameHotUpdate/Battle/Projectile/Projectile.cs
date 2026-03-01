@@ -2,8 +2,8 @@ using System;
 using System.Collections;
 using Core.Service;
 using Core.Utility;
-using Game.Battle.Damage;
-using Game.VFX;
+using GameHotUpdate.Battle.Damage;
+using GameHotUpdate.VFX;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Projectile

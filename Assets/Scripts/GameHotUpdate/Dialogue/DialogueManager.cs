@@ -10,10 +10,10 @@ using Core.Service;
 using Core.Singleton;
 using Core.UI;
 using Core.Utility;
-using Game.Dialogue;
 using GameHotUpdate.Config;
 using GameHotUpdate.Dialogue.UI;
-using GameHotUpdate.Tasks;
+using GameHotUpdate.Task;
+using GameHotUpdate.Task.Event;
 using UnityEngine;
 
 namespace GameHotUpdate.Dialogue

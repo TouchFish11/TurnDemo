@@ -7,8 +7,10 @@ using Core.Reflection;
 using Core.Service;
 using Core.Types;
 using Core.Utility;
+using GameHotUpdate.Battle.Toughness.CalcStrategy;
+using GameHotUpdate.Battle.Toughness.ReduceStrategy;
 
-namespace Game.Battle.Toughness
+namespace GameHotUpdate.Battle.Toughness
 {
     /// <summary>
     /// 韧性策略工厂类

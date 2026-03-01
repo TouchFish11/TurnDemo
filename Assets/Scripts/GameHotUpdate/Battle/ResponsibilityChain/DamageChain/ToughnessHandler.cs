@@ -1,5 +1,5 @@
-using Game.Battle.Damage;
-using Game.Battle.Toughness;
+using GameHotUpdate.Battle.Damage.Data;
+using GameHotUpdate.Battle.Toughness;
 
 namespace GameHotUpdate.Battle.ResponsibilityChain.DamageChain
 {

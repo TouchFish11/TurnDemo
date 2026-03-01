@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Game.Battle.Component;
+using GameHotUpdate.Battle.Core;
 
 namespace GameHotUpdate.Battle.Relic
 {

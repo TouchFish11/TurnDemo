@@ -1,5 +1,3 @@
-using Game.Battle.Objects;
-
 namespace GameHotUpdate.Battle.Object.StateMeachine
 {
     /// <summary>

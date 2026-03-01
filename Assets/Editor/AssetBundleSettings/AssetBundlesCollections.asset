@@ -176,9 +176,9 @@ MonoBehaviour:
   - assetBundleName: gameconfig
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\GameConfig\BattleActivityConfig.json
-      size: 1086
+      size: 2920
       name: BattleActivityConfig.json
-      hash: f85531484fa84495faebbb192f4776f0c76ea2d7962e5c69df72b41332c4c7b2
+      hash: 45e69e48f0006178059d2fe48aba6ec84c3f43451713acfbd7c166c2af3c7610
     - assetPath: Assets\Editor\ArtRes\GameConfig\Editor\NewInfo.bytes
       size: 33
       name: NewInfo.bytes
@@ -233,10 +233,14 @@ MonoBehaviour:
       hash: d681626eb25ae26f8a2a3e05bf1cc490fefad15470612193bace7674988ca194
   - assetBundleName: hotupdate
     assetInfos:
+    - assetPath: Assets\Editor\ArtRes\HotUpdate\Assembly-CSharp-Config-HotUpdate.dll.bytes
+      size: 5120
+      name: Assembly-CSharp-Config-HotUpdate.dll.bytes
+      hash: 6bafeaf2fcee290ff0f85a750e972a817efa3c042ff177d6ba5ed2462e7205fb
     - assetPath: Assets\Editor\ArtRes\HotUpdate\Assembly-CSharp-Game-HotUpdate.dll.bytes
-      size: 431616
+      size: 463872
       name: Assembly-CSharp-Game-HotUpdate.dll.bytes
-      hash: c1d6822c0bc14977285cc41ccc5aaba6e54605e65ec77fc657af46c39547f1ff
+      hash: 399c7010477acd4bc6c319225f91067ff76f9bc1472986e91a4ef787cfe18ad4
   - assetBundleName: material
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\Material\Ground.mat
@@ -256,9 +260,9 @@ MonoBehaviour:
       name: Prefab_Player.prefab
       hash: 7b9921066df45474efee9b0766024e44b0893104a73667565a4133b2e6350f66
     - assetPath: Assets\Editor\ArtRes\Prefab\Main\Prefab_Main_Warrior.prefab
-      size: 92501
+      size: 92079
       name: Prefab_Main_Warrior.prefab
-      hash: f23befbf93dc7a3115819dd6e64ba4ddb1dad4075626192bb2449965202c0d52
+      hash: 347f712b5a8e9180cfed5bc0c3ae40710fc0f08c3ee873be2e1da2fd03f4e14d
     - assetPath: Assets\Editor\ArtRes\Prefab\Main\Prefab_Npc.prefab
       size: 3581
       name: Prefab_Npc.prefab
@@ -310,9 +314,9 @@ MonoBehaviour:
       name: BeginScene.unity
       hash: f6d29e00fe5a395fb3a896bb236c49190c7603435d0e5c8ab3881694b95e5c3e
     - assetPath: Assets\Editor\ArtRes\Scene\LevelScene.unity
-      size: 113538
+      size: 107335
       name: LevelScene.unity
-      hash: abb82ce6f3fc2fc3cf042d0e848c7ea44e10d8338a738d8ed595fda00253962b
+      hash: ca1b3a14b5566ddee1c6c840c7536c0aac76d6838ca1cd395bd2d987440ac595
     - assetPath: Assets\Editor\ArtRes\Scene\MainScene.unity
       size: 49952
       name: MainScene.unity
@@ -402,9 +406,9 @@ MonoBehaviour:
       name: BattleLevelUI.prefab
       hash: dc0fe4e4c98627c22e9fb1116901b08d5ccab17a3849bc0101d5dc5f4b90d954
     - assetPath: Assets\Editor\ArtRes\UI\Activity\Details\EmbersCanonActivity\EmbersCanonSubActivityUI_01\EmbersCanonSubActivityUI_01.prefab
-      size: 28311
+      size: 28313
       name: EmbersCanonSubActivityUI_01.prefab
-      hash: 2642c025f8268c57388b81da359ec258986cd3071d81a9330ddf5949e8e9f04f
+      hash: edfee5ec5dfb174a3259a494a2affded0ca3f03dfba1ec9e9f2d77d9c7fce27f
     - assetPath: Assets\Editor\ArtRes\UI\Activity\Details\OrbitalDepartureActivity\OrbitalDepartureActivityUI.prefab
       size: 56288
       name: OrbitalDepartureActivityUI.prefab
@@ -524,7 +528,7 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\UI\Task\TaskView.prefab
       size: 57013
       name: TaskView.prefab
-      hash: bfc14884368ddb94f43a869ea765d6772bcd553734fb9a1c4d217806f6fd954d
+      hash: 34e70178e53947be885391c81767349f02377d394e187859b2a7004613a20ae1
     - assetPath: Assets\Editor\ArtRes\UI\Tip\BaseTipView.prefab
       size: 11726
       name: BaseTipView.prefab

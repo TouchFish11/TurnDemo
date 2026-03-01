@@ -2,17 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using Core.Mono;
 using Core.Service;
-using Game.Battle.Condition;
-using Game.Battle.Context;
-using Game.Battle.Enum;
-using Game.Battle.Objects;
-using Game.Battle.Turn;
 using GameHotUpdate.Battle.Command;
 using GameHotUpdate.Battle.Condition;
+using GameHotUpdate.Battle.Context;
 using GameHotUpdate.Battle.Event.Turn;
 using GameHotUpdate.Battle.Event.UI;
 using GameHotUpdate.Battle.Object;
 using GameHotUpdate.Battle.Property;
+using GameHotUpdate.Battle.Turn;
 using GameHotUpdate.Battle.Utility;
 
 namespace GameHotUpdate.Battle.StateMeachine

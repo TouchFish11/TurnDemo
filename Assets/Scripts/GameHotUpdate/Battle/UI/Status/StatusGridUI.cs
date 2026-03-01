@@ -1,8 +1,8 @@
 using Core.Mono;
 using Core.Service;
 using Core.UI;
-using Game.Battle.Status;
-using Game.Battle.Status.Enum;
+using GameHotUpdate.Battle.Status;
+using GameHotUpdate.Battle.Status.Enum;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

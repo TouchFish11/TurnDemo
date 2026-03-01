@@ -1,6 +1,6 @@
 using Core.Log;
-using Game.Battle.Damage;
-using Game.Battle.Objects;
+using GameHotUpdate.Battle.Damage.Data;
+using GameHotUpdate.Battle.Object;
 
 namespace GameHotUpdate.Battle.Damage.Strategys
 {

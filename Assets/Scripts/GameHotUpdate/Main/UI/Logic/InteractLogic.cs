@@ -4,8 +4,8 @@ using Core.GlobalEvent;
 using Core.Loader.UI;
 using Core.Log;
 using Core.Service;
-using Game.Interact;
 using GameHotUpdate.Config;
+using GameHotUpdate.Interact;
 using GameHotUpdate.Interact.UI;
 
 namespace GameHotUpdate.Main.UI.Logic

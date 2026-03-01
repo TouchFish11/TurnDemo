@@ -1,9 +1,10 @@
 using Core.Serialize.Binary;
 using Core.Service;
-using Game.Battle.Damage;
-using Game.Battle.Objects;
-using Game.Battle.Skill.Enum;
-using GameHotUpdate.Tasks;
+using GameHotUpdate.Battle.Damage.Data;
+using GameHotUpdate.Battle.Object;
+using GameHotUpdate.Battle.Skill.Enum;
+using GameHotUpdate.Extension;
+using GameHotUpdate.Task;
 
 namespace GameHotUpdate.Battle.Damage.Strategys
 {

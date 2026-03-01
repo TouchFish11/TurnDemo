@@ -10,7 +10,7 @@ using GameHotUpdate.Activity.Core;
 using GameHotUpdate.Activity.Data;
 using GameHotUpdate.Activity.UI.EmbersCanon;
 using GameHotUpdate.Config;
-using GameHotUpdate.Manager;
+using GameHotUpdate.Main.Manager;
 
 namespace GameHotUpdate.Activity.UI.Base
 {

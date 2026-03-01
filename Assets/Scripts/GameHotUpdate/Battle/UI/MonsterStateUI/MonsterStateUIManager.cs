@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Core.Pool;
 using Core.Service;
-using Game.Battle.Objects;
+using GameHotUpdate.Battle.Object;
 
 namespace GameHotUpdate.Battle.UI.MonsterStateUI
 {

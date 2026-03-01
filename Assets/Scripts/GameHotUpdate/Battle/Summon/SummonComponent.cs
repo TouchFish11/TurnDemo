@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Core.Log;
-using Game.Battle.Component;
+using GameHotUpdate.Battle.Core;
 
 namespace GameHotUpdate.Battle.Summon
 {

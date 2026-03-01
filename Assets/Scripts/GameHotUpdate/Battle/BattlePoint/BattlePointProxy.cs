@@ -4,16 +4,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using Core.Log;
 using Core.Service;
-using Game.Battle;
-using Game.Battle.Context;
-using Game.Battle.Objects;
+using GameHotUpdate.Battle.Context;
 using GameHotUpdate.Battle.Layer;
 using GameHotUpdate.Battle.Object;
-using GameHotUpdate.Cameras;
+using GameHotUpdate.Battle.Point;
+using GameHotUpdate.Camera;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.BattlePoint
 {
+    using Task = System.Threading.Tasks.Task;
+    
     /// <summary>
     /// 场景战斗点代理
     /// </summary>
@@ -31,7 +32,7 @@ namespace GameHotUpdate.Battle.BattlePoint
         /// <summary>
         /// 场景战斗点
         /// </summary>
-        public Game.Battle.BattlePoint BattlePoint { get; } = UnityEngine.Object.FindFirstObjectByType<Game.Battle.BattlePoint>();
+        public Point.BattlePoint BattlePoint { get; } = UnityEngine.Object.FindFirstObjectByType<Point.BattlePoint>();
 
         /// <summary>
         /// 初始化战斗点对象
@@ -40,7 +41,7 @@ namespace GameHotUpdate.Battle.BattlePoint
         /// <param name="players"></param>
         public void InitProxy(IBattleContext ctx, List<IBattleEntityObject> players)
         {
-            this.context = ctx;
+            context = ctx;
             var index = 0;
             foreach (var roleTrans in BattlePoint.GetRoleTransforms())
             {
@@ -177,7 +178,7 @@ namespace GameHotUpdate.Battle.BattlePoint
         /// 创建相机到指定位置
         /// </summary>
         /// <param name="entityPosIndex"></param>
-        private Task<Camera> CreateCameraAtPos(int entityPosIndex)
+        private Task<UnityEngine.Camera> CreateCameraAtPos(int entityPosIndex)
         {
             // 创建相机到指定位置点
             var cameraTrans = BattlePoint.GetRoleCameraTransByIndex(entityPosIndex);
@@ -189,7 +190,7 @@ namespace GameHotUpdate.Battle.BattlePoint
         /// </summary>
         /// <param name="CurrentActiveCamera"></param>
         /// <param name="currentPosIndex"></param>
-        private void UpdateCameraMask(Camera CurrentActiveCamera, int currentPosIndex)
+        private static void UpdateCameraMask(UnityEngine.Camera CurrentActiveCamera, int currentPosIndex)
         {
             var mask = ResetCameraMask();
             // 根据当前玩家位置索引，只渲染符合的角色

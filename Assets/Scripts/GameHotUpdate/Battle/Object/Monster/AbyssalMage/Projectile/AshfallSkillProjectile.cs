@@ -2,11 +2,10 @@ using Core.Pool;
 using Core.Reflection;
 using Core.Service;
 using Core.Time;
-using Game.Battle.Status;
-using Game.VFX;
 using GameHotUpdate.Battle.Projectile;
 using GameHotUpdate.Battle.Status;
 using GameHotUpdate.Config;
+using GameHotUpdate.VFX;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Object.Monster.AbyssalMage.Projectile

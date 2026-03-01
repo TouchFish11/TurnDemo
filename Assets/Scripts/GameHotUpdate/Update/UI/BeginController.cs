@@ -1,8 +1,6 @@
 using System;
-using System.Threading.Tasks;
 using Core.AssetBundles.Update;
 using Core.AssetBundles.Update.Enum;
-using Core.Log;
 using Core.Service;
 using Core.UI;
 using Core.UI.MVC;
@@ -12,6 +10,8 @@ using GameHotUpdate.Tip.UI.Update;
 
 namespace GameHotUpdate.Update.UI
 {
+    using Task = System.Threading.Tasks.Task;
+    
     /// <summary>
     /// 开始界面控制器
     /// </summary>

@@ -1,5 +1,5 @@
-using Game.Battle.Context;
-using Game.Battle.Objects;
+using GameHotUpdate.Battle.Context;
+using GameHotUpdate.Battle.Object;
 
 namespace GameHotUpdate.Battle.Event.UI
 {

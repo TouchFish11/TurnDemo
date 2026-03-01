@@ -1,6 +1,6 @@
 using Core.Service;
 using Core.UI;
-using Game.Dialogue;
+using GameHotUpdate.Dialogue;
 
 namespace GameHotUpdate.Main.UI.Logic
 {

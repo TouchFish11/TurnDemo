@@ -2,7 +2,7 @@ using Core.Serialize.Binary;
 using Core.Service;
 using Core.UI;
 using Core.UI.MVC;
-using Game.Tasks;
+using GameHotUpdate.Task.Data;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

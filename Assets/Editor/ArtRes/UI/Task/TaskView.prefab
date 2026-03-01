@@ -1101,7 +1101,7 @@ GameObject:
   - component: {fileID: 1526272866241535057}
   - component: {fileID: 1939796992716815348}
   - component: {fileID: 629362497948096758}
-  - component: {fileID: -7313820077971362625}
+  - component: {fileID: -5568510374451585831}
   m_Layer: 5
   m_Name: TaskView
   m_TagString: Untagged
@@ -1181,7 +1181,7 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &-7313820077971362625
+--- !u!114 &-5568510374451585831
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

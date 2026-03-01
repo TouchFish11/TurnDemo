@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using Core.Components;
-using Game.Battle.Component;
-using Game.Battle.Objects;
-using Game.Battle.Status;
-using Game.Battle.Status.Data;
-using Game.Battle.Status.Enum;
+using GameHotUpdate.Battle.Core;
 using GameHotUpdate.Battle.Event.UI;
+using GameHotUpdate.Battle.Object;
+using GameHotUpdate.Battle.Status.Data;
+using GameHotUpdate.Battle.Status.Enum;
 
 namespace GameHotUpdate.Battle.Status
 {

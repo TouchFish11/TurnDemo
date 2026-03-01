@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Game.Battle.Objects;
+using GameHotUpdate.Battle.Object;
 
 namespace GameHotUpdate.Battle.UI.SkillKey
 {

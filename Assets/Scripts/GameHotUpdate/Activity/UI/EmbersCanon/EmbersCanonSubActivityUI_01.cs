@@ -1,6 +1,5 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Config.ActivityConfigSO;
+using ConfigHotUpdate;
 using Core.AssetBundles.Management;
 using Core.Loader.Sprite;
 using Core.Loader.UI;
@@ -9,15 +8,18 @@ using Core.Serialize.Json;
 using Core.Service;
 using Core.Tasks.Extensions;
 using Core.UI;
+using Core.Utility;
 using GameHotUpdate.Activity.Core;
 using GameHotUpdate.Activity.Data;
 using GameHotUpdate.Config;
-using GameHotUpdate.Manager;
+using GameHotUpdate.Main.Manager;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace GameHotUpdate.Activity.UI.EmbersCanon
 {
+    using Task = System.Threading.Tasks.Task;
+    
     /// <summary>
     /// 余烬圣典子界面UI01
     /// </summary>
@@ -37,9 +39,9 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
             var configAb = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(AbKeyCollection.Gameconfig);
             var textAsset = await configAb.LoadAssetAsync<TextAsset>(ResKeyCollection.BattleActivityConfig).ToTask<TextAsset>();
             // 解析该活动的关卡配置
-            var battleConfigEntryColletion = ServiceLocator.Get<IJsonManager>().FromJson<BattleConfigEntryColletion>(textAsset.text);
+            var battleActivityConfig = ServiceLocator.Get<IJsonManager>().FromJson<BattleActivityConfig>(textAsset.text, settings: NewtonsoftJsonUtility.SerializerSettings);
             // 初始化关卡
-            foreach (var battleConfigEntry in battleConfigEntryColletion.battleConfigs)
+            foreach (var battleConfigEntry in battleActivityConfig.BattleConfigEntryColletion.battleConfigs)
             {
                 var battleLevelUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<BattleLevelUI>(AbKeyCollection.Ui,
                     ResKeyCollection.BattleLevelUI, svLevel.content);
@@ -79,7 +81,7 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
             switch (btnName)
             {
                 case "btnClose":
-                    ServiceLocator.Get<IPoolManager>().PushObj(this.gameObject);
+                    ServiceLocator.Get<IPoolManager>().PushObj(gameObject);
                     break;
             }
         }

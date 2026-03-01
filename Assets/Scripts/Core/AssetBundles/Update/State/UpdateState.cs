@@ -14,18 +14,22 @@ namespace Core.AssetBundles.Update.State
     public abstract class UpdateState : IUpdateState
     {
         // 持有AssetBundle更新器实例
-        protected readonly AssetBundleUpdater assetBundleUpdater;
+        protected readonly IAssetBundleUpdater assetBundleUpdater;
         // 对象池管理器接口
         protected readonly IPoolManager poolManager;
-
+        protected  readonly IJsonManager jsonManager;
+        
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="updater">AssetBundle更新器实例</param>
-        protected UpdateState(AssetBundleUpdater updater)
+        /// <param name="assetBundleUpdater">AssetBundle更新器实例</param>
+        /// <param name="poolManager"></param>
+        /// <param name="jsonManager"></param>
+        protected UpdateState(IAssetBundleUpdater assetBundleUpdater, IPoolManager poolManager, IJsonManager jsonManager)
         {
-            assetBundleUpdater = updater;
-            poolManager = ServiceLocator.Get<IPoolManager>();
+            this.assetBundleUpdater = assetBundleUpdater;
+            this.poolManager = poolManager;
+            this.jsonManager = jsonManager;
         }
 
         /// <summary>

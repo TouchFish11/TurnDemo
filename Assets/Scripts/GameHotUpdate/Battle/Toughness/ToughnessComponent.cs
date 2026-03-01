@@ -3,15 +3,14 @@ using Core.Components;
 using Core.Reflection;
 using Core.Service;
 using Core.Utility;
-using Game.Battle.Component;
-using Game.Battle.Enum;
-using Game.Battle.Objects;
-using Game.Battle.Toughness;
+using GameHotUpdate.Battle.Core;
 using GameHotUpdate.Battle.Event.General;
 using GameHotUpdate.Battle.Object;
+using GameHotUpdate.Battle.Property;
 using GameHotUpdate.Battle.Toughness.CalcStrategy;
 using GameHotUpdate.Battle.Toughness.ReduceStrategy;
-using GameHotUpdate.Tasks;
+using GameHotUpdate.Extension;
+using GameHotUpdate.Task;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Toughness

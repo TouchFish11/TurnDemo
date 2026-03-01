@@ -1,15 +1,14 @@
 using System.Collections;
 using Core.Service;
-using Game.Battle.Context;
-using Game.Battle.Enum;
-using Game.Battle.Event;
-using Game.Battle.Objects;
-using Game.Battle.Skill.Interface;
-using Game.Battle.Status;
-using Game.VFX;
-using GameHotUpdate.Animation;
+using GameHotUpdate.Animation.Component;
+using GameHotUpdate.Battle.Context;
+using GameHotUpdate.Battle.Event;
 using GameHotUpdate.Battle.Event.Skill;
+using GameHotUpdate.Battle.Object;
+using GameHotUpdate.Battle.Property;
 using GameHotUpdate.Battle.Skill.Component;
+using GameHotUpdate.Battle.Skill.Interface;
+using GameHotUpdate.VFX;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Skill.Base

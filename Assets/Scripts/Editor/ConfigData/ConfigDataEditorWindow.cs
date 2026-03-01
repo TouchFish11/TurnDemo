@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using Editor.Generation;
 using Editor.Generation.Detail;
 using UnityEditor;
@@ -238,7 +237,7 @@ namespace Editor.ConfigData
             // 创建新配置对象
             var newConfigData = new ConfigData(configName);
             // 序列化保存到文件
-            var json = JsonUtility.ToJson(newConfigData, true);
+            var json = UnityEngine.JsonUtility.ToJson(newConfigData, true);
             File.WriteAllText(assetPath, json);
             // 添加到内存列表
             configDatas.Add(newConfigData);
@@ -672,7 +671,7 @@ namespace Editor.ConfigData
 
                 Debug.Log($"已加载路径:{fileInfo}");
                 var json = File.ReadAllText($"{fileInfo}");
-                var configData = JsonUtility.FromJson<ConfigData>(json);
+                var configData = UnityEngine.JsonUtility.FromJson<ConfigData>(json);
                 configDatas.Add(configData);
             }
         }
@@ -688,7 +687,7 @@ namespace Editor.ConfigData
             }
 
             var savePath = $"{GetSavePath()}{selectConfigData.configName}.json";
-            File.WriteAllText(savePath, JsonUtility.ToJson(selectConfigData, true));
+            File.WriteAllText(savePath, UnityEngine.JsonUtility.ToJson(selectConfigData, true));
             AssetDatabase.Refresh();
             Debug.Log($"保存:{selectConfigData.configName}成功");
         }
@@ -701,7 +700,7 @@ namespace Editor.ConfigData
             foreach (var configData in configDatas)
             {
                 var savePath = $"{GetSavePath()}{configData.configName}.json";
-                var json = JsonUtility.ToJson(configData, true);
+                var json = UnityEngine.JsonUtility.ToJson(configData, true);
                 File.WriteAllText(savePath, json);
                 AssetDatabase.Refresh();
                 Debug.Log($"保存:{configData.configName}成功");

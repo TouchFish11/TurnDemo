@@ -4,14 +4,14 @@ using Core.Log;
 using Core.Service;
 using Core.UI;
 using Core.Utility;
-using Game.Battle.Command;
-using Game.Battle.Objects;
 using GameHotUpdate.Battle.Context;
+using GameHotUpdate.Battle.Core;
 using GameHotUpdate.Battle.Event.General;
+using GameHotUpdate.Battle.Object;
 using GameHotUpdate.Battle.StateMeachine;
 using GameHotUpdate.Battle.UI.Base;
 using GameHotUpdate.Battle.Utility;
-using GameHotUpdate.Cameras;
+using GameHotUpdate.Camera;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Command

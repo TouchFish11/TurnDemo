@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using Game.Battle.Objects;
-using Game.Battle.Skill.Interface;
+using GameHotUpdate.Battle.Object;
+using GameHotUpdate.Battle.Skill.Interface;
 
 namespace GameHotUpdate.Battle.Skill.Base
 {

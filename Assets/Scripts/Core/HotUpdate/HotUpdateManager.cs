@@ -17,7 +17,7 @@ namespace Core.HotUpdate
     public class HotUpdateManager : SingletonBase<HotUpdateManager>, IHotUpdateManager
     {
         // 缓存热更程序集名称
-        private readonly List<string>  _assemblyNames = new();
+        private readonly List<string> _assemblyNames = new();
         
         private HotUpdateManager()
         {
@@ -72,11 +72,6 @@ namespace Core.HotUpdate
             return Assembly.Load("Assembly-CSharp-Config");
         }
         
-        public Assembly GetGameAssembly()
-        {
-            return Assembly.Load("Assembly-CSharp-Game");
-        }
-        
         /// <summary>
         /// 获取所有程序集
         /// </summary>
@@ -87,7 +82,6 @@ namespace Core.HotUpdate
             {
                 GetCoreAssembly(),
                 GetConfigAssembly(),
-                GetGameAssembly(),
             };
             
             // 获取所有热更后的程序集

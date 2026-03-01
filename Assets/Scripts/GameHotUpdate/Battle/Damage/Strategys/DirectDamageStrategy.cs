@@ -1,9 +1,9 @@
 using Core.Log;
-using Game.Battle.Damage;
-using Game.Battle.Enum;
-using Game.Battle.Objects;
+using GameHotUpdate.Battle.Damage.Data;
+using GameHotUpdate.Battle.Object;
 using GameHotUpdate.Battle.Property;
-using GameHotUpdate.Tasks;
+using GameHotUpdate.Extension;
+using GameHotUpdate.Task;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Damage.Strategys

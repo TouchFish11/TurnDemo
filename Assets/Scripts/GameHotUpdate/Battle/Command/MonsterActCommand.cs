@@ -2,13 +2,12 @@ using System.Collections;
 using Core.Service;
 using Core.UI;
 using Core.Utility;
-using Game.Battle.Command;
-using Game.Battle.Context;
-using Game.Battle.Toughness;
+using GameHotUpdate.Battle.Context;
 using GameHotUpdate.Battle.Layer;
 using GameHotUpdate.Battle.Status;
+using GameHotUpdate.Battle.Toughness;
 using GameHotUpdate.Battle.UI.Base;
-using GameHotUpdate.Cameras;
+using GameHotUpdate.Camera;
 using UnityEngine;
 
 namespace GameHotUpdate.Battle.Command
@@ -17,7 +16,7 @@ namespace GameHotUpdate.Battle.Command
     /// 怪物行动指令
     /// 包括韧性恢复和技能执行
     /// </summary>
-    public class MonsterActCommand : Game.Battle.Command.Command, IMonsterActCommand
+    public class MonsterActCommand : Command, IMonsterActCommand
     {
         // 韧性恢复速度
         private const float recoverySpeed = 55f;

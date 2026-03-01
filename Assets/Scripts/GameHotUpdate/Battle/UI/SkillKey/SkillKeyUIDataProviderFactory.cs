@@ -5,7 +5,7 @@ using Core.Service;
 using Core.Utility;
 using GameHotUpdate.Battle.UI.SkillKey.Provider;
 
-namespace Game.UI.Battle.SkillKey.Provider
+namespace GameHotUpdate.Battle.UI.SkillKey
 {
     /// <summary>
     /// 技能按键UI数据提供器工厂

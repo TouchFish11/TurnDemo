@@ -5,17 +5,15 @@ using Core.Reflection;
 using Core.Serialize.Binary;
 using Core.Service;
 using Core.Utility;
-using Game.Animation;
-using Game.Battle.Command;
-using Game.Battle.Context;
-using Game.Battle.Objects;
-using Game.Battle.Skill.Enum;
 using GameHotUpdate.Animation;
+using GameHotUpdate.Animation.Component;
 using GameHotUpdate.Battle.Command;
+using GameHotUpdate.Battle.Context;
 using GameHotUpdate.Battle.Event.Turn;
 using GameHotUpdate.Battle.Object.StateMeachine;
 using GameHotUpdate.Battle.ResponsibilityChain.DamageChain;
 using GameHotUpdate.Battle.Skill.Component;
+using GameHotUpdate.Battle.Skill.Enum;
 
 namespace GameHotUpdate.Battle.Object
 {
@@ -97,7 +95,7 @@ namespace GameHotUpdate.Battle.Object
 
         public override void CastSkill(int skillId)
         {
-            var skillComponent = this.GetComponent<PlayerSkillComponent>();
+            var skillComponent = GetComponent<PlayerSkillComponent>();
             // 能否释放
             if (!skillComponent.CanCast(skillId))
             {

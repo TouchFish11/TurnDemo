@@ -1,5 +1,3 @@
-using Game.Battle.Condition;
-using Game.Battle.Context;
 using GameHotUpdate.Battle.Context;
 
 namespace GameHotUpdate.Battle.Condition

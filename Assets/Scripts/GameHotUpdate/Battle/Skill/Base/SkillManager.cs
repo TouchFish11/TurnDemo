@@ -1,8 +1,7 @@
 using Core.Service;
 using Core.Singleton;
-using Game.Battle.Skill;
-using Game.Battle.Skill.Interface;
-using Game.Battle.TargetSelect;
+using GameHotUpdate.Battle.Skill.Interface;
+using GameHotUpdate.Battle.TargetSelect;
 
 namespace GameHotUpdate.Battle.Skill.Base
 {

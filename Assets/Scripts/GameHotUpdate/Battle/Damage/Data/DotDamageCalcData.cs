@@ -1,5 +1,5 @@
-using Game.Battle.Enum;
-using Game.Battle.Objects;
+using GameHotUpdate.Battle.Object;
+using GameHotUpdate.Battle.Property;
 
 namespace GameHotUpdate.Battle.Damage.Data
 {

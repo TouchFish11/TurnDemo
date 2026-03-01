@@ -9,6 +9,26 @@
       "CurrentPro": 0,
       "IsCompleted": false,
       "IsTracking": true
+    },
+    "1_1": {
+      "currentTaskId": "1_1",
+      "currentPro": 1,
+      "isCompleted": true,
+      "isTracking": false,
+      "CurrentTaskId": "1_1",
+      "CurrentPro": 1,
+      "IsCompleted": true,
+      "IsTracking": false
+    },
+    "1_2": {
+      "currentTaskId": "1_2",
+      "currentPro": 1,
+      "isCompleted": true,
+      "isTracking": false,
+      "CurrentTaskId": "1_2",
+      "CurrentPro": 1,
+      "IsCompleted": true,
+      "IsTracking": false
     }
   }
 }

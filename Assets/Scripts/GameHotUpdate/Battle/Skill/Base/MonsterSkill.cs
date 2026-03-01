@@ -1,10 +1,9 @@
 using Core.Service;
 using Core.UI;
-using Game.Battle.Context;
-using Game.Battle.Objects;
-using Game.Battle.Skill.Interface;
-using Game.Battle.Status;
-using Game.Battle.TargetSelect;
+using GameHotUpdate.Battle.Context;
+using GameHotUpdate.Battle.Object;
+using GameHotUpdate.Battle.Skill.Interface;
+using GameHotUpdate.Battle.TargetSelect;
 using GameHotUpdate.Battle.UI.Base;
 
 namespace GameHotUpdate.Battle.Skill.Base

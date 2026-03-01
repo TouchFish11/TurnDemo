@@ -2,6 +2,8 @@ using System.IO;
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Enum;
 using Core.AssetBundles.Update.Exception;
+using Core.Pool;
+using Core.Serialize.Json;
 using Core.Tasks.Extensions;
 using Core.Utility;
 using UnityEngine;
@@ -15,11 +17,7 @@ namespace Core.AssetBundles.Update.State
     /// </summary>
     public class GetLocalListFileState : UpdateState
     {
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="updater">AssetBundle更新器实例</param>
-        public GetLocalListFileState(AssetBundleUpdater updater) : base(updater)
+        public GetLocalListFileState(IAssetBundleUpdater assetBundleUpdater, IPoolManager poolManager, IJsonManager jsonManager) : base(assetBundleUpdater, poolManager, jsonManager)
         {
         }
 

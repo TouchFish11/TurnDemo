@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Core.Log;
-using Game.Battle.Objects;
-using Game.Battle.Skill.Enum;
+using GameHotUpdate.Battle.Object;
+using GameHotUpdate.Battle.Skill.Enum;
 
 namespace GameHotUpdate.Battle.Utility
 {

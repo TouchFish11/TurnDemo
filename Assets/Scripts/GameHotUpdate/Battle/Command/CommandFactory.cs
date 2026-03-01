@@ -1,9 +1,8 @@
 using Core.Pool;
 using Core.Reflection;
 using Core.Service;
-using Game.Battle.Command;
-using Game.Battle.Skill.Interface;
-using Game.Battle.Toughness;
+using GameHotUpdate.Battle.Skill.Interface;
+using GameHotUpdate.Battle.Toughness;
 
 namespace GameHotUpdate.Battle.Command
 {
