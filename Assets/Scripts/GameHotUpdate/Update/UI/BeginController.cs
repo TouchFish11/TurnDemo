@@ -1,6 +1,7 @@
 using System;
 using Core.AssetBundles.Update;
 using Core.AssetBundles.Update.Enum;
+using Core.Log;
 using Core.Service;
 using Core.UI;
 using Core.UI.MVC;
@@ -17,7 +18,7 @@ namespace GameHotUpdate.Update.UI
     /// </summary>
     public class BeginController : UIController<BeginView, BeginModel>
     {
-        private readonly IAssetBundleUpdater _assetBundleUpdater;
+        private readonly IAssetBundleUpdater _assetBundleUpdater = ServiceLocator.Get<IAssetBundleUpdater>();
         private string _speed;
         
         /// <summary>
@@ -25,15 +26,21 @@ namespace GameHotUpdate.Update.UI
         /// </summary>
         public event Func<Task> OnClickEnterGame;
 
-        public BeginController()
+        protected override Task OnShow()
         {
-            _assetBundleUpdater = ServiceLocator.Get<IAssetBundleUpdater>();
+            RegisterUpdateEvent();
+            return Task.CompletedTask;
         }
-        
+
+        protected override Task OnHide()
+        {
+            UnRegisterUpdateEvent();
+            return Task.CompletedTask;
+        }
+
         protected override Task OnInit()
         {
             _assetBundleUpdater.Init();
-            RegisterUpdateEvent();
             ResetState();
             return Task.CompletedTask;
         }
@@ -118,6 +125,8 @@ namespace GameHotUpdate.Update.UI
                     view.SetStopButtonActive(false);
                     // 隐藏部分UI
                     view.SetDownloadSizeAndSpeedActive(false);
+                    // 重置进度条
+                    view.SetSliderProgress(0);
                     view.SetTextPhase("正在校验资源完整性...");
                     break;
                 case EUpdatePhase.Finished:
@@ -165,32 +174,39 @@ namespace GameHotUpdate.Update.UI
         /// <param name="updateResult"></param>
         private async void OnUpdateOver(UpdateResult updateResult)
         {
-            UnRegisterUpdateEvent();
-            // 更新成功
-            if (updateResult.Success)
+            try
             {
-                view.SetUpdateAreaActive(false);
-                view.SetEnterAreaActive(true);
-            }
-            // 更新失败
-            else
-            {
-                // 更新失败
-                var controller = await uiManager.CreateViewAsync<UpdateTipView, UpdateTipModel, UpdateTipController>(AbKeyCollection.Default, E_UILayer.Mid, ResKeyCollection.UpdateTipView);
-                // 设置消息
-                controller.SetUpdateMessage(GetErrorMessage(updateResult.UpdateError));
-                
-                // 暂时这样处理，可根据枚举类型决定如何处理按钮点击逻辑
-                controller.SetTipActive(true, "点击确认后将重新下载");
-                controller.OnSure += () =>
+                UnRegisterUpdateEvent();
+                // 更新成功
+                if (updateResult.Success)
                 {
-                    uiManager.DestroyView(AbKeyCollection.Default, controller);
+                    view.SetUpdateAreaActive(false);
+                    view.SetEnterAreaActive(true);
+                }
+                // 更新失败
+                else
+                {
+                    // 更新失败
+                    var controller = await uiManager.CreateViewAsync<UpdateTipView, UpdateTipModel, UpdateTipController>(AbKeyCollection.Default, E_UILayer.Mid, ResKeyCollection.UpdateTipView);
+                    // 设置消息
+                    controller.SetUpdateMessage(GetErrorMessage(updateResult.UpdateError));
+                
+                    // 暂时这样处理，可根据枚举类型决定如何处理按钮点击逻辑
+                    controller.SetTipActive(true, "点击确认后将重新下载");
+                    controller.OnSure += () =>
+                    {
+                        uiManager.DestroyView(AbKeyCollection.Default, controller);
                     
-                    ResetState();
-                    _assetBundleUpdater.Init();
-                    RegisterUpdateEvent();
-                    _assetBundleUpdater.CheckUpdate();
-                };
+                        ResetState();
+                        _assetBundleUpdater.Init();
+                        RegisterUpdateEvent();
+                        _assetBundleUpdater.CheckUpdate();
+                    };
+                }
+            }
+            catch (Exception e)
+            {
+                LogManager.LogError($"{nameof(BeginController)}.{nameof(OnUpdateOver)}：{e.Message}，{e.StackTrace}");
             }
         }
 
@@ -215,34 +231,49 @@ namespace GameHotUpdate.Update.UI
             };
         }
         
-        
+        /// <summary>
+        /// 进入主场景
+        /// </summary>
         private async void EnterMain()
         {
-            // 销毁界面
-            uiManager.DestroyView(AbKeyCollection.Default, this);
-            // 清空UI管理器
-            uiManager.Clear(AbKeyCollection.Default);
-            
-            await OnClickEnterGame?.Invoke();
-            OnClickEnterGame = null;
+            try
+            {
+                // 销毁界面
+                uiManager.DestroyView(AbKeyCollection.Default, this);
+                // 清空UI管理器
+                uiManager.Clear(AbKeyCollection.Default);
+
+                if (OnClickEnterGame == null)
+                {
+                    return;
+                }
+                
+                await OnClickEnterGame.Invoke();
+                OnClickEnterGame = null;
+            }
+            catch (Exception e)
+            {
+                LogManager.LogError($"{nameof(BeginController)}.{nameof(EnterMain)}：{e.Message}，{e.StackTrace}");
+            }
         }
         
         protected override async void ButtonOnClick(string btnName)
         {
-            if (btnName == nameof(view.btnStop))
+            try
             {
-                await _assetBundleUpdater.GetContext().CancelDownload();
+                if (btnName == nameof(view.btnStop))
+                {
+                    await _assetBundleUpdater.GetContext().CancelDownload();
+                }
+                else if (btnName == nameof(view.btnEnter))
+                {
+                    EnterMain();
+                }
             }
-            else if (btnName == nameof(view.btnEnter))
+            catch (Exception e)
             {
-                EnterMain();
+                LogManager.LogError($"{nameof(BeginController)}.{nameof(ButtonOnClick)}：{e.Message}，{e.StackTrace}");
             }
-        }
-
-        public override void Destroy()
-        {
-            UnRegisterUpdateEvent();
-            base.Destroy();
         }
     }
 }

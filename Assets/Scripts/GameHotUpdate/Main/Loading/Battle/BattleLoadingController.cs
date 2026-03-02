@@ -2,19 +2,26 @@ using Core.UI.MVC;
 
 namespace GameHotUpdate.Main.Loading.Battle
 {
+    using Task = System.Threading.Tasks.Task;
+
     /// <summary>
-    /// 
+    /// 战斗加载界面控制器
     /// </summary>
     public class BattleLoadingController : UIController<BattleLoadingView, BattleLoadingModel>
     {
-        protected override System.Threading.Tasks.Task OnInit()
+        protected override Task OnShow()
         {
-            return System.Threading.Tasks.Task.CompletedTask;
+            return Task.CompletedTask;
         }
 
-        public void LoadBattle()
+        protected override Task OnHide()
         {
+            return Task.CompletedTask;
+        }
 
+        protected override Task OnInit()
+        {
+            return Task.CompletedTask;
         }
 
         /// <summary>

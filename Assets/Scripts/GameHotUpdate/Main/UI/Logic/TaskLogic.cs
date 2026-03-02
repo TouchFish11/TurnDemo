@@ -11,31 +11,26 @@ namespace GameHotUpdate.Main.UI.Logic
     /// </summary>
     public class TaskLogic : MainLogic
     {
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="mainController">主界面控制器，用于交互逻辑调度</param>
-        /// <param name="mainModel">主界面数据模型，用于数据存储与读取</param>
-        /// <param name="mainView">主界面视图层，用于UI渲染与交互</param>
-        public TaskLogic(MainController mainController, MainModel mainModel, MainView mainView) : base(mainController, mainModel, mainView)
-        {
-
-        }
-
+        private readonly ITaskManager _taskManager = ServiceLocator.Get<ITaskManager>();
+        
         /// <summary>
         /// 初始化任务逻辑
         /// 初始化时检查所有任务的当前状态，确保任务栏显示与实际状态一致
         /// </summary>
-        public override void Init()
+        /// <param name="mainController1"></param>
+        /// <param name="mainModel1"></param>
+        /// <param name="mainView1"></param>
+        public override void Init(MainController mainController1, MainModel mainModel1, MainView mainView1)
         {
+            base.Init(mainController1, mainModel1, mainView1);
             // 初始化任务栏状态：默认隐藏
             SetTaskbarActive(false);
             // 注册任务系统回调：任务更新时执行TaskLogic的UpdateTask方法
-            ServiceLocator.Get<ITaskManager>().OnUpdateTask += UpdateTask;
+            _taskManager.OnUpdateTask += UpdateTask;
             // 注册任务系统回调：任务取消时执行TaskLogic的CancelTask方法
-            ServiceLocator.Get<ITaskManager>().OnCancelTask += CancelTask;
+            _taskManager.OnCancelTask += CancelTask;
             // 通过服务定位器获取任务管理器，执行任务状态检查
-            ServiceLocator.Get<ITaskManager>().CheckTaskState();
+            _taskManager.CheckTaskState();
         }
 
         /// <summary>
@@ -78,11 +73,11 @@ namespace GameHotUpdate.Main.UI.Logic
             mainView.SetTaskbarActive(isActive);
         }
 
-        public override void Dispose()
+        public override void ResetData()
         {
-            ServiceLocator.Get<ITaskManager>().OnUpdateTask -= UpdateTask;
-            ServiceLocator.Get<ITaskManager>().OnCancelTask -= CancelTask;
-            base.Dispose();
+            _taskManager.OnUpdateTask -= UpdateTask;
+            _taskManager.OnCancelTask -= CancelTask;
+            base.ResetData();
         }
     }
 }

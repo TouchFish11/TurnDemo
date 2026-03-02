@@ -10,19 +10,23 @@ using UnityEngine;
 
 namespace GameHotUpdate.Dialogue.UI
 {
+    using Task = System.Threading.Tasks.Task;
+
     /// <summary>
     /// 对话控制器核心类
     /// 处理对话界面的交互逻辑、对话内容展示、分支选项设置等核心功能
     /// </summary>
     public class DialogueController : UIController<DialogueView, DialogueModel>
     {
-        // 等待0.25秒的缓存实例，避免重复创建
         private static readonly WaitForSeconds _waitForSeconds0_25 = new(0.25f);
 
+        private readonly IDialogueManager _dialogueManager = ServiceLocator.Get<IDialogueManager>();
+        
         /// <summary>
         /// 对话加载提示文本（渐变显示的省略号）
         /// </summary>
         private const string DialogueTip = "...";
+        
         /// <summary>
         /// 对话默认提示文本（继续按钮提示）
         /// </summary>
@@ -31,24 +35,35 @@ namespace GameHotUpdate.Dialogue.UI
         // 对话提示动画的协程引用，用于停止协程
         private Coroutine dialogueTipCor;
 
+        protected override Task OnShow()
+        {
+            // 获取对话管理器实例，注册单条对话开始/结束事件
+            _dialogueManager.OnSingleDialogueStart += OnSingleDialogueStart;
+            _dialogueManager.OnSingleDialogueEnd += OnSingleDialogueEnd;
+            // 注册故事回顾子视图关闭事件
+            view.StoryReviewView.OnSubViewClosed += OnSubViewClosed;
+            // 初始状态隐藏故事回顾界面
+            view.SetActiveReview(false);
+            return Task.CompletedTask;
+        }
+
+        protected override Task OnHide()
+        {
+            _dialogueManager.OnSingleDialogueStart -= OnSingleDialogueStart;
+            _dialogueManager.OnSingleDialogueEnd -= OnSingleDialogueEnd;
+            view.StoryReviewView.OnSubViewClosed -= OnSubViewClosed;
+            dialogueTipCor = null;
+            return Task.CompletedTask;
+        }
+
         /// <summary>
         /// 控制器初始化方法（异步）
         /// 注册对话管理器的事件监听、初始化故事回顾子视图
         /// </summary>
         /// <returns>异步任务</returns>
-        protected override System.Threading.Tasks.Task OnInit()
+        protected override Task OnInit()
         {
-            // 获取对话管理器实例，注册单条对话开始/结束事件
-            var dialogueManager = ServiceLocator.Get<IDialogueManager>();
-            dialogueManager.OnSingleDialogueStart += OnSingleDialogueStart;
-            dialogueManager.OnSingleDialogueEnd += OnSingleDialogueEnd;
-            
-            // 注册故事回顾子视图关闭事件
-            view.StoryReviewView.OnSubViewClosed += OnSubViewClosed;
-            // 初始状态隐藏故事回顾界面
-            view.SetActiveReview(false);
-            
-            return System.Threading.Tasks.Task.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -139,7 +154,8 @@ namespace GameHotUpdate.Dialogue.UI
         public IEnumerator DialogueTip_Cor()
         {
             var length = DialogueTip.Length;
-            while (true) // 无限循环，直到对话结束停止协程
+            // 直到对话结束停止协程
+            while (true) 
             {
                 // 逐字符显示省略号，每次等待0.25秒
                 for (var i = 0; i < length; i++)
@@ -157,7 +173,7 @@ namespace GameHotUpdate.Dialogue.UI
         /// <param name="dialogueText">对话文本内容</param>
         public void ShowDialogueText(string speakerName ,string dialogueText)
         {
-            // 清空上一次的分支选项（避免残留）
+            // 清空上一次的分支选项
             model.ClearBranchOpt();
             // 更新视图显示说话人名称和对话文本
             view.UpdateNameAndText(speakerName, dialogueText);
@@ -170,34 +186,32 @@ namespace GameHotUpdate.Dialogue.UI
         /// <param name="branchInfos">分支信息数组</param>
         public async void SetBranchOpt(BranchInfo[] branchInfos)
         {
-            // 清空已有分支选项
-            model.ClearBranchOpt();
-            // 遍历分支信息，逐个创建选项UI
-            foreach (var branchInfo in branchInfos)
-            {
-                // 从资源包异步加载分支选项UI预制体，并挂载到对话框节点下
-                var optUIWrapper = await ServiceLocator.Get<IUiLoader>().GetUIObject<DialogueOptUI>(
-                    AbKeyCollection.Ui, 
-                    ResKeyCollection.DialogueOptUI, 
-                    view.DialogueOptBox
-                );
-                    
-                // 初始化分支选项UI（绑定分支数据）
-                optUIWrapper.Init(branchInfo);
-                // 绑定选项选择事件到对话管理器的处理方法
-                optUIWrapper.OnSelectOpt += ServiceLocator.Get<IDialogueManager>().OnSelectOpt;
-                // 将选项UI缓存到模型中（便于后续管理）
-                model.CacheBranchOpt(optUIWrapper);
-            }
-            
             try
             {
-
+                // 清空已有分支选项
+                model.ClearBranchOpt();
+                // 遍历分支信息，逐个创建选项UI
+                foreach (var branchInfo in branchInfos)
+                {
+                    // 从资源包异步加载分支选项UI预制体，并挂载到对话框节点下
+                    var optUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<DialogueOptUI>(
+                        AbKeyCollection.Ui, 
+                        ResKeyCollection.DialogueOptUI, 
+                        view.DialogueOptBox
+                    );
+                    
+                    // 初始化分支选项UI
+                    optUI.Init(branchInfo);
+                    // 绑定选项选择事件到对话管理器的处理方法
+                    optUI.OnSelectOpt += ServiceLocator.Get<IDialogueManager>().OnSelectOpt;
+                    // 将选项UI缓存到模型中（便于后续管理）
+                    model.CacheBranchOpt(optUI);
+                }
             }
             catch (Exception e)
             {
                 // 记录分支选项创建异常日志
-                LogManager.LogError($"{nameof(DialogueController)}.{nameof(SetBranchOpt)}: {e.Message}");
+                LogManager.LogError($"{nameof(DialogueController)}.{nameof(SetBranchOpt)}: {e.Message}，{e.StackTrace}");
             }
         }
     }

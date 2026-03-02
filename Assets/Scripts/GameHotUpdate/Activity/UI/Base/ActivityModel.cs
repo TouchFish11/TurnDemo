@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using Core.Loader.UI;
 using Core.Pool;
 using Core.Service;
 using Core.UI.MVC;
 using GameHotUpdate.Activity.Core;
+using GameHotUpdate.Config;
 
 namespace GameHotUpdate.Activity.UI.Base
 {
@@ -13,9 +15,9 @@ namespace GameHotUpdate.Activity.UI.Base
     public class ActivityModel : UIModel
     {
         // 活动选项UI列表
-        private List<ActivityUI> activityUis = new();
+        private readonly List<ActivityUI> activityUis = new();
         // 活动界面类型缓存
-        private HashSet<Type> activityTypes = new();
+        private readonly HashSet<Type> activityTypes = new();
         
         /// <summary>
         /// 当前显示的活动界面缓存
@@ -49,31 +51,35 @@ namespace GameHotUpdate.Activity.UI.Base
         {
             if (Activity != null)
             {
+                // 释放资源
+                ServiceLocator.Get<IUiLoader>().RealseAsset(AbKeyCollection.Ui, Activity.GameObject.name);
                 // 清除当前缓存的界面
                 ServiceLocator.Get<IPoolManager>().PushObj(Activity.GameObject);
             }
             Activity = currentActivity;
             activityTypes.Add(type);
         }
-
-        /// <summary>
-        /// 获取活动类型
-        /// 用于清理缓存池
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<Type> GetActivityTypes()
-        {
-            foreach (var activityType in activityTypes)
-            {
-                yield return activityType;
-            }
-        }
-
+        
         public override void ClearData()
         {
             Activity = null;
-            activityUis = null;
-            activityTypes = null;
+            foreach (var activityUi in activityUis)
+            {
+                // 释放资源
+                ServiceLocator.Get<IUiLoader>().RealseAsset(AbKeyCollection.Ui, activityUi.name);
+                // 放入缓存池
+                ServiceLocator.Get<IPoolManager>().PushObj(activityUi.gameObject);
+            }
+            activityUis.Clear();
+            // 清理类型缓存
+            ServiceLocator.Get<IPoolManager>().ClearTypes(typeof(ActivityUI));
+            
+            foreach (var activityType in activityTypes)
+            {
+                // 清理类型缓存
+                ServiceLocator.Get<IPoolManager>().ClearTypes(activityType);
+            }
+            activityTypes.Clear();
             base.ClearData();
         }
     }

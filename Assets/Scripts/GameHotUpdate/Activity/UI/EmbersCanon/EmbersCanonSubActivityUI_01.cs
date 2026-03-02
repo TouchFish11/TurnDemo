@@ -1,9 +1,6 @@
 using System.Collections.Generic;
 using ConfigHotUpdate;
 using Core.AssetBundles.Management;
-using Core.Loader.Sprite;
-using Core.Loader.UI;
-using Core.Pool;
 using Core.Serialize.Json;
 using Core.Service;
 using Core.Tasks.Extensions;
@@ -28,8 +25,8 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
         [Inject] private ScrollRect svLevel;
 
         private readonly IList<BattleLevelUI> _battleLevelUis = new List<BattleLevelUI>();
-
-        protected override async Task OnInit()
+        
+        protected override async Task OnShow()
         {
             // 根据读取用户活动数据
             var activityDataCollection = ServiceLocator.Get<IGameManager>().GameDataManager.ActivityDataCollection as ActivityDataCollection;
@@ -43,7 +40,7 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
             // 初始化关卡
             foreach (var battleConfigEntry in battleActivityConfig.BattleConfigEntryColletion.battleConfigs)
             {
-                var battleLevelUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<BattleLevelUI>(AbKeyCollection.Ui,
+                var battleLevelUI = await uiLoader.GetUIObject<BattleLevelUI>(AbKeyCollection.Ui,
                     ResKeyCollection.BattleLevelUI, svLevel.content);
                 // 获取用户数据中的战斗关卡条目
                 var levelEntryData = embersCanonData.GetLevelData(battleConfigEntry.levelId);
@@ -57,9 +54,9 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
                 // 根据是否完成使用不同的Sprite
                 var levelTipIconRes = levelEntryData.isComplete ? ResKeyCollection.Icon_Common_Check : ResKeyCollection.Icon_Common_Battle;
                 
-                var icon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Icon_Common, levelTipIconRes);
+                var icon = await spriteLoader.LoadSpriteAsync(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Icon_Common, levelTipIconRes);
                 // 初始化关卡UI
-                battleLevelUI.Init(battleConfigEntry.levelName, icon, battleConfigEntry);
+                battleLevelUI.Init(battleConfigEntry.levelName, icon, levelEntryData, battleConfigEntry);
                 // 缓存UI
                 _battleLevelUis.Add(battleLevelUI);
             }
@@ -69,11 +66,10 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
         {
             foreach (var battleLevelUi in _battleLevelUis)
             {
-                ServiceLocator.Get<IPoolManager>().PushObj(battleLevelUi.gameObject);
+                poolManager.PushObj(battleLevelUi.gameObject);
             }
             _battleLevelUis.Clear();
-            
-            ServiceLocator.Get<IPoolManager>().ClearTypes(typeof(BattleLevelUI), typeof(EmbersCanonSubActivityUI_01));
+            poolManager.ClearTypes(typeof(BattleLevelUI), typeof(EmbersCanonSubActivityUI_01));
         }
 
         protected override void OnButtonClick(string btnName)
@@ -81,7 +77,8 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
             switch (btnName)
             {
                 case "btnClose":
-                    ServiceLocator.Get<IPoolManager>().PushObj(gameObject);
+                    uiLoader.RealseAsset(AbKeyCollection.Ui, ResKeyCollection.EmbersCanonSubActivityUI_01);
+                    Destroy(this.gameObject);
                     break;
             }
         }

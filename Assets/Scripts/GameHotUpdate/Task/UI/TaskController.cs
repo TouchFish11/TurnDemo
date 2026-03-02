@@ -1,10 +1,7 @@
 using System.Threading.Tasks;
 using Core.Collection;
-using Core.Loader.UI;
-using Core.Pool;
 using Core.Serialize.Binary;
 using Core.Service;
-using Core.UI;
 using Core.UI.MVC;
 using GameHotUpdate.Config;
 using GameHotUpdate.Item;
@@ -13,26 +10,24 @@ using GameHotUpdate.Task.Data;
 
 namespace GameHotUpdate.Task.UI
 {
+    using Task = System.Threading.Tasks.Task;
+
     /// <summary>
     /// 任务控制器类
     /// 处理任务UI的交互逻辑、数据初始化、视图更新等核心逻辑
     /// </summary>
-    //[UIControllerFactory(typeof(TaskControllerFactory))]
     public class TaskController : UIController<TaskView, TaskModel>
     {
         // 任务数据集合，存储当前所有任务的状态数据
         private ITaskDataCollection taskDataCollection;
+        private readonly ITaskManager _taskManager = ServiceLocator.Get<ITaskManager>();
+        private readonly IBinaryDataManager _binaryDataManager = ServiceLocator.Get<IBinaryDataManager>();
         
-        /// <summary>
-        /// 控制器初始化方法（异步）
-        /// 完成任务数据初始化、视图状态初始化等核心初始化逻辑
-        /// </summary>
-        /// <returns>异步任务</returns>
-        protected override async System.Threading.Tasks.Task OnInit()
+        
+        protected override async Task OnShow()
         {
             // 初始化所有任务数据和UI展示
             await InitTasks();
-
             // 判断是否存在任务数据
             var hasTask = model.HasTask();
             view.HasTasks(hasTask);
@@ -59,6 +54,21 @@ namespace GameHotUpdate.Task.UI
             // 设置任务分组的Toggle不允许取消选中，确保始终有一个任务处于选中状态
             view.TaskItemGroup.allowSwitchOff = false;
         }
+
+        protected override Task OnHide()
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// 控制器初始化
+        /// 完成任务数据初始化、视图状态初始化等核心初始化逻辑
+        /// </summary>
+        /// <returns>异步任务</returns>
+        protected override Task OnInit()
+        {
+            return Task.CompletedTask;
+        }
         
         /// <summary>
         /// 选中追踪的任务
@@ -83,7 +93,7 @@ namespace GameHotUpdate.Task.UI
             {
                 case "btnClose":
                     // 关闭任务UI视图
-                    ServiceLocator.Get<IUIManager>().DestroyView(AbKeyCollection.Ui, this);
+                    uiManager.DestroyView(AbKeyCollection.Ui, this);
                     break;
                 case "btnAcceptTask":
                     // 切换任务追踪状态（接受/取消追踪）
@@ -93,12 +103,12 @@ namespace GameHotUpdate.Task.UI
                     if (model.IsFollowingTask)
                     {
                         // 接受当前选中的任务，开始追踪
-                        ServiceLocator.Get<ITaskManager>().AcceptTask(model.CurrentTaskInfo.f_id);
+                        _taskManager.AcceptTask(model.CurrentTaskInfo.f_id);
                     }
                     else
                     {
                         // 取消当前追踪的任务
-                        ServiceLocator.Get<ITaskManager>().CancelTask();
+                        _taskManager.CancelTask();
                     }
                     break;
             }
@@ -109,12 +119,11 @@ namespace GameHotUpdate.Task.UI
         /// 加载任务配置、筛选任务状态、创建任务分类和任务项UI
         /// </summary>
         /// <returns>异步任务</returns>
-        private async System.Threading.Tasks.Task InitTasks()
+        private async Task InitTasks()
         {
             // 临时设置任务分组允许取消选中，避免初始化过程中Toggle无法响应事件
             view.TaskItemGroup.allowSwitchOff = true;
             // 获取全局任务数据集合实例
-
             taskDataCollection = TaskUtility.GetTaskDataCollection();
             if (taskDataCollection == null)
             {
@@ -122,7 +131,7 @@ namespace GameHotUpdate.Task.UI
             }
             
             // 从二进制数据管理器加载任务配置表（Excel配置），获取任务ID到任务信息的映射表
-            var idToInfoMap = ServiceLocator.Get<IBinaryDataManager>().GetConfig<TaskInfoContainer>(EConfigLoadType.Excel).dataDic;
+            var idToInfoMap = _binaryDataManager.GetConfig<TaskInfoContainer>(EConfigLoadType.Excel).dataDic;
 
             // 遍历所有任务配置信息
             foreach (var taskInfo in idToInfoMap.Values)
@@ -168,7 +177,7 @@ namespace GameHotUpdate.Task.UI
         private async Task<TaskTypeContainer> CreateTaskTypeContainer(TaskInfo taskInfo)
         {
             // 从资源包中异步加载任务类型容器预制体并创建实例
-            var taskTypeContainerWrapper = await ServiceLocator.Get<IUiLoader>().GetUIObject<TaskTypeContainer>(AbKeyCollection.Ui, ResKeyCollection.TaskTypeContainer, view.TaskContent);
+            var taskTypeContainerWrapper = await uiLoader.GetUIObject<TaskTypeContainer>(AbKeyCollection.Ui, ResKeyCollection.TaskTypeContainer, view.TaskContent);
             // 初始化任务类型容器（设置对应的任务类型）
             taskTypeContainerWrapper.Init(taskInfo.f_taskType);
             // 将创建的容器添加到模型中管理
@@ -182,10 +191,10 @@ namespace GameHotUpdate.Task.UI
         /// <param name="taskInfo">任务信息（配置数据）</param>
         /// <param name="container">该任务项所属的任务类型容器</param>
         /// <returns>异步任务</returns>
-        private async System.Threading.Tasks.Task CreateTaskItem(TaskInfo taskInfo, TaskTypeContainer container)
+        private async Task CreateTaskItem(TaskInfo taskInfo, TaskTypeContainer container)
         {
             // 从资源包中异步加载任务项预制体，并挂载到对应任务类型容器的Transform下
-            var taskItem = await ServiceLocator.Get<IUiLoader>().GetUIObject<TaskItem>(AbKeyCollection.Ui, ResKeyCollection.TaskItem, container.transform);
+            var taskItem = await uiLoader.GetUIObject<TaskItem>(AbKeyCollection.Ui, ResKeyCollection.TaskItem, container.transform);
             // 注册任务项选中事件，选中时更新任务详情展示
             taskItem.OnSelectedTask += UpdateTaskDetail;
             // 初始化任务项UI（传入任务信息和任务分组组件）
@@ -202,7 +211,7 @@ namespace GameHotUpdate.Task.UI
         private void UpdateTaskDetail(string id)
         {
             // 从配置中获取任务基础信息
-            var selectTaskInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<TaskInfoContainer>(EConfigLoadType.Excel).dataDic[id];
+            var selectTaskInfo = _binaryDataManager.GetConfig<TaskInfoContainer>(EConfigLoadType.Excel).dataDic[id];
             // 相等不用处理
             if (model.CurrentTaskInfo != null && selectTaskInfo == model.CurrentTaskInfo)
             {
@@ -213,7 +222,9 @@ namespace GameHotUpdate.Task.UI
             model.CurrentTaskInfo = selectTaskInfo;
             foreach (var itemGrid in model.GetItemGrids())
             {
-                ServiceLocator.Get<IPoolManager>().PushObj(itemGrid.gameObject);
+                // 释放资源
+                uiLoader.RealseAsset(AbKeyCollection.Ui, itemGrid.name);
+                poolManager.PushObj(itemGrid.gameObject);
             }
             model.ClearItemGrid();
 

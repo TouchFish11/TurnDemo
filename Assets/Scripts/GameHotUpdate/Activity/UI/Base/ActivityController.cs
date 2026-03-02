@@ -1,6 +1,5 @@
 using Core.Loader.Sprite;
 using Core.Loader.UI;
-using Core.Pool;
 using Core.Reflection;
 using Core.Serialize.Binary;
 using Core.Service;
@@ -14,12 +13,14 @@ using GameHotUpdate.Main.Manager;
 
 namespace GameHotUpdate.Activity.UI.Base
 {
+    using Task = System.Threading.Tasks.Task;
+
     /// <summary>
     /// 活动界面控制器
     /// </summary>
     public class ActivityController : UIController<ActivityView, ActivityModel>
     {
-        protected override async System.Threading.Tasks.Task OnInit()
+        protected override async Task OnShow()
         {
             // 读取活动数据
             var infoDic = ServiceLocator.Get<IBinaryDataManager>().GetConfig<ActivityInfoContainer>(EConfigLoadType.Excel).dataDic;
@@ -29,7 +30,7 @@ namespace GameHotUpdate.Activity.UI.Base
                 var activityUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<ActivityUI>(AbKeyCollection.Ui, ResKeyCollection.ActivityUI, view.SvActivityContent);
                 // 加载图标
                 var icon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Activity,
-                        activityInfo.f_bkUi_Res);
+                    activityInfo.f_bkUi_Res);
                 // 初始化UI
                 activityUI.Init(icon, activityInfo, view.ActivityGroup, this);
                 // 缓存UI
@@ -38,6 +39,16 @@ namespace GameHotUpdate.Activity.UI.Base
             
             // 默认选中第一个UI
             model.GetFirstActivityUI().SelectActivity();
+        }
+        
+        protected override Task OnInit()
+        {
+            return Task.CompletedTask;
+        }
+        
+        protected override Task OnHide()
+        {
+            return Task.CompletedTask;
         }
 
         protected override void ButtonOnClick(string btnName)
@@ -50,7 +61,7 @@ namespace GameHotUpdate.Activity.UI.Base
             }
         }
 
-        public async System.Threading.Tasks.Task UpdateDetailActivity(ActivityInfo activityInfo)
+        public async Task UpdateDetailActivity(ActivityInfo activityInfo)
         {
             if (model.Activity != null && activityInfo.f_id == model.Activity.ActivityData.ActivityId)
             {
@@ -86,17 +97,6 @@ namespace GameHotUpdate.Activity.UI.Base
             activity?.Init(activityData, activityInfo);
             // 缓存界面
             model.UpdateActivityDetailUI(activityType, activity);
-        }
-
-        public override void Destroy()
-        {
-            // 清除缓存
-            ServiceLocator.Get<IPoolManager>().ClearTypes(typeof(ActivityUI));
-            foreach (var activityType in model.GetActivityTypes())
-            {
-                ServiceLocator.Get<IPoolManager>().ClearTypes(activityType);
-            }
-            base.Destroy();
         }
     }
 }

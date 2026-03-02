@@ -7,22 +7,6 @@ using GameHotUpdate.Config;
 
 namespace GameHotUpdate.Login.UI
 {
-    // /// <summary>
-    // /// ��¼�������������
-    // /// </summary>
-    // public class LoginControllerFactory : UIControllerFactory<LoginViewWrapper, LoginModel, LoginController>
-    // {
-    //     protected override LoginModel CreateModel()
-    //     {
-    //         return new LoginModel();
-    //     }
-    //
-    //     protected override LoginController CreateController(LoginViewWrapper viewWrapper, LoginModel model)
-    //     {
-    //         return new LoginController(viewWrapper.UiInstance, model);
-    //     }
-    // }
-
     /// <summary>
     /// ��¼���������
     /// </summary>
@@ -34,6 +18,16 @@ namespace GameHotUpdate.Login.UI
         public LoginController(LoginView view, LoginModel model) : base()
         {
 
+        }
+
+        protected override System.Threading.Tasks.Task OnShow()
+        {
+            return System.Threading.Tasks.Task.CompletedTask;
+        }
+
+        protected override System.Threading.Tasks.Task OnHide()
+        {
+            return System.Threading.Tasks.Task.CompletedTask;
         }
 
         protected override async System.Threading.Tasks.Task OnInit()

@@ -17,10 +17,13 @@ namespace Core.Loader.UI
         private readonly Dictionary<string, int> _nameToUiRef = new();
         // AB包管理器接口
         private readonly IAssetBundleManager _assetBundleManager;
+        // 缓存池接口
+        private readonly IPoolManager _poolManager;
         
         public UiLoader()
         {
             _assetBundleManager = ServiceLocator.Get<IAssetBundleManager>();
+            _poolManager = ServiceLocator.Get<IPoolManager>();
         }
         
         public async Task<T> GetUIObject<T>(string abName, string assetName, Transform parent, bool worldPosStay = false) where T : class
@@ -30,7 +33,7 @@ namespace Core.Loader.UI
         
         public async Task<T> GetUIObject<T>(string abName, string assetName, Transform parent, Vector3 pos, Quaternion rot, bool worldPosStay = false) where T : class
         {
-            var cacheObj = await ServiceLocator.Get<IPoolManager>().GetAssetBundleObjAsync(abName, assetName);
+            var cacheObj = await _poolManager.GetAssetBundleObjAsync(abName, assetName);
             cacheObj.transform.SetParent(parent, worldPosStay);
             cacheObj.transform.SetLocalPositionAndRotation(pos, rot);
             // 更新引用计数
@@ -40,7 +43,7 @@ namespace Core.Loader.UI
         
         public async Task<GameObject> GetUIGameobject(string abName, string assetName, Transform parent, bool worldPosStay = false)
         {
-            var cacheObj = await ServiceLocator.Get<IPoolManager>().GetAssetBundleObjAsync(abName, assetName);
+            var cacheObj = await _poolManager.GetAssetBundleObjAsync(abName, assetName);
             cacheObj.transform.SetParent(parent, worldPosStay);
             // 更新引用计数
             AddRefCount(assetName);

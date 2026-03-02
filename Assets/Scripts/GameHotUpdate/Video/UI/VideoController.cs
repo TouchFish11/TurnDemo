@@ -9,14 +9,26 @@ using UnityEngine.Video;
 
 namespace GameHotUpdate.Video.UI
 {
+    using Task = System.Threading.Tasks.Task;
+
     /// <summary>
-    /// ��Ƶ���������
+    /// 视频界面控制器
     /// </summary>
     public class VideoController : UIController<VideoView, VideoModel>
     {
-        protected override System.Threading.Tasks.Task OnInit()
+        protected override Task OnShow()
         {
-            return System.Threading.Tasks.Task.CompletedTask;
+            return Task.CompletedTask;
+        }
+
+        protected override Task OnHide()
+        {
+            return Task.CompletedTask;
+        }
+
+        protected override Task OnInit()
+        {
+            return Task.CompletedTask;
         }
         
         public async void PlayVideo()

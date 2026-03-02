@@ -1,25 +1,27 @@
-using System;
-using Core.Service;
-using Core.UI;
 using Core.UI.MVC;
-using GameHotUpdate.Config;
 
 namespace GameHotUpdate.Main.Back
 {
+    using Task = System.Threading.Tasks.Task;
+
     /// <summary>
-    /// 
+    /// 背景界面控制器
     /// </summary>
     public class BackController : UIController<BackView, BackModel>
     {
-        public void CompletedHide(Action action)
+        protected override Task OnShow()
         {
-            action?.Invoke();
-            ServiceLocator.Get<IUIManager>().DestroyView(AbKeyCollection.Ui, this);
+            return Task.CompletedTask;
         }
 
-        protected override System.Threading.Tasks.Task OnInit()
+        protected override Task OnHide()
         {
-            return System.Threading.Tasks.Task.CompletedTask;
+            return Task.CompletedTask;
+        }
+
+        protected override Task OnInit()
+        {
+            return Task.CompletedTask;
         }
     }
 }

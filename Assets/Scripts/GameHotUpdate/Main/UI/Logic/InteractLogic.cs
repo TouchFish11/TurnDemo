@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Core.Collection;
 using Core.GlobalEvent;
 using Core.Loader.UI;
 using Core.Log;
@@ -17,25 +18,21 @@ namespace GameHotUpdate.Main.UI.Logic
     /// </summary>
     public class InteractLogic : MainLogic
     {
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="mainController">主控制器，用于业务逻辑调度</param>
-        /// <param name="mainModel">主数据模型，用于存储交互相关数据</param>
-        /// <param name="mainView">主视图，用于交互UI的渲染更新</param>
-        public InteractLogic(MainController mainController, MainModel mainModel, MainView mainView) : base(mainController, mainModel, mainView)
-        {
-
-        }
-
+        private readonly IEventCenter _eventCenter = ServiceLocator.Get<IEventCenter>();
+        private readonly IUiLoader _uiLoader = ServiceLocator.Get<IUiLoader>();
+        
         /// <summary>
         /// 逻辑初始化方法
         /// 可在此添加交互逻辑初始化的前置操作（如数据预加载、事件注册等）
         /// </summary>
-        public override void Init()
+        /// <param name="mainController1"></param>
+        /// <param name="mainModel1"></param>
+        /// <param name="mainView1"></param>
+        public override void Init(MainController mainController1, MainModel mainModel1, MainView mainView1)
         {
+            base.Init(mainController1, mainModel1, mainView1);
             // 订阅交互事件（当触发InteractEvent时，执行OnInteractEvent回调）
-            ServiceLocator.Get<IEventCenter>().SubscribeEvent<InteractEvent>(OnInteractEvent);
+            _eventCenter.SubscribeEvent<InteractEvent>(OnInteractEvent);
         }
         
         /// <summary>
@@ -57,36 +54,33 @@ namespace GameHotUpdate.Main.UI.Logic
         {
             try
             {
-                // 初始化交互UI列表，容量与可交互对象集合一致，减少内存扩容开销
-                var interactUIs = new List<InteractUI>(interactables.Count);
+                var uniList = CollectionUtil.GetUniList<InteractUI>();
                 // 遍历可交互对象，为每个对象创建对应的交互UI
                 foreach (var interactable in interactables)
                 {
                     // 从UI资源包中异步加载交互UI预制体并实例化
-                    // AbKeyCollection.Ui：指定资源包类型为UI
-                    // ResKeyCollection.InteractUI：交互UI的资源标识键
-                    var interactUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<InteractUI>(AbKeyCollection.Ui, ResKeyCollection.InteractUI, mainView.InteractContent);
-                    LogManager.Log($"{nameof(InteractLogic)}.{nameof(CreateInteract)}: {interactUI}");
+                    var interactUI = await _uiLoader.GetUIObject<InteractUI>(AbKeyCollection.Ui, ResKeyCollection.InteractUI, mainView.InteractContent);
                     // 初始化交互UI的显示数据（设置发言者/交互对象名称）
                     interactUI.Init(interactable.NpcInfo.f_speakerName);
                     // 将初始化完成的交互UI加入列表
-                    interactUIs.Add(interactUI);
+                    uniList.List.Add(interactUI);
                 }
             
                 // 将创建好的交互UI列表存入主数据模型，供全局业务逻辑调用
-                mainModel.CacheInteracts(interactUIs);
+                mainModel.CacheInteracts(uniList.List);
+                CollectionUtil.CollectUniList(uniList);
             }
             catch (Exception e)
             {
-                LogManager.LogError($"{nameof(InteractLogic)}.{nameof(CreateInteract)}: {e.Message}");
+                LogManager.LogError($"{nameof(InteractLogic)}.{nameof(CreateInteract)}: {e.Message}，{e.StackTrace}");
             }
         }
 
-        public override void Dispose()
+        public override void ResetData()
         {
             // 取消交互事件的订阅
-            ServiceLocator.Get<IEventCenter>().UnsubscribeEvent<InteractEvent>(OnInteractEvent);
-            base.Dispose();
+            _eventCenter.UnsubscribeEvent<InteractEvent>(OnInteractEvent);
+            base.ResetData();
         }
     }
 }

@@ -127,6 +127,7 @@ namespace Core.UI
             var controller = new TController();
             // 初始化控制器
             await controller.Init(view, model);
+            await controller.Show();
             // 初始化面板信息
             var newInfo = new PanelInfo<TView, TModel, TController>(view, model, controller);
             // 存储面板信息
@@ -180,13 +181,13 @@ namespace Core.UI
                 }
                 
                 // 调用面板隐藏
-                _panels[i].UiView.Hide();
+                _panels[i].UiController.Hide();
                 // 调用控制器的销毁
                 _panels[i].UiController.Destroy();
-                // 销毁预设体
-                Object.Destroy(_panels[i].UiView.ViewObj);
                 // 释放该UI的资源
                 _uiLoader.RealseAsset(abName, _panels[i].UiView.ViewObj.name);
+                // 销毁预设体
+                Object.Destroy(_panels[i].UiView.ViewObj);
                 // 从缓存中移除
                 _panels.RemoveAt(i);
             }
@@ -210,13 +211,13 @@ namespace Core.UI
                 var view = panelInfo.UiView;
                 if (!isActive)
                 {
-                    view.Hide();
+                    controller.Hide();
                     view.ViewObj.SetActive(false);
                 }
                 else
                 {
                     view.ViewObj.SetActive(true);
-                    view.Show();
+                    controller.Show();
                 }
                 
                 return;

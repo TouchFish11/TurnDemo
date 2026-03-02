@@ -41,6 +41,8 @@ namespace GameHotUpdate.Activity.UI.OrbitalDeparture
 
         protected override async Task OnInit()
         {
+            await base.OnInit();
+            
             // 初始化组件
             _activityBkComponent.Init(this, activityInfo, ActivityData);
             _activityJoinComponent.Init(this, activityInfo, ActivityData);
@@ -79,7 +81,12 @@ namespace GameHotUpdate.Activity.UI.OrbitalDeparture
                 }
             });
         }
-        
+
+        protected override Task OnShow()
+        {
+            return Task.CompletedTask;
+        }
+
         private void OnTriggerJoin()
         {
             if (!ActivityData.IsComplete)

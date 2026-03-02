@@ -6,17 +6,16 @@ namespace GameHotUpdate.Main.UI.Logic
 {
     public class DialogueLogic : MainLogic
     {
-        public DialogueLogic(MainController mainController, MainModel mainModel, MainView mainView) : base(mainController, mainModel, mainView)
-        {
-            
-        }
+        private readonly IDialogueManager _dialogueManager = ServiceLocator.Get<IDialogueManager>();
+        private readonly IUIManager _uiManager = ServiceLocator.Get<IUIManager>();
         
-        public override void Init()
+        public override void Init(MainController mainController, MainModel mainModel, MainView mainView)
         {
+            base.Init(mainController, mainModel, mainView);
             // 注册对话系统回调：对话开始时隐藏主界面
-            ServiceLocator.Get<IDialogueManager>().OnDialogueStart += InActive;
+            _dialogueManager.OnDialogueStart += InActive;
             // 注册对话系统回调：对话结束时显示主界面
-            ServiceLocator.Get<IDialogueManager>().OnDialogueEnd += Active;
+            _dialogueManager.OnDialogueEnd += Active;
         }
         
         /// <summary>
@@ -25,7 +24,7 @@ namespace GameHotUpdate.Main.UI.Logic
         /// </summary>
         private void Active()
         {
-            ServiceLocator.Get<IUIManager>().SetViewActive(mainController,true);
+            _uiManager.SetViewActive(mainController,true);
         }
 
         /// <summary>
@@ -34,14 +33,14 @@ namespace GameHotUpdate.Main.UI.Logic
         /// </summary>
         private void InActive()
         {
-            ServiceLocator.Get<IUIManager>().SetViewActive(mainController,false);
+            _uiManager.SetViewActive(mainController,false);
         }
 
-        public override void Dispose()
+        public override void ResetData()
         {
-            ServiceLocator.Get<IDialogueManager>().OnDialogueStart -= InActive;
-            ServiceLocator.Get<IDialogueManager>().OnDialogueEnd -= Active;
-            base.Dispose();
+            _dialogueManager.OnDialogueStart -= InActive;
+            _dialogueManager.OnDialogueEnd -= Active;
+            base.ResetData();
         }
     }
 }

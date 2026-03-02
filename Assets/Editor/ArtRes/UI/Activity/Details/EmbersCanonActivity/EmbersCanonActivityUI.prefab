@@ -2108,7 +2108,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1662735935966734828}
   - component: {fileID: 3941311945005351832}
-  - component: {fileID: 8168838091845783736}
+  - component: {fileID: 2281765867306758720}
   m_Layer: 5
   m_Name: EmbersCanonActivityUI
   m_TagString: Untagged
@@ -2150,7 +2150,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9110581365680961650}
   m_CullTransparentMesh: 1
---- !u!114 &8168838091845783736
+--- !u!114 &2281765867306758720
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

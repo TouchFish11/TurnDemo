@@ -68,15 +68,6 @@ namespace Core.AssetBundles.Update
             {
                 _updateStates.Add(updateState);
             }
-            
-            // 注册所有更新阶段对应的状态处理类
-            // _updateStates.Add(new DownloadListFileState(this)); // 下载远程资源列表
-            // _updateStates.Add(new GetLocalListFileState(this)); // 获取本地资源列表（用于对比）
-            // _updateStates.Add(new CompareContrastState(this));  // 对比本地/远程列表，确定需要更新的资源
-            // _updateStates.Add(new CheckDeviceStorageState(this)); // 检查磁盘空间
-            // _updateStates.Add(new DownLoadAssetState(this));    // 下载需要更新的AssetBundle资源
-            // _updateStates.Add(new CheckAssetIntegrityState(this));  // 校验下载完成的资源完整性（如Hash校验）
-            // _updateStates.Add(new FinishState(this));   // 更新完成状态
         }
 
         /// <summary>

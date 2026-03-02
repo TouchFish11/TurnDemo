@@ -14,7 +14,7 @@ namespace GameHotUpdate.Battle.Turn
         
         /// <summary>
         /// 波次
-        /// 每波次的怪物ID
+        /// 每波次的怪物ID，每回合可以有多个波次，默认一回合一波，即Waves.Count = 1;
         /// </summary>
         public List<List<int>> Waves { get; set; }
     }

@@ -40,19 +40,7 @@ namespace GameHotUpdate.Main
                 ServiceLocator.Get<IFactoryManager>().InitHotFactorys();
                 
                 // 切换场景
-                ServiceLocator.Get<ISceneManager>().LoadSceneAsync(ResKeyCollection.MainScene, LoadSceneMode.Single, null,
-                async () =>
-                {
-                    // 初始化游戏数据、服务
-                    await ServiceLocator.Get<IGameManager>().Init(new GameDataManager(), new GameServiceManger());
-
-                    // 自动登录逻辑（暂注释，可根据业务开启）
-                    //await ServiceLocator.Get<IServerManager>().TryAutoLogin();
-                    // 初始化游戏场景（创建NPC、玩家、UI等核心游戏对象）
-                    await InitScene();
-                    // 初始化主界面
-                    await InitMainView();
-                });
+                ServiceLocator.Get<ISceneManager>().LoadSceneAsync(ResKeyCollection.MainScene, LoadSceneMode.Single, null);
             }
             catch (Exception e)
             {
@@ -92,8 +80,7 @@ namespace GameHotUpdate.Main
         /// </summary>
         private static async Task InitMainView()
         {
-            // 创建主界面UI（MVC架构）：指定UI层级为中层，初始化MainView、MainModel、MainController
-            var mainController = await ServiceLocator.Get<IUIManager>().CreateViewAsync<MainView, MainModel, MainController>(AbKeyCollection.Ui, E_UILayer.Mid, ResKeyCollection.MainView);
+            await ServiceLocator.Get<IUIManager>().CreateViewAsync<MainView, MainModel, MainController>(AbKeyCollection.Ui, E_UILayer.Mid, ResKeyCollection.MainView);
         }
         
         /// <summary>
@@ -102,16 +89,13 @@ namespace GameHotUpdate.Main
         /// </summary>
         public static void ClearScene()
         {
-            // 1. 销毁轨道相机对象（场景核心相机）
+            // 销毁相机对象
             UnityEngine.Object.Destroy(OrbitCameraController.Instance.gameObject);
-
-            // 2. 清理玩家数据和对象（移除玩家实例、重置玩家状态）
+            // 清理玩家数据和对象
             ServiceLocator.Get<IPlayerManager>().Clear();
-
-            // 3. 清理飘字缓存（释放浮动文字对象池）
+            // 清理飘字缓存
             ServiceLocator.Get<IFloatingTextManager>().ClearCache();
-
-            // 4. 清空对象池（释放所有预制体缓存，如NPC、特效等）
+            // 清空对象池
             ServiceLocator.Get<IPoolManager>().Clear();
         }
     }

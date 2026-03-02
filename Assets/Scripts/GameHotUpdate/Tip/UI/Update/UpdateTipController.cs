@@ -11,7 +11,17 @@ namespace GameHotUpdate.Tip.UI.Update
         /// 确认事件
         /// </summary>
         public event Action OnSure;
-        
+
+        protected override Task OnShow()
+        {
+            return Task.CompletedTask;
+        }
+
+        protected override Task OnHide()
+        {
+            return Task.CompletedTask;
+        }
+
         protected override Task OnInit()
         {
             return Task.CompletedTask;

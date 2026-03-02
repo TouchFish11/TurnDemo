@@ -16,27 +16,27 @@
           {
             "$type": "GameHotUpdate.Activity.UI.EmbersCanon.EmbersCanonLevelEntry, Assembly-CSharp-Game-HotUpdate",
             "levelId": 1001,
-            "isComplete": false
+            "isComplete": true
           },
           {
             "$type": "GameHotUpdate.Activity.UI.EmbersCanon.EmbersCanonLevelEntry, Assembly-CSharp-Game-HotUpdate",
             "levelId": 1002,
-            "isComplete": false
+            "isComplete": true
           },
           {
             "$type": "GameHotUpdate.Activity.UI.EmbersCanon.EmbersCanonLevelEntry, Assembly-CSharp-Game-HotUpdate",
             "levelId": 1003,
-            "isComplete": false
+            "isComplete": true
           },
           {
             "$type": "GameHotUpdate.Activity.UI.EmbersCanon.EmbersCanonLevelEntry, Assembly-CSharp-Game-HotUpdate",
             "levelId": 1004,
-            "isComplete": false
+            "isComplete": true
           },
           {
             "$type": "GameHotUpdate.Activity.UI.EmbersCanon.EmbersCanonLevelEntry, Assembly-CSharp-Game-HotUpdate",
             "levelId": 1005,
-            "isComplete": false
+            "isComplete": true
           }
         ]
       },

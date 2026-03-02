@@ -1,4 +1,3 @@
-using Core.GlobalEvent;
 using Core.GlobalEvent.Events;
 using Core.Loader.UI;
 using Core.Service;
@@ -7,18 +6,29 @@ using GameHotUpdate.Config;
 
 namespace GameHotUpdate.Global.UI
 {
+    using Task = System.Threading.Tasks.Task;
+
     /// <summary>
-    ///
+    /// 全局消息界面
     /// </summary>
     public class GlobalMessageController : UIController<GlobalMessageView, GlobalMessageModel>
     {
-        protected override async System.Threading.Tasks.Task OnInit()
+        protected override Task OnShow()
         {
-            // �����¼�
-            ServiceLocator.Get<IEventCenter>().SubscribeEvent<GlobalMessageEvent>(OnGlobalMessageEvent);
-            await System.Threading.Tasks.Task.CompletedTask;
+            // 注册全局消息事件
+            eventCenter.SubscribeEvent<GlobalMessageEvent>(OnGlobalMessageEvent);
+            return Task.CompletedTask;
         }
 
+        protected override Task OnInit()
+        {
+            return Task.CompletedTask;
+        }
+        
+        /// <summary>
+        /// 全局消息事件回调
+        /// </summary>
+        /// <param name="globalMessageEvent"></param>
         private void OnGlobalMessageEvent(GlobalMessageEvent globalMessageEvent)
         {
             ShowMessage(globalMessageEvent.Message);
@@ -30,10 +40,10 @@ namespace GameHotUpdate.Global.UI
             messageUIWrapper.InitMessage(msg);
         }
         
-        public override void Destroy()
+        protected override Task OnHide()
         {
-            base.Destroy();
-            ServiceLocator.Get<IEventCenter>().UnsubscribeEvent<GlobalMessageEvent>(OnGlobalMessageEvent);
+            eventCenter.UnsubscribeEvent<GlobalMessageEvent>(OnGlobalMessageEvent);
+            return Task.CompletedTask;
         }
     }
 }

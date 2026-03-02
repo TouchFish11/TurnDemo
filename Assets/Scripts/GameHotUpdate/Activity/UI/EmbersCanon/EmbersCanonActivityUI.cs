@@ -1,9 +1,6 @@
+using System;
 using System.Collections.Generic;
-using Core.Loader.Sprite;
-using Core.Loader.UI;
 using Core.Log;
-using Core.Pool;
-using Core.Service;
 using GameHotUpdate.Activity.Core;
 using GameHotUpdate.Activity.UI.Common;
 using GameHotUpdate.Config;
@@ -45,8 +42,9 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
         
         protected override async Task OnInit()
         {
+            await base.OnInit();
             // 初始化界面背景
-            var backGround = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Activity,
+            var backGround = await spriteLoader.LoadSpriteAsync(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Activity,
                     activityInfo.f_bkUi_Res);
             _activityBkComponent.SetBackGround(backGround);
 
@@ -72,15 +70,26 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
                 }
             });
         }
-        
+
+        protected override Task OnShow()
+        {
+            return Task.CompletedTask;
+        }
+
         private async void OnTriggerJoin()
         {
-            // 创建关卡界面到活动界面下
-            var subActivityUi  = await ServiceLocator.Get<IUiLoader>()
-                .GetUIObject<EmbersCanonSubActivityUI_01>(AbKeyCollection.Ui, ResKeyCollection.EmbersCanonSubActivityUI_01,
+            try
+            {
+                // 创建关卡界面到活动界面下
+                var subActivityUi = await uiLoader.GetUIObject<EmbersCanonSubActivityUI_01>(AbKeyCollection.Ui, ResKeyCollection.EmbersCanonSubActivityUI_01,
                     activityView);
-            // 初始化关卡子界面
-            subActivityUi.Init(ActivityData, activityInfo);
+                // 初始化关卡子界面
+                subActivityUi.Init(ActivityData, activityInfo);
+            }
+            catch (Exception e)
+            {
+                LogManager.LogError($"{nameof(EmbersCanonActivityUI)}.{nameof(OnTriggerJoin)}：{e.Message}，{e.StackTrace}");
+            }
         }
 
         private void OnTriggerLimitTimeAward()
@@ -95,16 +104,16 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
         {
             foreach (var itemGrid in _itemGrids)
             {
-                ServiceLocator.Get<IPoolManager>().PushObj(itemGrid.gameObject);
+                poolManager.PushObj(itemGrid.gameObject);
             }
             _itemGrids.Clear();
-            ServiceLocator.Get<IPoolManager>().ClearTypes(typeof(ItemGrid));
+            poolManager.ClearTypes(typeof(ItemGrid));
         }
         
         protected override void OnHide()
         {
             ClearItem();
-            ServiceLocator.Get<IPoolManager>().ClearTypes(typeof(EmbersCanonActivityUI));
+            poolManager.ClearTypes(typeof(EmbersCanonActivityUI));
             
             _activityJoinComponent.OnClickJoin -= OnTriggerJoin;
             _limitTimeAwardComponent.OnClickAward -= OnTriggerLimitTimeAward;

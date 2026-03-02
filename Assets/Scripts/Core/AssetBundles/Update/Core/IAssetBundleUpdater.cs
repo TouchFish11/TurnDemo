@@ -18,6 +18,7 @@ namespace Core.AssetBundles.Update
 
         /// <summary>
         /// 初始化更新管理器
+        /// 执行更新前先调用该方法
         /// </summary>
         void Init();
     }

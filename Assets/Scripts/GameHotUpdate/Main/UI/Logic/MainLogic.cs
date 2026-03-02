@@ -1,34 +1,30 @@
+using Core.Pool;
+
 namespace GameHotUpdate.Main.UI.Logic
 {
     /// <summary>
-    /// �������߼���
+    /// 主界面逻辑
     /// </summary>
-    public abstract class MainLogic
+    public abstract class MainLogic : IPoolData
     {
         protected MainController mainController;
         protected MainModel mainModel;
         protected MainView mainView;
 
-        protected MainLogic(MainController mainController, MainModel mainModel, MainView mainView)
+        /// <summary>
+        /// 初始化
+        /// </summary>
+        /// <param name="mainController"></param>
+        /// <param name="mainModel"></param>
+        /// <param name="mainView"></param>
+        public virtual void Init(MainController mainController, MainModel mainModel, MainView mainView)
         {
             this.mainController = mainController;
             this.mainModel = mainModel;
             this.mainView = mainView;
         }
 
-        /// <summary>
-        /// ��ʼ��
-        /// </summary>
-        public abstract void Init();
-
-        /// <summary>
-        /// ת��
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public T As<T>() where T : MainLogic => this as T;
-        
-        public virtual void Dispose()
+        public virtual void ResetData()
         {
             mainController = null;
             mainModel = null;

@@ -1,4 +1,5 @@
 ﻿using System;
+using Core.Log;
 using Core.Pool;
 using Core.PreLoad;
 using Core.Scene;
@@ -29,11 +30,18 @@ using UnityEngine.U2D;
 
 namespace GameHotUpdate.Battle.Core
 {
+    using Task = System.Threading.Tasks.Task;
+
     /// <summary>
     /// 战斗管理器
     /// </summary>
     public class BattleManager : SingletonBase<BattleManager>, IBattleManager
     {
+        private readonly IUIManager _uiManager = ServiceLocator.Get<IUIManager>();
+        private readonly ISceneManager _sceneManager = ServiceLocator.Get<ISceneManager>();
+        private readonly IMouseManager _mouseManager = ServiceLocator.Get<IMouseManager>();
+        private readonly IPoolManager _poolManager = ServiceLocator.Get<IPoolManager>();
+        
         // 战斗上下文
         private IBattleContext _context;
         // 回合创建器
@@ -42,11 +50,11 @@ namespace GameHotUpdate.Battle.Core
         /// <summary>
         /// 战斗结束事件
         /// </summary>
-        private Func<System.Threading.Tasks.Task> OnBattleOver;
+        private Func<Task> OnBattleOver;
         
         private BattleManager()
         {
-
+            
         }
 
         /// <summary>
@@ -88,51 +96,53 @@ namespace GameHotUpdate.Battle.Core
             ServiceLocator.Unregister<IBattlePointProxy>();
             ServiceLocator.Unregister<IBattleEventScheduler>();
         }
-        
+
         /// <summary>
         /// 进入战斗
         /// 唯一入口
         /// </summary>
-        /// <param name="turnData"></param>
-        /// <param name="onBattleOver"></param>
-        public async System.Threading.Tasks.Task EnterBattle(TurnData turnData, Func<System.Threading.Tasks.Task> onBattleOver)
+        /// <param name="turnData">回合数据</param>
+        /// <param name="OnpreEnter">在进入前执行回调</param>
+        /// <param name="onBattleOver">在结束后执行回调</param>
+        public async Task EnterBattle(TurnData turnData, Func<Task> OnpreEnter, Func<Task> onBattleOver)
         {
             // 缓存回调
             OnBattleOver = onBattleOver;
             // 创建战斗加载界面
-            var battleLoadingController = await ServiceLocator.Get<IUIManager>().CreateViewAsync<BattleLoadingView, BattleLoadingModel, BattleLoadingController>(AbKeyCollection.Ui, E_UILayer.Bot, ResKeyCollection.BattleLoadingView);
-            // 清理场景内容缓存
-            HotfixGameMain.ClearScene();
-            // 加载战斗场景
-            ServiceLocator.Get<ISceneManager>().LoadSceneAsync(ResKeyCollection.LevelScene, UnityEngine.SceneManagement.LoadSceneMode.Single, 
-            (progress) => battleLoadingController.UpdateProgress(progress), 
-            async () =>
+            var battleLoadingController = await _uiManager.CreateViewAsync<BattleLoadingView, BattleLoadingModel, BattleLoadingController>(AbKeyCollection.Ui, E_UILayer.Bot, ResKeyCollection.BattleLoadingView);
+            // 在加载界面显示后，在执行该回调
+            if (OnpreEnter != null)
             {
-                // 隐藏主界面
-                var controller = ServiceLocator.Get<IUIManager>().GetController<MainController>();
-                ServiceLocator.Get<IUIManager>().SetViewActive(controller, false);
-                // 注册战斗点，依赖战斗场景加载完成
-                ServiceLocator.Register<IBattlePointProxy>(new BattlePointProxy());
-                // 预加载资源
-                await PreLoad();
-                // 创建战斗上下文，依赖战斗点代理
-                _context = new BattleContext(ServiceLocator.Get<IBattlePointProxy>());
-                // 监听战斗退出事件
-                _context.GetEventBus().AddListener<QuitBattleEvent>(OnQuitBattleEvent);
-                // 注册战斗相关管理器
-                RegisterManager(_context);
-                // 创建回合创建器
-                _creator = ServiceLocator.Get<IPoolManager>().GetData<TurnCreator>();
-                _creator.Init(_context, turnData.TotalTurnNumber, turnData.Waves);
-                // 开始战斗
-                _context.GetStateMachine().StartBattle();
-            });
+                await OnpreEnter();
+            }
+            
+            // 加载战斗场景
+            await _sceneManager.LoadSceneAsync(ResKeyCollection.LevelScene, UnityEngine.SceneManagement.LoadSceneMode.Single, progress => battleLoadingController.UpdateProgress(progress));
+            
+            // 隐藏主界面
+            var controller = _uiManager.GetController<MainController>();
+            _uiManager.SetViewActive(controller, false);
+            // 注册战斗点，依赖战斗场景加载完成
+            ServiceLocator.Register<IBattlePointProxy>(new BattlePointProxy());
+            // 预加载资源
+            await PreLoad();
+            // 创建战斗上下文，依赖战斗点代理
+            _context = new BattleContext(ServiceLocator.Get<IBattlePointProxy>());
+            // 监听战斗退出事件
+            _context.GetEventBus().AddListener<QuitBattleEvent>(OnQuitBattleEvent);
+            // 注册战斗相关管理器
+            RegisterManager(_context);
+            // 创建回合创建器
+            _creator = _poolManager.GetData<TurnCreator>();
+            _creator.Init(_context, turnData.TotalTurnNumber, turnData.Waves);
+            // 开始战斗
+            _context.GetStateMachine().StartBattle();
         }
         
         /// <summary>
         /// 战斗资源预加载
         /// </summary>
-        private static async System.Threading.Tasks.Task PreLoad()
+        private static async Task PreLoad()
         {
             // TODO：暂时写死
             var preLoadDatas = new PreLoadData[]
@@ -174,52 +184,40 @@ namespace GameHotUpdate.Battle.Core
         /// 战斗退出事件回调
         /// </summary>
         /// <param name="quitBattleEvent"></param>
-        private void OnQuitBattleEvent(QuitBattleEvent quitBattleEvent)
+        private async void OnQuitBattleEvent(QuitBattleEvent quitBattleEvent)
         {
-            // 清理战斗数据
-            _context.CleanupBattle();
-            
-            // 销毁战斗输入处理器、战斗点对象、战斗UI调度器
-            UnityEngine.Object.Destroy(ServiceLocator.Get<IBattleCameraManager>().GameObject);
-            UnityEngine.Object.Destroy(ServiceLocator.Get<IBattleInputHandler>().GameObject);
-            UnityEngine.Object.Destroy(ServiceLocator.Get<IBattleEventScheduler>().GameObject);
-            
-            // 移除注册
-            UnregisterManager();
-
-            // 销毁战斗界面
-            ServiceLocator.Get<IUIManager>().DestroyView(AbKeyCollection.Ui, quitBattleEvent.BattleUIController);
-            // 回到主场景
-            BackMain();
-        }
-
-        /// <summary>
-        /// 回到主场景
-        /// </summary>
-        private async void BackMain()
-        {
-            // 创建黑背景界面遮挡
-            var backController = await ServiceLocator.Get<IUIManager>().CreateViewAsync<BackView, BackModel, BackController>(AbKeyCollection.Ui, E_UILayer.Bot, ResKeyCollection.BackView);
-            
-            ServiceLocator.Get<ISceneManager>().LoadSceneAsync(ResKeyCollection.MainScene, UnityEngine.SceneManagement.LoadSceneMode.Single, null, 
-            async () =>
+            try
             {
-                // 初始化场景
-                await HotfixGameMain.InitScene();
-                // 销毁黑背景界面
-                ServiceLocator.Get<IUIManager>().DestroyView(AbKeyCollection.Ui, backController);
-                
+                // 清理战斗数据
+                _context.CleanupBattle();
+            
+                // 销毁战斗输入处理器、战斗点对象、战斗UI调度器
+                UnityEngine.Object.Destroy(ServiceLocator.Get<IBattleCameraManager>().GameObject);
+                UnityEngine.Object.Destroy(ServiceLocator.Get<IBattleInputHandler>().GameObject);
+                UnityEngine.Object.Destroy(ServiceLocator.Get<IBattleEventScheduler>().GameObject);
+            
+                // 移除注册
+                UnregisterManager();
+
+                // 创建黑背景界面遮挡
+                var backController = await _uiManager.CreateViewAsync<BackView, BackModel, BackController>(AbKeyCollection.Ui, E_UILayer.Bot, ResKeyCollection.BackView);
                 // 强制不可见，暂时这样处理，正常流程Bug：battleLoadingController销毁时未正确释放
-                ServiceLocator.Get<IMouseManager>().ForceInVisible();
-                
-                // 激活主界面
-                var controller = ServiceLocator.Get<IUIManager>().GetController<MainController>();
-                ServiceLocator.Get<IUIManager>().SetViewActive(controller, true);
-                
-                // 执行战斗结束回调
-                await OnBattleOver?.Invoke();
-                OnBattleOver = null;
-            });
+                _mouseManager.ForceInVisible();
+                // 销毁战斗界面
+                _uiManager.DestroyView(AbKeyCollection.Ui, quitBattleEvent.BattleUIController);
+                // 执行战斗结束回调，在背景界面销毁前执行
+                if (OnBattleOver != null)
+                {
+                    await OnBattleOver();
+                    OnBattleOver = null;
+                    // 销毁黑背景界面
+                    _uiManager.DestroyView(AbKeyCollection.Ui, backController);
+                }
+            }
+            catch (Exception e)
+            {
+                LogManager.LogError($"{nameof(BattleManager)}.{nameof(OnQuitBattleEvent)}：{e.Message}，{e.StackTrace}");
+            }
         }
     }
 }

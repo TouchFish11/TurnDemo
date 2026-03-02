@@ -42,5 +42,5 @@ MonoBehaviour:
       levelName: "\u5173\u53615"
       battleSceneId: 0
       battleWave: 1
-      monsterIds: 0100000002000000010000000200000001000000
+      monsterIds: 0100000002000000040000000200000001000000
       winConditionId: 0

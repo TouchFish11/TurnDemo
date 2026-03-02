@@ -1,10 +1,15 @@
 namespace Core.GlobalEvent.Events
 {
     /// <summary>
-    /// ȫ����Ϣ�¼�
+    /// 全局消息事件
     /// </summary>
     public class GlobalMessageEvent : Event
     {
         public string Message { get; set; }
+
+        public GlobalMessageEvent(string message)
+        {
+            Message = message;
+        }
     }
 }

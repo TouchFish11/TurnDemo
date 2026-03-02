@@ -178,7 +178,7 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\GameConfig\BattleActivityConfig.json
       size: 2920
       name: BattleActivityConfig.json
-      hash: 45e69e48f0006178059d2fe48aba6ec84c3f43451713acfbd7c166c2af3c7610
+      hash: c9dd4264d2f7043fd85be58cadf7ca3d87a943364dc46ca799d67a7f2ad79fd2
     - assetPath: Assets\Editor\ArtRes\GameConfig\Editor\NewInfo.bytes
       size: 33
       name: NewInfo.bytes
@@ -202,7 +202,7 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\MonsterInfo.bytes
       size: 878
       name: MonsterInfo.bytes
-      hash: c0d99fc8d119c525af37f4f0aaabca0ea015d2c0dde49881bde1270fe78dec3c
+      hash: 2cc03a5c4712e1bcf143b0931bc83a4ff7cec36dfee2dbc966a5ea7c8a7cce08
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\NpcInfo.bytes
       size: 150
       name: NpcInfo.bytes
@@ -310,9 +310,9 @@ MonoBehaviour:
   - assetBundleName: scene
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\Scene\BeginScene.unity
-      size: 21522
+      size: 23302
       name: BeginScene.unity
-      hash: f6d29e00fe5a395fb3a896bb236c49190c7603435d0e5c8ab3881694b95e5c3e
+      hash: 424568ffab32a1b0f0846730e0b89146d29bb728af52a01d1852cba7cdb0c35f
     - assetPath: Assets\Editor\ArtRes\Scene\LevelScene.unity
       size: 107335
       name: LevelScene.unity
@@ -400,19 +400,19 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\UI\Activity\Details\EmbersCanonActivity\EmbersCanonActivityUI.prefab
       size: 67577
       name: EmbersCanonActivityUI.prefab
-      hash: a1f2e4d23de433ee6123d6538e810ca90163cadf6c52bfca462139f6b00126c7
+      hash: b0e7ccbda35bc43eb1f4daa5100726eb0454d69a8927850749a7a4e57cedc192
     - assetPath: Assets\Editor\ArtRes\UI\Activity\Details\EmbersCanonActivity\EmbersCanonSubActivityUI_01\BattleLevelUI.prefab
-      size: 11317
+      size: 11319
       name: BattleLevelUI.prefab
-      hash: dc0fe4e4c98627c22e9fb1116901b08d5ccab17a3849bc0101d5dc5f4b90d954
+      hash: d38e18daf0b4a9b45b90f973a841ad46d20a2e99ebacafa22273764cae7e526c
     - assetPath: Assets\Editor\ArtRes\UI\Activity\Details\EmbersCanonActivity\EmbersCanonSubActivityUI_01\EmbersCanonSubActivityUI_01.prefab
-      size: 28313
+      size: 28311
       name: EmbersCanonSubActivityUI_01.prefab
-      hash: edfee5ec5dfb174a3259a494a2affded0ca3f03dfba1ec9e9f2d77d9c7fce27f
+      hash: 4815ec97350ba82ae389be6b8856e438f93366d51a5a054f59ea2a8da7648f09
     - assetPath: Assets\Editor\ArtRes\UI\Activity\Details\OrbitalDepartureActivity\OrbitalDepartureActivityUI.prefab
-      size: 56288
+      size: 56292
       name: OrbitalDepartureActivityUI.prefab
-      hash: ff407375b9e38bb4529b0a062bbfa7fdefff3ef45674e61cdba6fb2bd0828568
+      hash: 93045202c1328c560977f195d8f5be9798a0285bd1a748475cd424970057ecb3
     - assetPath: Assets\Editor\ArtRes\UI\Back\BackView.prefab
       size: 3001
       name: BackView.prefab

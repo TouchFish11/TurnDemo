@@ -9,7 +9,7 @@ using GameHotUpdate.Battle.Skill.Enum;
 namespace GameHotUpdate.Battle.Skill.Conditions
 {
     /// <summary>
-    /// ���Ĭ���ͷż�������
+    /// 角色默认释放技能条件
     /// </summary>
     public class PlayerDefaultCastSkillCondition : ICastSkillCondition
     {
@@ -20,35 +20,32 @@ namespace GameHotUpdate.Battle.Skill.Conditions
                 case E_SkillType.NormalAttack:
                     return true;
                 case E_SkillType.CombatSkill:
-                    int tempBP = caster.Context.CurentBattlePointCount;
-                    // ʣ��ս�����ȥս�����ѵ�ս������������
+                    var tempBP = caster.Context.CurentBattlePointCount;
+                    // 战技点数大于消耗点数
                     if (tempBP - skill.SkillInfo.f_costBP >= 0)
                     {
                         return true;
                     }
-                    else
-                    {
-                        // ��ʾ��ʾ��UI
-                        ServiceLocator.Get<IEventCenter>().TriggerEvent(new GlobalMessageEvent() { Message = "ս���㲻�㣬�޷��ͷ�" });
-                        return false;
-                    }
+
+                    // 全局提示
+                    ServiceLocator.Get<IEventCenter>().TriggerEvent(new GlobalMessageEvent("战技点不足无法释放"));
+                    return false;
                 case E_SkillType.UltimateSkill:
-                    // �սἼ���ж������Ƿ��㹻
-                    int currentEnergy = caster.GetComponent<PropertyComponent>().GetPropertyValue(E_DynamicPropertyType.CurrentEnergy);
-                    int baseEnergy = caster.GetComponent<PropertyComponent>().GetPropertyValue(E_DynamicPropertyType.BaseEnergy);
+                    // 判断能量释放足够
+                    var currentEnergy = caster.GetComponent<PropertyComponent>().GetPropertyValue(E_DynamicPropertyType.CurrentEnergy);
+                    var baseEnergy = caster.GetComponent<PropertyComponent>().GetPropertyValue(E_DynamicPropertyType.BaseEnergy);
                     if (currentEnergy == baseEnergy)
                     {
                         return true;
                     }
-                    else
-                    {
-                        // ��ʾ�����������
-                        ServiceLocator.Get<IEventCenter>().TriggerEvent(new GlobalMessageEvent() { Message = "�������㣬�޷��ͷ��սἼ" });
-                        return false;
-                    }
+
+                    // 全局提示
+                    ServiceLocator.Get<IEventCenter>().TriggerEvent(new GlobalMessageEvent("能量不足无法释放"));
+                    return false;
                 case E_SkillType.EnhancedNormalAttack:
                 case E_SkillType.EnhancedCombatSkill:
                     return true;
+                case E_SkillType.Monster:
                 default:
                     return false;
             }

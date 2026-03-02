@@ -13,7 +13,22 @@ namespace Core.UI.MVC
         Task Init(IuiView view, IuiModel model);
         
         /// <summary>
+        /// 显示
+        /// 处理业务逻辑
+        /// </summary>
+        /// <returns></returns>
+        Task Show();
+        
+        /// <summary>
+        /// 隐藏
+        /// 处理业务逻辑
+        /// </summary>
+        /// <returns></returns>
+        Task Hide();
+        
+        /// <summary>
         /// 销毁
+        /// 主要处理资源释放的逻辑
         /// </summary>
         void Destroy();
     }

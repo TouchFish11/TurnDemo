@@ -37,7 +37,7 @@ namespace Core.Scene
             await InitSceneBundle(abName);
         }
         
-        public async void LoadSceneAsync(string scenePath, LoadSceneMode mode, [CanBeNull] Action<float> onLoadProgress, [CanBeNull] Func<Task> completed)
+        public async Task LoadSceneAsync(string scenePath, LoadSceneMode mode, [CanBeNull] Action<float> onLoadProgress)
         {
             try
             {
@@ -54,8 +54,6 @@ namespace Core.Scene
                 ServiceLocator.Get<IMonoAdapter>().StartCoroutine(UpdateProgress_Cor(ao, onLoadProgress));
                 // 等待场景加载结束
                 await TaskUtility.WaitUntil(() => ao != null && ao.isDone);
-                // 执行场景加载完成后的异步回调逻辑
-                await completed?.Invoke();
                 
             }
             catch (Exception exception)
