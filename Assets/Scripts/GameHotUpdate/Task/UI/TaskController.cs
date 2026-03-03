@@ -5,6 +5,7 @@ using Core.Service;
 using Core.UI.MVC;
 using GameHotUpdate.Config;
 using GameHotUpdate.Item;
+using GameHotUpdate.Main.UI;
 using GameHotUpdate.Task.Core;
 using GameHotUpdate.Task.Data;
 
@@ -22,7 +23,6 @@ namespace GameHotUpdate.Task.UI
         private ITaskDataCollection taskDataCollection;
         private readonly ITaskManager _taskManager = ServiceLocator.Get<ITaskManager>();
         private readonly IBinaryDataManager _binaryDataManager = ServiceLocator.Get<IBinaryDataManager>();
-        
         
         protected override async Task OnShow()
         {
@@ -57,7 +57,8 @@ namespace GameHotUpdate.Task.UI
 
         protected override Task OnHide()
         {
-            return Task.CompletedTask;
+            // 显示主界面
+            return uiManager.SetViewActive(uiManager.GetController<MainController>(), true);
         }
 
         /// <summary>
@@ -223,8 +224,7 @@ namespace GameHotUpdate.Task.UI
             foreach (var itemGrid in model.GetItemGrids())
             {
                 // 释放资源
-                uiLoader.RealseAsset(AbKeyCollection.Ui, itemGrid.name);
-                poolManager.PushObj(itemGrid.gameObject);
+                uiLoader.RealseAsset(AbKeyCollection.Ui, itemGrid.gameObject);
             }
             model.ClearItemGrid();
 

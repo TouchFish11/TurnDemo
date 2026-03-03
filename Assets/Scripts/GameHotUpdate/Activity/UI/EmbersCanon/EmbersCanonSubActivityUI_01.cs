@@ -47,7 +47,7 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
                 // 新增数据
                 if (levelEntryData == null)
                 {
-                    levelEntryData = new EmbersCanonLevelEntry { levelId = battleConfigEntry.levelId, isComplete = false };
+                    levelEntryData = new EmbersCanonLevelEntryData { levelId = battleConfigEntry.levelId, isComplete = false };
                     embersCanonData.Add(levelEntryData);
                 }
 
@@ -77,7 +77,7 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
             switch (btnName)
             {
                 case "btnClose":
-                    uiLoader.RealseAsset(AbKeyCollection.Ui, ResKeyCollection.EmbersCanonSubActivityUI_01);
+                    uiLoader.RealseAsset(AbKeyCollection.Ui, this.name);
                     Destroy(this.gameObject);
                     break;
             }

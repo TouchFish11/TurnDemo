@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.Loader.Object;
@@ -31,16 +32,8 @@ namespace Core.UI
 
         private UIManager()
         {
-
         }
-
-        /// <summary>
-        /// 异步初始化UI管理器
-        /// </summary>
-        /// <param name="defaultAbName"></param>
-        /// <param name="canvasName"></param>
-        /// <param name="uiCameraName"></param>
-        /// <returns></returns>
+        
         public async Task InitUIManagerAsync(string defaultAbName, string canvasName, string uiCameraName)
         {
             _uiLoader = ServiceLocator.Get<IUiLoader>();
@@ -87,12 +80,7 @@ namespace Core.UI
             await Task.CompletedTask;
 #endif
         }
-
-        /// <summary>
-        /// 获取指定层级对象
-        /// </summary>
-        /// <param name="layer">层级对象枚举</param>
-        /// <returns>层级对象位置</returns>
+        
         public Transform GetLayer(E_UILayer layer)
         {
             return layer switch
@@ -104,28 +92,16 @@ namespace Core.UI
                 _ => null,
             };
         }
-
-        /// <summary>
-        /// 异步显示界面
-        /// 可创建同一类型多实例
-        /// </summary>
-        /// <typeparam name="TView">热更类型</typeparam>
-        /// <typeparam name="TModel"></typeparam>
-        /// <typeparam name="TController"></typeparam>
-        /// <param name="abName"></param>
-        /// <param name="layer"></param>
-        /// <param name="panelName"></param>
-        /// <returns></returns>
+        
         public async Task<TController> CreateViewAsync<TView, TModel, TController>(string abName, E_UILayer layer, string panelName)
             where TView : UIBehaviourBase, IuiView where TModel : IuiModel, new() where TController : class, IuiController, new()
         {
 #if EDITOR_TEST_AB || !UNITY_EDITOR
             // 获取面板
-            var view = await ServiceLocator.Get<IUiLoader>().GetUIObject<TView>(abName, panelName, GetLayer(layer));
-            view.Show();
-            var model = new TModel();
-            var controller = new TController();
+            var view = await _uiLoader.GetUIObject<TView>(abName, panelName, GetLayer(layer));
             // 初始化控制器
+            var controller = new TController();
+            var model = new TModel();
             await controller.Init(view, model);
             await controller.Show();
             // 初始化面板信息
@@ -166,70 +142,49 @@ namespace Core.UI
             return controller;
 #endif
         }
-
-        /// <summary>
-        /// 销毁界面
-        /// 指定实例销毁
-        /// </summary>
-        public void DestroyView(string abName, IuiController controller)
+        
+        public async void DestroyView(string abName, IuiController controller)
         {
-            for (var i = _panels.Count - 1; i >= 0; i--)
+            try
             {
-                if (_panels[i].UiController != controller)
+                for (var i = _panels.Count - 1; i >= 0; i--)
                 {
-                    continue;
-                }
+                    if (_panels[i].UiController != controller)
+                    {
+                        continue;
+                    }
                 
-                // 调用面板隐藏
-                _panels[i].UiController.Hide();
-                // 调用控制器的销毁
-                _panels[i].UiController.Destroy();
-                // 释放该UI的资源
-                _uiLoader.RealseAsset(abName, _panels[i].UiView.ViewObj.name);
-                // 销毁预设体
-                Object.Destroy(_panels[i].UiView.ViewObj);
-                // 从缓存中移除
-                _panels.RemoveAt(i);
+                    // 调用控制器的销毁
+                    await _panels[i].UiController.Destroy();
+                    // 释放该UI的资源
+                    _uiLoader.RealseAsset(abName, _panels[i].UiView.ViewObj.name);
+                    // 销毁预设体
+                    Object.Destroy(_panels[i].UiView.ViewObj);
+                    // 从缓存中移除
+                    _panels.RemoveAt(i);
+                }
+            }
+            catch (Exception e)
+            {
+                LogManager.LogError($"{nameof(UIManager)}.{nameof(GetController)}：{e.Message}，{e.StackTrace}");
             }
         }
-
-        /// <summary>
-        /// 设置界面活动状态
-        /// 只能设置第一个查找到的实例，多实例无法准确获取
-        /// </summary>
-        /// <param name="controller"></param>
-        /// <param name="isActive"></param>
-        public void SetViewActive(IuiController controller, bool isActive)
+        
+        public async Task SetViewActive(IuiController controller, bool isActive)
         {
-            foreach (var panelInfo in _panels)
+            if (_panels.ConvertAll(info => info.UiController).Contains(controller))
             {
-                if (panelInfo.UiController != controller)
-                {
-                    continue;
-                }
-                
-                var view = panelInfo.UiView;
                 if (!isActive)
                 {
-                    controller.Hide();
-                    view.ViewObj.SetActive(false);
+                    await controller.Hide();
                 }
                 else
                 {
-                    view.ViewObj.SetActive(true);
-                    controller.Show();
+                    await controller.Show();
                 }
-                
-                return;
             }
         }
 
-        /// <summary>
-        /// 获取界面控制器
-        /// 只能获取第一个查找到的实例，多实例无法准确获取
-        /// </summary>
-        /// <typeparam name="TController">接口类型</typeparam>
-        /// <returns></returns>
         public TController GetController<TController>() where TController : IuiController
         {
             foreach (var basePanelInfo in _panels)
@@ -239,7 +194,7 @@ namespace Core.UI
                     return controller;
                 }
             }
-            LogManager.LogError($"控制器未找到“{typeof(TController)}");
+            LogManager.LogError($"{nameof(UIManager)}.{nameof(GetController)}：控制器{typeof(TController)}未找到");
             return default;
         }
         
@@ -261,15 +216,11 @@ namespace Core.UI
             }
             _panels.Clear();
         }
+        
+        public List<IPanelInfo> AllPanels => _panels;
 
-        /// <summary>
-        /// UI画布
-        /// </summary>
         public Canvas Canvas { get; private set; }
 
-        /// <summary>
-        /// UI摄像机
-        /// </summary>
         public Camera UICamera { get; private set; }
     }
 }

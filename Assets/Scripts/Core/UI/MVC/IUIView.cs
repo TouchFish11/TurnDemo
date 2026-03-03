@@ -9,17 +9,6 @@ namespace Core.UI.MVC
         /// 界面对象
         /// </summary>
         GameObject ViewObj { get; }
-        
-        /// <summary>
-        /// 显示
-        /// </summary>
-        void Show();
-
-        /// <summary>
-        /// 隐藏
-        /// </summary>
-        /// <param name="hideCallBack"></param>
-        void Hide(Action hideCallBack = null);
 
         /// <summary>
         /// 获取绑定器

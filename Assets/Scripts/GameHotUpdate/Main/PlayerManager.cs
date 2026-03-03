@@ -1,10 +1,18 @@
 using System.Collections.Generic;
 using Core.Components;
+using Core.GlobalEvent;
+using Core.GlobalEvent.Events;
 using Core.Service;
 using Core.Singleton;
+using GameHotUpdate.Animation;
+using GameHotUpdate.Animation.Component;
 using GameHotUpdate.Battle.Object.Role.Warrior;
 using GameHotUpdate.Config;
+using GameHotUpdate.Dialogue.UI;
+using GameHotUpdate.Input;
+using GameHotUpdate.Main.Move;
 using GameHotUpdate.Main.Object;
+using GameHotUpdate.Main.UI;
 using UnityEngine;
 
 namespace GameHotUpdate.Main
@@ -17,16 +25,17 @@ namespace GameHotUpdate.Main
     /// </summary>
     public class PlayerManager : SingletonBase<PlayerManager>, IPlayerManager
     {
+        private readonly IEventCenter _eventCenter = ServiceLocator.Get<IEventCenter>();
         // 字典：玩家UID映射到对应的实体对象，用于快速查找玩家
         private readonly Dictionary<uint, IEntityObject> uidToEntityMap = new();
 
         // 主玩家对象（固定UID为1001）
         public IEntityObject MainPlayer => uidToEntityMap[1001];
-
-        // 私有构造函数（单例模式，禁止外部实例化）
+        
         private PlayerManager()
         {
-
+            _eventCenter.SubscribeEvent<OpenViewEvent>(OnOpenViewEvent, OpenViewEventFilter);
+            _eventCenter.SubscribeEvent<CloseViewEvent>(OnCloseViewEvent, OpenViewEventFilter);
         }
 
         /// <summary>
@@ -73,6 +82,39 @@ namespace GameHotUpdate.Main
 
             // 清空字典，释放引用
             uidToEntityMap.Clear();
+        }
+
+        /// <summary>
+        /// UI界面打开事件回调
+        /// </summary>
+        /// <param name="openViewEvent"></param>
+        private void OnOpenViewEvent(OpenViewEvent openViewEvent)
+        {
+            MainPlayer.GetComponent<InputComponent>().DisEnableInput();
+            MainPlayer.GetComponent<NormalAnimationComponent>().SetAnimationState(E_AnimationType.Idle);
+            MainPlayer.GetComponent<MoveComponent>().Disable();
+        }
+
+        private bool OpenViewEventFilter(OpenViewEvent openViewEvent)
+        {
+            return openViewEvent.UIController is not MainController ||
+                   openViewEvent.UIController is not DialogueController;
+        }
+        
+        /// <summary>
+        /// UI界面打开事件回调
+        /// </summary>
+        /// <param name="closeViewEvent"></param>
+        private void OnCloseViewEvent(CloseViewEvent closeViewEvent)
+        {
+            MainPlayer.GetComponent<InputComponent>().EnableInput();
+            MainPlayer.GetComponent<MoveComponent>().Enable();
+        }
+
+        private bool OpenViewEventFilter(CloseViewEvent closeViewEvent)
+        {
+            return closeViewEvent.UIController is not MainController ||
+                   closeViewEvent.UIController is not DialogueController;
         }
     }
 }

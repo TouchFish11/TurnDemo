@@ -162,9 +162,9 @@ MonoBehaviour:
       name: StarSkybox046.png
       hash: dc0b20db005d6c93f6bea3632549448c5d4c58b97f4eaf3b8131f9f6b37a9bf2
     - assetPath: Assets\Editor\ArtRes\Default\UI\BeginView.prefab
-      size: 45110
+      size: 45134
       name: BeginView.prefab
-      hash: f1a5064b83d922f6c2fbdbe0bd1923dcb0a3a354d505de86f552ab5a8ac3b5cd
+      hash: 39e6e30a02fa4d6626f75ab2f3d6af2ac4b55286079503864bf89619a607a14e
     - assetPath: Assets\Editor\ArtRes\Default\UI\Canvas.prefab
       size: 13454
       name: Canvas.prefab
@@ -364,7 +364,7 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\UI\Activity\ActivityView.prefab
       size: 27731
       name: ActivityView.prefab
-      hash: 8c23ad6fd41e8df51f7078270558d645ea8209e69db635cd2216f390ed860cfd
+      hash: b9712c5d286aa1ae3977f7c8c37bfe22b000872c7ede9ed0089d397dc0b68a67
     - assetPath: Assets\Editor\ArtRes\UI\Activity\Common\ActivityBkComponent.prefab
       size: 3644
       name: ActivityBkComponent.prefab
@@ -402,9 +402,9 @@ MonoBehaviour:
       name: EmbersCanonActivityUI.prefab
       hash: b0e7ccbda35bc43eb1f4daa5100726eb0454d69a8927850749a7a4e57cedc192
     - assetPath: Assets\Editor\ArtRes\UI\Activity\Details\EmbersCanonActivity\EmbersCanonSubActivityUI_01\BattleLevelUI.prefab
-      size: 11319
+      size: 11317
       name: BattleLevelUI.prefab
-      hash: d38e18daf0b4a9b45b90f973a841ad46d20a2e99ebacafa22273764cae7e526c
+      hash: 1a1c3af7d16bc9d2755adfa120bb5ba419661eaee42ba96ada4eaac62892bd39
     - assetPath: Assets\Editor\ArtRes\UI\Activity\Details\EmbersCanonActivity\EmbersCanonSubActivityUI_01\EmbersCanonSubActivityUI_01.prefab
       size: 28311
       name: EmbersCanonSubActivityUI_01.prefab
@@ -422,9 +422,9 @@ MonoBehaviour:
       name: BattleMessageUI.prefab
       hash: d4adef4129a947cfdbb8cbe8f5a422d38e98828e39bf4ea336ec910a116fbd9f
     - assetPath: Assets\Editor\ArtRes\UI\Battle\BattleView.prefab
-      size: 92250
+      size: 92248
       name: BattleView.prefab
-      hash: 596f636ce2736be0d83f66629c5aee976fc32d1c5144ede058ae83cacf7e668c
+      hash: c7e4339f0ad224a2c30a0ad22f1344da476319019f7a03a83c2d3b97033cc287
     - assetPath: Assets\Editor\ArtRes\UI\Battle\SelectMarkerUI.prefab
       size: 17123
       name: SelectMarkerUI.prefab
@@ -526,9 +526,9 @@ MonoBehaviour:
       name: TaskTypeContainer.prefab
       hash: e729dc8ee5926adf37e640abf718f8755f5f22923599b83926fbd8f408ca47f3
     - assetPath: Assets\Editor\ArtRes\UI\Task\TaskView.prefab
-      size: 57013
+      size: 57011
       name: TaskView.prefab
-      hash: 34e70178e53947be885391c81767349f02377d394e187859b2a7004613a20ae1
+      hash: 9c6c53b716681151ca3114672234ad45756a00cc1fd5b108290aaf4640edf252
     - assetPath: Assets\Editor\ArtRes\UI\Tip\BaseTipView.prefab
       size: 11726
       name: BaseTipView.prefab

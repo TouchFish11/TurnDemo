@@ -41,9 +41,18 @@ namespace Core.Loader.UI
 
         /// <summary>
         /// 释放资源
+        /// 用于希望将obj对象放入缓存池的情况
         /// </summary>
-        /// <param name="abName"></param>
-        /// <param name="assetName"></param>
+        /// <param name="abName">资源AB包名称</param>
+        /// <param name="obj">被缓存的对象</param>
+        void RealseAsset(string abName, GameObject obj);
+
+        /// <summary>
+        /// 释放资源
+        /// 用于不希望将obj放入缓存池的情况
+        /// </summary>
+        /// <param name="abName">资源AB包名称</param>
+        /// <param name="assetName">资源名称</param>
         void RealseAsset(string abName, string assetName);
     }
 }

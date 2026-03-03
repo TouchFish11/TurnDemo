@@ -1,15 +1,15 @@
 using Core.Loader.Sprite;
 using Core.Loader.UI;
+using Core.Log;
 using Core.Reflection;
 using Core.Serialize.Binary;
 using Core.Service;
-using Core.UI;
 using Core.UI.MVC;
 using GameHotUpdate.Activity.Core;
 using GameHotUpdate.Activity.Data;
-using GameHotUpdate.Activity.UI.EmbersCanon;
 using GameHotUpdate.Config;
 using GameHotUpdate.Main.Manager;
+using GameHotUpdate.Main.UI;
 
 namespace GameHotUpdate.Activity.UI.Base
 {
@@ -20,6 +20,8 @@ namespace GameHotUpdate.Activity.UI.Base
     /// </summary>
     public class ActivityController : UIController<ActivityView, ActivityModel>
     {
+        private readonly IGameManager _gameManager = ServiceLocator.Get<IGameManager>();
+        
         protected override async Task OnShow()
         {
             // 读取活动数据
@@ -48,7 +50,8 @@ namespace GameHotUpdate.Activity.UI.Base
         
         protected override Task OnHide()
         {
-            return Task.CompletedTask;
+            // 显示主界面
+            return uiManager.SetViewActive(uiManager.GetController<MainController>(), true);
         }
 
         protected override void ButtonOnClick(string btnName)
@@ -56,7 +59,7 @@ namespace GameHotUpdate.Activity.UI.Base
             switch (btnName)
             {
                 case nameof(view.btnClose):
-                    ServiceLocator.Get<IUIManager>().DestroyView(AbKeyCollection.Ui, this);
+                    uiManager.DestroyView(AbKeyCollection.Ui, this);
                     break;
             }
         }
@@ -67,29 +70,26 @@ namespace GameHotUpdate.Activity.UI.Base
             {
                 return;
             }
-            
+
             // 通过配置信息获取对应类型
             var activityType = ServiceLocator.Get<IFactoryManager>().GetFactory<IActivityFactory, ActivityFactory>()
                 .GetActivity(activityInfo.f_detailUI_res);
             
             // 活动本地活动数据
-            var activityDataCollection = ServiceLocator.Get<IGameManager>().GameDataManager.ActivityDataCollection as ActivityDataCollection;
+            var activityDataCollection = _gameManager.GameDataManager.ActivityDataCollection as ActivityDataCollection;
             
             // 获取活动UI对象
-            var activity = await ServiceLocator.Get<IUiLoader>().GetUIObject<IActivity>(AbKeyCollection.Ui, activityInfo.f_detailUI_res,
+            var activity = await uiLoader.GetUIObject<IActivity>(AbKeyCollection.Ui, activityInfo.f_detailUI_res,
                 view.ActivityDetailArea);
             // 初始化详细界面
             if (!activityDataCollection.TryGetValue(activityInfo.f_id, out var activityData))
             {
                 // 新增活动数据
-                // TODO：暂时这样处理
-                activityData = activityInfo.f_id switch
-                {
-                    1001 => new ActivityData { ActivityId = activityInfo.f_id },
-                    1002 => new EmbersCanonData { ActivityId = activityInfo.f_id },
-                    _ => activityData
-                };
-                
+                activityData = ServiceLocator.Get<IFactoryManager>()
+                    .GetFactory<IActivityDataFactory, ActivityDataFactory>()
+                    .GetData(activityInfo.f_id);
+                // 初始化ID
+                activityData.ActivityId = activityInfo.f_id;
                 // 缓存
                 activityDataCollection.TryAdd(activityInfo.f_id, activityData);
             }

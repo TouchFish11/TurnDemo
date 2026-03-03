@@ -5,6 +5,7 @@ using Core.Service;
 using Core.UI.MVC;
 using GameHotUpdate.Config;
 using GameHotUpdate.Interact.UI;
+using UnityEngine;
 
 namespace GameHotUpdate.Main.UI
 {
@@ -25,8 +26,7 @@ namespace GameHotUpdate.Main.UI
             foreach (var interactUI in this.interactUIs)
             {
                 // 释放资源
-                ServiceLocator.Get<IUiLoader>().RealseAsset(AbKeyCollection.Ui, interactUI.name);
-                ServiceLocator.Get<IPoolManager>().PushObj(interactUI.gameObject);
+                ServiceLocator.Get<IUiLoader>().RealseAsset(AbKeyCollection.Ui, interactUI.gameObject);
             }
             
             this.interactUIs.Clear();

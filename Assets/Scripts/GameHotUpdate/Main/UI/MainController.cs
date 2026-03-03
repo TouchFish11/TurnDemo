@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Core.Log;
-using Core.Service;
 using Core.UI;
 using Core.UI.MVC;
 using GameHotUpdate.Activity.UI.Base;
-using GameHotUpdate.Battle.Core;
-using GameHotUpdate.Battle.Turn;
 using GameHotUpdate.Config;
 using GameHotUpdate.Main.UI.Logic;
 using GameHotUpdate.Task.UI;
@@ -31,15 +28,8 @@ namespace GameHotUpdate.Main.UI
 
         protected override Task OnShow()
         {
-            // 初始化交互逻辑实例并加入字典
-
-            mainLogics.Add(typeof(InteractLogic), poolManager.GetData<InteractLogic>());
-            // 初始化任务逻辑实例并加入字典
-            mainLogics.Add(typeof(TaskLogic), poolManager.GetData<TaskLogic>());
-            // 初始化对话逻辑实例并加入字典
-            mainLogics.Add(typeof(DialogueLogic), poolManager.GetData<DialogueLogic>());
-            // 初始化所有子逻辑模块的状态
-            InitState();
+            // 显示主界面显示效果
+            // ...
             return Task.CompletedTask;
         }
         
@@ -51,27 +41,21 @@ namespace GameHotUpdate.Main.UI
         /// <returns>异步任务</returns>
         protected override Task OnInit()
         {
+            // 初始化交互逻辑实例并加入字典
+            mainLogics.Add(typeof(InteractLogic), poolManager.GetData<InteractLogic>());
+            // 初始化任务逻辑实例并加入字典
+            mainLogics.Add(typeof(TaskLogic), poolManager.GetData<TaskLogic>());
+            // 初始化对话逻辑实例并加入字典
+            mainLogics.Add(typeof(DialogueLogic), poolManager.GetData<DialogueLogic>());
+            // 初始化所有子逻辑模块的状态
+            InitState();
             return Task.CompletedTask;
         }
         
         protected override Task OnHide()
         {
-            foreach (var logic in mainLogics.Values)
-            {
-                switch (logic)
-                {
-                    case InteractLogic interactLogic:
-                        poolManager.PushData(interactLogic);
-                        break;
-                    case TaskLogic taskLogic:
-                        poolManager.PushData(taskLogic);
-                        break;
-                    case DialogueLogic dialogueLogic:
-                        poolManager.PushData(dialogueLogic);
-                        break;
-                }
-            }
-
+            // 显示主界面隐藏效果
+            // ...
             return Task.CompletedTask;
         }
 
@@ -84,6 +68,8 @@ namespace GameHotUpdate.Main.UI
         {
             try
             {
+                // 失活主界面
+                await uiManager.SetViewActive(this, false);
                 switch (btnName)
                 {
                     case "btnActivity":

@@ -1,27 +1,27 @@
 using System;
 using System.Collections.Generic;
+using GameHotUpdate.Activity.Core;
 using GameHotUpdate.Activity.Data;
 using Newtonsoft.Json;
-using UnityEngine;
 
 namespace GameHotUpdate.Activity.UI.EmbersCanon
 {
     /// <summary>
     /// 余烬圣典活动数据
     /// </summary>
+    [ActivityId(ActivityId = 1002)]
     [Serializable]
     public class EmbersCanonData : ActivityData
     {
-        [JsonProperty]
-        [SerializeField] private List<EmbersCanonLevelEntry> levels = new();
+        [JsonProperty] private List<EmbersCanonLevelEntryData> levels = new();
 
         /// <summary>
         /// 添加数据
         /// </summary>
-        /// <param name="entry"></param>
-        public void Add(EmbersCanonLevelEntry entry)
+        /// <param name="entryData"></param>
+        public void Add(EmbersCanonLevelEntryData entryData)
         {
-            levels.Add(entry);
+            levels.Add(entryData);
         }
         
         /// <summary>
@@ -30,7 +30,7 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
         /// </summary>
         /// <param name="levelId"></param>
         /// <returns></returns>
-        public EmbersCanonLevelEntry GetLevelData(int levelId)
+        public EmbersCanonLevelEntryData GetLevelData(int levelId)
         {
             return levels.Find(x => x.levelId == levelId);
         }
@@ -40,7 +40,7 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
     /// 余烬圣典活动关卡条目
     /// </summary>
     [Serializable]
-    public class EmbersCanonLevelEntry
+    public class EmbersCanonLevelEntryData
     {
         public int levelId;
         public bool isComplete;

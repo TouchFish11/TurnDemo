@@ -49,7 +49,7 @@ namespace Core.Loader.UI
             AddRefCount(assetName);
             return cacheObj;
         }
-
+        
         /// <summary>
         /// 释放资源
         /// </summary>
@@ -68,6 +68,30 @@ namespace Core.Loader.UI
             }
             
             _nameToUiRef.Remove(assetName);
+            _assetBundleManager.UnloadBundle(abName);
+        }
+
+        /// <summary>
+        /// 释放资源
+        /// </summary>
+        /// <param name="abName"></param>
+        /// <param name="obj"></param>
+        public void RealseAsset(string abName, GameObject obj)
+        {
+            // 放入缓存池
+            _poolManager.PushObj(obj);
+            
+            if (!_nameToUiRef.ContainsKey(obj.name))
+            {
+                return;
+            }
+            
+            if (--_nameToUiRef[obj.name] != 0)
+            {
+                return;
+            }
+            
+            _nameToUiRef.Remove(obj.name);
             _assetBundleManager.UnloadBundle(abName);
         }
 

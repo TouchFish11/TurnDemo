@@ -40,7 +40,7 @@ namespace Core.Pool
         /// <param name="data">数据对象</param>
         /// <param name="nameSpace">可选参数：命名空间</param>
         void PushData<T>(T data, string nameSpace = "") where T : class, IPoolData, new();
-        
+
         /// <summary>
         /// 缓存继承Mono的对象
         /// </summary>

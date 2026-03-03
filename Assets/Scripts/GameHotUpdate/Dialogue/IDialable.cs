@@ -1,17 +1,17 @@
 namespace GameHotUpdate.Dialogue
 {
     /// <summary>
-    /// �ɶԻ��ӿ�
+    /// 可对话接口
     /// </summary>
     public interface IDialable
     {
         /// <summary>
-        /// �Ի���ʼ
+        /// 对话开始
         /// </summary>
         void OnDialogueStart();
 
         /// <summary>
-        /// �Ի�����
+        /// 对话结束
         /// </summary>
         void OnDialogueEnd();
     }

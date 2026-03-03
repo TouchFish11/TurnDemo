@@ -54,7 +54,6 @@ namespace Core.Scene
                 ServiceLocator.Get<IMonoAdapter>().StartCoroutine(UpdateProgress_Cor(ao, onLoadProgress));
                 // 等待场景加载结束
                 await TaskUtility.WaitUntil(() => ao != null && ao.isDone);
-                
             }
             catch (Exception exception)
             {

@@ -90,7 +90,7 @@ namespace GameHotUpdate.Update.UI
             view.SetUpdateAreaActive(true);
             view.SetEnterAreaActive(false);
             view.SetSliderProgress(0);
-            view.SetTextProgress($"{TextUtility.FloatToStr(0, 2)}%");
+            view.SetTextProgress(0);
             view.SetDownloadSizeAndSpeedText(string.Empty);
         }
         
@@ -125,8 +125,9 @@ namespace GameHotUpdate.Update.UI
                     view.SetStopButtonActive(false);
                     // 隐藏部分UI
                     view.SetDownloadSizeAndSpeedActive(false);
-                    // 重置进度条
+                    // 重置进度条、进度文本
                     view.SetSliderProgress(0);
+                    view.SetTextProgress(0);
                     view.SetTextPhase("正在校验资源完整性...");
                     break;
                 case EUpdatePhase.Finished:
@@ -144,7 +145,7 @@ namespace GameHotUpdate.Update.UI
         {
             var downloadSizeAndSpeed = $"{TextUtility.ToByteUnit(currentloadedBytes)}/{TextUtility.ToByteUnit(totalBytes)} {_speed}";
             view.SetSliderProgress(currentloadedBytes / (float)totalBytes);
-            view.SetTextProgress($"{TextUtility.FloatToStr(currentloadedBytes / (float)totalBytes * 100, 2)}%");
+            view.SetTextProgress(currentloadedBytes / (float)totalBytes * 100);
             view.SetDownloadSizeAndSpeedText(downloadSizeAndSpeed);
         }
 
@@ -156,7 +157,7 @@ namespace GameHotUpdate.Update.UI
         private void OnCheckProgress(int current, int total)
         {
             view.SetSliderProgress(current / (float)total);
-            view.SetTextProgress($"{TextUtility.FloatToStr(current / (float)total * 100, 2)}%");
+            view.SetTextProgress(current / (float)total * 100);
         }
 
         /// <summary>

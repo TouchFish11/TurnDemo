@@ -1,13 +1,15 @@
+using Core.UI.MVC;
+
 namespace Core.GlobalEvent.Events
 {
     /// <summary>
-    /// �򿪽����¼�
+    /// 打开界面事件
     /// </summary>
     public class OpenViewEvent : Event
     {
         /// <summary>
-        /// �������������
+        /// 界面控制器
         /// </summary>
-        public string ControllerName { get; set; }
+        public IuiController UIController { get; set; }
     }
 }

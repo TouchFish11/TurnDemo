@@ -120,8 +120,7 @@ namespace GameHotUpdate.Battle.Core
             await _sceneManager.LoadSceneAsync(ResKeyCollection.LevelScene, UnityEngine.SceneManagement.LoadSceneMode.Single, progress => battleLoadingController.UpdateProgress(progress));
             
             // 隐藏主界面
-            var controller = _uiManager.GetController<MainController>();
-            _uiManager.SetViewActive(controller, false);
+            await _uiManager.SetViewActive(_uiManager.GetController<MainController>(), false);
             // 注册战斗点，依赖战斗场景加载完成
             ServiceLocator.Register<IBattlePointProxy>(new BattlePointProxy());
             // 预加载资源

@@ -1786,7 +1786,7 @@ GameObject:
   - component: {fileID: 7707006530792071595}
   - component: {fileID: 3761416556721229723}
   - component: {fileID: 8327654917911730071}
-  - component: {fileID: -3748988135606488371}
+  - component: {fileID: 6343786881327606316}
   m_Layer: 5
   m_Name: BattleView
   m_TagString: Untagged
@@ -1878,7 +1878,7 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &-3748988135606488371
+--- !u!114 &6343786881327606316
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

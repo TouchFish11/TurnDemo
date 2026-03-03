@@ -52,9 +52,7 @@ namespace GameHotUpdate.Activity.UI.Base
             if (Activity != null)
             {
                 // 释放资源
-                ServiceLocator.Get<IUiLoader>().RealseAsset(AbKeyCollection.Ui, Activity.GameObject.name);
-                // 清除当前缓存的界面
-                ServiceLocator.Get<IPoolManager>().PushObj(Activity.GameObject);
+                ServiceLocator.Get<IUiLoader>().RealseAsset(AbKeyCollection.Ui, Activity.GameObject);
             }
             Activity = currentActivity;
             activityTypes.Add(type);
@@ -62,13 +60,14 @@ namespace GameHotUpdate.Activity.UI.Base
         
         public override void ClearData()
         {
+            // 释放资源
+            ServiceLocator.Get<IUiLoader>().RealseAsset(AbKeyCollection.Ui, Activity.GameObject);
+            
             Activity = null;
             foreach (var activityUi in activityUis)
             {
                 // 释放资源
-                ServiceLocator.Get<IUiLoader>().RealseAsset(AbKeyCollection.Ui, activityUi.name);
-                // 放入缓存池
-                ServiceLocator.Get<IPoolManager>().PushObj(activityUi.gameObject);
+                ServiceLocator.Get<IUiLoader>().RealseAsset(AbKeyCollection.Ui, activityUi.gameObject);
             }
             activityUis.Clear();
             // 清理类型缓存

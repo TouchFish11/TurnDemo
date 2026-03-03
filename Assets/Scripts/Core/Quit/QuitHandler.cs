@@ -30,12 +30,15 @@ namespace Core.Quit
         {
             try
             {
-                await OnAppQuit?.Invoke();
-                OnAppQuit = null;
+                if (OnAppQuit != null)
+                {
+                    await OnAppQuit();
+                    OnAppQuit = null;
+                }
             }
             catch (Exception e)
             {
-                LogManager.LogException(e);
+                LogManager.LogError($"{nameof(QuitHandler)}.{nameof(OnApplicationQuit)}：{e.Message}，{e.StackTrace}");
             }
         }
     }

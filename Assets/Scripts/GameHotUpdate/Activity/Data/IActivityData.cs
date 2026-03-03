@@ -4,7 +4,6 @@ namespace GameHotUpdate.Activity.Data
 {
     public interface IActivityData : IData
     {
-
-
+        
     }
 }

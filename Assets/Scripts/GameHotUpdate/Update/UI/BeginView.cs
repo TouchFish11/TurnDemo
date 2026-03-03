@@ -2,6 +2,7 @@ using Core.Mono;
 using Core.Service;
 using Core.UI;
 using Core.UI.MVC;
+using Core.Utility;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -69,9 +70,9 @@ namespace GameHotUpdate.Update.UI
             sliderProgress.value = value;
         }
         
-        public void SetTextProgress(string text)
+        public void SetTextProgress(float value)
         {
-            txtProgress.text = text;
+            txtProgress.text = $"{TextUtility.FloatToStr(value, 2)}%";
         }
         
         public void SetTextPhase(string phase)

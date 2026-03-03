@@ -1,3 +1,5 @@
+using Core.UI.MVC;
+
 namespace Core.GlobalEvent.Events
 {
     /// <summary>
@@ -6,8 +8,8 @@ namespace Core.GlobalEvent.Events
     public class CloseViewEvent : Event
     {
         /// <summary>
-        /// 界面控制器名称
+        /// 界面控制器
         /// </summary>
-        public string ControllerName { get; set; }
+        public IuiController UIController { get; set; }
     }
 }

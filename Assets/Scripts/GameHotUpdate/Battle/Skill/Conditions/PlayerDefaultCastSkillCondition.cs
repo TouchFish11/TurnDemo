@@ -28,7 +28,7 @@ namespace GameHotUpdate.Battle.Skill.Conditions
                     }
 
                     // 全局提示
-                    ServiceLocator.Get<IEventCenter>().TriggerEvent(new GlobalMessageEvent("战技点不足无法释放"));
+                    ServiceLocator.Get<IEventCenter>().TriggerEvent(new GlobalMessageEvent{Message = "战技点不足无法释放"});
                     return false;
                 case E_SkillType.UltimateSkill:
                     // 判断能量释放足够
@@ -40,7 +40,7 @@ namespace GameHotUpdate.Battle.Skill.Conditions
                     }
 
                     // 全局提示
-                    ServiceLocator.Get<IEventCenter>().TriggerEvent(new GlobalMessageEvent("能量不足无法释放"));
+                    ServiceLocator.Get<IEventCenter>().TriggerEvent(new GlobalMessageEvent{Message = "能量不足无法释放"});
                     return false;
                 case E_SkillType.EnhancedNormalAttack:
                 case E_SkillType.EnhancedCombatSkill:

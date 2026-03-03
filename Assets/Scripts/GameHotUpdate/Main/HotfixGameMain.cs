@@ -30,7 +30,7 @@ namespace GameHotUpdate.Main
         /// <summary>
         /// 游戏启动入口方法
         /// </summary>
-        private static void Init()
+        private static async void Init()
         {
             try
             {
@@ -40,11 +40,21 @@ namespace GameHotUpdate.Main
                 ServiceLocator.Get<IFactoryManager>().InitHotFactorys();
                 
                 // 切换场景
-                ServiceLocator.Get<ISceneManager>().LoadSceneAsync(ResKeyCollection.MainScene, LoadSceneMode.Single, null);
+                await ServiceLocator.Get<ISceneManager>().LoadSceneAsync(ResKeyCollection.MainScene, LoadSceneMode.Single, null);
+                
+                // 初始化游戏数据、服务
+                await ServiceLocator.Get<IGameManager>().Init(new GameDataManager(), new GameServiceManger());
+
+                // 自动登录逻辑（暂注释，可根据业务开启）
+                //await ServiceLocator.Get<IServerManager>().TryAutoLogin();
+                // 初始化游戏场景（创建NPC、玩家、UI等核心游戏对象）
+                await InitScene();
+                // 初始化主界面
+                await InitMainView();
             }
             catch (Exception e)
             {
-                LogManager.LogError($"{nameof(HotfixGameMain)}.{nameof(Init)}: {e.Message}");
+                LogManager.LogError($"{nameof(HotfixGameMain)}.{nameof(Init)}: {e.Message}，{e.StackTrace}");
             }
         }
 

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.UI.MVC;
 using UnityEngine;
@@ -9,14 +10,43 @@ namespace Core.UI
     /// </summary>
     public interface IUIManager
     {
+        /// <summary>
+        /// UI画布
+        /// </summary>
         Canvas Canvas { get; }
         
+        /// <summary>
+        /// UI摄像机
+        /// </summary>
         Camera UICamera { get; }
         
+        /// <summary>
+        /// 所有存活的界面列表
+        /// </summary>
+        List<IPanelInfo> AllPanels { get; }
+
+        /// <summary>
+        /// 获取指定层级对象
+        /// </summary>
+        /// <param name="layer">层级对象枚举</param>
+        /// <returns>层级对象位置</returns>
         Transform GetLayer(E_UILayer layer);
         
+        /// <summary>
+        /// 获取界面控制器
+        /// 只能获取第一个查找到的实例，同一类型多实例无法准确获取
+        /// </summary>
+        /// <typeparam name="TController">接口类型</typeparam>
+        /// <returns></returns>
         TController GetController<TController>() where TController : IuiController;
         
+        /// <summary>
+        /// 异步初始化UI管理器
+        /// </summary>
+        /// <param name="defaultAbName"></param>
+        /// <param name="canvasName"></param>
+        /// <param name="uiCameraName"></param>
+        /// <returns></returns>
         Task InitUIManagerAsync(string defaultAbName, string canvasName, string uiCameraName);
         
         /// <summary>
@@ -26,11 +56,10 @@ namespace Core.UI
 
         /// <summary>
         /// 设置界面活动状态
-        /// 只能设置第一个查找到的实例，多实例无法准确获取
         /// </summary>
         /// <param name="controller"></param>
         /// <param name="isActive"></param>
-        void SetViewActive(IuiController controller, bool isActive);
+        Task SetViewActive(IuiController controller, bool isActive);
 
         /// <summary>
         /// 异步显示界面

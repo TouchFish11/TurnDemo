@@ -72,11 +72,11 @@ namespace Core.Pool
         public void PushObj(GameObject obj)
         {
             // 第一次缓存对象时初始化缓存池存储结构
-            if (_poolRootObj == null && GlobalSettings.Instance.isOpenLayout)
+            if (!_poolRootObj && GlobalSettings.Instance.isOpenLayout)
             {
                 _poolRootObj = new GameObject("Pool");
             }
-
+            
             // 已经存储过了就可以直接往容器中存储对象
             if (_poolObjDic.TryGetValue(obj.name, out var poolObj))
             {

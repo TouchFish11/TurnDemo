@@ -30,6 +30,6 @@ namespace Core.UI.MVC
         /// 销毁
         /// 主要处理资源释放的逻辑
         /// </summary>
-        void Destroy();
+        Task Destroy();
     }
 }

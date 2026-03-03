@@ -1,9 +1,14 @@
+using System;
+using Core.Log;
 using Core.Service;
 using Core.UI;
 using GameHotUpdate.Dialogue;
 
 namespace GameHotUpdate.Main.UI.Logic
 {
+    /// <summary>
+    /// 主界面对话逻辑
+    /// </summary>
     public class DialogueLogic : MainLogic
     {
         private readonly IDialogueManager _dialogueManager = ServiceLocator.Get<IDialogueManager>();
@@ -22,18 +27,32 @@ namespace GameHotUpdate.Main.UI.Logic
         /// 激活主界面
         /// 作用：设置主界面为显示状态
         /// </summary>
-        private void Active()
+        private async void Active()
         {
-            _uiManager.SetViewActive(mainController,true);
+            try
+            {
+                await _uiManager.SetViewActive(mainController,true);
+            }
+            catch (Exception e)
+            {
+                LogManager.LogError($"{nameof(DialogueLogic)}.{nameof(Active)}：{e.Message}，{e.StackTrace}");
+            }
         }
 
         /// <summary>
         /// 隐藏主界面
         /// 作用：设置主界面为隐藏状态
         /// </summary>
-        private void InActive()
+        private async void InActive()
         {
-            _uiManager.SetViewActive(mainController,false);
+            try
+            {
+                await _uiManager.SetViewActive(mainController,false);
+            }
+            catch (Exception e)
+            {
+                LogManager.LogError($"{nameof(DialogueLogic)}.{nameof(InActive)}：{e.Message}，{e.StackTrace}");
+            }
         }
 
         public override void ResetData()

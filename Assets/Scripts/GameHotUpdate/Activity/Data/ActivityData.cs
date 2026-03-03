@@ -1,7 +1,7 @@
 using System;
 using Core.Serialize.Binary;
 using Core.Service;
-using UnityEngine;
+using Newtonsoft.Json;
 
 namespace GameHotUpdate.Activity.Data
 {
@@ -10,11 +10,12 @@ namespace GameHotUpdate.Activity.Data
     /// 存储用户活动相关数据
     /// </summary>
     [Serializable]
-    public class ActivityData : IActivityData
+    [JsonObject(MemberSerialization.OptIn)]
+    public abstract class ActivityData : IActivityData
     {
-        [SerializeField] private int activityId;
-        [SerializeField] private bool isComplete;
-        [SerializeField] private int currentPro;
+        [JsonProperty] protected int activityId;
+        [JsonProperty] protected bool isComplete;
+        [JsonProperty] protected int currentPro;
         
         /// <summary>
         /// 活动ID

@@ -6,10 +6,5 @@ namespace Core.GlobalEvent.Events
     public class GlobalMessageEvent : Event
     {
         public string Message { get; set; }
-
-        public GlobalMessageEvent(string message)
-        {
-            Message = message;
-        }
     }
 }

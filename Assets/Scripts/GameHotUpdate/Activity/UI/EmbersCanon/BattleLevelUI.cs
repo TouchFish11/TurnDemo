@@ -36,7 +36,7 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
         private ISceneManager _sceneManager;
         
         private BattleConfigEntry _configEntry;
-        private EmbersCanonLevelEntry _levelDataEntry;
+        private EmbersCanonLevelEntryData levelDataEntryData;
 
         protected override void Awake()
         {
@@ -52,13 +52,13 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
         /// </summary>
         /// <param name="levelName"></param>
         /// <param name="finishedIcon"></param>
-        /// <param name="levelDataEntry"></param>
+        /// <param name="levelDataEntryData"></param>
         /// <param name="configEntry"></param>
-        public void Init(string levelName, Sprite finishedIcon, EmbersCanonLevelEntry levelDataEntry, BattleConfigEntry configEntry)
+        public void Init(string levelName, Sprite finishedIcon, EmbersCanonLevelEntryData levelDataEntryData, BattleConfigEntry configEntry)
         {
             txtName.text = levelName;
             imgIsFinished.sprite = finishedIcon;
-            _levelDataEntry =  levelDataEntry;
+            this.levelDataEntryData =  levelDataEntryData;
             _configEntry = configEntry;
         }
 
@@ -67,13 +67,13 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
             switch (btnName)
             {
                 case nameof(btnEnter):
-                if (!_levelDataEntry.isComplete)
+                if (!levelDataEntryData.isComplete)
                 {
                     EnterBattle();
                 }
                 else
                 {
-                    _eventCenter.TriggerEvent(new GlobalMessageEvent("该关卡已完成"));
+                    _eventCenter.TriggerEvent(new GlobalMessageEvent {Message = "该关卡已完成"});
                 }
                 break;
             }
@@ -96,22 +96,19 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
                 };
             
                 // 通过BattleManager启动战斗，传入当前控制器上下文
-                await _battleManager.EnterBattle(turnData, () =>
+                await _battleManager.EnterBattle(turnData, async () =>
                 {
                     // 清理场景内容缓存
                     HotfixGameMain.ClearScene();
                     // 隐藏活动界面
-                    _uiManager.SetViewActive(_uiManager.GetController<ActivityController>(), false);
-                    return Task.CompletedTask;
+                    await _uiManager.SetViewActive(_uiManager.GetController<ActivityController>(), false);
                 }, async () =>
                 {
                     await ChangedScene();
-                    // 显示主界面
-                    _uiManager.SetViewActive(_uiManager.GetController<MainController>(), true);
                     // 更新当前活动数据，标记为完成
-                    _levelDataEntry.isComplete = true;
+                    levelDataEntryData.isComplete = true;
                     // 激活活动界面
-                    _uiManager.SetViewActive(_uiManager.GetController<ActivityController>(), true);
+                    await _uiManager.SetViewActive(_uiManager.GetController<ActivityController>(), true);
                 });
             }
             catch (Exception e)
@@ -124,10 +121,11 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
         /// 切换场景
         /// </summary>
         /// <returns></returns>
-        private Task ChangedScene()
+        private async Task ChangedScene()
         {
             // 切换到指定场景场景
-            return _sceneManager.LoadSceneAsync(ResKeyCollection.MainScene, UnityEngine.SceneManagement.LoadSceneMode.Single, null);
+            await _sceneManager.LoadSceneAsync(ResKeyCollection.MainScene, UnityEngine.SceneManagement.LoadSceneMode.Single, null);
+            await HotfixGameMain.InitScene();
         }
     }
 }

@@ -56,24 +56,6 @@ namespace Core.UI.MVC
         }
 
         /// <summary>
-        /// 显示
-        /// </summary>
-        public virtual void Show()
-        {
-            _isHide = false;
-        }
-
-        /// <summary>
-        /// 隐藏
-        /// </summary>
-        /// <param name="hideCallBack">隐藏结束回调</param>
-        public virtual void Hide(Action hideCallBack = null)
-        {
-            _isHide = true;
-            _hideCallBack = hideCallBack;
-        }
-
-        /// <summary>
         /// 获取绑定器
         /// </summary>
         /// <returns></returns>
