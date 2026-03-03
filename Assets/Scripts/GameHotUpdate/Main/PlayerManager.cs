@@ -97,7 +97,7 @@ namespace GameHotUpdate.Main
 
         private bool OpenViewEventFilter(OpenViewEvent openViewEvent)
         {
-            return openViewEvent.UIController is not MainController ||
+            return openViewEvent.UIController is not MainController &&
                    openViewEvent.UIController is not DialogueController;
         }
         
@@ -113,7 +113,7 @@ namespace GameHotUpdate.Main
 
         private bool OpenViewEventFilter(CloseViewEvent closeViewEvent)
         {
-            return closeViewEvent.UIController is not MainController ||
+            return closeViewEvent.UIController is not MainController &&
                    closeViewEvent.UIController is not DialogueController;
         }
     }
