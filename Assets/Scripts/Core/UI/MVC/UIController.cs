@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Core.GlobalEvent;
 using Core.GlobalEvent.Events;
-using Core.Loader.UI;
+using Core.Loader.Object;
 using Core.Pool;
 using Core.Service;
 
@@ -18,7 +18,7 @@ namespace Core.UI.MVC
         protected readonly IUIManager uiManager = ServiceLocator.Get<IUIManager>();
         protected readonly IEventCenter eventCenter = ServiceLocator.Get<IEventCenter>();
         protected readonly IPoolManager poolManager = ServiceLocator.Get<IPoolManager>();
-        protected readonly IUiLoader uiLoader = ServiceLocator.Get<IUiLoader>();
+        protected readonly IPrefabLoader prefabLoader = ServiceLocator.Get<IPrefabLoader>();
 
         public async Task Init(IuiView view, IuiModel model)
         {

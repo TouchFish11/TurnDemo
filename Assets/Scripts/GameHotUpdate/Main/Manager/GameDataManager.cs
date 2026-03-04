@@ -18,10 +18,10 @@ namespace GameHotUpdate.Main.Manager
     /// <summary>
     /// 游戏数据管理器
     /// </summary>
-    public class GameDataManager : IGameDataManager
+    public class GameDataManager
     {
-        private readonly IBinaryDataManager _binaryDataManager;
-        private readonly IJsonManager _jsonManager;
+        private readonly IBinaryDataManager _binaryDataManager = ServiceLocator.Get<IBinaryDataManager>();
+        private readonly IJsonManager _jsonManager = ServiceLocator.Get<IJsonManager>();
         
         private readonly JsonSerializerSettings activityDataSettings = new()
         {
@@ -29,12 +29,6 @@ namespace GameHotUpdate.Main.Manager
             Formatting = Formatting.Indented,
         };
 
-        public GameDataManager()
-        {
-            _binaryDataManager = ServiceLocator.Get<IBinaryDataManager>();
-            _jsonManager = ServiceLocator.Get<IJsonManager>();
-        }
-        
         public async Task InitData()
         {
             _binaryDataManager.AddConfig(EConfigLoadType.Excel, async loader =>
@@ -96,14 +90,29 @@ namespace GameHotUpdate.Main.Manager
             LogManager.Log($"活动数据保存成功，{ActivityDataCollection}");
         }
         
+        /// <summary>
+        /// 任务数据集合
+        /// </summary>
         public ITaskDataCollection TaskDataCollection { get; private set; }
         
+        /// <summary>
+        /// 音乐数据
+        /// </summary>
         public MusicData MusicData { get; private set; }
 
+        /// <summary>
+        /// 主动作行为映射数据容器
+        /// </summary>
         public MainActionMapDataContainer InputActionContainer { get; private set; }
         
+        /// <summary>
+        /// 活动数据集合
+        /// </summary>
         public IActivityDataCollection ActivityDataCollection { get; private set; }
         
+        /// <summary>
+        /// 输入数据集合
+        /// </summary>
         public InputDataContainer InputDataContainer { get; private set; }
     }
 }

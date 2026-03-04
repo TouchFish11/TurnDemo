@@ -3,6 +3,7 @@ using Core.Serialize.Binary;
 using Core.Service;
 using GameHotUpdate.Dialogue;
 using GameHotUpdate.Interact;
+using GameHotUpdate.Main.FloatingText;
 using GameHotUpdate.Main.Object;
 
 namespace GameHotUpdate.Battle.Object
@@ -23,6 +24,7 @@ namespace GameHotUpdate.Battle.Object
             NpcInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<NpcInfoContainer>(EConfigLoadType.Excel).dataDic[id];
             _interactTrigger = AddComponent<InteractTrigger>();
             _interactTrigger.Init(this);
+            ServiceLocator.Get<IFloatingTextManager>().AddNpc(this);
         }
 
         public void Interact(IEntityObject entityObject)

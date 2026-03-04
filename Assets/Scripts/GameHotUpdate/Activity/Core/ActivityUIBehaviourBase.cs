@@ -1,8 +1,7 @@
 using System;
+using Core.Loader.Object;
 using Core.Loader.Sprite;
-using Core.Loader.UI;
 using Core.Log;
-using Core.Pool;
 using Core.Service;
 using Core.UI;
 using Core.Utility;
@@ -19,9 +18,8 @@ namespace GameHotUpdate.Activity.Core
     /// </summary>
     public abstract class ActivityUIBehaviourBase : UIBehaviourBase, IActivity
     {
-        protected IPoolManager poolManager;
-        protected IUiLoader uiLoader; 
-        protected ISpriteLoader spriteLoader;
+        protected IPrefabLoader prefabLoader = ServiceLocator.Get<IPrefabLoader>();
+        protected readonly ISpriteLoader spriteLoader = ServiceLocator.Get<ISpriteLoader>();
         
         public GameObject GameObject { get; private set; }
         public ActivityData ActivityData { get; private set; }
@@ -35,9 +33,6 @@ namespace GameHotUpdate.Activity.Core
         {
             base.Awake();
             GameObject = gameObject;
-            poolManager = ServiceLocator.Get<IPoolManager>();
-            uiLoader = ServiceLocator.Get<IUiLoader>();
-            spriteLoader = ServiceLocator.Get<ISpriteLoader>();
         }
 
         protected sealed override async void OnEnable()

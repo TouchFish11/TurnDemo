@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.Loader.Object;
-using Core.Loader.UI;
 using Core.Log;
 using Core.Service;
 using Core.Singleton;
@@ -27,8 +26,8 @@ namespace Core.UI
         private Transform _botLayer;
         // 系统层
         private Transform _systemLayer;
-        // ui加载器
-        private IUiLoader _uiLoader;
+        // 预制体加载器
+        private readonly IPrefabLoader _prefabLoader= ServiceLocator.Get<IPrefabLoader>();
 
         private UIManager()
         {
@@ -36,10 +35,9 @@ namespace Core.UI
         
         public async Task InitUIManagerAsync(string defaultAbName, string canvasName, string uiCameraName)
         {
-            _uiLoader = ServiceLocator.Get<IUiLoader>();
 #if EDITOR_TEST_AB || !UNITY_EDITOR
             // 创建画布实例
-            Canvas = await ServiceLocator.Get<IUiLoader>().GetUIObject<Canvas>(defaultAbName, canvasName, null);
+            Canvas = await ServiceLocator.Get<IPrefabLoader>().GetObjectAsync<Canvas>(defaultAbName, canvasName, null);
             Object.DontDestroyOnLoad(Canvas.gameObject);
 
             // 获取对应层级对象位置
@@ -49,7 +47,7 @@ namespace Core.UI
             _systemLayer = Canvas.transform.Find("System");
             
             // 创建UI相机实例
-            UICamera = await ServiceLocator.Get<IPrefabLoader>().GetObject<Camera>(defaultAbName, uiCameraName, null);
+            UICamera = await ServiceLocator.Get<IPrefabLoader>().GetObjectAsync<Camera>(defaultAbName, uiCameraName, null);
             Object.DontDestroyOnLoad(UICamera.gameObject);
             // 设置UI摄像机
             Canvas.worldCamera = UICamera;
@@ -98,7 +96,7 @@ namespace Core.UI
         {
 #if EDITOR_TEST_AB || !UNITY_EDITOR
             // 获取面板
-            var view = await _uiLoader.GetUIObject<TView>(abName, panelName, GetLayer(layer));
+            var view = await _prefabLoader.GetObjectAsync<TView>(abName, panelName, GetLayer(layer));
             // 初始化控制器
             var controller = new TController();
             var model = new TModel();
@@ -149,17 +147,17 @@ namespace Core.UI
             {
                 for (var i = _panels.Count - 1; i >= 0; i--)
                 {
-                    if (_panels[i].UiController != controller)
+                    var uiController = _panels[i].UiController;
+                    if (uiController != controller)
                     {
                         continue;
                     }
                 
                     // 调用控制器的销毁
-                    await _panels[i].UiController.Destroy();
+                    await uiController.Destroy();
+                    _prefabLoader.CollectAsset(_panels[i].UiView.ViewObj);
                     // 释放该UI的资源
-                    _uiLoader.RealseAsset(abName, _panels[i].UiView.ViewObj.name);
-                    // 销毁预设体
-                    Object.Destroy(_panels[i].UiView.ViewObj);
+                    _prefabLoader.RealseAsset(abName, _panels[i].UiView.ViewObj.name);
                     // 从缓存中移除
                     _panels.RemoveAt(i);
                 }
@@ -201,12 +199,12 @@ namespace Core.UI
         public void Clear(string abName)
         {
             // 销毁画布和摄像机
-            ServiceLocator.Get<IUiLoader>().RealseAsset(abName, Canvas.name);
-            Object.Destroy(Canvas.gameObject);
+            _prefabLoader.CollectAsset(Canvas.gameObject);
+            _prefabLoader.RealseAsset(abName, Canvas.name);
             Canvas = null;
             
-            ServiceLocator.Get<IPrefabLoader>().RealseAsset(abName, UICamera.name);
-            Object.Destroy(UICamera.gameObject);
+            _prefabLoader.CollectAsset(UICamera.gameObject);
+            _prefabLoader.RealseAsset(abName, UICamera.name);
             UICamera = null;
             
             // 销毁所有界面

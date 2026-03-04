@@ -1,6 +1,5 @@
+using Core.Loader.Object;
 using Core.Loader.Sprite;
-using Core.Loader.UI;
-using Core.Log;
 using Core.Reflection;
 using Core.Serialize.Binary;
 using Core.Service;
@@ -29,7 +28,7 @@ namespace GameHotUpdate.Activity.UI.Base
             // 创建UI
             foreach (var activityInfo in infoDic.Values)
             {
-                var activityUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<ActivityUI>(AbKeyCollection.Ui, ResKeyCollection.ActivityUI, view.SvActivityContent);
+                var activityUI = await ServiceLocator.Get<IPrefabLoader>().GetObjectAsync<ActivityUI>(AbKeyCollection.Ui, ResKeyCollection.ActivityUI, view.SvActivityContent);
                 // 加载图标
                 var icon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Activity,
                     activityInfo.f_bkUi_Res);
@@ -79,7 +78,7 @@ namespace GameHotUpdate.Activity.UI.Base
             var activityDataCollection = _gameManager.GameDataManager.ActivityDataCollection as ActivityDataCollection;
             
             // 获取活动UI对象
-            var activity = await uiLoader.GetUIObject<IActivity>(AbKeyCollection.Ui, activityInfo.f_detailUI_res,
+            var activity = await prefabLoader.GetObjectAsync<IActivity>(AbKeyCollection.Ui, activityInfo.f_detailUI_res,
                 view.ActivityDetailArea);
             // 初始化详细界面
             if (!activityDataCollection.TryGetValue(activityInfo.f_id, out var activityData))

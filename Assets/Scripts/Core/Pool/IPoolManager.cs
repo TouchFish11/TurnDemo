@@ -10,12 +10,12 @@ namespace Core.Pool
     public interface IPoolManager
     {
         /// <summary>
-        /// 异步获取来自AB包的缓存对象
+        /// 获取来自AB包的缓存对象
         /// </summary>
         /// <param name="abName"></param>
         /// <param name="assetName">资源名称</param>
         /// <returns></returns>
-        Task<GameObject> GetAssetBundleObjAsync(string abName, string assetName);
+        GameObject GetAssetBundleObj(string abName, string assetName);
         
         /// <summary>
         /// 获取未继承Mono的对象
@@ -46,16 +46,24 @@ namespace Core.Pool
         /// </summary>
         /// <param name="obj">游戏对象</param>
         void PushObj(GameObject obj);
-        
+
         /// <summary>
-        /// 清除指定类型缓存
+        /// 清除指定资源缓存
         /// </summary>
-        /// <param name="types"></param>
-        void ClearTypes(params Type[] types);
+        /// <param name="assetName">资源名称</param>
+        /// <returns>销毁的资源数量</returns>
+        int ClearCache(string assetName);
         
         /// <summary>
         /// 清空缓存池
         /// </summary>
         void Clear();
+
+        /// <summary>
+        /// 获取指定资源缓存的数量
+        /// </summary>
+        /// <param name="assetName"></param>
+        /// <returns></returns>
+        int GetUnUsedCount(string assetName);
     }
 }

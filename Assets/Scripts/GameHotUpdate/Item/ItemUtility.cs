@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Core.Loader.Object;
 using Core.Loader.Sprite;
-using Core.Loader.UI;
 using Core.Log;
 using Core.Serialize.Binary;
 using Core.Service;
@@ -18,6 +18,10 @@ namespace GameHotUpdate.Item
     /// </summary>
     public static class ItemUtility
     {
+        private static readonly IPrefabLoader _prefabLoader = ServiceLocator.Get<IPrefabLoader>();
+        private static readonly IBinaryDataManager _binaryDataManager = ServiceLocator.Get<IBinaryDataManager>();
+        private static readonly ISpriteLoader _spriteLoader = ServiceLocator.Get<ISpriteLoader>();
+        
         /// <summary>
         /// 获取物品格子UI
         /// 内部已初始化UI，异常时回调返回null
@@ -39,13 +43,11 @@ namespace GameHotUpdate.Item
                 foreach (var pair in itemInfos)
                 {
                     // 获取UI
-                    var itemGrid = await ServiceLocator.Get<IUiLoader>()
-                        .GetUIObject<ItemGrid>(AbKeyCollection.Ui, ResKeyCollection.ItemGrid, parent);
+                    var itemGrid = await _prefabLoader.GetObjectAsync<ItemGrid>(AbKeyCollection.Ui, ResKeyCollection.ItemGrid, parent);
                     // 读取配置
-                    var itemInfo = ServiceLocator.Get<IBinaryDataManager>()
-                        .GetConfig<ItemInfoContainer>(EConfigLoadType.Excel).dataDic[pair.Key];
+                    var itemInfo = _binaryDataManager.GetConfig<ItemInfoContainer>(EConfigLoadType.Excel).dataDic[pair.Key];
                     // 加载图标
-                    var itemIcon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Icon_Item, 
+                    var itemIcon = await _spriteLoader.LoadSpriteAsync(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Icon_Item, 
                         itemInfo.f_icon);
                     // 初始化
                     itemGrid.Init(itemIcon, pair.Value, itemInfo.f_quality);
@@ -78,13 +80,11 @@ namespace GameHotUpdate.Item
                 foreach (var pair in itemInfos)
                 {
                     // 获取UI
-                    var itemGrid = await ServiceLocator.Get<IUiLoader>()
-                        .GetUIObject<ItemGrid>(AbKeyCollection.Ui, ResKeyCollection.ItemGrid, null);
+                    var itemGrid = await _prefabLoader.GetObjectAsync<ItemGrid>(AbKeyCollection.Ui, ResKeyCollection.ItemGrid, null);
                     // 读取配置
-                    var itemInfo = ServiceLocator.Get<IBinaryDataManager>()
-                        .GetConfig<ItemInfoContainer>(EConfigLoadType.Excel).dataDic[pair.Key];
+                    var itemInfo = _binaryDataManager.GetConfig<ItemInfoContainer>(EConfigLoadType.Excel).dataDic[pair.Key];
                     // 加载图标
-                    var itemIcon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Icon_Item, itemInfo.f_icon);
+                    var itemIcon = await _spriteLoader.LoadSpriteAsync(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Icon_Item, itemInfo.f_icon);
                     // 初始化
                     itemGrid.Init(itemIcon, pair.Value, itemInfo.f_quality);
                     callback?.Invoke(itemGrid);

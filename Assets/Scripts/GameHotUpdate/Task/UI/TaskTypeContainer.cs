@@ -1,21 +1,24 @@
 using System.Collections.Generic;
+using Core.Loader.Object;
+using Core.Service;
 using Core.UI;
 using Core.Utility;
+using GameHotUpdate.Config;
 using GameHotUpdate.Extension;
 using TMPro;
 
 namespace GameHotUpdate.Task.UI
 {
     /// <summary>
-    /// ������������
+    /// 任务类型容器
     /// </summary>
     public class TaskTypeContainer : UIBehaviourBase
     {
         [Inject] private TextMeshProUGUI txtTaskName;
-
+        
+        private readonly IPrefabLoader _prefabLoader = ServiceLocator.Get<IPrefabLoader>();
         private readonly List<TaskItem> taskItems = new();
         private readonly Dictionary<string, TaskItem> idToItemMap = new();
-
         private int taskType;
         private bool isExpand = true;
 
@@ -38,7 +41,7 @@ namespace GameHotUpdate.Task.UI
         }
 
         /// <summary>
-        /// ��ʼ��
+        /// 初始化容器
         /// </summary>
         /// <param name="taskType"></param>
         public void Init(int taskType)
@@ -47,6 +50,11 @@ namespace GameHotUpdate.Task.UI
             txtTaskName.text = taskType.TaskTypeToStr();
         }
 
+        /// <summary>
+        /// 是否包含该ID的任务
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public bool ContainTask(string id)
         {
             foreach (var cacheId in idToItemMap.Keys)
@@ -60,7 +68,7 @@ namespace GameHotUpdate.Task.UI
         }
 
         /// <summary>
-        /// ����������
+        /// 添加任务
         /// </summary>
         /// <param name="taskItem"></param>
         public void AddItem(TaskItem taskItem)
@@ -71,7 +79,7 @@ namespace GameHotUpdate.Task.UI
         }
 
         /// <summary>
-        /// Ĭ��ѡ�е�һ������
+        /// 默认选择第一个任务项
         /// </summary>
         public void DefaultSelectFirstTask()
         {
@@ -82,7 +90,8 @@ namespace GameHotUpdate.Task.UI
         }
 
         /// <summary>
-        /// ѡ��ָ������
+        /// 选择任务
+        /// 使该任务项被选中
         /// </summary>
         /// <param name="id"></param>
         public void SelectTask(string id)
@@ -94,7 +103,7 @@ namespace GameHotUpdate.Task.UI
         }
 
         /// <summary>
-        /// �۵�
+        /// 折叠隐藏该类型的任务项
         /// </summary>
         private void Fold()
         {
@@ -105,7 +114,7 @@ namespace GameHotUpdate.Task.UI
         }
 
         /// <summary>
-        /// չ��
+        /// 拓展显示该类型的任务项
         /// </summary>
         private void Expand()
         {
@@ -116,11 +125,16 @@ namespace GameHotUpdate.Task.UI
         }
 
         /// <summary>
-        /// ���������
+        /// 清理任务项
         /// </summary>
         public void ClearItem()
         {
+            foreach (var taskItem in taskItems)
+            {
+                _prefabLoader.CollectAsset(taskItem.gameObject);
+            }
             taskItems.Clear();
+            _prefabLoader.RealseAsset(AbKeyCollection.Ui,  ResKeyCollection.TaskItem);
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Core.Loader.Object;
 using Core.Mono;
 using Core.Pool;
 using Core.Service;
@@ -9,7 +10,6 @@ using GameHotUpdate.Battle.Input;
 using GameHotUpdate.Battle.Object;
 using GameHotUpdate.Battle.TargetSelect;
 using GameHotUpdate.Config;
-using GameHotUpdate.Main.Object;
 using UnityEngine;
 
 namespace GameHotUpdate.Camera
@@ -19,6 +19,7 @@ namespace GameHotUpdate.Camera
     /// </summary>
     public class BattleCameraManager : SingletonAutoMono<BattleCameraManager>, IBattleCameraManager
     {
+        private readonly IPrefabLoader _prefabLoader = ServiceLocator.Get<IPrefabLoader>();
         // X轴旋转角度限制
         private const float minXAngle = -3f;
         private const float maxXAngle = 3f;
@@ -60,8 +61,7 @@ namespace GameHotUpdate.Camera
                 CurrentActiveCamera = null;
             }
             
-            var cameraObj = await ServiceLocator.Get<IObjectBuilder>()
-                .GetGameobject(AbKeyCollection.Camera, ResKeyCollection.BattleCamera, cameraTrans);
+            var cameraObj = await _prefabLoader.GetGameObjectAsync(AbKeyCollection.Camera, ResKeyCollection.BattleCamera, cameraTrans);
             CurrentActiveCamera = cameraObj.GetComponent<UnityEngine.Camera>();
             CurrentActiveCamera.transform.SetLocalPositionAndRotation(localPos, localRot);
             
@@ -79,8 +79,7 @@ namespace GameHotUpdate.Camera
                 CurrentActiveCamera = null;
             }
             
-            var cameraObj = await ServiceLocator.Get<IObjectBuilder>()
-                .GetGameobject(AbKeyCollection.Camera, ResKeyCollection.BattleCamera, cameraTrans);
+            var cameraObj = await _prefabLoader.GetGameObjectAsync(AbKeyCollection.Camera, ResKeyCollection.BattleCamera, cameraTrans);
             CurrentActiveCamera = cameraObj.GetComponent<UnityEngine.Camera>();
             CurrentActiveCamera.transform.SetLocalPositionAndRotation(localPos, localRot);
             // 设置遮罩

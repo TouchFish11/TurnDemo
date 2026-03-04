@@ -68,10 +68,14 @@ namespace Core.Pool
         }
 
         /// <summary>
-        /// 清空对象池：释放所有资源
+        /// 清空对象池释放所有资源
         /// </summary>
         public void Clear()
         {
+            while (_unUsedObjStack.Count > 0)
+            {
+                Object.Destroy(_unUsedObjStack.Pop());
+            }
             // 清空未使用对象栈
             _unUsedObjStack.Clear();
             // 销毁池的父物体（连带销毁所有子物体）

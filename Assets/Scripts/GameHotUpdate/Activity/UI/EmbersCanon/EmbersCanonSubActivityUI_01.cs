@@ -40,7 +40,7 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
             // 初始化关卡
             foreach (var battleConfigEntry in battleActivityConfig.BattleConfigEntryColletion.battleConfigs)
             {
-                var battleLevelUI = await uiLoader.GetUIObject<BattleLevelUI>(AbKeyCollection.Ui,
+                var battleLevelUI = await prefabLoader.GetObjectAsync<BattleLevelUI>(AbKeyCollection.Ui,
                     ResKeyCollection.BattleLevelUI, svLevel.content);
                 // 获取用户数据中的战斗关卡条目
                 var levelEntryData = embersCanonData.GetLevelData(battleConfigEntry.levelId);
@@ -66,10 +66,12 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
         {
             foreach (var battleLevelUi in _battleLevelUis)
             {
-                poolManager.PushObj(battleLevelUi.gameObject);
+                prefabLoader.CollectAsset(battleLevelUi.gameObject);
             }
             _battleLevelUis.Clear();
-            poolManager.ClearTypes(typeof(BattleLevelUI), typeof(EmbersCanonSubActivityUI_01));
+            prefabLoader.RealseAsset(AbKeyCollection.Ui, ResKeyCollection.BattleLevelUI);
+            
+            prefabLoader.CollectAsset(this.GameObject);
         }
 
         protected override void OnButtonClick(string btnName)
@@ -77,8 +79,7 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
             switch (btnName)
             {
                 case "btnClose":
-                    uiLoader.RealseAsset(AbKeyCollection.Ui, this.name);
-                    Destroy(this.gameObject);
+                    prefabLoader.RealseAsset(AbKeyCollection.Ui, name);
                     break;
             }
         }

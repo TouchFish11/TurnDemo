@@ -16,12 +16,12 @@
           {
             "$type": "GameHotUpdate.Activity.UI.EmbersCanon.EmbersCanonLevelEntryData, Assembly-CSharp-Game-HotUpdate",
             "levelId": 1001,
-            "isComplete": false
+            "isComplete": true
           },
           {
             "$type": "GameHotUpdate.Activity.UI.EmbersCanon.EmbersCanonLevelEntryData, Assembly-CSharp-Game-HotUpdate",
             "levelId": 1002,
-            "isComplete": false
+            "isComplete": true
           },
           {
             "$type": "GameHotUpdate.Activity.UI.EmbersCanon.EmbersCanonLevelEntryData, Assembly-CSharp-Game-HotUpdate",

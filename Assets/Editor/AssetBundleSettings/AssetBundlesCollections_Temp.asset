@@ -304,23 +304,23 @@ MonoBehaviour:
       name: Prefab_Wizard.prefab
       hash: bdca6f9e31198c952281373d2bc68c22a70c3f0da146fa2d1a26ceaa89694bc3
     - assetPath: Assets\Editor\ArtRes\Prefab\UI\UI_3D_FloatingText.prefab
-      size: 10674
+      size: 11096
       name: UI_3D_FloatingText.prefab
-      hash: 8b43d4b7b956810328e301a60cb5625bc04b03fc2b43ccb56861f1f934fea43a
+      hash: 58aac3368f032442d8546ba54ed8b2f39a7bbf03674d1ddaebe515bf09a95eec
   - assetBundleName: scene
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\Scene\BeginScene.unity
-      size: 23302
+      size: 21522
       name: BeginScene.unity
-      hash: 424568ffab32a1b0f0846730e0b89146d29bb728af52a01d1852cba7cdb0c35f
+      hash: ef511e9f6d55e79263f21d1c031f5c27cd67cea41502c909e3306726c0740194
     - assetPath: Assets\Editor\ArtRes\Scene\LevelScene.unity
       size: 107335
       name: LevelScene.unity
       hash: ca1b3a14b5566ddee1c6c840c7536c0aac76d6838ca1cd395bd2d987440ac595
     - assetPath: Assets\Editor\ArtRes\Scene\MainScene.unity
-      size: 49952
+      size: 45247
       name: MainScene.unity
-      hash: d5ff41bd211a105ee868f1bed217826acdbadbc202e5c905f5f233fe5ec6d8b7
+      hash: 26be50c1d76aa9acbd14deb521f35a4128448b8374b57e38e19954defc40b136
     - assetPath: Assets\Editor\ArtRes\Scene\Test\RoleTestScene.unity
       size: 571677
       name: RoleTestScene.unity

@@ -11,8 +11,7 @@ using GameHotUpdate.Activity.UI.Base;
 using GameHotUpdate.Battle.Core;
 using GameHotUpdate.Battle.Turn;
 using GameHotUpdate.Config;
-using GameHotUpdate.Main;
-using GameHotUpdate.Main.UI;
+using GameHotUpdate.Main.Scene;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -99,7 +98,7 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
                 await _battleManager.EnterBattle(turnData, async () =>
                 {
                     // 清理场景内容缓存
-                    HotfixGameMain.ClearScene();
+                    SceneGenerator.ClearMainScene();
                     // 隐藏活动界面
                     await _uiManager.SetViewActive(_uiManager.GetController<ActivityController>(), false);
                 }, async () =>
@@ -125,7 +124,7 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
         {
             // 切换到指定场景场景
             await _sceneManager.LoadSceneAsync(ResKeyCollection.MainScene, UnityEngine.SceneManagement.LoadSceneMode.Single, null);
-            await HotfixGameMain.InitScene();
+            await SceneGenerator.InitMainScene();
         }
     }
 }

@@ -1,7 +1,8 @@
 using System.Collections.Generic;
-using Core.Pool;
+using Core.Loader.Object;
 using Core.Service;
 using Core.UI.MVC;
+using GameHotUpdate.Config;
 using GameHotUpdate.Item.UI;
 
 namespace GameHotUpdate.Task.UI
@@ -13,8 +14,8 @@ namespace GameHotUpdate.Task.UI
     /// </summary>
     public class TaskModel : UIModel
     {
-        // 任务类型与对应任务容器的映射字典
-        // Key：任务类型ID  Value：该类型下的任务容器
+        private readonly IPrefabLoader _prefabLoader = ServiceLocator.Get<IPrefabLoader>();
+        // 任务类型与对应任务容器的映射字典，Key：任务类型ID  Value：该类型下的任务容器
         private readonly Dictionary<int, TaskTypeContainer> taskTypeToContainerMap = new();
         // 当前选中任务的奖励物品格子列表
         private readonly List<ItemGrid> rewardItems = new();
@@ -97,14 +98,6 @@ namespace GameHotUpdate.Task.UI
             return null;
         }
 
-        public IEnumerable<ItemGrid> GetItemGrids()
-        {
-            foreach (var item in rewardItems)
-            {
-                yield return item;
-            }
-        }
-
         public void AddItemGrid(ItemGrid itemGrid)
         {
             rewardItems.Add(itemGrid);
@@ -112,6 +105,10 @@ namespace GameHotUpdate.Task.UI
 
         public void ClearItemGrid()
         {
+            foreach (var rewardItem in rewardItems)
+            {
+                ServiceLocator.Get<IPrefabLoader>().CollectAsset(rewardItem.gameObject);
+            }
             rewardItems.Clear();
         }
 
@@ -122,8 +119,8 @@ namespace GameHotUpdate.Task.UI
         public override void ClearData()
         {
             // 清空奖励物品列表
-            rewardItems.Clear();
-
+            ClearItemGrid();
+            _prefabLoader.RealseAsset(AbKeyCollection.Ui, ResKeyCollection.ItemGrid);
             // 清空所有任务容器内的子项
             foreach (var container in taskTypeToContainerMap.Values)
             {
@@ -131,9 +128,7 @@ namespace GameHotUpdate.Task.UI
             }
             // 清空任务容器映射字典
             taskTypeToContainerMap.Clear();
-
-            // 回收任务项和物品格子的对象池
-            ServiceLocator.Get<IPoolManager>().ClearTypes(typeof(TaskItem), typeof(ItemGrid));
+            _prefabLoader.RealseAsset(AbKeyCollection.Ui, ResKeyCollection.ItemGrid);
         }
     }
 }

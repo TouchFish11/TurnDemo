@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Core.Collection;
 using Core.GlobalEvent;
-using Core.Loader.UI;
+using Core.Loader.Object;
 using Core.Log;
 using Core.Service;
 using GameHotUpdate.Config;
@@ -19,7 +19,7 @@ namespace GameHotUpdate.Main.UI.Logic
     public class InteractLogic : MainLogic
     {
         private readonly IEventCenter _eventCenter = ServiceLocator.Get<IEventCenter>();
-        private readonly IUiLoader _uiLoader = ServiceLocator.Get<IUiLoader>();
+        private readonly IPrefabLoader _prefabLoader = ServiceLocator.Get<IPrefabLoader>();
         
         /// <summary>
         /// 逻辑初始化方法
@@ -59,7 +59,7 @@ namespace GameHotUpdate.Main.UI.Logic
                 foreach (var interactable in interactables)
                 {
                     // 从UI资源包中异步加载交互UI预制体并实例化
-                    var interactUI = await _uiLoader.GetUIObject<InteractUI>(AbKeyCollection.Ui, ResKeyCollection.InteractUI, mainView.InteractContent);
+                    var interactUI = await _prefabLoader.GetObjectAsync<InteractUI>(AbKeyCollection.Ui, ResKeyCollection.InteractUI, mainView.InteractContent);
                     // 初始化交互UI的显示数据（设置发言者/交互对象名称）
                     interactUI.Init(interactable.NpcInfo.f_speakerName);
                     // 将初始化完成的交互UI加入列表

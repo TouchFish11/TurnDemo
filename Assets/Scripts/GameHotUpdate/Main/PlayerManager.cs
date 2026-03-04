@@ -2,16 +2,18 @@ using System.Collections.Generic;
 using Core.Components;
 using Core.GlobalEvent;
 using Core.GlobalEvent.Events;
+using Core.Loader.Object;
 using Core.Service;
 using Core.Singleton;
 using GameHotUpdate.Animation;
 using GameHotUpdate.Animation.Component;
 using GameHotUpdate.Battle.Object.Role.Warrior;
+using GameHotUpdate.Camera;
 using GameHotUpdate.Config;
 using GameHotUpdate.Dialogue.UI;
 using GameHotUpdate.Input;
+using GameHotUpdate.Main.FloatingText;
 using GameHotUpdate.Main.Move;
-using GameHotUpdate.Main.Object;
 using GameHotUpdate.Main.UI;
 using UnityEngine;
 
@@ -25,10 +27,12 @@ namespace GameHotUpdate.Main
     /// </summary>
     public class PlayerManager : SingletonBase<PlayerManager>, IPlayerManager
     {
+        private readonly IPrefabLoader _prefabLoader = ServiceLocator.Get<IPrefabLoader>();
         private readonly IEventCenter _eventCenter = ServiceLocator.Get<IEventCenter>();
         // 字典：玩家UID映射到对应的实体对象，用于快速查找玩家
         private readonly Dictionary<uint, IEntityObject> uidToEntityMap = new();
 
+        private const string DefaultPlayerName = "Player";
         // 主玩家对象（固定UID为1001）
         public IEntityObject MainPlayer => uidToEntityMap[1001];
         
@@ -45,7 +49,7 @@ namespace GameHotUpdate.Main
         public async Task CreatePlayer(uint uid)
         {
             // 创建玩家根节点GameObject
-            var mainObj = new GameObject("Player");
+            var mainObj = new GameObject(DefaultPlayerName);
             // 设置玩家初始位置和旋转角度
             mainObj.transform.SetPositionAndRotation(new Vector3(0, 0, -5.6f), Quaternion.identity);
 
@@ -57,19 +61,22 @@ namespace GameHotUpdate.Main
             var main = mainObj.AddComponent<MainPlayer>();
             
             // 从资源包加载战士预制体，并挂载到玩家节点下
-            var warrior = await ServiceLocator.Get<IObjectBuilder>().GetGameobject(AbKeyCollection.Prefab, ResKeyCollection.Prefab_Main_Warrior, main.transform);
+            var warrior = await _prefabLoader.GetGameObjectAsync(AbKeyCollection.Prefab, ResKeyCollection.Prefab_Main_Warrior, main.transform);
             // 给战士预制体添加战士逻辑组件，并关联到主玩家
             main.AddEntity(warrior.AddComponent<Warrior>());
             
+            // 初始化玩家相机（异步创建主相机控制器）
+            await CreateMainCamera();
             // 初始化主玩家基础数据（参数1为示例配置ID）
             main.BaseInit(1);
             // 将玩家对象加入字典管理
             uidToEntityMap.Add(uid, main);
+
+            ServiceLocator.Get<IFloatingTextManager>().SetPlayer(main.transform);
         }
 
         /// <summary>
         /// 清理所有玩家对象
-        /// （场景切换/游戏退出时调用，释放资源）
         /// </summary>
         public void Clear()
         {
@@ -98,7 +105,7 @@ namespace GameHotUpdate.Main
         private bool OpenViewEventFilter(OpenViewEvent openViewEvent)
         {
             return openViewEvent.UIController is not MainController &&
-                   openViewEvent.UIController is not DialogueController;
+                   openViewEvent.UIController is not DialogueController && uidToEntityMap.ContainsKey(1001);
         }
         
         /// <summary>
@@ -114,7 +121,19 @@ namespace GameHotUpdate.Main
         private bool OpenViewEventFilter(CloseViewEvent closeViewEvent)
         {
             return closeViewEvent.UIController is not MainController &&
-                   closeViewEvent.UIController is not DialogueController;
+                   closeViewEvent.UIController is not DialogueController && uidToEntityMap.ContainsKey(1001);
+        }
+        
+        /// <summary>
+        /// 异步创建玩家主相机控制器
+        /// 从资源包中加载主相机预制体并初始化相机控制器
+        /// </summary>
+        /// <returns>初始化完成的轨道相机控制器实例</returns>
+        private Task CreateMainCamera()
+        {
+            // 通过对象构建器从指定资源包加载主相机
+            return _prefabLoader.GetObjectAsync<OrbitCameraController>(AbKeyCollection.Camera, ResKeyCollection.MainCamera,
+                    null);
         }
     }
 }

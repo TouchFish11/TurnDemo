@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Core.Loader.UI;
+using Core.Loader.Object;
 using Core.Mono;
 using Core.Pool;
 using Core.Serialize.Binary;
@@ -17,7 +17,6 @@ using GameHotUpdate.Battle.Status.Enum;
 using GameHotUpdate.Battle.UI.Status;
 using GameHotUpdate.Config;
 using GameHotUpdate.Extension;
-using GameHotUpdate.Task;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -235,7 +234,7 @@ namespace GameHotUpdate.Battle.UI.Role
             if (!hasStatus)
             {
                 // 创建新的状态图标
-                var statusGridUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<StatusGridUI>(AbKeyCollection.Ui, ResKeyCollection.StatusGridUI, svBuffBox.content);
+                var statusGridUI = await ServiceLocator.Get<IPrefabLoader>().GetObjectAsync<StatusGridUI>(AbKeyCollection.Ui, ResKeyCollection.StatusGridUI, svBuffBox.content);
                 statusGridUI.Init(status);
                 statusGridUIs.Add(statusGridUI);
             }
@@ -248,7 +247,7 @@ namespace GameHotUpdate.Battle.UI.Role
         private async void OnConflict_Lonel(IStatus newStatus)
         {
             // 直接创建新的状态图标（独占类型总是创建新的）
-            var statusGridUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<StatusGridUI>(AbKeyCollection.Ui, ResKeyCollection.StatusGridUI, svBuffBox.content);
+            var statusGridUI = await ServiceLocator.Get<IPrefabLoader>().GetObjectAsync<StatusGridUI>(AbKeyCollection.Ui, ResKeyCollection.StatusGridUI, svBuffBox.content);
             statusGridUI.Init(newStatus);
             statusGridUIs.Add(statusGridUI);
         }
@@ -269,7 +268,7 @@ namespace GameHotUpdate.Battle.UI.Role
             }
             
             // 创建新的状态图标
-            var statusGridUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<StatusGridUI>(AbKeyCollection.Ui, ResKeyCollection.StatusGridUI, svBuffBox.content);
+            var statusGridUI = await ServiceLocator.Get<IPrefabLoader>().GetObjectAsync<StatusGridUI>(AbKeyCollection.Ui, ResKeyCollection.StatusGridUI, svBuffBox.content);
             statusGridUI.Init(newStatus);
             statusGridUIs.Add(statusGridUI);
         }

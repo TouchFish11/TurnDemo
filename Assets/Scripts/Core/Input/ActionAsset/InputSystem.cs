@@ -49,33 +49,16 @@ namespace Core.Input.ActionAsset
         }
 
         /// <summary>
-        /// 初始化玩家输入组件
+        /// 初始化输入系统
         /// </summary>
         /// <param name="abName"></param>
-        /// <param name="playerInput">玩家输入组件实例</param>
-        /// <param name="container"></param>
-        /// <param name="onActionTrigger">输入动作触发时的回调方法</param>
-        /// <returns>异步任务</returns>
-        public async Task InitPlayerInput(string abName, PlayerInput playerInput, MainActionMapDataContainer container, Action<InputAction.CallbackContext> onActionTrigger)
+        public async Task InitAsync(string abName)
         {
-            // 缓存玩家输入组件引用
-            _playerInput = playerInput;
-            // 缓存数据容器
-            _mapDataContainer = container;
-            // 设置通知行为为调用C#事件（而非SendMessage）
-            _playerInput.notificationBehavior = PlayerNotifications.InvokeCSharpEvents;
-            // 注册动作触发回调
-            if (playerInput && onActionTrigger != null)
-            {
-                _playerInput.onActionTriggered += onActionTrigger;
-            }
-
 #if EDITOR_TEST_AB || !UNITY_EDITOR
             // 从AssetBundle加载输入配置JSON
             var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(abName);
             var json = await assetBundle.LoadAssetAsync<TextAsset>(FileUtility.InputActionLocalFileName).ToTask<TextAsset>();
             _jsonInputData = json.text;
-            UpdateActions();
 #else
             // 编辑器模式：从编辑器资源管理器加载输入配置JSON
             TextAsset json = ServiceLocator.Get<IEditorResManager>().LoadEditorAsset<TextAsset>(FileUtility.InputActionLocalFileName, "None");
@@ -86,12 +69,35 @@ namespace Core.Input.ActionAsset
         }
 
         /// <summary>
+        /// 初始化玩家输入组件
+        /// </summary>
+        /// <param name="playerInput">玩家输入组件实例</param>
+        /// <param name="container"></param>
+        /// <param name="onActionTrigger">输入动作触发时的回调方法</param>
+        /// <returns>异步任务</returns>
+        public void InitPlayerInput(PlayerInput playerInput, MainActionMapDataContainer container, Action<InputAction.CallbackContext> onActionTrigger)
+        {
+            // 缓存玩家输入组件引用
+            _playerInput = playerInput;
+            // 缓存数据容器
+            _mapDataContainer = container;
+            // 设置通知行为为调用C#事件
+            _playerInput.notificationBehavior = PlayerNotifications.InvokeCSharpEvents;
+            // 注册动作触发回调
+            if (playerInput && onActionTrigger != null)
+            {
+                _playerInput.onActionTriggered += onActionTrigger;
+            }
+            UpdateActions();
+        }
+
+        /// <summary>
         /// 启用所有输入动作
         /// 使输入系统响应玩家输入
         /// </summary>
         public void EnableInput()
         {
-            _playerInput.actions.Enable();
+            _playerInput.actions?.Enable();
         }
 
         /// <summary>
@@ -100,7 +106,7 @@ namespace Core.Input.ActionAsset
         /// </summary>
         public void DisableInput()
         {
-            _playerInput.actions.Disable();
+            _playerInput.actions?.Disable();
         }
 
         /// <summary>
@@ -225,13 +231,11 @@ namespace Core.Input.ActionAsset
                 // 赋值新的InputActionAsset并更新引用
                 playerInput.actions = GetInputActionAsset();
                 _playerInput = playerInput;
-                EnableInput();
             }
             else if (_playerInput)
             {
                 // 刷新现有PlayerInput的动作配置
                 _playerInput.actions = GetInputActionAsset();
-                EnableInput();
                 LogManager.Log($"输入配置更新成功，{_playerInput.actions}");
             }
             else

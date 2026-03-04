@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Core.Loader.UI;
+using Core.Loader.Object;
 using Core.Mono;
 using Core.Pool;
 using Core.Service;
@@ -13,7 +13,6 @@ using GameHotUpdate.Battle.Toughness;
 using GameHotUpdate.Camera;
 using GameHotUpdate.Config;
 using GameHotUpdate.Extension;
-using GameHotUpdate.Task;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -38,9 +37,9 @@ namespace GameHotUpdate.Battle.UI.MonsterStateUI
         /// </summary>
         [Inject(1)] private RectTransform WeaknessBar { get; set; }
 
+        private readonly IPrefabLoader _prefabLoader = ServiceLocator.Get<IPrefabLoader>();
         // 血量渐变动画速度（控制fade遮罩的动画速率）
         private const float fadeSpeed = 1f;
-
         // 弱点图标集合（存储当前怪物的所有弱点图标，便于后续回收）
         private readonly List<Image> weakneses = new();  
         // 绑定的战斗实体对象（当前UI对应的怪物实体）
@@ -112,7 +111,7 @@ namespace GameHotUpdate.Battle.UI.MonsterStateUI
             foreach (var elementType in toughnessComponent.WeakPropertys)
             {
                 // 从资源包加载弱点UI预制体，并挂载到弱点容器下
-                var weaknessIconObj = await ServiceLocator.Get<IUiLoader>().GetUIGameobject(AbKeyCollection.Ui, ResKeyCollection.WeaknessUI, WeaknessBar);
+                var weaknessIconObj = await _prefabLoader.GetGameObjectAsync(AbKeyCollection.Ui, ResKeyCollection.WeaknessUI, WeaknessBar);
                 var weaknessIcon = weaknessIconObj.GetComponent<Image>();
                 // 设置弱点图标颜色（根据元素类型转换为对应颜色）
                 weaknessIcon.color = ((int)elementType).ToElementTypeColor();

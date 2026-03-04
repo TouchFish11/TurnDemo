@@ -112,7 +112,7 @@ namespace GameHotUpdate.Input
             if (mouseVisibleSources.Count > 0)
             {
                 // 有显示请求时，解除鼠标锁定，显示鼠标
-                Cursor.lockState = CursorLockMode.None;
+                Cursor.lockState = CursorLockMode.Confined;
                 Cursor.visible = true;
             }
             else
@@ -135,5 +135,7 @@ namespace GameHotUpdate.Input
         }
         
         public bool Visible => Cursor.visible;
+
+        public CursorLockMode LockState => Cursor.lockState;
     }
 }

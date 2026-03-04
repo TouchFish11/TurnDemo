@@ -4,6 +4,7 @@ using Core.AssetBundles.Management;
 using Core.Log;
 using Core.Pool;
 using Core.Service;
+using Core.Tasks.Extensions;
 using UnityEngine;
 
 namespace Core.Loader.Object
@@ -13,16 +14,32 @@ namespace Core.Loader.Object
     /// </summary>
     public class PrefabLoader : IPrefabLoader
     {
-        // 资源名称到引用计数映射
-        private readonly Dictionary<string, int> _nameToRef = new();
-        // AB包管理器接口
-        private readonly IAssetBundleManager _assetBundleManager;
-        
-        public PrefabLoader()
+        private struct PrefabData
         {
-            _assetBundleManager = ServiceLocator.Get<IAssetBundleManager>();
+            /// <summary>
+            /// 预制体资源
+            /// </summary>
+            public GameObject objAsset;
+            
+            /// <summary>
+            /// 该资源的引用计数，实例化数
+            /// </summary>
+            public int refCount;
+            
+            public PrefabData(GameObject objAsset, int refCount)
+            {
+                this.objAsset = objAsset;
+                this.refCount = refCount;
+            }
         }
         
+        // AB包管理器接口
+        private readonly IAssetBundleManager _assetBundleManager = ServiceLocator.Get<IAssetBundleManager>();
+        // 缓存池接口
+        private readonly IPoolManager _poolManager = ServiceLocator.Get<IPoolManager>();
+        // 资源名称到预制体数据映射
+        private readonly Dictionary<string, PrefabData> _assetNameToData = new();
+
         /// <summary>
         /// 获取对象
         /// </summary>
@@ -32,9 +49,9 @@ namespace Core.Loader.Object
         /// <param name="worldPosStay"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public async Task<T> GetObject<T>(string abName, string assetName, Transform parent, bool worldPosStay = false) where T : class
+        public async Task<T> GetObjectAsync<T>(string abName, string assetName, Transform parent, bool worldPosStay = false) where T : class
         {
-            return await GetObject<T>(abName, assetName, parent, Vector3.zero, Quaternion.identity, worldPosStay);
+            return await GetObjectAsync<T>(abName, assetName, parent, Vector3.zero, Quaternion.identity, worldPosStay);
         }
         
         /// <summary>
@@ -48,48 +65,92 @@ namespace Core.Loader.Object
         /// <param name="worldPosStay"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public async Task<T> GetObject<T>(string abName, string assetName, Transform parent, Vector3 pos, Quaternion rot, bool worldPosStay = false) where T : class
+        public async Task<T> GetObjectAsync<T>(string abName, string assetName, Transform parent, Vector3 pos, Quaternion rot, bool worldPosStay = false) where T : class
         {
-            var cacheObj = await ServiceLocator.Get<IPoolManager>().GetAssetBundleObjAsync(abName, assetName);
-            cacheObj.transform.SetParent(parent, worldPosStay);
-            cacheObj.transform.SetLocalPositionAndRotation(pos, rot);
-            // 更新引用计数
-            AddRefCount(assetName);
-            return cacheObj.TryGetComponent(out T component) ? component : null;
+            var instanceObj = await GetGameObjectAsync(abName, assetName);
+            // 设置父对象、位置
+            instanceObj.transform.SetParent(parent, worldPosStay);
+            instanceObj.transform.SetLocalPositionAndRotation(pos, rot);
+            return instanceObj.TryGetComponent(out T component) ? component : null;
+        }
+
+        public Task<GameObject> GetGameObjectAsync(string abName, string assetName, Transform parent, bool worldPosStay = false)
+        {
+            return GetGameObjectAsync(abName, assetName, parent, Vector3.zero, Quaternion.identity, worldPosStay);
         }
         
+        public async Task<GameObject> GetGameObjectAsync(string abName, string assetName, Transform parent, Vector3 pos, Quaternion rot, bool worldPosStay = false)
+        {
+            var instanceObj = await GetGameObjectAsync(abName, assetName);
+            // 设置父对象、位置
+            instanceObj.transform.SetParent(parent, worldPosStay);
+            instanceObj.transform.SetLocalPositionAndRotation(pos, rot);
+            return instanceObj;
+        }
+
         /// <summary>
-        /// 释放资源
+        /// 异步获取游戏对象
         /// </summary>
         /// <param name="abName"></param>
         /// <param name="assetName"></param>
-        public void RealseAsset(string abName, string assetName)
+        /// <returns></returns>
+        internal async Task<GameObject> GetGameObjectAsync(string abName, string assetName)
         {
-            if (!_nameToRef.ContainsKey(assetName))
+            // 从缓存池获取
+            var instanceObj = _poolManager.GetAssetBundleObj(abName, assetName);
+            // 不存在可复用的该对象
+            if (instanceObj)
             {
-                return;
+                return instanceObj;
             }
             
-            --_nameToRef[assetName];
-            if (_nameToRef[assetName] != 0)
+            // 是否已存在资源缓存
+            if (_assetNameToData.TryGetValue(assetName, out var prefabData))
             {
-                return;
+                // 实例化预设体
+                instanceObj = UnityEngine.Object.Instantiate(prefabData.objAsset);
+                // 资源引用数+1
+                prefabData.refCount += 1;
             }
-            
-            _nameToRef.Remove(assetName);
-            _assetBundleManager.UnloadBundle(abName);
+            else
+            {
+                // AB包异步加载
+                var assetBundle = await _assetBundleManager.LoadBundleAsync(abName);
+                var objAsset = await assetBundle.LoadAssetAsync<GameObject>(assetName).ToTask<GameObject>();
+                // 实例化预设体
+                instanceObj = UnityEngine.Object.Instantiate(objAsset);
+                // 缓存加载的资源
+                _assetNameToData.Add(assetName, new PrefabData(objAsset, 1));
+            }
+
+            // 避免实例化出的对象的名字后带有(Clone)
+            instanceObj.name = assetName;
+            return instanceObj;
         }
         
-        /// <summary>
-        /// 添加资源引用计数
-        /// </summary>
-        /// <param name="assetName"></param>
-        private void AddRefCount(string assetName)
+        public void CollectAsset(GameObject gameObject)
         {
-            if (!_nameToRef.TryAdd(assetName, 1))
+            _poolManager.PushObj(gameObject);
+        }
+        
+        public void RealseAsset(string abName, string assetName)
+        {
+            if (!_assetNameToData.TryGetValue(assetName, out var prefabData))
             {
-                ++_nameToRef[assetName];
+                return;
             }
+
+            var unUsedCount = _poolManager.GetUnUsedCount(assetName);
+            if (prefabData.refCount != unUsedCount)
+            {
+                LogManager.LogWarning($"{nameof(PrefabLoader)}.{nameof(RealseAsset)}：无法释放该{abName}.{assetName}资源。引用数：{prefabData.refCount}，未使用数：{unUsedCount}");
+                return;
+            }
+            
+            _poolManager.ClearCache(assetName);
+            prefabData.objAsset = null;
+            _assetNameToData.Remove(assetName);
+            _assetBundleManager.UnloadBundle(abName);
         }
     }
 }

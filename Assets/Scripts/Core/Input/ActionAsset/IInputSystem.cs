@@ -14,9 +14,25 @@ namespace Core.Input.ActionAsset
         void EditInput(E_MainActionMap keyMap, Key oldKey, UnityAction<E_KeyConflict> overCallBack);
         void EnableInput();
         InputAction GetInputAction(string actionName);
-        Task InitPlayerInput(string abName, PlayerInput playerInput, MainActionMapDataContainer container,
-            Action<InputAction.CallbackContext> onActionTrigger);
+
+        
+        
         void InvokeExchangeKey();
         void UpdateActions(PlayerInput playerInput = null);
+
+        /// <summary>
+        /// 初始化输入系统
+        /// </summary>
+        /// <param name="abName"></param>
+        Task InitAsync(string abName);
+
+        /// <summary>
+        /// 初始化玩家输入组件
+        /// </summary>
+        /// <param name="playerInput">玩家输入组件实例</param>
+        /// <param name="container"></param>
+        /// <param name="onActionTrigger">输入动作触发时的回调方法</param>
+        /// <returns>异步任务</returns>
+        void InitPlayerInput(PlayerInput playerInput, MainActionMapDataContainer container, Action<InputAction.CallbackContext> onActionTrigger);
     }
 }

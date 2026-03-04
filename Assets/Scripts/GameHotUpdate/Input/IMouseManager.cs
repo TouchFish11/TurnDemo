@@ -1,4 +1,6 @@
 
+using UnityEngine;
+
 namespace GameHotUpdate.Input
 {
     /// <summary>
@@ -11,6 +13,8 @@ namespace GameHotUpdate.Input
         /// 对外暴露当前Cursor的可见性
         /// </summary>
         bool Visible { get; }
+
+        CursorLockMode LockState { get; }
 
         /// <summary>
         /// 强制不可见

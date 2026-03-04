@@ -1,10 +1,6 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Core.Service;
 using GameHotUpdate.Animation.Component;
 using GameHotUpdate.Battle.Object;
-using GameHotUpdate.Camera;
-using GameHotUpdate.Config;
 using GameHotUpdate.Dialogue;
 using GameHotUpdate.Input;
 using GameHotUpdate.Interact;
@@ -30,11 +26,8 @@ namespace GameHotUpdate.Main
         /// 重写自 EntityObject 基类，在实体创建时调用
         /// </summary>
         /// <param name="id">玩家实体的唯一标识ID</param>
-        public override async void BaseInit(int id)
+        public override void BaseInit(int id)
         {
-            // 初始化玩家相机（异步创建主相机控制器）
-            await CreateCamera();
-            
             // 挂载输入组件：处理玩家的输入事件（键鼠、手柄等）
             AddComponent<InputComponent>();
             
@@ -75,20 +68,6 @@ namespace GameHotUpdate.Main
             // 【注】当前逻辑注释待启用：获取索引为0的默认实体，绑定其动画控制器到玩家动画组件
             //var defaultEntity = indexToEntityMap[0];
             //GetComponent<NormalAnimationComponent>().SetAnimator(defaultEntity.GetComponentInChildren<AnimatorComponent>().Animator);
-        }
-
-        /// <summary>
-        /// 异步创建玩家主相机控制器
-        /// 从资源包中加载主相机预制体并初始化相机控制器
-        /// </summary>
-        /// <returns>初始化完成的轨道相机控制器实例</returns>
-        private async Task<OrbitCameraController> CreateCamera()
-        {
-            // 通过对象构建器从指定资源包加载主相机
-                var hotfixOrbitCameraController = await ServiceLocator.Get<IObjectBuilder>()
-                .GetHotfixObject<OrbitCameraController>(AbKeyCollection.Camera, ResKeyCollection.MainCamera,
-                    null);
-                return hotfixOrbitCameraController;
         }
     }
 }

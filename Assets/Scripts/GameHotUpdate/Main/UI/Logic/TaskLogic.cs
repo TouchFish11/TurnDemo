@@ -1,5 +1,4 @@
 using Core.Service;
-using GameHotUpdate.Task;
 using GameHotUpdate.Task.Core;
 using GameHotUpdate.Task.Data;
 

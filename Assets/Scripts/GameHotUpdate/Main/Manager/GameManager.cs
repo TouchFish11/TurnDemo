@@ -13,22 +13,22 @@ namespace GameHotUpdate.Main.Manager
     /// </summary>
     public class GameManager : SingletonBase<GameManager>, IGameManager
     {
-        public IGameDataManager GameDataManager { get; private set; }
-        
-        public IGameServiceManger GameServiceManger { get; private set; }
+        private readonly IQuitHandler _quitHandler = ServiceLocator.Get<IQuitHandler>();
+        public GameDataManager GameDataManager { get; private set; }
+        public GameServiceManger GameServiceManger { get; private set; }
 
         private GameManager()
         {
-            ServiceLocator.Get<IQuitHandler>().OnAppQuit += OnApplicationQuit;
+            _quitHandler.OnAppQuit += OnApplicationQuit;
         }
 
-        public async Task Init(IGameDataManager gameDataManager, IGameServiceManger gameServiceManger)
+        public async Task Init()
         {
-            GameDataManager = gameDataManager;
-            GameServiceManger = gameServiceManger;
+            GameDataManager = new GameDataManager();
+            GameServiceManger = new GameServiceManger();
             
-            gameServiceManger.InitService();
-            await gameDataManager.InitData();
+            GameServiceManger.InitService();
+            await GameDataManager.InitData();
             
             try
             {

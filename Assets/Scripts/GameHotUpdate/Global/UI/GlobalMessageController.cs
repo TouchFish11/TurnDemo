@@ -1,5 +1,5 @@
 using Core.GlobalEvent.Events;
-using Core.Loader.UI;
+using Core.Loader.Object;
 using Core.Service;
 using Core.UI.MVC;
 using GameHotUpdate.Config;
@@ -36,7 +36,7 @@ namespace GameHotUpdate.Global.UI
 
         private async void ShowMessage(string msg)
         {
-            var messageUIWrapper = await ServiceLocator.Get<IUiLoader>().GetUIObject<MessageUI>(AbKeyCollection.Ui, ResKeyCollection.MessageUI, view.MessageContainer);
+            var messageUIWrapper = await ServiceLocator.Get<IPrefabLoader>().GetObjectAsync<MessageUI>(AbKeyCollection.Ui, ResKeyCollection.MessageUI, view.MessageContainer);
             messageUIWrapper.InitMessage(msg);
         }
         

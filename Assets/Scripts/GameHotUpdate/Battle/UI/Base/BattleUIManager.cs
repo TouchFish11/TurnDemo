@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Core.Loader.Object;
 using Core.Loader.Sprite;
-using Core.Loader.UI;
 using Core.Log;
 using Core.Mono;
 using Core.Service;
@@ -21,7 +21,6 @@ using GameHotUpdate.Battle.UI.Status;
 using GameHotUpdate.Camera;
 using GameHotUpdate.Config;
 using GameHotUpdate.Extension;
-using GameHotUpdate.Task;
 using UnityEngine;
 using BattlePointUI = GameHotUpdate.Battle.UI.BattlePoint.BattlePointUI;
 using Random = UnityEngine.Random;
@@ -166,7 +165,7 @@ namespace GameHotUpdate.Battle.UI.Base
         public async void ShowBattleMessage(string msg)
         {
             // 从资源包异步加载战斗提示UI预制体
-            var battleMessageUIWrapper= await ServiceLocator.Get<IUiLoader>().GetUIObject<BattleMessageUI>(AbKeyCollection.Ui, ResKeyCollection.BattleMessageUI, _view.BattleMsgArea);
+            var battleMessageUIWrapper= await ServiceLocator.Get<IPrefabLoader>().GetObjectAsync<BattleMessageUI>(AbKeyCollection.Ui, ResKeyCollection.BattleMessageUI, _view.BattleMsgArea);
             // 初始化提示文本（红色字体）
             battleMessageUIWrapper.InitMessage(Color.red, msg);
         }
@@ -179,7 +178,7 @@ namespace GameHotUpdate.Battle.UI.Base
         public async void ShowDamageText(DamageResult damageResult)
         {
             // 从资源包异步加载伤害文本UI预制体
-            var damageTextUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<DamageTextUI>(AbKeyCollection.Ui, ResKeyCollection.DamageTextUI, null);
+            var damageTextUI = await ServiceLocator.Get<IPrefabLoader>().GetObjectAsync<DamageTextUI>(AbKeyCollection.Ui, ResKeyCollection.DamageTextUI, null);
             // 获取伤害文本的显示偏移位置（随机偏移）
             var dmgTextOffset = GetDamageTextUIPos(damageResult.Target, textXOffsetRange, textYOffsetRange);
 
@@ -216,7 +215,7 @@ namespace GameHotUpdate.Battle.UI.Base
             try
             {
                 // 从资源包异步加载护盾文本UI预制体
-                var shieldTextUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<ShieldTextUI>(AbKeyCollection.Ui, ResKeyCollection.ShieldTextUI, null);
+                var shieldTextUI = await ServiceLocator.Get<IPrefabLoader>().GetObjectAsync<ShieldTextUI>(AbKeyCollection.Ui, ResKeyCollection.ShieldTextUI, null);
                 // 获取护盾文本的显示偏移位置（随机偏移）
                 var dmgTextOffset = GetDamageTextUIPos(target, textXOffsetRange, textYOffsetRange);
             
@@ -254,7 +253,7 @@ namespace GameHotUpdate.Battle.UI.Base
         public async void ShowHealText(IBattleEntityObject target, int healAmount)
         {
             // 从资源包异步加载治疗文本UI预制体
-            var healTextUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<HealTextUI>(AbKeyCollection.Ui, ResKeyCollection.HealTextUI, null);
+            var healTextUI = await ServiceLocator.Get<IPrefabLoader>().GetObjectAsync<HealTextUI>(AbKeyCollection.Ui, ResKeyCollection.HealTextUI, null);
             // 获取治疗文本的显示偏移位置（随机偏移）
             var dmgTextOffset = GetDamageTextUIPos(target, textXOffsetRange, textYOffsetRange);
             
@@ -288,7 +287,7 @@ namespace GameHotUpdate.Battle.UI.Base
             try
             {
                 // 从资源包异步加载状态文本UI预制体
-                var statusEffectTextUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<StatusEffectTextUI>(AbKeyCollection.Ui, ResKeyCollection.StatusEffectTextUI, null);
+                var statusEffectTextUI = await ServiceLocator.Get<IPrefabLoader>().GetObjectAsync<StatusEffectTextUI>(AbKeyCollection.Ui, ResKeyCollection.StatusEffectTextUI, null);
                 // 计算状态文本显示位置
                 if (UIUtility.WorldToLocalPointInRectangle(
                         ServiceLocator.Get<IBattleCameraManager>().CurrentActiveCamera, 
@@ -335,7 +334,7 @@ namespace GameHotUpdate.Battle.UI.Base
                 foreach (var battleEntity in battleEntities)
                 {
                     // 异步加载等待行动UI预制体
-                    var waitingActUIWrapper = await ServiceLocator.Get<IUiLoader>().GetUIObject<WaitingActUI>(AbKeyCollection.Ui, ResKeyCollection.WaitingActUI, _view.WaitQueueContent);
+                    var waitingActUIWrapper = await ServiceLocator.Get<IPrefabLoader>().GetObjectAsync<WaitingActUI>(AbKeyCollection.Ui, ResKeyCollection.WaitingActUI, _view.WaitQueueContent);
                     // 获取实体对应的图标名称
                     var iconName = GetIconByEntity(battleEntity);
                     // 加载图标精灵并初始化UI
@@ -369,7 +368,7 @@ namespace GameHotUpdate.Battle.UI.Base
                 foreach (var battleEntity in battleEntities)
                 {
                     // 异步加载行动格子UI预制体
-                    var actionGridUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<ActionGridUI>(AbKeyCollection.Ui, ResKeyCollection.ActionGridUI, _view.ActionBarContent);
+                    var actionGridUI = await ServiceLocator.Get<IPrefabLoader>().GetObjectAsync<ActionGridUI>(AbKeyCollection.Ui, ResKeyCollection.ActionGridUI, _view.ActionBarContent);
                     // 获取实体对应的图标名称
                     var iconName = GetIconByEntity(battleEntity);
                     // 加载图标精灵
@@ -493,7 +492,7 @@ namespace GameHotUpdate.Battle.UI.Base
             foreach (var info in infos)
             {
                 // 异步加载技能按键UI预制体
-                var skillKeyUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<SkillKeyUI>(AbKeyCollection.Ui, ResKeyCollection.SkillKeyUI, _view.OperatorArea);
+                var skillKeyUI = await ServiceLocator.Get<IPrefabLoader>().GetObjectAsync<SkillKeyUI>(AbKeyCollection.Ui, ResKeyCollection.SkillKeyUI, _view.OperatorArea);
                 // 初始化技能按键UI
                 skillKeyUI.Init(info, _view.SkillKeyGroup, currentObject);
                 skillKeyUIs.Add(skillKeyUI);
@@ -522,7 +521,7 @@ namespace GameHotUpdate.Battle.UI.Base
             foreach (var battleEntity in selectedTargets)
             {
                 // 异步加载目标标记UI预制体
-                var selectMarkerUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<SelectMarkerUI>(AbKeyCollection.Ui, ResKeyCollection.SelectMarkerUI, null);
+                var selectMarkerUI = await ServiceLocator.Get<IPrefabLoader>().GetObjectAsync<SelectMarkerUI>(AbKeyCollection.Ui, ResKeyCollection.SelectMarkerUI, null);
                 // 初始化目标标记
                 selectMarkerUI.InitSelectMarker(battleEntity, skillTargetType, _view.SelectMarkerArea);
                 // 缓存标记
@@ -545,7 +544,7 @@ namespace GameHotUpdate.Battle.UI.Base
             for (var i = 0; i < max; i++)
             {
                 // 异步加载战斗点数UI预制体
-                var battlePointUIWrapper = await ServiceLocator.Get<IUiLoader>().GetUIObject<BattlePointUI>(AbKeyCollection.Ui, ResKeyCollection.BattlePointUI, _view.PointContent);
+                var battlePointUIWrapper = await ServiceLocator.Get<IPrefabLoader>().GetObjectAsync<BattlePointUI>(AbKeyCollection.Ui, ResKeyCollection.BattlePointUI, _view.PointContent);
                 // 设置点数激活状态（i < current 表示已解锁）
                 battlePointUIWrapper.SetActivePoint(i < current);
                 battlePointUIs.Add(battlePointUIWrapper);

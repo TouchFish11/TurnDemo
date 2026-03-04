@@ -81,7 +81,7 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
             try
             {
                 // 创建关卡界面到活动界面下
-                var subActivityUi = await uiLoader.GetUIObject<EmbersCanonSubActivityUI_01>(AbKeyCollection.Ui, ResKeyCollection.EmbersCanonSubActivityUI_01,
+                var subActivityUi = await prefabLoader.GetObjectAsync<EmbersCanonSubActivityUI_01>(AbKeyCollection.Ui, ResKeyCollection.EmbersCanonSubActivityUI_01,
                     activityView);
                 // 初始化关卡子界面
                 subActivityUi.Init(ActivityData, activityInfo);
@@ -104,16 +104,16 @@ namespace GameHotUpdate.Activity.UI.EmbersCanon
         {
             foreach (var itemGrid in _itemGrids)
             {
-                poolManager.PushObj(itemGrid.gameObject);
+                prefabLoader.CollectAsset(itemGrid.gameObject);
             }
             _itemGrids.Clear();
-            poolManager.ClearTypes(typeof(ItemGrid));
+            prefabLoader.RealseAsset(AbKeyCollection.Ui, ResKeyCollection.ItemGrid);
         }
         
         protected override void OnHide()
         {
             ClearItem();
-            poolManager.ClearTypes(typeof(EmbersCanonActivityUI));
+            prefabLoader.RealseAsset(AbKeyCollection.Ui, ResKeyCollection.EmbersCanonActivityUI);
             
             _activityJoinComponent.OnClickJoin -= OnTriggerJoin;
             _limitTimeAwardComponent.OnClickAward -= OnTriggerLimitTimeAward;

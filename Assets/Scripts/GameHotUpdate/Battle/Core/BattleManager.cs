@@ -21,7 +21,6 @@ using GameHotUpdate.Battle.Turn;
 using GameHotUpdate.Camera;
 using GameHotUpdate.Config;
 using GameHotUpdate.Input;
-using GameHotUpdate.Main;
 using GameHotUpdate.Main.Back;
 using GameHotUpdate.Main.Loading.Battle;
 using GameHotUpdate.Main.UI;

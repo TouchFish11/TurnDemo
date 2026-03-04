@@ -1,11 +1,8 @@
 using System.Collections.Generic;
-using Core.Loader.UI;
-using Core.Pool;
+using Core.Loader.Object;
 using Core.Service;
 using Core.UI.MVC;
-using GameHotUpdate.Config;
 using GameHotUpdate.Interact.UI;
-using UnityEngine;
 
 namespace GameHotUpdate.Main.UI
 {
@@ -26,9 +23,8 @@ namespace GameHotUpdate.Main.UI
             foreach (var interactUI in this.interactUIs)
             {
                 // 释放资源
-                ServiceLocator.Get<IUiLoader>().RealseAsset(AbKeyCollection.Ui, interactUI.gameObject);
+                ServiceLocator.Get<IPrefabLoader>().CollectAsset(interactUI.gameObject);
             }
-            
             this.interactUIs.Clear();
             this.interactUIs.AddRange(interactUIs);
         }

@@ -1,13 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Core.AssetBundles.Management;
 using Core.Global;
-using Core.Service;
 using Core.Singleton;
-using Core.Tasks.Extensions;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Core.Pool
 {
@@ -40,7 +36,7 @@ namespace Core.Pool
             return newObj.AddComponent<T>();
         }
         
-        public async Task<GameObject> GetAssetBundleObjAsync(string abName, string assetName)
+        public GameObject GetAssetBundleObj(string abName, string assetName)
         {
             // 存在该对象就取出来使用
             if (_poolObjDic.ContainsKey(assetName) && _poolObjDic[assetName].UnUsedCount > 0)
@@ -48,15 +44,9 @@ namespace Core.Pool
                 return _poolObjDic[assetName].Get();
             }
 
+            return null;
+
 #if EDITOR_TEST_AB || !UNITY_EDITOR
-            // AB包异步加载
-            var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(abName);
-            var obj = await assetBundle.LoadAssetAsync<GameObject>(assetName).ToTask<GameObject>();
-            // 实例化预设体
-            var instanceObj = Object.Instantiate(obj);
-            // 避免实例化出的对象的名字后带有(Clone)
-            instanceObj.name = assetName;
-            return instanceObj;
 #else
             await Task.CompletedTask;
             // 加载编辑器路径下的资源
@@ -122,20 +112,28 @@ namespace Core.Pool
                 _poolDataDic.Add(dataName, poolData);
             }
         }
-        
-        public void ClearTypes(params Type[] types)
+
+        /// <summary>
+        /// 获取指定资源缓存的数量
+        /// </summary>
+        /// <param name="assetName"></param>
+        /// <returns></returns>
+        public int GetUnUsedCount(string assetName)
         {
-            foreach (var type in types)
+            return _poolObjDic.TryGetValue(assetName, out var obj) ? obj.UnUsedCount : 0;
+        }
+        
+        public int ClearCache(string assetName)
+        {
+            if (!_poolObjDic.TryGetValue(assetName, out var poolObj))
             {
-                var typeName = type.Name;
-                if (!_poolObjDic.TryGetValue(typeName, out var poolObj))
-                {
-                    continue;
-                }
-                
-                poolObj.Clear();
-                _poolObjDic.Remove(typeName);
+                return 0;
             }
+
+            var count = poolObj.UnUsedCount;
+            poolObj.Clear();
+            _poolObjDic.Remove(assetName);
+            return count;
         }
         
         public void Clear()

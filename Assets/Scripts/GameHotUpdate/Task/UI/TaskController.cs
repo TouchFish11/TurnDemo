@@ -178,7 +178,7 @@ namespace GameHotUpdate.Task.UI
         private async Task<TaskTypeContainer> CreateTaskTypeContainer(TaskInfo taskInfo)
         {
             // 从资源包中异步加载任务类型容器预制体并创建实例
-            var taskTypeContainerWrapper = await uiLoader.GetUIObject<TaskTypeContainer>(AbKeyCollection.Ui, ResKeyCollection.TaskTypeContainer, view.TaskContent);
+            var taskTypeContainerWrapper = await prefabLoader.GetObjectAsync<TaskTypeContainer>(AbKeyCollection.Ui, ResKeyCollection.TaskTypeContainer, view.TaskContent);
             // 初始化任务类型容器（设置对应的任务类型）
             taskTypeContainerWrapper.Init(taskInfo.f_taskType);
             // 将创建的容器添加到模型中管理
@@ -195,7 +195,7 @@ namespace GameHotUpdate.Task.UI
         private async Task CreateTaskItem(TaskInfo taskInfo, TaskTypeContainer container)
         {
             // 从资源包中异步加载任务项预制体，并挂载到对应任务类型容器的Transform下
-            var taskItem = await uiLoader.GetUIObject<TaskItem>(AbKeyCollection.Ui, ResKeyCollection.TaskItem, container.transform);
+            var taskItem = await prefabLoader.GetObjectAsync<TaskItem>(AbKeyCollection.Ui, ResKeyCollection.TaskItem, container.transform);
             // 注册任务项选中事件，选中时更新任务详情展示
             taskItem.OnSelectedTask += UpdateTaskDetail;
             // 初始化任务项UI（传入任务信息和任务分组组件）
@@ -221,11 +221,6 @@ namespace GameHotUpdate.Task.UI
 
             // 更新当前任务信息为选中的任务信息
             model.CurrentTaskInfo = selectTaskInfo;
-            foreach (var itemGrid in model.GetItemGrids())
-            {
-                // 释放资源
-                uiLoader.RealseAsset(AbKeyCollection.Ui, itemGrid.gameObject);
-            }
             model.ClearItemGrid();
 
             // 解析奖励ID数组，获取物品格子

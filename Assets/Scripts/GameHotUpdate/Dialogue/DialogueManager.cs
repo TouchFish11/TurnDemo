@@ -3,9 +3,9 @@ using System.Collections;
 using System.Text;
 using Core.Global;
 using Core.GlobalEvent;
+using Core.Loader.Object;
 using Core.Log;
 using Core.Mono;
-using Core.Pool;
 using Core.Serialize.Binary;
 using Core.Service;
 using Core.Singleton;
@@ -25,7 +25,7 @@ namespace GameHotUpdate.Dialogue
     public class DialogueManager : SingletonBase<DialogueManager>, IDialogueManager
     {
         private readonly IUIManager _uiManager = ServiceLocator.Get<IUIManager>();
-        private readonly IPoolManager _poolManager = ServiceLocator.Get<IPoolManager>();
+        private readonly IPrefabLoader _prefabLoader = ServiceLocator.Get<IPrefabLoader>();
         private readonly IEventCenter _eventCenter = ServiceLocator.Get<IEventCenter>();
         private readonly IBinaryDataManager _binaryDataManager = ServiceLocator.Get<IBinaryDataManager>();
         private readonly IMonoAdapter _monoAdapter = ServiceLocator.Get<IMonoAdapter>();
@@ -247,9 +247,9 @@ namespace GameHotUpdate.Dialogue
             // 触发对话结束事件
             OnDialogueEnd?.Invoke();
             // 清理对话选项UI对象池
-            _poolManager.ClearTypes(typeof(DialogueOptUI));
+            _prefabLoader.RealseAsset(AbKeyCollection.Ui, ResKeyCollection.DialogueOptUI);
             // 清理对话回顾UI对象池
-            _poolManager.ClearTypes(typeof(DialogueReviewUI));
+            _prefabLoader.RealseAsset(AbKeyCollection.Ui, ResKeyCollection.DialogueReviewUI);
         }
     }
 }

@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using Core.Loader.Object;
+using Core.Log;
 using Core.Mono;
 using Core.Pool;
 using Core.Service;
@@ -15,6 +18,8 @@ namespace GameHotUpdate.VFX
     /// </summary>
     public class VFXManager : SingletonBase<VFXManager>, IVFXManager
     {
+        private readonly IMonoAdapter _monoAdapter = ServiceLocator.Get<IMonoAdapter>();
+        private readonly IPrefabLoader _prefabLoader = ServiceLocator.Get<IPrefabLoader>();
         // 存储当前活跃的VFX信息列表
         private readonly List<VFXInfo> _activeVfxs = new();
 
@@ -24,7 +29,7 @@ namespace GameHotUpdate.VFX
         private VFXManager()
         {
             // 注册帧更新监听，用于检测VFX状态
-            ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpdate);
+            _monoAdapter.AddUpdateListener(OnUpdate);
         }
 
         /// <summary>
@@ -57,32 +62,36 @@ namespace GameHotUpdate.VFX
         /// <param name="vFXInfo">VFX信息载体</param>
         public async void CreateVFX(string vfxName, ProjectileTrans projectileTrans, ProjectileData data, VFXInfo vFXInfo)
         {
-            // 从对象池异步获取VFX资源
-            var vfxObj = await ServiceLocator.Get<IPoolManager>().GetAssetBundleObjAsync(AbKeyCollection.Vfx, vfxName);
-            // 设置VFX父物体
-            vfxObj.transform.SetParent(projectileTrans.Parent, projectileTrans.WorldPositionStays);
-            
-            // 根据父物体是否存在，设置VFX的位置和旋转
-            if (projectileTrans.Parent)
+            try
             {
-                vfxObj.transform.SetLocalPositionAndRotation(projectileTrans.LocalPos, projectileTrans.Rotation);
-            }
-            else
-            {
-                vfxObj.transform.SetPositionAndRotation(projectileTrans.WorldPos, projectileTrans.Rotation);
-            }
+                // 异步获取VFX资源
+                var vfxObj = await _prefabLoader.GetGameObjectAsync(AbKeyCollection.Vfx, vfxName, projectileTrans.Parent, projectileTrans.WorldPositionStays);
+                // 根据父物体是否存在，设置VFX的位置和旋转
+                if (projectileTrans.Parent)
+                {
+                    vfxObj.transform.SetLocalPositionAndRotation(projectileTrans.LocalPos, projectileTrans.Rotation);
+                }
+                else
+                {
+                    vfxObj.transform.SetPositionAndRotation(projectileTrans.WorldPos, projectileTrans.Rotation);
+                }
 
-            // 如果VFX挂载了投射物组件，初始化投射物数据
-            if (vfxObj.TryGetComponent<Projectile>(out var projectile))
-            {
-                projectile.Init(data, vFXInfo);
-            }
+                // 如果VFX挂载了投射物组件，初始化投射物数据
+                if (vfxObj.TryGetComponent<Projectile>(out var projectile))
+                {
+                    projectile.Init(data, vFXInfo);
+                }
 
-            // 如果包含粒子系统，记录到活跃列表
-            if (vfxObj.TryGetComponent<ParticleSystem>(out var ps))
+                // 如果包含粒子系统，记录到活跃列表
+                if (vfxObj.TryGetComponent<ParticleSystem>(out var ps))
+                {
+                    vFXInfo.ParticleSystem = ps;
+                    _activeVfxs.Add(vFXInfo);
+                }
+            }
+            catch (Exception e)
             {
-                vFXInfo.ParticleSystem = ps;
-                _activeVfxs.Add(vFXInfo);
+                LogManager.LogError($"{nameof(VFXManager)}.{nameof(CreateVFX)}：{e.Message}，{e.StackTrace}");
             }
         }
 
@@ -96,18 +105,20 @@ namespace GameHotUpdate.VFX
         /// <param name="vFXInfo">VFX信息载体</param>
         public async void CreateVFX(string vfxName, Transform parent, Vector3 pos, Quaternion rot, VFXInfo vFXInfo)
         {
-            // 从对象池异步获取VFX资源
-            var vfxObj = await ServiceLocator.Get<IPoolManager>().GetAssetBundleObjAsync(AbKeyCollection.Vfx, vfxName);
-            // 设置父物体并重置局部坐标
-            vfxObj.transform.SetParent(parent, false);
-            // 设置VFX局部位置和旋转
-            vfxObj.transform.SetLocalPositionAndRotation(pos, rot);
-            
-            // 如果包含粒子系统，记录到活跃列表
-            if (vfxObj.TryGetComponent<ParticleSystem>(out var ps))
+            try
             {
-                vFXInfo.ParticleSystem = ps;
-                _activeVfxs.Add(vFXInfo);
+                // 异步获取VFX资源
+                var vfxObj = await _prefabLoader.GetGameObjectAsync(AbKeyCollection.Vfx, vfxName, parent,  pos, rot);
+                // 如果包含粒子系统，记录到活跃列表
+                if (vfxObj.TryGetComponent<ParticleSystem>(out var ps))
+                {
+                    vFXInfo.ParticleSystem = ps;
+                    _activeVfxs.Add(vFXInfo);
+                }
+            }
+            catch (Exception e)
+            {
+                LogManager.LogError($"{nameof(VFXManager)}.{nameof(CreateVFX)}：{e.Message}，{e.StackTrace}");
             }
         }
         
@@ -133,7 +144,8 @@ namespace GameHotUpdate.VFX
             // 遍历所有活跃VFX，逐一回收至对象池
             foreach (var vFXInfo in _activeVfxs)
             {
-                ServiceLocator.Get<IPoolManager>().PushObj(vFXInfo.ParticleSystem.gameObject);
+                _prefabLoader.CollectAsset(vFXInfo.ParticleSystem.gameObject);
+                _prefabLoader.RealseAsset(AbKeyCollection.Vfx, vFXInfo.ParticleSystem.gameObject.name);
             }
             // 清空活跃列表
             _activeVfxs.Clear();

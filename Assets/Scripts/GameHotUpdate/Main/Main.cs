@@ -1,8 +1,8 @@
 using System;
 using System.Diagnostics;
-using System.Reflection;
 using Core.AssetBundles.Management;
 using Core.HotUpdate;
+using Core.Input.ActionAsset;
 using Core.Log;
 using Core.Quit;
 using Core.Reflection;
@@ -11,15 +11,19 @@ using Core.Service;
 using Core.Singleton;
 using Core.UI;
 using GameHotUpdate.Config;
+using GameHotUpdate.Main.Manager;
+using GameHotUpdate.Main.Scene;
+using GameHotUpdate.Main.UI;
 using GameHotUpdate.Update.UI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace GameHotUpdate.Main
 {
     /// <summary>
-    /// 主入口代理
+    /// 主入口
     /// </summary>
-    public class MainProxy : SingletonMono<MainProxy>
+    public class Main : SingletonMono<Main>
     {
         /// <summary>
         /// 游戏启动入口方法（Unity生命周期）
@@ -57,12 +61,13 @@ namespace GameHotUpdate.Main
                         AbKeyCollection.Default, ResKeyCollection.Canvas, ResKeyCollection.UICamera);
                     // 初始化场景
                     await ServiceLocator.Get<ISceneManager>().Init(AbKeyCollection.Scene);
-            
+                    // 初始化输入系统
+                    await ServiceLocator.Get<IInputSystem>().InitAsync(AbKeyCollection.Gameconfig);
                     // 加载热更程序集，应该更新后再加载程序集
                     await ServiceLocator.Get<IHotUpdateManager>().LoadAssemblys(AbKeyCollection.Hotupdate);
                     LogManager.Log($"加载热更程序集成功");
-                    
-                    InitHotUpdateGameMain();
+
+                    Init();
                 };
                 
                 // 检查更新
@@ -83,7 +88,7 @@ namespace GameHotUpdate.Main
             }
             catch (Exception e)
             {
-                LogManager.LogError($"{nameof(MainProxy)}.{nameof(Start)}: {e.Message}，StackTrace：{e.StackTrace}");
+                LogManager.LogError($"{nameof(Main)}.{nameof(Start)}: {e.Message}，StackTrace：{e.StackTrace}");
             }
         }
 
@@ -97,19 +102,30 @@ namespace GameHotUpdate.Main
         }
         
         /// <summary>
-        /// 初始化热更新游戏入口
+        /// 游戏启动入口方法
         /// </summary>
-        private static void InitHotUpdateGameMain()
+        private static async void Init()
         {
-            // 通过游戏热更初始化
-            var methodInfo = typeof(HotfixGameMain).GetMethod("Init", BindingFlags.Static | BindingFlags.NonPublic);
-            if (methodInfo != null)
+            try
             {
-                methodInfo.Invoke(null, null);
+                // 注册游戏业务层管理器到服务容器
+                ServiceLocator.Register<IGameManager>(GameManager.Instance);
+                // 初始化热更工厂
+                ServiceLocator.Get<IFactoryManager>().InitHotFactorys();
+                // 切换场景
+                await ServiceLocator.Get<ISceneManager>().LoadSceneAsync(ResKeyCollection.MainScene, LoadSceneMode.Single, null);
+                // 初始化游戏数据、服务
+                await ServiceLocator.Get<IGameManager>().Init();
+                // 初始化场景
+                await SceneGenerator.InitMainScene();
+                // 创建玩家对象（参数为玩家配置ID，对应玩家基础配置表）
+                await ServiceLocator.Get<IPlayerManager>().CreatePlayer(1001);
+                // 初始化主界面
+                await ServiceLocator.Get<IUIManager>().CreateViewAsync<MainView, MainModel, MainController>(AbKeyCollection.Ui, E_UILayer.Mid, ResKeyCollection.MainView);
             }
-            else
+            catch (Exception e)
             {
-                LogManager.LogError($"未找到方法：Init");
+                LogManager.LogError($"{nameof(Main)}.{nameof(Init)}: {e.Message}，{e.StackTrace}");
             }
         }
         

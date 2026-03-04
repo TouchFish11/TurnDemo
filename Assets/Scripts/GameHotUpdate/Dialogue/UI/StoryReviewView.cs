@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Core.Loader.UI;
+using Core.Loader.Object;
 using Core.Log;
 using Core.Pool;
 using Core.Serialize.Binary;
@@ -86,7 +86,7 @@ namespace GameHotUpdate.Dialogue.UI
             foreach (var dialogueInfo in historicalDialogueInfos)
             {
                 // 从资源包异步加载对话回顾UI预制体，并挂载到滚动容器的内容节点下
-                var dialogueReviewUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<DialogueReviewUI>(
+                var dialogueReviewUI = await ServiceLocator.Get<IPrefabLoader>().GetObjectAsync<DialogueReviewUI>(
                     AbKeyCollection.Ui, 
                     ResKeyCollection.DialogueReviewUI, 
                     svReview.content);

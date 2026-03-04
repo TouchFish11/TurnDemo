@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using Core.Loader.UI;
+using Core.Loader.Object;
 using Core.Log;
 using Core.Mono;
 using Core.Service;
@@ -194,7 +194,7 @@ namespace GameHotUpdate.Dialogue.UI
                 foreach (var branchInfo in branchInfos)
                 {
                     // 从资源包异步加载分支选项UI预制体，并挂载到对话框节点下
-                    var optUI = await ServiceLocator.Get<IUiLoader>().GetUIObject<DialogueOptUI>(
+                    var optUI = await ServiceLocator.Get<IPrefabLoader>().GetObjectAsync<DialogueOptUI>(
                         AbKeyCollection.Ui, 
                         ResKeyCollection.DialogueOptUI, 
                         view.DialogueOptBox

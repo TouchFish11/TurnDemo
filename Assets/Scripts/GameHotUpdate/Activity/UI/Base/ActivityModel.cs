@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Core.Loader.UI;
-using Core.Pool;
+using Core.Loader.Object;
 using Core.Service;
 using Core.UI.MVC;
 using GameHotUpdate.Activity.Core;
@@ -17,7 +16,7 @@ namespace GameHotUpdate.Activity.UI.Base
         // 活动选项UI列表
         private readonly List<ActivityUI> activityUis = new();
         // 活动界面类型缓存
-        private readonly HashSet<Type> activityTypes = new();
+        private readonly HashSet<string> activityObjNames = new();
         
         /// <summary>
         /// 当前显示的活动界面缓存
@@ -52,33 +51,27 @@ namespace GameHotUpdate.Activity.UI.Base
             if (Activity != null)
             {
                 // 释放资源
-                ServiceLocator.Get<IUiLoader>().RealseAsset(AbKeyCollection.Ui, Activity.GameObject);
+                ServiceLocator.Get<IPrefabLoader>().CollectAsset(Activity.GameObject);
             }
             Activity = currentActivity;
-            activityTypes.Add(type);
+            activityObjNames.Add(currentActivity.GameObject.name);
         }
         
         public override void ClearData()
         {
-            // 释放资源
-            ServiceLocator.Get<IUiLoader>().RealseAsset(AbKeyCollection.Ui, Activity.GameObject);
-            
+            ServiceLocator.Get<IPrefabLoader>().CollectAsset(Activity.GameObject);
             Activity = null;
             foreach (var activityUi in activityUis)
             {
-                // 释放资源
-                ServiceLocator.Get<IUiLoader>().RealseAsset(AbKeyCollection.Ui, activityUi.gameObject);
+                ServiceLocator.Get<IPrefabLoader>().CollectAsset(activityUi.gameObject);
             }
             activityUis.Clear();
-            // 清理类型缓存
-            ServiceLocator.Get<IPoolManager>().ClearTypes(typeof(ActivityUI));
-            
-            foreach (var activityType in activityTypes)
+            ServiceLocator.Get<IPrefabLoader>().RealseAsset(AbKeyCollection.Ui, ResKeyCollection.ActivityUI);
+            foreach (var name in activityObjNames)
             {
-                // 清理类型缓存
-                ServiceLocator.Get<IPoolManager>().ClearTypes(activityType);
+                ServiceLocator.Get<IPrefabLoader>().RealseAsset(AbKeyCollection.Ui, name);
             }
-            activityTypes.Clear();
+            activityObjNames.Clear();
             base.ClearData();
         }
     }

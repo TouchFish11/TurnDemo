@@ -10,19 +10,17 @@ namespace GameHotUpdate.Main.Manager
         /// <summary>
         /// 游戏数据管理器
         /// </summary>
-        IGameDataManager GameDataManager { get; }
+        GameDataManager GameDataManager { get; }
         
         /// <summary>
         /// 游戏服务管理器
         /// </summary>
-        IGameServiceManger  GameServiceManger { get; }
+        GameServiceManger GameServiceManger { get; }
 
         /// <summary>
         /// 异步初始化数据
         /// </summary>
-        /// <param name="gameDataManager"></param>
-        /// <param name="gameServiceManger"></param>
         /// <returns></returns>
-        Task Init(IGameDataManager gameDataManager, IGameServiceManger gameServiceManger);
+        Task Init();
     }
 }
