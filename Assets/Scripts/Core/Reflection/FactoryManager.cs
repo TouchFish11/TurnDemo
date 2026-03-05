@@ -27,7 +27,7 @@ namespace Core.Reflection
         /// </summary>
         public void InitCoreFactorys()
         {
-            var coreAssembly = ServiceLocator.Get<IHotUpdateManager>().GetCoreAssembly();
+            var coreAssembly = ServiceLocator.Get<IHotUpdateManager>().GetCoreModule();
             FactoryUtility.ScanAllFactory(typeToFactoryMap, coreAssembly);
         }
 

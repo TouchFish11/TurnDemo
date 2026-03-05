@@ -78,11 +78,11 @@ namespace Editor.Generation.Detail
         private const string staticModifier = "static";
 
         /// <summary>生成的C#脚本文件保存路径</summary>
-        private readonly string filePath = $"{Application.dataPath}/Scripts/GameHotUpdate/Config/ResKeyCollection.cs";
+        private readonly string filePath = $"{Application.dataPath}/Scripts/HotUpdate/Config/ResKeyCollection.cs";
         
         /// <summary>生成类的命名空间</summary>
         /// <value>固定为Core命名空间</value>
-        protected override string NameSpace => "GameHotUpdate.Config";
+        protected override string NameSpace => "HotUpdate.Config";
         
         /// <summary>生成类的注释描述</summary>
         protected override string Note { get; set; }

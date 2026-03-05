@@ -15,7 +15,7 @@ namespace Core.Loader
     {
         public override void InitFactory()
         {
-            FactoryUtility.ScanAllType(typeToInterfaceMap, ServiceLocator.Get<IHotUpdateManager>().GetCoreAssembly());
+            FactoryUtility.ScanAllType(typeToInterfaceMap, ServiceLocator.Get<IHotUpdateManager>().GetCoreModule());
             
             // 注册加载器到全局定位器中
             foreach (var assetLoader in typeToInterfaceMap.Values)

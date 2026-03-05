@@ -1,0 +1,54 @@
+using Core.Loader.Object;
+using Core.Pool;
+using Core.Service;
+using HotUpdate.Battle.Object;
+using HotUpdate.Camera;
+using HotUpdate.Config;
+using HotUpdate.Main.FloatingText;
+using UnityEngine;
+
+namespace HotUpdate.Main.Scene
+{
+    using Task = System.Threading.Tasks.Task;
+
+    /// <summary>
+    /// 场景生成器
+    /// </summary>
+    public static class SceneGenerator
+    {
+        private static readonly IPrefabLoader _prefabLoader = ServiceLocator.Get<IPrefabLoader>();
+        
+        /// <summary>
+        /// 初始化主游戏场景核心内容
+        /// 异步创建NPC、玩家对象，初始化UI界面、飘字管理器等游戏元素
+        /// </summary>
+        public static async Task InitMainScene()
+        {
+            // 创建村民NPC对象
+            var villager = await _prefabLoader.GetObjectAsync<NpcObject>(AbKeyCollection.Prefab, ResKeyCollection.Prefab_Npc, null);
+            villager.transform.SetPositionAndRotation(new Vector3(0, 1, 8.39f), Quaternion.identity);
+            // 初始化NPC基础属性（参数为NPC配置ID，对应配置表）
+            villager.BaseInit(1);
+
+            // 创建流浪汉NPC对象
+            var Vagrant = await _prefabLoader.GetObjectAsync<NpcObject>(AbKeyCollection.Prefab, ResKeyCollection.Prefab_Npc,null);
+            Vagrant.transform.SetPositionAndRotation(new Vector3(6.94f, 1, 8.39f), Quaternion.identity);
+            Vagrant.BaseInit(2);
+        }
+        
+        /// <summary>
+        /// 清理主游戏场景
+        /// </summary>
+        public static void ClearMainScene()
+        {
+            // 销毁相机对象
+            UnityEngine.Object.Destroy(OrbitCameraController.Instance.gameObject);
+            // 清理玩家数据和对象
+            ServiceLocator.Get<IPlayerManager>().Clear();
+            // 清理飘字缓存
+            ServiceLocator.Get<IFloatingTextManager>().ClearCache();
+            // 清空对象池
+            ServiceLocator.Get<IPoolManager>().Clear();
+        }
+    }
+}

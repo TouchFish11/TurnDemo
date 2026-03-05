@@ -34,8 +34,8 @@ namespace Core.HotUpdate
         /// <returns></returns>
         Assembly[] GetAssemblies();
 
-        Assembly GetCoreAssembly();
+        Assembly GetCoreModule();
         
-        Assembly GetConfigAssembly();
+        Assembly GetConfigModule();
     }
 }

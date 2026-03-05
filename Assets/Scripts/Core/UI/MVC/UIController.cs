@@ -71,8 +71,8 @@ namespace Core.UI.MVC
             view.GetBinder().OnSliderValueChanged -= SliderValueChanged;
             view.GetBinder().OnToggleValueChanged -= ToggleValueChanged;
             view.GetBinder().OnInputFieldValueChanged -= InputFieldValueChanged;
-            model.ClearData();
             await OnHide();
+            model.ClearData();
             view.ViewObj.SetActive(false);
         }
 

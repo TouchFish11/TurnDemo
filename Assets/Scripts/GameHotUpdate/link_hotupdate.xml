@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<linker>
-    <assembly fullname="Assembly-CSharp-Game-HotUpdate">
-        <type fullname="GameHotUpdate.Battle.BattlePoint.BattlePoint" preserve="all" />
-        <type fullname="GameHotUpdate.Battle.BattlePoint.PointInfo" preserve="all" />
-    </assembly>
-</linker>

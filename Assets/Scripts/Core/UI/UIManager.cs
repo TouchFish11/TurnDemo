@@ -26,8 +26,6 @@ namespace Core.UI
         private Transform _botLayer;
         // 系统层
         private Transform _systemLayer;
-        // 预制体加载器
-        private readonly IPrefabLoader _prefabLoader= ServiceLocator.Get<IPrefabLoader>();
 
         private UIManager()
         {
@@ -96,7 +94,7 @@ namespace Core.UI
         {
 #if EDITOR_TEST_AB || !UNITY_EDITOR
             // 获取面板
-            var view = await _prefabLoader.GetObjectAsync<TView>(abName, panelName, GetLayer(layer));
+            var view = await ServiceLocator.Get<IPrefabLoader>().GetObjectAsync<TView>(abName, panelName, GetLayer(layer));
             // 初始化控制器
             var controller = new TController();
             var model = new TModel();
@@ -155,9 +153,9 @@ namespace Core.UI
                 
                     // 调用控制器的销毁
                     await uiController.Destroy();
-                    _prefabLoader.CollectAsset(_panels[i].UiView.ViewObj);
+                    ServiceLocator.Get<IPrefabLoader>().CollectAsset(_panels[i].UiView.ViewObj);
                     // 释放该UI的资源
-                    _prefabLoader.RealseAsset(abName, _panels[i].UiView.ViewObj.name);
+                    ServiceLocator.Get<IPrefabLoader>().RealseAsset(abName, _panels[i].UiView.ViewObj.name);
                     // 从缓存中移除
                     _panels.RemoveAt(i);
                 }
@@ -199,12 +197,12 @@ namespace Core.UI
         public void Clear(string abName)
         {
             // 销毁画布和摄像机
-            _prefabLoader.CollectAsset(Canvas.gameObject);
-            _prefabLoader.RealseAsset(abName, Canvas.name);
+            ServiceLocator.Get<IPrefabLoader>().CollectAsset(Canvas.gameObject);
+            ServiceLocator.Get<IPrefabLoader>().RealseAsset(abName, Canvas.name);
             Canvas = null;
             
-            _prefabLoader.CollectAsset(UICamera.gameObject);
-            _prefabLoader.RealseAsset(abName, UICamera.name);
+            ServiceLocator.Get<IPrefabLoader>().CollectAsset(UICamera.gameObject);
+            ServiceLocator.Get<IPrefabLoader>().RealseAsset(abName, UICamera.name);
             UICamera = null;
             
             // 销毁所有界面

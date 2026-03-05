@@ -14,7 +14,7 @@ namespace Core.Loader.Object
     /// </summary>
     public class PrefabLoader : IPrefabLoader
     {
-        private struct PrefabData
+        private class PrefabData : IPoolData
         {
             /// <summary>
             /// 预制体资源
@@ -25,11 +25,18 @@ namespace Core.Loader.Object
             /// 该资源的引用计数，实例化数
             /// </summary>
             public int refCount;
-            
-            public PrefabData(GameObject objAsset, int refCount)
+
+            public PrefabData Init(GameObject objAsset, int refCount)
             {
                 this.objAsset = objAsset;
                 this.refCount = refCount;
+                return this;
+            }
+
+            public void ResetData()
+            {
+                objAsset = null;
+                refCount = 0;
             }
         }
         
@@ -49,7 +56,7 @@ namespace Core.Loader.Object
         /// <param name="worldPosStay"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public async Task<T> GetObjectAsync<T>(string abName, string assetName, Transform parent, bool worldPosStay = false) where T : class
+        public async Task<T> GetObjectAsync<T>(string abName, string assetName, Transform parent, bool worldPosStay = false) where T : Component
         {
             return await GetObjectAsync<T>(abName, assetName, parent, Vector3.zero, Quaternion.identity, worldPosStay);
         }
@@ -65,13 +72,13 @@ namespace Core.Loader.Object
         /// <param name="worldPosStay"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public async Task<T> GetObjectAsync<T>(string abName, string assetName, Transform parent, Vector3 pos, Quaternion rot, bool worldPosStay = false) where T : class
+        public async Task<T> GetObjectAsync<T>(string abName, string assetName, Transform parent, Vector3 pos, Quaternion rot, bool worldPosStay = false) where T : Component
         {
-            var instanceObj = await GetGameObjectAsync(abName, assetName);
+            var instanceObj = await GetGameObjectAsyncInternal(abName, assetName);
             // 设置父对象、位置
             instanceObj.transform.SetParent(parent, worldPosStay);
             instanceObj.transform.SetLocalPositionAndRotation(pos, rot);
-            return instanceObj.TryGetComponent(out T component) ? component : null;
+            return instanceObj.TryGetComponent(out T component) ? component : instanceObj.AddComponent<T>();
         }
 
         public Task<GameObject> GetGameObjectAsync(string abName, string assetName, Transform parent, bool worldPosStay = false)
@@ -81,7 +88,7 @@ namespace Core.Loader.Object
         
         public async Task<GameObject> GetGameObjectAsync(string abName, string assetName, Transform parent, Vector3 pos, Quaternion rot, bool worldPosStay = false)
         {
-            var instanceObj = await GetGameObjectAsync(abName, assetName);
+            var instanceObj = await GetGameObjectAsyncInternal(abName, assetName);
             // 设置父对象、位置
             instanceObj.transform.SetParent(parent, worldPosStay);
             instanceObj.transform.SetLocalPositionAndRotation(pos, rot);
@@ -94,7 +101,7 @@ namespace Core.Loader.Object
         /// <param name="abName"></param>
         /// <param name="assetName"></param>
         /// <returns></returns>
-        internal async Task<GameObject> GetGameObjectAsync(string abName, string assetName)
+        internal async Task<GameObject> GetGameObjectAsyncInternal(string abName, string assetName)
         {
             // 从缓存池获取
             var instanceObj = _poolManager.GetAssetBundleObj(abName, assetName);
@@ -117,10 +124,13 @@ namespace Core.Loader.Object
                 // AB包异步加载
                 var assetBundle = await _assetBundleManager.LoadBundleAsync(abName);
                 var objAsset = await assetBundle.LoadAssetAsync<GameObject>(assetName).ToTask<GameObject>();
+                // 缓存加载的资源
+                if (!_assetNameToData.TryAdd(assetName, _poolManager.GetData<PrefabData>().Init(objAsset, 1)))
+                {
+                    _assetNameToData[assetName].refCount += 1;
+                }
                 // 实例化预设体
                 instanceObj = UnityEngine.Object.Instantiate(objAsset);
-                // 缓存加载的资源
-                _assetNameToData.Add(assetName, new PrefabData(objAsset, 1));
             }
 
             // 避免实例化出的对象的名字后带有(Clone)

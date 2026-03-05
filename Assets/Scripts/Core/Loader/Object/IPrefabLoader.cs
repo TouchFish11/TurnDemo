@@ -19,7 +19,7 @@ namespace Core.Loader.Object
         /// <param name="worldPosStay"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        Task<T> GetObjectAsync<T>(string abName, string assetName, Transform parent, Vector3 pos, Quaternion rot, bool worldPosStay = false) where T : class;
+        Task<T> GetObjectAsync<T>(string abName, string assetName, Transform parent, Vector3 pos, Quaternion rot, bool worldPosStay = false) where T : Component;
         
         /// <summary>
         /// 异步获取对象
@@ -30,7 +30,7 @@ namespace Core.Loader.Object
         /// <param name="worldPosStay"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        Task<T> GetObjectAsync<T>(string abName, string assetName, Transform parent, bool worldPosStay = false) where T : class;
+        Task<T> GetObjectAsync<T>(string abName, string assetName, Transform parent, bool worldPosStay = false) where T : Component;
 
         /// <summary>
         /// 异步获取游戏对象

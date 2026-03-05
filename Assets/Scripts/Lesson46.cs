@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Lesson46 : MonoBehaviour
@@ -10,12 +8,6 @@ public class Lesson46 : MonoBehaviour
         CombineMesh();
     }
 
-    // OnInitDataCompleted is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void CombineMesh()
     {
         MeshFilter[] meshFilters = this.GetComponentsInChildren<MeshFilter>();
@@ -24,19 +16,19 @@ public class Lesson46 : MonoBehaviour
 
         for (int i = 0; i < combineInstances.Length; i++)
         {
-            // »ñÈ¡Íø¸ñÊý¾Ý
+            // ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             combineInstances[i].mesh = meshFilters[i].sharedMesh;
-            // ÓÃÓÚ½«×Ó¶ÔÏóµÄ¶¥µãÎ»ÖÃ´Óµ±Ç°±¾µØ¿Õ¼ä±ä»»µ½¸¸¶ÔÏóµÄ±¾µØ¿Õ¼ä
+            // ï¿½ï¿½ï¿½Ú½ï¿½ï¿½Ó¶ï¿½ï¿½ï¿½Ä¶ï¿½ï¿½ï¿½Î»ï¿½Ã´Óµï¿½Ç°ï¿½ï¿½ï¿½Ø¿Õ¼ï¿½ä»»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½Ø¿Õ¼ï¿½
             combineInstances[i].transform = this.transform.worldToLocalMatrix * meshFilters[i].transform.localToWorldMatrix;
-            // ×ÔÐÐ´¦ÀíÍø¸ñ£¨Ïú»Ù¡¢Ê§»î£©
+            // ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù¡ï¿½Ê§ï¿½î£©
             Destroy(meshFilters[i].gameObject);
 
         }
 
-        // ´´½¨ÐÂÍø¸ñ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         Mesh mesh = new Mesh();
 
-        // ÅÐ¶Ï¶¥µãÊýÊÇ·ñ³¬¹ýÁËÏÞÖÆ
+        // ï¿½Ð¶Ï¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ñ³¬¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         int totalVertices = 0;
         foreach (var item in combineInstances)
         {
@@ -45,25 +37,25 @@ public class Lesson46 : MonoBehaviour
 
         if (totalVertices > ushort.MaxValue)
         {
-            // Ä¬ÈÏÊÇUInt16£¨ushort£©£¬´ú±í×î¶àÖ§³Ö65535¸ö¶¥µã¡£ÈôºÏ²¢µÄ¶¥µãÊý³¬¹ý¸ÃÖµ£¬¾ÍÒªÐÞ¸ÄÎªUint32£¨uint£©
+            // Ä¬ï¿½ï¿½ï¿½ï¿½UInt16ï¿½ï¿½ushortï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö§ï¿½ï¿½65535ï¿½ï¿½ï¿½ï¿½ï¿½ã¡£ï¿½ï¿½ï¿½Ï²ï¿½ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½Òªï¿½Þ¸ï¿½ÎªUint32ï¿½ï¿½uintï¿½ï¿½
             mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         }
         else
         {
-            // Ä¬ÈÏÊÇUInt16£¨ushort£©£¬´ú±í×î¶àÖ§³Ö65535¸ö¶¥µã¡£ÈôºÏ²¢µÄ¶¥µãÊý³¬¹ý¸ÃÖµ£¬¾ÍÒªÐÞ¸ÄÎªUint32£¨uint£©
+            // Ä¬ï¿½ï¿½ï¿½ï¿½UInt16ï¿½ï¿½ushortï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö§ï¿½ï¿½65535ï¿½ï¿½ï¿½ï¿½ï¿½ã¡£ï¿½ï¿½ï¿½Ï²ï¿½ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½Òªï¿½Þ¸ï¿½ÎªUint32ï¿½ï¿½uintï¿½ï¿½
             mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt16;
         }
 
-        // ºÏ²¢Íø¸ñ
+        // ï¿½Ï²ï¿½ï¿½ï¿½ï¿½ï¿½
         mesh.CombineMeshes(combineInstances, true, true, true);
 
-        // ÖØÐÂ¼ÆËã°üÎ§ºÐ
+        // ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½Î§ï¿½ï¿½
         mesh.RecalculateBounds();
 
-        // Ê¹ÓÃäÖÈ¾ºÏ²¢µÄÍø¸ñ
+        // Ê¹ï¿½ï¿½ï¿½ï¿½È¾ï¿½Ï²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         MeshFilter meshFilter = this.gameObject.AddComponent<MeshFilter>();
         meshFilter.mesh = mesh;
-        // ¶¯Ì¬Ìí¼ÓäÖÈ¾Æ÷£¬ÉèÖÃ²ÄÖÊÇò
+        // ï¿½ï¿½Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½È¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã²ï¿½ï¿½ï¿½ï¿½ï¿½
         MeshRenderer meshRenderer = this.gameObject.AddComponent<MeshRenderer>();
         meshRenderer.sharedMaterial = meshFilters[0].GetComponent<MeshRenderer>().sharedMaterial;
     }

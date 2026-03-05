@@ -21,12 +21,12 @@ namespace Editor.Excel
         /// <summary>
         /// 数据结构类脚本在编辑器的存储的文件夹
         /// </summary>
-        private static readonly string DataclassEditorSavePath = $"{Application.dataPath}/Scripts/Config/ExcelInfo/Info/";
+        private static readonly string DataclassEditorSavePath = $"{Application.dataPath}/Scripts/HotUpdate/Config/ExcelInfo/Info/";
 
         /// <summary>
         /// 数据容器类脚本在编辑器的存储的文件夹
         /// </summary>
-        private static readonly string DataContainerEditorSavePath = $"{Application.dataPath}/Scripts/Config/ExcelInfo/Container/";
+        private static readonly string DataContainerEditorSavePath = $"{Application.dataPath}/Scripts/HotUpdate/Config/ExcelInfo/Container/";
 
         /// <summary>
         /// 表数据文件在编辑器的存储文件夹

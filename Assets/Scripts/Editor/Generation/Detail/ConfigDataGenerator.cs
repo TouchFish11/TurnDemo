@@ -17,12 +17,12 @@ namespace Editor.Generation.Detail
         /// <summary>
         /// 数据结构类在编辑器中的存储文件夹路径
         /// </summary>
-        private static readonly string DataclassEditorSavePath = $"{Application.dataPath}/Scripts/Config/EditorInfo/Info/";
+        private static readonly string DataclassEditorSavePath = $"{Application.dataPath}/Scripts/HotUpdate/Config/EditorInfo/Info/";
 
         /// <summary>
         /// 数据容器类在编辑器中的存储文件夹路径
         /// </summary>
-        private static readonly string DataContainerEditorSavePath = $"{Application.dataPath}/Scripts/Config/EditorInfo/Container/";
+        private static readonly string DataContainerEditorSavePath = $"{Application.dataPath}/Scripts/HotUpdate/Config/EditorInfo/Container/";
 
         /// <summary>
         /// 数据表文件在编辑器中的存储文件夹路径

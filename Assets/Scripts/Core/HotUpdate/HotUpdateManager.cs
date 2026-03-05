@@ -62,14 +62,14 @@ namespace Core.HotUpdate
             return Assembly.Load(assemblyName);
         }
         
-        public Assembly GetCoreAssembly()
+        public Assembly GetCoreModule()
         {
-            return Assembly.Load("Assembly-CSharp-Core");
+            return Assembly.Load("CoreModule");
         }
         
-        public Assembly GetConfigAssembly()
+        public Assembly GetConfigModule()
         {
-            return Assembly.Load("Assembly-CSharp-Config");
+            return Assembly.Load("ConfigModule");
         }
         
         /// <summary>
@@ -80,8 +80,8 @@ namespace Core.HotUpdate
         {
             var assemblies = new List<Assembly>
             {
-                GetCoreAssembly(),
-                GetConfigAssembly(),
+                GetCoreModule(),
+                GetConfigModule(),
             };
             
             // 获取所有热更后的程序集

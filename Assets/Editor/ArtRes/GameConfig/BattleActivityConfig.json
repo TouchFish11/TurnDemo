@@ -1,12 +1,12 @@
 {
-  "$type": "ConfigHotUpdate.BattleActivityConfig, Assembly-CSharp-Config-HotUpdate",
+  "$type": "HotUpdate.Config.Activity.BattleActivityConfig, ConfigModule",
   "BattleConfigEntryColletion": {
-    "$type": "ConfigHotUpdate.BattleConfigEntryColletion, Assembly-CSharp-Config-HotUpdate",
+    "$type": "HotUpdate.Config.Activity.BattleConfigEntryColletion, ConfigModule",
     "battleConfigs": {
-      "$type": "System.Collections.Generic.List`1[[ConfigHotUpdate.BattleConfigEntry, Assembly-CSharp-Config-HotUpdate]], mscorlib",
+      "$type": "System.Collections.Generic.List`1[[HotUpdate.Config.Activity.BattleConfigEntry, ConfigModule]], mscorlib",
       "$values": [
         {
-          "$type": "ConfigHotUpdate.BattleConfigEntry, Assembly-CSharp-Config-HotUpdate",
+          "$type": "HotUpdate.Config.Activity.BattleConfigEntry, ConfigModule",
           "levelId": 1001,
           "levelName": "关卡1",
           "battleSceneId": 0,
@@ -20,7 +20,7 @@
           "winConditionId": 0
         },
         {
-          "$type": "ConfigHotUpdate.BattleConfigEntry, Assembly-CSharp-Config-HotUpdate",
+          "$type": "HotUpdate.Config.Activity.BattleConfigEntry, ConfigModule",
           "levelId": 1002,
           "levelName": "关卡2",
           "battleSceneId": 0,
@@ -34,7 +34,7 @@
           "winConditionId": 0
         },
         {
-          "$type": "ConfigHotUpdate.BattleConfigEntry, Assembly-CSharp-Config-HotUpdate",
+          "$type": "HotUpdate.Config.Activity.BattleConfigEntry, ConfigModule",
           "levelId": 1003,
           "levelName": "关卡3",
           "battleSceneId": 0,
@@ -50,7 +50,7 @@
           "winConditionId": 0
         },
         {
-          "$type": "ConfigHotUpdate.BattleConfigEntry, Assembly-CSharp-Config-HotUpdate",
+          "$type": "HotUpdate.Config.Activity.BattleConfigEntry, ConfigModule",
           "levelId": 1004,
           "levelName": "关卡4",
           "battleSceneId": 0,
@@ -66,7 +66,7 @@
           "winConditionId": 0
         },
         {
-          "$type": "ConfigHotUpdate.BattleConfigEntry, Assembly-CSharp-Config-HotUpdate",
+          "$type": "HotUpdate.Config.Activity.BattleConfigEntry, ConfigModule",
           "levelId": 1005,
           "levelName": "关卡5",
           "battleSceneId": 0,

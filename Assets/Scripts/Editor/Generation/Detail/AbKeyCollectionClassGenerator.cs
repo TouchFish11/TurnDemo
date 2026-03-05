@@ -13,9 +13,9 @@ namespace Editor.Generation.Detail
     {
         protected override string Note { get; set; } = "AB包键集合";
 
-        protected override string NameSpace => "GameHotUpdate.Config";
+        protected override string NameSpace => "HotUpdate.Config";
 
-        private readonly string filePath = $"{Application.dataPath}/Scripts/GameHotUpdate/Config/{className}.cs";
+        private readonly string filePath = $"{Application.dataPath}/Scripts/HotUpdate/Config/{className}.cs";
 
         private readonly List<string> abNames;
         

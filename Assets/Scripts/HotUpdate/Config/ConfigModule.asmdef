@@ -1,0 +1,16 @@
+{
+    "name": "ConfigModule",
+    "rootNamespace": "",
+    "references": [
+        "GUID:e0f5e5adbbd3d7447bb8a1a2ae96bce8"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

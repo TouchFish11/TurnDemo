@@ -45,7 +45,7 @@ namespace Editor.AssetBundle
         private static int upLoadmaxNum;    // 待上传文件总数
         private static int nowUpLoadFinishedNum;    // 已完成上传的文件数
         private const string targetPath_game = @"D:\UnityProject\TurnDemo\Assets\Editor\ArtRes\HotUpdate\Assembly-CSharp-Game-HotUpdate.dll.bytes";
-        private const string targetPath_config = @"D:\UnityProject\TurnDemo\Assets\Editor\ArtRes\HotUpdate\Assembly-CSharp-Config-HotUpdate.dll.bytes";
+        private const string targetPath_config = @"D:\UnityProject\TurnDemo\Assets\Editor\ArtRes\HotUpdate\ConfigModule.dll.bytes";
         private const string AssetsInputPath = "Assets/Editor/ArtRes/";     // 待打包资源的输入根路径
         private readonly Dictionary<string, List<FileInfo>> _fileInfoDic = new();   // 存储待处理文件信息的字典：Key为目录名，Value为该目录下的文件列表
         private readonly string[] filterDirectorys = { "Texture" };     // 过滤的文件夹
@@ -790,14 +790,14 @@ namespace Editor.AssetBundle
             GUILayout.BeginHorizontal();
             
             EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.TextField("Generate Path", $"{Application.dataPath}/Scripts/GameHotUpdate/Config/ResKeyCollection.cs");
+            EditorGUILayout.TextField("Generate Path", $"{Application.dataPath}/Scripts/HotUpdate/Config/ResKeyCollection.cs");
             EditorGUI.EndDisabledGroup();
             
             if (GUILayout.Button("Generate Script Code", GUILayout.Width(200)))
             {
                 IScriptGenerator scriptGenerator = new ResKeyCollectionClassGenerator();
                 scriptGenerator.GenerateScript();
-                AppendToLog($"ResKeyCollection Generate At：{Application.dataPath}/Scripts/GameHotUpdate/Config/ResKeyCollection.cs\n");
+                AppendToLog($"ResKeyCollection Generate At：{Application.dataPath}/Scripts/HotUpdate/Config/ResKeyCollection.cs\n");
             }
             GUILayout.EndHorizontal();
         }
@@ -1440,8 +1440,14 @@ namespace Editor.AssetBundle
         /// </summary>
         private static void MoveHotUpdateAssembly()
         {
+            var info = Directory.CreateDirectory(@"D:\UnityProject\TurnDemo\Assets\Editor\ArtRes\HotUpdate\");
+            foreach (var fileInfo in info.GetFiles())
+            {
+                File.Delete(fileInfo.FullName);
+            }
+            
             const string sourcesPath_game = @"D:\UnityProject\TurnDemo\HybridCLRData\HotUpdateDlls\StandaloneWindows\Assembly-CSharp-Game-HotUpdate.dll";
-            const string sourcesPath_config = @"D:\UnityProject\TurnDemo\HybridCLRData\HotUpdateDlls\StandaloneWindows\Assembly-CSharp-Config-HotUpdate.dll";
+            const string sourcesPath_config = @"D:\UnityProject\TurnDemo\HybridCLRData\HotUpdateDlls\StandaloneWindows\ConfigModule.dll";
             File.Copy(sourcesPath_game,  targetPath_game, true);
             File.Copy(sourcesPath_config,  targetPath_config, true);
             AssetDatabase.Refresh();

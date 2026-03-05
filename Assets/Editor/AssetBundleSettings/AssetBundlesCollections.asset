@@ -176,13 +176,13 @@ MonoBehaviour:
   - assetBundleName: gameconfig
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\GameConfig\BattleActivityConfig.json
-      size: 2920
+      size: 2840
       name: BattleActivityConfig.json
-      hash: c9dd4264d2f7043fd85be58cadf7ca3d87a943364dc46ca799d67a7f2ad79fd2
+      hash: 2be68e4cc4568c8cf581e469d1a4814635fad9fa7614c0ab46be5ed279f326d9
     - assetPath: Assets\Editor\ArtRes\GameConfig\Editor\NewInfo.bytes
-      size: 33
+      size: 49
       name: NewInfo.bytes
-      hash: 58837203371e8fe49ec6194c2bf392884535ab5ad5efc6c7538b6728cfcb536a
+      hash: be7385c64d52a0369a7fdd3b7169ec628ece25bf9f04c0e4357569a4c7b5211e
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\ActivityInfo.bytes
       size: 955
       name: ActivityInfo.bytes
@@ -233,14 +233,14 @@ MonoBehaviour:
       hash: d681626eb25ae26f8a2a3e05bf1cc490fefad15470612193bace7674988ca194
   - assetBundleName: hotupdate
     assetInfos:
-    - assetPath: Assets\Editor\ArtRes\HotUpdate\Assembly-CSharp-Config-HotUpdate.dll.bytes
-      size: 5120
-      name: Assembly-CSharp-Config-HotUpdate.dll.bytes
-      hash: 6bafeaf2fcee290ff0f85a750e972a817efa3c042ff177d6ba5ed2462e7205fb
     - assetPath: Assets\Editor\ArtRes\HotUpdate\Assembly-CSharp-Game-HotUpdate.dll.bytes
-      size: 463872
+      size: 455680
       name: Assembly-CSharp-Game-HotUpdate.dll.bytes
-      hash: 399c7010477acd4bc6c319225f91067ff76f9bc1472986e91a4ef787cfe18ad4
+      hash: a173959d72ec54306d315117d41ca30838b47fbba5a3d687081ec35c5d2083fa
+    - assetPath: Assets\Editor\ArtRes\HotUpdate\ConfigModule.dll.bytes
+      size: 29696
+      name: ConfigModule.dll.bytes
+      hash: bfa020b63e9ab2d09cad9e99d7441f83cb1f0d789894ca8dafa28644dc30a109
   - assetBundleName: material
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\Material\Ground.mat
@@ -402,17 +402,17 @@ MonoBehaviour:
       name: EmbersCanonActivityUI.prefab
       hash: b0e7ccbda35bc43eb1f4daa5100726eb0454d69a8927850749a7a4e57cedc192
     - assetPath: Assets\Editor\ArtRes\UI\Activity\Details\EmbersCanonActivity\EmbersCanonSubActivityUI_01\BattleLevelUI.prefab
-      size: 11317
+      size: 11319
       name: BattleLevelUI.prefab
-      hash: 1a1c3af7d16bc9d2755adfa120bb5ba419661eaee42ba96ada4eaac62892bd39
+      hash: de9cdfb1729dcdcf3fcb664f6e6705ef35e84ac58dde1dc1192b8203559e9699
     - assetPath: Assets\Editor\ArtRes\UI\Activity\Details\EmbersCanonActivity\EmbersCanonSubActivityUI_01\EmbersCanonSubActivityUI_01.prefab
       size: 28311
       name: EmbersCanonSubActivityUI_01.prefab
       hash: 4815ec97350ba82ae389be6b8856e438f93366d51a5a054f59ea2a8da7648f09
     - assetPath: Assets\Editor\ArtRes\UI\Activity\Details\OrbitalDepartureActivity\OrbitalDepartureActivityUI.prefab
-      size: 56292
+      size: 56290
       name: OrbitalDepartureActivityUI.prefab
-      hash: 93045202c1328c560977f195d8f5be9798a0285bd1a748475cd424970057ecb3
+      hash: f0fac12af4eacaf78c91794b8825cbef3f773e097c951f1524d4ae152a711d09
     - assetPath: Assets\Editor\ArtRes\UI\Back\BackView.prefab
       size: 3001
       name: BackView.prefab

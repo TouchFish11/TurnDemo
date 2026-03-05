@@ -1,6 +1,6 @@
 using System.IO;
-using Config.ActivityConfigSO;
 using Core.Serialize.Json;
+using Shared.ActivityConfigSO;
 using UnityEditor;
 using UnityEngine;
 
