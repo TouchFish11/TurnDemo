@@ -17,6 +17,6 @@ namespace Core.Scene
         /// <param name="onLoadProgress">加载进度回调，参数为0~1的进度值</param>
         Task LoadSceneAsync(string scenePath, LoadSceneMode mode, Action<float> onLoadProgress);
 
-        Task Init(string abName);
+        Task InitAsync(string abName);
     }
 }

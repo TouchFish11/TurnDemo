@@ -2,9 +2,12 @@ using Core.Service;
 using Core.UI;
 using HotUpdate.Battle.Context;
 using HotUpdate.Battle.Object;
-using HotUpdate.Battle.Skill.Interface;
 using HotUpdate.Battle.TargetSelect;
 using HotUpdate.Battle.UI.Base;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.Battle.Skill;
+using HotUpdate.Core.Battle.TargetSelect;
 
 namespace HotUpdate.Battle.Skill.Base
 {

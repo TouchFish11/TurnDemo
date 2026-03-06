@@ -1,6 +1,6 @@
 using Core.Components;
 using Core.Log;
-using HotUpdate.Component;
+using HotUpdate.Core.Component;
 using UnityEngine;
 
 namespace HotUpdate.Animation.Component

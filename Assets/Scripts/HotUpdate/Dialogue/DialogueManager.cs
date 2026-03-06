@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Text;
+using System.Threading.Tasks;
 using Core.Global;
 using Core.GlobalEvent;
 using Core.Loader.Object;
@@ -12,6 +13,7 @@ using Core.Singleton;
 using Core.UI;
 using Core.Utility;
 using HotUpdate.Config;
+using HotUpdate.Core.Dialogue;
 using HotUpdate.Dialogue.UI;
 using HotUpdate.Task.Event;
 using UnityEngine;
@@ -24,6 +26,7 @@ namespace HotUpdate.Dialogue
     /// </summary>
     public class DialogueManager : SingletonBase<DialogueManager>, IDialogueManager
     {
+        public override int Priority => -1;
         private readonly IUIManager _uiManager = ServiceLocator.Get<IUIManager>();
         private readonly IPrefabLoader _prefabLoader = ServiceLocator.Get<IPrefabLoader>();
         private readonly IEventCenter _eventCenter = ServiceLocator.Get<IEventCenter>();
@@ -61,16 +64,18 @@ namespace HotUpdate.Dialogue
 
         // 是否有对话正在进行中（对外只读）
         public bool IsDialogueActive { get; private set; } 
-
-        /// <summary>
-        /// 构造函数（私有，单例）
-        /// 初始化打字机配置监听、默认启用打字机
-        /// </summary>
+        
         private DialogueManager()
+        {
+
+        }
+
+        public override Task InitAsync()
         {
             enableTypewriter = true;
             // 监听全局设置中打字机效果的开关变化
             GameSettingManager.Instance.OnEnableTypewriterChanged += OnEnableTypewriterChanged;
+            return Task.CompletedTask;
         }
 
         /// <summary>

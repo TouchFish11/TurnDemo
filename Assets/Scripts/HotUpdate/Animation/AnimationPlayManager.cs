@@ -1,8 +1,9 @@
 using System;
 using System.Collections;
+using System.Threading.Tasks;
 using Core.Singleton;
 using HotUpdate.Animation.Component;
-using HotUpdate.Battle.Object;
+using HotUpdate.Core.Battle.Object;
 using UnityEngine;
 
 namespace HotUpdate.Animation
@@ -13,9 +14,18 @@ namespace HotUpdate.Animation
     /// </summary>
     public class AnimationPlayManager : SingletonBase<AnimationPlayManager>, IAnimationPlayManager
     {
+        private int priority;
+
+        public override int Priority => -1;
+
         private AnimationPlayManager()
         {
 
+        }
+
+        public override Task InitAsync()
+        {
+            return Task.CompletedTask;
         }
 
         /// <summary>

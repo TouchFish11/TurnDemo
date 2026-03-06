@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core.Mono;
 using Core.Service;
 using Core.Singleton;
@@ -13,6 +14,8 @@ namespace Core.GlobalEvent
     /// </summary>
     public class EventCenter : SingletonBase<EventCenter>, IEventCenter
     {
+        public override int Priority => -1;
+
         // 存储事件类型与对应事件信息列表的映射表
         // Key：事件类型（TEvent），Value：该类型下所有订阅的事件信息
         private readonly Dictionary<Type, List<BaseEventInfo>> _typeToEventInfoMap = new Dictionary<Type, List<BaseEventInfo>>();
@@ -31,9 +34,12 @@ namespace Core.GlobalEvent
         /// 私有构造函数（单例模式）
         /// 初始化：注册Update监听，用于每帧处理延迟事件队列
         /// </summary>
-        private EventCenter()
+        private EventCenter(){}
+
+        public override Task InitAsync()
         {
             ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpdate);
+            return Task.CompletedTask;
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core.Net.FrameSync.Interface;
 using Core.Singleton;
 using UnityEngine;
@@ -11,12 +12,20 @@ namespace Core.Net.FrameSync.Manager
     /// </summary>
     public class NetGameManager : SingletonBase<NetGameManager>
     {
+        public override int Priority => -1;
+
         //����������Ŀͻ��˻��棺�����ͻ���ID��ֵ����Ҷ���
         private readonly Dictionary<int, INetObject> _idToPlayerMap = new Dictionary<int, INetObject>();
+        private int priority;
 
         private NetGameManager()
         {
 
+        }
+
+        public override Task InitAsync()
+        {
+            return Task.CompletedTask;
         }
 
         /// <summary>

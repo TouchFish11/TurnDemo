@@ -1,0 +1,16 @@
+{
+    "name": "HotUpdate.Common",
+    "rootNamespace": "",
+    "references": [
+        "GUID:a4a6af4070a88c44295e96802cdc9fef"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

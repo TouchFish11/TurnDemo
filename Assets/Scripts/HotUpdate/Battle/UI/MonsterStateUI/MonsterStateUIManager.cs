@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using Core.Pool;
 using Core.Service;
 using HotUpdate.Battle.Object;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Object;
 
 namespace HotUpdate.Battle.UI.MonsterStateUI
 {

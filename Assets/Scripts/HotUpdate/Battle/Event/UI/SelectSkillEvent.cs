@@ -1,6 +1,10 @@
 using HotUpdate.Battle.Context;
 using HotUpdate.Battle.Object;
 using HotUpdate.Battle.TargetSelect.Strategys;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Event;
+using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.Battle.TargetSelect;
 
 namespace HotUpdate.Battle.Event.UI
 {

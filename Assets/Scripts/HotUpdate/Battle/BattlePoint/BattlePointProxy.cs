@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using Core.Log;
 using Core.Service;
 using HotUpdate.Battle.Context;
-using HotUpdate.Battle.Layer;
 using HotUpdate.Battle.Object;
-using HotUpdate.Battle.Point;
-using HotUpdate.Camera;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Layer;
+using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.Battle.Point;
+using HotUpdate.Core.Camera;
 using UnityEngine;
 
 namespace HotUpdate.Battle.BattlePoint
@@ -32,7 +34,7 @@ namespace HotUpdate.Battle.BattlePoint
         /// <summary>
         /// 场景战斗点
         /// </summary>
-        public Point.BattlePoint BattlePoint { get; } = UnityEngine.Object.FindFirstObjectByType<Point.BattlePoint>();
+        public HotUpdate.Core.Battle.Point.BattlePoint BattlePoint { get; } = UnityEngine.Object.FindFirstObjectByType<HotUpdate.Core.Battle.Point.BattlePoint>();
 
         /// <summary>
         /// 初始化战斗点对象

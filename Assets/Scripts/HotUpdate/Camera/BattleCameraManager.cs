@@ -4,12 +4,8 @@ using Core.Mono;
 using Core.Pool;
 using Core.Service;
 using Core.Singleton;
-using HotUpdate.Battle.Core;
-using HotUpdate.Battle.Event.Turn;
-using HotUpdate.Battle.Input;
-using HotUpdate.Battle.Object;
-using HotUpdate.Battle.TargetSelect;
 using HotUpdate.Config;
+using HotUpdate.Core.Camera;
 using UnityEngine;
 
 namespace HotUpdate.Camera

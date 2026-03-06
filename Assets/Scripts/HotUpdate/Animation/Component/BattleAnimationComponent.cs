@@ -3,8 +3,8 @@ using Core.Serialize.Binary;
 using Core.Service;
 using HotUpdate.Battle.Event.UI;
 using HotUpdate.Battle.Object;
-using HotUpdate.Battle.Skill.Enum;
-using HotUpdate.Component;
+using HotUpdate.Core.Battle.Skill;
+using HotUpdate.Core.Component;
 
 namespace HotUpdate.Animation.Component
 {

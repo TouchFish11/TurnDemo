@@ -4,5 +4,6 @@
     <assembly fullname="Assembly-CSharp-Game-HotUpdate">
         <type fullname="HotUpdate.Battle.BattlePoint.BattlePoint" preserve="all" />
         <type fullname="HotUpdate.Battle.BattlePoint.PointInfo" preserve="all" />
+        <namespace fullname="HotUpdate.Main" preserve="all"/>
     </assembly>
 </linker>

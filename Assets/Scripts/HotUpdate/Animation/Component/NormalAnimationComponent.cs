@@ -1,5 +1,4 @@
 using Core.Components;
-using HotUpdate.Input;
 using UnityEngine;
 
 namespace HotUpdate.Animation.Component

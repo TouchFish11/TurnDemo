@@ -9,6 +9,9 @@ using HotUpdate.Battle.Object;
 using HotUpdate.Battle.Property;
 using HotUpdate.Battle.Toughness.CalcStrategy;
 using HotUpdate.Battle.Toughness.ReduceStrategy;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.Battle.Toughness;
 using HotUpdate.Extension;
 using UnityEngine;
 

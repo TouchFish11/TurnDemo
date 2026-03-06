@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Core.Res;
 using Core.Service;
 using Core.Singleton;
@@ -9,9 +10,18 @@ namespace Core.ScriptableObject
     /// </summary>
     public class ScriptableObjectManager : SingletonBase<ScriptableObjectManager>, IScriptableObjectManager
     {
+        public override int Priority => -1;
+
         private ScriptableObjectManager()
         {
 
+        }
+        
+        
+
+        public override Task InitAsync()
+        {
+            return Task.CompletedTask;
         }
 
         /// <summary>

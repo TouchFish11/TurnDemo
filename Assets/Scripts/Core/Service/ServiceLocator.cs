@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Core.AssetBundles.Management;
 using Core.AssetBundles.Update;
+using Core.AssetBundles.Update.Core;
 using Core.EditorRes;
 using Core.GlobalEvent;
 using Core.HotUpdate;

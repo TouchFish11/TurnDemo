@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Threading;
+using Core.AssetBundles.Update.Core;
 using Core.AssetBundles.Update.Handler;
 using Core.Global;
 using Core.Log;

@@ -1,6 +1,7 @@
 using HotUpdate.Battle.Context;
 using HotUpdate.Battle.Object.Monster.Slime.Skill;
 using HotUpdate.Battle.Skill.Component;
+using HotUpdate.Core.Battle;
 using UnityEngine;
 
 namespace HotUpdate.Battle.Object.Monster.Slime

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Core.AssetBundles.Update.Core;
 using Core.AssetBundles.Update.Enum;
 using Core.AssetBundles.Update.State;
 using Core.Collection;

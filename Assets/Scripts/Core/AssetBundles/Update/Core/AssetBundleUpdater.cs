@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Enum;
-using Core.AssetBundles.Update.State;
 using Core.Log;
 using Core.Pool;
 using Core.Quit;
@@ -11,13 +10,14 @@ using Core.Service;
 using Core.Singleton;
 using Core.Utility;
 
-namespace Core.AssetBundles.Update
+namespace Core.AssetBundles.Update.Core
 {
     /// <summary>
     /// AssetBundle更新管理器
     /// </summary>
     public class AssetBundleUpdater : SingletonBase<AssetBundleUpdater>, IAssetBundleUpdater
     {
+        public override int Priority => -1;
         // 更新上下文
         private ABUpdateContext _updateContext;
         // 更新状态列表
@@ -29,27 +29,22 @@ namespace Core.AssetBundles.Update
         // 对象池管理器接口
         private IPoolManager _poolManager;
         private IQuitHandler _quitHandler;
-        
+
         /// <summary>
         /// 更新阶段
         /// </summary>
         public EUpdatePhase UpdatePhase => _currentUpdateState.UpdatePhase;
-
-        /// <summary>
-        /// 私有构造函数
-        /// </summary>
-        private AssetBundleUpdater()
-        {
-            OnInitialize();
-        }
-
-        private void OnInitialize()
+        
+        private AssetBundleUpdater(){}
+        
+        public override Task InitAsync()
         {
             _poolManager = ServiceLocator.Get<IPoolManager>();
             _quitHandler = ServiceLocator.Get<IQuitHandler>();
             
             // 注册应用退出事件，确保退出时能取消未完成的下载任务
             _quitHandler.OnAppQuit += OnApplicationQuit;
+            return Task.CompletedTask;
         }
 
         /// <summary>

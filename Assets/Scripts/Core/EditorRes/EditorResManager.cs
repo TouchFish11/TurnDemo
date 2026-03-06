@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using Core.Log;
 using Core.Singleton;
 using Core.Utility;
@@ -16,18 +17,22 @@ namespace Core.EditorRes
     /// </summary>
     public class EditorResManager : SingletonBase<EditorResManager>, IEditorResManager
     {
+        public override int Priority => -1;
+
         /// <summary>
         /// 编辑器资源根目录
         /// </summary>
         private const string RootPath = "Assets/Editor/ArtRes/";
         // 文件信息列表
-        private List<FileInfo> _fileInfoList = new List<FileInfo>();
+        private List<FileInfo> _fileInfoList = new();
 
-        private EditorResManager()
+        private EditorResManager(){}
+
+        public override Task InitAsync()
         {
-
+            return Task.CompletedTask;
         }
-        
+
         public T LoadEditorAsset<T>(string assetName, string suffixName = "") where T : Object
         {
 #if UNITY_EDITOR

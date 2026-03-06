@@ -18,7 +18,9 @@ MonoBehaviour:
   il2cppPlusRepoURL: https://gitee.com/focus-creative-games/il2cpp_plus
   hotUpdateAssemblyDefinitions:
   - {fileID: 5897886265953266890, guid: f5a55acf87783a04789ef460f6045f4c, type: 3}
-  - {fileID: 5897886265953266890, guid: a02ace6229f1d5d43a1e26fa1f32162b, type: 3}
+  - {fileID: 5897886265953266890, guid: 2d6b82cbb58bfe242819a76942417efe, type: 3}
+  - {fileID: 5897886265953266890, guid: 8c083432f5a27e446bf2cd94f7a39a12, type: 3}
+  - {fileID: 5897886265953266890, guid: db61124f449342c4a9aa53163c6ebb10, type: 3}
   hotUpdateAssemblies: []
   preserveHotUpdateAssemblies: []
   hotUpdateDllCompileOutputRootDir: HybridCLRData/HotUpdateDlls

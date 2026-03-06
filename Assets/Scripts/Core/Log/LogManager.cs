@@ -20,8 +20,9 @@ namespace Core.Log
     /// </summary>
     public class LogManager : SingletonBase<LogManager>, ILogManager
     {
+        public override int Priority => -1;
         // 日志队列
-        private readonly ConcurrentQueue<string> _logs = new ConcurrentQueue<string>();
+        private readonly ConcurrentQueue<string> _logs = new();
         // 日志线程
         private Thread logThread;
         // 是否正在运行日志线程
@@ -29,21 +30,27 @@ namespace Core.Log
         // 日志唯一ID
         private static ulong Id;
         // 日志字符串构建器
-        private readonly StringBuilder sb = new StringBuilder();
+        private readonly StringBuilder sb = new();
+
+        private int priority;
+
         // 日志保存路径
         private static string LogSavePath;
         // 写入日志最大间隔时间
         private static ushort WriteLogMaxIntervalTime;
 
-        private LogManager()
+        private LogManager(){}
+
+        public override Task InitAsync()
         {
             ServiceLocator.Get<IQuitHandler>().OnAppQuit += OnApplicationQuit;
             LogSavePath = PathUtility.GetLogLocalSavePath(FileUtility.LocalLogFileName);
             WriteLogMaxIntervalTime = GlobalSettings.Instance.writeLogMaxIntervalTime;
             InitLogFile();
             StartLogWrite();
+            return Task.CompletedTask;
         }
-
+        
         /// <summary>
         /// 打印
         /// </summary>
@@ -104,7 +111,7 @@ namespace Core.Log
         /// <summary>
         /// 初始化日志文件
         /// </summary>
-        private void InitLogFile()
+        private static void InitLogFile()
         {
             if (!File.Exists(LogSavePath))
             {

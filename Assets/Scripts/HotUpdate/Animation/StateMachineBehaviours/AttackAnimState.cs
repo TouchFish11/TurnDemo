@@ -1,5 +1,3 @@
-using HotUpdate.Main;
-using HotUpdate.Main.Move;
 using UnityEngine;
 
 namespace HotUpdate.Animation.StateMachineBehaviours

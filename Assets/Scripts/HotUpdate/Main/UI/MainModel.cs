@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Core.Loader.Object;
 using Core.Service;
 using Core.UI.MVC;
-using HotUpdate.Interact.UI;
 
 namespace HotUpdate.Main.UI
 {

@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Core.Serialize.Json;
 using Core.Service;
 using Core.Singleton;
@@ -6,19 +7,23 @@ namespace Core.Global
 {
     public class GameSettingManager : SingletonBase<GameSettingManager>, IGameSettingManager
     {
-        // ��Ϸ��������
+        public override int Priority => -1;
+        
+        // 
         private GameSettingData gameSettingData;
 
         /// <summary>
-        /// �Ի��ı����ֻ����ñ仯�¼�
+        /// 
         /// </summary>
         public event GameSettingEvent<bool> OnEnableTypewriterChanged;
-
-        private GameSettingManager()
+        
+        private GameSettingManager(){}
+        
+        public override Task InitAsync()
         {
-
+            return Task.CompletedTask;
         }
-
+        
         /// <summary>
         /// ��ʼ��
         /// </summary>

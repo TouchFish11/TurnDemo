@@ -1,4 +1,5 @@
 using System.IO;
+using Core.AssetBundles.Update.Core;
 using Core.Log;
 using Core.Service;
 using UnityEngine.Networking;

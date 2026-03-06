@@ -13,7 +13,9 @@ using HotUpdate.Battle.ResponsibilityChain.DamageChain;
 using HotUpdate.Battle.Skill.Component;
 using HotUpdate.Battle.Toughness;
 using HotUpdate.Config;
-using HotUpdate.VFX;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Command;
+using HotUpdate.Core.VFX;
 using UnityEngine;
 
 namespace HotUpdate.Battle.Object

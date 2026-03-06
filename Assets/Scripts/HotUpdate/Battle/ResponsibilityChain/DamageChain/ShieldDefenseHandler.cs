@@ -1,5 +1,7 @@
-using HotUpdate.Battle.Damage.Data;
 using HotUpdate.Battle.Property;
+using HotUpdate.Core.Battle.Damage;
+using HotUpdate.Core.Battle.Damage.Data;
+using HotUpdate.Core.Battle.Property;
 
 namespace HotUpdate.Battle.ResponsibilityChain.DamageChain
 {

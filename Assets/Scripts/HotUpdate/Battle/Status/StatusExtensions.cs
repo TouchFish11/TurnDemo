@@ -1,3 +1,5 @@
+using HotUpdate.Core.Battle.Status;
+
 namespace HotUpdate.Battle.Status
 {
     /// <summary>

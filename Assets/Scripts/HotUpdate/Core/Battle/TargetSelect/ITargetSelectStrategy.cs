@@ -1,0 +1,26 @@
+using System.Collections.Generic;
+using HotUpdate.Core.Battle.Object;
+
+namespace HotUpdate.Core.Battle.TargetSelect
+{
+    /// <summary>
+    /// 技能目标选择策略
+    /// </summary>
+    public interface ITargetSelectStrategy
+    {
+        /// <summary>
+        /// 优先级
+        /// 越高越先执行
+        /// </summary>
+        public int Priority { get; }
+
+        /// <summary>
+        /// 选择主目标
+        /// </summary>
+        /// <param name="targets"></param>
+        /// <param name="caster"></param>
+        /// <param name="skillInfo"></param>
+        /// <returns></returns>
+        IBattleEntityObject SelectMainTarget(List<IBattleEntityObject> targets, IBattleEntityObject caster, SkillInfo skillInfo);
+    }
+}

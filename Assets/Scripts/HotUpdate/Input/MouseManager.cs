@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core.GlobalEvent;
 using Core.GlobalEvent.Events;
 using Core.Log;
 using Core.Service;
 using Core.Singleton;
-using HotUpdate.Main.UI;
+using HotUpdate.Core.Input;
 using UnityEngine;
 
 namespace HotUpdate.Input
@@ -16,21 +17,24 @@ namespace HotUpdate.Input
     /// </summary>
     public class MouseManager : SingletonBase<MouseManager>, IMouseManager
     {
+        public override int Priority => -1;
         // 默认鼠标锁定模式（锁定到屏幕中心，无法拖动）
         private const CursorLockMode defaultLockMode = CursorLockMode.Locked;
         // 默认鼠标可见性（隐藏）
         private const bool defaultVisible = false;
         // 记录鼠标显示状态的请求来源标识栈，栈顶元素为当前生效的请求来源，保证"最后请求显示的来源，最先释放"的逻辑
         private readonly Stack<string> mouseVisibleSources = new();
-
-        /// <summary>
-        /// 私有构造函数（单例模式）
-        /// 订阅鼠标可见性变更事件，初始化事件监听
-        /// </summary>
+        
         private MouseManager()
+        {
+
+        }
+
+        public override Task InitAsync()
         {
             ServiceLocator.Get<IEventCenter>().SubscribeEvent<MouseVisibleChangedEvent>(OnMouseVisibleChangedEvent);
             UpdateMouseState();
+            return Task.CompletedTask;
         }
 
         /// <summary>

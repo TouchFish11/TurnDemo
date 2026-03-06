@@ -2,7 +2,7 @@ using System;
 using Core.Log;
 using Core.Service;
 using Core.UI;
-using HotUpdate.Dialogue;
+using HotUpdate.Core.Dialogue;
 
 namespace HotUpdate.Main.UI.Logic
 {

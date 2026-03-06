@@ -310,9 +310,9 @@ MonoBehaviour:
   - assetBundleName: scene
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\Scene\BeginScene.unity
-      size: 21522
+      size: 9107
       name: BeginScene.unity
-      hash: ef511e9f6d55e79263f21d1c031f5c27cd67cea41502c909e3306726c0740194
+      hash: 7e7fe7214890cebcd3afa352e6931d8c442eb7a5924c940efee25ca180398f8e
     - assetPath: Assets\Editor\ArtRes\Scene\LevelScene.unity
       size: 107335
       name: LevelScene.unity

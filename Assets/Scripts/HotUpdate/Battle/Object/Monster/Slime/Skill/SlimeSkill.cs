@@ -8,7 +8,9 @@ using HotUpdate.Animation.Component;
 using HotUpdate.Battle.Context;
 using HotUpdate.Battle.Skill.Base;
 using HotUpdate.Config;
-using HotUpdate.VFX;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.VFX;
 using UnityEngine;
 
 namespace HotUpdate.Battle.Object.Monster.Slime.Skill

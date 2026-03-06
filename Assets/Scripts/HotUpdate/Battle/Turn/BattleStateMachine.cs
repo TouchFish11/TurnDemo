@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using HotUpdate.Battle.Context;
 using HotUpdate.Battle.StateMeachine;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Turn;
 
 namespace HotUpdate.Battle.Turn
 {

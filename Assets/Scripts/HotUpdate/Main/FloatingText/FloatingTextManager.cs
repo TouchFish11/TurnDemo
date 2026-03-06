@@ -5,8 +5,9 @@ using Core.Log;
 using Core.Mono;
 using Core.Service;
 using Core.Singleton;
-using HotUpdate.Battle.Object;
 using HotUpdate.Config;
+using HotUpdate.Core.Interact;
+using HotUpdate.Core.Main;
 using UnityEngine;
 
 namespace HotUpdate.Main.FloatingText
@@ -20,9 +21,9 @@ namespace HotUpdate.Main.FloatingText
         private readonly IMonoAdapter _monoAdapter = ServiceLocator.Get<IMonoAdapter>();
         
         // 存储需要显示浮动文本的NPC列表
-        private readonly List<NpcObject> npcObjects = new();
+        private readonly List<INpcObject> npcObjects = new();
         // 映射NPC与对应的浮动文本对象，便于快速查找和管理
-        private readonly Dictionary<NpcObject, FloatingTextObj> npcToTextMap = new();
+        private readonly Dictionary<INpcObject, FloatingTextObj> npcToTextMap = new();
         // 玩家对象（用于计算距离）
         private Transform player;
         // 浮动文本最大显示距离：超过该距离则隐藏文本
@@ -40,12 +41,12 @@ namespace HotUpdate.Main.FloatingText
         /// 添加需要管理浮动文本的NPC
         /// </summary>
         /// <param name="npcObject">目标NPC对象</param>
-        public void AddNpc(NpcObject npcObject)
+        public void AddNpc(INpcObject npcObject)
         {
             npcObjects.Add(npcObject);
         }
 
-        public void RemoveNpc(NpcObject npcObject)
+        public void RemoveNpc(INpcObject npcObject)
         {
             npcObjects.Remove(npcObject);
         }
@@ -72,7 +73,7 @@ namespace HotUpdate.Main.FloatingText
                 foreach (var npcObject in npcObjects)
                 {
                     // NPC在显示距离内：显示浮动文本
-                    if (Vector3.Distance(npcObject.transform.position, player.transform.position) <= MaxDisplayDistance)
+                    if (Vector3.Distance(npcObject.Transform.position, player.transform.position) <= MaxDisplayDistance)
                     {
                         // 未显示文本时，创建并初始化浮动文本
                         if (!npcObject.IsShowFloatingText)
@@ -81,7 +82,7 @@ namespace HotUpdate.Main.FloatingText
                             // 从对象池/资源加载浮动文本对象
                             var floatingTextObj = await _prefabLoader.GetObjectAsync<FloatingTextObj>(AbKeyCollection.Prefab, ResKeyCollection.UI_3D_FloatingText, null);
                             // 初始化浮动文本（绑定NPC位置、玩家视角、显示名称/身份）
-                            floatingTextObj.Init(npcObject.transform, player, npcObject.NpcInfo.f_speakerName, npcObject.NpcInfo.f_identity);
+                            floatingTextObj.Init(npcObject.Transform, player, npcObject.NpcInfo.f_speakerName, npcObject.NpcInfo.f_identity);
                             // 将NPC与文本对象映射存储
                             npcToTextMap.TryAdd(npcObject, floatingTextObj);
                         }

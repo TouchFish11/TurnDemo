@@ -5,6 +5,12 @@
       "size": 24258813,
       "hash": "75fc3faafb6aff4e42f1594c090730a6b5b5f6a55214b4e4c71a4f63501968c6",
       "dependencies": []
+    },
+    "hotupdate.assetbundle": {
+      "name": "hotupdate.assetbundle",
+      "size": 225409,
+      "hash": "69db8cb372e59c3b0be7a7eb04e78caf35e98d77bbee20966f82e945904ba9f0",
+      "dependencies": []
     }
   }
 }

@@ -3,11 +3,14 @@ using Core.Service;
 using Core.UI;
 using Core.Utility;
 using HotUpdate.Battle.Context;
-using HotUpdate.Battle.Layer;
 using HotUpdate.Battle.Status;
 using HotUpdate.Battle.Toughness;
 using HotUpdate.Battle.UI.Base;
-using HotUpdate.Camera;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Command;
+using HotUpdate.Core.Battle.Layer;
+using HotUpdate.Core.Battle.Toughness;
+using HotUpdate.Core.Camera;
 using UnityEngine;
 
 namespace HotUpdate.Battle.Command

@@ -1,0 +1,19 @@
+{
+    "name": "HotUpdate.Interact",
+    "rootNamespace": "",
+    "references": [
+        "GUID:a4a6af4070a88c44295e96802cdc9fef",
+        "GUID:ba37b622f9f82464bb32510ffa5ae889",
+        "GUID:2d6b82cbb58bfe242819a76942417efe",
+        "GUID:675974fcae778bd478a120c720691f96"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

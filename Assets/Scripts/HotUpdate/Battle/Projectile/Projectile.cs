@@ -3,7 +3,8 @@ using System.Collections;
 using Core.Service;
 using Core.Utility;
 using HotUpdate.Battle.Damage;
-using HotUpdate.VFX;
+using HotUpdate.Core.Battle.Damage;
+using HotUpdate.Core.VFX;
 using UnityEngine;
 
 namespace HotUpdate.Battle.Projectile
@@ -13,7 +14,7 @@ namespace HotUpdate.Battle.Projectile
     /// 负责抛射物的基础初始化、粒子系统管理、伤害计算依赖注入等核心基础逻辑
     /// </summary>
     [RequireComponent(typeof(ParticleSystem))] // 强制挂载粒子系统组件，用于抛射物视觉表现
-    public abstract class Projectile : MonoBehaviour
+    public abstract class Projectile : MonoBehaviour, IProjectile
     {
         /// <summary>
         /// 视觉特效信息（存储抛射物对应的特效配置）

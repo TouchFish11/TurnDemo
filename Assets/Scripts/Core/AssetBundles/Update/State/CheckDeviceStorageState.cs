@@ -2,6 +2,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Collection;
+using Core.AssetBundles.Update.Core;
 using Core.AssetBundles.Update.Enum;
 using Core.AssetBundles.Update.Exception;
 using Core.Pool;

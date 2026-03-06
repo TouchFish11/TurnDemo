@@ -1,7 +1,10 @@
 using Core.Pool;
 using HotUpdate.Battle.Context;
 using HotUpdate.Battle.Object;
-using HotUpdate.Battle.Status.Data;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.Battle.Status;
+using HotUpdate.Core.Battle.Status.Data;
 
 namespace HotUpdate.Battle.Status
 {

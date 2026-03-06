@@ -14,6 +14,8 @@ namespace Core.Serialize.Json
     /// </summary>
     public class JsonManager : SingletonBase<JsonManager>, IJsonManager
     {
+        public override int Priority => -1;
+
         public static JsonSerializerSettings DefaultSettings => new()
         {
             TypeNameHandling = TypeNameHandling.None,
@@ -33,7 +35,12 @@ namespace Core.Serialize.Json
         {
             
         }
-        
+
+        public override Task InitAsync()
+        {
+            return Task.CompletedTask;
+        }
+
         public T FromJson<T>(string json, E_JsonType jsonType = E_JsonType.Newtonsoft, JsonSerializerSettings settings = null) where T : new()
         {
             // 空值校验：JSON字符串为空时返回默认实例

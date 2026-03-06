@@ -14,15 +14,23 @@ namespace Core.Serialize.Binary
     /// </summary>
     public class BinaryDataManager : SingletonBase<BinaryDataManager>, IBinaryDataManager
     {
+        public override int Priority => -1;
+
         // 配置加载类型到加载器的映射
         private readonly Dictionary<EConfigLoadType, IConfigLoader> typeToLoaderMap = new();
 
         private BinaryDataManager()
         {
+
+        }
+
+        public override Task InitAsync()
+        {
             typeToLoaderMap.Add(EConfigLoadType.Excel, new ExcelConfigLoader());
             typeToLoaderMap.Add(EConfigLoadType.Editor, new EditorConfigLoader());
+            return Task.CompletedTask;
         }
-        
+
         public async Task LoadConfigAsync(string abName)
         {
             foreach (var loader in typeToLoaderMap.Values)

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core.HotUpdate;
 using Core.Log;
 using Core.Service;
@@ -14,14 +15,22 @@ namespace Core.Reflection
     /// </summary>
     public class FactoryManager : SingletonBase<FactoryManager> , IFactoryManager
     {
+        public override int Priority => -1;
+
         // 工厂实例类型Type到工厂接口的映射
         private readonly Dictionary<TypeIdentifier, IFactory> typeToFactoryMap = new();
+        private int priority;
 
         private FactoryManager()
         {
 
         }
-        
+
+        public override Task InitAsync()
+        {
+            return Task.CompletedTask;
+        }
+
         /// <summary>
         /// 初始化框架工厂
         /// </summary>

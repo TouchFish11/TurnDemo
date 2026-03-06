@@ -6,8 +6,8 @@ using Core.Serialize.Binary;
 using Core.Service;
 using Core.Singleton;
 using Core.Utility;
-using HotUpdate.Extension;
-using HotUpdate.Main.Manager;
+using HotUpdate.Core;
+using HotUpdate.Core.Task;
 using HotUpdate.Task.Data;
 using HotUpdate.Task.Event;
 
@@ -19,6 +19,7 @@ namespace HotUpdate.Task.Core
     /// </summary>
     public class TaskManager : SingletonBase<TaskManager>, ITaskManager
     {
+        public override int Priority => -1;
         // 当前追踪的任务基础信息（配置表数据）
         private TaskInfo currentTaskInfo;
         // 当前任务的完成条件信息（配置表数据）
@@ -43,6 +44,11 @@ namespace HotUpdate.Task.Core
         private TaskManager()
         {
 
+        }
+
+        public override System.Threading.Tasks.Task InitAsync()
+        {
+            return  System.Threading.Tasks.Task.CompletedTask;
         }
 
         /// <summary>

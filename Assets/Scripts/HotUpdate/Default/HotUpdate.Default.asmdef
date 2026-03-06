@@ -1,0 +1,20 @@
+{
+    "name": "HotUpdate.Default",
+    "rootNamespace": "",
+    "references": [
+        "GUID:a4a6af4070a88c44295e96802cdc9fef",
+        "GUID:8c083432f5a27e446bf2cd94f7a39a12",
+        "GUID:ba37b622f9f82464bb32510ffa5ae889",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:aa777688f4b6528469faa748ab27c30a"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

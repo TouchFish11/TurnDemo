@@ -1,6 +1,7 @@
 using HotUpdate.Battle.Context;
 using HotUpdate.Battle.Object.Role.Priest.Skill;
 using HotUpdate.Battle.Skill.Component;
+using HotUpdate.Core.Battle;
 
 namespace HotUpdate.Battle.Object.Role.Priest
 {

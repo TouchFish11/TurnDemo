@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core.Mono;
 using Core.Pool;
 using Core.Service;
@@ -16,6 +17,7 @@ namespace Core.Time
     /// </summary>
     public class TimerManager : SingletonBase<TimerManager>, ITimerManager
     {
+        public override int Priority => -1;
         // 存储受游戏时间影响的定时器字典（Key：定时器唯一ID，Value：定时器对象）
         private readonly Dictionary<int, Timer> _timerDic = new Dictionary<int, Timer>();
         // 存储不受游戏时间影响的定时器字典（Key：定时器唯一ID，Value：定时器对象）
@@ -38,16 +40,18 @@ namespace Core.Time
         private readonly WaitForSecondsRealtime _WaitForSecondsRealTime = new WaitForSecondsRealtime(IntervalTime);
         // 当前全局时间流速（控制TimeScale）
         private E_TimeRate _timeRate;
-
-        /// <summary>
-        /// 私有构造函数（单例模式）
-        /// 初始化时间流速并启动定时器驱动协程
-        /// </summary>
+        
         private TimerManager()
+        {
+
+        }
+
+        public override Task InitAsync()
         {
             // 初始化时间流速为正常速度
             _timeRate = E_TimeRate.Normal;
             Start();
+            return Task.CompletedTask;
         }
 
         /// <summary>

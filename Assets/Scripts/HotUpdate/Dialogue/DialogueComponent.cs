@@ -1,11 +1,8 @@
 using Core.Components;
 using Core.Input.ActionAsset;
 using Core.Service;
-using HotUpdate.Animation;
-using HotUpdate.Animation.Component;
-using HotUpdate.Component;
-using HotUpdate.Input;
-using HotUpdate.Main.Move;
+using HotUpdate.Core.Dialogue;
+using HotUpdate.Core.Main.Object;
 
 namespace HotUpdate.Dialogue
 {

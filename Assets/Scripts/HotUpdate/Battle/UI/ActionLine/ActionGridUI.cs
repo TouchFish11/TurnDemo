@@ -2,6 +2,8 @@ using Core.Mono;
 using Core.Service;
 using Core.UI;
 using HotUpdate.Battle.Object;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Object;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

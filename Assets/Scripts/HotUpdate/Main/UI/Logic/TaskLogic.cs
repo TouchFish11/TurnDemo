@@ -1,6 +1,5 @@
 using Core.Service;
-using HotUpdate.Task.Core;
-using HotUpdate.Task.Data;
+using HotUpdate.Core.Task;
 
 namespace HotUpdate.Main.UI.Logic
 {

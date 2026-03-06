@@ -56,7 +56,7 @@ namespace Core.Loader.Object
         /// <param name="worldPosStay"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public async Task<T> GetObjectAsync<T>(string abName, string assetName, Transform parent, bool worldPosStay = false) where T : Component
+        public async Task<T> GetObjectAsync<T>(string abName, string assetName, Transform parent, bool worldPosStay = false) where T : class
         {
             return await GetObjectAsync<T>(abName, assetName, parent, Vector3.zero, Quaternion.identity, worldPosStay);
         }
@@ -72,13 +72,13 @@ namespace Core.Loader.Object
         /// <param name="worldPosStay"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public async Task<T> GetObjectAsync<T>(string abName, string assetName, Transform parent, Vector3 pos, Quaternion rot, bool worldPosStay = false) where T : Component
+        public async Task<T> GetObjectAsync<T>(string abName, string assetName, Transform parent, Vector3 pos, Quaternion rot, bool worldPosStay = false) where T : class
         {
             var instanceObj = await GetGameObjectAsyncInternal(abName, assetName);
             // 设置父对象、位置
             instanceObj.transform.SetParent(parent, worldPosStay);
             instanceObj.transform.SetLocalPositionAndRotation(pos, rot);
-            return instanceObj.TryGetComponent(out T component) ? component : instanceObj.AddComponent<T>();
+            return instanceObj.GetComponent<T>();
         }
 
         public Task<GameObject> GetGameObjectAsync(string abName, string assetName, Transform parent, bool worldPosStay = false)

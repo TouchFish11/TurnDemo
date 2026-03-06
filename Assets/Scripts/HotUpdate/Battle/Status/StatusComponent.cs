@@ -3,8 +3,11 @@ using Core.Components;
 using HotUpdate.Battle.Core;
 using HotUpdate.Battle.Event.UI;
 using HotUpdate.Battle.Object;
-using HotUpdate.Battle.Status.Data;
 using HotUpdate.Battle.Status.Enum;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.Battle.Status;
+using HotUpdate.Core.Battle.Status.Data;
 
 namespace HotUpdate.Battle.Status
 {

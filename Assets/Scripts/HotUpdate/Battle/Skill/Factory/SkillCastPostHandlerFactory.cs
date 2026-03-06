@@ -4,6 +4,7 @@ using Core.Reflection;
 using Core.Service;
 using Core.Utility;
 using HotUpdate.Battle.Skill.Handler;
+using HotUpdate.Core.Battle.Skill;
 
 namespace HotUpdate.Battle.Skill.Factory
 {

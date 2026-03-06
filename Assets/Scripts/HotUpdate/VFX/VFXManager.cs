@@ -6,8 +6,8 @@ using Core.Mono;
 using Core.Pool;
 using Core.Service;
 using Core.Singleton;
-using HotUpdate.Battle.Projectile;
 using HotUpdate.Config;
+using HotUpdate.Core.VFX;
 using UnityEngine;
 
 namespace HotUpdate.VFX
@@ -20,18 +20,23 @@ namespace HotUpdate.VFX
     /// </summary>
     public class VFXManager : SingletonBase<VFXManager>, IVFXManager
     {
+        public override int Priority => -1;
+
         private readonly IMonoAdapter _monoAdapter = ServiceLocator.Get<IMonoAdapter>();
         private readonly IPrefabLoader _prefabLoader = ServiceLocator.Get<IPrefabLoader>();
         // 存储当前活跃的VFX信息列表
         private readonly List<VFXInfo> _activeVfxs = new();
-
-        /// <summary>
-        /// 私有构造函数（单例模式），注册Update监听
-        /// </summary>
+        
         private VFXManager()
+        {
+
+        }
+
+        public override Task InitAsync()
         {
             // 注册帧更新监听，用于检测VFX状态
             _monoAdapter.AddUpdateListener(OnUpdate);
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -79,7 +84,7 @@ namespace HotUpdate.VFX
                 }
 
                 // 如果VFX挂载了投射物组件，初始化投射物数据
-                if (vfxObj.TryGetComponent<Projectile>(out var projectile))
+                if (vfxObj.TryGetComponent<IProjectile>(out var projectile))
                 {
                     projectile.Init(data, vFXInfo);
                 }

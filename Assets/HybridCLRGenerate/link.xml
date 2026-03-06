@@ -1,38 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <linker>
-  <assembly fullname="Assembly-CSharp-Config">
-    <type fullname="ActivityInfo" preserve="all" />
-    <type fullname="ActivityInfoContainer" preserve="all" />
-    <type fullname="BranchInfo" preserve="all" />
-    <type fullname="BranchInfoContainer" preserve="all" />
-    <type fullname="Config.ActivityConfigSO.ActivityConfig" preserve="all" />
-    <type fullname="DialogueInfo" preserve="all" />
-    <type fullname="DialogueInfoContainer" preserve="all" />
-    <type fullname="ItemInfo" preserve="all" />
-    <type fullname="ItemInfoContainer" preserve="all" />
-    <type fullname="MonsterInfo" preserve="all" />
-    <type fullname="MonsterInfoContainer" preserve="all" />
-    <type fullname="NpcInfo" preserve="all" />
-    <type fullname="NpcInfoContainer" preserve="all" />
-    <type fullname="RoleInfo" preserve="all" />
-    <type fullname="RoleInfoContainer" preserve="all" />
-    <type fullname="SkillInfo" preserve="all" />
-    <type fullname="SkillInfoContainer" preserve="all" />
-    <type fullname="StatusInfo" preserve="all" />
-    <type fullname="StatusInfoContainer" preserve="all" />
-    <type fullname="TaskConditionInfo" preserve="all" />
-    <type fullname="TaskConditionInfoContainer" preserve="all" />
-    <type fullname="TaskInfo" preserve="all" />
-    <type fullname="TaskInfoContainer" preserve="all" />
-  </assembly>
-  <assembly fullname="Assembly-CSharp-Core">
+  <assembly fullname="CoreModule">
     <type fullname="Core.AssetBundles.Management.IAssetBundleManager" preserve="all" />
     <type fullname="Core.AssetBundles.Update.ABUpdateContext" preserve="all" />
     <type fullname="Core.AssetBundles.Update.Enum.EUpdatePhase" preserve="all" />
     <type fullname="Core.AssetBundles.Update.IAssetBundleUpdater" preserve="all" />
     <type fullname="Core.AssetBundles.Update.UpdateResult" preserve="all" />
     <type fullname="Core.AssetBundles.Update.UpdateResult/EUpdateError" preserve="all" />
+    <type fullname="Core.Collection.CollectionUtil" preserve="all" />
     <type fullname="Core.Collection.Collection`2" preserve="all" />
+    <type fullname="Core.Collection.Generic.UniList`1" preserve="all" />
     <type fullname="Core.Components.ComponentIdAttribute" preserve="all" />
     <type fullname="Core.Components.EntityProperty" preserve="all" />
     <type fullname="Core.Components.IComponent" preserve="all" />
@@ -40,16 +17,18 @@
     <type fullname="Core.Global.GameSettingEvent`1" preserve="all" />
     <type fullname="Core.Global.GameSettingManager" preserve="all" />
     <type fullname="Core.GlobalEvent.Event" preserve="all" />
+    <type fullname="Core.GlobalEvent.Events.CloseViewEvent" preserve="all" />
     <type fullname="Core.GlobalEvent.Events.GlobalMessageEvent" preserve="all" />
     <type fullname="Core.GlobalEvent.Events.MouseVisibleChangedEvent" preserve="all" />
+    <type fullname="Core.GlobalEvent.Events.OpenViewEvent" preserve="all" />
     <type fullname="Core.GlobalEvent.IEvent" preserve="all" />
     <type fullname="Core.GlobalEvent.IEventCenter" preserve="all" />
     <type fullname="Core.HotUpdate.IHotUpdateManager" preserve="all" />
     <type fullname="Core.Input.ActionAsset.IInputSystem" preserve="all" />
     <type fullname="Core.Input.ActionAsset.MainActionMapDataContainer" preserve="all" />
     <type fullname="Core.Input.CoreListen.InputDataContainer" preserve="all" />
+    <type fullname="Core.Loader.Object.IPrefabLoader" preserve="all" />
     <type fullname="Core.Loader.Sprite.ISpriteLoader" preserve="all" />
-    <type fullname="Core.Loader.UI.IUiLoader" preserve="all" />
     <type fullname="Core.Log.LogManager" preserve="all" />
     <type fullname="Core.Mono.IMonoAdapter" preserve="all" />
     <type fullname="Core.Music.MusicData" preserve="all" />
@@ -68,10 +47,6 @@
     <type fullname="Core.Serialize.Binary.IConfigLoader" preserve="all" />
     <type fullname="Core.Serialize.Json.E_JsonType" preserve="all" />
     <type fullname="Core.Serialize.Json.IJsonManager" preserve="all" />
-    <type fullname="Core.Service.Login.ILoginService" preserve="all" />
-    <type fullname="Core.Service.Login.LoginData" preserve="all" />
-    <type fullname="Core.Service.Login.LoginService" preserve="all" />
-    <type fullname="Core.Service.ServerManager" preserve="all" />
     <type fullname="Core.Service.ServiceLocator" preserve="all" />
     <type fullname="Core.Singleton.SingletonAutoMono`1" preserve="all" />
     <type fullname="Core.Singleton.SingletonBase`1" preserve="all" />
@@ -105,9 +80,14 @@
   </assembly>
   <assembly fullname="Newtonsoft.Json">
     <type fullname="Newtonsoft.Json.Formatting" preserve="all" />
+    <type fullname="Newtonsoft.Json.JsonObjectAttribute" preserve="all" />
     <type fullname="Newtonsoft.Json.JsonPropertyAttribute" preserve="all" />
     <type fullname="Newtonsoft.Json.JsonSerializerSettings" preserve="all" />
+    <type fullname="Newtonsoft.Json.MemberSerialization" preserve="all" />
     <type fullname="Newtonsoft.Json.TypeNameHandling" preserve="all" />
+  </assembly>
+  <assembly fullname="Shared">
+    <type fullname="Shared.ActivityConfigSO.ActivityConfig" preserve="all" />
   </assembly>
   <assembly fullname="Unity.InputSystem">
     <type fullname="UnityEngine.InputSystem.Controls.ButtonControl" preserve="all" />
@@ -196,7 +176,6 @@
     <type fullname="UnityEngine.UI.Button" preserve="all" />
     <type fullname="UnityEngine.UI.Graphic" preserve="all" />
     <type fullname="UnityEngine.UI.Image" preserve="all" />
-    <type fullname="UnityEngine.UI.InputField" preserve="all" />
     <type fullname="UnityEngine.UI.RawImage" preserve="all" />
     <type fullname="UnityEngine.UI.ScrollRect" preserve="all" />
     <type fullname="UnityEngine.UI.Selectable" preserve="all" />
@@ -219,7 +198,6 @@
     <type fullname="System.Attribute" preserve="all" />
     <type fullname="System.AttributeTargets" preserve="all" />
     <type fullname="System.AttributeUsageAttribute" preserve="all" />
-    <type fullname="System.Boolean" preserve="all" />
     <type fullname="System.Byte" preserve="all" />
     <type fullname="System.CodeDom.Compiler.GeneratedCodeAttribute" preserve="all" />
     <type fullname="System.Collections.Generic.CollectionExtensions" preserve="all" />
@@ -271,15 +249,11 @@
     <type fullname="System.NotImplementedException" preserve="all" />
     <type fullname="System.NotSupportedException" preserve="all" />
     <type fullname="System.Object" preserve="all" />
-    <type fullname="System.ObsoleteAttribute" preserve="all" />
     <type fullname="System.ParamArrayAttribute" preserve="all" />
     <type fullname="System.Predicate`1" preserve="all" />
     <type fullname="System.Reflection.Assembly" preserve="all" />
-    <type fullname="System.Reflection.BindingFlags" preserve="all" />
     <type fullname="System.Reflection.CustomAttributeExtensions" preserve="all" />
     <type fullname="System.Reflection.MemberInfo" preserve="all" />
-    <type fullname="System.Reflection.MethodBase" preserve="all" />
-    <type fullname="System.Reflection.MethodInfo" preserve="all" />
     <type fullname="System.Reflection.PropertyInfo" preserve="all" />
     <type fullname="System.Runtime.CompilerServices.AsyncStateMachineAttribute" preserve="all" />
     <type fullname="System.Runtime.CompilerServices.AsyncTaskMethodBuilder" preserve="all" />

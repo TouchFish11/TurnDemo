@@ -2,10 +2,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.Pool;
 using Core.Service;
-using HotUpdate.Battle.Context;
-using HotUpdate.Battle.Layer;
 using HotUpdate.Battle.Object;
-using HotUpdate.Battle.Point;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Layer;
+using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.Battle.Point;
+using HotUpdate.Core.Battle.Turn;
 using UnityEngine;
 
 namespace HotUpdate.Battle.Turn
@@ -13,7 +15,7 @@ namespace HotUpdate.Battle.Turn
     /// <summary>
     /// 回合创建器
     /// </summary>
-    public class TurnCreator : IPoolData
+    public class TurnCreator : IPoolData, ITurnCreator
     {
         // 战斗上下文
         private IBattleContext _context;
@@ -86,7 +88,8 @@ namespace HotUpdate.Battle.Turn
                 var roleId = roleIds[i];
                 var transform = playerTrans[i];
                 // 创建角色对象
-                var playerObject = await RoleBuilder.CreateRole(roleId, transform);
+
+                var playerObject = await ServiceLocator.Get<RoleFactory>().CreateRole(roleId, transform);
                 // 注入上下文，供角色内部组件使用
                 playerObject.BattleInit(roleId, _context);
                 // 记录角色所在的位置索引
@@ -115,7 +118,7 @@ namespace HotUpdate.Battle.Turn
                     var monsterId = monsterIds[i];
                     var transform = monsterTrans[i];
                     // 创建怪物对象
-                    var monsterObject = await MonsterBuilder.CreateMonster(monsterId, transform);
+                    var monsterObject = await ServiceLocator.Get<MonsterFactory>().CreateMonster(monsterId, transform);
                     // 设置名称
                     monsterObject.GameObject.name = $"{monsterObject.GameObject.name}_{i}";
                     // 注入上下文，供角色内部组件使用
@@ -133,7 +136,7 @@ namespace HotUpdate.Battle.Turn
                 var monsterId = monsterIds[0];
                 var transform = monsterTrans[2];
                 // 创建怪物对象
-                var monsterObject = await MonsterBuilder.CreateMonster(monsterId, transform);
+                var monsterObject = await ServiceLocator.Get<MonsterFactory>().CreateMonster(monsterId, transform);
                 // 设置名称
                 monsterObject.GameObject.name = $"{monsterObject.GameObject.name}_{2}";
                 // 注入上下文，供角色内部组件使用
@@ -152,7 +155,7 @@ namespace HotUpdate.Battle.Turn
                     var monsterId = monsterIds[i];
                     var transform = monsterTrans[i + 1];
                     // 创建怪物对象
-                    var monsterObject = await MonsterBuilder.CreateMonster(monsterId, transform);
+                    var monsterObject = await ServiceLocator.Get<MonsterFactory>().CreateMonster(monsterId, transform);
                     // 设置名称
                     monsterObject.GameObject.name = $"{monsterObject.GameObject.name}_{i + 1}";
                     // 注入上下文，供角色内部组件使用

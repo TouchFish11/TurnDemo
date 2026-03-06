@@ -4,7 +4,10 @@ using Core.Service;
 using HotUpdate.Battle.Object;
 using HotUpdate.Battle.Property;
 using HotUpdate.Battle.Skill.Base;
-using HotUpdate.Battle.Skill.Enum;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.Battle.Property;
+using HotUpdate.Core.Battle.Skill;
 
 namespace HotUpdate.Battle.Skill.Conditions
 {

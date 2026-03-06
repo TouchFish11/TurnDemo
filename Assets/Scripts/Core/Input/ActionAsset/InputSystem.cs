@@ -22,6 +22,7 @@ namespace Core.Input.ActionAsset
     /// </summary>
     public class InputSystem : SingletonBase<InputSystem>, IInputSystem
     {
+        public override int Priority => -1;
         // 输入配置的JSON原始数据
         private string _jsonInputData;
         // 玩家输入组件引用，关联InputActionAsset
@@ -38,34 +39,31 @@ namespace Core.Input.ActionAsset
         private string newPath;
         // 数据容器
         private MainActionMapDataContainer _mapDataContainer;
+
+        private IAssetBundleManager _assetBundleManager;
         
         /// <summary>
         /// 私有构造函数
         /// 单例模式，禁止外部实例化
         /// </summary>
-        private InputSystem()
+        private InputSystem(){}
+        
+        public override Task InitAsync()
         {
-
+            _assetBundleManager = ServiceLocator.Get<IAssetBundleManager>();
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// 初始化输入系统
         /// </summary>
         /// <param name="abName"></param>
-        public async Task InitAsync(string abName)
+        public async Task InitInputsystemAsync(string abName)
         {
-#if EDITOR_TEST_AB || !UNITY_EDITOR
             // 从AssetBundle加载输入配置JSON
-            var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(abName);
+            var assetBundle = await _assetBundleManager.LoadBundleAsync(abName);
             var json = await assetBundle.LoadAssetAsync<TextAsset>(FileUtility.InputActionLocalFileName).ToTask<TextAsset>();
             _jsonInputData = json.text;
-#else
-            // 编辑器模式：从编辑器资源管理器加载输入配置JSON
-            TextAsset json = ServiceLocator.Get<IEditorResManager>().LoadEditorAsset<TextAsset>(FileUtility.InputActionLocalFileName, "None");
-            _jsonInputData = json.text;
-            UpdateActions();
-            await Task.CompletedTask;
-#endif
         }
 
         /// <summary>

@@ -1,27 +1,32 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core.Log;
 using Core.Singleton;
-using HotUpdate.Battle.Context;
-using HotUpdate.Battle.Damage.Data;
 using HotUpdate.Battle.Damage.Strategys;
 using HotUpdate.Battle.Event.General;
-using HotUpdate.Battle.Object;
-using HotUpdate.Battle.Skill.Enum;
-using HotUpdate.Extension;
+using HotUpdate.Battle.Utility;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Damage;
+using HotUpdate.Core.Battle.Damage.Data;
+using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.Battle.Skill;
 
 namespace HotUpdate.Battle.Damage
 {
     /// <summary>
     /// 伤害计算管理器
     /// </summary>
-    public class DamageCalcManager : SingletonBase<DamageCalcManager>, IDamageCalcManager
+    public class DamageCalcManager : IInitializable, IDamageCalcManager
     {
+        public int Priority => -1;
+        
         // 伤害计算策略缓存
         private readonly Dictionary<E_DamageType, IDamageStrategy> _strategys = new();
+        private int priority;
 
-        private DamageCalcManager()
+        public Task InitAsync()
         {
-
+            return Task.CompletedTask;
         }
 
         public void Init(IBattleContext context)

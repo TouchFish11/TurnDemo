@@ -2,8 +2,9 @@ using Core.Service;
 using HotUpdate.Battle.Context;
 using HotUpdate.Battle.Event.UI;
 using HotUpdate.Battle.Object;
-using HotUpdate.Battle.Skill.Enum;
-using HotUpdate.Battle.Skill.Interface;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.Battle.Skill;
 
 namespace HotUpdate.Battle.Skill.Base
 {

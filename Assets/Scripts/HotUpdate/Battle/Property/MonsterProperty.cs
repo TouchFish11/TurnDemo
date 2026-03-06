@@ -1,5 +1,6 @@
 using Core.Serialize.Binary;
 using Core.Service;
+using HotUpdate.Core.Battle.Property;
 
 namespace HotUpdate.Battle.Property
 {

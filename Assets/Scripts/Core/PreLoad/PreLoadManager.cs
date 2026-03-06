@@ -12,11 +12,20 @@ namespace Core.PreLoad
     /// </summary>
     public class PreLoadManager : SingletonBase<PreLoadManager>, IPreLoadManager
     {
+        private int priority;
+
+        public override int Priority => -1;
+
         private PreLoadManager()
         {
         
         }
-        
+
+        public override Task InitAsync()
+        {
+            return Task.CompletedTask;
+        }
+
         /// <summary>
         /// 预加载资源
         /// </summary>

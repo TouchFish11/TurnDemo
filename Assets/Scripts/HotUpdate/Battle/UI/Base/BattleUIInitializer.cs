@@ -7,10 +7,12 @@ using Core.Service;
 using HotUpdate.Battle.Object;
 using HotUpdate.Battle.Property;
 using HotUpdate.Battle.Skill.Component;
-using HotUpdate.Battle.Skill.Enum;
 using HotUpdate.Battle.UI.MonsterStateUI;
 using HotUpdate.Battle.UI.Role;
 using HotUpdate.Config;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.Battle.Skill;
 
 namespace HotUpdate.Battle.UI.Base
 {

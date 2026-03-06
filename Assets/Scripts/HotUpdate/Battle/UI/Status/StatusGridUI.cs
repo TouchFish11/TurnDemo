@@ -3,6 +3,7 @@ using Core.Service;
 using Core.UI;
 using HotUpdate.Battle.Status;
 using HotUpdate.Battle.Status.Enum;
+using HotUpdate.Core.Battle.Status;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

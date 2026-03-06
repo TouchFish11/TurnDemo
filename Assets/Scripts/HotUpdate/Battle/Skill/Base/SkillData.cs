@@ -1,5 +1,5 @@
 using HotUpdate.Battle.Skill.Handler;
-using HotUpdate.Battle.Skill.Interface;
+using HotUpdate.Core.Battle.Skill;
 
 namespace HotUpdate.Battle.Skill.Base
 {

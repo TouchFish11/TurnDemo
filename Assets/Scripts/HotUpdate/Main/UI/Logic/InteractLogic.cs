@@ -7,7 +7,6 @@ using Core.Log;
 using Core.Service;
 using HotUpdate.Config;
 using HotUpdate.Interact;
-using HotUpdate.Interact.UI;
 
 namespace HotUpdate.Main.UI.Logic
 {

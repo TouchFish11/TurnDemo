@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Core.Singleton;
 using UnityEngine;
 using UnityEngine.Video;
@@ -10,6 +11,8 @@ namespace Core.Video
     /// </summary>
     public class VideoManager : SingletonBase<VideoManager>, IVideoManager
     {
+        public override int Priority => -1;
+
         private VideoPlayer videoPlayer;
 
         /// <summary>
@@ -25,6 +28,11 @@ namespace Core.Video
         private VideoManager()
         {
 
+        }
+
+        public override Task InitAsync()
+        {
+            return Task.CompletedTask;
         }
 
         /// <summary>

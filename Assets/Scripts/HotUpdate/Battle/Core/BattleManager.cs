@@ -6,24 +6,26 @@ using Core.Scene;
 using Core.Service;
 using Core.Singleton;
 using Core.UI;
-using HotUpdate.Animation;
 using HotUpdate.Battle.BattlePoint;
 using HotUpdate.Battle.Context;
 using HotUpdate.Battle.Damage;
 using HotUpdate.Battle.Event;
 using HotUpdate.Battle.Event.Turn;
 using HotUpdate.Battle.Input;
-using HotUpdate.Battle.Point;
 using HotUpdate.Battle.Skill.Base;
-using HotUpdate.Battle.Skill.Interface;
 using HotUpdate.Battle.TargetSelect;
 using HotUpdate.Battle.Turn;
-using HotUpdate.Camera;
 using HotUpdate.Config;
-using HotUpdate.Input;
-using HotUpdate.Main.Back;
-using HotUpdate.Main.Loading.Battle;
-using HotUpdate.Main.UI;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Damage;
+using HotUpdate.Core.Battle.Event;
+using HotUpdate.Core.Battle.Input;
+using HotUpdate.Core.Battle.Point;
+using HotUpdate.Core.Battle.Skill;
+using HotUpdate.Core.Battle.TargetSelect;
+using HotUpdate.Core.Battle.Turn;
+using HotUpdate.Core.Camera;
+using HotUpdate.Core.Input;
 using UnityEngine;
 using UnityEngine.U2D;
 
@@ -36,6 +38,7 @@ namespace HotUpdate.Battle.Core
     /// </summary>
     public class BattleManager : SingletonBase<BattleManager>, IBattleManager
     {
+        public override int Priority => -1;
         private readonly IUIManager _uiManager = ServiceLocator.Get<IUIManager>();
         private readonly ISceneManager _sceneManager = ServiceLocator.Get<ISceneManager>();
         private readonly IMouseManager _mouseManager = ServiceLocator.Get<IMouseManager>();
@@ -50,10 +53,15 @@ namespace HotUpdate.Battle.Core
         /// 战斗结束事件
         /// </summary>
         private Func<Task> OnBattleOver;
-        
+
         private BattleManager()
         {
             
+        }
+
+        public override Task InitAsync()
+        {
+            return Task.CompletedTask;
         }
 
         /// <summary>

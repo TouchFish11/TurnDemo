@@ -7,8 +7,12 @@ using HotUpdate.Battle.Event.Skill;
 using HotUpdate.Battle.Object;
 using HotUpdate.Battle.Property;
 using HotUpdate.Battle.Skill.Component;
-using HotUpdate.Battle.Skill.Interface;
-using HotUpdate.VFX;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Event;
+using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.Battle.Property;
+using HotUpdate.Core.Battle.Skill;
+using HotUpdate.Core.VFX;
 using UnityEngine;
 
 namespace HotUpdate.Battle.Skill.Base

@@ -11,7 +11,7 @@ using Core.Serialize.Json;
 using Core.Service;
 using Core.Utility;
 
-namespace Core.AssetBundles.Update
+namespace Core.AssetBundles.Update.Core
 {
     /// <summary>
     /// AssetBundle 更新上下文类

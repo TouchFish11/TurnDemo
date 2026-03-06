@@ -17,6 +17,8 @@ namespace Core.Music
     /// </summary>
     public class MusicManager : SingletonBase<MusicManager>, IMusicManager
     {
+        public override int Priority => -1;
+
         // 音效播放器列表
         private readonly Dictionary<int, AudioSource> _sounds = new();
         // 待移除的音频源Id
@@ -27,14 +29,18 @@ namespace Core.Music
         private bool isOpenSounds;
         // 音频源id
         private int auidoId;
+        private int priority;
 
         /// <summary>
         /// 私有构造函数（单例模式）
         /// 注册帧更新监听，用于检测音效播放状态并回收无效音效对象
         /// </summary>
-        private MusicManager()
+        private MusicManager(){}
+
+        public override Task InitAsync()
         {
             ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpdate);
+            return Task.CompletedTask;
         }
 
         /// <summary>

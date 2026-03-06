@@ -1,4 +1,6 @@
 using HotUpdate.Battle.Context;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Condition;
 
 namespace HotUpdate.Battle.Condition
 {

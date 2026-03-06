@@ -35,33 +35,6 @@ namespace Core.AssetBundles.Management
         }
 
         /// <summary>
-        /// 获取AssetBundle主包名
-        /// </summary>
-        /// <value>
-        /// 不同平台对应的主包名
-        /// </value>
-        /// <remarks>
-        /// 由运行时的平台决定，支持PC、Android、IOS
-        /// 不同平台需实现不同的返回名称，否则返回null
-        /// </remarks>
-        private static string AbMainName
-        {
-            get
-            {
-#if UNITY_ANDROID
-                    return "Android";
-#elif UNITY_IOS
-                    return "IOS";
-#elif UNITY_STANDALONE_WIN
-                return "PC";
-#else
-                    LogManager.LogError("未实现该平台的主包名");
-                    return null;
-#endif
-            }
-        }
-
-        /// <summary>
         /// 初始化默认包
         /// 更新使用
         /// </summary>

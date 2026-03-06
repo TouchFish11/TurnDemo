@@ -12,16 +12,20 @@ namespace Core.Pool
     /// </summary>
     public class PoolManager : SingletonBase<PoolManager>, IPoolManager
     {
+        public override int Priority => -1;
         // 存储继承Mono对象
         private readonly Dictionary<string, PoolObj> _poolObjDic = new();
         // 存储不继承Mono对象
         private readonly Dictionary<string, BasePoolData> _poolDataDic = new();
         // 缓存池根对象
         private GameObject _poolRootObj;
+        private int priority;
 
-        private PoolManager()
+        private PoolManager(){}
+
+        public override Task InitAsync()
         {
-
+            return Task.CompletedTask;
         }
 
         public T GetObj<T>(string assetName) where T : Behaviour
@@ -45,18 +49,6 @@ namespace Core.Pool
             }
 
             return null;
-
-#if EDITOR_TEST_AB || !UNITY_EDITOR
-#else
-            await Task.CompletedTask;
-            // 加载编辑器路径下的资源
-            GameObject obj = EditorResManager.Instance.LoadEditorAsset<GameObject>(assetName);
-            // 实例化预设体
-            GameObject instanceObj = GameObject.Instantiate(obj);
-            // 避免实例化出的对象的名字后带有(Clone)
-            instanceObj.name = assetName;
-            return instanceObj;
-#endif
         }
 
         public void PushObj(GameObject obj)

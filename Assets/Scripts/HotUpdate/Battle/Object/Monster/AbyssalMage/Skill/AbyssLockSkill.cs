@@ -6,11 +6,13 @@ using HotUpdate.Animation;
 using HotUpdate.Animation.Component;
 using HotUpdate.Battle.Context;
 using HotUpdate.Battle.Core;
-using HotUpdate.Battle.Layer;
 using HotUpdate.Battle.Skill.Base;
-using HotUpdate.Camera;
 using HotUpdate.Config;
-using HotUpdate.VFX;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Layer;
+using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.Camera;
+using HotUpdate.Core.VFX;
 using UnityEngine;
 
 namespace HotUpdate.Battle.Object.Monster.AbyssalMage.Skill

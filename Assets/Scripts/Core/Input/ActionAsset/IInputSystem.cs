@@ -24,7 +24,7 @@ namespace Core.Input.ActionAsset
         /// 初始化输入系统
         /// </summary>
         /// <param name="abName"></param>
-        Task InitAsync(string abName);
+        Task InitInputsystemAsync(string abName);
 
         /// <summary>
         /// 初始化玩家输入组件

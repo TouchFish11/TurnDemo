@@ -19,19 +19,30 @@ namespace Core.Scene
     /// </summary>
     public class SceneManager : SingletonBase<SceneManager>, ISceneManager
     {
+        public override int Priority => -1;
+
         // 场景路径缓存
         private List<string> _scenePaths;
-
+        private IMonoAdapter _monoAdapter;
+        private IAssetBundleManager _assetBundleManager;
+        
         private SceneManager()
         {
 
+        }
+
+        public override Task InitAsync()
+        {
+            _monoAdapter = ServiceLocator.Get<IMonoAdapter>();
+            _assetBundleManager = ServiceLocator.Get<IAssetBundleManager>();
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// 初始化场景管理器
         /// </summary>
         /// <param name="abName"></param>
-        public async Task Init(string abName)
+        public async Task InitAsync(string abName)
         {
             // 初始化场景包
             await InitSceneBundle(abName);
@@ -51,7 +62,7 @@ namespace Core.Scene
                 // 异步加载场景
                 var ao = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(scenePath, mode);
                 // 开启更新进度协程
-                ServiceLocator.Get<IMonoAdapter>().StartCoroutine(UpdateProgress_Cor(ao, onLoadProgress));
+                _monoAdapter.StartCoroutine(UpdateProgress_Cor(ao, onLoadProgress));
                 // 等待场景加载结束
                 await TaskUtility.WaitUntil(() => ao != null && ao.isDone);
             }
@@ -68,7 +79,7 @@ namespace Core.Scene
             if (_scenePaths == null)
             {
                 // 加载场景对应的AssetBundle资源包
-                var sceneBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(abName);
+                var sceneBundle = await _assetBundleManager.LoadBundleAsync(abName);
                 _scenePaths = new List<string>();
                 foreach (var scenePath in sceneBundle.GetAllScenePaths())
                 {

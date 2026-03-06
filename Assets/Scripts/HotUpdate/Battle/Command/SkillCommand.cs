@@ -1,7 +1,9 @@
 using System.Collections;
 using HotUpdate.Battle.Context;
 using HotUpdate.Battle.Event.Skill;
-using HotUpdate.Battle.Skill.Interface;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Command;
+using HotUpdate.Core.Battle.Skill;
 
 namespace HotUpdate.Battle.Command
 {

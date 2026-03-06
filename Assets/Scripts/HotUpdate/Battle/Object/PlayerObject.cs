@@ -13,7 +13,9 @@ using HotUpdate.Battle.Event.Turn;
 using HotUpdate.Battle.Object.StateMeachine;
 using HotUpdate.Battle.ResponsibilityChain.DamageChain;
 using HotUpdate.Battle.Skill.Component;
-using HotUpdate.Battle.Skill.Enum;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Command;
+using HotUpdate.Core.Battle.Skill;
 
 namespace HotUpdate.Battle.Object
 {

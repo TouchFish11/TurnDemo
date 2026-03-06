@@ -2,13 +2,16 @@ using Core.Pool;
 using Core.Service;
 using Core.Time;
 using HotUpdate.Battle.Context;
-using HotUpdate.Battle.Damage.Data;
 using HotUpdate.Battle.Event.General;
 using HotUpdate.Battle.Event.UI;
 using HotUpdate.Battle.Property;
 using HotUpdate.Battle.Status;
 using HotUpdate.Config;
-using HotUpdate.VFX;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Damage;
+using HotUpdate.Core.Battle.Damage.Data;
+using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.VFX;
 using UnityEngine;
 
 namespace HotUpdate.Battle.Object.Monster.Slime.Status

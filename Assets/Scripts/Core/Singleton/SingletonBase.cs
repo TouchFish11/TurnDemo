@@ -1,17 +1,18 @@
 using System;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Core.Singleton
 {
     /// <summary>
     /// 单例基类
     /// </summary>
-    public abstract class SingletonBase<T> where T : class
+    public abstract class SingletonBase<T> : IInitializable where T : class
     {
-        // 单例对象·
+        // 单例对象
         private static volatile T _instance;
-        //锁引用对象
-        private static readonly object LockObj = new object();
+        // 锁引用对象
+        private static readonly object LockObj = new();
 
         /// <summary>
         /// 单例对象
@@ -38,7 +39,7 @@ namespace Core.Singleton
                     }
                     else
                     {
-                        throw new Exception($"没有实现私有无参构造函数, 缺失类：{typeof(T).Name}");
+                        throw new Exception($"{nameof(SingletonBase<T>)}.{Instance}：{typeof(T).Name}没有实现私有无参构造函数");
                     }
                 }
                 return _instance;
@@ -49,5 +50,9 @@ namespace Core.Singleton
         /// 单例是否存在
         /// </summary>
         public bool IsLive => _instance != null;
+
+        public abstract int Priority { get; }
+        
+        public abstract Task InitAsync();
     }
 }

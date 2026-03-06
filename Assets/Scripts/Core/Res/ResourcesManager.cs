@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core.Mono;
 using Core.Service;
 using Core.Singleton;
@@ -9,16 +10,24 @@ using UnityEngine.Events;
 namespace Core.Res
 {
     /// <summary>
-    /// Resources��Դ������
+    /// Resources
     /// </summary>
     public class ResourcesManager : SingletonBase<ResourcesManager>, IResourcesManager
     {
-        // ��Դ������Դ��Ϣӳ��
+        public override int Priority => -1;
+
+        // 
         private readonly Dictionary<string, BaseResourcesInfo> _nameToResInfoMap = new Dictionary<string, BaseResourcesInfo>();
+        private int priority;
 
         private ResourcesManager()
         {
 
+        }
+
+        public override Task InitAsync()
+        {
+            return Task.CompletedTask;
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Core.Singleton;
 
 namespace Core.Input.CoreListen
@@ -9,6 +10,7 @@ namespace Core.Input.CoreListen
     [Obsolete("ʹ��FrameworkInputSystem", true)]
     public class InputManager : SingletonBase<InputManager>, IInputManager
     {
+        private int priority;
         //    //�洢��������
         //    private Dictionary<E_EventType, InputData> _inputDataDic = new Dictionary<E_EventType, InputData>();
         //    //��ǰ��������
@@ -165,5 +167,11 @@ namespace Core.Input.CoreListen
         //            }
         //        }
         //    }
+        public override int Priority => -1;
+
+        public override Task InitAsync()
+        {
+            return Task.CompletedTask;
+        }
     }
 }

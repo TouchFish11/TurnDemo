@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using Core.Components;
 using Core.GlobalEvent;
 using Core.Service;
-using HotUpdate.Component;
-using HotUpdate.Dialogue;
+using HotUpdate.Core.Component;
+using HotUpdate.Core.Dialogue;
 using HotUpdate.Input;
 
 namespace HotUpdate.Interact

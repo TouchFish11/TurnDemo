@@ -3,6 +3,7 @@ using Core.Service;
 using Core.Time;
 using HotUpdate.Battle.Projectile;
 using HotUpdate.Battle.Status;
+using HotUpdate.Core.Battle.Status;
 
 namespace HotUpdate.Battle.Object.Monster.AbyssalMage.Projectile
 {

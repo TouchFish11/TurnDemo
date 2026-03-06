@@ -1,16 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core.Log;
 using Core.Serialize.Binary;
 using Core.Service;
 using Core.Singleton;
-using HotUpdate.Battle.Context;
 using HotUpdate.Battle.Event.UI;
-using HotUpdate.Battle.Input;
 using HotUpdate.Battle.Object;
-using HotUpdate.Battle.Skill.Enum;
-using HotUpdate.Battle.TargetSelect.Strategys;
 using HotUpdate.Battle.Utility;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Input;
+using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.Battle.Skill;
+using HotUpdate.Core.Battle.TargetSelect;
 
 namespace HotUpdate.Battle.TargetSelect
 {
@@ -20,8 +22,9 @@ namespace HotUpdate.Battle.TargetSelect
     /// 响应技能选择、拖拽切换目标、点击选中目标等交互事件，同步更新目标选择UI
     /// 单例模式实现，全局唯一管理战斗目标选择流程
     /// </summary>
-    public class TargetSelectManager : SingletonBase<TargetSelectManager>, ITargetSelectManager
+    public class TargetSelectManager : IInitializable, ITargetSelectManager
     {
+        public int Priority => -1;
         // 缓存筛选出的所有目标
         private List<IBattleEntityObject> _filterEntitys;
         // 已选中的范围目标列表（包含主目标及范围内的其他目标）
@@ -36,19 +39,15 @@ namespace HotUpdate.Battle.TargetSelect
         private IBattleEntityObject caster;
         // 当前生效的目标选择策略（不同技能有不同的目标选择规则）
         private ITargetSelectStrategy currentSelectStrategy;
-        
+
         /// <summary>
         /// 主目标选择变化
         /// </summary>
         public event Action<IBattleEntityObject> OnSelectChanged;
         
-        /// <summary>
-        /// 私有构造函数
-        /// 单例模式：禁止外部实例化，通过 SingletonBase 的 Instance 属性获取实例
-        /// </summary>
-        private TargetSelectManager()
+        public Task InitAsync()
         {
-
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -219,7 +218,7 @@ namespace HotUpdate.Battle.TargetSelect
             // 清空旧的范围目标列表
             _selectedTargets.Clear();
             // 计算主目标范围内的所有有效目标（玩家角色类型，按技能范围规则筛选）
-            BattleUtil.GetRangeTargets(_mainTarget, skillInfo.f_skillRangeType, _filterEntitys, _selectedTargets);
+            BattleUtility.GetRangeTargets(_mainTarget, skillInfo.f_skillRangeType, _filterEntitys, _selectedTargets);
             // 触发目标选择变更事件，通知UI更新选中状态
             battleContext.GetEventBus().TriggerEvent(new SelectTargetEvent(battleContext, caster, _mainTarget, _selectedTargets));
         }

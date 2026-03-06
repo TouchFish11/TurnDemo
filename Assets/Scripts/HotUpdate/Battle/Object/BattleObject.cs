@@ -1,11 +1,15 @@
 using System.Collections;
 using HotUpdate.Battle.Context;
 using HotUpdate.Battle.Damage;
-using HotUpdate.Battle.Damage.Data;
 using HotUpdate.Battle.Event.General;
 using HotUpdate.Battle.Property;
 using HotUpdate.Battle.ResponsibilityChain;
-using HotUpdate.Main.Object;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Damage;
+using HotUpdate.Core.Battle.Damage.Data;
+using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.Battle.Property;
+using HotUpdate.Core.Main.Object;
 using UnityEngine;
 
 namespace HotUpdate.Battle.Object

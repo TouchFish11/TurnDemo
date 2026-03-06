@@ -16,12 +16,16 @@ namespace Core.HotUpdate
     /// </summary>
     public class HotUpdateManager : SingletonBase<HotUpdateManager>, IHotUpdateManager
     {
+        public override int Priority => -1;
+
         // 缓存热更程序集名称
         private readonly List<string> _assemblyNames = new();
-        
-        private HotUpdateManager()
+
+        private HotUpdateManager(){}
+
+        public override Task InitAsync()
         {
-            
+            return Task.CompletedTask;
         }
 
         public async Task LoadAssemblys(string abName)
@@ -39,7 +43,7 @@ namespace Core.HotUpdate
                 var assembly = Assembly.Load(dllText.bytes);
                 RuntimeApi.LoadMetadataForAOTAssembly(dllText.bytes, HomologousImageMode.SuperSet);
                 _assemblyNames.Add(assembly.GetName().Name);
-                LogManager.Log($"已加载热更程序集，{assembly.GetName().Name}");
+                LogManager.Log($"{nameof(HotUpdateManager)}.{nameof(LoadAssemblys)}：已加载热更程序集，{assembly.GetName().Name}");
 #else
                 // Editor下无需加载，直接查找获得HotUpdate程序集
                 foreach (var assembly in System.AppDomain.CurrentDomain.GetAssemblies())

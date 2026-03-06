@@ -12,15 +12,20 @@ using HotUpdate.Battle.Event.Skill;
 using HotUpdate.Battle.Event.Turn;
 using HotUpdate.Battle.Event.UI;
 using HotUpdate.Battle.Input;
-using HotUpdate.Battle.Layer;
 using HotUpdate.Battle.Object;
-using HotUpdate.Battle.Point;
-using HotUpdate.Battle.Skill.Enum;
 using HotUpdate.Battle.TargetSelect;
 using HotUpdate.Battle.UI.Base;
 using HotUpdate.Battle.UI.SkillKey;
 using HotUpdate.Battle.UI.SkillKey.Provider;
-using HotUpdate.Camera;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Event;
+using HotUpdate.Core.Battle.Input;
+using HotUpdate.Core.Battle.Layer;
+using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.Battle.Point;
+using HotUpdate.Core.Battle.Skill;
+using HotUpdate.Core.Battle.TargetSelect;
+using HotUpdate.Core.Camera;
 using UnityEngine;
 
 namespace HotUpdate.Battle.Event

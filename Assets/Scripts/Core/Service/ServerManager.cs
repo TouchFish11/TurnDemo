@@ -15,6 +15,7 @@ namespace Core.Service
     {
         // ����ӿ����͵��������ʵ����ӳ��
         private readonly Dictionary<Type, object> _typeToSeverMap = new Dictionary<Type, object>();
+        private int priority;
 
         private ServerManager()
         {
@@ -78,6 +79,13 @@ namespace Core.Service
                 return false;
             }
             return true;
+        }
+
+        public override int Priority => priority;
+
+        public override Task InitAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using HotUpdate.Core.Task;
 using Newtonsoft.Json;
 
 namespace HotUpdate.Task.Data

@@ -4,8 +4,9 @@ using Core.Utility;
 using HotUpdate.Battle.Core;
 using HotUpdate.Battle.Skill.Base;
 using HotUpdate.Battle.Skill.Conditions;
-using HotUpdate.Battle.Skill.Interface;
 using HotUpdate.Battle.TargetSelect.Strategys;
+using HotUpdate.Core.Battle.Skill;
+using HotUpdate.Core.Battle.TargetSelect;
 
 namespace HotUpdate.Battle.Skill.Component
 {

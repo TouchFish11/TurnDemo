@@ -4,7 +4,9 @@ using HotUpdate.Battle.Object.Monster.AbyssalMage.Skill.Handler;
 using HotUpdate.Battle.Skill.Base;
 using HotUpdate.Battle.Skill.Factory;
 using HotUpdate.Battle.Skill.Handler;
-using HotUpdate.Battle.Skill.Interface;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.Battle.Skill;
 
 namespace HotUpdate.Battle.Object.Monster.AbyssalMage.Skill
 {

@@ -7,8 +7,9 @@ using Core.Input.ActionAsset;
 using Core.Log;
 using Core.Mono;
 using Core.Service;
-using HotUpdate.Component;
-using HotUpdate.Main.Manager;
+using HotUpdate.Core;
+using HotUpdate.Core.Component;
+using HotUpdate.Core.Input;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -20,7 +21,7 @@ namespace HotUpdate.Input
     /// </summary>
     [ComponentId(typeof(InputComponent))]
     [RequireComponent(typeof(PlayerInputComponent))]
-    public class InputComponent : BaseComponent
+    public class InputComponent : BaseComponent, IInputComponent
     {
         // 输入系统接口，封装底层输入逻辑
         private IInputSystem inputSystem;

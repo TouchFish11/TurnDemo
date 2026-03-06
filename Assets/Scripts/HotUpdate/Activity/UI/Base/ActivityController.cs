@@ -7,8 +7,7 @@ using Core.UI.MVC;
 using HotUpdate.Activity.Core;
 using HotUpdate.Activity.Data;
 using HotUpdate.Config;
-using HotUpdate.Main.Manager;
-using HotUpdate.Main.UI;
+using HotUpdate.Core;
 
 namespace HotUpdate.Activity.UI.Base
 {

@@ -2,7 +2,8 @@ using Core.Components;
 using Core.Mono;
 using Core.Service;
 using Core.Singleton;
-using HotUpdate.Input;
+using HotUpdate.Core.Camera;
+using HotUpdate.Core.Input;
 using UnityEngine;
 
 namespace HotUpdate.Camera
@@ -89,7 +90,7 @@ namespace HotUpdate.Camera
         {
             player = target;
             // 注册鼠标拖动输入监听
-            target.GetComponent<IEntityObject>().GetComponent<InputComponent>().OnMouseSlideChanged += OnUpdateMouse;
+            target.GetComponent<IEntityObject>().GetComponent<IInputComponent>().OnMouseSlideChanged += OnUpdateMouse;
         }
 
         /// <summary>
@@ -188,7 +189,7 @@ namespace HotUpdate.Camera
         private void OnMouseWheel()
         {
             // 获取滚轮输入（向前为正，向后为负）
-            float scroll = UnityEngine.Input.GetAxis("Mouse ScrollWheel");
+            float scroll = Input.GetAxis("Mouse ScrollWheel");
             // 调整半径并限制范围（滚轮每滚动1单位，半径变化2f）
             radius = Mathf.Clamp(radius - scroll * 2f, 2f, 10f);
         }

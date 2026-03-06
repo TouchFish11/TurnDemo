@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using Core.Log;
 using Core.UI;
 using Core.UI.MVC;
-using HotUpdate.Activity.UI.Base;
 using HotUpdate.Config;
 using HotUpdate.Main.UI.Logic;
-using HotUpdate.Task.UI;
 
 namespace HotUpdate.Main.UI
 {

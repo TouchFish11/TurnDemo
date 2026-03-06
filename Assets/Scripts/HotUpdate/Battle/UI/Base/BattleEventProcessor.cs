@@ -5,8 +5,11 @@ using HotUpdate.Battle.Event.Turn;
 using HotUpdate.Battle.Event.UI;
 using HotUpdate.Battle.Input;
 using HotUpdate.Battle.Object;
-using HotUpdate.Battle.Skill.Enum;
 using HotUpdate.Battle.TargetSelect;
+using HotUpdate.Core.Battle.Event;
+using HotUpdate.Core.Battle.Input;
+using HotUpdate.Core.Battle.Skill;
+using HotUpdate.Core.Battle.TargetSelect;
 
 namespace HotUpdate.Battle.UI.Base
 {

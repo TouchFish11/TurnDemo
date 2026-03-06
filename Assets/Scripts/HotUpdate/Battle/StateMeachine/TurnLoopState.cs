@@ -11,6 +11,11 @@ using HotUpdate.Battle.Object;
 using HotUpdate.Battle.Property;
 using HotUpdate.Battle.Turn;
 using HotUpdate.Battle.Utility;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Condition;
+using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.Battle.Property;
+using HotUpdate.Core.Battle.Turn;
 
 namespace HotUpdate.Battle.StateMeachine
 {

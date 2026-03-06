@@ -1,6 +1,6 @@
 using Core.AssetBundles.Update.Enum;
 
-namespace Core.AssetBundles.Update
+namespace Core.AssetBundles.Update.Core
 {
     /// <summary>
     /// AB包更新器接口

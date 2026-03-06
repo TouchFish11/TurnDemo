@@ -4,13 +4,12 @@ using UnityEngine;
 namespace HotUpdate.Interact
 {
     /// <summary>
-    /// ����������
+    /// 交互触发器
     /// </summary>
     [ComponentId(typeof(InteractTrigger))]
     [RequireComponent(typeof(Collider))]
     public class InteractTrigger : MonoBehaviour, IComponent
     {
-        // ��ȡ��ǰ����Ľ����߼���ʵ��IInteractable�������
         private IInteractable interactable;
         private BoxCollider _collider;
         

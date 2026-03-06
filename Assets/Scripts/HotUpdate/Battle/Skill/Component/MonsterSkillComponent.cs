@@ -6,6 +6,9 @@ using HotUpdate.Battle.Skill.Conditions;
 using HotUpdate.Battle.Skill.Factory;
 using HotUpdate.Battle.TargetSelect;
 using HotUpdate.Battle.TargetSelect.Strategys;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.Battle.TargetSelect;
 
 namespace HotUpdate.Battle.Skill.Component
 {

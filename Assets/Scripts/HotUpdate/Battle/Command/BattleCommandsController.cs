@@ -11,7 +11,10 @@ using HotUpdate.Battle.Object;
 using HotUpdate.Battle.StateMeachine;
 using HotUpdate.Battle.UI.Base;
 using HotUpdate.Battle.Utility;
-using HotUpdate.Camera;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Command;
+using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.Camera;
 using UnityEngine;
 
 namespace HotUpdate.Battle.Command

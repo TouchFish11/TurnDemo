@@ -6,10 +6,13 @@ using Core.Service;
 using Core.Singleton;
 using HotUpdate.Battle.Context;
 using HotUpdate.Battle.Event.UI;
-using HotUpdate.Battle.Layer;
 using HotUpdate.Battle.Object;
-using HotUpdate.Battle.Skill.Enum;
-using HotUpdate.Camera;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Input;
+using HotUpdate.Core.Battle.Layer;
+using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.Battle.Skill;
+using HotUpdate.Core.Camera;
 using UnityEngine;
 using UnityEngine.InputSystem;
 

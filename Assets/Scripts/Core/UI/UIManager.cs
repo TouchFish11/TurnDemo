@@ -16,6 +16,7 @@ namespace Core.UI
     /// </summary>
     public class UIManager : SingletonBase<UIManager>, IUIManager
     {
+        public override int Priority => -1;
         // 存储打开的界面
         private readonly List<IPanelInfo> _panels = new();
         // 上层
@@ -27,10 +28,19 @@ namespace Core.UI
         // 系统层
         private Transform _systemLayer;
 
+        private IPrefabLoader _prefabLoader;
+        
         private UIManager()
         {
         }
-        
+
+        public override Task InitAsync()
+        {
+            // TODO：要先初始化工厂才能拿到加载器实例
+            _prefabLoader = ServiceLocator.Get<IPrefabLoader>();
+            return Task.CompletedTask;
+        }
+
         public async Task InitUIManagerAsync(string defaultAbName, string canvasName, string uiCameraName)
         {
 #if EDITOR_TEST_AB || !UNITY_EDITOR

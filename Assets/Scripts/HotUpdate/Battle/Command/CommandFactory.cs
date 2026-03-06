@@ -1,8 +1,10 @@
 using Core.Pool;
 using Core.Reflection;
 using Core.Service;
-using HotUpdate.Battle.Skill.Interface;
 using HotUpdate.Battle.Toughness;
+using HotUpdate.Core.Battle.Command;
+using HotUpdate.Core.Battle.Skill;
+using HotUpdate.Core.Battle.Toughness;
 
 namespace HotUpdate.Battle.Command
 {

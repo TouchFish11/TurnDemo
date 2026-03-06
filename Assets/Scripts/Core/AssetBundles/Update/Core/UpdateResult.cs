@@ -2,7 +2,7 @@ using Core.Log;
 using Core.Pool;
 using Core.Service;
 
-namespace Core.AssetBundles.Update
+namespace Core.AssetBundles.Update.Core
 {
     /// <summary>
     /// 更新结果

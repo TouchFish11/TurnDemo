@@ -4,7 +4,8 @@ using Core.Service;
 using HotUpdate.Battle.Projectile;
 using HotUpdate.Battle.Status;
 using HotUpdate.Config;
-using HotUpdate.VFX;
+using HotUpdate.Core.Battle.Status;
+using HotUpdate.Core.VFX;
 using UnityEngine;
 
 namespace HotUpdate.Battle.Object.Monster.Slime.Projectile

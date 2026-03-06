@@ -1,7 +1,4 @@
 using Core.Components;
-using HotUpdate.Camera;
-using HotUpdate.Component;
-using HotUpdate.Input;
 using UnityEngine;
 
 namespace HotUpdate.Main.Move

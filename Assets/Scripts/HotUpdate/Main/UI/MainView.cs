@@ -2,7 +2,7 @@ using Core.Serialize.Binary;
 using Core.Service;
 using Core.UI;
 using Core.UI.MVC;
-using HotUpdate.Task.Data;
+using HotUpdate.Core.Task;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

@@ -1,6 +1,13 @@
+using System.Collections.Generic;
+using Core.Log;
 using HotUpdate.Battle.Context;
 using HotUpdate.Battle.Event.UI;
 using HotUpdate.Battle.Property;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.Battle.Property;
+using HotUpdate.Core.Battle.Skill;
+using UnityEngine;
 
 namespace HotUpdate.Battle.Utility
 {
@@ -57,6 +64,96 @@ namespace HotUpdate.Battle.Utility
         {
             // 计算行动值，基准行动值 / 速度 * 修正系数
             return BASE_ACTION_VALUE / speed * SPEED_CORRECTION;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="mainTarget"></param>
+        /// <param name="rangeType"></param>
+        /// <param name="filterObjects"></param>
+        /// <param name="finalTargets"></param>
+        public static void GetRangeTargets(IBattleEntityObject mainTarget, int rangeType, List<IBattleEntityObject> filterObjects, List<IBattleEntityObject> finalTargets)
+        {
+            switch ((E_SkillRangeType)rangeType)
+            {
+                case E_SkillRangeType.Single:
+                    // ֻ������Ŀ��
+                    finalTargets.Add(mainTarget);
+                    break;
+                case E_SkillRangeType.Diffusion:
+                    // ������Ŀ�������Ŀ��
+                    finalTargets.Add(mainTarget);
+                    if (filterObjects.Count > 1)
+                    {
+                        var mainIndex = filterObjects.IndexOf(mainTarget);
+                        // �����
+                        if (mainIndex == 0)
+                        {
+                            finalTargets.Add(filterObjects[mainIndex + 1]);
+                        }
+                        // ���Ҷ�
+                        else if (mainIndex == filterObjects.Count - 1)
+                        {
+                            finalTargets.Add(filterObjects[mainIndex - 1]);
+                        }
+                        // ��������/��
+                        else
+                        {
+                            finalTargets.Add(filterObjects[mainIndex - 1]);
+                            finalTargets.Add(filterObjects[mainIndex + 1]);
+                        }
+                    }
+                    break;
+                case E_SkillRangeType.All:
+                    //����ȫ��Ŀ��
+                    finalTargets.AddRange(filterObjects);
+                    break;
+                default:
+                    LogManager.LogError($"{nameof(rangeType)}, {rangeType}");
+                    break;
+            }
+        }
+        
+        public static string ToSkillRangeTypeText(this int i)
+        {
+            E_SkillRangeType skillRangeType = (E_SkillRangeType)i;
+            return skillRangeType switch
+            {
+                E_SkillRangeType.Single => "单体",
+                E_SkillRangeType.Diffusion => "扩散",
+                E_SkillRangeType.All => "全体",
+                _ => "None"
+            };
+        }
+
+        public static E_SkillType ToSkillType(this int i)
+        {
+            return (E_SkillType)i;
+        }
+        
+        public static Color ToElementTypeColor(this int i)
+        {
+            E_ElementType elementType = (E_ElementType)i;
+            return elementType switch
+            {
+                E_ElementType.Fire => Color.red,
+                E_ElementType.Ice => Color.blue,
+                E_ElementType.Physical => Color.white,
+                E_ElementType.Quantum => new Color(128, 0, 128),
+                E_ElementType.Wind => Color.green,
+                _ => Color.white
+            };
+        }
+        
+        public static E_ElementType ToElementType(this int i)
+        {
+            return (E_ElementType)i;
+        }
+        
+        public static E_DamageType ToDamageType(this int i)
+        {
+            return (E_DamageType)i;
         }
     }
 }

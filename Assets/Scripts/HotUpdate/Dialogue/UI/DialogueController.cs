@@ -6,6 +6,7 @@ using Core.Mono;
 using Core.Service;
 using Core.UI.MVC;
 using HotUpdate.Config;
+using HotUpdate.Core.Dialogue;
 using UnityEngine;
 
 namespace HotUpdate.Dialogue.UI
