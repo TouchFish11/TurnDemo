@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
+using Core.Collection;
 using Core.Log;
 using Core.Service;
 using Core.Singleton;
@@ -28,16 +29,27 @@ namespace Core.HotUpdate
             return Task.CompletedTask;
         }
 
-        public async Task LoadAssemblys(string abName)
+        /// <summary>
+        /// 加载指定程序集
+        /// </summary>
+        /// <param name="abName"></param>
+        /// <param name="assemblyNames"></param>
+        public async Task LoadAssembliesAsync(string abName, params string[] assemblyNames)
         {
+            var uniList = CollectionUtil.GetUniList<string>();
+            uniList.List.AddRange(assemblyNames);
             Clear();
-            
             var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(abName);
             // 加载热更新AB包资源
             var dllTexts = new List<TextAsset>();
             await assetBundle.LoadAllAssetsAsync<TextAsset>().ToTask(dllTexts);
             foreach (var dllText in dllTexts)
             {
+                if (!uniList.List.Contains(dllText.name))
+                {
+                    continue;
+                }
+                
                 // Editor环境下，HotUpdate.dll.bytes已经被自动加载，不需要加载，重复加载反而会出问题。
 #if !UNITY_EDITOR
                 var assembly = Assembly.Load(dllText.bytes);
@@ -59,6 +71,45 @@ namespace Core.HotUpdate
 #endif
             }
 
+            CollectionUtil.CollectUniList(uniList);
+            ServiceLocator.Get<IAssetBundleManager>().UnloadBundle(abName);
+        }
+
+        public async Task LoadAssemblysAsync(string abName)
+        {
+            var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(abName);
+            // 加载热更新AB包资源
+            var dllTexts = new List<TextAsset>();
+            await assetBundle.LoadAllAssetsAsync<TextAsset>().ToTask(dllTexts);
+            foreach (var dllText in dllTexts)
+            {
+                if (_assemblyNames.Contains(dllText.name))
+                {
+                    continue;
+                }
+                
+                // Editor环境下，HotUpdate.dll.bytes已经被自动加载，不需要加载，重复加载反而会出问题。
+#if !UNITY_EDITOR
+                var assembly = Assembly.Load(dllText.bytes);
+                RuntimeApi.LoadMetadataForAOTAssembly(dllText.bytes, HomologousImageMode.SuperSet);
+                _assemblyNames.Add(assembly.GetName().Name);
+                LogManager.Log($"{nameof(HotUpdateManager)}.{nameof(LoadAssemblys)}：已加载热更程序集，{assembly.GetName().Name}");
+#else
+                // Editor下无需加载，直接查找获得HotUpdate程序集
+                foreach (var assembly in System.AppDomain.CurrentDomain.GetAssemblies())
+                {
+                    if (assembly.GetName().Name != dllText.name.Substring(0, dllText.name.LastIndexOf('.')))
+                    {
+                        continue;
+                    }
+                    
+                    _assemblyNames.Add(assembly.GetName().Name);
+                    LogManager.Log($"已缓存编辑器加载热更程序集名称，{dllText.name}");
+                }
+#endif
+            }
+            
+            ServiceLocator.Get<IAssetBundleManager>().UnloadBundle(abName);
         }
 
         public Assembly GetAssembly(string assemblyName)

@@ -7,8 +7,6 @@ using Core.Reflection;
 using Core.Service;
 using Core.Types;
 using Core.Utility;
-using HotUpdate.Battle.Toughness.CalcStrategy;
-using HotUpdate.Battle.Toughness.ReduceStrategy;
 using HotUpdate.Core.Battle.Toughness;
 
 namespace HotUpdate.Battle.Toughness

@@ -1,5 +1,3 @@
-using HotUpdate.Battle.Context;
-using HotUpdate.Battle.Status;
 using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Event;
 using HotUpdate.Core.Battle.Status;

@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using Core.Service;
 using Core.Utility;
-using HotUpdate.Battle.Damage;
 using HotUpdate.Core.Battle.Damage;
 using HotUpdate.Core.VFX;
 using UnityEngine;

@@ -5,6 +5,7 @@ using Core.Log;
 using Core.Mono;
 using Core.Service;
 using Core.UI.MVC;
+using HotUpdate.Common;
 using HotUpdate.Config;
 using HotUpdate.Core.Dialogue;
 using UnityEngine;

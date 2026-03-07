@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Core.Log;
-using HotUpdate.Battle.Context;
 using HotUpdate.Battle.Event.UI;
 using HotUpdate.Battle.Property;
 using HotUpdate.Core.Battle;

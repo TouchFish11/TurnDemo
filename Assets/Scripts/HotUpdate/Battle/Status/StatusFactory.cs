@@ -4,8 +4,6 @@ using System.Reflection;
 using Core.HotUpdate;
 using Core.Reflection;
 using Core.Service;
-using HotUpdate.Battle.Object;
-using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Object;
 using HotUpdate.Core.Battle.Status;
 

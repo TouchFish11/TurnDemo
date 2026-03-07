@@ -5,6 +5,7 @@ using Core.GlobalEvent;
 using Core.Loader.Object;
 using Core.Log;
 using Core.Service;
+using HotUpdate.Common;
 using HotUpdate.Config;
 using HotUpdate.Interact;
 

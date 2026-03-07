@@ -3,8 +3,6 @@ using Core.Mono;
 using Core.Service;
 using Core.UI;
 using Core.Utility;
-using HotUpdate.Battle.Context;
-using HotUpdate.Battle.Turn;
 using HotUpdate.Battle.UI.Base;
 using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Layer;

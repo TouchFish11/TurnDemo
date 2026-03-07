@@ -3,8 +3,8 @@ using Core.Loader.Object;
 using Core.Service;
 using Core.UI;
 using Core.Utility;
-using HotUpdate.Config;
-using HotUpdate.Extension;
+using HotUpdate.Common;
+using HotUpdate.Task.Core;
 using TMPro;
 
 namespace HotUpdate.Task.UI

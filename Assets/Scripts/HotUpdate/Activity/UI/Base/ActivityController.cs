@@ -6,8 +6,11 @@ using Core.Service;
 using Core.UI.MVC;
 using HotUpdate.Activity.Core;
 using HotUpdate.Activity.Data;
+using HotUpdate.Common;
 using HotUpdate.Config;
 using HotUpdate.Core;
+using HotUpdate.Core.Activity;
+using HotUpdate.Core.Manager;
 
 namespace HotUpdate.Activity.UI.Base
 {

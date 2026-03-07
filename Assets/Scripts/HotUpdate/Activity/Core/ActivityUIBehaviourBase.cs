@@ -5,8 +5,8 @@ using Core.Log;
 using Core.Service;
 using Core.UI;
 using Core.Utility;
-using HotUpdate.Activity.Data;
 using HotUpdate.Activity.UI.Base;
+using HotUpdate.Core.Activity;
 using UnityEngine;
 
 namespace HotUpdate.Activity.Core
@@ -22,7 +22,7 @@ namespace HotUpdate.Activity.Core
         protected ISpriteLoader spriteLoader;
         
         public GameObject GameObject { get; private set; }
-        public ActivityData ActivityData { get; private set; }
+        public IActivityData ActivityData { get; private set; }
 
         // 活动信息
         protected ActivityInfo activityInfo;
@@ -47,7 +47,7 @@ namespace HotUpdate.Activity.Core
             await OnShow();
         }
 
-        public async void Init(ActivityData activityData, ActivityInfo activityInfo)
+        public async void Init(IActivityData activityData, ActivityInfo activityInfo)
         {
             try
             {

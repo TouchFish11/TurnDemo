@@ -12,10 +12,9 @@ using Core.Service;
 using Core.Singleton;
 using Core.UI;
 using Core.Utility;
-using HotUpdate.Config;
+using HotUpdate.Common;
 using HotUpdate.Core.Dialogue;
 using HotUpdate.Dialogue.UI;
-using HotUpdate.Task.Event;
 using UnityEngine;
 
 namespace HotUpdate.Dialogue

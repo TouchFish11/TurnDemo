@@ -3,7 +3,9 @@ using Core.Loader.Object;
 using Core.Service;
 using Core.UI.MVC;
 using HotUpdate.Activity.Core;
+using HotUpdate.Common;
 using HotUpdate.Config;
+using HotUpdate.Core.Activity;
 
 namespace HotUpdate.Activity.UI.Base
 {

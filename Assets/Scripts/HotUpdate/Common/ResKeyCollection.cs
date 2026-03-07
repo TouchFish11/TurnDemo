@@ -1,4 +1,4 @@
-namespace HotUpdate.Config
+namespace HotUpdate.Common
 {
 	/// <summary>
 	/// 资源键值集合类，自动生成，包含所有资源名称的静态字符串常量

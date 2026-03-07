@@ -3,7 +3,7 @@ using Core.Reflection;
 using Core.Service;
 using HotUpdate.Battle.Projectile;
 using HotUpdate.Battle.Status;
-using HotUpdate.Config;
+using HotUpdate.Common;
 using HotUpdate.Core.Battle.Status;
 using HotUpdate.Core.VFX;
 using UnityEngine;

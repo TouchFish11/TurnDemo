@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using HotUpdate.Battle.Object;
-using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Object;
 
 namespace HotUpdate.Battle.UI.SkillKey

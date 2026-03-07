@@ -1,6 +1,4 @@
 using System.Collections;
-using HotUpdate.Battle.Context;
-using HotUpdate.Battle.Damage;
 using HotUpdate.Battle.Event.General;
 using HotUpdate.Battle.Property;
 using HotUpdate.Battle.ResponsibilityChain;

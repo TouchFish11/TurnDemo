@@ -4,7 +4,11 @@ using Core.Mono;
 using Core.Pool;
 using Core.Service;
 using Core.Singleton;
-using HotUpdate.Config;
+using HotUpdate.Common;
+using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Input;
+using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.Battle.TargetSelect;
 using HotUpdate.Core.Camera;
 using UnityEngine;
 

@@ -1,5 +1,6 @@
 using System;
 using Core.Collection;
+using HotUpdate.Core.Activity;
 
 namespace HotUpdate.Activity.Data
 {

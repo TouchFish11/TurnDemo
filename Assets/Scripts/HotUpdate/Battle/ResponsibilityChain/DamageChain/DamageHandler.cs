@@ -1,9 +1,6 @@
 using Core.Log;
-using HotUpdate.Animation;
-using HotUpdate.Animation.Component;
 using HotUpdate.Battle.Event.General;
 using HotUpdate.Battle.Property;
-using HotUpdate.Core.Battle.Damage;
 using HotUpdate.Core.Battle.Damage.Data;
 using HotUpdate.Core.Battle.Property;
 

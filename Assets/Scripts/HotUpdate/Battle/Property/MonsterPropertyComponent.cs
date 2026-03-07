@@ -1,6 +1,4 @@
 using Core.Components;
-using HotUpdate.Battle.Object;
-using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Object;
 
 namespace HotUpdate.Battle.Property

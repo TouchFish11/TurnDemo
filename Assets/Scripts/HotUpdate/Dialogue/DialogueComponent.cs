@@ -1,7 +1,10 @@
 using Core.Components;
 using Core.Input.ActionAsset;
 using Core.Service;
+using HotUpdate.Core.Animation;
+using HotUpdate.Core.Component;
 using HotUpdate.Core.Dialogue;
+using HotUpdate.Core.Input;
 using HotUpdate.Core.Main.Object;
 
 namespace HotUpdate.Dialogue
@@ -25,19 +28,19 @@ namespace HotUpdate.Dialogue
         void IDialable.OnDialogueStart()
         {
             // 只允许交互输入
-            EntityObject.GetComponent<InputComponent>().LimitInput(nameof(MainActionMapData.Interact));
+            EntityObject.GetComponent<IInputComponent>().LimitInput(nameof(MainActionMapData.Interact));
             // 重置为待机动画
-            EntityObject.GetComponent<NormalAnimationComponent>().SetAnimationState(E_AnimationType.Idle);
+            EntityObject.GetComponent<INormalAnimationComponent>().SetAnimationState(E_AnimationType.Idle);
             // 停止并禁用移动
-            EntityObject.GetComponent<MoveComponent>().Disable();
+            EntityObject.GetComponent<IMoveComponent>().Disable();
         }
 
         void IDialable.OnDialogueEnd()
         {
             // 取消输入限制
-            EntityObject.GetComponent<InputComponent>().CancelLimitInput(nameof(MainActionMapData.Interact));
+            EntityObject.GetComponent<IInputComponent>().CancelLimitInput(nameof(MainActionMapData.Interact));
             // 允许移动
-            EntityObject.GetComponent<MoveComponent>().Enable();
+            EntityObject.GetComponent<IMoveComponent>().Enable();
         }
 
         public override void Destroy()

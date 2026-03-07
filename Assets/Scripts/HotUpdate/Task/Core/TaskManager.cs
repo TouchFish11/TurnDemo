@@ -7,6 +7,7 @@ using Core.Service;
 using Core.Singleton;
 using Core.Utility;
 using HotUpdate.Core;
+using HotUpdate.Core.Manager;
 using HotUpdate.Core.Task;
 using HotUpdate.Task.Data;
 using HotUpdate.Task.Event;

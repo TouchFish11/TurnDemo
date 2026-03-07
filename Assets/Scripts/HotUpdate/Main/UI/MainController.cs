@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Core.Log;
 using Core.UI;
 using Core.UI.MVC;
+using HotUpdate.Common;
 using HotUpdate.Config;
 using HotUpdate.Main.UI.Logic;
 

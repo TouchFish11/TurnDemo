@@ -1,8 +1,5 @@
 using Core.Service;
 using Core.UI;
-using HotUpdate.Battle.Context;
-using HotUpdate.Battle.Object;
-using HotUpdate.Battle.TargetSelect;
 using HotUpdate.Battle.UI.Base;
 using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Object;

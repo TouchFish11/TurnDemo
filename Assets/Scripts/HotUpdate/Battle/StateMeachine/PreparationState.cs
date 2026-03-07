@@ -3,18 +3,13 @@ using System.Collections.Generic;
 using Core.Log;
 using Core.Service;
 using Core.UI;
-using HotUpdate.Battle.Context;
-using HotUpdate.Battle.Core;
-using HotUpdate.Battle.Object;
-using HotUpdate.Battle.Turn;
 using HotUpdate.Battle.UI.Base;
 using HotUpdate.Battle.Utility;
-using HotUpdate.Config;
+using HotUpdate.Common;
 using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Object;
 using HotUpdate.Core.Battle.Point;
 using HotUpdate.Core.Battle.Turn;
-using HotUpdate.Main.Loading.Battle;
 
 namespace HotUpdate.Battle.StateMeachine
 {

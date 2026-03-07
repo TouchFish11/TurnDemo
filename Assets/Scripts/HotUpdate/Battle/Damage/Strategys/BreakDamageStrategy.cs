@@ -1,12 +1,10 @@
 using Core.Serialize.Binary;
 using Core.Service;
-using HotUpdate.Battle.Object;
-using HotUpdate.Core.Battle;
+using HotUpdate.Battle.Utility;
 using HotUpdate.Core.Battle.Damage;
 using HotUpdate.Core.Battle.Damage.Data;
 using HotUpdate.Core.Battle.Object;
 using HotUpdate.Core.Battle.Skill;
-using HotUpdate.Extension;
 
 namespace HotUpdate.Battle.Damage.Strategys
 {

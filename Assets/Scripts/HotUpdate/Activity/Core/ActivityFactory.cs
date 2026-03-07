@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Core.HotUpdate;
 using Core.Reflection;
 using Core.Service;
+using HotUpdate.Core.Activity;
 
 namespace HotUpdate.Activity.Core
 {

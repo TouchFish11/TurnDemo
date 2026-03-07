@@ -1,4 +1,4 @@
-namespace HotUpdate.Config
+namespace HotUpdate.Common
 {
 	/// <summary>
 	/// AB包键集合

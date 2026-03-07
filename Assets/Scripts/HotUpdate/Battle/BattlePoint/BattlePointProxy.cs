@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Core.Log;
 using Core.Service;
-using HotUpdate.Battle.Context;
 using HotUpdate.Battle.Object;
 using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Layer;

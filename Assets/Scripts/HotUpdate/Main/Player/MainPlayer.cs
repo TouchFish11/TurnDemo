@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using Core.Service;
 using HotUpdate.Core.Battle.Object;
 using HotUpdate.Core.Main.Object;
+using HotUpdate.Core.Module;
 using HotUpdate.Main.Move;
 
 namespace HotUpdate.Main.Player
@@ -24,20 +26,20 @@ namespace HotUpdate.Main.Player
         /// <param name="id">玩家实体的唯一标识ID</param>
         public override void BaseInit(int id)
         {
-            // 挂载输入组件：处理玩家的输入事件（键鼠、手柄等）
-            AddComponent<InputComponent>();
+            // 挂载输入组件：处理玩家的输入事件
+            ServiceLocator.Get<IModuleManager>().GetModule<IInputModule>().AddInputComponent(this);
             
-            // 挂载普通动画组件：处理玩家基础动画状态（待机、移动、攻击等）
-            AddComponent<NormalAnimationComponent>();
+            // 挂载普通动画组件：处理玩家基础动画状态
+            ServiceLocator.Get<IModuleManager>().GetModule<IAnimationModule>().AddNormalAnimationComponent(this);
             
             // 挂载移动组件：处理玩家的位移逻辑（坐标更新、移动速度、碰撞检测等）
             AddComponent<MoveComponent>();
             
             // 挂载交互组件：处理玩家与场景/其他实体的交互逻辑（拾取、对话触发等）
-            AddComponent<InteractComponent>();
+            AddComponent<IInteractComponent>();
             
             // 挂载对话组件：处理玩家的对话流程、剧情触发、文本展示等逻辑
-            AddComponent<DialogueComponent>();
+            AddComponent<IDialogueComponent>();
         }
 
         /// <summary>

@@ -1,8 +1,9 @@
 using Core.Components;
 using Core.Serialize.Binary;
 using Core.Service;
-using HotUpdate.Battle.Event.UI;
-using HotUpdate.Battle.Object;
+using HotUpdate.Animation.Core;
+using HotUpdate.Core.Animation;
+using HotUpdate.Core.Battle.Object;
 using HotUpdate.Core.Battle.Skill;
 using HotUpdate.Core.Component;
 
@@ -14,7 +15,7 @@ namespace HotUpdate.Animation.Component
     /// 监听技能选择、技能释放等战斗事件，并根据事件触发对应动画
     /// </summary>
     [ComponentId(typeof(BattleAnimationComponent))]
-    public class BattleAnimationComponent : AnimationComponent
+    public class BattleAnimationComponent : AnimationComponent, IBattleAnimationComponent
     {
         /// <summary>
         /// 当前绑定的战斗实体对象（玩家/怪物）

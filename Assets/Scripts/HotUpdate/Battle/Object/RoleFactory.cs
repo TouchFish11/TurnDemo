@@ -5,7 +5,7 @@ using Core.Service;
 using HotUpdate.Battle.Object.Role.Priest;
 using HotUpdate.Battle.Object.Role.Warrior;
 using HotUpdate.Battle.Object.Role.Wizard;
-using HotUpdate.Config;
+using HotUpdate.Common;
 using HotUpdate.Core.Battle.Object;
 using UnityEngine;
 

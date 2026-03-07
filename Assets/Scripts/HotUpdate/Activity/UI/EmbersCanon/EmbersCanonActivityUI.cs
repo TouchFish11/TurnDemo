@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using Core.Log;
 using HotUpdate.Activity.Core;
 using HotUpdate.Activity.UI.Common;
-using HotUpdate.Config;
-using HotUpdate.Item;
-using HotUpdate.Item.UI;
+using HotUpdate.Common;
 
 namespace HotUpdate.Activity.UI.EmbersCanon
 {

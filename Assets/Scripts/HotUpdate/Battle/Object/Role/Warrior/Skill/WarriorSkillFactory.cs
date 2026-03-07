@@ -3,7 +3,6 @@ using Core.Service;
 using HotUpdate.Battle.Skill.Base;
 using HotUpdate.Battle.Skill.Factory;
 using HotUpdate.Battle.Skill.Handler;
-using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Object;
 using HotUpdate.Core.Battle.Skill;
 

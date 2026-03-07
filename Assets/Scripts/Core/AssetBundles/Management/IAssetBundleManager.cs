@@ -44,8 +44,8 @@ namespace Core.AssetBundles.Management
         /// 初始化默认包
         /// 更新使用
         /// </summary>
-        /// <param name="defaultName"></param>
-        Task InitDefault(string defaultName);
+        /// <param name="abNames"></param>
+        Task InitSpecifyAsync(params string[] abNames);
 
         /// <summary>
         /// 强制卸载未使用的AB包

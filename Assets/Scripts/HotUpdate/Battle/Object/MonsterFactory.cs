@@ -5,7 +5,7 @@ using Core.Service;
 using HotUpdate.Battle.Object.Monster.AbyssalMage;
 using HotUpdate.Battle.Object.Monster.Slime;
 using HotUpdate.Battle.Object.Monster.TurtleShell;
-using HotUpdate.Config;
+using HotUpdate.Common;
 using UnityEngine;
 
 namespace HotUpdate.Battle.Object

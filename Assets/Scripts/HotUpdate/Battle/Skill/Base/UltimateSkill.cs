@@ -1,11 +1,6 @@
 using System.Collections;
 using Core.Service;
-using HotUpdate.Animation.Component;
-using HotUpdate.Battle.Context;
-using HotUpdate.Battle.Event;
 using HotUpdate.Battle.Event.Skill;
-using HotUpdate.Battle.Object;
-using HotUpdate.Battle.Property;
 using HotUpdate.Battle.Skill.Component;
 using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Event;

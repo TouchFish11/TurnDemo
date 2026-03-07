@@ -6,13 +6,12 @@ using Core.Log;
 using Core.Serialize.Binary;
 using Core.Service;
 using Core.Utility;
-using HotUpdate.Config;
 using HotUpdate.Main.Item.UI;
 using UnityEngine;
 
 // ReSharper disable RedundantLambdaParameterType
 
-namespace HotUpdate.Main.Item
+namespace HotUpdate.Common.Item
 {
     /// <summary>
     /// 物品工具类

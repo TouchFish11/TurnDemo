@@ -4,6 +4,7 @@ using Core.Tasks.Extensions;
 using Core.UI;
 using Core.UI.MVC;
 using Core.Video;
+using HotUpdate.Common;
 using HotUpdate.Config;
 using UnityEngine.Video;
 

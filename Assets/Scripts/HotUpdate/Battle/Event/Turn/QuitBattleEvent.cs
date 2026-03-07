@@ -1,5 +1,4 @@
 using Core.UI.MVC;
-using HotUpdate.Battle.Context;
 using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Event;
 

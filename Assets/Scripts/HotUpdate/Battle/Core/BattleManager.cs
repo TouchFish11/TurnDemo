@@ -15,7 +15,7 @@ using HotUpdate.Battle.Input;
 using HotUpdate.Battle.Skill.Base;
 using HotUpdate.Battle.TargetSelect;
 using HotUpdate.Battle.Turn;
-using HotUpdate.Config;
+using HotUpdate.Common;
 using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Damage;
 using HotUpdate.Core.Battle.Event;

@@ -6,6 +6,7 @@ using Core.Log;
 using Core.Reflection;
 using Core.Service;
 using HotUpdate.Activity.Data;
+using HotUpdate.Core.Activity;
 
 namespace HotUpdate.Activity.Core
 {
@@ -40,7 +41,7 @@ namespace HotUpdate.Activity.Core
             return -1;
         }
 
-        public ActivityData GetData(int activityId)
+        public IActivityData GetData(int activityId)
         {
             return _data.GetValueOrDefault(activityId);
         }

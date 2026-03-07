@@ -143,6 +143,9 @@ namespace Core.AssetBundles.Update.State
             {
                 waitDownloadCollection.Remove(abFileName);
             }
+
+            // 当前存在下载
+            assetBundleUpdater.GetContext().IsHasUpdate = waitDownloadCollection.Count != 0;
         }
 
         /// <summary>

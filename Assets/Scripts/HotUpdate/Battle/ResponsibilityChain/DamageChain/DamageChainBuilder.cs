@@ -1,4 +1,3 @@
-using HotUpdate.Core.Battle.Damage;
 using HotUpdate.Core.Battle.Damage.Data;
 
 namespace HotUpdate.Battle.ResponsibilityChain.DamageChain

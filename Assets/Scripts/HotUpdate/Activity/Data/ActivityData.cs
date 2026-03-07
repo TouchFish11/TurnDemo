@@ -1,6 +1,7 @@
 using System;
 using Core.Serialize.Binary;
 using Core.Service;
+using HotUpdate.Core.Activity;
 using Newtonsoft.Json;
 
 namespace HotUpdate.Activity.Data

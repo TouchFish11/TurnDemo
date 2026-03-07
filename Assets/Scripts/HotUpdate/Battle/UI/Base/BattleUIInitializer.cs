@@ -4,13 +4,11 @@ using Core.Loader.Object;
 using Core.Loader.Sprite;
 using Core.Log;
 using Core.Service;
-using HotUpdate.Battle.Object;
 using HotUpdate.Battle.Property;
 using HotUpdate.Battle.Skill.Component;
 using HotUpdate.Battle.UI.MonsterStateUI;
 using HotUpdate.Battle.UI.Role;
-using HotUpdate.Config;
-using HotUpdate.Core.Battle;
+using HotUpdate.Common;
 using HotUpdate.Core.Battle.Object;
 using HotUpdate.Core.Battle.Skill;
 

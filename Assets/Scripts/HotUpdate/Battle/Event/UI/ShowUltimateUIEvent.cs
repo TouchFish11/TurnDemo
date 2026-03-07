@@ -1,6 +1,3 @@
-using HotUpdate.Battle.Context;
-using HotUpdate.Battle.Object;
-using HotUpdate.Battle.Skill.Base;
 using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Event;
 using HotUpdate.Core.Battle.Object;

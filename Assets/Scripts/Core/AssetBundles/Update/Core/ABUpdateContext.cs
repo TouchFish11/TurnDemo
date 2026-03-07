@@ -130,6 +130,11 @@ namespace Core.AssetBundles.Update.Core
         private readonly IJsonManager _jsonManager;
         
         /// <summary>
+        /// 是否存在更新
+        /// </summary>
+        public bool IsHasUpdate { get; set; }
+        
+        /// <summary>
         /// 构造函数
         /// 初始化所有AB包信息集合和缓存集合
         /// </summary>

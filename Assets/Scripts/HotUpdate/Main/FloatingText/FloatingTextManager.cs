@@ -5,6 +5,7 @@ using Core.Log;
 using Core.Mono;
 using Core.Service;
 using Core.Singleton;
+using HotUpdate.Common;
 using HotUpdate.Config;
 using HotUpdate.Core.Interact;
 using HotUpdate.Core.Main;

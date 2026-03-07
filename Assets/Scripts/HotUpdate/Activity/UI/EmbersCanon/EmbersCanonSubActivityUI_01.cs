@@ -7,9 +7,8 @@ using Core.UI;
 using Core.Utility;
 using HotUpdate.Activity.Core;
 using HotUpdate.Activity.Data;
-using HotUpdate.Config;
+using HotUpdate.Common;
 using HotUpdate.Config.Activity;
-using HotUpdate.Main.Manager;
 using UnityEngine;
 using UnityEngine.UI;
 

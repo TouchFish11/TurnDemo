@@ -3,9 +3,8 @@ using Core.Collection;
 using Core.Serialize.Binary;
 using Core.Service;
 using Core.UI.MVC;
-using HotUpdate.Config;
-using HotUpdate.Item;
-using HotUpdate.Main.UI;
+using HotUpdate.Common;
+using HotUpdate.Core.Task;
 using HotUpdate.Task.Core;
 using HotUpdate.Task.Data;
 

@@ -4,7 +4,6 @@ using Core.UI;
 using Core.Utility;
 using HotUpdate.Battle.Status;
 using HotUpdate.Battle.UI.Base;
-using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Layer;
 using HotUpdate.Core.Battle.Object;
 using HotUpdate.Core.Camera;

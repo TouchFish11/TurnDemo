@@ -1,6 +1,7 @@
 using System;
 using Core.Collection;
 using Core.Utility;
+using HotUpdate.Core.Task;
 
 namespace HotUpdate.Task.Data
 {

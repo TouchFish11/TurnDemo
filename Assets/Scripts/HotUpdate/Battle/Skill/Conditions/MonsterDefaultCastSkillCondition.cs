@@ -1,9 +1,6 @@
-using HotUpdate.Battle.Object;
-using HotUpdate.Battle.Skill.Base;
-using HotUpdate.Core.Battle;
+using HotUpdate.Battle.Utility;
 using HotUpdate.Core.Battle.Object;
 using HotUpdate.Core.Battle.Skill;
-using HotUpdate.Extension;
 
 namespace HotUpdate.Battle.Skill.Conditions
 {

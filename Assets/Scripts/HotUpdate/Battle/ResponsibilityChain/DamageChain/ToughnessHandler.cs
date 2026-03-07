@@ -1,5 +1,3 @@
-using HotUpdate.Battle.Toughness;
-using HotUpdate.Core.Battle.Damage;
 using HotUpdate.Core.Battle.Damage.Data;
 using HotUpdate.Core.Battle.Toughness;
 

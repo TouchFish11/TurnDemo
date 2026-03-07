@@ -1,4 +1,7 @@
 using Core.Components;
+using HotUpdate.Animation.Core;
+using HotUpdate.Core.Animation;
+using HotUpdate.Core.Input;
 using UnityEngine;
 
 namespace HotUpdate.Animation.Component
@@ -8,7 +11,7 @@ namespace HotUpdate.Animation.Component
     /// 负责处理角色基础的移动、普通攻击等常规动画逻辑
     /// </summary>
     [ComponentId(typeof(NormalAnimationComponent))]
-    public class NormalAnimationComponent : AnimationComponent
+    public class NormalAnimationComponent : AnimationComponent, INormalAnimationComponent
     {
         /// <summary>
         /// 当前播放的动画类型
@@ -23,8 +26,8 @@ namespace HotUpdate.Animation.Component
         {
             base.Init(entityObject);
             // 注册输入组件的事件监听：移动输入变化、鼠标左键点击（普通攻击）
-            EntityObject.GetComponent<InputComponent>().OnKeyInputChanged += OnMove;
-            EntityObject.GetComponent<InputComponent>().OnMouseLeftClick += OnAttack;
+            EntityObject.GetComponent<IInputComponent>().OnKeyInputChanged += OnMove;
+            EntityObject.GetComponent<IInputComponent>().OnMouseLeftClick += OnAttack;
             
             // 初始化时将战斗层、技能层动画权重设为0，优先使用基础动画层
             animatorComponent.Animator.SetLayerWeight(animatorComponent.Animator.GetLayerIndex(Battle_Layer_Name), 0);

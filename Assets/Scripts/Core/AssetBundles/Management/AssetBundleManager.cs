@@ -35,17 +35,20 @@ namespace Core.AssetBundles.Management
         }
 
         /// <summary>
-        /// 初始化默认包
+        /// 初始化指定包
         /// 更新使用
         /// </summary>
-        /// <param name="defaultName"></param>
-        public async Task InitDefault(string defaultName)
+        /// <param name="abNames"></param>
+        public async Task InitSpecifyAsync(params string[] abNames)
         {
-            // 读取本地清单文件
-            _abPackageCollection = await ServiceLocator.Get<IJsonManager>().FromJsonAsync<ABPackageCollection>(PathUtility.GetAbLoadPath(FileUtility.ListFileDefaultName));
-            if(_abPackageCollection.TryGetValue(defaultName, out var defaultPackage))
+            foreach (var abName in abNames)
             {
-                _nameToWrapperMap.TryAdd(defaultName, new BundleWrapper(defaultName, PathUtility.GetAbLoadPath(defaultPackage.Name), this));
+                // 读取本地清单文件
+                _abPackageCollection = await ServiceLocator.Get<IJsonManager>().FromJsonAsync<ABPackageCollection>(PathUtility.GetAbLoadPath(FileUtility.ListFileDefaultName));
+                if(_abPackageCollection.TryGetValue(abName, out var defaultPackage))
+                {
+                    _nameToWrapperMap.TryAdd(abName, new BundleWrapper(abName, PathUtility.GetAbLoadPath(defaultPackage.Name), this));
+                }   
             }
         }
         

@@ -5,19 +5,15 @@ using Core.GlobalEvent.Events;
 using Core.Loader.Object;
 using Core.Service;
 using Core.Singleton;
-using HotUpdate.Animation;
-using HotUpdate.Animation.Component;
-using HotUpdate.Battle.Object.Role.Warrior;
+using HotUpdate.Common;
 using HotUpdate.Config;
+using HotUpdate.Core.Camera;
 using HotUpdate.Core.Main;
-using HotUpdate.Dialogue.UI;
-using HotUpdate.Main.FloatingText;
 using HotUpdate.Main.Move;
-using HotUpdate.Main.Player;
 using HotUpdate.Main.UI;
 using UnityEngine;
 
-namespace HotUpdate.Main
+namespace HotUpdate.Main.Player
 {
     using Task = System.Threading.Tasks.Task;
     
@@ -74,7 +70,7 @@ namespace HotUpdate.Main
             main.AddEntity(warrior.AddComponent<Warrior>());
             
             // 初始化玩家相机（异步创建主相机控制器）
-            await CreateMainCamera();
+            await ServiceLocator.Get<IOrbitCameraGeter>().CreateMainCamera();
             // 初始化主玩家基础数据（参数1为示例配置ID）
             main.BaseInit(1);
             // 将玩家对象加入字典管理
@@ -130,18 +126,6 @@ namespace HotUpdate.Main
         {
             return closeViewEvent.UIController is not MainController &&
                    closeViewEvent.UIController is not DialogueController && uidToEntityMap.ContainsKey(1001);
-        }
-        
-        /// <summary>
-        /// 异步创建玩家主相机控制器
-        /// 从资源包中加载主相机预制体并初始化相机控制器
-        /// </summary>
-        /// <returns>初始化完成的轨道相机控制器实例</returns>
-        private Task CreateMainCamera()
-        {
-            // 通过对象构建器从指定资源包加载主相机
-            return _prefabLoader.GetObjectAsync<OrbitCameraController>(AbKeyCollection.Camera, ResKeyCollection.MainCamera,
-                    null);
         }
     }
 }

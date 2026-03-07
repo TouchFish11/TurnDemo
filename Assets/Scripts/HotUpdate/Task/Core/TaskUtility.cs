@@ -2,6 +2,7 @@ using Core.Collection;
 using Core.Log;
 using Core.Service;
 using HotUpdate.Core;
+using HotUpdate.Core.Manager;
 using HotUpdate.Task.Data;
 
 namespace HotUpdate.Task.Core

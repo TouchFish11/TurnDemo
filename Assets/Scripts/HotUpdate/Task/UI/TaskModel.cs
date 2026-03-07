@@ -2,8 +2,7 @@ using System.Collections.Generic;
 using Core.Loader.Object;
 using Core.Service;
 using Core.UI.MVC;
-using HotUpdate.Config;
-using HotUpdate.Item.UI;
+using HotUpdate.Common;
 
 namespace HotUpdate.Task.UI
 {
