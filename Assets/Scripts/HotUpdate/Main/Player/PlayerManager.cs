@@ -6,11 +6,12 @@ using Core.Loader.Object;
 using Core.Service;
 using Core.Singleton;
 using HotUpdate.Common;
-using HotUpdate.Config;
+using HotUpdate.Core.Animation;
 using HotUpdate.Core.Camera;
+using HotUpdate.Core.Input;
 using HotUpdate.Core.Main;
+using HotUpdate.Core.MVC;
 using HotUpdate.Main.Move;
-using HotUpdate.Main.UI;
 using UnityEngine;
 
 namespace HotUpdate.Main.Player
@@ -88,7 +89,7 @@ namespace HotUpdate.Main.Player
             foreach (var entity in uidToEntityMap.Values)
             {
                 entity.Destroy(); // 执行实体内部销毁逻辑
-                UnityEngine.Object.Destroy(entity.GameObject); // 销毁GameObject对象
+                Object.Destroy(entity.GameObject); // 销毁GameObject对象
             }
 
             // 清空字典，释放引用
@@ -101,15 +102,15 @@ namespace HotUpdate.Main.Player
         /// <param name="openViewEvent"></param>
         private void OnOpenViewEvent(OpenViewEvent openViewEvent)
         {
-            MainPlayer.GetComponent<InputComponent>().DisEnableInput();
-            MainPlayer.GetComponent<NormalAnimationComponent>().SetAnimationState(E_AnimationType.Idle);
+            MainPlayer.GetComponent<IInputComponent>().DisEnableInput();
+            MainPlayer.GetComponent<INormalAnimationComponent>().SetAnimationState((int)E_AnimationType.Idle);
             MainPlayer.GetComponent<MoveComponent>().Disable();
         }
 
         private bool OpenViewEventFilter(OpenViewEvent openViewEvent)
         {
-            return openViewEvent.UIController is not MainController &&
-                   openViewEvent.UIController is not DialogueController && uidToEntityMap.ContainsKey(1001);
+            return openViewEvent.UIController is not IMainController &&
+                   openViewEvent.UIController is not IDialogueController && uidToEntityMap.ContainsKey(1001);
         }
         
         /// <summary>
@@ -118,14 +119,14 @@ namespace HotUpdate.Main.Player
         /// <param name="closeViewEvent"></param>
         private void OnCloseViewEvent(CloseViewEvent closeViewEvent)
         {
-            MainPlayer.GetComponent<InputComponent>().EnableInput();
+            MainPlayer.GetComponent<IInputComponent>().EnableInput();
             MainPlayer.GetComponent<MoveComponent>().Enable();
         }
 
         private bool OpenViewEventFilter(CloseViewEvent closeViewEvent)
         {
-            return closeViewEvent.UIController is not MainController &&
-                   closeViewEvent.UIController is not DialogueController && uidToEntityMap.ContainsKey(1001);
+            return closeViewEvent.UIController is not IMainController &&
+                   closeViewEvent.UIController is not IDialogueController && uidToEntityMap.ContainsKey(1001);
         }
     }
 }

@@ -1,7 +1,7 @@
 using Core.Components;
 using Core.UI;
 using HotUpdate.Activity.Core;
-using HotUpdate.Activity.Data;
+using HotUpdate.Core.Activity;
 
 namespace HotUpdate.Activity.UI.Base
 {
@@ -12,7 +12,7 @@ namespace HotUpdate.Activity.UI.Base
     {
         protected ActivityUIBehaviourBase ActivityUIBehaviourBase { get; private set; }
         protected ActivityInfo ActivityInfo { get; private set; }
-        protected ActivityData ActivityData { get; private set; }
+        protected IActivityData ActivityData { get; private set; }
         
         /// <summary>
         /// UI界面没有继承IEntityObject接口，此属性返回null
@@ -25,7 +25,7 @@ namespace HotUpdate.Activity.UI.Base
         /// <param name="activityUIBehaviourBase"></param>
         /// <param name="activityInfo"></param>
         /// <param name="activityData"></param>
-        public void Init(ActivityUIBehaviourBase activityUIBehaviourBase, ActivityInfo activityInfo, ActivityData activityData)
+        public void Init(ActivityUIBehaviourBase activityUIBehaviourBase, ActivityInfo activityInfo, IActivityData activityData)
         {
             ActivityUIBehaviourBase = activityUIBehaviourBase;
             ActivityInfo = activityInfo;

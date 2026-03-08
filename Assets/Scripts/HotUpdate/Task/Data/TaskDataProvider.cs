@@ -15,15 +15,22 @@ namespace HotUpdate.Task.Data
     /// </summary>
     public class TaskDataProvider : IDataProvider<ITaskDataCollection>
     {
+        private IJsonManager _jsonManager;
+        
         /// <summary>
         /// 任务数据集合
         /// </summary>
         public ITaskDataCollection TaskDataCollection { get; private set; }
+
+        public TaskDataProvider(IJsonManager jsonManager)
+        {
+            _jsonManager = jsonManager;
+        }
         
         public async Task<ITaskDataCollection> GetDataAsync()
         {
             // 读取任务数据
-            TaskDataCollection = await ServiceLocator.Get<IJsonManager>().FromJsonAsync<TaskDataCollection>(PathUtility.GetUserDataLocalSavePath(FileUtility.LocalTaskDataFileName));
+            TaskDataCollection = await _jsonManager.FromJsonAsync<TaskDataCollection>(PathUtility.GetUserDataLocalSavePath(FileUtility.LocalTaskDataFileName));
             LogManager.Log($"任务数据加载成功，{TaskDataCollection}");
             return TaskDataCollection;
         }
@@ -31,7 +38,7 @@ namespace HotUpdate.Task.Data
         public async Task SaveDataAsync()
         {
             // 保存任务数据
-            await ServiceLocator.Get<IJsonManager>().SaveToJsonAsync(TaskDataCollection, PathUtility.GetUserDataLocalSavePath(FileUtility.LocalTaskDataFileName));
+            await _jsonManager.SaveToJsonAsync(TaskDataCollection, PathUtility.GetUserDataLocalSavePath(FileUtility.LocalTaskDataFileName));
             LogManager.Log($"任务数据保存成功，{TaskDataCollection}");
         }
     }

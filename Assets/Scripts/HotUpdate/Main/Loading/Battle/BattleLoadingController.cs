@@ -1,4 +1,5 @@
 using Core.UI.MVC;
+using HotUpdate.Core.MVC;
 
 namespace HotUpdate.Main.Loading.Battle
 {
@@ -7,7 +8,7 @@ namespace HotUpdate.Main.Loading.Battle
     /// <summary>
     /// 战斗加载界面控制器
     /// </summary>
-    public class BattleLoadingController : UIController<BattleLoadingView, BattleLoadingModel>
+    public class BattleLoadingController : UIController<BattleLoadingView, BattleLoadingModel>, IBattleLoadingController
     {
         protected override Task OnShow()
         {

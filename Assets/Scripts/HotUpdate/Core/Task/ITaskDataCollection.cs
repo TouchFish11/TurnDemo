@@ -1,6 +1,8 @@
+using Core.Collection;
+
 namespace HotUpdate.Core.Task
 {
-    public interface ITaskDataCollection
+    public interface ITaskDataCollection : ICollection
     {
         /// <summary>
         /// 检查是否包含指定标识的任务（按任务主ID匹配，截取前7位作为主ID）

@@ -12,11 +12,6 @@ namespace HotUpdate.Battle.Skill.Base
     public class SkillManager : IInitializable, ISkillManager
     {
         public int Priority => -1;
-
-        private SkillManager()
-        {
-
-        }
         
         public Task InitAsync()
         {

@@ -37,7 +37,7 @@ namespace Core.HotUpdate
         public async Task LoadAssembliesAsync(string abName, params string[] assemblyNames)
         {
             var uniList = CollectionUtil.GetUniList<string>();
-            uniList.List.AddRange(assemblyNames);
+            uniList.AddRange(assemblyNames);
             Clear();
             var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(abName);
             // 加载热更新AB包资源
@@ -50,13 +50,14 @@ namespace Core.HotUpdate
                     continue;
                 }
                 
-                // Editor环境下，HotUpdate.dll.bytes已经被自动加载，不需要加载，重复加载反而会出问题。
+                // TODO：多线程加载程序集
 #if !UNITY_EDITOR
                 var assembly = Assembly.Load(dllText.bytes);
                 RuntimeApi.LoadMetadataForAOTAssembly(dllText.bytes, HomologousImageMode.SuperSet);
                 _assemblyNames.Add(assembly.GetName().Name);
                 LogManager.Log($"{nameof(HotUpdateManager)}.{nameof(LoadAssemblys)}：已加载热更程序集，{assembly.GetName().Name}");
 #else
+                // Editor环境下，HotUpdate.dll.bytes已经被自动加载，不需要加载，重复加载反而会出问题。
                 // Editor下无需加载，直接查找获得HotUpdate程序集
                 foreach (var assembly in System.AppDomain.CurrentDomain.GetAssemblies())
                 {

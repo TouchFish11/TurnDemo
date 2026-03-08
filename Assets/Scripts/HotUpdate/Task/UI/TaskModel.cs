@@ -3,6 +3,7 @@ using Core.Loader.Object;
 using Core.Service;
 using Core.UI.MVC;
 using HotUpdate.Common;
+using HotUpdate.Common.Item.UI;
 
 namespace HotUpdate.Task.UI
 {

@@ -7,7 +7,7 @@ using Core.Log;
 using Core.Service;
 using HotUpdate.Common;
 using HotUpdate.Config;
-using HotUpdate.Interact;
+using HotUpdate.Core.Interact;
 
 namespace HotUpdate.Main.UI.Logic
 {
@@ -54,12 +54,12 @@ namespace HotUpdate.Main.UI.Logic
         {
             try
             {
-                var uniList = CollectionUtil.GetUniList<InteractUI>();
+                var uniList = CollectionUtil.GetUniList<IInteractUI>();
                 // 遍历可交互对象，为每个对象创建对应的交互UI
                 foreach (var interactable in interactables)
                 {
                     // 从UI资源包中异步加载交互UI预制体并实例化
-                    var interactUI = await _prefabLoader.GetObjectAsync<InteractUI>(AbKeyCollection.Ui, ResKeyCollection.InteractUI, mainView.InteractContent);
+                    var interactUI = await _prefabLoader.GetObjectAsync<IInteractUI>(AbKeyCollection.Ui, ResKeyCollection.InteractUI, mainView.InteractContent);
                     // 初始化交互UI的显示数据（设置发言者/交互对象名称）
                     interactUI.Init(interactable.NpcInfo.f_speakerName);
                     // 将初始化完成的交互UI加入列表

@@ -5,6 +5,7 @@ using Core.Service;
 using Core.Utility;
 using HotUpdate.Battle.Skill.Base;
 using HotUpdate.Common;
+using HotUpdate.Core.Animation;
 using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Layer;
 using HotUpdate.Core.Battle.Object;
@@ -42,12 +43,12 @@ namespace HotUpdate.Battle.Object.Monster.AbyssalMage.Skill
             // 技能释放前短暂延迟
             yield return new WaitForSeconds(0.1f);
             // 获取施法者的动画组件
-            var animationComponent = Caster.GetComponent<BattleAnimationComponent>();
+            var animationComponent = Caster.GetComponent<IBattleAnimationComponent>();
             
             // 根据配置表设置技能对应的动画状态
-            animationComponent.SetAnimationState((E_AnimationType)SkillInfo.f_animationType);
+            animationComponent.SetAnimationState(SkillInfo.f_animationType);
             // 动画切换到第一段
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).IsName(Attack01));
+            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).IsName(Attack01));
             yield return UpdateCamera_01();
             
             // 第一段VEX

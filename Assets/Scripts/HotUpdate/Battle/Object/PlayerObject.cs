@@ -10,6 +10,7 @@ using HotUpdate.Battle.Event.Turn;
 using HotUpdate.Battle.Object.StateMeachine;
 using HotUpdate.Battle.ResponsibilityChain.DamageChain;
 using HotUpdate.Battle.Skill.Component;
+using HotUpdate.Core.Animation;
 using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Command;
 using HotUpdate.Core.Battle.Skill;
@@ -118,7 +119,7 @@ namespace HotUpdate.Battle.Object
         public override IEnumerator Die()
         {
             // 
-            yield return ServiceLocator.Get<IAnimationPlayManager>().WaitForAnimOver(GetComponent<BattleAnimationComponent>(), AnimationComponent.Battle_Layer_Name, E_AnimationType.Death);
+            yield return ServiceLocator.Get<IAnimationPlayManager>().WaitForAnimOver(GetComponent<IBattleAnimationComponent>(), AnimationUtility.Battle_Layer_Name, (int)E_AnimationType.Death);
         }
     }
 }

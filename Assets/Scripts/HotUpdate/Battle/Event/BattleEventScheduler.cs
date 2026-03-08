@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Threading.Tasks;
 using Core.Log;
 using Core.Reflection;
 using Core.Serialize.Binary;
@@ -16,6 +17,7 @@ using HotUpdate.Battle.UI.SkillKey;
 using HotUpdate.Battle.UI.SkillKey.Provider;
 using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Event;
+using HotUpdate.Core.Battle.Event.UI;
 using HotUpdate.Core.Battle.Input;
 using HotUpdate.Core.Battle.Layer;
 using HotUpdate.Core.Battle.Object;
@@ -31,15 +33,15 @@ namespace HotUpdate.Battle.Event
     /// 战斗事件逻辑调度器
     /// 监听战斗事件，执行其它模块的统一调用
     /// </summary>
-    public class BattleEventScheduler : SingletonAutoMono<BattleEventScheduler>, IBattleEventScheduler
+    public class BattleEventScheduler : IInitializable, IBattleEventScheduler
     {
+        public int Priority => -1;
+
         private IBattleContext _context;
 
-        public GameObject GameObject { get; private set; }
-
-        private void Awake()
+        public Task InitAsync()
         {
-            GameObject = gameObject;
+            return Task.CompletedTask;
         }
 
         public void Init(IBattleContext context)

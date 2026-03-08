@@ -6,6 +6,7 @@ using Core.Utility;
 using HotUpdate.Battle.Skill.Base;
 using HotUpdate.Battle.UI.Base;
 using HotUpdate.Common;
+using HotUpdate.Core.Animation;
 using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Layer;
 using HotUpdate.Core.Battle.Object;
@@ -39,16 +40,16 @@ namespace HotUpdate.Battle.Object.Role.Priest.Skill
         protected override IEnumerator OnUltimateCast(IBattleContext context)
         {
             // 获取施法者的动画组件
-            var animationComponent = Caster.GetComponent<BattleAnimationComponent>();
+            var animationComponent = Caster.GetComponent<IBattleAnimationComponent>();
             // 设置技能对应的动画状态
-            animationComponent.SetAnimationState((E_AnimationType)SkillInfo.f_animationType);
+            animationComponent.SetAnimationState(SkillInfo.f_animationType);
             
             // 等待动画切换到第一段
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).IsName(Priest_Ultimate_01));
+            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).IsName(Priest_Ultimate_01));
             yield return UpdateCamera_01();
             
             // 等待动画切换到第二段
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).IsName(Priest_Ultimate_02));
+            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).IsName(Priest_Ultimate_02));
             yield return UpdateCamera_02();
 
             CreateVFX();

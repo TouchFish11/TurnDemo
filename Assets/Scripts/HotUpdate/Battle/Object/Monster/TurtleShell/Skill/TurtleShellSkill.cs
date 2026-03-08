@@ -5,6 +5,7 @@ using Core.Pool;
 using Core.Service;
 using HotUpdate.Battle.Skill.Base;
 using HotUpdate.Common;
+using HotUpdate.Core.Animation;
 using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Object;
 using HotUpdate.Core.VFX;
@@ -25,7 +26,7 @@ namespace HotUpdate.Battle.Object.Monster.TurtleShell.Skill
 
         public TurtleShellSkill(IBattleEntityObject caster, int skillId) : base(caster, skillId)
         {
-            Caster.GetComponentInChildren<AnimationTrigger>().OnAttack += OnAttack;
+            Caster.GetComponentInChildren<IAnimationTrigger>().OnAttack += OnAttack;
         }
 
         private async void OnAttack(int skillId)
@@ -82,15 +83,15 @@ namespace HotUpdate.Battle.Object.Monster.TurtleShell.Skill
             yield return new WaitForSeconds(0.1f);
             
             // 获取施法者的动画组件
-            var animationComponent = Caster.GetComponent<BattleAnimationComponent>();
+            var animationComponent = Caster.GetComponent<IBattleAnimationComponent>();
             // 根据配置表设置技能对应的动画状态
-            animationComponent.SetAnimationState((E_AnimationType)SkillInfo.f_animationType);
+            animationComponent.SetAnimationState(SkillInfo.f_animationType);
             
             // 等待动画播放到普攻状态（Attack）
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).IsName(Attack));
+            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).IsName(Attack));
             
             // 等待动画播放至90%且特效已结束，确保技能流程完整
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).normalizedTime >= 0.9f && !vFXInfo.IsAlive);
+            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).normalizedTime >= 0.9f && !vFXInfo.IsAlive);
             
             // 技能结束前短暂延迟
             yield return new WaitForSeconds(0.2f);

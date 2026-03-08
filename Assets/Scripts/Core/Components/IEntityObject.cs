@@ -41,7 +41,7 @@ namespace Core.Components
         /// </summary>
         /// <typeparam name="TComponent">要获取的组件类型，需继承UnityEngine.Component并实现IComponent</typeparam>
         /// <returns>匹配类型的组件实例，若无则返回null</returns>
-        TComponent GetComponentInChildren<TComponent>() where TComponent : Component, IComponent;
+        TComponent GetComponentInChildren<TComponent>() where TComponent : IComponent;
 
         /// <summary>
         /// 为实体添加指定类型的组件

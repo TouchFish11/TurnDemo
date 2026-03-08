@@ -1,8 +1,8 @@
 using Core.Components;
 using Core.Serialize.Binary;
 using Core.Service;
-using HotUpdate.Animation.Core;
 using HotUpdate.Core.Animation;
+using HotUpdate.Core.Battle.Event.UI;
 using HotUpdate.Core.Battle.Object;
 using HotUpdate.Core.Battle.Skill;
 using HotUpdate.Core.Component;
@@ -51,18 +51,19 @@ namespace HotUpdate.Animation.Component
             // 注册技能选择事件监听
             battleEntity.Context.GetEventBus().AddListener<SelectSkillEvent>(OnSelectSkillEvent);
             // 初始化默认动画类型：玩家默认预普通攻击动画，其他实体（怪物）默认无动画
-            CurrentAnimationType = (battleEntity is PlayerObject) ? E_AnimationType.PreNormalAttack : E_AnimationType.None;
+            CurrentAnimationType = (battleEntity is IPlayerObject) ? E_AnimationType.PreNormalAttack : E_AnimationType.None;
         }
 
         /// <summary>
         /// 设置动画播放状态
         /// 根据指定的动画类型触发对应的Animator Trigger参数
         /// </summary>
-        /// <param name="animationType">要切换的动画类型</param>
-        public override void SetAnimationState(E_AnimationType animationType)
+        /// <param name="type">要切换的动画类型</param>
+        public override void SetAnimationState(int type)
         {
+            E_AnimationType animationType = (E_AnimationType)type;
             // 临时逻辑：若当前已在播放预普通攻击动画，且目标动画也是预普通攻击，则不重复触发
-            if (animatorComponent.Animator.GetCurrentAnimatorStateInfo(animatorComponent.Animator.GetLayerIndex(Battle_Layer_Name)).IsName("PreNormalAttack") 
+            if (animatorComponent.Animator.GetCurrentAnimatorStateInfo(animatorComponent.Animator.GetLayerIndex(AnimationUtility.Battle_Layer_Name)).IsName("PreNormalAttack") 
                 && animationType == E_AnimationType.PreNormalAttack)
             {
                 return;
@@ -114,7 +115,7 @@ namespace HotUpdate.Animation.Component
         /// </summary>
         public void SetUltimatePose()
         {
-            SetAnimationState(E_AnimationType.PreUltimateAttack);
+            SetAnimationState((int)E_AnimationType.PreUltimateAttack);
         }
 
         /// <summary>
@@ -123,7 +124,7 @@ namespace HotUpdate.Animation.Component
         /// </summary>
         public void ResetAnimationType()
         {
-            CurrentAnimationType = BattleEntity is PlayerObject ? E_AnimationType.PreNormalAttack : E_AnimationType.None;
+            CurrentAnimationType = BattleEntity is IPlayerObject ? E_AnimationType.PreNormalAttack : E_AnimationType.None;
         }
 
         /// <summary>
@@ -135,7 +136,7 @@ namespace HotUpdate.Animation.Component
         {
             // 过滤条件：事件触发者不是当前绑定实体，或触发者是怪物 → 不处理
             // TODO：分为玩家/怪物战斗动画组件
-            if (selectSkillEvent.Caster != BattleEntity || selectSkillEvent.Caster is MonsterObject)
+            if (selectSkillEvent.Caster != BattleEntity || selectSkillEvent.Caster is IMonsterObject)
             {
                 return;
             }
@@ -146,13 +147,13 @@ namespace HotUpdate.Animation.Component
             switch ((E_SkillType)skillInfo.f_SkillType)
             {
                 case E_SkillType.Monster: // 怪物技能 → 播放通用攻击动画
-                    SetAnimationState(E_AnimationType.Attack);
+                    SetAnimationState((int)E_AnimationType.Attack);
                     break;
                 case E_SkillType.NormalAttack: // 普通攻击 → 播放预普通攻击动画
-                    SetAnimationState(E_AnimationType.PreNormalAttack);
+                    SetAnimationState((int)E_AnimationType.PreNormalAttack);
                     break;
                 case E_SkillType.CombatSkill: // 战斗技能 → 播放预战斗技能攻击动画
-                    SetAnimationState(E_AnimationType.PreBattleAttack);
+                    SetAnimationState((int)E_AnimationType.PreBattleAttack);
                     break;
                 case E_SkillType.EnhancedNormalAttack: // 强化普通攻击 → 暂未处理
                     break;

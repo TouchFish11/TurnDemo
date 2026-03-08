@@ -5,6 +5,7 @@ using HotUpdate.Common;
 using HotUpdate.Core.Camera;
 using HotUpdate.Core.Interact;
 using HotUpdate.Core.Main;
+using HotUpdate.Core.Scene;
 using UnityEngine;
 
 namespace HotUpdate.Main
@@ -14,7 +15,7 @@ namespace HotUpdate.Main
     /// <summary>
     /// 场景生成器
     /// </summary>
-    public static class SceneGenerator
+    public class SceneGenerator : ISceneGenerator
     {
         private static readonly IPrefabLoader _prefabLoader = ServiceLocator.Get<IPrefabLoader>();
         
@@ -22,7 +23,7 @@ namespace HotUpdate.Main
         /// 初始化主游戏场景核心内容
         /// 异步创建NPC、玩家对象，初始化UI界面、飘字管理器等游戏元素
         /// </summary>
-        public static async Task InitMainScene()
+        public async Task InitMainScene()
         {
             // 创建村民NPC对象
             var villager = await _prefabLoader.GetObjectAsync<INpcObject>(AbKeyCollection.Prefab, ResKeyCollection.Prefab_Npc, null);
@@ -39,7 +40,7 @@ namespace HotUpdate.Main
         /// <summary>
         /// 清理主游戏场景
         /// </summary>
-        public static void ClearMainScene()
+        public void ClearMainScene()
         {
             // 销毁相机对象
             Object.Destroy(ServiceLocator.Get<IOrbitCameraGeter>().OrbitCameraController.Transform.gameObject);

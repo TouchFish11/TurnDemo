@@ -8,7 +8,7 @@ namespace HotUpdate.Activity.Data
     /// 活动数据容器
     /// </summary>
     [Serializable]
-    public class ActivityDataCollection : Collection<int, ActivityData>, IActivityDataCollection
+    public class ActivityDataCollection : Collection<int, IActivityData>, IActivityDataCollection
     {
         
     }

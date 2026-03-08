@@ -208,7 +208,7 @@ namespace HotUpdate.Camera
         EntityProperty IEntityObject.EntityProperty => _entityProperty;
         void IEntityObject.BaseInit(int id) { }
         T IEntityObject.GetComponent<T>() => default;
-        TComponent IEntityObject.GetComponentInChildren<TComponent>() => null;
+        TComponent IEntityObject.GetComponentInChildren<TComponent>() => default;
         TComponent IEntityObject.AddComponent<TComponent>() => null;
         bool IEntityObject.AddComponents(params string[] componentNames) => false;
         void IEntityObject.Destroy() { }

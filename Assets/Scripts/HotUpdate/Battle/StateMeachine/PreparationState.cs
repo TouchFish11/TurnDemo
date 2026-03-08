@@ -10,6 +10,7 @@ using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Object;
 using HotUpdate.Core.Battle.Point;
 using HotUpdate.Core.Battle.Turn;
+using HotUpdate.Core.MVC;
 
 namespace HotUpdate.Battle.StateMeachine
 {
@@ -62,7 +63,7 @@ namespace HotUpdate.Battle.StateMeachine
                 // 初始化行动顺序
                 BattleUtility.InitOrder(Context);
                 // 销毁战斗加载界面
-                var loadingController = ServiceLocator.Get<IUIManager>().GetController<BattleLoadingController>();
+                var loadingController = ServiceLocator.Get<IUIManager>().GetController<IBattleLoadingController>();
                 ServiceLocator.Get<IUIManager>().DestroyView(AbKeyCollection.Ui, loadingController);
             
                 BattleStateMachine.ChangeState(EBattlePhase.EnterAnimation);

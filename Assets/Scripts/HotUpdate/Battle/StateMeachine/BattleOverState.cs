@@ -2,6 +2,7 @@ using Core.Service;
 using Core.Time;
 using HotUpdate.Battle.Event.Turn;
 using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Event;
 using HotUpdate.Core.Battle.Turn;
 
 namespace HotUpdate.Battle.StateMeachine

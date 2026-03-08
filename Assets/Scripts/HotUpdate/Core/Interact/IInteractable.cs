@@ -1,6 +1,6 @@
 using Core.Components;
 
-namespace HotUpdate.Interact
+namespace HotUpdate.Core.Interact
 {
     /// <summary>
     /// �ɽ�����

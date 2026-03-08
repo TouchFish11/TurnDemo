@@ -3,6 +3,7 @@ using Core.Service;
 using Core.Utility;
 using HotUpdate.Battle.Skill.Base;
 using HotUpdate.Common;
+using HotUpdate.Core.Animation;
 using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Object;
 using HotUpdate.Core.VFX;
@@ -59,11 +60,11 @@ namespace HotUpdate.Battle.Object.Role.Warrior.Skill
             yield return _waitForSeconds0_25;
 
             // 切换终结技动画
-            var animationComponent = Caster.GetComponent<BattleAnimationComponent>(); 
-            animationComponent.SetAnimationState((E_AnimationType)SkillInfo.f_animationType);
+            var animationComponent = Caster.GetComponent<IBattleAnimationComponent>(); 
+            animationComponent.SetAnimationState(SkillInfo.f_animationType);
             
             // 等待动画切换到终结技攻击状态
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).IsName(ultimateAttackState));
+            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).IsName(ultimateAttackState));
 
             // 初始化终结技核心特效数据（位置上移0.9米，避免穿模）
             projectileData = new ProjectileData(Caster, MainTarget, AllTargets, this);
@@ -75,7 +76,7 @@ namespace HotUpdate.Battle.Object.Role.Warrior.Skill
                 projectileTrans, projectileData, vFXInfo));
             
             // 等待动画播放到90%（确保特效播放完成）
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).normalizedTime >= 0.9f);
+            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).normalizedTime >= 0.9f);
 
             // 重置角色位置到战斗初始点位
             targetPos = context.GetProxy().BattlePoint.GetRoleTransByIndex(Caster.EntityPosIndex).position;

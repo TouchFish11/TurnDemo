@@ -2,6 +2,7 @@ using System.Collections;
 using Core.Service;
 using HotUpdate.Battle.Event.Skill;
 using HotUpdate.Battle.Skill.Component;
+using HotUpdate.Core.Animation;
 using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Event;
 using HotUpdate.Core.Battle.Object;
@@ -55,7 +56,7 @@ namespace HotUpdate.Battle.Skill.Base
         private IEnumerator OnUltimateTrigger()
         {
             // 终结技动画Pose
-            Caster.GetComponent<BattleAnimationComponent>().SetUltimatePose();
+            Caster.GetComponent<IBattleAnimationComponent>().SetUltimatePose();
             InitProjectileAndPoseVfx();
             yield return ServiceLocator.Get<IBattleEventScheduler>().PreUltimateCastDispatch(Caster, SkillInfo);
         }

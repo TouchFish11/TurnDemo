@@ -3,6 +3,7 @@ using Core.Service;
 using HotUpdate.Core.Camera;
 using HotUpdate.Core.Component;
 using HotUpdate.Core.Input;
+using HotUpdate.Core.Main;
 using UnityEngine;
 
 namespace HotUpdate.Main.Move
@@ -13,7 +14,7 @@ namespace HotUpdate.Main.Move
     /// </summary>
     [ComponentId(typeof(MoveComponent))]
     [RequireComponent(typeof(CharacterControllerComponent))]
-    public class MoveComponent : BaseComponent
+    public class MoveComponent : BaseComponent, IMoveComponent
     {
         // 移动基础速度（单位/秒）
         [SerializeField] private float speed = 7;

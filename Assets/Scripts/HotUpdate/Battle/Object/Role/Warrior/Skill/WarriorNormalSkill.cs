@@ -3,6 +3,7 @@ using Core.Service;
 using Core.Utility;
 using HotUpdate.Battle.Skill.Base;
 using HotUpdate.Common;
+using HotUpdate.Core.Animation;
 using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Object;
 using HotUpdate.Core.VFX;
@@ -47,12 +48,12 @@ namespace HotUpdate.Battle.Object.Role.Warrior.Skill
         protected override IEnumerator OnCast(IBattleContext context)
         {
             // 获取动画组件并切换到普攻动画
-            var animationComponent = Caster.GetComponent<BattleAnimationComponent>();
-            animationComponent.SetAnimationState((E_AnimationType)SkillInfo.f_animationType);
+            var animationComponent = Caster.GetComponent<IBattleAnimationComponent>();
+            animationComponent.SetAnimationState(SkillInfo.f_animationType);
             var animator = animationComponent.GetAnimator();
 
             // 等待动画切换到翻滚状态
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).IsName(rollState));
+            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).IsName(rollState));
 
             // 初始化第一段普攻特效（波浪特效）
             projectileTrans = new ProjectileTrans(Caster.GameObject.transform.position, Quaternion.identity);
@@ -67,7 +68,7 @@ namespace HotUpdate.Battle.Object.Role.Warrior.Skill
             animator.MatchTarget(matchPos, matchRot, AvatarTarget.Body, mask, 0.28f); // 0.28秒内完成匹配
 
             // 等待动画切换到攻击状态
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).IsName(attackState));
+            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).IsName(attackState));
 
             // 初始化第二段普攻特效（核心攻击特效）
             projectileTrans = new ProjectileTrans(Caster.SubGameObject.transform.position + Vector3.up, Quaternion.Euler(180, 180, 0));
@@ -77,7 +78,7 @@ namespace HotUpdate.Battle.Object.Role.Warrior.Skill
                 .CreateVFX(ResKeyCollection.VFX_WarriorNormalSkill, projectileTrans, projectileData, vFXInfo));
 
             // 等待动画播放到90%且特效结束
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).normalizedTime >= 0.9f && !vFXInfo.IsAlive);
+            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).normalizedTime >= 0.9f && !vFXInfo.IsAlive);
 
             // 重置角色本地位置（防止动画位移残留）
             animator.transform.localPosition = Vector3.zero;

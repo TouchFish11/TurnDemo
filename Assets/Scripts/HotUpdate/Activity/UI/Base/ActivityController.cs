@@ -7,10 +7,9 @@ using Core.UI.MVC;
 using HotUpdate.Activity.Core;
 using HotUpdate.Activity.Data;
 using HotUpdate.Common;
-using HotUpdate.Config;
-using HotUpdate.Core;
 using HotUpdate.Core.Activity;
 using HotUpdate.Core.Manager;
+using HotUpdate.Core.MVC;
 
 namespace HotUpdate.Activity.UI.Base
 {
@@ -19,7 +18,7 @@ namespace HotUpdate.Activity.UI.Base
     /// <summary>
     /// 活动界面控制器
     /// </summary>
-    public class ActivityController : UIController<ActivityView, ActivityModel>
+    public class ActivityController : UIController<ActivityView, ActivityModel>, IActivityController
     {
         private readonly IGameManager _gameManager = ServiceLocator.Get<IGameManager>();
         
@@ -52,7 +51,7 @@ namespace HotUpdate.Activity.UI.Base
         protected override Task OnHide()
         {
             // 显示主界面
-            return uiManager.SetViewActive(uiManager.GetController<MainController>(), true);
+            return uiManager.SetViewActive(uiManager.GetController<IMainController>(), true);
         }
 
         protected override void ButtonOnClick(string btnName)
@@ -73,7 +72,7 @@ namespace HotUpdate.Activity.UI.Base
             }
             
             // 活动本地活动数据
-            var activityDataCollection = _gameManager.GameDataManager.ActivityDataCollection as ActivityDataCollection;
+            var activityDataCollection = await _gameManager.GameDataManager.GetData<IActivityDataCollection>() as ActivityDataCollection;
             // 获取活动UI对象
             var activity = await prefabLoader.GetObjectAsync<ActivityUIBehaviourBase>(AbKeyCollection.Ui, activityInfo.f_detailUI_res,
                 view.ActivityDetailArea);

@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
+using Core.Collection;
 using Core.GlobalEvent;
 using Core.Log;
 using Core.Serialize.Binary;
 using Core.Service;
 using Core.Singleton;
 using Core.Utility;
-using HotUpdate.Core;
 using HotUpdate.Core.Manager;
 using HotUpdate.Core.Task;
+using HotUpdate.Core.Task.Event;
 using HotUpdate.Task.Data;
-using HotUpdate.Task.Event;
 
 namespace HotUpdate.Task.Core
 {
@@ -56,10 +56,11 @@ namespace HotUpdate.Task.Core
         /// 检查当前任务状态（初始化/恢复任务追踪）
         /// 从游戏管理器中获取正在追踪的任务，加载对应配置并监听事件
         /// </summary>
-        public void CheckTaskState()
+        public async void CheckTaskState()
         {
+            var taskDataCollection = await ServiceLocator.Get<IGameManager>().GameDataManager.GetData<ITaskDataCollection>();
             // 若没有正在追踪的任务，直接返回
-            if (!ServiceLocator.Get<IGameManager>().GameDataManager.TaskDataCollection.IsTracking(out var taskData))
+            if (!taskDataCollection.IsTracking(out var taskData))
             {
                 LogManager.Log($"{nameof(TaskManager)}.{nameof(CheckTaskState)}，任务数据：{taskData}");
                 return;
@@ -82,7 +83,7 @@ namespace HotUpdate.Task.Core
         /// 若已有正在追踪的任务，先取消原有任务
         /// </summary>
         /// <param name="id">要接受的任务ID</param>
-        public void AcceptTask(string id)
+        public async void AcceptTask(string id)
         {
             // 若当前已有正在追踪的任务，先取消该任务的追踪
             if (currentTaskInfo != null && currentTaskData != null)
@@ -95,7 +96,7 @@ namespace HotUpdate.Task.Core
             currentConditionInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<TaskConditionInfoContainer>(EConfigLoadType.Excel).dataDic[currentTaskInfo.f_completionConditionId];
 
             // 转换集合
-            var collection = TaskUtility.GetTaskDataCollection();
+            var collection = await TaskUtility.GetTaskDataCollection() as Collection<string, TaskData>;
             if (collection == null)
             {
                 return;
@@ -207,7 +208,7 @@ namespace HotUpdate.Task.Core
         /// 更新任务节点进度
         /// 进度满则标记任务完成，并处理后续任务（如有）
         /// </summary>
-        private void UpdateTaskNodeProgress()
+        private async void UpdateTaskNodeProgress()
         {
             // 当前任务进度+1
             currentTaskData.CurrentPro += 1;
@@ -241,7 +242,7 @@ namespace HotUpdate.Task.Core
                     };
                     
                     // 转换集合
-                    var collection = TaskUtility.GetTaskDataCollection();
+                    var collection = (Collection<string, TaskData>)await TaskUtility.GetTaskDataCollection();
                     if (collection == null)
                     {
                         return;

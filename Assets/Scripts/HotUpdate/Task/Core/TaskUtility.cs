@@ -1,18 +1,19 @@
 using Core.Collection;
 using Core.Log;
 using Core.Service;
-using HotUpdate.Core;
 using HotUpdate.Core.Manager;
+using HotUpdate.Core.Task;
 using HotUpdate.Task.Data;
 
 namespace HotUpdate.Task.Core
 {
     public static class TaskUtility
     {
-        public static TaskDataCollection GetTaskDataCollection()
+        public static async System.Threading.Tasks.Task<ITaskDataCollection> GetTaskDataCollection()
         {
+            var taskDataCollection = await ServiceLocator.Get<IGameManager>().GameDataManager.GetData<ITaskDataCollection>();
             // 转换集合
-            if (ServiceLocator.Get<IGameManager>().GameDataManager.TaskDataCollection is Collection<string, TaskData> collection)
+            if (taskDataCollection is Collection<string, TaskData> collection)
             {
                 return collection as TaskDataCollection;
             }

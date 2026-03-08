@@ -4,6 +4,8 @@ using Core.Serialize.Binary;
 using Core.Service;
 using Core.UI.MVC;
 using HotUpdate.Common;
+using HotUpdate.Common.Item;
+using HotUpdate.Core.MVC;
 using HotUpdate.Core.Task;
 using HotUpdate.Task.Core;
 using HotUpdate.Task.Data;
@@ -16,7 +18,7 @@ namespace HotUpdate.Task.UI
     /// 任务控制器类
     /// 处理任务UI的交互逻辑、数据初始化、视图更新等核心逻辑
     /// </summary>
-    public class TaskController : UIController<TaskView, TaskModel>
+    public class TaskController : UIController<TaskView, TaskModel>, ITaskController
     {
         // 任务数据集合，存储当前所有任务的状态数据
         private ITaskDataCollection taskDataCollection;
@@ -57,7 +59,7 @@ namespace HotUpdate.Task.UI
         protected override Task OnHide()
         {
             // 显示主界面
-            return uiManager.SetViewActive(uiManager.GetController<MainController>(), true);
+            return uiManager.SetViewActive(uiManager.GetController<IMainController>(), true);
         }
 
         /// <summary>
@@ -124,7 +126,7 @@ namespace HotUpdate.Task.UI
             // 临时设置任务分组允许取消选中，避免初始化过程中Toggle无法响应事件
             view.TaskItemGroup.allowSwitchOff = true;
             // 获取全局任务数据集合实例
-            taskDataCollection = TaskUtility.GetTaskDataCollection();
+            taskDataCollection = await TaskUtility.GetTaskDataCollection();
             if (taskDataCollection == null)
             {
                 return;

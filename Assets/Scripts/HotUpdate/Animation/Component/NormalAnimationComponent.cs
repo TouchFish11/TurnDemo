@@ -30,8 +30,8 @@ namespace HotUpdate.Animation.Component
             EntityObject.GetComponent<IInputComponent>().OnMouseLeftClick += OnAttack;
             
             // 初始化时将战斗层、技能层动画权重设为0，优先使用基础动画层
-            animatorComponent.Animator.SetLayerWeight(animatorComponent.Animator.GetLayerIndex(Battle_Layer_Name), 0);
-            animatorComponent.Animator.SetLayerWeight(animatorComponent.Animator.GetLayerIndex(Skill_Layer_Name), 0);
+            animatorComponent.Animator.SetLayerWeight(animatorComponent.Animator.GetLayerIndex(AnimationUtility.Battle_Layer_Name), 0);
+            animatorComponent.Animator.SetLayerWeight(animatorComponent.Animator.GetLayerIndex(AnimationUtility.Skill_Layer_Name), 0);
         }
 
         /// <summary>
@@ -48,9 +48,10 @@ namespace HotUpdate.Animation.Component
         /// 设置动画播放状态
         /// 根据指定的动画类型切换对应的动画参数
         /// </summary>
-        /// <param name="animationType">要切换的动画类型</param>
-        public override void SetAnimationState(E_AnimationType animationType)
+        /// <param name="type"></param>
+        public override void SetAnimationState(int type)
         {
+            E_AnimationType animationType = (E_AnimationType)type;
             switch (animationType)
             {
                 case E_AnimationType.Idle:
@@ -78,7 +79,7 @@ namespace HotUpdate.Animation.Component
         private void OnMove(Vector3 inputDir)
         {
             // 输入方向非零则播放跑步动画，否则播放待机动画
-            SetAnimationState(inputDir != Vector3.zero ? E_AnimationType.Run : E_AnimationType.Idle);
+            SetAnimationState((int)(inputDir != Vector3.zero ? E_AnimationType.Run : E_AnimationType.Idle));
         }
 
         /// <summary>
@@ -87,7 +88,7 @@ namespace HotUpdate.Animation.Component
         /// </summary>
         private void OnAttack()
         {
-            SetAnimationState(E_AnimationType.NormalAttack);
+            SetAnimationState((int)E_AnimationType.NormalAttack);
         }
     }
 }

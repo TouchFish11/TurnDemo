@@ -6,6 +6,7 @@ using Core.Log;
 using Core.Service;
 using Core.Singleton;
 using HotUpdate.Core.Input;
+using HotUpdate.Core.MVC;
 using UnityEngine;
 
 namespace HotUpdate.Input
@@ -133,9 +134,9 @@ namespace HotUpdate.Input
         /// </summary>
         /// <param name="source">请求来源标识</param>
         /// <returns>true=允许显示，false=禁止显示</returns>
-        private bool CanVisible(string source)
+        private static bool CanVisible(string source)
         {
-            return source != typeof(MainController).FullName;
+            return source != typeof(IMainController).FullName;
         }
         
         public bool Visible => Cursor.visible;

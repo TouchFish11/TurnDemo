@@ -1,5 +1,9 @@
+using Core.Service;
+
 namespace HotUpdate.Core.Module
 {
+    using Task = System.Threading.Tasks.Task;
+
     /// <summary>
     /// 模块接口
     /// </summary>
@@ -9,6 +13,6 @@ namespace HotUpdate.Core.Module
         /// 异步初始化模块
         /// </summary>
         /// <returns></returns>
-        System.Threading.Tasks.Task InitModuleAsync();
+        Task InitModuleAsync();
     }
 }

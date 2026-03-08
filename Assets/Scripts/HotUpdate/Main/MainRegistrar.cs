@@ -1,6 +1,9 @@
 using Core.Service;
+using Core.UI;
 using HotUpdate.Core.Main;
 using HotUpdate.Core.Manager;
+using HotUpdate.Core.Scene;
+using HotUpdate.Core.UI.Helper;
 using HotUpdate.Core.VFX;
 using HotUpdate.Main.FloatingText;
 using HotUpdate.Main.Player;
@@ -18,6 +21,9 @@ namespace HotUpdate.Main
             ServiceLocator.Register<IFloatingTextManager>(FloatingTextManager.Instance);
             ServiceLocator.Register<IPlayerManager>(PlayerManager.Instance);
             ServiceLocator.Register<IVFXManager>(VFXManager.Instance);
+            ServiceLocator.Register<IMainUiHelper>(new MainUiHelper(ServiceLocator.Get<IUIManager>()));
+            // 初始化场景生成器
+            SceneGeneratorHelper.Init(new SceneGenerator());
         }
     }
 }

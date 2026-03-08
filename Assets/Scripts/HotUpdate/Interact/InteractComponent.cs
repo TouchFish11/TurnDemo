@@ -4,6 +4,7 @@ using Core.GlobalEvent;
 using Core.Service;
 using HotUpdate.Core.Component;
 using HotUpdate.Core.Dialogue;
+using HotUpdate.Core.Interact;
 using HotUpdate.Input;
 
 namespace HotUpdate.Interact
@@ -13,7 +14,7 @@ namespace HotUpdate.Interact
     /// 负责管理实体的交互逻辑，包括交互对象的添加/移除、交互触发、对话结束后退出交互等核心逻辑
     /// </summary>
     [ComponentId(typeof(InteractComponent))]
-    public class InteractComponent : BaseComponent
+    public class InteractComponent : BaseComponent, IInteractComponent
     {
         // 存储当前可交互的所有交互对象
         private readonly List<IInteractable> interactables = new();

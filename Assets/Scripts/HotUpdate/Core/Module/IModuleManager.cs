@@ -1,11 +1,13 @@
 namespace HotUpdate.Core.Module
 {
+    using Task = System.Threading.Tasks.Task;
+
     public interface IModuleManager
     {
         /// <summary>
         /// 初始化所有热更程序集的模块
         /// </summary>
-        void InitModules();
+        Task InitModules();
         
         /// <summary>
         /// 获取指定模块

@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using Core.Log;
-using Core.UI;
+using Core.Service;
 using Core.UI.MVC;
-using HotUpdate.Common;
-using HotUpdate.Config;
+using HotUpdate.Core.MVC;
+using HotUpdate.Core.UI;
+using HotUpdate.Core.UI.Helper;
 using HotUpdate.Main.UI.Logic;
 
 namespace HotUpdate.Main.UI
@@ -16,8 +17,12 @@ namespace HotUpdate.Main.UI
     /// 职责：处理主界面的业务逻辑、事件订阅/取消、按钮点击、状态初始化等
     /// 继承：UIController（基础UI控制器），实现IMainController接口
     /// </summary>
-    public class MainController : UIController<MainView, MainModel>
+    public class MainController : UIController<MainView, MainModel>, IMainController
     {
+        private readonly ITaskUiHelper _taskUiHelper = ServiceLocator.Get<ITaskUiHelper>();
+        private readonly IActivityUiHelper _activityUiHelper = ServiceLocator.Get<IActivityUiHelper>();
+        
+        
         /// <summary>
         /// 主界面逻辑对象字典
         /// 键：逻辑类类型（如InteractLogic/TaskLogic）
@@ -72,7 +77,7 @@ namespace HotUpdate.Main.UI
                 switch (btnName)
                 {
                     case "btnActivity":
-                        await uiManager.CreateViewAsync<ActivityView, ActivityModel, ActivityController>(AbKeyCollection.Ui, E_UILayer.Mid, ResKeyCollection.ActivityView);
+                        await _activityUiHelper.CreateActivityController();
                         break;
                     case "btnJourney":
                         
@@ -82,7 +87,7 @@ namespace HotUpdate.Main.UI
                         break;
                     // 任务按钮点击：打开任务界面
                     case "btnTask":
-                        await uiManager.CreateViewAsync<TaskView, TaskModel, TaskController>(AbKeyCollection.Ui, E_UILayer.Mid, ResKeyCollection.TaskView);
+                        await _taskUiHelper.CreateTaskController();
                         break;
                     case "btnTeam":
                         

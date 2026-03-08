@@ -12,6 +12,7 @@ using HotUpdate.Config.Activity;
 using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Turn;
 using HotUpdate.Core.Main;
+using HotUpdate.Core.Scene;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -98,7 +99,7 @@ namespace HotUpdate.Activity.UI.EmbersCanon
                 await _battleManager.EnterBattle(turnData, async () =>
                 {
                     // 清理场景内容缓存
-                    SceneGenerator.ClearMainScene();
+                    SceneGeneratorHelper.GetSceneGenerator().ClearMainScene();
                     // 隐藏活动界面
                     await _uiManager.SetViewActive(_uiManager.GetController<ActivityController>(), false);
                 }, async () =>
@@ -126,7 +127,7 @@ namespace HotUpdate.Activity.UI.EmbersCanon
         {
             // 切换到指定场景场景
             await _sceneManager.LoadSceneAsync(ResKeyCollection.MainScene, UnityEngine.SceneManagement.LoadSceneMode.Single, null);
-            await SceneGenerator.InitMainScene();
+            await SceneGeneratorHelper.GetSceneGenerator().InitMainScene();
         }
     }
 }

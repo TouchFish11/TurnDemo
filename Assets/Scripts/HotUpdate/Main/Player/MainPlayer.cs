@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using Core.Service;
 using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.Dialogue;
+using HotUpdate.Core.Interact;
+using HotUpdate.Core.Main;
 using HotUpdate.Core.Main.Object;
 using HotUpdate.Core.Module;
 using HotUpdate.Main.Move;
@@ -12,7 +15,7 @@ namespace HotUpdate.Main.Player
     /// 负责玩家实体的初始化、组件挂载、战斗实体管理、相机创建等核心逻辑
     /// 继承自 EntityObject，作为游戏内可交互的实体基类
     /// </summary>
-    public class MainPlayer : EntityObject
+    public class MainPlayer : EntityObject, IMainPlayer
     {
         // 战斗实体对象的索引映射字典
         // Key：实体的索引序号（自增），Value：对应的战斗实体对象接口实例
@@ -36,10 +39,10 @@ namespace HotUpdate.Main.Player
             AddComponent<MoveComponent>();
             
             // 挂载交互组件：处理玩家与场景/其他实体的交互逻辑（拾取、对话触发等）
-            AddComponent<IInteractComponent>();
+            ServiceLocator.Get<IModuleManager>().GetModule<IInteractModule>().AddInteractComponent(this);
             
             // 挂载对话组件：处理玩家的对话流程、剧情触发、文本展示等逻辑
-            AddComponent<IDialogueComponent>();
+            ServiceLocator.Get<IModuleManager>().GetModule<IDialogueModule>().AddDialogueComponent(this);
         }
 
         /// <summary>

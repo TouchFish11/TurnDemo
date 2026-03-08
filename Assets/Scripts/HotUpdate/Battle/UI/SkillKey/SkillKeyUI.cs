@@ -8,6 +8,7 @@ using HotUpdate.Battle.TargetSelect;
 using HotUpdate.Battle.TargetSelect.Strategys;
 using HotUpdate.Battle.Utility;
 using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Event.UI;
 using HotUpdate.Core.Battle.Object;
 using HotUpdate.Core.Battle.Skill;
 using HotUpdate.Core.Battle.TargetSelect;

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Core.Loader.Object;
 using Core.Service;
 using Core.UI.MVC;
+using HotUpdate.Core.Interact;
 
 namespace HotUpdate.Main.UI
 {
@@ -11,18 +12,18 @@ namespace HotUpdate.Main.UI
     public class MainModel : UIModel
     {
         // 交互UI列表
-        private readonly List<InteractUI> interactUIs = new();
+        private readonly List<IInteractUI> interactUIs = new();
 
         /// <summary>
         /// 缓存交互UI对象
         /// </summary>
         /// <param name="interactUIs"></param>
-        public void CacheInteracts(List<InteractUI> interactUIs)
+        public void CacheInteracts(List<IInteractUI> interactUIs)
         {
             foreach (var interactUI in this.interactUIs)
             {
                 // 释放资源
-                ServiceLocator.Get<IPrefabLoader>().CollectAsset(interactUI.gameObject);
+                ServiceLocator.Get<IPrefabLoader>().CollectAsset(interactUI.GameObject);
             }
             this.interactUIs.Clear();
             this.interactUIs.AddRange(interactUIs);

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using HotUpdate.Core.Battle.Point;
 
-namespace HotUpdate.Reserve
+namespace HotUpdate.Battle.Reserve
 {
     public static class PreserveGeneric
     {

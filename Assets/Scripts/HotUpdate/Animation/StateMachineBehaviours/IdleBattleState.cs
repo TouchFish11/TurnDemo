@@ -12,7 +12,7 @@ namespace HotUpdate.Animation.StateMachineBehaviours
         public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
             IBattleEntityObject battleEntity = animator.GetComponentInParent<IBattleEntityObject>();
-            if (battleEntity is MonsterObject && stateInfo.IsName("IdleBattle"))
+            if (battleEntity is IMonsterObject && stateInfo.IsName("IdleBattle"))
             {
                 battleEntity.GetComponent<BattleAnimationComponent>().ResetAnimationType();
             }

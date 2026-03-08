@@ -16,6 +16,7 @@ using HotUpdate.Battle.Skill.Base;
 using HotUpdate.Battle.TargetSelect;
 using HotUpdate.Battle.Turn;
 using HotUpdate.Common;
+using HotUpdate.Core.Animation;
 using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Damage;
 using HotUpdate.Core.Battle.Event;
@@ -26,6 +27,9 @@ using HotUpdate.Core.Battle.TargetSelect;
 using HotUpdate.Core.Battle.Turn;
 using HotUpdate.Core.Camera;
 using HotUpdate.Core.Input;
+using HotUpdate.Core.MVC;
+using HotUpdate.Core.UI;
+using HotUpdate.Core.UI.Helper;
 using UnityEngine;
 using UnityEngine.U2D;
 
@@ -69,24 +73,24 @@ namespace HotUpdate.Battle.Core
         /// </summary>
         private static void RegisterManager(IBattleContext context)
         {
-            ServiceLocator.Register<ITargetSelectManager>(TargetSelectManager.Instance);
+            ServiceLocator.Register<ITargetSelectManager>(new TargetSelectManager());
             ServiceLocator.Get<ITargetSelectManager>().Init(context);
             
             // IDamageCalcManager 依赖 ITargetSelectManager
-            ServiceLocator.Register<IDamageCalcManager>(DamageCalcManager.Instance);
+            ServiceLocator.Register<IDamageCalcManager>(new DamageCalcManager());
             ServiceLocator.Get<IDamageCalcManager>().Init(context);
             
-            ServiceLocator.Register<IBattleInputHandler>(BattleInputHandler.Instance);
+            ServiceLocator.Register<IBattleInputHandler>(new BattleInputHandler());
             ServiceLocator.Get<IBattleInputHandler>().Init(context);
             
-            ServiceLocator.Register<ISkillManager>(SkillManager.Instance);
-            ServiceLocator.Register<IAnimationPlayManager>(AnimationPlayManager.Instance);
+            ServiceLocator.Register<ISkillManager>(new SkillManager());
+            ServiceLocator.Register<IAnimationPlayManager>(new AnimationPlayManager());
             
-            ServiceLocator.Register<IBattleEventScheduler>(BattleEventScheduler.Instance);
+            ServiceLocator.Register<IBattleEventScheduler>(new BattleEventScheduler());
             ServiceLocator.Get<IBattleEventScheduler>().Init(context);
             
             //  IBattleCameraManager 依赖 IBattleInputHandler
-            ServiceLocator.Register<IBattleCameraManager>(BattleCameraManager.Instance);
+            ServiceLocator.Register<IBattleCameraManager>(new BattleCameraManager());
         }
 
         /// <summary>
@@ -116,7 +120,7 @@ namespace HotUpdate.Battle.Core
             // 缓存回调
             OnBattleOver = onBattleOver;
             // 创建战斗加载界面
-            var battleLoadingController = await _uiManager.CreateViewAsync<BattleLoadingView, BattleLoadingModel, BattleLoadingController>(AbKeyCollection.Ui, E_UILayer.Bot, ResKeyCollection.BattleLoadingView);
+            var battleLoadingController = await ServiceLocator.Get<IMainUiHelper>().CreateBattleLoadingController();
             // 在加载界面显示后，在执行该回调
             if (OnpreEnter != null)
             {
@@ -127,7 +131,7 @@ namespace HotUpdate.Battle.Core
             await _sceneManager.LoadSceneAsync(ResKeyCollection.LevelScene, UnityEngine.SceneManagement.LoadSceneMode.Single, progress => battleLoadingController.UpdateProgress(progress));
             
             // 隐藏主界面
-            await _uiManager.SetViewActive(_uiManager.GetController<MainController>(), false);
+            await _uiManager.SetViewActive(_uiManager.GetController<IMainController>(), false);
             // 注册战斗点，依赖战斗场景加载完成
             ServiceLocator.Register<IBattlePointProxy>(new BattlePointProxy());
             // 预加载资源
@@ -181,7 +185,7 @@ namespace HotUpdate.Battle.Core
             return _context;
         }
 
-        public TurnCreator GetTurnCreator()
+        public ITurnCreator GetTurnCreator()
         {
             return _creator;
         }
@@ -198,15 +202,12 @@ namespace HotUpdate.Battle.Core
                 _context.CleanupBattle();
             
                 // 销毁战斗输入处理器、战斗点对象、战斗UI调度器
-                UnityEngine.Object.Destroy(ServiceLocator.Get<IBattleCameraManager>().GameObject);
-                UnityEngine.Object.Destroy(ServiceLocator.Get<IBattleInputHandler>().GameObject);
-                UnityEngine.Object.Destroy(ServiceLocator.Get<IBattleEventScheduler>().GameObject);
             
                 // 移除注册
                 UnregisterManager();
 
                 // 创建黑背景界面遮挡
-                var backController = await _uiManager.CreateViewAsync<BackView, BackModel, BackController>(AbKeyCollection.Ui, E_UILayer.Bot, ResKeyCollection.BackView);
+                var backController = await ServiceLocator.Get<IMainUiHelper>().CreateBackController();
                 // 强制不可见，暂时这样处理，正常流程Bug：battleLoadingController销毁时未正确释放
                 _mouseManager.ForceInVisible();
                 // 销毁战斗界面

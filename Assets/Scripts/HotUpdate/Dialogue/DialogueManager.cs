@@ -14,6 +14,7 @@ using Core.UI;
 using Core.Utility;
 using HotUpdate.Common;
 using HotUpdate.Core.Dialogue;
+using HotUpdate.Core.Task.Event;
 using HotUpdate.Dialogue.UI;
 using UnityEngine;
 

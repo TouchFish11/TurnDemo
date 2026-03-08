@@ -1,5 +1,6 @@
 using Core.UI;
 using HotUpdate.Activity.UI.Base;
+using HotUpdate.Common.Item.UI;
 using UnityEngine.UI;
 
 namespace HotUpdate.Activity.UI.Common

@@ -1,13 +1,10 @@
 using System.Collections;
 using HotUpdate.Core.Battle.Object;
-using UnityEngine;
 
 namespace HotUpdate.Core.Battle.Event
 {
     public interface IBattleEventScheduler
     {
-        GameObject GameObject { get; }
-        
         void Init(IBattleContext context);
 
         /// <summary>

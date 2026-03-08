@@ -2,7 +2,12 @@ using System.Collections.Generic;
 
 namespace Core.Collection
 {
-    public interface ICollection<in TKey, TValue>
+    public interface ICollection
+    {
+        
+    }
+    
+    public interface ICollection<in TKey, TValue> : ICollection
     {
         /// <summary>
         /// 索引器，通过键快速获取对应的值

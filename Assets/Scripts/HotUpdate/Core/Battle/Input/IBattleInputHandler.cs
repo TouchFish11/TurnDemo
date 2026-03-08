@@ -1,13 +1,10 @@
 using System;
 using HotUpdate.Core.Battle.Object;
-using UnityEngine;
 
 namespace HotUpdate.Core.Battle.Input
 {
     public interface IBattleInputHandler
     {
-        GameObject GameObject { get; }    
-        
         /// <summary>
         /// 选中战斗实体对象的事件（如选中玩家/怪物作为技能目标）
         /// 事件参数：选中的战斗实体对象接口

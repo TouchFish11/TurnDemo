@@ -32,14 +32,16 @@ namespace Game
                 // 设置
                 InitSettings();
                 // 注册框架核心服务
-                ServiceLocator.InitService();
+                await ServiceLocator.RegisterServices();
                 // 激活退出处理器
                 ServiceLocator.Get<IQuitHandler>().ActiveHandler();
                 // 初始化框架工厂
                 ServiceLocator.Get<IFactoryManager>().InitCoreFactorys();
+                
+                // ------------------
+                
                 // 初始化指定AB包
                 await ServiceLocator.Get<IAssetBundleManager>().InitSpecifyAsync(DefaultAbNames);
-                
                 var hotUpdateManager = ServiceLocator.Get<IHotUpdateManager>();
                 // 加载指定程序集
                 await hotUpdateManager.LoadAssembliesAsync(DefaultAbNames[1], DefaultAssemblyName);
@@ -61,7 +63,7 @@ namespace Game
             }
             catch (Exception e)
             {
-                LogManager.LogError($"{nameof(Main)}.{nameof(Start)}: {e.Message}，StackTrace：{e.StackTrace}");
+                LogManager.LogError($"{nameof(Main)}.{nameof(Start)}: {e.Message}，{e.StackTrace}");
             }
         }
         

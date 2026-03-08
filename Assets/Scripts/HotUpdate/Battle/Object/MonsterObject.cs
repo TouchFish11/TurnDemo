@@ -10,8 +10,10 @@ using HotUpdate.Battle.ResponsibilityChain.DamageChain;
 using HotUpdate.Battle.Skill.Component;
 using HotUpdate.Battle.Toughness;
 using HotUpdate.Common;
+using HotUpdate.Core.Animation;
 using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Command;
+using HotUpdate.Core.Battle.Object;
 using HotUpdate.Core.VFX;
 using UnityEngine;
 
@@ -21,7 +23,7 @@ namespace HotUpdate.Battle.Object
     /// 怪物战斗对象
     /// 继承自BattleObject，封装了怪物的基础属性、战斗行为等核心逻辑
     /// </summary>
-    public abstract class MonsterObject : BattleObject
+    public abstract class MonsterObject : BattleObject, IMonsterObject
     {
         /// <summary>
         /// 怪物配置信息（从配置表加载）
@@ -109,9 +111,8 @@ namespace HotUpdate.Battle.Object
                 vFXInfo));
             // 播放怪物死亡动画，并等待动画播放完成
             StartCoroutine(ServiceLocator.Get<IAnimationPlayManager>().
-                WaitForAnimOver(GetComponent<BattleAnimationComponent>(), 
-                AnimationComponent.Battle_Layer_Name, 
-                E_AnimationType.Death));
+                WaitForAnimOver(GetComponent<IBattleAnimationComponent>(), 
+                AnimationUtility.Battle_Layer_Name, (int)E_AnimationType.Death));
             
             // 等待死亡特效播放完毕（协程阻塞，直到特效销毁）
             yield return new WaitUntil(() => !vFXInfo.IsAlive);

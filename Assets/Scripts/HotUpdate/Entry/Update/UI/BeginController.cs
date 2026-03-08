@@ -8,6 +8,7 @@ using Core.UI;
 using Core.UI.MVC;
 using Core.Utility;
 using HotUpdate.Common;
+using HotUpdate.Core.MVC;
 using HotUpdate.Default.Update.Tip;
 using UnityEngine;
 
@@ -18,7 +19,7 @@ namespace HotUpdate.Entry.Update.UI
     /// <summary>
     /// 开始界面控制器
     /// </summary>
-    public class BeginController : UIController<BeginView, BeginModel>
+    public class BeginController : UIController<BeginView, BeginModel>, IBeginController
     {
         private readonly IAssetBundleUpdater _assetBundleUpdater = ServiceLocator.Get<IAssetBundleUpdater>();
         private string _speed;

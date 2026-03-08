@@ -1,18 +1,20 @@
 using System;
+using System.Threading.Tasks;
 using Core.Log;
 using Core.Mono;
 using Core.Serialize.Binary;
 using Core.Service;
 using Core.Singleton;
-using HotUpdate.Battle.Event.UI;
 using HotUpdate.Battle.Object;
 using HotUpdate.Core.Battle;
+using HotUpdate.Core.Battle.Event.UI;
 using HotUpdate.Core.Battle.Input;
 using HotUpdate.Core.Battle.Layer;
 using HotUpdate.Core.Battle.Object;
 using HotUpdate.Core.Battle.Skill;
 using HotUpdate.Core.Camera;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace HotUpdate.Battle.Input
 {
@@ -21,8 +23,9 @@ namespace HotUpdate.Battle.Input
     /// 负责处理战斗中的鼠标拖拽、点击选择目标、技能释放目标选择等核心输入逻辑
     /// 继承自单例自动挂载 MonoBehaviour 基类，保证全局唯一且自动初始化
     /// </summary>
-    public class BattleInputHandler : SingletonAutoMono<BattleInputHandler>, IBattleInputHandler
+    public class BattleInputHandler : IInitializable, IBattleInputHandler
     {
+        public int Priority => -1;
         // 拖拽起始位置（屏幕坐标）
         private Vector3 _dragStartPosition;
         // 是否处于拖拽状态（用于区分点击和拖拽行为）
@@ -43,7 +46,7 @@ namespace HotUpdate.Battle.Input
         private Action _OnLeftDrag;
         private Action _OnRightDrag;
         private Action<IBattleEntityObject> _OnSelectedObject;
-        
+
         /// <summary>
         /// 选中战斗实体对象的事件（如选中玩家/怪物作为技能目标）
         /// 事件参数：选中的战斗实体对象接口
@@ -107,8 +110,11 @@ namespace HotUpdate.Battle.Input
         /// </summary>
         public event Action<bool> OnRebound;
 
-        public GameObject GameObject => gameObject;
-        
+        public Task InitAsync()
+        {
+            return Task.CompletedTask;
+        }
+
         /// <summary>
         /// 初始化
         /// </summary>

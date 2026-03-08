@@ -1,4 +1,5 @@
 using Core.UI.MVC;
+using HotUpdate.Core.MVC;
 
 namespace HotUpdate.Main.Back
 {
@@ -7,7 +8,7 @@ namespace HotUpdate.Main.Back
     /// <summary>
     /// 背景界面控制器
     /// </summary>
-    public class BackController : UIController<BackView, BackModel>
+    public class BackController : UIController<BackView, BackModel>, IBackController
     {
         protected override Task OnShow()
         {

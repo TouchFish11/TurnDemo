@@ -5,7 +5,7 @@ using HotUpdate.Core.Animation;
 using HotUpdate.Core.Component;
 using HotUpdate.Core.Dialogue;
 using HotUpdate.Core.Input;
-using HotUpdate.Core.Main.Object;
+using HotUpdate.Core.Main;
 
 namespace HotUpdate.Dialogue
 {
@@ -13,7 +13,7 @@ namespace HotUpdate.Dialogue
     /// 对话组件
     /// </summary>
     [ComponentId(typeof(DialogueComponent))]
-    public class DialogueComponent : BaseComponent, IDialable
+    public class DialogueComponent : BaseComponent, IDialogueComponent
     {
         private readonly IDialogueManager _dialogueManager = ServiceLocator.Get<IDialogueManager>();
         
@@ -30,7 +30,7 @@ namespace HotUpdate.Dialogue
             // 只允许交互输入
             EntityObject.GetComponent<IInputComponent>().LimitInput(nameof(MainActionMapData.Interact));
             // 重置为待机动画
-            EntityObject.GetComponent<INormalAnimationComponent>().SetAnimationState(E_AnimationType.Idle);
+            EntityObject.GetComponent<INormalAnimationComponent>().SetAnimationState((int)E_AnimationType.Idle);
             // 停止并禁用移动
             EntityObject.GetComponent<IMoveComponent>().Disable();
         }

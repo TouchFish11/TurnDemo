@@ -4,6 +4,7 @@ using Core.Service;
 using Core.Utility;
 using HotUpdate.Battle.Skill.Base;
 using HotUpdate.Common;
+using HotUpdate.Core.Animation;
 using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Object;
 using HotUpdate.Core.VFX;
@@ -50,19 +51,19 @@ namespace HotUpdate.Battle.Object.Role.Priest.Skill
         protected override IEnumerator OnCast(IBattleContext context)
         {
             // 获取施法者的动画组件，用于播放普攻动画
-            var animationComponent = Caster.GetComponent<BattleAnimationComponent>();
+            var animationComponent = Caster.GetComponent<IBattleAnimationComponent>();
             // 设置技能动画状态（动画类型从技能配置中读取）
-            animationComponent.SetAnimationState((E_AnimationType)SkillInfo.f_animationType);
+            animationComponent.SetAnimationState(SkillInfo.f_animationType);
             
             // 等待动画播放到普攻状态（确保动画执行到攻击帧再执行后续逻辑）
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).IsName(attackState));
+            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).IsName(attackState));
             
             // 创建牧师普攻特效（通过特效管理器加载指定特效资源）
             yield return TaskUtility.WaitForTask(ServiceLocator.Get<IVFXManager>()
                 .CreateVFX(ResKeyCollection.VFX_Priest_NormalSkill, projectileTrans, projectileData, vFXInfo));
             
             // 等待动画播放到90%以上且特效已结束，确保技能流程完整后再结束协程
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).normalizedTime >= 0.9f && !vFXInfo.IsAlive);
+            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).normalizedTime >= 0.9f && !vFXInfo.IsAlive);
         }
     }
 }

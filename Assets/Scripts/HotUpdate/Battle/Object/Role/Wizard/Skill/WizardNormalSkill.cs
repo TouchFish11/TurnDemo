@@ -3,6 +3,7 @@ using Core.Service;
 using Core.Utility;
 using HotUpdate.Battle.Skill.Base;
 using HotUpdate.Common;
+using HotUpdate.Core.Animation;
 using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Object;
 using HotUpdate.Core.VFX;
@@ -51,19 +52,19 @@ namespace HotUpdate.Battle.Object.Role.Wizard.Skill
         protected override IEnumerator OnCast(IBattleContext context)
         {
             // 获取施法者的动画组件
-            var animationComponent = Caster.GetComponent<BattleAnimationComponent>();
+            var animationComponent = Caster.GetComponent<IBattleAnimationComponent>();
             // 设置技能对应的动画状态（从配置表读取动画类型）
-            animationComponent.SetAnimationState((E_AnimationType)SkillInfo.f_animationType);
+            animationComponent.SetAnimationState(SkillInfo.f_animationType);
             
             // 等待动画播放到普攻状态（确保动画执行到攻击帧再触发后续逻辑）
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).IsName(attackState));
+            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).IsName(attackState));
             
             // 创建普攻特效（从资源配置中获取普攻特效资源）
             yield return TaskUtility.WaitForTask(ServiceLocator.Get<IVFXManager>()
                 .CreateVFX(ResKeyCollection.VFX_WizardNormalSkill, projectileTrans, projectileData, vFXInfo));
             
             // 等待动画播放至90%且特效已结束，确保技能流程完整结束
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationComponent.Skill_Layer_Name).normalizedTime >= 0.9f && !vFXInfo.IsAlive);
+            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).normalizedTime >= 0.9f && !vFXInfo.IsAlive);
         }
     }
 }

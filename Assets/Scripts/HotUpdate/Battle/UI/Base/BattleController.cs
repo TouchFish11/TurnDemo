@@ -1,6 +1,7 @@
 using Core.UI.MVC;
 using HotUpdate.Battle.UI.MonsterStateUI;
 using HotUpdate.Core.Battle;
+using HotUpdate.Core.MVC;
 
 namespace HotUpdate.Battle.UI.Base
 {
@@ -9,7 +10,7 @@ namespace HotUpdate.Battle.UI.Base
     /// <summary>
     /// 战斗界面控制器
     /// </summary>
-    public class BattleController : UIController<BattleView, BattleModel>
+    public class BattleController : UIController<BattleView, BattleModel>, IBattleController
     {
         public BattleUIInitializer UiInitializer { get; private set; }
         public BattleEventProcessor EventProcessor { get; private set; }

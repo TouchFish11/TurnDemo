@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core.AssetBundles.Management;
-using Core.AssetBundles.Update;
 using Core.AssetBundles.Update.Core;
+using Core.Collection;
 using Core.EditorRes;
+using Core.Extensions;
 using Core.GlobalEvent;
 using Core.HotUpdate;
 using Core.Input.ActionAsset;
@@ -20,6 +22,7 @@ using Core.Scene;
 using Core.ScriptableObject;
 using Core.Serialize.Binary;
 using Core.Serialize.Json;
+using Core.Singleton;
 using Core.Systems.Memorys;
 using Core.Time;
 using Core.UI;
@@ -41,9 +44,9 @@ namespace Core.Service
         }
 
         /// <summary>
-        /// 初始化服务
+        /// 异步注册服务
         /// </summary>
-        public static void InitService()
+        public static Task RegisterServices()
         {
             // 继承Mono
             Register<IMonoAdapter>(MonoAdapter.Instance);
@@ -71,12 +74,50 @@ namespace Core.Service
             Register<IHotUpdateManager>(HotUpdateManager.Instance);
             Register<ISceneManager>(SceneManager.Instance);
             Register<IPreLoadManager>(PreLoadManager.Instance);
-
+            
+            // 初始化服务
+            return InitServices();
+            
             // Test
 #if !DISABLE_ADDRESSABLES
             Register<IAddressablesUpdater>(AddressablesUpdater.Instance);
             Register<IAddressablesManager>(AddressablesManager.Instance);
 #endif
+        }
+
+        /// <summary>
+        /// 异步初始化所有服务
+        /// 按优先级初始化
+        /// </summary>
+        private static async Task InitServices()
+        {
+            var initializables = TypeToServerMap.Values.ToArray(service => (IInitializable)service);
+            var uniList = CollectionUtil.GetUniList<IInitializable>();
+            uniList.AddRange(initializables);
+            // 按优先级排序
+            uniList.Sort((i1, i2) =>
+            {
+                if (i1.Priority > i2.Priority)
+                {
+                    return 1;
+                }
+
+                if (i1.Priority < i2.Priority)
+                {
+                    return -1;
+                }
+
+                return 0;
+            });
+            
+            // 顺序初始化
+            foreach (var initializable in uniList.List)
+            {
+                await initializable.InitAsync();
+            }
+
+            // 回收列表对象
+            CollectionUtil.CollectUniList(uniList);
         }
 
         /// <summary>
@@ -120,7 +161,7 @@ namespace Core.Service
             var type = typeof(T);
             TypeToServerMap.Remove(type);
         }
-
+        
         /// <summary>
         /// 清理
         /// </summary>

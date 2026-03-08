@@ -8,8 +8,6 @@ namespace HotUpdate.Core.Camera
     /// </summary>
     public interface IBattleCameraManager
     {
-        GameObject GameObject { get; }
-        
         /// <summary>
         /// 创建相机
         /// </summary>

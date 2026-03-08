@@ -84,12 +84,12 @@ namespace HotUpdate.Core.Main.Object
         /// </summary>
         /// <typeparam name="TComponent">目标组件类型，需同时继承UnityEngine.Component和IComponent</typeparam>
         /// <returns>找到的组件实例；未找到则返回null</returns>
-        public new TComponent GetComponentInChildren<TComponent>() where TComponent : UnityEngine.Component, IComponent
+        public new TComponent GetComponentInChildren<TComponent>() where TComponent : IComponent
         {
             // 优先从缓存获取已缓存的组件
             if (typeToIComponentMap.TryGetValue(typeof(TComponent).ToIdentifier(), out var component))
             {
-                return component as TComponent;
+                return (TComponent)component;
             }
             
             // 缓存未命中时，递归子物体查找组件

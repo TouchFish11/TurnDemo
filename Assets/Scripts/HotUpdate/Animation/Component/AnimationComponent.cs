@@ -1,6 +1,5 @@
 using Core.Components;
 using Core.Log;
-using HotUpdate.Animation.Core;
 using HotUpdate.Core.Animation;
 using HotUpdate.Core.Component;
 using UnityEngine;
@@ -19,11 +18,6 @@ namespace HotUpdate.Animation.Component
         // 动画类型
         protected abstract E_AnimationType CurrentAnimationType { get; set; }
 
-        // 定义动画层级名称常量,与Animator窗口中的层级名称一致
-        public const string Base_Layer_Name = "Base Layer";
-        public const string Battle_Layer_Name = "Battle Layer";
-        public const string Skill_Layer_Name = "Skill Layer";
-
         /// <summary>
         /// 动画参数
         /// </summary>
@@ -38,8 +32,8 @@ namespace HotUpdate.Animation.Component
         /// <summary>
         /// 设置动画类型
         /// </summary>
-        /// <param name="animationType"></param>
-        public abstract void SetAnimationState(E_AnimationType animationType);
+        /// <param name="type"></param>
+        public abstract void SetAnimationState(int type);
 
         /// <summary>
         /// 获取Animator

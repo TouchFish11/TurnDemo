@@ -12,7 +12,7 @@ namespace HotUpdate.Animation.StateMachineBehaviours
         public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
             IBattleEntityObject battleEntity = animator.GetComponentInParent<IBattleEntityObject>();
-            if (battleEntity is PlayerObject && stateInfo.IsName("PreNormalAttack"))
+            if (battleEntity is IPlayerObject && stateInfo.IsName("PreNormalAttack"))
             {
                 var animationComponent = battleEntity.GetComponent<BattleAnimationComponent>();
                 animationComponent.ResetAnimationType();

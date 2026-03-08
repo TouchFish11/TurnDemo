@@ -4,6 +4,8 @@ using Core.Service;
 using HotUpdate.Activity.Core;
 using HotUpdate.Activity.UI.Common;
 using HotUpdate.Common;
+using HotUpdate.Common.Item;
+using HotUpdate.Common.Item.UI;
 
 namespace HotUpdate.Activity.UI.OrbitalDeparture
 {
