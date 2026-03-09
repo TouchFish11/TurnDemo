@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core.Log;
 using Core.Mono;
 using Core.Service;
@@ -12,8 +13,9 @@ namespace Core.Systems.Memorys
     /// <summary>
     /// 内存监视器
     /// </summary>
-    public class MemoryMonitor : SingletonAutoMono<MemoryMonitor>, IMemoryMonitor
+    public class MemoryMonitor : SingletonBase<MemoryMonitor>, IMemoryMonitor
     {
+        public override int Priority => 0;
         // 监听者列表
         private readonly List<IMemoryListener> _listeners = new();
         // 当前内存占用级别
@@ -27,15 +29,21 @@ namespace Core.Systems.Memorys
         // 当前时间
         private float nowTime;
         
-        // 
+        // 当前内存相关
         private long currentMemory;
         private long currentSystemMemory;
         private float currentRatio;
+
+        private MemoryMonitor()
+        {
+            
+        }
         
-        private void OnEnable()
+        public override Task InitAsync()
         {
             ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpdate);
             Application.lowMemory += OnLowMemory;
+            return Task.CompletedTask;
         }
 
         public void Register(IMemoryListener listener)
@@ -49,7 +57,7 @@ namespace Core.Systems.Memorys
         }
         
         /// <summary>
-        /// 
+        /// 检查内存
         /// </summary>
         private void CheckMemory()
         {
@@ -105,12 +113,6 @@ namespace Core.Systems.Memorys
                 CheckMemory();
                 nowTime = UnityEngine.Time.realtimeSinceStartup;
             }
-        }
-
-        private void OnDisable()
-        {
-            Application.lowMemory -= OnLowMemory;
-            ServiceLocator.Get<IMonoAdapter>().RemoveUpdateListener(OnUpdate);
         }
     }
 }

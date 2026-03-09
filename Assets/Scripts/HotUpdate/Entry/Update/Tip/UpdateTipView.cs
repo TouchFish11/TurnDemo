@@ -1,5 +1,5 @@
 using Core.UI;
-using HotUpdate.Entry.Tip.UI;
+using HotUpdate.Common.Tip.UI;
 using TMPro;
 using UnityEngine.UI;
 

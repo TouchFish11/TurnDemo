@@ -13,7 +13,7 @@ namespace Core.HotUpdate
         /// </summary>
         /// <param name="abName"></param>
         /// <returns></returns>
-        Task LoadAssemblysAsync(string abName);
+        Task LoadAssembliesAsync(string abName);
 
         /// <summary>
         /// 获取加载的指定热更程序集
@@ -35,8 +35,6 @@ namespace Core.HotUpdate
         Assembly[] GetAssemblies();
 
         Assembly GetCoreModule();
-        
-        Assembly GetConfigModule();
 
         /// <summary>
         /// 加载指定程序集

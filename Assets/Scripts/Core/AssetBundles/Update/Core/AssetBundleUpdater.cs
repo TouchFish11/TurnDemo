@@ -3,8 +3,8 @@ using System.IO;
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Enum;
 using Core.Log;
+using Core.Mono;
 using Core.Pool;
-using Core.Quit;
 using Core.Serialize.Json;
 using Core.Service;
 using Core.Singleton;
@@ -17,7 +17,7 @@ namespace Core.AssetBundles.Update.Core
     /// </summary>
     public class AssetBundleUpdater : SingletonBase<AssetBundleUpdater>, IAssetBundleUpdater
     {
-        public override int Priority => -1;
+        public override int Priority => 1;
         // 更新上下文
         private ABUpdateContext _updateContext;
         // 更新状态列表
@@ -28,7 +28,6 @@ namespace Core.AssetBundles.Update.Core
         private int _stateIndex;
         // 对象池管理器接口
         private IPoolManager _poolManager;
-        private IQuitHandler _quitHandler;
 
         /// <summary>
         /// 更新阶段
@@ -40,10 +39,8 @@ namespace Core.AssetBundles.Update.Core
         public override Task InitAsync()
         {
             _poolManager = ServiceLocator.Get<IPoolManager>();
-            _quitHandler = ServiceLocator.Get<IQuitHandler>();
-            
             // 注册应用退出事件，确保退出时能取消未完成的下载任务
-            _quitHandler.OnAppQuit += OnApplicationQuit;
+            ServiceLocator.Get<IMonoAdapter>().OnAppQuit += OnApplicationQuit;
             return Task.CompletedTask;
         }
 
@@ -144,7 +141,7 @@ namespace Core.AssetBundles.Update.Core
         /// </summary>
         private async Task OnApplicationQuit()
         {
-            if (UpdatePhase == EUpdatePhase.Finished)
+            if (_currentUpdateState == null || UpdatePhase == EUpdatePhase.Finished)
             {
                 return;
             }

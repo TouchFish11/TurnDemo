@@ -57,7 +57,7 @@ namespace Core.Pool
         /// <summary>
         /// 清空缓存池
         /// </summary>
-        void Clear();
+        void ClearAll();
 
         /// <summary>
         /// 获取指定资源缓存的数量

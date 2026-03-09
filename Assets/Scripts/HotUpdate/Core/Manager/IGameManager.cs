@@ -9,16 +9,11 @@ namespace HotUpdate.Core.Manager
         /// 游戏数据管理器
         /// </summary>
         GameDataManager GameDataManager { get; }
-        
-        /// <summary>
-        /// 游戏服务管理器
-        /// </summary>
-        GameServiceManager GameServiceManager { get; }
 
         /// <summary>
         /// 异步初始化数据
         /// </summary>
         /// <returns></returns>
-        System.Threading.Tasks.Task Init();
+        System.Threading.Tasks.Task InitDataAsync();
     }
 }

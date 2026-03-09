@@ -15,7 +15,6 @@ using Core.Music;
 using Core.Net;
 using Core.Pool;
 using Core.PreLoad;
-using Core.Quit;
 using Core.Reflection;
 using Core.Res;
 using Core.Scene;
@@ -48,13 +47,11 @@ namespace Core.Service
         /// </summary>
         public static Task RegisterServices()
         {
-            // 继承Mono
+            // Mono适配器
             Register<IMonoAdapter>(MonoAdapter.Instance);
-            Register<IQuitHandler>(QuitHandler.Instance);
-            Register<IUWRManager>(UWRManager.Instance);
+            
             Register<IMemoryMonitor>(MemoryMonitor.Instance);
-
-            // 不继承Mono
+            Register<IUWRManager>(UWRManager.Instance);
             Register<IPoolManager>(PoolManager.Instance);
             Register<IUIManager>(UIManager.Instance);
             Register<IAssetBundleManager>(AssetBundleManager.Instance);
@@ -67,7 +64,6 @@ namespace Core.Service
             Register<IMusicManager>(MusicManager.Instance);
             Register<IResourcesManager>(ResourcesManager.Instance);
             Register<IScriptableObjectManager>(ScriptableObjectManager.Instance);
-            Register<IServerManager>(ServerManager.Instance);
             Register<ITimerManager>(TimerManager.Instance);
             Register<IVideoManager>(VideoManager.Instance);
             Register<IFactoryManager>(FactoryManager.Instance);
@@ -91,7 +87,14 @@ namespace Core.Service
         /// </summary>
         private static async Task InitServices()
         {
-            var initializables = TypeToServerMap.Values.ToArray(service => (IInitializable)service);
+            var initializables = TypeToServerMap.Values.ToArray(service =>
+            {
+                if (service is IInitializable initializable)
+                {
+                    return initializable;
+                }
+                return null;
+            });
             var uniList = CollectionUtil.GetUniList<IInitializable>();
             uniList.AddRange(initializables);
             // 按优先级排序

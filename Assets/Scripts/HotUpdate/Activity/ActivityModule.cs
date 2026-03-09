@@ -6,7 +6,6 @@ using HotUpdate.Activity.Data;
 using HotUpdate.Core.Activity;
 using HotUpdate.Core.Manager;
 using HotUpdate.Core.Module;
-using HotUpdate.Core.UI;
 using HotUpdate.Core.UI.Helper;
 
 namespace HotUpdate.Activity

@@ -28,7 +28,10 @@ namespace HotUpdate.Main
         {
             try
             {
-                // 初始化模块
+                ServiceLocator.Register<IGameManager>(new GameManager());
+                // 初始化游戏数据
+                await ServiceLocator.Get<IGameManager>().InitDataAsync();
+                // 初始化模块管理器
                 var moduleManager = new ModuleManager(ServiceLocator.Get<IHotUpdateManager>());
                 ServiceLocator.Register<IModuleManager>(moduleManager);
                 await moduleManager.InitModules();
@@ -37,9 +40,6 @@ namespace HotUpdate.Main
                 ServiceLocator.Get<IFactoryManager>().InitHotFactorys();
                 // 切换场景
                 await ServiceLocator.Get<ISceneManager>().LoadSceneAsync(ResKeyCollection.MainScene, LoadSceneMode.Single, null);
-                // 初始化游戏数据、服务
-                await ServiceLocator.Get<IGameManager>().Init();
-                
                 
                 // 初始化场景
                 await SceneGeneratorHelper.GetSceneGenerator().InitMainScene();

@@ -13,6 +13,7 @@ using HotUpdate.Battle.Skill.Component;
 using HotUpdate.Core.Animation;
 using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Command;
+using HotUpdate.Core.Battle.Object;
 using HotUpdate.Core.Battle.Skill;
 
 namespace HotUpdate.Battle.Object
@@ -20,7 +21,7 @@ namespace HotUpdate.Battle.Object
     /// <summary>
     /// 角色对象
     /// </summary>
-    public abstract class PlayerObject : BattleObject
+    public abstract class PlayerObject : BattleObject, IPlayerObject
     {
         private readonly Dictionary<EActPhase, ITurnState> _turnStates = new();
         private ITurnState _currentState;

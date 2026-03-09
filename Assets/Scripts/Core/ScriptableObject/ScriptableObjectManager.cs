@@ -10,14 +10,12 @@ namespace Core.ScriptableObject
     /// </summary>
     public class ScriptableObjectManager : SingletonBase<ScriptableObjectManager>, IScriptableObjectManager
     {
-        public override int Priority => -1;
+        public override int Priority => 0;
 
         private ScriptableObjectManager()
         {
 
         }
-        
-        
 
         public override Task InitAsync()
         {

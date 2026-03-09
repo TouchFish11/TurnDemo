@@ -123,7 +123,7 @@ namespace HotUpdate.Battle.Context
             _eventBus = null;
             
             // 清空缓存池
-            ServiceLocator.Get<IPoolManager>().Clear();
+            ServiceLocator.Get<IPoolManager>().ClearAll();
 
             _currentEntity = null;
             _battleMachine = null;

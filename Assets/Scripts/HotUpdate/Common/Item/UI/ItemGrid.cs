@@ -1,5 +1,4 @@
 using Core.UI;
-using HotUpdate.Main.Item;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

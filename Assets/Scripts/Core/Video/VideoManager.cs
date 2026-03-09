@@ -11,7 +11,7 @@ namespace Core.Video
     /// </summary>
     public class VideoManager : SingletonBase<VideoManager>, IVideoManager
     {
-        public override int Priority => -1;
+        public override int Priority => 0;
 
         private VideoPlayer videoPlayer;
 

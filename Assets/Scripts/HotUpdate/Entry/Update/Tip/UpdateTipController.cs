@@ -1,6 +1,6 @@
 using System;
 using HotUpdate.Common;
-using HotUpdate.Entry.Tip.UI;
+using HotUpdate.Common.Tip.UI;
 
 namespace HotUpdate.Default.Update.Tip
 {

@@ -1,6 +1,6 @@
 using Core.UI.MVC;
 
-namespace HotUpdate.Entry.Tip.UI
+namespace HotUpdate.Common.Tip.UI
 {
     /// <summary>
     /// 提示界面基类

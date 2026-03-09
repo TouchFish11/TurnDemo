@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Core.Mono;
 using Core.Net.FrameSync.Udp;
 using Core.Net.Tcp;
-using Core.Quit;
 using Core.Service;
 using Core.Singleton;
 
@@ -35,7 +34,7 @@ namespace Core.Net.FrameSync.Manager
 
         private void Awake()
         {
-            ServiceLocator.Get<IQuitHandler>().OnAppQuit += OnAppQuit;
+            ServiceLocator.Get<IMonoAdapter>().OnAppQuit += OnAppQuit;
             ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpdate);
         }
 

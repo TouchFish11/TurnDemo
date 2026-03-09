@@ -14,7 +14,7 @@ namespace Core.Extensions
             var uniList = CollectionUtil.GetUniList<TReturn>();
             foreach (var value in valueCollection)
             {
-                uniList.List.Add(func(value));
+                uniList.Add(func(value));
             }
             
             return uniList.List.ToArray();
@@ -25,7 +25,7 @@ namespace Core.Extensions
             var uniList = CollectionUtil.GetUniList<TReturn>();
             foreach (var value in keyCollection)
             {
-                uniList.List.Add(func(value));
+                uniList.Add(func(value));
             }
             
             return uniList.List.ToArray();

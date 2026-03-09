@@ -1,6 +1,6 @@
 using System;
 using Core.Log;
-using Core.Quit;
+using Core.Mono;
 using Core.Service;
 using Core.Singleton;
 using HotUpdate.Core.Manager;
@@ -12,40 +12,27 @@ namespace HotUpdate.Main
     /// <summary>
     /// 游戏管理器
     /// </summary>
-    public class GameManager : SingletonBase<GameManager>, IGameManager
+    public class GameManager : IInitializable, IGameManager
     {
-        public override int Priority => -1;
-        private IQuitHandler _quitHandler;
-        private GameServiceManager gameServiceManager;
+        public int Priority => -1;
         public GameDataManager GameDataManager { get; private set; }
-        
-        public GameServiceManager GameServiceManager { get; private set; }
 
-        private GameManager()
+        public Task InitAsync()
         {
-
-        }
-
-        public override Task InitAsync()
-        {
-            _quitHandler = ServiceLocator.Get<IQuitHandler>();
-            _quitHandler.OnAppQuit += OnApplicationQuit;
+            ServiceLocator.Get<IMonoAdapter>().OnAppQuit += OnAppQuit;
             return Task.CompletedTask;
         }
 
-        public async Task Init()
+        public async Task InitDataAsync()
         {
             try
             {
                 GameDataManager = new GameDataManager();
-                GameServiceManager = new GameServiceManager();
-            
-                GameServiceManager.InitService();
-                await GameDataManager.InitData();
+                await GameDataManager.InitDataAsync();
             }
             catch (Exception ex)
             {
-                LogManager.LogError($"{nameof(GameManager)}.{nameof(Init)}：{ex.Message}，{ex.StackTrace}");
+                LogManager.LogError($"{nameof(GameManager)}.{nameof(InitDataAsync)}：{ex.Message}，{ex.StackTrace}");
             }
         }
 
@@ -53,7 +40,7 @@ namespace HotUpdate.Main
         /// 应用退出事件回调
         /// </summary>
         /// <returns></returns>
-        private Task OnApplicationQuit()
+        private Task OnAppQuit()
         {
             return GameDataManager.SaveDataAsync();
         }

@@ -17,7 +17,7 @@ namespace Core.EditorRes
     /// </summary>
     public class EditorResManager : SingletonBase<EditorResManager>, IEditorResManager
     {
-        public override int Priority => -1;
+        public override int Priority => 0;
 
         /// <summary>
         /// 编辑器资源根目录

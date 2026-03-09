@@ -9,7 +9,6 @@ using Core.Service;
 using Core.Utility;
 using HotUpdate.Common;
 using HotUpdate.Core.Provider;
-using Newtonsoft.Json;
 
 namespace HotUpdate.Core.Manager
 {
@@ -21,13 +20,6 @@ namespace HotUpdate.Core.Manager
     public class GameDataManager
     {
         private readonly IBinaryDataManager _binaryDataManager = ServiceLocator.Get<IBinaryDataManager>();
-        
-        private readonly JsonSerializerSettings activityDataSettings = new()
-        {
-            TypeNameHandling = TypeNameHandling.All,
-            Formatting = Formatting.Indented,
-        };
-
         private readonly Dictionary<Type, IDataProvider> _dataProviders = new();
 
         public IDataProvider<T> GetDataProvider<T>() where T : class
@@ -59,7 +51,7 @@ namespace HotUpdate.Core.Manager
             _dataProviders.TryAdd(type, dataProvider);
         }
         
-        public async Task InitData()
+        public async Task InitDataAsync()
         {
             _binaryDataManager.AddConfig(EConfigLoadType.Excel, async loader =>
             {

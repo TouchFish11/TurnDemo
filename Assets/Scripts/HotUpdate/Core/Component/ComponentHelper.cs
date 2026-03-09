@@ -1,4 +1,4 @@
-namespace HotUpdate.Core
+namespace HotUpdate.Core.Component
 {
     public class ComponentHelper
     {

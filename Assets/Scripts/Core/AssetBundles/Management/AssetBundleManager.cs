@@ -16,22 +16,26 @@ namespace Core.AssetBundles.Management
     /// <summary>
     /// AB包管理器
     /// </summary>
-    public class AssetBundleManager : SingletonAutoMono<AssetBundleManager>, IAssetBundleManager
+    public class AssetBundleManager : SingletonBase<AssetBundleManager>, IAssetBundleManager
     {
+        public override int Priority => 1;
         // 缓存活跃的包包装器
         private readonly Dictionary<string, BundleWrapper> _nameToWrapperMap = new();
         // 未被引用的包装器缓存
         private readonly Dictionary<string, BundleWrapper> _nameToNonRefWrapperMap = new();
-        // 内存监听器
-        private IMemoryMonitor _memoryMonitor;
         // 清单文件集合
         private ABPackageCollection _abPackageCollection;
-
-        private void Awake()
+        
+        private AssetBundleManager()
         {
-            _memoryMonitor = ServiceLocator.Get<IMemoryMonitor>();
+            
+        }
+        
+        public override Task InitAsync()
+        {
             // 注册事件
-            _memoryMonitor.Register(this);
+            ServiceLocator.Get<IMemoryMonitor>().Register(this);
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -187,27 +191,27 @@ namespace Core.AssetBundles.Management
         
         public async void OnReport()
         {
-            // LRU
-            BundleWrapper unUsebundleWrapper = null;
-            foreach (var bundleWrapper in _nameToNonRefWrapperMap.Values)
+            try
             {
-                if (unUsebundleWrapper == null || unUsebundleWrapper.LastUseTime > bundleWrapper.LastUseTime)
+                // LRU
+                BundleWrapper unUsebundleWrapper = null;
+                foreach (var bundleWrapper in _nameToNonRefWrapperMap.Values)
                 {
-                    unUsebundleWrapper = bundleWrapper;
+                    if (unUsebundleWrapper == null || unUsebundleWrapper.LastUseTime > bundleWrapper.LastUseTime)
+                    {
+                        unUsebundleWrapper = bundleWrapper;
+                    }
+                }
+
+                if (unUsebundleWrapper != null)
+                {
+                    await unUsebundleWrapper.TryUnloadAsync(false);
                 }
             }
-
-            if (unUsebundleWrapper != null)
+            catch (Exception e)
             {
-                await unUsebundleWrapper.TryUnloadAsync(false);
+                LogManager.LogError($"{nameof(AssetBundleManager)}.{nameof(OnReport)}：{e.Message}，{e.StackTrace}");
             }
-        }
-
-        protected override void OnDestroy()
-        {
-            // 注销事件
-            _memoryMonitor.Unregister(this);
-            _memoryMonitor = null;
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Core.Components;
 using Core.HotUpdate;
+using Core.Log;
 using Core.Service;
 using Core.Types;
 using Core.Utility;
@@ -110,7 +111,11 @@ namespace Core.Reflection
                     }
                     var factory = Activator.CreateInstance(type) as TValue;
                     factory?.InitFactory();
-                    dic.Add(type.ToIdentifier(), factory);
+                    if (!dic.TryAdd(type.ToIdentifier(), factory))
+                    {
+                        LogManager.LogError($"{nameof(FactoryUtility)}.{nameof(ScanAllFactory)}：重复添加工厂类型：{type}");
+                        // FactoryUtility.ScanAllFactory：重复添加工厂类型：HotUpdate.Core.Component.ComponentFactory???
+                    }
                 }
             }
         }

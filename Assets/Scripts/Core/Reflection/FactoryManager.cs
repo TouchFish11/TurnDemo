@@ -15,11 +15,9 @@ namespace Core.Reflection
     /// </summary>
     public class FactoryManager : SingletonBase<FactoryManager> , IFactoryManager
     {
-        public override int Priority => -1;
-
+        public override int Priority => 1;
         // 工厂实例类型Type到工厂接口的映射
         private readonly Dictionary<TypeIdentifier, IFactory> typeToFactoryMap = new();
-        private int priority;
 
         private FactoryManager()
         {
@@ -28,16 +26,9 @@ namespace Core.Reflection
 
         public override Task InitAsync()
         {
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// 初始化框架工厂
-        /// </summary>
-        public void InitCoreFactorys()
-        {
             var coreAssembly = ServiceLocator.Get<IHotUpdateManager>().GetCoreModule();
             FactoryUtility.ScanAllFactory(typeToFactoryMap, coreAssembly);
+            return Task.CompletedTask;
         }
 
         public void InitHotFactorys()

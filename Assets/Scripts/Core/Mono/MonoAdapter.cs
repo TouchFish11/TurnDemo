@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Core.Log;
 using Core.Mono.MonoFunction;
 using Core.Singleton;
 using UnityEngine;
@@ -8,26 +10,47 @@ using UnityEngine;
 namespace Core.Mono
 {
     /// <summary>
-    /// Mono������
+    /// Mono适配器
     /// </summary>
-    public class MonoAdapter : SingletonAutoMono<MonoAdapter>, IMonoAdapter
+    public class MonoAdapter : SingletonAutoMono<MonoAdapter>, IMonoAdapter, IInitializable
     {
-        private List<IAwakable> awakables = new List<IAwakable>();
-        private List<IEnable> enables = new List<IEnable>();
-        private List<IStartable> startables = new List<IStartable>();
-        private List<IDisable> disables = new List<IDisable>();
-        private List<IDestroyable> destroyables = new List<IDestroyable>();
+        private List<IAwakable> awakables = new();
+        private List<IEnable> enables = new();
+        private List<IStartable> startables = new();
+        private List<IDisable> disables = new();
+        private List<IDestroyable> destroyables = new();
 
-        // ����֡�����б�
-        private List<Action> fixedUpdates = new List<Action>();
-        // ֡�����б�
-        private List<Action> updates = new List<Action>();
-        // ���ڸ����б�
-        private List<Action> lateUpdates = new List<Action>();
+        
+        
+        private List<Action> _fixedUpdates = new();
+        private List<Action> _updates = new();
+        private List<Action> _lateUpdates = new();
 
+        /// <summary>
+        /// 应用程序退出事件
+        /// </summary>
+        public event Func<Task> OnAppQuit;
+        
+        /// <summary>
+        /// 应用程序暂停事件
+        /// </summary>
+        public event Func<bool, Task> OnAppPause; 
+        
+        /// <summary>
+        /// 应用程序焦点事件
+        /// </summary>
+        public event Func<bool, Task> OnAppFocus;
+
+        public int Priority => -1;
+
+        public Task InitAsync()
+        {
+            return Task.CompletedTask;
+        }
+        
         private void Awake()
         {
-            for (int i = 0; i < awakables.Count; ++i)
+            for (var i = 0; i < awakables.Count; ++i)
             {
                 awakables[i].Awake();
             }
@@ -54,7 +77,7 @@ namespace Core.Mono
             {
                 return;
             }
-            fixedUpdates.Add(fixedUpdateFun);
+            _fixedUpdates.Add(fixedUpdateFun);
         }
 
         public void AddUpdateListener(Action updateFun)
@@ -63,7 +86,7 @@ namespace Core.Mono
             {
                 return;
             }
-            updates.Add(updateFun);
+            _updates.Add(updateFun);
         }
 
         public void AddLateUpdateListener(Action lateUpdateFun)
@@ -72,7 +95,7 @@ namespace Core.Mono
             {
                 return;
             }
-            lateUpdates.Add(lateUpdateFun);
+            _lateUpdates.Add(lateUpdateFun);
         }
 
         public void RemoveFixedUpdateListener(Action fixedUpdateFun)
@@ -81,7 +104,7 @@ namespace Core.Mono
             {
                 return;
             }
-            fixedUpdates?.Remove(fixedUpdateFun);
+            _fixedUpdates?.Remove(fixedUpdateFun);
         }
 
         public void RemoveUpdateListener(Action updateFun)
@@ -90,7 +113,7 @@ namespace Core.Mono
             {
                 return;
             }
-            updates?.Remove(updateFun);
+            _updates?.Remove(updateFun);
         }
         
         public void RemoveLateUpdateListener(Action lateUpdateFun)
@@ -99,30 +122,30 @@ namespace Core.Mono
             {
                 return;
             }
-            lateUpdates?.Remove(lateUpdateFun);
+            _lateUpdates?.Remove(lateUpdateFun);
         }
 
         private void FixedUpdate()
         {
-            for (int i = 0; i < fixedUpdates.Count; ++i)
+            for (var i = 0; i < _fixedUpdates.Count; ++i)
             {
-                fixedUpdates[i]?.Invoke();
+                _fixedUpdates[i]?.Invoke();
             }
         }
 
         private void Update()
         {
-            for (int i = 0; i < updates.Count; ++i)
+            for (var i = 0; i < _updates.Count; ++i)
             {
-                updates[i]?.Invoke();
+                _updates[i]?.Invoke();
             }
         }
 
         private void LateUpdate()
         {
-            for (int i = 0; i < lateUpdates.Count; ++i)
+            for (var i = 0; i < _lateUpdates.Count; ++i)
             {
-                lateUpdates[i]?.Invoke();
+                _lateUpdates[i]?.Invoke();
             }
         }
 
@@ -131,18 +154,72 @@ namespace Core.Mono
             
         }
 
+        private async void OnApplicationQuit()
+        {
+            try
+            {
+                if (OnAppQuit == null)
+                {
+                    return;
+                }
+                
+                await OnAppQuit();
+                OnAppQuit = null;
+            }
+            catch (Exception e)
+            {
+                LogManager.LogError($"{nameof(MonoAdapter)}.{nameof(OnApplicationQuit)}：{e.Message}，{e.StackTrace}");
+            }
+        }
+
+        private async void OnApplicationPause(bool pauseStatus)
+        {
+            try
+            {
+                if (OnAppPause == null)
+                {
+                    return;
+                }
+                
+                await OnAppPause(pauseStatus);
+                OnAppPause = null;
+            }
+            catch (Exception e)
+            {
+                LogManager.LogError($"{nameof(MonoAdapter)}.{nameof(OnApplicationPause)}：{e.Message}，{e.StackTrace}");
+            }
+        }
+
+        private async void OnApplicationFocus(bool hasFocus)
+        {
+            try
+            {
+                if (OnAppFocus == null)
+                {
+                    return;
+                }
+                
+                await OnAppFocus(hasFocus);
+                OnAppFocus = null;
+            }
+            catch (Exception e)
+            {
+                LogManager.LogError($"{nameof(MonoAdapter)}.{nameof(OnApplicationFocus)}：{e.Message}，{e.StackTrace}");
+            }
+        }
+
         protected override void OnDestroy()
         {
             awakables.Clear();
-
-            fixedUpdates.Clear();
-            updates.Clear();
-            lateUpdates.Clear();
-
             awakables = null;
-            fixedUpdates = null;
-            updates = null;
-            lateUpdates = null;
+
+            _fixedUpdates.Clear();
+            _updates.Clear();
+            _lateUpdates.Clear();
+            _fixedUpdates = null;
+            _updates = null;
+            _lateUpdates = null;
+            
             base.OnDestroy();
         }
     }

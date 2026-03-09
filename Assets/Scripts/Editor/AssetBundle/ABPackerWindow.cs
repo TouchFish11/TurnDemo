@@ -29,8 +29,7 @@ namespace Editor.AssetBundle
         // --- 配置参数 ---
         private BuildTarget _targetPlatform = BuildTarget.StandaloneWindows; // 默认平台
         private BuildAssetBundleOptions _buildOptions = BuildAssetBundleOptions.None; // 构建选项
-        private string _AssemblyhotUpdateTargetPath_game;  // 热更新程序集目标路径
-        private string _AssemblyhotUpdateTargetPath_conifg;
+        private string _assemblyhotUpdateStrings;  // 热更新程序集名称列表
         private string _outputPath; // 输出路径
         private const string AB_COPY_PATH = "Assets/StreamingAssets/AssetBundles/";     // AssetBundle拷贝到StreamingAssets的目标路径
         private string _mainBundlePath = "";  // 用于依赖分析的主包路径
@@ -44,8 +43,8 @@ namespace Editor.AssetBundle
         private uint maxBytesCapacity = 4096;   // 单次上传的最大字节数（自定义模式下生效）
         private static int upLoadmaxNum;    // 待上传文件总数
         private static int nowUpLoadFinishedNum;    // 已完成上传的文件数
-        private const string targetPath_game = @"D:\UnityProject\TurnDemo\Assets\Editor\ArtRes\HotUpdate\Assembly-CSharp-Game-HotUpdate.dll.bytes";
-        private const string targetPath_config = @"D:\UnityProject\TurnDemo\Assets\Editor\ArtRes\HotUpdate\ConfigModule.dll.bytes";
+        private const string hotUpdateAssemblyTargetPath = @"D:\UnityProject\TurnDemo\Assets\Editor\ArtRes\HotUpdate\";
+        private const string hybridCLRAssemblySourcesPath = @"D:\UnityProject\TurnDemo\HybridCLRData\HotUpdateDlls\StandaloneWindows64\";
         private const string AssetsInputPath = "Assets/Editor/ArtRes/";     // 待打包资源的输入根路径
         private readonly Dictionary<string, List<FileInfo>> _fileInfoDic = new();   // 存储待处理文件信息的字典：Key为目录名，Value为该目录下的文件列表
         private readonly string[] filterDirectorys = { "Texture" };     // 过滤的文件夹
@@ -70,9 +69,8 @@ namespace Editor.AssetBundle
         {
             // 初始化时设置默认输出路径
             _outputPath = Path.Combine(Application.dataPath, "AssetBundles", EditorUserBuildSettings.activeBuildTarget.ToString());
-            _AssemblyhotUpdateTargetPath_game = targetPath_game;
-            _AssemblyhotUpdateTargetPath_conifg = targetPath_config;
-            
+            _assemblyhotUpdateStrings = "HotUpdate.Activity,HotUpdate.Animation,HotUpdate.Battle,HotUpdate.Camera,HotUpdate.Common,HotUpdate.Config," +
+                                        "HotUpdate.Core,HotUpdate.Dialogue,HotUpdate.Entry,HotUpdate.Input,HotUpdate.Interact,HotUpdate.Main,HotUpdate.Task";
             minSize = new Vector2(1389, 725);
         }
 
@@ -772,9 +770,8 @@ namespace Editor.AssetBundle
         {
             EditorGUILayout.Space();
             GUILayout.Label("Assembly HotUpdate", EditorStyles.boldLabel);
-            
-            _AssemblyhotUpdateTargetPath_game = EditorGUILayout.TextField("Game Target Path", _AssemblyhotUpdateTargetPath_game, GUILayout.ExpandWidth(true));
-            _AssemblyhotUpdateTargetPath_conifg = EditorGUILayout.TextField("Config Target Path", _AssemblyhotUpdateTargetPath_conifg, GUILayout.ExpandWidth(true));
+            EditorGUILayout.TextField("HybridCLR Dlls Path", hybridCLRAssemblySourcesPath, GUILayout.ExpandWidth(true));
+            _assemblyhotUpdateStrings = EditorGUILayout.TextField("Assembly Names", _assemblyhotUpdateStrings, GUILayout.ExpandWidth(true));
             // 拷贝热更新程序集
             if (GUILayout.Button("Copy HotUpdate Assembly"))
             {
@@ -797,7 +794,7 @@ namespace Editor.AssetBundle
             {
                 IScriptGenerator scriptGenerator = new ResKeyCollectionClassGenerator();
                 scriptGenerator.GenerateScript();
-                AppendToLog($"ResKeyCollection Generate At：{Application.dataPath}/Scripts/HotUpdate/Config/ResKeyCollection.cs\n");
+                AppendToLog($"ResKeyCollection Generate At：{Application.dataPath}/Scripts/HotUpdate/Common/ResKeyCollection.cs\n");
             }
             GUILayout.EndHorizontal();
         }
@@ -1438,18 +1435,48 @@ namespace Editor.AssetBundle
         /// <summary>
         /// 拷贝热更新程序集
         /// </summary>
-        private static void MoveHotUpdateAssembly()
+        private void MoveHotUpdateAssembly()
         {
-            var info = Directory.CreateDirectory(@"D:\UnityProject\TurnDemo\Assets\Editor\ArtRes\HotUpdate\");
-            foreach (var fileInfo in info.GetFiles())
+            if (!Directory.Exists(hybridCLRAssemblySourcesPath))
+            {
+                AppendToLog($"路径：{hybridCLRAssemblySourcesPath}不存在，请先生成热更程序集");
+                return;
+            }
+            
+            var sorcesInfo = Directory.CreateDirectory(hybridCLRAssemblySourcesPath);
+            // 先删除目标路径下的所有程序集
+            var targetInfo = Directory.CreateDirectory(hotUpdateAssemblyTargetPath);
+            foreach (var fileInfo in targetInfo.GetFiles())
             {
                 File.Delete(fileInfo.FullName);
             }
+
+            var assemblyNames = TextUtility.Split(_assemblyhotUpdateStrings, 2);
+            if (assemblyNames.Length == 0)
+            {
+                AppendToLog($"Split Error");
+                return;
+            }
             
-            const string sourcesPath_game = @"D:\UnityProject\TurnDemo\HybridCLRData\HotUpdateDlls\StandaloneWindows\Assembly-CSharp-Game-HotUpdate.dll";
-            const string sourcesPath_config = @"D:\UnityProject\TurnDemo\HybridCLRData\HotUpdateDlls\StandaloneWindows\ConfigModule.dll";
-            File.Copy(sourcesPath_game,  targetPath_game, true);
-            File.Copy(sourcesPath_config,  targetPath_config, true);
+            AppendToLog($"--- Copy HotUpdate Dlls ---");
+            foreach (var fileInfo in sorcesInfo.GetFiles())
+            {
+                if (fileInfo.Extension == ".dll" && fileInfo.Name.Contains("HotUpdate"))
+                {
+                    foreach (var assemblyName in assemblyNames)
+                    {
+                        if (fileInfo.Name.Contains(assemblyName))
+                        {
+                            // 拷贝
+                            File.Copy(fileInfo.FullName,  $"{hotUpdateAssemblyTargetPath}{fileInfo.Name}.bytes",true);
+                            AppendToLog($"Copy Over：{hotUpdateAssemblyTargetPath}{fileInfo.Name}.bytes");
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            AppendToLog($"--- Copy HotUpdate Dlls End ---\n");
             AssetDatabase.Refresh();
         }
         

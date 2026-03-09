@@ -12,9 +12,7 @@ namespace Core.PreLoad
     /// </summary>
     public class PreLoadManager : SingletonBase<PreLoadManager>, IPreLoadManager
     {
-        private int priority;
-
-        public override int Priority => -1;
+        public override int Priority => 0;
 
         private PreLoadManager()
         {

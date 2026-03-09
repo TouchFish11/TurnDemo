@@ -4,7 +4,6 @@ using Core.UI.MVC;
 using HotUpdate.Activity.UI.Base;
 using HotUpdate.Common;
 using HotUpdate.Core.MVC;
-using HotUpdate.Core.UI;
 using HotUpdate.Core.UI.Helper;
 
 namespace HotUpdate.Activity.Core

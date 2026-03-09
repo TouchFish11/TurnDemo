@@ -32,6 +32,7 @@ namespace HotUpdate.Common
 		public static string MainCamera => "MainCamera";
 		public static string UICamera => "UICamera";
 		public static string CubemapStars => "CubemapStars";
+		public static string HotUpdateEntry => "HotUpdateEntry";
 		public static string StarSkybox => "StarSkybox";
 		public static string Atlas_Default => "Atlas_Default";
 		public static string StarSkybox041 => "StarSkybox041";

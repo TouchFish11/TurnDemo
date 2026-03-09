@@ -15,7 +15,7 @@ namespace HotUpdate.Task.Data
     /// </summary>
     public class TaskDataProvider : IDataProvider<ITaskDataCollection>
     {
-        private IJsonManager _jsonManager;
+        private readonly IJsonManager _jsonManager;
         
         /// <summary>
         /// 任务数据集合

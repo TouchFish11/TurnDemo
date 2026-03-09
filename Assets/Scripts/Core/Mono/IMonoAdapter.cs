@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Core.Mono
@@ -57,5 +58,20 @@ namespace Core.Mono
         /// </summary>
         /// <param name="coroutine"></param>
         void StopCoroutine(Coroutine coroutine);
+
+        /// <summary>
+        /// 应用程序退出事件
+        /// </summary>
+        event Func<Task> OnAppQuit;
+
+        /// <summary>
+        /// 应用程序暂停事件
+        /// </summary>
+        event Func<bool, Task> OnAppPause;
+
+        /// <summary>
+        /// 应用程序焦点事件
+        /// </summary>
+        event Func<bool, Task> OnAppFocus;
     }
 }

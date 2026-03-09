@@ -18,10 +18,5 @@ namespace Core.Reflection
         /// <typeparam name="TFactory">继承具体接口类型</typeparam>
         /// <returns></returns>
         TISubFactory GetFactory<TISubFactory, TFactory>() where TISubFactory : class, IFactory where TFactory : TISubFactory;
-
-        /// <summary>
-        /// 初始化框架工厂
-        /// </summary>
-        void InitCoreFactorys();
     }
 }

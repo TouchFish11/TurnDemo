@@ -14,7 +14,7 @@ namespace Core.Serialize.Json
     /// </summary>
     public class JsonManager : SingletonBase<JsonManager>, IJsonManager
     {
-        public override int Priority => -1;
+        public override int Priority => 0;
 
         public static JsonSerializerSettings DefaultSettings => new()
         {
@@ -27,10 +27,6 @@ namespace Core.Serialize.Json
             }
         };
         
-        /// <summary>
-        /// 私有构造函数（单例模式）
-        /// 防止外部实例化，保证全局唯一实例
-        /// </summary>
         private JsonManager()
         {
             

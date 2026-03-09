@@ -6,7 +6,7 @@ using Core.Reflection;
 using Unity.VisualScripting;
 using UnityEngine;
 
-namespace HotUpdate.Core
+namespace HotUpdate.Core.Component
 {
     /// <summary>
     /// 组件工厂核心类

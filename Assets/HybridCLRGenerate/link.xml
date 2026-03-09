@@ -2,14 +2,15 @@
 <linker>
   <assembly fullname="CoreModule">
     <type fullname="Core.AssetBundles.Management.IAssetBundleManager" preserve="all" />
-    <type fullname="Core.AssetBundles.Update.ABUpdateContext" preserve="all" />
+    <type fullname="Core.AssetBundles.Update.Core.ABUpdateContext" preserve="all" />
+    <type fullname="Core.AssetBundles.Update.Core.IAssetBundleUpdater" preserve="all" />
+    <type fullname="Core.AssetBundles.Update.Core.UpdateResult" preserve="all" />
+    <type fullname="Core.AssetBundles.Update.Core.UpdateResult/EUpdateError" preserve="all" />
     <type fullname="Core.AssetBundles.Update.Enum.EUpdatePhase" preserve="all" />
-    <type fullname="Core.AssetBundles.Update.IAssetBundleUpdater" preserve="all" />
-    <type fullname="Core.AssetBundles.Update.UpdateResult" preserve="all" />
-    <type fullname="Core.AssetBundles.Update.UpdateResult/EUpdateError" preserve="all" />
     <type fullname="Core.Collection.CollectionUtil" preserve="all" />
     <type fullname="Core.Collection.Collection`2" preserve="all" />
     <type fullname="Core.Collection.Generic.UniList`1" preserve="all" />
+    <type fullname="Core.Collection.ICollection" preserve="all" />
     <type fullname="Core.Components.ComponentIdAttribute" preserve="all" />
     <type fullname="Core.Components.EntityProperty" preserve="all" />
     <type fullname="Core.Components.IComponent" preserve="all" />
@@ -36,7 +37,7 @@
     <type fullname="Core.Pool.IPoolManager" preserve="all" />
     <type fullname="Core.PreLoad.IPreLoadManager" preserve="all" />
     <type fullname="Core.PreLoad.PreLoadData" preserve="all" />
-    <type fullname="Core.Quit.IQuitHandler" preserve="all" />
+    <type fullname="Core.Process.ProcessRestarter" preserve="all" />
     <type fullname="Core.Reflection.FactoryUtility" preserve="all" />
     <type fullname="Core.Reflection.Factory`1" preserve="all" />
     <type fullname="Core.Reflection.IFactory" preserve="all" />
@@ -48,6 +49,7 @@
     <type fullname="Core.Serialize.Json.E_JsonType" preserve="all" />
     <type fullname="Core.Serialize.Json.IJsonManager" preserve="all" />
     <type fullname="Core.Service.ServiceLocator" preserve="all" />
+    <type fullname="Core.Singleton.IInitializable" preserve="all" />
     <type fullname="Core.Singleton.SingletonAutoMono`1" preserve="all" />
     <type fullname="Core.Singleton.SingletonBase`1" preserve="all" />
     <type fullname="Core.Singleton.SingletonMono`1" preserve="all" />
@@ -117,7 +119,6 @@
     <type fullname="UnityEngine.AssetBundleRequest" preserve="all" />
   </assembly>
   <assembly fullname="UnityEngine.CoreModule">
-    <type fullname="UnityEngine.Application" preserve="all" />
     <type fullname="UnityEngine.Camera" preserve="all" />
     <type fullname="UnityEngine.Color" preserve="all" />
     <type fullname="UnityEngine.Component" preserve="all" />
@@ -233,9 +234,6 @@
     <type fullname="System.Diagnostics.DebuggerBrowsableState" preserve="all" />
     <type fullname="System.Diagnostics.DebuggerHiddenAttribute" preserve="all" />
     <type fullname="System.Diagnostics.DebuggerStepThroughAttribute" preserve="all" />
-    <type fullname="System.Diagnostics.Process" preserve="all" />
-    <type fullname="System.Diagnostics.ProcessModule" preserve="all" />
-    <type fullname="System.Diagnostics.ProcessStartInfo" preserve="all" />
     <type fullname="System.Enum" preserve="all" />
     <type fullname="System.Environment" preserve="all" />
     <type fullname="System.Exception" preserve="all" />
@@ -248,12 +246,15 @@
     <type fullname="System.Linq.IGrouping`2" preserve="all" />
     <type fullname="System.NotImplementedException" preserve="all" />
     <type fullname="System.NotSupportedException" preserve="all" />
+    <type fullname="System.NullReferenceException" preserve="all" />
     <type fullname="System.Object" preserve="all" />
     <type fullname="System.ParamArrayAttribute" preserve="all" />
     <type fullname="System.Predicate`1" preserve="all" />
     <type fullname="System.Reflection.Assembly" preserve="all" />
     <type fullname="System.Reflection.CustomAttributeExtensions" preserve="all" />
     <type fullname="System.Reflection.MemberInfo" preserve="all" />
+    <type fullname="System.Reflection.MethodBase" preserve="all" />
+    <type fullname="System.Reflection.MethodInfo" preserve="all" />
     <type fullname="System.Reflection.PropertyInfo" preserve="all" />
     <type fullname="System.Runtime.CompilerServices.AsyncStateMachineAttribute" preserve="all" />
     <type fullname="System.Runtime.CompilerServices.AsyncTaskMethodBuilder" preserve="all" />

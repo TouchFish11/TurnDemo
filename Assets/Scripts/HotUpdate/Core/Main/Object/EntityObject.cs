@@ -3,6 +3,7 @@ using Core.Components;
 using Core.Log;
 using Core.Types;
 using Core.Utility;
+using HotUpdate.Core.Component;
 using UnityEngine;
 
 namespace HotUpdate.Core.Main.Object

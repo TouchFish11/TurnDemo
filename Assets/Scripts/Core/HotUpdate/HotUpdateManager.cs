@@ -1,4 +1,6 @@
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
@@ -17,15 +19,16 @@ namespace Core.HotUpdate
     /// </summary>
     public class HotUpdateManager : SingletonBase<HotUpdateManager>, IHotUpdateManager
     {
-        public override int Priority => -1;
-
+        public override int Priority => 2;
         // 缓存热更程序集名称
-        private readonly List<string> _assemblyNames = new();
-
+        private readonly ConcurrentBag<string> _assemblyNames = new();
+        private IAssetBundleManager _assetBundleManager;
+        
         private HotUpdateManager(){}
 
         public override Task InitAsync()
         {
+            _assetBundleManager = ServiceLocator.Get<IAssetBundleManager>();
             return Task.CompletedTask;
         }
 
@@ -38,24 +41,26 @@ namespace Core.HotUpdate
         {
             var uniList = CollectionUtil.GetUniList<string>();
             uniList.AddRange(assemblyNames);
-            Clear();
-            var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(abName);
+            var assetBundle = await _assetBundleManager.LoadBundleAsync(abName);
             // 加载热更新AB包资源
-            var dllTexts = new List<TextAsset>();
-            await assetBundle.LoadAllAssetsAsync<TextAsset>().ToTask(dllTexts);
-            foreach (var dllText in dllTexts)
+            var dllTexts = CollectionUtil.GetUniList<TextAsset>();
+            await assetBundle.LoadAllAssetsAsync<TextAsset>().ToTask(dllTexts.List);
+            foreach (var dllText in dllTexts.List)
             {
-                if (!uniList.List.Contains(dllText.name))
+                if (!uniList.Contains(dllText.name))
                 {
                     continue;
                 }
                 
-                // TODO：多线程加载程序集
 #if !UNITY_EDITOR
-                var assembly = Assembly.Load(dllText.bytes);
-                RuntimeApi.LoadMetadataForAOTAssembly(dllText.bytes, HomologousImageMode.SuperSet);
-                _assemblyNames.Add(assembly.GetName().Name);
-                LogManager.Log($"{nameof(HotUpdateManager)}.{nameof(LoadAssemblys)}：已加载热更程序集，{assembly.GetName().Name}");
+                // 多线程加载程序集
+                await Task.Run(() =>
+                {
+                    var assembly = Assembly.Load(dllText.bytes);
+                    RuntimeApi.LoadMetadataForAOTAssembly(dllText.bytes, HomologousImageMode.SuperSet);
+                    _assemblyNames.Add(assembly.GetName().Name);
+                    LogManager.Log($"{nameof(HotUpdateManager)}.{nameof(LoadAssembliesAsync)}：已加载热更程序集，{assembly.GetName().Name}");
+                });
 #else
                 // Editor环境下，HotUpdate.dll.bytes已经被自动加载，不需要加载，重复加载反而会出问题。
                 // Editor下无需加载，直接查找获得HotUpdate程序集
@@ -73,29 +78,28 @@ namespace Core.HotUpdate
             }
 
             CollectionUtil.CollectUniList(uniList);
-            ServiceLocator.Get<IAssetBundleManager>().UnloadBundle(abName);
+            _assetBundleManager.UnloadBundle(abName);
         }
 
-        public async Task LoadAssemblysAsync(string abName)
+        public async Task LoadAssembliesAsync(string abName)
         {
-            var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(abName);
+            var assetBundle = await _assetBundleManager.LoadBundleAsync(abName);
             // 加载热更新AB包资源
-            var dllTexts = new List<TextAsset>();
-            await assetBundle.LoadAllAssetsAsync<TextAsset>().ToTask(dllTexts);
-            foreach (var dllText in dllTexts)
+            var dllTexts = CollectionUtil.GetUniList<TextAsset>();
+            await assetBundle.LoadAllAssetsAsync<TextAsset>().ToTask(dllTexts.List);
+            foreach (var dllText in dllTexts.List)
             {
-                if (_assemblyNames.Contains(dllText.name))
-                {
-                    continue;
-                }
-                
-                // Editor环境下，HotUpdate.dll.bytes已经被自动加载，不需要加载，重复加载反而会出问题。
 #if !UNITY_EDITOR
-                var assembly = Assembly.Load(dllText.bytes);
-                RuntimeApi.LoadMetadataForAOTAssembly(dllText.bytes, HomologousImageMode.SuperSet);
-                _assemblyNames.Add(assembly.GetName().Name);
-                LogManager.Log($"{nameof(HotUpdateManager)}.{nameof(LoadAssemblys)}：已加载热更程序集，{assembly.GetName().Name}");
+                // 多线程加载程序集
+                await Task.Run(() =>
+                {
+                    var assembly = Assembly.Load(dllText.bytes);
+                    RuntimeApi.LoadMetadataForAOTAssembly(dllText.bytes, HomologousImageMode.SuperSet);
+                    _assemblyNames.Add(assembly.GetName().Name);
+                    LogManager.Log($"{nameof(HotUpdateManager)}.{nameof(LoadAssembliesAsync)}：已加载热更程序集，{assembly.GetName().Name}");
+                });
 #else
+                // Editor环境下，HotUpdate.dll.bytes已经被自动加载，不需要加载，重复加载反而会出问题。
                 // Editor下无需加载，直接查找获得HotUpdate程序集
                 foreach (var assembly in System.AppDomain.CurrentDomain.GetAssemblies())
                 {
@@ -110,7 +114,7 @@ namespace Core.HotUpdate
 #endif
             }
             
-            ServiceLocator.Get<IAssetBundleManager>().UnloadBundle(abName);
+            _assetBundleManager.UnloadBundle(abName);
         }
 
         public Assembly GetAssembly(string assemblyName)
@@ -123,11 +127,6 @@ namespace Core.HotUpdate
             return Assembly.Load("CoreModule");
         }
         
-        public Assembly GetConfigModule()
-        {
-            return Assembly.Load("ConfigModule");
-        }
-        
         /// <summary>
         /// 获取所有程序集
         /// </summary>
@@ -137,7 +136,6 @@ namespace Core.HotUpdate
             var assemblies = new List<Assembly>
             {
                 GetCoreModule(),
-                GetConfigModule(),
             };
             
             // 获取所有热更后的程序集
@@ -153,14 +151,6 @@ namespace Core.HotUpdate
                 assemblies.Add(Assembly.Load(assemblyName));
             }
             return assemblies.ToArray();
-        }
-        
-        /// <summary>
-        /// 清理名称缓存
-        /// </summary>
-        private void Clear()
-        {
-            _assemblyNames.Clear();
         }
     }
 }

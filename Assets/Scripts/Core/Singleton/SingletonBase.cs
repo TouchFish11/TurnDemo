@@ -39,7 +39,7 @@ namespace Core.Singleton
                     }
                     else
                     {
-                        throw new Exception($"{nameof(SingletonBase<T>)}.{Instance}：{typeof(T).Name}没有实现私有无参构造函数");
+                        throw new Exception($"{typeof(T).Name}没有实现私有无参构造函数");
                     }
                 }
                 return _instance;

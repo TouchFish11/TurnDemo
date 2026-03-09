@@ -16,7 +16,7 @@ namespace Core.UI
     /// </summary>
     public class UIManager : SingletonBase<UIManager>, IUIManager
     {
-        public override int Priority => -1;
+        public override int Priority => 2;
         // 存储打开的界面
         private readonly List<IPanelInfo> _panels = new();
         // 上层
@@ -27,7 +27,7 @@ namespace Core.UI
         private Transform _botLayer;
         // 系统层
         private Transform _systemLayer;
-
+        // 预制体加载器对象
         private IPrefabLoader _prefabLoader;
         
         private UIManager()
@@ -36,7 +36,7 @@ namespace Core.UI
 
         public override Task InitAsync()
         {
-            // TODO：要先初始化工厂才能拿到加载器实例
+            // 要先初始化工厂才能拿到加载器实例
             _prefabLoader = ServiceLocator.Get<IPrefabLoader>();
             return Task.CompletedTask;
         }

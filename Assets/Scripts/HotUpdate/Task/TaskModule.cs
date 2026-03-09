@@ -18,18 +18,13 @@ namespace HotUpdate.Task
     /// </summary>
     public class TaskModule : ITaskModule
     {
-        private TaskRegistrar _taskRegistrar;
-        
         public Task InitModuleAsync()
         {
-            // 注册服务注册器
-            ServiceLocator.Get<IGameManager>().GameServiceManager.AddRegistrar(_taskRegistrar);
+            ServiceLocator.Register<ITaskManager>(TaskManager.Instance);
             // 初始化UIHelper
             ServiceLocator.Register<ITaskUiHelper>(new TaskUiHelper(ServiceLocator.Get<IUIManager>()));
             // 注册活动数据提供器
-            ServiceLocator.Get<IGameManager>().GameDataManager.AddDataProvider(typeof(ITaskDataCollection), 
-                new TaskDataProvider(ServiceLocator.Get<IJsonManager>()));
-            
+            ServiceLocator.Get<IGameManager>().GameDataManager.AddDataProvider(typeof(ITaskDataCollection), new TaskDataProvider(ServiceLocator.Get<IJsonManager>()));
             return Task.CompletedTask;
         }
     }

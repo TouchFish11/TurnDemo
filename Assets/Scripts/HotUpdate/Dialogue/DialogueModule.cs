@@ -11,6 +11,7 @@ namespace HotUpdate.Dialogue
     {
         public Task InitModuleAsync()
         {
+            ServiceLocator.Register<IDialogueManager>(DialogueManager.Instance);
             ServiceLocator.Register<IDialogueUiHelper>(new DialogueUiHelper(ServiceLocator.Get<IUIManager>()));
             return Task.CompletedTask;
         }

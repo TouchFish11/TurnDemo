@@ -6,8 +6,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Core.Global;
+using Core.Mono;
 using Core.Net;
-using Core.Quit;
 using Core.Service;
 using Core.Singleton;
 using Core.Utility;
@@ -43,7 +43,7 @@ namespace Core.Log
 
         public override Task InitAsync()
         {
-            ServiceLocator.Get<IQuitHandler>().OnAppQuit += OnApplicationQuit;
+            ServiceLocator.Get<IMonoAdapter>().OnAppQuit += OnApplicationQuit;
             LogSavePath = PathUtility.GetLogLocalSavePath(FileUtility.LocalLogFileName);
             WriteLogMaxIntervalTime = GlobalSettings.Instance.writeLogMaxIntervalTime;
             InitLogFile();

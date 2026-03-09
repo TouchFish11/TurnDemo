@@ -1,8 +1,8 @@
 using System;
-using System.Diagnostics;
 using Core.AssetBundles.Update.Core;
 using Core.AssetBundles.Update.Enum;
 using Core.Log;
+using Core.Process;
 using Core.Service;
 using Core.UI;
 using Core.UI.MVC;
@@ -10,7 +10,6 @@ using Core.Utility;
 using HotUpdate.Common;
 using HotUpdate.Core.MVC;
 using HotUpdate.Default.Update.Tip;
-using UnityEngine;
 
 namespace HotUpdate.Entry.Update.UI
 {
@@ -189,10 +188,9 @@ namespace HotUpdate.Entry.Update.UI
                         var controller = await uiManager.CreateViewAsync<UpdateTipView, UpdateTipModel, UpdateTipController>(AbKeyCollection.Default, E_UILayer.Mid, ResKeyCollection.UpdateTipView);
                         // 设置消息
                         controller.SetUpdateMessage("更新成功，请重新启动游戏");
-                
                         // 暂时这样处理，可根据枚举类型决定如何处理按钮点击逻辑
-                        controller.SetTipActive(true, "点击确认后将重新启动");
-                        controller.OnSure += RestartGame;
+                        controller.SetTipActive(true, "点击确认后将重启游戏");
+                        controller.OnSure += ProcessRestarter.RestartProcess;
                     }
                     else
                     {
@@ -271,49 +269,6 @@ namespace HotUpdate.Entry.Update.UI
             catch (Exception e)
             {
                 LogManager.LogError($"{nameof(BeginController)}.{nameof(EnterMain)}：{e.Message}，{e.StackTrace}");
-            }
-        }
-        
-        /// <summary>
-        /// 重新启动游戏
-        /// </summary>
-        public static void RestartGame()
-        {
-            if (Application.isEditor)
-            {
-                return;
-            }
-
-            try
-            {
-                string exePath = Process.GetCurrentProcess().MainModule?.FileName;
-                if (string.IsNullOrEmpty(exePath)) return;
-
-                // 防止无限重启
-                if (Environment.CommandLine.Contains("--noRestart"))
-                    return;
-
-                // 构造新参数（保留原参数 + 添加防重入标记）
-                string originalArgs = Environment.CommandLine;
-                string argsWithoutExe = originalArgs
-                    .Substring(originalArgs.IndexOf('"', 1) + 1) // 跳过第一个引号包围的 exe 路径
-                    .Trim();
-                string newArgs = argsWithoutExe + " --noRestart";
-
-                var startInfo = new ProcessStartInfo
-                {
-                    FileName = exePath,
-                    Arguments = newArgs,
-                    UseShellExecute = true,      // 关键！
-                    CreateNoWindow = false
-                };
-
-                Process.Start(startInfo);
-                Application.Quit();
-            }
-            catch (Exception)
-            {
-                Application.Quit(); // 至少退出
             }
         }
         

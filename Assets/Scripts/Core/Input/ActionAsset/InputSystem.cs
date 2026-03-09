@@ -22,7 +22,7 @@ namespace Core.Input.ActionAsset
     /// </summary>
     public class InputSystem : SingletonBase<InputSystem>, IInputSystem
     {
-        public override int Priority => -1;
+        public override int Priority => 2;
         // 输入配置的JSON原始数据
         private string _jsonInputData;
         // 玩家输入组件引用，关联InputActionAsset
@@ -39,7 +39,7 @@ namespace Core.Input.ActionAsset
         private string newPath;
         // 数据容器
         private MainActionMapDataContainer _mapDataContainer;
-
+        // AB包管理器接口
         private IAssetBundleManager _assetBundleManager;
         
         /// <summary>
