@@ -322,9 +322,9 @@ MonoBehaviour:
       name: Prefab_Npc.prefab
       hash: 4721972f7c7b253e0bfaaf4627f8c8cb687faac50dcd1560a178b79de1bb0b8a
     - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Prefab_AbyssalMage.prefab
-      size: 28357
+      size: 28781
       name: Prefab_AbyssalMage.prefab
-      hash: 9e8bb6ccfe6f923347a0c994fb451a9a1e100fe5de514d3c6bec3448cdade587
+      hash: 11cb63059c30fd0af0538b862f42096459eeca14acfbef7f855f43495e0d34ed
     - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Prefab_Boss.prefab
       size: 81157
       name: Prefab_Boss.prefab
@@ -334,13 +334,13 @@ MonoBehaviour:
       name: Prefab_Chest.prefab
       hash: e625eb32c556f3b842bd4042b5001ce9652b2e72e91a660ea39597dbfbdfb096
     - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Prefab_Slime.prefab
-      size: 16617
+      size: 17039
       name: Prefab_Slime.prefab
-      hash: 89c161c6c1a796c24fb8c132ed2321a37d3d7e774a263ed9dadf846de91f4253
+      hash: f5a3d2bf828ede0c3382ea1b905909a06f5fd6e4b670a4522abe7850096b3383
     - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Prefab_TurtleShell.prefab
-      size: 37036
+      size: 37456
       name: Prefab_TurtleShell.prefab
-      hash: 2864f65a01d11e96d00f1dc3e88ee1426d4fb7a3e059b123193c1d01c4514e1e
+      hash: 70528111196d875ce97dc911edb66a7e90a8becf47d055927e9e29693b887fe2
     - assetPath: Assets\Editor\ArtRes\Prefab\Role\Prefab_Gunman.prefab
       size: 87144
       name: Prefab_Gunman.prefab

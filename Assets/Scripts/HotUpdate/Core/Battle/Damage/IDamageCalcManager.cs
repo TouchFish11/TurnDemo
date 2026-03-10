@@ -3,14 +3,18 @@ using HotUpdate.Core.Battle.Object;
 
 namespace HotUpdate.Core.Battle.Damage
 {
+    /// <summary>
+    /// 伤害计算管理器接口
+    /// </summary>
     public interface IDamageCalcManager
     {
-        void CalcSkillDamage(IBattleEntityObject source, IBattleEntityObject target, SkillInfo skillInfo, out DamageResult damageResult);
-
         /// <summary>
-        /// 
+        /// 计算技能伤害
         /// </summary>
-        /// <param name="context"></param>
-        void Init(IBattleContext context);
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        /// <param name="skillInfo"></param>
+        /// <param name="damageResult"></param>
+        void CalcSkillDamage(IBattleEntityObject source, IBattleEntityObject target, SkillInfo skillInfo, out DamageResult damageResult);
     }
 }

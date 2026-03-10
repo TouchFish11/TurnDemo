@@ -22,13 +22,13 @@ namespace Core.Loader.Sprite
         /// <summary>
         /// 缓存Sprite
         /// </summary>
-        /// <param name="spritename"></param>
+        /// <param name="spriteName"></param>
         /// <param name="sprite"></param>
-        public void TryAdd(string spritename, UnityEngine.Sprite sprite)
+        public void TryAdd(string spriteName, UnityEngine.Sprite sprite)
         {
-            if (!_sprites.TryAdd(spritename, (sprite, 1)))
+            if (!_sprites.TryAdd(spriteName, (sprite, 1)))
             {
-                LogManager.LogWarning($"{nameof(AtlasData)}.{nameof(TryAdd)}：重复缓存Sprite，{spritename}");
+                LogManager.LogWarning($"{nameof(AtlasData)}.{nameof(TryAdd)}：重复缓存Sprite，{spriteName}");
             }
         }
     

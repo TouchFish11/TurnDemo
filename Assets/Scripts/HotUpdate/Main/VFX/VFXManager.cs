@@ -5,9 +5,7 @@ using Core.Log;
 using Core.Mono;
 using Core.Pool;
 using Core.Service;
-using Core.Singleton;
 using HotUpdate.Common;
-using HotUpdate.Config;
 using HotUpdate.Core.VFX;
 using UnityEngine;
 
@@ -19,25 +17,17 @@ namespace HotUpdate.Main.VFX
     /// 视觉特效（VFX）管理器
     /// 负责VFX的创建、更新、移除、缓存清理等核心逻辑，基于对象池管理VFX资源
     /// </summary>
-    public class VFXManager : SingletonBase<VFXManager>, IVFXManager
+    public class VFXManager : IVFXManager
     {
-        public override int Priority => -1;
-
-        private readonly IMonoAdapter _monoAdapter = ServiceLocator.Get<IMonoAdapter>();
-        private readonly IPrefabLoader _prefabLoader = ServiceLocator.Get<IPrefabLoader>();
+        private readonly IPrefabLoader _prefabLoader;
         // 存储当前活跃的VFX信息列表
         private readonly List<VFXInfo> _activeVfxs = new();
         
-        private VFXManager()
+        public VFXManager(IMonoAdapter monoAdapter, IPrefabLoader prefabLoader)
         {
-
-        }
-
-        public override Task InitAsync()
-        {
+            _prefabLoader = prefabLoader;
             // 注册帧更新监听，用于检测VFX状态
-            _monoAdapter.AddUpdateListener(OnUpdate);
-            return Task.CompletedTask;
+            monoAdapter.AddUpdateListener(OnUpdate);
         }
 
         /// <summary>

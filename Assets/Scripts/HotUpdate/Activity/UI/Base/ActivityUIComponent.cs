@@ -47,7 +47,9 @@ namespace HotUpdate.Activity.UI.Base
 
         public void Destroy()
         {
-            throw new System.NotImplementedException();
+            ActivityUIBehaviourBase = null;
+            ActivityInfo = null;
+            ActivityData = null;
         }
     }
 }

@@ -1,9 +1,8 @@
 using System.Threading.Tasks;
 using Core.Loader.Object;
 using Core.Mono;
-using Core.Pool;
+using Core.Mono.MonoFunction;
 using Core.Service;
-using Core.Singleton;
 using HotUpdate.Common;
 using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Event;
@@ -18,10 +17,9 @@ namespace HotUpdate.Battle
     /// <summary>
     /// 战斗相机管理器
     /// </summary>
-    public class BattleCameraManager : IInitializable, IBattleCameraManager
+    public class BattleCameraManager : IBattleCameraManager, IDestroyable
     {
-        public int Priority => -1;
-        private readonly IPrefabLoader _prefabLoader = ServiceLocator.Get<IPrefabLoader>();
+        private IPrefabLoader _prefabLoader;
         // X轴旋转角度限制
         private const float minXAngle = -3f;
         private const float maxXAngle = 3f;
@@ -43,22 +41,23 @@ namespace HotUpdate.Battle
         private Quaternion _originRot;
 
         public Camera CurrentActiveCamera { get; private set; }
-        
-        public Task InitAsync()
+
+        public BattleCameraManager(IPrefabLoader prefabLoader)
         {
+            _prefabLoader = prefabLoader;
+            
             ServiceLocator.Get<IBattleInputHandler>().OnDrag += OnDrag;
             ServiceLocator.Get<IBattleInputHandler>().OnRebound += OnRebound;
             ServiceLocator.Get<ITargetSelectManager>().OnSelectChanged += OnSelectChanged;
             ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpdate);
             ServiceLocator.Get<IBattleManager>().GetContext().GetEventBus().AddListener<BattleOverEvent>(OnBattleOverEvent);
-            return Task.CompletedTask;
         }
 
         public async Task<Camera> CreateCamera(Transform cameraTrans, Vector3 localPos, Quaternion localRot)
         {
             if(CurrentActiveCamera)
             {
-                ServiceLocator.Get<IPoolManager>().PushObj(CurrentActiveCamera.gameObject);
+                _prefabLoader.CollectAsset(CurrentActiveCamera.gameObject);
                 CurrentActiveCamera = null;
             }
             
@@ -76,7 +75,7 @@ namespace HotUpdate.Battle
         {
             if(CurrentActiveCamera)
             {
-                ServiceLocator.Get<IPoolManager>().PushObj(CurrentActiveCamera.gameObject);
+                _prefabLoader.CollectAsset(CurrentActiveCamera.gameObject);
                 CurrentActiveCamera = null;
             }
             
@@ -123,20 +122,18 @@ namespace HotUpdate.Battle
                 // 以起始四元数为基准的偏移
                 targetRot *= _originRot;
                 // 应用旋转
-                CurrentActiveCamera.transform.localRotation = 
-                    Quaternion.Slerp(CurrentActiveCamera.transform.localRotation, targetRot, Time.deltaTime * rotateSpeed);
+                CurrentActiveCamera.transform.localRotation = Quaternion.Slerp(CurrentActiveCamera.transform.localRotation, targetRot, Time.deltaTime * rotateSpeed);
             }
             // 限制最大范围，对于单位四元数的角度可以这样处理
             else
             {
                 // 应用旋转
-                CurrentActiveCamera.transform.localRotation = 
-                    Quaternion.Slerp(CurrentActiveCamera.transform.localRotation, targetRot, Time.deltaTime * rotateSpeed);
+                CurrentActiveCamera.transform.localRotation = Quaternion.Slerp(CurrentActiveCamera.transform.localRotation, targetRot, Time.deltaTime * rotateSpeed);
             }
         }
         
         /// <summary>
-        /// 
+        /// 目标选择切换事件回调
         /// </summary>
         /// <param name="mainTarget"></param>
         private void OnSelectChanged(IBattleEntityObject mainTarget)
@@ -190,10 +187,12 @@ namespace HotUpdate.Battle
             ServiceLocator.Get<IMonoAdapter>().RemoveUpdateListener(OnUpdate);
         }
         
-        protected void OnDestroy()
+        public void OnDestroy()
         {
-            ServiceLocator.Get<IPoolManager>().PushObj(CurrentActiveCamera.gameObject);
+            _prefabLoader.CollectAsset(CurrentActiveCamera.gameObject);
+            _prefabLoader.RealseAsset(AbKeyCollection.Camera, ResKeyCollection.BattleCamera);
             CurrentActiveCamera = null;
+            _prefabLoader = null;
         }
     }
 }

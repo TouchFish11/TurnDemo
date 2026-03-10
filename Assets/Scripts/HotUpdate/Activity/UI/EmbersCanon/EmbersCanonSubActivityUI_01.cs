@@ -68,6 +68,8 @@ namespace HotUpdate.Activity.UI.EmbersCanon
             foreach (var battleLevelUi in _battleLevelUis)
             {
                 prefabLoader.CollectAsset(battleLevelUi.gameObject);
+                spriteLoader.ReleaseSprite(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Icon_Common, ResKeyCollection.Icon_Common_Check);
+                spriteLoader.ReleaseSprite(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Icon_Common, ResKeyCollection.Icon_Common_Battle);
             }
             _battleLevelUis.Clear();
             prefabLoader.RealseAsset(AbKeyCollection.Ui, ResKeyCollection.BattleLevelUI);

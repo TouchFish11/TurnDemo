@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.Log;
@@ -16,20 +15,12 @@ namespace Core.Loader.Sprite
     /// </summary>
     public class SpriteLoader : ISpriteLoader
     {
+        // AB包管理器接口
+        private readonly IAssetBundleManager _assetBundleManager = ServiceLocator.Get<IAssetBundleManager>();
         // 图集缓存
         private readonly Dictionary<string, AtlasData> _atlasDatas =  new();
         
-        private SpriteCache _spriteCache;
-
-        /// <summary>
-        /// 异步加载Sprite
-        /// </summary>
-        /// <param name="abName"></param>
-        /// <param name="atlasName"></param>
-        /// <param name="assetName"></param>
-        /// <param name="token"></param>
-        /// <returns></returns>
-        public async Task<UnityEngine.Sprite> LoadSpriteAsync(string abName, string atlasName, string assetName, CancellationToken token = default)
+        public async Task<UnityEngine.Sprite> LoadSpriteAsync(string abName, string atlasName, string assetName)
         {
             // 存在图集
             if (_atlasDatas.TryGetValue(atlasName, out var atlasData))
@@ -49,19 +40,19 @@ namespace Core.Loader.Sprite
                     return sprite;
                 }
 
-                LogManager.LogWarning($"{nameof(SpriteLoader)}.{nameof(LoadSpriteAsync)}，精灵：{assetName}，获取失败，返回默认Sprite");
+                LogManager.LogWarning($"{nameof(SpriteLoader)}.{nameof(LoadSpriteAsync)}，{abName}.{atlasName}.{assetName}资源获取失败，返回默认Sprite");
                 return null;
             }
             else
             {
                 // 加载图集包
-                var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(abName, token);
+                var assetBundle = await _assetBundleManager.LoadBundleAsync(abName);
                 // 加载指定图集
-                var atlas = await assetBundle.LoadAssetAsync<SpriteAtlas>(atlasName).ToTask<SpriteAtlas>(token);
+                var atlas = await assetBundle.LoadAssetAsync<SpriteAtlas>(atlasName).ToTask<SpriteAtlas>();
                 // 图集加载失败，则返回默认精灵
                 if (!atlas)
                 {
-                    LogManager.LogWarning($"{nameof(SpriteLoader)}.{nameof(LoadSpriteAsync)}，图集：{atlasName}，加载失败，加载默认Atlas");
+                    LogManager.LogWarning($"{nameof(SpriteLoader)}.{nameof(LoadSpriteAsync)}，{abName}.{atlasName}图集加载失败，返回默认Sprite");
                     return null;
                 }
                 
@@ -69,7 +60,7 @@ namespace Core.Loader.Sprite
                 var newAtlasData = new AtlasData(atlas);
                 if (!_atlasDatas.TryAdd(atlasName, newAtlasData))
                 {
-                    LogManager.LogWarning($"{nameof(AtlasData)}.{nameof(LoadSpriteAsync)}：重复缓存SpriteAtlas，{atlasName}");
+                    LogManager.LogWarning($"{nameof(AtlasData)}.{nameof(LoadSpriteAsync)}：重复缓存{abName}中的SpriteAtlas，{atlasName}");
                 }
                 
                 // 图集加载成功，从图集中获取指定名称的精灵
@@ -80,23 +71,24 @@ namespace Core.Loader.Sprite
                     return sprite;
                 }
             
-                LogManager.LogWarning($"{nameof(SpriteLoader)}.{nameof(LoadSpriteAsync)}，精灵：{assetName}，获取失败，返回默认Sprite");
+                LogManager.LogWarning($"{nameof(SpriteLoader)}.{nameof(LoadSpriteAsync)}，{abName}.{atlasName}.{assetName}资源获取失败，返回默认Sprite");
                 return null;
             }
         }
         
-        public void UnloadSpriteAsync(string abName, string atlasName, string spriteName, bool unloadAllLoadedObjects = false)
+        public void ReleaseSprite(string abName, string atlasName, string spriteName)
         {
             if (!_atlasDatas.TryGetValue(atlasName, out var atlasData))
             {
                 return;
             }
             
+            // 卸载图片
             atlasData.Unload(spriteName);
             if(atlasData.GetRefCount() == 0)
             {
                 _atlasDatas.Remove(atlasName);
-                ServiceLocator.Get<IAssetBundleManager>().UnloadBundle(abName, unloadAllLoadedObjects);
+                _assetBundleManager.UnloadBundle(abName);
             }
         }
     }

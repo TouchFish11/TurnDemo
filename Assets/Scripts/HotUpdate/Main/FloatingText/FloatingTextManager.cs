@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using Core.Loader.Object;
 using Core.Log;
 using Core.Mono;
-using Core.Service;
-using Core.Singleton;
 using HotUpdate.Common;
-using HotUpdate.Config;
 using HotUpdate.Core.Interact;
 using HotUpdate.Core.Main;
 using UnityEngine;
@@ -16,11 +13,10 @@ namespace HotUpdate.Main.FloatingText
     /// <summary>
     /// 浮动文本管理器：负责NPC浮动文本的显示/隐藏管理
     /// </summary>
-    public class FloatingTextManager : SingletonAutoMono<FloatingTextManager>, IFloatingTextManager
+    public class FloatingTextManager : IFloatingTextManager
     {
-        private readonly IPrefabLoader _prefabLoader = ServiceLocator.Get<IPrefabLoader>();
-        private readonly IMonoAdapter _monoAdapter = ServiceLocator.Get<IMonoAdapter>();
-        
+        private readonly IPrefabLoader _prefabLoader;
+
         // 存储需要显示浮动文本的NPC列表
         private readonly List<INpcObject> npcObjects = new();
         // 映射NPC与对应的浮动文本对象，便于快速查找和管理
@@ -30,12 +26,10 @@ namespace HotUpdate.Main.FloatingText
         // 浮动文本最大显示距离：超过该距离则隐藏文本
         private const float MaxDisplayDistance = 10f;
 
-        /// <summary>
-        /// 初始化：注册固定更新监听
-        /// </summary>
-        private void Awake()
+        public FloatingTextManager(IPrefabLoader prefabLoader, IMonoAdapter monoAdapter)
         {
-            _monoAdapter.AddFixedUpdateListener(OnFixedUpdate);
+            _prefabLoader = prefabLoader;
+            monoAdapter.AddFixedUpdateListener(OnFixedUpdate);
         }
 
         /// <summary>

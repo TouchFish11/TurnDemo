@@ -6,7 +6,7 @@ using UnityEngine;
 namespace HotUpdate.Battle.Core
 {
     /// <summary>
-    /// ս�����
+    /// 战斗组件
     /// </summary>
     public abstract class BattleComponent : MonoBehaviour, IBattleComponent
     {

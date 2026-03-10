@@ -5,9 +5,9 @@ using Core.Service;
 namespace Core.Collection
 {
     /// <summary>
-    /// 集合工具类
+    /// 列表工具类
     /// </summary>
-    public static class CollectionUtil
+    public static class ListUtility
     {
         /// <summary>
         /// 获取可复用的List

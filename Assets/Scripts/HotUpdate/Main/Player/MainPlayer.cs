@@ -55,8 +55,6 @@ namespace HotUpdate.Main.Player
             // 以当前字典长度作为索引（自增），添加实体到映射表
             indexToEntityMap.Add(indexToEntityMap.Count, entityObject);
             
-            // 【注】此处省略实体添加后的其他逻辑（如实体初始化、事件注册等）
-            
             // 设置默认战斗实体（如默认角色模型、默认行为等）
             SetDefault();
         }

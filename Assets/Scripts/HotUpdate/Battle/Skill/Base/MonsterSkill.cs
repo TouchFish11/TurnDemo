@@ -35,7 +35,7 @@ namespace HotUpdate.Battle.Skill.Base
             ServiceLocator.Get<ITargetSelectManager>().SelectTarget(context, Caster, SkillInfo, TargetSelectStrategy);
             
             // 初始化技能目标数据，将选中的目标绑定到当前技能实例
-            ServiceLocator.Get<ISkillManager>().InitSkillTarget(this);
+            SkillUtility.InitSkillTarget(this);
             
             // 关闭目标选择状态，避免技能释放过程中重复选目标
             ServiceLocator.Get<ITargetSelectManager>().InActiveSelectTarget();

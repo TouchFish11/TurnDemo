@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Core.Log;
+using Core.Mono.MonoFunction;
 using Core.Serialize.Binary;
 using Core.Service;
-using Core.Singleton;
 using HotUpdate.Battle.Event.UI;
 using HotUpdate.Battle.Object;
 using HotUpdate.Battle.Utility;
@@ -23,9 +22,8 @@ namespace HotUpdate.Battle.TargetSelect
     /// 响应技能选择、拖拽切换目标、点击选中目标等交互事件，同步更新目标选择UI
     /// 单例模式实现，全局唯一管理战斗目标选择流程
     /// </summary>
-    public class TargetSelectManager : IInitializable, ITargetSelectManager
+    public class TargetSelectManager : ITargetSelectManager, IDestroyable
     {
-        public int Priority => -1;
         // 缓存筛选出的所有目标
         private List<IBattleEntityObject> _filterEntitys;
         // 已选中的范围目标列表（包含主目标及范围内的其他目标）
@@ -45,17 +43,8 @@ namespace HotUpdate.Battle.TargetSelect
         /// 主目标选择变化
         /// </summary>
         public event Action<IBattleEntityObject> OnSelectChanged;
-        
-        public Task InitAsync()
-        {
-            return Task.CompletedTask;
-        }
 
-        /// <summary>
-        /// 初始化目标选择管理器
-        /// </summary>
-        /// <param name="battleContext">战斗上下文，提供战斗核心数据和事件总线</param>
-        public void Init(IBattleContext battleContext)
+        public TargetSelectManager(IBattleContext battleContext)
         {
             this.battleContext = battleContext;
             // 注册技能选择事件监听：当玩家选择技能时触发目标选择逻辑
@@ -302,6 +291,13 @@ namespace HotUpdate.Battle.TargetSelect
             _mainTarget = mainTarget;
             // 选中后更新范围目标列表并同步UI
             UpdateTargets();
+        }
+
+        public void OnDestroy()
+        {
+            // 注册技能选择事件监听：当玩家选择技能时触发目标选择逻辑
+            battleContext.GetEventBus().RemoveListener<SelectSkillEvent>(OnSelectSkillEvent);
+            battleContext = null;
         }
     }
 }

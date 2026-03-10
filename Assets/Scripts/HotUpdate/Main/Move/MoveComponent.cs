@@ -1,5 +1,4 @@
 using Core.Components;
-using Core.Service;
 using HotUpdate.Core.Camera;
 using HotUpdate.Core.Component;
 using HotUpdate.Core.Input;
@@ -31,7 +30,7 @@ namespace HotUpdate.Main.Move
         // 主相机控制器（用于获取相机视角，计算相对移动方向）
         private IOrbitCameraController mainCamera;
         // 移动开关：控制是否允许执行移动/旋转逻辑
-        private bool canMove;
+        private bool _canMove;
 
         /// <summary>
         /// 组件初始化方法
@@ -57,7 +56,7 @@ namespace HotUpdate.Main.Move
         /// </summary>
         public void Enable()
         {
-            canMove = true;
+            _canMove = true;
         }
 
         /// <summary>
@@ -68,7 +67,7 @@ namespace HotUpdate.Main.Move
         {
             // 重置移动方向，停止移动
             moveDir = Vector3.zero;
-            canMove = false;
+            _canMove = false;
             // 注：此处预留“转向NPC”逻辑扩展点，暂未实现
         }
 
@@ -88,7 +87,7 @@ namespace HotUpdate.Main.Move
         /// <param name="canMove">是否允许移动</param>
         public void SetMoveFlag(bool canMove)
         {
-            this.canMove = canMove;
+            this._canMove = canMove;
         }
 
         /// <summary>
@@ -98,7 +97,7 @@ namespace HotUpdate.Main.Move
         private void Update()
         {
             // 移动开关关闭时，直接返回不执行后续逻辑
-            if (!canMove)
+            if (!_canMove || mainCamera == null)
             {
                 return;
             }
@@ -175,6 +174,13 @@ namespace HotUpdate.Main.Move
         {
             // 基于最终移动方向、速度和帧时间，执行移动（Time.deltaTime保证帧率无关）
             characterController.Move(speed * Time.deltaTime * moveDir);
+        }
+
+        public override void Destroy()
+        {
+            mainCamera = null;
+            characterController = null;
+            base.Destroy();
         }
     }
 }

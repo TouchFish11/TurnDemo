@@ -98,7 +98,7 @@ namespace Core.Service
                 }
                 return null;
             });
-            var uniList = CollectionUtil.GetUniList<IInitializable>();
+            var uniList = ListUtility.GetUniList<IInitializable>();
             uniList.AddRange(initializables);
             // 按优先级排序
             uniList.Sort((i1, i2) =>
@@ -123,7 +123,7 @@ namespace Core.Service
             }
 
             // 回收列表对象
-            CollectionUtil.CollectUniList(uniList);
+            ListUtility.CollectUniList(uniList);
         }
 
         /// <summary>

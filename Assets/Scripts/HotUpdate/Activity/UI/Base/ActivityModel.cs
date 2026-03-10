@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using Core.Loader.Object;
+using Core.Loader.Sprite;
+using Core.Serialize.Binary;
 using Core.Service;
 using Core.UI.MVC;
 using HotUpdate.Common;
@@ -50,6 +52,10 @@ namespace HotUpdate.Activity.UI.Base
             {
                 // 释放资源
                 ServiceLocator.Get<IPrefabLoader>().CollectAsset(Activity.GameObject);
+                var activityInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<ActivityInfoContainer>(EConfigLoadType.Excel)
+                    .dataDic[Activity.ActivityData.ActivityId];
+                ServiceLocator.Get<ISpriteLoader>().ReleaseSprite(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Activity, 
+                    activityInfo.f_bkUi_Res);
             }
             Activity = currentActivity;
             activityObjNames.Add(currentActivity.GameObject.name);

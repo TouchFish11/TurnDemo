@@ -49,6 +49,9 @@ namespace HotUpdate.Common.Item
                     // 加载图标
                     var itemIcon = await _spriteLoader.LoadSpriteAsync(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Icon_Item, 
                         itemInfo.f_icon);
+                    // 释放资源
+                    ServiceLocator.Get<ISpriteLoader>().ReleaseSprite(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Icon_Item, 
+                        itemInfo.f_icon);
                     // 初始化
                     itemGrid.Init(itemIcon, pair.Value, itemInfo.f_quality);
                     callback?.Invoke(itemGrid);
@@ -85,6 +88,9 @@ namespace HotUpdate.Common.Item
                     var itemInfo = _binaryDataManager.GetConfig<ItemInfoContainer>(EConfigLoadType.Excel).dataDic[pair.Key];
                     // 加载图标
                     var itemIcon = await _spriteLoader.LoadSpriteAsync(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Icon_Item, itemInfo.f_icon);
+                    // 释放资源
+                    ServiceLocator.Get<ISpriteLoader>().ReleaseSprite(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Icon_Item, 
+                        itemInfo.f_icon);
                     // 初始化
                     itemGrid.Init(itemIcon, pair.Value, itemInfo.f_quality);
                     callback?.Invoke(itemGrid);

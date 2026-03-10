@@ -73,7 +73,7 @@ namespace HotUpdate.Battle.Skill.Base
             // 清空释放者当前能量（终结技消耗所有能量）
             PropertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentEnergy, 0);
             // 初始化技能目标
-            ServiceLocator.Get<ISkillManager>().InitSkillTarget(this);
+            SkillUtility.InitSkillTarget(this);
             // 终结释放通用逻辑、禁用输入、更新UI显示
             context.GetEventBus().TriggerEvent(new UltimateCastEvent(context));
         }

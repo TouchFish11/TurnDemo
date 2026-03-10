@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace HotUpdate.Animation.Core
 {
+    /// <summary>
+    /// 动画触发器
+    /// </summary>
     [RequireComponent(typeof(AnimatorComponent))]
     [DisallowMultipleComponent]
     public class AnimationTrigger : MonoBehaviour, IAnimationTrigger
@@ -14,7 +17,7 @@ namespace HotUpdate.Animation.Core
         
         public void OnAttackTrigger(int skillId)
         {
-            AnimatorStateInfo stateInfo = GetComponent<Animator>().GetCurrentAnimatorStateInfo(1);
+            var stateInfo = GetComponent<Animator>().GetCurrentAnimatorStateInfo(1);
             OnAttack?.Invoke(skillId);
         }
 
@@ -27,7 +30,8 @@ namespace HotUpdate.Animation.Core
 
         public void Destroy()
         {
-
+            EntityObject = null;
+            OnAttack = null;
         }
     }
 }

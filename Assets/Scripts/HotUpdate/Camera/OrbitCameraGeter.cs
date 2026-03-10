@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Core.Loader.Object;
+using Core.Mono;
 using Core.Service;
 using HotUpdate.Common;
 using HotUpdate.Core.Camera;
@@ -11,18 +12,28 @@ namespace HotUpdate.Camera
     /// </summary>
     public class OrbitCameraGeter : IOrbitCameraGeter
     {
-        public IOrbitCameraController OrbitCameraController { get; set; }
+        private readonly IPrefabLoader _prefabLoader;
         
-        /// <summary>
-        /// 异步创建玩家主相机控制器
-        /// 从资源包中加载主相机预制体并初始化相机控制器
-        /// </summary>
-        /// <returns>初始化完成的轨道相机控制器实例</returns>
+        public IOrbitCameraController OrbitCameraController { get; set; }
+
+        public OrbitCameraGeter(IPrefabLoader prefabLoader)
+        {
+            _prefabLoader = prefabLoader;
+        }
+        
         public async Task<IOrbitCameraController> CreateMainCamera()
         {
-            OrbitCameraController ??= await ServiceLocator.Get<IPrefabLoader>()
-                .GetObjectAsync<OrbitCameraController>(AbKeyCollection.Camera, ResKeyCollection.MainCamera, null);
+            OrbitCameraController ??= await _prefabLoader.GetObjectAsync<OrbitCameraController>(
+                AbKeyCollection.Camera, 
+                ResKeyCollection.MainCamera, 
+                null);
             return OrbitCameraController;
+        }
+
+        public void DestroyMainCamera()
+        {
+            EngineUtility.Destroy(OrbitCameraController.Transform.gameObject);
+            OrbitCameraController = null;
         }
     }
 }

@@ -26,7 +26,7 @@ namespace HotUpdate.Interact
         
         void IComponent.Init(IEntityObject entityObject)
         {
-            EntityObject =  entityObject;
+            EntityObject = entityObject;
         }
 
         /// <summary>

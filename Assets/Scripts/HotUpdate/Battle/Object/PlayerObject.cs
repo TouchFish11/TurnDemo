@@ -119,8 +119,8 @@ namespace HotUpdate.Battle.Object
 
         public override IEnumerator Die()
         {
-            // 
-            yield return ServiceLocator.Get<IAnimationPlayManager>().WaitForAnimOver(GetComponent<IBattleAnimationComponent>(), AnimationUtility.Battle_Layer_Name, (int)E_AnimationType.Death);
+            // 等待死亡动画播放结束
+            yield return AnimationPlayUtility.WaitForAnimOver(GetComponent<IBattleAnimationComponent>(), AnimationUtility.Battle_Layer_Name, (int)E_AnimationType.Death);
         }
     }
 }

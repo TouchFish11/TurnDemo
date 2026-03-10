@@ -24,7 +24,7 @@ namespace HotUpdate.Battle.UI.Base
         private readonly BattleView _view;
         // 战斗数据模型接口，用于缓存和管理UI相关数据
         private readonly BattleModel _model;
-        //
+        // 战斗控制器
         private readonly BattleController _battleController;
 
         /// <summary>
@@ -80,6 +80,7 @@ namespace HotUpdate.Battle.UI.Base
                 var iconName = BattleUIManager.GetIconByEntity(battleEntity);
                 // 从图集加载角色图标
                 var icon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Icon_BattleEntity, iconName);
+                ServiceLocator.Get<ISpriteLoader>().ReleaseSprite(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Icon_BattleEntity, iconName);
                 // 获取当前实体的玩家属性组件
                 var playerPropertyComponent = battleEntity.GetComponent<PlayerPropertyComponent>();
                 // 获取角色核心属性数据

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.Log;
+using Core.Mono.MonoFunction;
 using Core.Service;
 using HotUpdate.Battle.Object;
 using HotUpdate.Core.Battle;
@@ -14,12 +15,10 @@ using UnityEngine;
 
 namespace HotUpdate.Battle.BattlePoint
 {
-    using Task = System.Threading.Tasks.Task;
-    
     /// <summary>
     /// 场景战斗点代理
     /// </summary>
-    public class BattlePointProxy : IBattlePointProxy
+    public class BattlePointProxy : IBattlePointProxy, IDestroyable
     {
         // 怪物中心点x值
         private readonly float[] monstetCenterXs = { 6f, 4f, 2f, 0f };
@@ -179,7 +178,7 @@ namespace HotUpdate.Battle.BattlePoint
         /// 创建相机到指定位置
         /// </summary>
         /// <param name="entityPosIndex"></param>
-        private Task<UnityEngine.Camera> CreateCameraAtPos(int entityPosIndex)
+        private Task<Camera> CreateCameraAtPos(int entityPosIndex)
         {
             // 创建相机到指定位置点
             var cameraTrans = BattlePoint.GetRoleCameraTransByIndex(entityPosIndex);
@@ -191,7 +190,7 @@ namespace HotUpdate.Battle.BattlePoint
         /// </summary>
         /// <param name="CurrentActiveCamera"></param>
         /// <param name="currentPosIndex"></param>
-        private static void UpdateCameraMask(UnityEngine.Camera CurrentActiveCamera, int currentPosIndex)
+        private static void UpdateCameraMask(Camera CurrentActiveCamera, int currentPosIndex)
         {
             var mask = ResetCameraMask();
             // 根据当前玩家位置索引，只渲染符合的角色
@@ -219,6 +218,12 @@ namespace HotUpdate.Battle.BattlePoint
         {
             pointInfos.Clear();
             pointInfos = null;
+        }
+
+        public void OnDestroy()
+        {
+            pointInfos.Clear();
+            context = null;
         }
     }
 }

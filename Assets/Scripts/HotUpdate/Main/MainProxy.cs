@@ -42,7 +42,6 @@ namespace HotUpdate.Main
                 ServiceLocator.Get<IFactoryManager>().InitHotFactorys();
                 // 切换场景
                 await ServiceLocator.Get<ISceneManager>().LoadSceneAsync(ResKeyCollection.MainScene, LoadSceneMode.Single, null);
-                
                 // 初始化场景
                 await SceneGeneratorHelper.GetSceneGenerator().InitMainScene();
                 // 创建玩家对象（参数为玩家配置ID，对应玩家基础配置表）

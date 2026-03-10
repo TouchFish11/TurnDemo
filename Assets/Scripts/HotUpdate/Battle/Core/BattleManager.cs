@@ -1,10 +1,10 @@
 ﻿using System;
+using Core.Loader.Object;
 using Core.Log;
 using Core.Pool;
 using Core.PreLoad;
 using Core.Scene;
 using Core.Service;
-using Core.Singleton;
 using Core.UI;
 using HotUpdate.Battle.BattlePoint;
 using HotUpdate.Battle.Context;
@@ -12,23 +12,19 @@ using HotUpdate.Battle.Damage;
 using HotUpdate.Battle.Event;
 using HotUpdate.Battle.Event.Turn;
 using HotUpdate.Battle.Input;
-using HotUpdate.Battle.Skill.Base;
 using HotUpdate.Battle.TargetSelect;
 using HotUpdate.Battle.Turn;
 using HotUpdate.Common;
-using HotUpdate.Core.Animation;
 using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Damage;
 using HotUpdate.Core.Battle.Event;
 using HotUpdate.Core.Battle.Input;
 using HotUpdate.Core.Battle.Point;
-using HotUpdate.Core.Battle.Skill;
 using HotUpdate.Core.Battle.TargetSelect;
 using HotUpdate.Core.Battle.Turn;
 using HotUpdate.Core.Camera;
 using HotUpdate.Core.Input;
 using HotUpdate.Core.MVC;
-using HotUpdate.Core.UI;
 using HotUpdate.Core.UI.Helper;
 using UnityEngine;
 using UnityEngine.U2D;
@@ -40,13 +36,12 @@ namespace HotUpdate.Battle.Core
     /// <summary>
     /// 战斗管理器
     /// </summary>
-    public class BattleManager : SingletonBase<BattleManager>, IBattleManager
+    public class BattleManager : IBattleManager
     {
-        public override int Priority => -1;
-        private readonly IUIManager _uiManager = ServiceLocator.Get<IUIManager>();
-        private readonly ISceneManager _sceneManager = ServiceLocator.Get<ISceneManager>();
-        private readonly IMouseManager _mouseManager = ServiceLocator.Get<IMouseManager>();
-        private readonly IPoolManager _poolManager = ServiceLocator.Get<IPoolManager>();
+        private readonly IUIManager _uiManager;
+        private readonly ISceneManager _sceneManager;
+        private readonly IMouseManager _mouseManager;
+        private readonly IPoolManager _poolManager;
         
         // 战斗上下文
         private IBattleContext _context;
@@ -58,14 +53,12 @@ namespace HotUpdate.Battle.Core
         /// </summary>
         private Func<Task> OnBattleOver;
 
-        private BattleManager()
+        public BattleManager(IUIManager uiManager, ISceneManager sceneManager, IMouseManager mouseManager, IPoolManager poolManager)
         {
-            
-        }
-
-        public override Task InitAsync()
-        {
-            return Task.CompletedTask;
+            _uiManager = uiManager;
+            _sceneManager = sceneManager;
+            _mouseManager = mouseManager;
+            _poolManager = poolManager;
         }
 
         /// <summary>
@@ -73,24 +66,13 @@ namespace HotUpdate.Battle.Core
         /// </summary>
         private static void RegisterManager(IBattleContext context)
         {
-            ServiceLocator.Register<ITargetSelectManager>(new TargetSelectManager());
-            ServiceLocator.Get<ITargetSelectManager>().Init(context);
-            
+            ServiceLocator.Register<ITargetSelectManager>(new TargetSelectManager(context));
             // IDamageCalcManager 依赖 ITargetSelectManager
-            ServiceLocator.Register<IDamageCalcManager>(new DamageCalcManager());
-            ServiceLocator.Get<IDamageCalcManager>().Init(context);
-            
-            ServiceLocator.Register<IBattleInputHandler>(new BattleInputHandler());
-            ServiceLocator.Get<IBattleInputHandler>().Init(context);
-            
-            ServiceLocator.Register<ISkillManager>(new SkillManager());
-            ServiceLocator.Register<IAnimationPlayManager>(new AnimationPlayManager());
-            
-            ServiceLocator.Register<IBattleEventScheduler>(new BattleEventScheduler());
-            ServiceLocator.Get<IBattleEventScheduler>().Init(context);
-            
+            ServiceLocator.Register<IDamageCalcManager>(new DamageCalcManager(context));
+            ServiceLocator.Register<IBattleInputHandler>(new BattleInputHandler(context));
+            ServiceLocator.Register<IBattleEventScheduler>(new BattleEventScheduler(context));
             //  IBattleCameraManager 依赖 IBattleInputHandler
-            ServiceLocator.Register<IBattleCameraManager>(new BattleCameraManager());
+            ServiceLocator.Register<IBattleCameraManager>(new BattleCameraManager(ServiceLocator.Get<IPrefabLoader>()));
         }
 
         /// <summary>
@@ -101,8 +83,6 @@ namespace HotUpdate.Battle.Core
             ServiceLocator.Unregister<IBattleCameraManager>();
             ServiceLocator.Unregister<ITargetSelectManager>();
             ServiceLocator.Unregister<IDamageCalcManager>();
-            ServiceLocator.Unregister<ISkillManager>();
-            ServiceLocator.Unregister<IAnimationPlayManager>();
             ServiceLocator.Unregister<IBattleInputHandler>();
             ServiceLocator.Unregister<IBattlePointProxy>();
             ServiceLocator.Unregister<IBattleEventScheduler>();
@@ -198,13 +178,10 @@ namespace HotUpdate.Battle.Core
         {
             try
             {
-                // 清理战斗数据
-                _context.CleanupBattle();
-            
-                // 销毁战斗输入处理器、战斗点对象、战斗UI调度器
-            
                 // 移除注册
                 UnregisterManager();
+                // 清理战斗数据
+                _context.CleanupBattle();
 
                 // 创建黑背景界面遮挡
                 var backController = await ServiceLocator.Get<IMainUiHelper>().CreateBackController();

@@ -50,7 +50,7 @@ namespace Core.AssetBundles.Update
 
         public IEnumerable<IUpdateState> GetStates()
         {
-            var uniList = CollectionUtil.GetUniList<EUpdatePhase>();
+            var uniList = ListUtility.GetUniList<EUpdatePhase>();
             var values = System.Enum.GetValues(typeof(EUpdatePhase));
             foreach (var phase in values)
             {
@@ -84,7 +84,7 @@ namespace Core.AssetBundles.Update
             {
                 yield return CreateState(updatePhase);
             }
-            CollectionUtil.CollectUniList(uniList);
+            ListUtility.CollectUniList(uniList);
         }
     }
 }

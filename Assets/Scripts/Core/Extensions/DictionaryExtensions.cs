@@ -11,7 +11,7 @@ namespace Core.Extensions
     {
         public static TReturn[] ToArray<TKey, TValue, TReturn>(this Dictionary<TKey,TValue>.ValueCollection valueCollection, Func<TValue, TReturn> func)
         {
-            var uniList = CollectionUtil.GetUniList<TReturn>();
+            var uniList = ListUtility.GetUniList<TReturn>();
             foreach (var value in valueCollection)
             {
                 uniList.Add(func(value));
@@ -22,7 +22,7 @@ namespace Core.Extensions
         
         public static TReturn[] ToArray<TKey, TValue, TReturn>(this Dictionary<TKey,TValue>.KeyCollection keyCollection, Func<TKey, TReturn> func)
         {
-            var uniList = CollectionUtil.GetUniList<TReturn>();
+            var uniList = ListUtility.GetUniList<TReturn>();
             foreach (var value in keyCollection)
             {
                 uniList.Add(func(value));

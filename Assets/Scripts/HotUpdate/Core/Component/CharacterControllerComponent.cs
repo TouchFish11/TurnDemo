@@ -22,6 +22,7 @@ namespace HotUpdate.Core.Component
 
         public void Destroy()
         {
+            EntityObject = null;
             _controller = null;
         }
     }

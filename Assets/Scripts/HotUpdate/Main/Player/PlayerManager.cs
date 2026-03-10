@@ -23,12 +23,10 @@ namespace HotUpdate.Main.Player
     /// 玩家管理器
     /// 负责玩家对象的创建、管理、销毁等核心逻辑
     /// </summary>
-    public class PlayerManager : SingletonBase<PlayerManager>, IPlayerManager
+    public class PlayerManager : IPlayerManager
     {
-        public override int Priority => -1;
+        private readonly IPrefabLoader _prefabLoader;
 
-        private readonly IPrefabLoader _prefabLoader = ServiceLocator.Get<IPrefabLoader>();
-        private readonly IEventCenter _eventCenter = ServiceLocator.Get<IEventCenter>();
         // 字典：玩家UID映射到对应的实体对象，用于快速查找玩家
         private readonly Dictionary<uint, IEntityObject> uidToEntityMap = new();
 
@@ -36,16 +34,11 @@ namespace HotUpdate.Main.Player
         // 主玩家对象（固定UID为1001）
         public IEntityObject MainPlayer => uidToEntityMap[1001];
         
-        private PlayerManager()
+        public PlayerManager(IPrefabLoader prefabLoader,  IEventCenter eventCenter)
         {
-
-        }
-
-        public override Task InitAsync()
-        {
-            _eventCenter.SubscribeEvent<OpenViewEvent>(OnOpenViewEvent, OpenViewEventFilter);
-            _eventCenter.SubscribeEvent<CloseViewEvent>(OnCloseViewEvent, OpenViewEventFilter);
-            return Task.CompletedTask;
+            _prefabLoader = prefabLoader;
+            eventCenter.SubscribeEvent<OpenViewEvent>(OnOpenViewEvent, OpenViewEventFilter);
+            eventCenter.SubscribeEvent<CloseViewEvent>(OnCloseViewEvent, OpenViewEventFilter);
         }
 
         /// <summary>
@@ -96,6 +89,8 @@ namespace HotUpdate.Main.Player
 
             // 清空字典，释放引用
             uidToEntityMap.Clear();
+            // 销毁主摄像机
+            ServiceLocator.Get<IOrbitCameraGeter>().DestroyMainCamera();
         }
 
         /// <summary>

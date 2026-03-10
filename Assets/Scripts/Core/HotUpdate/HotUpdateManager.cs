@@ -39,11 +39,11 @@ namespace Core.HotUpdate
         /// <param name="assemblyNames"></param>
         public async Task LoadAssembliesAsync(string abName, params string[] assemblyNames)
         {
-            var uniList = CollectionUtil.GetUniList<string>();
+            var uniList = ListUtility.GetUniList<string>();
             uniList.AddRange(assemblyNames);
             var assetBundle = await _assetBundleManager.LoadBundleAsync(abName);
             // 加载热更新AB包资源
-            var dllTexts = CollectionUtil.GetUniList<TextAsset>();
+            var dllTexts = ListUtility.GetUniList<TextAsset>();
             await assetBundle.LoadAllAssetsAsync<TextAsset>().ToTask(dllTexts.List);
             foreach (var dllText in dllTexts.List)
             {
@@ -77,7 +77,7 @@ namespace Core.HotUpdate
 #endif
             }
 
-            CollectionUtil.CollectUniList(uniList);
+            ListUtility.CollectUniList(uniList);
             _assetBundleManager.UnloadBundle(abName);
         }
 
@@ -85,7 +85,7 @@ namespace Core.HotUpdate
         {
             var assetBundle = await _assetBundleManager.LoadBundleAsync(abName);
             // 加载热更新AB包资源
-            var dllTexts = CollectionUtil.GetUniList<TextAsset>();
+            var dllTexts = ListUtility.GetUniList<TextAsset>();
             await assetBundle.LoadAllAssetsAsync<TextAsset>().ToTask(dllTexts.List);
             foreach (var dllText in dllTexts.List)
             {

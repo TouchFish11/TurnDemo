@@ -327,7 +327,7 @@ namespace Core.AssetBundles.Update.Core
             });
             
             // 临时收集所有未完成的请求（失败、下载中、等待）
-            var uniList = CollectionUtil.GetUniList<ABWebRequester>();
+            var uniList = ListUtility.GetUniList<ABWebRequester>();
             uniList.List.AddRange(_requesterFailList);
             uniList.List.AddRange(_requesterLoadingList);
             uniList.List.AddRange(_requesterWaitList);
@@ -353,7 +353,7 @@ namespace Core.AssetBundles.Update.Core
             // 将缓存信息写入本地文件
             await WriteCacheFile();
             // 使用完毕，回收
-            CollectionUtil.CollectUniList(uniList);
+            ListUtility.CollectUniList(uniList);
         }
 
         /// <summary>

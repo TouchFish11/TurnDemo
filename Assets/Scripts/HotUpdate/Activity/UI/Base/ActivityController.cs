@@ -21,6 +21,8 @@ namespace HotUpdate.Activity.UI.Base
     public class ActivityController : UIController<ActivityView, ActivityModel>, IActivityController
     {
         private readonly IGameManager _gameManager = ServiceLocator.Get<IGameManager>();
+        private readonly IPrefabLoader _prefabLoader = ServiceLocator.Get<IPrefabLoader>();
+        private readonly ISpriteLoader _spriteLoader = ServiceLocator.Get<ISpriteLoader>();
         
         protected override async Task OnShow()
         {
@@ -29,9 +31,9 @@ namespace HotUpdate.Activity.UI.Base
             // 创建UI
             foreach (var activityInfo in infoDic.Values)
             {
-                var activityUI = await ServiceLocator.Get<IPrefabLoader>().GetObjectAsync<ActivityUI>(AbKeyCollection.Ui, ResKeyCollection.ActivityUI, view.SvActivityContent);
+                var activityUI = await _prefabLoader.GetObjectAsync<ActivityUI>(AbKeyCollection.Ui, ResKeyCollection.ActivityUI, view.SvActivityContent);
                 // 加载图标
-                var icon = await ServiceLocator.Get<ISpriteLoader>().LoadSpriteAsync(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Activity,
+                var icon = await _spriteLoader.LoadSpriteAsync(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Activity,
                     activityInfo.f_bkUi_Res);
                 // 初始化UI
                 activityUI.Init(icon, activityInfo, view.ActivityGroup, this);

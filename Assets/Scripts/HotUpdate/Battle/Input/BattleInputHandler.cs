@@ -1,10 +1,9 @@
 using System;
-using System.Threading.Tasks;
 using Core.Log;
 using Core.Mono;
+using Core.Mono.MonoFunction;
 using Core.Serialize.Binary;
 using Core.Service;
-using Core.Singleton;
 using HotUpdate.Battle.Object;
 using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Event.UI;
@@ -23,9 +22,8 @@ namespace HotUpdate.Battle.Input
     /// 负责处理战斗中的鼠标拖拽、点击选择目标、技能释放目标选择等核心输入逻辑
     /// 继承自单例自动挂载 MonoBehaviour 基类，保证全局唯一且自动初始化
     /// </summary>
-    public class BattleInputHandler : IInitializable, IBattleInputHandler
+    public class BattleInputHandler : IBattleInputHandler, IDestroyable
     {
-        public int Priority => -1;
         // 拖拽起始位置（屏幕坐标）
         private Vector3 _dragStartPosition;
         // 是否处于拖拽状态（用于区分点击和拖拽行为）
@@ -110,16 +108,7 @@ namespace HotUpdate.Battle.Input
         /// </summary>
         public event Action<bool> OnRebound;
 
-        public Task InitAsync()
-        {
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// 初始化
-        /// </summary>
-        /// <param name="context"></param>
-        public void Init(IBattleContext context)
+        public BattleInputHandler(IBattleContext context)
         {
             // 注册帧更新监听，每帧执行输入处理逻辑
             ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpdate);
@@ -269,11 +258,7 @@ namespace HotUpdate.Battle.Input
             }
         }
 
-        /// <summary>
-        /// 组件禁用时的清理逻辑
-        /// 移除更新监听、清空事件委托（避免内存泄漏）
-        /// </summary>
-        private void OnDisable()
+        public void OnDestroy()
         {
             // 移除帧更新监听
             ServiceLocator.Get<IMonoAdapter>().RemoveUpdateListener(OnUpdate);

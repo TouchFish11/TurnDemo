@@ -28,11 +28,9 @@ namespace HotUpdate.Core.Battle.Input
         event Action<float> OnDrag;
 
         /// <summary>
-        /// 初始化
+        /// 相机回弹事件
+        /// 参数是否回弹
         /// </summary>
-        /// <param name="context"></param>
-        void Init(IBattleContext context);
-
         event Action<bool> OnRebound;
 
         /// <summary>

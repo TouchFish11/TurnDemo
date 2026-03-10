@@ -12,6 +12,7 @@ using HotUpdate.Config.Activity;
 using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Turn;
 using HotUpdate.Core.Main;
+using HotUpdate.Core.MVC;
 using HotUpdate.Core.Scene;
 using TMPro;
 using UnityEngine;
@@ -110,7 +111,7 @@ namespace HotUpdate.Activity.UI.EmbersCanon
                     // 更新当前活动数据，标记为完成
                     levelDataEntryData.isComplete = true;
                     // 激活活动界面
-                    await _uiManager.SetViewActive(_uiManager.GetController<ActivityController>(), true);
+                    await _uiManager.SetViewActive(_uiManager.GetController<IActivityController>(), true);
                 });
             }
             catch (Exception e)

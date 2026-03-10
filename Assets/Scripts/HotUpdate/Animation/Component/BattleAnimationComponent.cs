@@ -168,8 +168,8 @@ namespace HotUpdate.Animation.Component
         /// </summary>
         public override void Destroy()
         {
-            base.Destroy();
             BattleEntity = null;
+            base.Destroy();
         }
     }
 }

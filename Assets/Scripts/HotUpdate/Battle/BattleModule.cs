@@ -1,10 +1,13 @@
 using System.Threading.Tasks;
+using Core.Pool;
+using Core.Scene;
 using Core.Service;
 using Core.UI;
 using HotUpdate.Battle.Core;
 using HotUpdate.Battle.Object.Role.Warrior;
 using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.Input;
 using HotUpdate.Core.Module;
 using HotUpdate.Core.UI.Helper;
 using UnityEngine;
@@ -18,7 +21,11 @@ namespace HotUpdate.Battle
     {
         public Task InitModuleAsync()
         {
-            ServiceLocator.Register<IBattleManager>(BattleManager.Instance);
+            ServiceLocator.Register<IBattleManager>(new BattleManager(
+                ServiceLocator.Get<IUIManager>(),
+                ServiceLocator.Get<ISceneManager>(),
+                ServiceLocator.Get<IMouseManager>(),
+                ServiceLocator.Get<IPoolManager>()));
             // 初始化UIHelper
             ServiceLocator.Register<IBattleUiHelper>(new BattleUiHelper(ServiceLocator.Get<IUIManager>()));
             return Task.CompletedTask;

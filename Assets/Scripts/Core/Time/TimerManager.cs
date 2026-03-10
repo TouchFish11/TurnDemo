@@ -19,13 +19,13 @@ namespace Core.Time
     {
         public override int Priority => 0;
         // 存储受游戏时间影响的定时器字典（Key：定时器唯一ID，Value：定时器对象）
-        private readonly Dictionary<int, Timer> _timerDic = new Dictionary<int, Timer>();
+        private readonly Dictionary<int, Timer> _timerDic = new();
         // 存储不受游戏时间影响的定时器字典（Key：定时器唯一ID，Value：定时器对象）
-        private readonly Dictionary<int, Timer> _realTimerDic = new Dictionary<int, Timer>();
+        private readonly Dictionary<int, Timer> _realTimerDic = new();
         // 存储待删除的受游戏时间影响的定时器ID列表
-        private readonly List<int> _delTimerIDList = new List<int>();
+        private readonly List<int> _delTimerIDList = new();
         // 存储待删除的不受游戏时间影响的定时器ID列表
-        private readonly List<int> _realDelTimerIDList = new List<int>();
+        private readonly List<int> _realDelTimerIDList = new();
         // 定时器全局唯一ID生成器（自增）
         private static int _TimerKey;
         // 受游戏时间影响的定时器驱动协程
@@ -35,9 +35,9 @@ namespace Core.Time
         // 定时器轮询间隔（单位：秒），每0.1秒检查一次定时器状态
         private const float IntervalTime = 0.1f;
         // 受游戏时间影响的协程等待对象（复用避免重复创建）
-        private readonly WaitForSeconds _WaitForSecondsTime = new WaitForSeconds(IntervalTime);
+        private readonly WaitForSeconds _WaitForSecondsTime = new(IntervalTime);
         // 不受游戏时间影响的协程等待对象（复用避免重复创建）
-        private readonly WaitForSecondsRealtime _WaitForSecondsRealTime = new WaitForSecondsRealtime(IntervalTime);
+        private readonly WaitForSecondsRealtime _WaitForSecondsRealTime = new(IntervalTime);
         // 当前全局时间流速（控制TimeScale）
         private E_TimeRate _timeRate;
         

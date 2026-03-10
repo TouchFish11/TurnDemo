@@ -14,6 +14,9 @@ namespace Core.Loader.Object
     /// </summary>
     public class PrefabLoader : IPrefabLoader
     {
+        /// <summary>
+        /// 预制体数据
+        /// </summary>
         private class PrefabData : IPoolData
         {
             /// <summary>

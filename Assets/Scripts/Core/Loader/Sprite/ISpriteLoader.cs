@@ -14,11 +14,9 @@ namespace Core.Loader.Sprite
         /// <param name="abName"></param>
         /// <param name="atlasName"></param>
         /// <param name="assetName"></param>
-        /// <param name="token"></param>
         /// <returns></returns>
-        Task<UnityEngine.Sprite> LoadSpriteAsync(string abName, string atlasName, string assetName,
-            CancellationToken token = default);
+        Task<UnityEngine.Sprite> LoadSpriteAsync(string abName, string atlasName, string assetName);
 
-        void UnloadSpriteAsync(string abName, string atlasName, string spriteName, bool unloadAllLoadedObjects = false);
+        void ReleaseSprite(string abName, string atlasName, string spriteName);
     }
 }

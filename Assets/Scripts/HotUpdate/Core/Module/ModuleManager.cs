@@ -22,7 +22,7 @@ namespace HotUpdate.Core.Module
         
         public async Task InitModules()
         {
-            var uniList = CollectionUtil.GetUniList<Type>();
+            var uniList = ListUtility.GetUniList<Type>();
             // 临时缓存具体模块接口
             foreach (var hotAssembly in _hotUpdateManager.GetHotAssemblies())
             {

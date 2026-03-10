@@ -54,7 +54,7 @@ namespace HotUpdate.Main.UI.Logic
         {
             try
             {
-                var uniList = CollectionUtil.GetUniList<IInteractUI>();
+                var uniList = ListUtility.GetUniList<IInteractUI>();
                 // 遍历可交互对象，为每个对象创建对应的交互UI
                 foreach (var interactable in interactables)
                 {
@@ -68,7 +68,7 @@ namespace HotUpdate.Main.UI.Logic
             
                 // 将创建好的交互UI列表存入主数据模型，供全局业务逻辑调用
                 mainModel.CacheInteracts(uniList.List);
-                CollectionUtil.CollectUniList(uniList);
+                ListUtility.CollectUniList(uniList);
             }
             catch (Exception e)
             {

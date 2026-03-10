@@ -15,7 +15,7 @@ namespace HotUpdate.Dialogue
     [ComponentId(typeof(DialogueComponent))]
     public class DialogueComponent : BaseComponent, IDialogueComponent
     {
-        private readonly IDialogueManager _dialogueManager = ServiceLocator.Get<IDialogueManager>();
+        private IDialogueManager _dialogueManager = ServiceLocator.Get<IDialogueManager>();
         
         public override void Init(IEntityObject entityObject)
         {
@@ -48,6 +48,7 @@ namespace HotUpdate.Dialogue
             // 取消监听
             _dialogueManager.OnDialogueStart -= (this as IDialable).OnDialogueStart;
             _dialogueManager.OnDialogueEnd -= (this as IDialable).OnDialogueEnd;
+            _dialogueManager = null;
             base.Destroy();
         }
     }

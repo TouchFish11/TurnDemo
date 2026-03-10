@@ -1,16 +1,14 @@
 using System.Collections;
-using System.Threading.Tasks;
 using Core.Log;
+using Core.Mono.MonoFunction;
 using Core.Reflection;
 using Core.Serialize.Binary;
 using Core.Service;
-using Core.Singleton;
 using Core.UI;
 using Core.Utility;
 using HotUpdate.Battle.Event.General;
 using HotUpdate.Battle.Event.Skill;
 using HotUpdate.Battle.Event.Turn;
-using HotUpdate.Battle.Event.UI;
 using HotUpdate.Battle.Object;
 using HotUpdate.Battle.UI.Base;
 using HotUpdate.Battle.UI.SkillKey;
@@ -33,18 +31,11 @@ namespace HotUpdate.Battle.Event
     /// 战斗事件逻辑调度器
     /// 监听战斗事件，执行其它模块的统一调用
     /// </summary>
-    public class BattleEventScheduler : IInitializable, IBattleEventScheduler
+    public class BattleEventScheduler : IBattleEventScheduler, IDestroyable
     {
-        public int Priority => -1;
-
         private IBattleContext _context;
 
-        public Task InitAsync()
-        {
-            return Task.CompletedTask;
-        }
-
-        public void Init(IBattleContext context)
+        public BattleEventScheduler(IBattleContext context)
         {
             _context = context;
             // 监听战斗事件
@@ -236,6 +227,21 @@ namespace HotUpdate.Battle.Event
                 default:
                     return;
             }
+        }
+
+        public void OnDestroy()
+        {
+            // 监听回合开始事件
+            _context.GetEventBus().RemoveListener<TurnStartEvent>(OnTurnStartDispatch);
+            // 监听角色技能选择事件
+            _context.GetEventBus().RemoveListener<SelectSkillEvent>(SelectSkillEventScheduler);
+            // 监听技能释放后通用逻辑事件
+            _context.GetEventBus().RemoveListener<PostCastEvent>(OnPostCastDispatch);
+            // 监听技能释放后通用逻辑事件
+            _context.GetEventBus().RemoveListener<UltimateCastEvent>(OnUltimateCastDispatch);
+            // 监听更新等待队列事件
+            _context.GetEventBus().RemoveListener<UpdateWaitCmdEvent>(OnUpdateWaitCmdDispatch);
+            _context = null;
         }
     }
 }

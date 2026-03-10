@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Core.Log;
-using Core.Singleton;
+using Core.Mono.MonoFunction;
 using HotUpdate.Battle.Damage.Strategys;
 using HotUpdate.Battle.Event.General;
 using HotUpdate.Battle.Utility;
@@ -16,22 +15,15 @@ namespace HotUpdate.Battle.Damage
     /// <summary>
     /// 伤害计算管理器
     /// </summary>
-    public class DamageCalcManager : IInitializable, IDamageCalcManager
+    public class DamageCalcManager : IDamageCalcManager, IDestroyable
     {
-        public int Priority => -1;
-        
         // 伤害计算策略缓存
         private readonly Dictionary<E_DamageType, IDamageStrategy> _strategys = new();
-        private int priority;
-
-        public Task InitAsync()
+        private IBattleContext context;
+        
+        public DamageCalcManager(IBattleContext context)
         {
-            return Task.CompletedTask;
-        }
-
-        public void Init(IBattleContext context)
-        {
-            _strategys.Clear();
+            this.context = context;
             // 注册策略
             _strategys.Add(E_DamageType.Direct, new DirectDamageStrategy());
             _strategys.Add(E_DamageType.Dot, new DotDamageStrategy());
@@ -122,6 +114,16 @@ namespace HotUpdate.Battle.Damage
             {
                 LogManager.LogError($"{nameof(DamageCalcManager)}.{nameof(CalcBrokenDamage)}：未注册Dot伤害策略");
             }
+        }
+
+        public void OnDestroy()
+        {
+            _strategys.Clear();
+            // 监听击破事件
+            context.GetEventBus().RemoveListener<ToughnessBrokenEvent>(OnToughnessBrokenEvent);
+            // 监听Dot事件
+            context.GetEventBus().RemoveListener<CalcDotDamageEvent>(OnCalcDotDamageEvent);
+            context = null;
         }
     }
 }

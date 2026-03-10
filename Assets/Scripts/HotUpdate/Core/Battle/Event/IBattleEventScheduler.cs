@@ -5,8 +5,6 @@ namespace HotUpdate.Core.Battle.Event
 {
     public interface IBattleEventScheduler
     {
-        void Init(IBattleContext context);
-
         /// <summary>
         /// 终结技释放前调度逻辑
         /// </summary>
