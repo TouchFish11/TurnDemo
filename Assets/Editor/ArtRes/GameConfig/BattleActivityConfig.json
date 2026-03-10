@@ -1,12 +1,12 @@
 {
-  "$type": "HotUpdate.Config.Activity.BattleActivityConfig, ConfigModule",
+  "$type": "HotUpdate.Config.Activity.BattleActivityConfig, HotUpdate.Config",
   "BattleConfigEntryColletion": {
-    "$type": "HotUpdate.Config.Activity.BattleConfigEntryColletion, ConfigModule",
+    "$type": "HotUpdate.Config.Activity.BattleConfigEntryColletion, HotUpdate.Config",
     "battleConfigs": {
-      "$type": "System.Collections.Generic.List`1[[HotUpdate.Config.Activity.BattleConfigEntry, ConfigModule]], mscorlib",
+      "$type": "System.Collections.Generic.List`1[[HotUpdate.Config.Activity.BattleConfigEntry, HotUpdate.Config]], mscorlib",
       "$values": [
         {
-          "$type": "HotUpdate.Config.Activity.BattleConfigEntry, ConfigModule",
+          "$type": "HotUpdate.Config.Activity.BattleConfigEntry, HotUpdate.Config",
           "levelId": 1001,
           "levelName": "关卡1",
           "battleSceneId": 0,
@@ -14,13 +14,15 @@
           "monsterIds": {
             "$type": "System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib",
             "$values": [
+              1,
+              1,
               1
             ]
           },
           "winConditionId": 0
         },
         {
-          "$type": "HotUpdate.Config.Activity.BattleConfigEntry, ConfigModule",
+          "$type": "HotUpdate.Config.Activity.BattleConfigEntry, HotUpdate.Config",
           "levelId": 1002,
           "levelName": "关卡2",
           "battleSceneId": 0,
@@ -28,13 +30,15 @@
           "monsterIds": {
             "$type": "System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib",
             "$values": [
+              2,
+              2,
               2
             ]
           },
           "winConditionId": 0
         },
         {
-          "$type": "HotUpdate.Config.Activity.BattleConfigEntry, ConfigModule",
+          "$type": "HotUpdate.Config.Activity.BattleConfigEntry, HotUpdate.Config",
           "levelId": 1003,
           "levelName": "关卡3",
           "battleSceneId": 0,
@@ -50,7 +54,7 @@
           "winConditionId": 0
         },
         {
-          "$type": "HotUpdate.Config.Activity.BattleConfigEntry, ConfigModule",
+          "$type": "HotUpdate.Config.Activity.BattleConfigEntry, HotUpdate.Config",
           "levelId": 1004,
           "levelName": "关卡4",
           "battleSceneId": 0,
@@ -66,7 +70,7 @@
           "winConditionId": 0
         },
         {
-          "$type": "HotUpdate.Config.Activity.BattleConfigEntry, ConfigModule",
+          "$type": "HotUpdate.Config.Activity.BattleConfigEntry, HotUpdate.Config",
           "levelId": 1005,
           "levelName": "关卡5",
           "battleSceneId": 0,

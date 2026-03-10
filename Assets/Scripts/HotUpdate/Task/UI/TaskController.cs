@@ -126,7 +126,7 @@ namespace HotUpdate.Task.UI
             // 临时设置任务分组允许取消选中，避免初始化过程中Toggle无法响应事件
             view.TaskItemGroup.allowSwitchOff = true;
             // 获取全局任务数据集合实例
-            taskDataCollection = await TaskUtility.GetTaskDataCollection();
+            taskDataCollection = TaskUtility.GetTaskDataCollection();
             if (taskDataCollection == null)
             {
                 return;

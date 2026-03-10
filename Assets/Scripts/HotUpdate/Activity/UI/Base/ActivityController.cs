@@ -72,7 +72,7 @@ namespace HotUpdate.Activity.UI.Base
             }
             
             // 活动本地活动数据
-            var activityDataCollection = await _gameManager.GameDataManager.GetData<IActivityDataCollection>() as ActivityDataCollection;
+            var activityDataCollection = _gameManager.GameDataManager.GetData<IActivityDataCollection>() as ActivityDataCollection;
             // 获取活动UI对象
             var activity = await prefabLoader.GetObjectAsync<ActivityUIBehaviourBase>(AbKeyCollection.Ui, activityInfo.f_detailUI_res,
                 view.ActivityDetailArea);

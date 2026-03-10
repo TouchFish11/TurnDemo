@@ -116,9 +116,9 @@ MonoBehaviour:
       name: BattleCamera.prefab
       hash: 556df893f1975848a107c70d550e00dded58ce575226f6270268d526085e9843
     - assetPath: Assets\Editor\ArtRes\Camera\MainCamera.prefab
-      size: 2433
+      size: 3007
       name: MainCamera.prefab
-      hash: b2eafcc61d2365eb5699eed3ff0c5b7cae5250e2334b8c386ab2b79ff80e22e8
+      hash: 899caf950ee5bbab6a24f5981959a40edff753cfa737d1a4569a564f8271ff48
   - assetBundleName: default
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\Default\Camera\UICamera.prefab
@@ -177,12 +177,18 @@ MonoBehaviour:
       size: 24049
       name: UpdateTipView.prefab
       hash: cd68208ca558926c1dec11a2f89c661b6250746aa91f4abe7b12e2a86e467285
+  - assetBundleName: fonts
+    assetInfos:
+    - assetPath: Assets\Editor\ArtRes\Fonts\MSYH.TTC
+      size: 19704352
+      name: MSYH.TTC
+      hash: d79c55e68b1131eea0cc1c47be4f572d964f28c682e143db2ad09c1e4cb07a3f
   - assetBundleName: gameconfig
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\GameConfig\BattleActivityConfig.json
-      size: 2840
+      size: 2944
       name: BattleActivityConfig.json
-      hash: 2be68e4cc4568c8cf581e469d1a4814635fad9fa7614c0ab46be5ed279f326d9
+      hash: dbe188d750beb3f111ca386640fe08bf9eeaa807b45525a4cdbb3eea0bd383b2
     - assetPath: Assets\Editor\ArtRes\GameConfig\Editor\NewInfo.bytes
       size: 49
       name: NewInfo.bytes
@@ -240,55 +246,55 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Activity.dll.bytes
       size: 44544
       name: HotUpdate.Activity.dll.bytes
-      hash: 8b013cc5181adeb305b257b1fa8ebffd55a44b8a328aa5610d13409c9b768684
+      hash: 045f19fb6ca388cee99d42b22dc0344b39608acea805574df73377baedaabac4
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Animation.dll.bytes
       size: 13312
       name: HotUpdate.Animation.dll.bytes
-      hash: 073a9841fcbdc42ddf4c059d669cfa3efa4470292ba08c46404ac3e625f1f440
+      hash: fe108b469fea77e2571282aa44bd226c7109a54007af79cd141189bbedd159ee
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Battle.dll.bytes
       size: 284160
       name: HotUpdate.Battle.dll.bytes
-      hash: c8420c1948613a2412ed2c4b51573c0622550147d15f5e0ae099f9916cfa87dd
+      hash: 3283e527da3de09ea5e18c130d15812c4c26f7df6fa171e20e438dbcc584025a
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Camera.dll.bytes
-      size: 11264
+      size: 10240
       name: HotUpdate.Camera.dll.bytes
-      hash: 6fce687723cd60937db188573a2c0338ba1ad75e089fee80d599c55d6af2d8ce
+      hash: 6254f0dc068d8af1b890903b2b2e3b24ef733aa5bba00313834aeb920ada5de9
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Common.dll.bytes
-      size: 30208
+      size: 30720
       name: HotUpdate.Common.dll.bytes
-      hash: 27f01f07cc138a14455cc9adb96a99a53959b72b30971a4894ad3cbb775ba53c
+      hash: 0941735e9195cefc43d6ffa7aa0f3367e83b85d876e55d24fa77663f0580728b
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Config.dll.bytes
       size: 10752
       name: HotUpdate.Config.dll.bytes
       hash: fffaa47057bcadb47985876506ebb671918f3d62b27322fdeb736555227f1024
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Core.dll.bytes
-      size: 78336
+      size: 78848
       name: HotUpdate.Core.dll.bytes
-      hash: 6859739a964fb9d6314ae8a1fe10fd46997a361e46e9e4040e2b02c176424611
+      hash: 061a548de681fa56a5be12fe4777f73a614c486ca78c9d1c0d57fc7c01eb9c5a
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Dialogue.dll.bytes
       size: 26624
       name: HotUpdate.Dialogue.dll.bytes
-      hash: 341a70b4fe985cef7febccb56cea9578c6e144ff07caa8871e79469f8271042c
+      hash: 6f189d78204fd655e043dc6840a5e1dbe9b143452a2823aae6f2fb60b6874987
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Entry.dll.bytes
       size: 19968
       name: HotUpdate.Entry.dll.bytes
-      hash: 5e5c9b58a05628e969bf36c6979077c5daf0e3d83922a605ec68fc3b814d8087
+      hash: 950c39af381f1f1f2866378b32c24d55622f91a0e8bf5116cdfbd7f2d60c82ef
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Input.dll.bytes
       size: 12288
       name: HotUpdate.Input.dll.bytes
-      hash: 15e7fe7e818c5cfc827e11f94b98e2a0399683f82e4bd5ac1d54ac226b5cfa6a
+      hash: a384ad88b5b07975e75a62413792bcdf50cfecc935605d44ed33b665dfdd8394
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Interact.dll.bytes
       size: 9728
       name: HotUpdate.Interact.dll.bytes
-      hash: 11a8a052c534457857b9cec79ccf1c0d66e86203fc7aec4232857ac79f7c75e5
+      hash: 4a75f013e88a2cad68dc1d8a227745df73a7cf47a1cee53139399cfd3e228d67
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Main.dll.bytes
       size: 45056
       name: HotUpdate.Main.dll.bytes
-      hash: 527bcd28a6870e8f2b3347783cee6f2dd0fdcf7f470029854c88d690c59f026e
+      hash: d4ea845366d7f8719cbfc1b26402e6aaf00eed296e58f123fb1fe50f09ceabc5
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Task.dll.bytes
       size: 32768
       name: HotUpdate.Task.dll.bytes
-      hash: ef3a3a40e9e5c359810397514b6ff6ab8c771e67d0fca89dfb9ea4507916abfb
+      hash: 1212242e6e07d94aa7f0acb5432f3285befd8e5e23f0fee3c3b81431578d1858
   - assetBundleName: material
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\Material\Ground.mat
@@ -312,9 +318,9 @@ MonoBehaviour:
       name: Prefab_Main_Warrior.prefab
       hash: 347f712b5a8e9180cfed5bc0c3ae40710fc0f08c3ee873be2e1da2fd03f4e14d
     - assetPath: Assets\Editor\ArtRes\Prefab\Main\Prefab_Npc.prefab
-      size: 3581
+      size: 4004
       name: Prefab_Npc.prefab
-      hash: 56e028b9f0479b238df7d3d3d565f8da72a2790548ebd39406649f3fa02f28f5
+      hash: 4721972f7c7b253e0bfaaf4627f8c8cb687faac50dcd1560a178b79de1bb0b8a
     - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Prefab_AbyssalMage.prefab
       size: 28357
       name: Prefab_AbyssalMage.prefab
@@ -403,6 +409,12 @@ MonoBehaviour:
       size: 394
       name: Atlas_Icon_Item.spriteatlasv2
       hash: 05a395ced15cb8b24eb57247c95339cfda36d602b8735d9f2b5a31ee4388761b
+  - assetBundleName: tmp_asset
+    assetInfos:
+    - assetPath: Assets\Editor\ArtRes\TMP_Asset\MSYH_SDF.asset
+      size: 8404080
+      name: MSYH_SDF.asset
+      hash: d8505671de6d3c1995ffae723fd5edc73684725cee50a114b960ccb6eb74b807
   - assetBundleName: ui
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\UI\Activity\ActivityUI.prefab

@@ -6,11 +6,13 @@ using Core.AssetBundles.Update.Core;
 using Core.Collection;
 using Core.EditorRes;
 using Core.Extensions;
+using Core.Global;
 using Core.GlobalEvent;
 using Core.HotUpdate;
 using Core.Input.ActionAsset;
 using Core.Log;
 using Core.Mono;
+using Core.Mono.MonoFunction;
 using Core.Music;
 using Core.Net;
 using Core.Pool;
@@ -70,6 +72,7 @@ namespace Core.Service
             Register<IHotUpdateManager>(HotUpdateManager.Instance);
             Register<ISceneManager>(SceneManager.Instance);
             Register<IPreLoadManager>(PreLoadManager.Instance);
+            Register<IGameSettingManager>(GameSettingManager.Instance);
             
             // 初始化服务
             return InitServices();
@@ -156,12 +159,23 @@ namespace Core.Service
         }
 
         /// <summary>
-        /// 注销
+        /// 注销类型实例
+        /// 若类型实现IDestroyable接口，会调用其OnDestroy方法
         /// </summary>
         /// <typeparam name="T"></typeparam>
         public static void Unregister<T>() where T : class
         {
             var type = typeof(T);
+            if (!TypeToServerMap.TryGetValue(type, out var service))
+            {
+                return;
+            }
+
+            if (service is IDestroyable destroyable)
+            {
+                destroyable.OnDestroy();
+            }
+            
             TypeToServerMap.Remove(type);
         }
         

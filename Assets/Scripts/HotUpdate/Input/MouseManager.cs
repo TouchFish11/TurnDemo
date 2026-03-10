@@ -1,10 +1,7 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Core.GlobalEvent;
 using Core.GlobalEvent.Events;
 using Core.Log;
-using Core.Service;
-using Core.Singleton;
 using HotUpdate.Core.Input;
 using HotUpdate.Core.MVC;
 using UnityEngine;
@@ -16,26 +13,19 @@ namespace HotUpdate.Input
     /// 负责统一管理鼠标的显示/隐藏、锁定状态，基于栈结构处理多源请求，保证状态切换的有序性
     /// 继承单例基类，确保全局唯一实例；实现IMouseManager接口
     /// </summary>
-    public class MouseManager : SingletonBase<MouseManager>, IMouseManager
+    public class MouseManager : IMouseManager
     {
-        public override int Priority => -1;
         // 默认鼠标锁定模式（锁定到屏幕中心，无法拖动）
         private const CursorLockMode defaultLockMode = CursorLockMode.Locked;
         // 默认鼠标可见性（隐藏）
         private const bool defaultVisible = false;
         // 记录鼠标显示状态的请求来源标识栈，栈顶元素为当前生效的请求来源，保证"最后请求显示的来源，最先释放"的逻辑
         private readonly Stack<string> mouseVisibleSources = new();
-        
-        private MouseManager()
-        {
 
-        }
-
-        public override Task InitAsync()
+        public MouseManager(IEventCenter eventCenter)
         {
-            ServiceLocator.Get<IEventCenter>().SubscribeEvent<MouseVisibleChangedEvent>(OnMouseVisibleChangedEvent);
+            eventCenter.SubscribeEvent<MouseVisibleChangedEvent>(OnMouseVisibleChangedEvent);
             UpdateMouseState();
-            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -136,7 +126,7 @@ namespace HotUpdate.Input
         /// <returns>true=允许显示，false=禁止显示</returns>
         private static bool CanVisible(string source)
         {
-            return source != typeof(IMainController).FullName;
+            return source != "HotUpdate.Main.UI.MainController";
         }
         
         public bool Visible => Cursor.visible;

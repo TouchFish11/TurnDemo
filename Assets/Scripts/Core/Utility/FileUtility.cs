@@ -74,6 +74,14 @@ namespace Core.Utility
         /// .assetbundle
         /// </value>
         public static string AbSuffix => ".assetbundle";
+        
+        /// <summary>
+        /// 游戏设置文件名
+        /// </summary>
+        /// <value>
+        /// GameSetting.json
+        /// </value>
+        public static string GameSettingFileName => "GameSetting.json";
         #endregion
 
         /// <summary>

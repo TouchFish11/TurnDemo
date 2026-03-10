@@ -56,9 +56,9 @@ namespace HotUpdate.Task.Core
         /// 检查当前任务状态（初始化/恢复任务追踪）
         /// 从游戏管理器中获取正在追踪的任务，加载对应配置并监听事件
         /// </summary>
-        public async void CheckTaskState()
+        public void CheckTaskState()
         {
-            var taskDataCollection = await ServiceLocator.Get<IGameManager>().GameDataManager.GetData<ITaskDataCollection>();
+            var taskDataCollection = ServiceLocator.Get<IGameManager>().GameDataManager.GetData<ITaskDataCollection>();
             // 若没有正在追踪的任务，直接返回
             if (!taskDataCollection.IsTracking(out var taskData))
             {
@@ -83,7 +83,7 @@ namespace HotUpdate.Task.Core
         /// 若已有正在追踪的任务，先取消原有任务
         /// </summary>
         /// <param name="id">要接受的任务ID</param>
-        public async void AcceptTask(string id)
+        public void AcceptTask(string id)
         {
             // 若当前已有正在追踪的任务，先取消该任务的追踪
             if (currentTaskInfo != null && currentTaskData != null)
@@ -96,7 +96,7 @@ namespace HotUpdate.Task.Core
             currentConditionInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<TaskConditionInfoContainer>(EConfigLoadType.Excel).dataDic[currentTaskInfo.f_completionConditionId];
 
             // 转换集合
-            var collection = await TaskUtility.GetTaskDataCollection() as Collection<string, TaskData>;
+            var collection = TaskUtility.GetTaskDataCollection() as Collection<string, TaskData>;
             if (collection == null)
             {
                 return;
@@ -208,7 +208,7 @@ namespace HotUpdate.Task.Core
         /// 更新任务节点进度
         /// 进度满则标记任务完成，并处理后续任务（如有）
         /// </summary>
-        private async void UpdateTaskNodeProgress()
+        private void UpdateTaskNodeProgress()
         {
             // 当前任务进度+1
             currentTaskData.CurrentPro += 1;
@@ -242,7 +242,7 @@ namespace HotUpdate.Task.Core
                     };
                     
                     // 转换集合
-                    var collection = (Collection<string, TaskData>)await TaskUtility.GetTaskDataCollection();
+                    var collection = (Collection<string, TaskData>)TaskUtility.GetTaskDataCollection();
                     if (collection == null)
                     {
                         return;

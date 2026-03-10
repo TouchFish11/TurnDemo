@@ -1,4 +1,5 @@
 using Core.Components;
+using HotUpdate.Core.Camera;
 
 namespace HotUpdate.Core.Main
 {
@@ -20,5 +21,11 @@ namespace HotUpdate.Core.Main
         /// </summary>
         /// <param name="canMove">是否允许移动</param>
         void SetMoveFlag(bool canMove);
+
+        /// <summary>
+        /// 设置相机
+        /// </summary>
+        /// <param name="camera"></param>
+        void SetCamera(IOrbitCameraController camera);
     }
 }

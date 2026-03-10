@@ -137,6 +137,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6801962216985205782}
   - component: {fileID: 1549914689538611630}
+  - component: {fileID: 360685975305753751}
   m_Layer: 0
   m_Name: Prefab_TurtleShell
   m_TagString: MonsterObject
@@ -181,6 +182,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0.5, z: 0}
+--- !u!114 &360685975305753751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1861187692708249038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc6750d2079cf8c4b8102e03f69a9c12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3190074845036211744
 GameObject:
   m_ObjectHideFlags: 0

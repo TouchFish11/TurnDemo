@@ -44,6 +44,7 @@ namespace HotUpdate.Common
 		public static string BeginView => "BeginView";
 		public static string Canvas => "Canvas";
 		public static string UpdateTipView => "UpdateTipView";
+		public static string MSYH => "MSYH";
 		public static string BattleActivityConfig => "BattleActivityConfig";
 		public static string MainActionMap => "MainActionMap";
 		public static string Ground => "Ground";
@@ -130,6 +131,7 @@ namespace HotUpdate.Common
 		public static string Crosshair_25 => "Crosshair_25";
 		public static string Crosshair_26 => "Crosshair_26";
 		public static string Crosshair_27 => "Crosshair_27";
+		public static string MSYH_SDF => "MSYH_SDF";
 		public static string ActivityUI => "ActivityUI";
 		public static string ActivityView => "ActivityView";
 		public static string ActivityBkComponent => "ActivityBkComponent";

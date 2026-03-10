@@ -18,7 +18,7 @@ namespace HotUpdate.Activity
         public Task InitModuleAsync()
         {
             // 注册活动数据提供器
-            ServiceLocator.Get<IGameManager>().GameDataManager.AddDataProvider(typeof(IActivityDataCollection), new ActivityDataProvider());
+            ServiceLocator.Get<IGameManager>().GameDataManager.RegisterProvider(typeof(IActivityDataCollection), new ActivityDataProvider());
 
             ServiceLocator.Register<IActivityUiHelper>(new ActivityUiHelper(ServiceLocator.Get<IUIManager>()));
             

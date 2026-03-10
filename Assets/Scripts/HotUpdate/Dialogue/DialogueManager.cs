@@ -1,15 +1,15 @@
 using System;
 using System.Collections;
 using System.Text;
-using System.Threading.Tasks;
 using Core.Global;
 using Core.GlobalEvent;
+using Core.GlobalEvent.Events;
 using Core.Loader.Object;
 using Core.Log;
 using Core.Mono;
+using Core.Mono.MonoFunction;
 using Core.Serialize.Binary;
 using Core.Service;
-using Core.Singleton;
 using Core.UI;
 using Core.Utility;
 using HotUpdate.Common;
@@ -21,19 +21,18 @@ using UnityEngine;
 namespace HotUpdate.Dialogue
 {
     /// <summary>
-    /// 对话管理器（单例）
+    /// 对话管理器
     /// 负责对话的启动、逐字显示、分支选择、下一步对话、结束对话等核心逻辑
     /// </summary>
-    public class DialogueManager : SingletonBase<DialogueManager>, IDialogueManager
+    public class DialogueManager : IDialogueManager, IDestroyable
     {
-        public override int Priority => -1;
-        private readonly IUIManager _uiManager = ServiceLocator.Get<IUIManager>();
-        private readonly IPrefabLoader _prefabLoader = ServiceLocator.Get<IPrefabLoader>();
-        private readonly IEventCenter _eventCenter = ServiceLocator.Get<IEventCenter>();
-        private readonly IBinaryDataManager _binaryDataManager = ServiceLocator.Get<IBinaryDataManager>();
-        private readonly IMonoAdapter _monoAdapter = ServiceLocator.Get<IMonoAdapter>();
+        private IUIManager _uiManager;
+        private IPrefabLoader _prefabLoader;
+        private IEventCenter _eventCenter;
+        private IBinaryDataManager _binaryDataManager;
+        private IMonoAdapter _monoAdapter;
         
-        // 是否启用打字机效果（仅在全局设置开启时生效）
+        // 是否启用打字机效果
         private bool enableTypewriter;
         // 当前单条对话是否播放完成（打字机/直接显示）
         private bool dialogueOver;
@@ -65,28 +64,17 @@ namespace HotUpdate.Dialogue
         // 是否有对话正在进行中（对外只读）
         public bool IsDialogueActive { get; private set; } 
         
-        private DialogueManager()
+        public DialogueManager()
         {
-
+            _uiManager = ServiceLocator.Get<IUIManager>();
+            _prefabLoader = ServiceLocator.Get<IPrefabLoader>();
+            _eventCenter = ServiceLocator.Get<IEventCenter>();
+            _binaryDataManager = ServiceLocator.Get<IBinaryDataManager>();
+            _monoAdapter = ServiceLocator.Get<IMonoAdapter>();
+            enableTypewriter = ServiceLocator.Get<IGameSettingManager>().GameSetting.enableTypewriter;
+            _eventCenter.SubscribeEvent<GameSettingUpdateEvent>(OnGameSettingUpdateEvent);
         }
-
-        public override Task InitAsync()
-        {
-            enableTypewriter = true;
-            // 监听全局设置中打字机效果的开关变化
-            GameSettingManager.Instance.OnEnableTypewriterChanged += OnEnableTypewriterChanged;
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// 全局打字机开关变更回调
-        /// </summary>
-        /// <param name="value">新的开关状态</param>
-        private void OnEnableTypewriterChanged(bool value)
-        {
-            enableTypewriter = value;
-        }
-
+        
         /// <summary>
         /// 启动对话流程
         /// </summary>
@@ -255,6 +243,21 @@ namespace HotUpdate.Dialogue
             _prefabLoader.RealseAsset(AbKeyCollection.Ui, ResKeyCollection.DialogueOptUI);
             // 清理对话回顾UI对象池
             _prefabLoader.RealseAsset(AbKeyCollection.Ui, ResKeyCollection.DialogueReviewUI);
+        }
+
+        private void OnGameSettingUpdateEvent(GameSettingUpdateEvent gameSettingUpdateEvent)
+        {
+            enableTypewriter = gameSettingUpdateEvent.GameSetting.enableTypewriter;
+        }
+
+        public void OnDestroy()
+        {
+            _eventCenter.UnsubscribeEvent<GameSettingUpdateEvent>(OnGameSettingUpdateEvent);
+            _uiManager = null;
+            _prefabLoader = null;
+            _eventCenter = null;
+            _binaryDataManager = null;
+            _monoAdapter = null;
         }
     }
 }

@@ -1,7 +1,5 @@
-using System.Threading.Tasks;
 using Core.Log;
 using Core.Serialize.Json;
-using Core.Service;
 using Core.Utility;
 using HotUpdate.Core.Provider;
 using HotUpdate.Core.Task;
@@ -26,13 +24,12 @@ namespace HotUpdate.Task.Data
         {
             _jsonManager = jsonManager;
         }
-        
-        public async Task<ITaskDataCollection> GetDataAsync()
+
+        public async Task LoadDataAsync()
         {
             // 读取任务数据
             TaskDataCollection = await _jsonManager.FromJsonAsync<TaskDataCollection>(PathUtility.GetUserDataLocalSavePath(FileUtility.LocalTaskDataFileName));
             LogManager.Log($"任务数据加载成功，{TaskDataCollection}");
-            return TaskDataCollection;
         }
         
         public async Task SaveDataAsync()
@@ -40,6 +37,11 @@ namespace HotUpdate.Task.Data
             // 保存任务数据
             await _jsonManager.SaveToJsonAsync(TaskDataCollection, PathUtility.GetUserDataLocalSavePath(FileUtility.LocalTaskDataFileName));
             LogManager.Log($"任务数据保存成功，{TaskDataCollection}");
+        }
+
+        public ITaskDataCollection GetData()
+        {
+            return TaskDataCollection;
         }
     }
 }

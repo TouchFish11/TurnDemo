@@ -10,10 +10,11 @@ using Newtonsoft.Json;
 namespace HotUpdate.Activity.Data
 {
     /// <summary>
-    /// 获取数据提供器
+    /// 活动数据提供器
     /// </summary>
     public class ActivityDataProvider : IDataProvider<IActivityDataCollection>
     {
+        // Newtonsoft设置配置
         private readonly JsonSerializerSettings activityDataSettings = new()
         {
             TypeNameHandling = TypeNameHandling.All,
@@ -24,8 +25,8 @@ namespace HotUpdate.Activity.Data
         /// 活动数据集合
         /// </summary>
         public IActivityDataCollection ActivityDataCollection { get; private set; }
-        
-        public async Task<IActivityDataCollection> GetDataAsync()
+
+        public async Task LoadDataAsync()
         {
             // 活动数据
             ActivityDataCollection = await ServiceLocator.Get<IJsonManager>()
@@ -34,7 +35,6 @@ namespace HotUpdate.Activity.Data
                     settings: activityDataSettings);
             
             LogManager.Log($"活动数据加载成功，{ActivityDataCollection}");
-            return ActivityDataCollection;
         }
 
         public async Task SaveDataAsync()
@@ -44,6 +44,11 @@ namespace HotUpdate.Activity.Data
                 PathUtility.GetUserDataLocalSavePath(FileUtility.LocalActivityDataFileName),
                 settings: activityDataSettings);
             LogManager.Log($"活动数据保存成功，{ActivityDataCollection}");
+        }
+        
+        public IActivityDataCollection GetData()
+        {
+            return ActivityDataCollection;
         }
     }
 }

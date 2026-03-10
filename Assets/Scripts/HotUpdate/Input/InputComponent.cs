@@ -9,6 +9,7 @@ using Core.Mono;
 using Core.Service;
 using HotUpdate.Core.Component;
 using HotUpdate.Core.Input;
+using HotUpdate.Core.Main;
 using HotUpdate.Core.Manager;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -71,7 +72,7 @@ namespace HotUpdate.Input
                 // 获取输入系统实例
                 inputSystem = ServiceLocator.Get<IInputSystem>();
                 // 初始化玩家输入，并注册输入动作触发回调
-                var container = ServiceLocator.Get<IGameManager>().GameDataManager.InputActionContainer;
+                var container = ServiceLocator.Get<IGameManager>().GameDataManager.GetData<IMainDataCollection>().InputActionContainer;
                 inputSystem.InitPlayerInput(EntityObject.GetComponent<PlayerInputComponent>().PlayerInput, container, OnActionTrigger);
                 EnableInput();
                 // 添加帧更新监听，处理每帧的输入逻辑

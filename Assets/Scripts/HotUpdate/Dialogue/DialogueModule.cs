@@ -7,11 +7,14 @@ using HotUpdate.Core.UI.Helper;
 
 namespace HotUpdate.Dialogue
 {
+    /// <summary>
+    /// 对话模块
+    /// </summary>
     public class DialogueModule : IDialogueModule
     {
         public Task InitModuleAsync()
         {
-            ServiceLocator.Register<IDialogueManager>(DialogueManager.Instance);
+            ServiceLocator.Register<IDialogueManager>(new DialogueManager());
             ServiceLocator.Register<IDialogueUiHelper>(new DialogueUiHelper(ServiceLocator.Get<IUIManager>()));
             return Task.CompletedTask;
         }

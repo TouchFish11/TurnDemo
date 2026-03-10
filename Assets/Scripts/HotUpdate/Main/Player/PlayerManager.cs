@@ -65,19 +65,20 @@ namespace HotUpdate.Main.Player
 
             // 添加主玩家核心逻辑组件
             var main = mainObj.AddComponent<MainPlayer>();
-            
             // 从资源包加载战士预制体，并挂载到玩家节点下
             var warrior = await _prefabLoader.GetGameObjectAsync(AbKeyCollection.Prefab, ResKeyCollection.Prefab_Main_Warrior, main.transform);
             // 给战士预制体添加战士逻辑组件，并关联到主玩家
-            ServiceLocator.Get<IBattleModule>().AddWarrior(warrior);
-            
-            // 初始化玩家相机
-            await ServiceLocator.Get<IOrbitCameraGeter>().CreateMainCamera();
+            ServiceLocator.Get<IModuleManager>().GetModule<IBattleModule>().AddWarrior(warrior);
             // 初始化主玩家基础数据（参数1为示例配置ID）
             main.BaseInit(1);
+            // 初始化玩家相机
+            var camera = await ServiceLocator.Get<IOrbitCameraGeter>().CreateMainCamera();
+            // 设置跟随对象
+            camera.SetTarget(main);
+            // 设置相机
+            main.InitCamera(camera);
             // 将玩家对象加入字典管理
             uidToEntityMap.Add(uid, main);
-
             ServiceLocator.Get<IFloatingTextManager>().SetPlayer(main.transform);
         }
 

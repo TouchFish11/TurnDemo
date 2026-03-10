@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Core.Service;
 using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.Camera;
 using HotUpdate.Core.Dialogue;
 using HotUpdate.Core.Interact;
 using HotUpdate.Core.Main;
@@ -69,6 +70,11 @@ namespace HotUpdate.Main.Player
             // 【注】当前逻辑注释待启用：获取索引为0的默认实体，绑定其动画控制器到玩家动画组件
             //var defaultEntity = indexToEntityMap[0];
             //GetComponent<NormalAnimationComponent>().SetAnimator(defaultEntity.GetComponentInChildren<AnimatorComponent>().Animator);
+        }
+
+        public void InitCamera(IOrbitCameraController orbitCameraController)
+        {
+            this.GetComponent<IMoveComponent>().SetCamera(orbitCameraController);
         }
     }
 }

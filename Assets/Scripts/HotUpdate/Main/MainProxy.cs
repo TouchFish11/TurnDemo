@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Core.HotUpdate;
 using Core.Log;
+using Core.Mono;
 using Core.Reflection;
 using Core.Scene;
 using Core.Service;
@@ -28,13 +29,14 @@ namespace HotUpdate.Main
         {
             try
             {
-                ServiceLocator.Register<IGameManager>(new GameManager());
-                // 初始化游戏数据
-                await ServiceLocator.Get<IGameManager>().InitDataAsync();
+                // 注册游戏管理器
+                ServiceLocator.Register<IGameManager>(new GameManager(ServiceLocator.Get<IMonoAdapter>()));
                 // 初始化模块管理器
                 var moduleManager = new ModuleManager(ServiceLocator.Get<IHotUpdateManager>());
                 ServiceLocator.Register<IModuleManager>(moduleManager);
                 await moduleManager.InitModules();
+                // 初始化游戏数据
+                await ServiceLocator.Get<IGameManager>().InitDataAsync();
                 
                 // 初始化热更工厂
                 ServiceLocator.Get<IFactoryManager>().InitHotFactorys();

@@ -9,9 +9,9 @@ namespace HotUpdate.Task.Core
 {
     public static class TaskUtility
     {
-        public static async System.Threading.Tasks.Task<ITaskDataCollection> GetTaskDataCollection()
+        public static ITaskDataCollection GetTaskDataCollection()
         {
-            var taskDataCollection = await ServiceLocator.Get<IGameManager>().GameDataManager.GetData<ITaskDataCollection>();
+            var taskDataCollection = ServiceLocator.Get<IGameManager>().GameDataManager.GetData<ITaskDataCollection>();
             // 转换集合
             if (taskDataCollection is Collection<string, TaskData> collection)
             {

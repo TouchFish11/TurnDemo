@@ -89,6 +89,10 @@ namespace Core.HotUpdate
             await assetBundle.LoadAllAssetsAsync<TextAsset>().ToTask(dllTexts.List);
             foreach (var dllText in dllTexts.List)
             {
+                if (_assemblyNames.Contains(dllText.name.Substring(0, dllText.name.LastIndexOf('.'))))
+                {
+                    continue;
+                }
 #if !UNITY_EDITOR
                 // 多线程加载程序集
                 await Task.Run(() =>

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Core.Collection;
 using Core.HotUpdate;
 
 namespace HotUpdate.Core.Module
@@ -21,7 +22,20 @@ namespace HotUpdate.Core.Module
         
         public async Task InitModules()
         {
-            // 初始化所有热更模块
+            var uniList = CollectionUtil.GetUniList<Type>();
+            // 临时缓存具体模块接口
+            foreach (var hotAssembly in _hotUpdateManager.GetHotAssemblies())
+            {
+                foreach (var type in hotAssembly.GetTypes())
+                {
+                    if (typeof(IModule).IsAssignableFrom(type) && type.IsInterface)
+                    {
+                        uniList.Add(type);
+                    }
+                }
+            }
+            
+            // 缓存模块接口类型到模块实例的映射
             foreach (var hotAssembly in _hotUpdateManager.GetHotAssemblies())
             {
                 foreach (var type in hotAssembly.GetTypes())
@@ -36,9 +50,17 @@ namespace HotUpdate.Core.Module
                     // 异步初始化模块
                     await module.InitModuleAsync();
                     // 缓存模块
-                    _modules.TryAdd(type, module);
+                    foreach (var interfaceType in uniList.List)
+                    {
+                        if (interfaceType.IsAssignableFrom(type))
+                        {
+                            _modules.TryAdd(interfaceType, module);
+                        }
+                    }
                 }
             }
+            
+            
         }
 
         public T GetModule<T>() where T : class, IModule

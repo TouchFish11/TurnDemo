@@ -39,16 +39,17 @@ namespace HotUpdate.Main.Move
         /// <param name="entityObject">当前挂载的实体对象</param>
         public override void Init(IEntityObject entityObject)
         {
-            // 获取主相机单例并将当前实体设为相机跟随目标
-            mainCamera = ServiceLocator.Get<IOrbitCameraGeter>().OrbitCameraController;
-            mainCamera.SetTarget(transform);
-
             // 获取角色控制器组件（封装Unity原生CharacterController）
             characterController = EntityObject.GetComponent<CharacterControllerComponent>().CharacterController;
             // 订阅输入组件的输入变更事件，实时更新输入方向
             EntityObject.GetComponent<IInputComponent>().OnKeyInputChanged += OnUpdateInputDir;
             // 初始化时启用移动功能
             Enable();
+        }
+        
+        public void SetCamera(IOrbitCameraController camera)
+        {
+            mainCamera = camera;
         }
 
         /// <summary>

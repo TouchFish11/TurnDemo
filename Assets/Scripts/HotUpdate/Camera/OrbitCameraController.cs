@@ -1,7 +1,6 @@
 using Core.Components;
 using Core.Mono;
 using Core.Service;
-using Core.Singleton;
 using HotUpdate.Core.Camera;
 using HotUpdate.Core.Input;
 using UnityEngine;
@@ -12,11 +11,10 @@ namespace HotUpdate.Camera
     /// 环绕式相机控制器（第三人称轨道相机）
     /// 核心功能：围绕目标（玩家）旋转、滚轮缩放、对话时切换光标状态
     /// </summary>
-    public class OrbitCameraController : SingletonMono<OrbitCameraController>, IOrbitCameraController
+    public class OrbitCameraController : MonoBehaviour, IOrbitCameraController
     {
-        private readonly IMouseManager _mouseManager = ServiceLocator.Get<IMouseManager>();
-        private readonly IMonoAdapter _monoAdapter = ServiceLocator.Get<IMonoAdapter>();
-        
+        private IMouseManager _mouseManager;
+        private IMonoAdapter _monoAdapter;
         // 相机自身Transform缓存
         public Transform Transform { get; private set; }
 
@@ -39,7 +37,7 @@ namespace HotUpdate.Camera
         public float smoothSpeed = 15f;
 
         // 相机跟随的目标（玩家Transform）
-        private Transform player;
+        private Transform playerTransform;
         // 水平旋转角度（绕Y轴）
         private float _horizontalAngle;
         // 垂直旋转角度（绕X轴）
@@ -49,17 +47,11 @@ namespace HotUpdate.Camera
         // 鼠标拖动输入值
         private Vector2 mouseInput;
         
-        private GameObject _gameObject;
-        private EntityProperty _entityProperty;
-        public IEntityObject EntityObject { get; private set; }
-
-        /// <summary>
-        /// 单例初始化（继承SingletonMono）
-        /// </summary>
-        protected override void Awake()
+        protected void Awake()
         {
-            base.Awake();
-
+            _mouseManager = ServiceLocator.Get<IMouseManager>();
+            _monoAdapter = ServiceLocator.Get<IMonoAdapter>();
+            
             // 注册帧更新监听
             _monoAdapter.AddUpdateListener(OnUpdate);
             // 缓存自身Transform
@@ -74,9 +66,9 @@ namespace HotUpdate.Camera
         private void Init()
         {
             // 如果已有目标，根据当前相机与目标的位置计算初始旋转角度
-            if (player)
+            if (playerTransform)
             {
-                var dir = transform.position - player.position;
+                var dir = transform.position - playerTransform.position;
                 _horizontalAngle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
                 _verticalAngle = Mathf.Asin(dir.y / radius) * Mathf.Rad2Deg;
             }
@@ -85,12 +77,12 @@ namespace HotUpdate.Camera
         /// <summary>
         /// 设置相机跟随的目标
         /// </summary>
-        /// <param name="target">玩家Transform</param>
-        public void SetTarget(Transform target)
+        /// <param name="entityObject"></param>
+        public void SetTarget(IEntityObject entityObject)
         {
-            player = target;
+            playerTransform = entityObject.GameObject.transform;
             // 注册鼠标拖动输入监听
-            target.GetComponent<IEntityObject>().GetComponent<IInputComponent>().OnMouseSlideChanged += OnUpdateMouse;
+            entityObject.GetComponent<IInputComponent>().OnMouseSlideChanged += OnUpdateMouse;
         }
 
         /// <summary>
@@ -114,7 +106,7 @@ namespace HotUpdate.Camera
         private void LateUpdate()
         {
             // 无目标时直接返回
-            if (!player)
+            if (!playerTransform)
             {
                 return;
             }
@@ -133,7 +125,7 @@ namespace HotUpdate.Camera
             }
 
             // 强制让相机看向目标（叠加偏移量，保证看向玩家头部）
-            transform.LookAt(player.position + lookOffset);
+            transform.LookAt(playerTransform.position + lookOffset);
         }
 
         /// <summary>
@@ -175,9 +167,9 @@ namespace HotUpdate.Camera
             // x = 目标x + 半径 * sin(垂直角度) * sin(水平角度)
             // y = 目标y + 半径 * cos(垂直角度)
             // z = 目标z + 半径 * sin(垂直角度) * cos(水平角度)
-            float x = player.position.x + radius * Mathf.Sin(verticalRad) * Mathf.Sin(horizontalRad);
-            float y = player.position.y + radius * Mathf.Cos(verticalRad);
-            float z = player.position.z + radius * Mathf.Sin(verticalRad) * Mathf.Cos(horizontalRad);
+            float x = playerTransform.position.x + radius * Mathf.Sin(verticalRad) * Mathf.Sin(horizontalRad);
+            float y = playerTransform.position.y + radius * Mathf.Cos(verticalRad);
+            float z = playerTransform.position.z + radius * Mathf.Sin(verticalRad) * Mathf.Cos(horizontalRad);
 
             // 赋值给目标位置
             _targetCameraPos = new Vector3(x, y, z);
@@ -195,7 +187,7 @@ namespace HotUpdate.Camera
         }
 
         /// <summary>
-        /// 销毁时移除监听（防止内存泄漏）
+        /// 销毁时移除监听
         /// </summary>
         private void OnDestroy()
         {
@@ -203,15 +195,15 @@ namespace HotUpdate.Camera
         }
         
         #region 无用接口实现（IEntityObject）
-        // 以下为接口强制实现的无用代码，无实际业务逻辑
-        GameObject IEntityObject.GameObject => _gameObject;
-        EntityProperty IEntityObject.EntityProperty => _entityProperty;
-        void IEntityObject.BaseInit(int id) { }
-        T IEntityObject.GetComponent<T>() => default;
-        TComponent IEntityObject.GetComponentInChildren<TComponent>() => default;
-        TComponent IEntityObject.AddComponent<TComponent>() => null;
-        bool IEntityObject.AddComponents(params string[] componentNames) => false;
-        void IEntityObject.Destroy() { }
+        // // 以下为接口强制实现的无用代码，无实际业务逻辑
+        // GameObject IEntityObject.GameObject => _gameObject;
+        // EntityProperty IEntityObject.EntityProperty => _entityProperty;
+        // void IEntityObject.BaseInit(int id) { }
+        // T IEntityObject.GetComponent<T>() => default;
+        // TComponent IEntityObject.GetComponentInChildren<TComponent>() => default;
+        // TComponent IEntityObject.AddComponent<TComponent>() => null;
+        // bool IEntityObject.AddComponents(params string[] componentNames) => false;
+        // void IEntityObject.Destroy() { }
         #endregion
     }
 }

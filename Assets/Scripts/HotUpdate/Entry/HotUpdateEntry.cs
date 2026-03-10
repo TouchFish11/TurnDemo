@@ -46,7 +46,7 @@ namespace HotUpdate.Entry
                     await ServiceLocator.Get<IInputSystem>().InitInputsystemAsync(AbKeyCollection.Gameconfig);
                     // 加载热更程序集
                     await ServiceLocator.Get<IHotUpdateManager>().LoadAssembliesAsync(AbKeyCollection.Hotupdate);
-                    LogManager.Log($"加载热更程序集成功");
+                    LogManager.Log($"加载所有热更程序集成功");
 
                     var assembly = ServiceLocator.Get<IHotUpdateManager>().GetAssembly("HotUpdate.Main");
                     var type = assembly.GetType("HotUpdate.Main.MainProxy");

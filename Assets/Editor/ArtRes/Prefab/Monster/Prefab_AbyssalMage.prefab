@@ -364,6 +364,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8606672268891395666}
   - component: {fileID: 2776103661635408259}
+  - component: {fileID: -3206050551462543808}
   m_Layer: 0
   m_Name: Prefab_AbyssalMage
   m_TagString: Untagged
@@ -408,6 +409,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 2, z: 1}
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &-3206050551462543808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3756789539785439618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d735cbb332bc1ba46997cae362f6fea5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3834951314405049864
 GameObject:
   m_ObjectHideFlags: 0

@@ -130,7 +130,7 @@ namespace HotUpdate.Entry.Update.UI
                     // 重置进度条、进度文本
                     view.SetSliderProgress(0);
                     view.SetTextProgress(0);
-                    view.SetTextPhase("正在校验资源完整性...");
+                    view.SetTextPhase("正在校验资源完整性... (请勿关闭应用程序)");
                     break;
                 case EUpdatePhase.Finished:
                     view.SetTextPhase("更新完成");

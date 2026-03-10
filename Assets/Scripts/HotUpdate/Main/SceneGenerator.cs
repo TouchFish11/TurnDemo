@@ -26,7 +26,6 @@ namespace HotUpdate.Main
         public async Task InitMainScene()
         {
             // 创建村民NPC对象
-            // TODO：需要挂载脚本
             var villager = await _prefabLoader.GetObjectAsync<INpcObject>(AbKeyCollection.Prefab, ResKeyCollection.Prefab_Npc, null);
             villager.Transform.SetPositionAndRotation(new Vector3(0, 1, 8.39f), Quaternion.identity);
             // 初始化NPC基础属性（参数为NPC配置ID，对应配置表）

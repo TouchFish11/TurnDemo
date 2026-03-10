@@ -12,23 +12,22 @@ namespace HotUpdate.Main
     /// <summary>
     /// 游戏管理器
     /// </summary>
-    public class GameManager : IInitializable, IGameManager
+    public class GameManager : IGameManager
     {
-        public int Priority => -1;
-        public GameDataManager GameDataManager { get; private set; }
+        // 游戏数据管理器
+        public GameDataManager GameDataManager { get; }
 
-        public Task InitAsync()
+        public GameManager(IMonoAdapter monoAdapter)
         {
-            ServiceLocator.Get<IMonoAdapter>().OnAppQuit += OnAppQuit;
-            return Task.CompletedTask;
+            GameDataManager = new GameDataManager();
+            monoAdapter.OnAppQuit += OnAppQuit;
         }
-
+        
         public async Task InitDataAsync()
         {
             try
             {
-                GameDataManager = new GameDataManager();
-                await GameDataManager.InitDataAsync();
+                await GameDataManager.LoadDataAsync();
             }
             catch (Exception ex)
             {

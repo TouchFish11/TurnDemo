@@ -18,13 +18,13 @@ MonoBehaviour:
       levelName: "\u5173\u53611"
       battleSceneId: 0
       battleWave: 1
-      monsterIds: 01000000
+      monsterIds: 010000000100000001000000
       winConditionId: 0
     - levelId: 1002
       levelName: "\u5173\u53612"
       battleSceneId: 0
       battleWave: 1
-      monsterIds: 02000000
+      monsterIds: 020000000200000002000000
       winConditionId: 0
     - levelId: 1003
       levelName: "\u5173\u53613"

@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Core.Components;
+using Core.GlobalEvent;
 using Core.Service;
 using HotUpdate.Core.Input;
 using HotUpdate.Core.Module;
@@ -13,7 +14,7 @@ namespace HotUpdate.Input
     {
         public Task InitModuleAsync()
         {
-            ServiceLocator.Register<IMouseManager>(MouseManager.Instance);
+            ServiceLocator.Register<IMouseManager>(new MouseManager(ServiceLocator.Get<IEventCenter>()));
             return Task.CompletedTask;
         }
 
