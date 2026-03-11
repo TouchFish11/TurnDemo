@@ -40,6 +40,9 @@ namespace HotUpdate.Battle.Object.StateMeachine
                     yield break;
                 }
             }
+            
+            // 切换状态
+            PlayerObject.ChangeState(EActPhase.TurnEnd);
         }
         
         /// <summary>
@@ -55,8 +58,6 @@ namespace HotUpdate.Battle.Object.StateMeachine
             }
 
             PlayerObject.CastSkill(triggerSkillEvent.SkillId);
-            // 行动结束
-            // BattleEntity.CanAct = false;
         }
 
         /// <summary>
@@ -66,12 +67,7 @@ namespace HotUpdate.Battle.Object.StateMeachine
         /// <param name="roleTriggerUltimateSkillEvent"></param>
         protected void OnCastUltimateSkill(RoleTriggerUltimateSkillEvent roleTriggerUltimateSkillEvent)
         {
-            if ((BattleObject)roleTriggerUltimateSkillEvent.Caster != PlayerObject)
-            {
-                return;
-            }
-
-            PlayerObject.CastSkill(roleTriggerUltimateSkillEvent.SkillId);
+            ((IPlayerObject)roleTriggerUltimateSkillEvent.Caster).CastSkill(roleTriggerUltimateSkillEvent.SkillId);
         }
 
         public override void Exit()

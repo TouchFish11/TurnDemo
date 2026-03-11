@@ -194,7 +194,7 @@ namespace HotUpdate.Battle.UI.SkillKey
         /// <param name="baseEventData">事件数据（UI事件基础数据）</param>
         private void OnClick(BaseEventData baseEventData)
         {
-            // 触发状态下（非奥义技能）：执行技能触发逻辑
+            // 触发状态下（非终结技技能）：执行技能触发逻辑
             if (triggerPhase == E_TriggerPhase.Trigger && _SkillType != E_SkillType.UltimateSkill)
             {
                 // 重置为选中状态（避免重复触发）

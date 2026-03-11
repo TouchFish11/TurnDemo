@@ -42,7 +42,6 @@ namespace HotUpdate.Battle.Skill.Component
 
         /// <summary>
         /// 校验指定技能是否可以释放
-        /// 校验逻辑：1. 技能是否存在于当前组件 2. 所有施法条件是否满足
         /// </summary>
         /// <param name="skillId">要校验的技能ID</param>
         /// <returns>true=可释放；false=不可释放（技能不存在/任意施法条件不满足）</returns>

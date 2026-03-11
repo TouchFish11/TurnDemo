@@ -54,13 +54,7 @@ namespace Core.HotUpdate
                 
 #if !UNITY_EDITOR
                 // 多线程加载程序集
-                await Task.Run(() =>
-                {
-                    var assembly = Assembly.Load(dllText.bytes);
-                    RuntimeApi.LoadMetadataForAOTAssembly(dllText.bytes, HomologousImageMode.SuperSet);
-                    _assemblyNames.Add(assembly.GetName().Name);
-                    LogManager.Log($"{nameof(HotUpdateManager)}.{nameof(LoadAssembliesAsync)}：已加载热更程序集，{assembly.GetName().Name}");
-                });
+                await LoadAssemblyAsyncInternal(dllText.bytes);
 #else
                 // Editor环境下，HotUpdate.dll.bytes已经被自动加载，不需要加载，重复加载反而会出问题。
                 // Editor下无需加载，直接查找获得HotUpdate程序集
@@ -95,13 +89,7 @@ namespace Core.HotUpdate
                 }
 #if !UNITY_EDITOR
                 // 多线程加载程序集
-                await Task.Run(() =>
-                {
-                    var assembly = Assembly.Load(dllText.bytes);
-                    RuntimeApi.LoadMetadataForAOTAssembly(dllText.bytes, HomologousImageMode.SuperSet);
-                    _assemblyNames.Add(assembly.GetName().Name);
-                    LogManager.Log($"{nameof(HotUpdateManager)}.{nameof(LoadAssembliesAsync)}：已加载热更程序集，{assembly.GetName().Name}");
-                });
+                await LoadAssemblyAsyncInternal(dllText.bytes);
 #else
                 // Editor环境下，HotUpdate.dll.bytes已经被自动加载，不需要加载，重复加载反而会出问题。
                 // Editor下无需加载，直接查找获得HotUpdate程序集
@@ -155,6 +143,22 @@ namespace Core.HotUpdate
                 assemblies.Add(Assembly.Load(assemblyName));
             }
             return assemblies.ToArray();
+        }
+
+        /// <summary>
+        /// 异步加载程序集
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
+        internal Task LoadAssemblyAsyncInternal(byte[] bytes)
+        {
+            return Task.Run(() =>
+            {
+                var assembly = Assembly.Load(bytes);
+                RuntimeApi.LoadMetadataForAOTAssembly(bytes, HomologousImageMode.SuperSet);
+                _assemblyNames.Add(assembly.GetName().Name);
+                LogManager.Log($"{nameof(HotUpdateManager)}.{nameof(LoadAssembliesAsync)}：已加载热更程序集，{assembly.GetName().Name}");
+            });
         }
     }
 }

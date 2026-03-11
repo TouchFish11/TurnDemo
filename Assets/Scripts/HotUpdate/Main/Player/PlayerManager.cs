@@ -12,6 +12,7 @@ using HotUpdate.Core.Input;
 using HotUpdate.Core.Main;
 using HotUpdate.Core.Module;
 using HotUpdate.Core.MVC;
+using HotUpdate.Main.Global.UI;
 using HotUpdate.Main.Move;
 using UnityEngine;
 
@@ -107,7 +108,9 @@ namespace HotUpdate.Main.Player
         private bool OpenViewEventFilter(OpenViewEvent openViewEvent)
         {
             return openViewEvent.UIController is not IMainController &&
-                   openViewEvent.UIController is not IDialogueController && uidToEntityMap.ContainsKey(1001);
+                   openViewEvent.UIController is not IDialogueController &&
+                   openViewEvent.UIController is not GlobalMessageController && 
+                   uidToEntityMap.ContainsKey(1001);
         }
         
         /// <summary>
@@ -123,7 +126,9 @@ namespace HotUpdate.Main.Player
         private bool OpenViewEventFilter(CloseViewEvent closeViewEvent)
         {
             return closeViewEvent.UIController is not IMainController &&
-                   closeViewEvent.UIController is not IDialogueController && uidToEntityMap.ContainsKey(1001);
+                   closeViewEvent.UIController is not IDialogueController &&
+                   closeViewEvent.UIController is not GlobalMessageController &&
+                   uidToEntityMap.ContainsKey(1001);
         }
     }
 }

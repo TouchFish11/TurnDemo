@@ -71,8 +71,10 @@ namespace Core.UI
         /// <param name="abName"></param>
         /// <param name="layer"></param>
         /// <param name="panelName"></param>
+        /// <param name="pos"></param>
+        /// <param name="quaternion"></param>
         /// <returns></returns>
-        Task<TController> CreateViewAsync<TView, TModel, TController>(string abName, E_UILayer layer, string panelName)
+        Task<TController> CreateViewAsync<TView, TModel, TController>(string abName, E_UILayer layer, string panelName, Vector2 pos = default, Quaternion quaternion = default)
             where TView : UIBehaviourBase, IuiView where TModel : IuiModel, new() where TController : class, IuiController, new();
 
         /// <summary>

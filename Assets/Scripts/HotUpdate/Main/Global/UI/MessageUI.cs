@@ -1,6 +1,6 @@
-using Core.Mono;
-using Core.Pool;
+using Core.Loader.Object;
 using Core.Service;
+using Core.Time;
 using Core.UI;
 using TMPro;
 using UnityEngine;
@@ -8,50 +8,27 @@ using UnityEngine;
 namespace HotUpdate.Main.Global.UI
 {
     /// <summary>
-    /// ��ϢUI
+    /// 消息UI
     /// </summary>
     public class MessageUI : UIBehaviourBase
     {
         [Inject] private TextMeshProUGUI txtMsg;
-
-        // ����ʱ��
+        // 显示时间
         [SerializeField] private float duration = 2.5f;
 
-        // ��ǰʱ��
-        private float currentDuration;
-
-        protected override void OnEnable()
-        {
-            currentDuration = 0;
-            ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpdate);
-        }
-
         /// <summary>
-        /// ��ʼ����Ϣ
+        /// 初始化消息
         /// </summary>
         /// <param name="msg"></param>
         public void InitMessage(string msg)
         {
             txtMsg.text = msg;
+            ServiceLocator.Get<ITimerManager>().CreateTimer(false, (int)(duration * 1000), CollectObj);
         }
 
-        private void OnUpdate()
+        private void CollectObj()
         {
-            if (!gameObject.activeSelf)
-            {
-                return;
-            }
-
-            currentDuration += Time.deltaTime;
-            if (currentDuration >= duration)
-            {
-                ServiceLocator.Get<IPoolManager>().PushObj(gameObject);
-            }
-        }
-
-        protected override void OnDisable()
-        {
-            ServiceLocator.Get<IMonoAdapter>().RemoveUpdateListener(OnUpdate);
+            ServiceLocator.Get<IPrefabLoader>().CollectAsset(this.gameObject);
         }
     }
 }

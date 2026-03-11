@@ -12,7 +12,9 @@ using HotUpdate.Core.Main;
 using HotUpdate.Core.Manager;
 using HotUpdate.Core.Module;
 using HotUpdate.Core.Scene;
+using HotUpdate.Main.Global.UI;
 using HotUpdate.Main.UI;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace HotUpdate.Main
@@ -46,8 +48,14 @@ namespace HotUpdate.Main
                 await SceneGeneratorHelper.GetSceneGenerator().InitMainScene();
                 // 创建玩家对象（参数为玩家配置ID，对应玩家基础配置表）
                 await ServiceLocator.Get<IPlayerManager>().CreatePlayer(1001);
+                // 初始化全局消息界面
+                await ServiceLocator.Get<IUIManager>()
+                    .CreateViewAsync<GlobalMessageView, GlobalMessageModel, GlobalMessageController>(AbKeyCollection.Ui,
+                        E_UILayer.Bot, ResKeyCollection.GlobalMessageView, new Vector2(0, 299));
                 // 初始化主界面
-                await ServiceLocator.Get<IUIManager>().CreateViewAsync<MainView, MainModel, MainController>(AbKeyCollection.Ui, E_UILayer.Mid, ResKeyCollection.MainView);
+                await ServiceLocator.Get<IUIManager>()
+                    .CreateViewAsync<MainView, MainModel, MainController>(AbKeyCollection.Ui, 
+                        E_UILayer.Mid, ResKeyCollection.MainView);
             }
             catch (Exception e)
             {

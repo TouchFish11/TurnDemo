@@ -20,7 +20,7 @@ namespace Core.Log
     /// </summary>
     public class LogManager : SingletonBase<LogManager>, ILogManager
     {
-        public override int Priority => -1;
+        public override int Priority => 0;
         // 日志队列
         private readonly ConcurrentQueue<string> _logs = new();
         // 日志线程
@@ -31,9 +31,6 @@ namespace Core.Log
         private static ulong Id;
         // 日志字符串构建器
         private readonly StringBuilder sb = new();
-
-        private int priority;
-
         // 日志保存路径
         private static string LogSavePath;
         // 写入日志最大间隔时间

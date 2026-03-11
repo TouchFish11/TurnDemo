@@ -2,14 +2,17 @@
   "keyToValueMap": {
     "default.assetbundle": {
       "name": "default.assetbundle",
-      "size": 24180183,
-      "hash": "0c108b49b4263fd7659304d5c2118706165b83e2748fa9cd980684fb69b58f4f",
-      "dependencies": []
+      "size": 10511407,
+      "hash": "6710ce6b4f07b8cea7bad2a5a2ee0809837f3035cb6352a452dee12086e2e53e",
+      "dependencies": [
+        "fonts",
+        "tmp_asset"
+      ]
     },
     "hotupdate.assetbundle": {
       "name": "hotupdate.assetbundle",
-      "size": 289603,
-      "hash": "92d78f87065393c554ffc1e7ed975cf64ffb5eae8569c82fb3a27e9269577e2d",
+      "size": 288628,
+      "hash": "7467424912e5329e69201eac0ae5c8cf089286bb77e7fe2acdfd866a69ede0ce",
       "dependencies": []
     }
   }

@@ -16,6 +16,7 @@ namespace HotUpdate.Battle.Skill.Component
     [ComponentId(typeof(PlayerSkillComponent))]
     public class PlayerSkillComponent : SkillComponent
     {
+        public bool IsTrigger { get; set; }
         public bool IsRelease { get; set; }
         
         public override void BattleInit(IBattleEntityObject battleEntity)

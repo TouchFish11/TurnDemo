@@ -146,7 +146,7 @@ GameObject:
   - component: {fileID: 7777213546654547632}
   - component: {fileID: 5010941159868613168}
   - component: {fileID: 727934520550215131}
-  - component: {fileID: -5986420277786676881}
+  - component: {fileID: 5047086881202322680}
   m_Layer: 5
   m_Name: MessageUI
   m_TagString: Untagged
@@ -238,7 +238,7 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &-5986420277786676881
+--- !u!114 &5047086881202322680
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

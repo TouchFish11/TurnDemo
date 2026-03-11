@@ -10,6 +10,7 @@ using HotUpdate.Battle.Event.General;
 using HotUpdate.Battle.Event.UI;
 using HotUpdate.Battle.Object;
 using HotUpdate.Battle.Property;
+using HotUpdate.Battle.Skill.Component;
 using HotUpdate.Battle.Status.Enum;
 using HotUpdate.Battle.UI.Status;
 using HotUpdate.Battle.Utility;
@@ -52,7 +53,6 @@ namespace HotUpdate.Battle.UI.Role
         private int ultimateSkillId;    
 
         // 角色相关
-        private bool isTriggerUltimate;  // 是否已触发终极技能（防止重复触发）
         private IBattleContext battleContext;  // 战斗上下文接口
         private IBattleEntityObject battleEntity;  // 战斗实体对象
 
@@ -163,7 +163,7 @@ namespace HotUpdate.Battle.UI.Role
             // 能量满时重置终极技能触发标志
             if (energyChangedEvent.CurrentEnergy == energyChangedEvent.MaxEnergy)
             {
-                isTriggerUltimate = false;
+                battleEntity.GetComponent<PlayerSkillComponent>().IsTrigger = false;
             }
         }
 
@@ -301,11 +301,9 @@ namespace HotUpdate.Battle.UI.Role
             switch (btnName)
             {
                 case "btnSkill":
-                    // 触发终极技能（防止重复触发）
-                    if (!isTriggerUltimate)
+                    if (!battleEntity.GetComponent<PlayerSkillComponent>().IsTrigger)
                     {
                         battleContext.GetEventBus().TriggerEvent(new RoleTriggerUltimateSkillEvent(battleContext, battleEntity, ultimateSkillId));
-                        isTriggerUltimate = true;
                     }
                     break;
             }

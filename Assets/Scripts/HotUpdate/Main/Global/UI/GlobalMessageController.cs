@@ -1,6 +1,6 @@
+using System;
 using Core.GlobalEvent.Events;
-using Core.Loader.Object;
-using Core.Service;
+using Core.Log;
 using Core.UI.MVC;
 using HotUpdate.Common;
 
@@ -34,10 +34,21 @@ namespace HotUpdate.Main.Global.UI
             ShowMessage(globalMessageEvent.Message);
         }
 
+        /// <summary>
+        /// 显示消息
+        /// </summary>
+        /// <param name="msg"></param>
         private async void ShowMessage(string msg)
         {
-            var messageUIWrapper = await ServiceLocator.Get<IPrefabLoader>().GetObjectAsync<MessageUI>(AbKeyCollection.Ui, ResKeyCollection.MessageUI, view.MessageContainer);
-            messageUIWrapper.InitMessage(msg);
+            try
+            {
+                var messageUIWrapper = await prefabLoader.GetObjectAsync<MessageUI>(AbKeyCollection.Ui, ResKeyCollection.MessageUI, view.MessageContainer);
+                messageUIWrapper.InitMessage(msg);
+            }
+            catch (Exception e)
+            {
+                LogManager.LogError($"{nameof(GlobalMessageController)}.{nameof(ShowMessage)}：{e.Message}，{e.StackTrace}");
+            }
         }
         
         protected override Task OnHide()

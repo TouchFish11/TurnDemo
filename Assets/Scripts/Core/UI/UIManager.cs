@@ -43,7 +43,6 @@ namespace Core.UI
 
         public async Task InitUIManagerAsync(string defaultAbName, string canvasName, string uiCameraName)
         {
-#if EDITOR_TEST_AB || !UNITY_EDITOR
             // 创建画布实例
             Canvas = await ServiceLocator.Get<IPrefabLoader>().GetObjectAsync<Canvas>(defaultAbName, canvasName, null);
             Object.DontDestroyOnLoad(Canvas.gameObject);
@@ -59,32 +58,6 @@ namespace Core.UI
             Object.DontDestroyOnLoad(UICamera.gameObject);
             // 设置UI摄像机
             Canvas.worldCamera = UICamera;
-#else
-            //加载画布资源
-            var canvasObj = EditorResManager.Instance.LoadEditorAsset<GameObject>(ResKeyCollection.Canvas);
-            //实例化画布对象
-            var canvasInstance = Object.Instantiate(canvasObj);
-            //记录画布对象
-            Canvas = canvasInstance.GetComponent<Canvas>();
-            //过场景不移除
-            Object.DontDestroyOnLoad(canvasInstance);
-            //获取对应层级对象位置
-            _topLayer = Canvas.transform.Find("Top");
-            _midLayer = Canvas.transform.Find("Mid");
-            _botLayer = Canvas.transform.Find("Bot");
-            _systemLayer = Canvas.transform.Find("System");
-            //加载UI摄像机资源
-            var uiCameraObj = EditorResManager.Instance.LoadEditorAsset<GameObject>(ResKeyCollection.UICamera);
-            //实例化摄像机对象
-            var uiCameraInstance = Object.Instantiate(uiCameraObj);
-            //记录UI摄像机
-            UICamera = uiCameraInstance.GetComponent<Camera>();
-            //过场景不移除
-            Object.DontDestroyOnLoad(uiCameraInstance);
-            //设置UI摄像机
-            Canvas.worldCamera = UICamera;
-            await Task.CompletedTask;
-#endif
         }
         
         public Transform GetLayer(E_UILayer layer)
@@ -99,12 +72,11 @@ namespace Core.UI
             };
         }
         
-        public async Task<TController> CreateViewAsync<TView, TModel, TController>(string abName, E_UILayer layer, string panelName)
+        public async Task<TController> CreateViewAsync<TView, TModel, TController>(string abName, E_UILayer layer, string panelName, Vector2 pos = default, Quaternion quaternion = default)
             where TView : UIBehaviourBase, IuiView where TModel : IuiModel, new() where TController : class, IuiController, new()
         {
-#if EDITOR_TEST_AB || !UNITY_EDITOR
             // 获取面板
-            var view = await ServiceLocator.Get<IPrefabLoader>().GetObjectAsync<TView>(abName, panelName, GetLayer(layer));
+            var view = await ServiceLocator.Get<IPrefabLoader>().GetObjectAsync<TView>(abName, panelName, GetLayer(layer), pos, quaternion);
             // 初始化控制器
             var controller = new TController();
             var model = new TModel();
@@ -115,38 +87,6 @@ namespace Core.UI
             // 存储面板信息
             _panels.Add(newInfo);
             return controller;
-#else
-            //自定义存储名称
-            var assetName = $"{typeof(TView).Name}";
-            // 不存在工厂
-            if (!_typeToCtrlFactoryMap.TryGetValue(typeof(TController), out var iFactory))
-            {
-                LogManager.LogWarning($"未初始化{typeof(TController)}控制器工厂");
-                return null;
-            }
-
-            // 存在工厂
-            var factory = iFactory as UIControllerFactory<TView, TModel, TController>;
-            // 获取面板
-            var view = await ObjectBuilder.GetObject<TView>(AbKeyCollection.Ui, assetName, GetLayer(layer));
-            // 调用显示函数
-            view.Show();
-            // 创建数据
-            var model = factory?.CreateModel();
-            // 创建控制器
-            var controller = factory?.CreateController(view, model);
-            // 等待控制器初始化
-            if (controller == null)
-            {
-                return null;
-            }
-            await controller.Init();
-            // 初始化面板信息
-            var newInfo = new PanelInfo<TView, TModel, TController>(view, model, controller);
-            // 存储面板信息
-            _panels.Push(newInfo);
-            return controller;
-#endif
         }
         
         public async void DestroyView(string abName, IuiController controller)

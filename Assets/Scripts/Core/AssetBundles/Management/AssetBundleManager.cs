@@ -151,6 +151,7 @@ namespace Core.AssetBundles.Management
         public void PushUnUseBundle(BundleWrapper bundleWrapper)
         {
             _nameToNonRefWrapperMap.Add(bundleWrapper.BundelName, bundleWrapper);
+            _nameToWrapperMap.Remove(bundleWrapper.BundelName);
         }
 
         /// <summary>

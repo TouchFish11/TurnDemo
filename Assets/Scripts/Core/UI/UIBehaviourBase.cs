@@ -7,6 +7,7 @@ namespace Core.UI
 {
     /// <summary>
     /// UIBehaviour基类
+    /// 对原生UIBehaviour的封装
     /// </summary>
     public abstract class UIBehaviourBase : UIBehaviour, IUiBehaviour
     {

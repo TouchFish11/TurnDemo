@@ -108,6 +108,7 @@ namespace HotUpdate.Battle.Object
             // 若是终结技，则重置标识
             if (skillData.Skill.SkillInfo.f_SkillType == (byte)E_SkillType.UltimateSkill)
             {
+                skillComponent.IsTrigger = true;
                 skillComponent.IsRelease = false;
             }
             

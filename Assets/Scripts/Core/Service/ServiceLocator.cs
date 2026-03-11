@@ -52,6 +52,7 @@ namespace Core.Service
             // Mono适配器
             Register<IMonoAdapter>(MonoAdapter.Instance);
             
+            Register<ILogManager>(LogManager.Instance);
             Register<IMemoryMonitor>(MemoryMonitor.Instance);
             Register<IUWRManager>(UWRManager.Instance);
             Register<IPoolManager>(PoolManager.Instance);

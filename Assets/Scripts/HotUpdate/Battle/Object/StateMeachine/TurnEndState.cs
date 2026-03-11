@@ -17,7 +17,6 @@ namespace HotUpdate.Battle.Object.StateMeachine
         {
             // 触发回合结束事件（供外部监听）
             PlayerObject.Context.GetEventBus().TriggerEvent(new TurnEndEvent(PlayerObject.Context, PlayerObject));
-            Exit();
         }
         
         public override void Exit()

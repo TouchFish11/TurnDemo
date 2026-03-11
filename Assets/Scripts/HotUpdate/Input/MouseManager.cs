@@ -120,13 +120,13 @@ namespace HotUpdate.Input
 
         /// <summary>
         /// 校验请求来源是否允许显示鼠标
-        /// 过滤掉MainController来源的请求（禁止该模块请求显示鼠标）
+        /// 过滤掉MainController、GlobalMessageController来源的请求
         /// </summary>
         /// <param name="source">请求来源标识</param>
         /// <returns>true=允许显示，false=禁止显示</returns>
         private static bool CanVisible(string source)
         {
-            return source != "HotUpdate.Main.UI.MainController";
+            return source != "HotUpdate.Main.UI.MainController" && source != "HotUpdate.Main.Global.UI.GlobalMessageController";
         }
         
         public bool Visible => Cursor.visible;

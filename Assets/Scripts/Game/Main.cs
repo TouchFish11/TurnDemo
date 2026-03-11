@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Core.AssetBundles.Management;
 using Core.HotUpdate;
 using Core.Log;
@@ -29,24 +30,23 @@ namespace Game
                 InitSettings();
                 // 注册框架核心服务
                 await ServiceLocator.RegisterServices();
-                // ------------------
-                
                 // 初始化指定AB包
                 await ServiceLocator.Get<IAssetBundleManager>().InitSpecifyAsync(DefaultAbNames);
                 var hotUpdateManager = ServiceLocator.Get<IHotUpdateManager>();
                 // 加载指定程序集
                 await hotUpdateManager.LoadAssembliesAsync(DefaultAbNames[1], DefaultAssemblyNames);
-                
                 var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(DefaultAbNames[0]);
                 var entry = assetBundle.LoadAsset<GameObject>("HotUpdateEntry");
                 Instantiate(entry);
             }
             catch (Exception e)
             {
+                var logPath = Path.Combine(Application.persistentDataPath, "Game.Main_Start_Exception_log.txt");
+                await File.WriteAllTextAsync(logPath, $"{nameof(Main)}.{nameof(Start)}: {e.Message}，{e.StackTrace}");
                 LogManager.LogError($"{nameof(Main)}.{nameof(Start)}: {e.Message}，{e.StackTrace}");
             }
         }
-        
+                                          
         /// <summary>
         /// 初始化设置
         /// </summary>
