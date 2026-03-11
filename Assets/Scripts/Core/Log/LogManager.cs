@@ -66,7 +66,7 @@ namespace Core.Log
         /// <param name="msgWarning">������־</param>
         public static void LogWarning(object msgWarning)
         {
-            Instance.GenerateLog(msgWarning.ToString(), GetStackTrace(), LogType.Warning);
+            Instance.GenerateLog(msgWarning.ToString(), GetStackTrace(2), LogType.Warning);
 #if UNITY_EDITOR
             UnityEngine.Debug.LogWarning(msgWarning);
 #endif
@@ -78,7 +78,7 @@ namespace Core.Log
         /// <param name="msgError">������־</param>
         public static void LogError(object msgError)
         {
-            Instance.GenerateLog(msgError.ToString(), GetStackTrace(), LogType.Error);
+            Instance.GenerateLog(msgError.ToString(), GetStackTrace(2), LogType.Error);
 #if UNITY_EDITOR
             UnityEngine.Debug.LogError(msgError);
 #endif
@@ -90,7 +90,7 @@ namespace Core.Log
         /// <param name="exception">�쳣��־</param>
         public static void LogException(Exception exception)
         {
-            Instance.GenerateLog(exception.ToString(), GetStackTrace(), LogType.Exception);
+            Instance.GenerateLog(exception.ToString(), GetStackTrace(2), LogType.Exception);
 #if UNITY_EDITOR
             UnityEngine.Debug.LogException(exception);
 #endif

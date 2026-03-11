@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hotUpdateLoadPath: 
   filterLevel: 255
-  writeLogMaxIntervalTime: 30
+  writeLogMaxIntervalTime: 5
   isOpenLayout: 1
   uploadServerIp: 
   resServerIp: http://192.168.0.28:8080/Http_Server/

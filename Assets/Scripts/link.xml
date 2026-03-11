@@ -10,7 +10,9 @@
     <assembly fullname="HotUpdate.Config" preserve="all"/>
     <assembly fullname="HotUpdate.Core" preserve="all"/>
     <assembly fullname="HotUpdate.Dialogue" preserve="all"/>
-    <assembly fullname="HotUpdate.Entry" preserve="all"/>
+    <assembly fullname="HotUpdate.Entry">
+        <type fullname="HotUpdate.Entry.HotUpdateEntry" preserve="all" />
+    </assembly>
     <assembly fullname="HotUpdate.Input" preserve="all"/>
     <assembly fullname="HotUpdate.Main" preserve="all"/>
     <assembly fullname="HotUpdate.Task" preserve="all"/>

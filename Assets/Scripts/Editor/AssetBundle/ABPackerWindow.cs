@@ -27,7 +27,7 @@ namespace Editor.AssetBundle
         private string _buildLog = "";
 
         // --- 配置参数 ---
-        private BuildTarget _targetPlatform = BuildTarget.StandaloneWindows; // 默认平台
+        private BuildTarget _targetPlatform = BuildTarget.StandaloneWindows64; // 默认平台
         private BuildAssetBundleOptions _buildOptions = BuildAssetBundleOptions.None; // 构建选项
         private string _assemblyhotUpdateStrings;  // 热更新程序集名称列表
         private string _outputPath; // 输出路径

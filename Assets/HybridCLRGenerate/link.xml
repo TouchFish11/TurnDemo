@@ -7,18 +7,19 @@
     <type fullname="Core.AssetBundles.Update.Core.UpdateResult" preserve="all" />
     <type fullname="Core.AssetBundles.Update.Core.UpdateResult/EUpdateError" preserve="all" />
     <type fullname="Core.AssetBundles.Update.Enum.EUpdatePhase" preserve="all" />
-    <type fullname="Core.Collection.CollectionUtil" preserve="all" />
     <type fullname="Core.Collection.Collection`2" preserve="all" />
     <type fullname="Core.Collection.Generic.UniList`1" preserve="all" />
     <type fullname="Core.Collection.ICollection" preserve="all" />
+    <type fullname="Core.Collection.ListUtility" preserve="all" />
     <type fullname="Core.Components.ComponentIdAttribute" preserve="all" />
     <type fullname="Core.Components.EntityProperty" preserve="all" />
     <type fullname="Core.Components.IComponent" preserve="all" />
     <type fullname="Core.Components.IEntityObject" preserve="all" />
-    <type fullname="Core.Global.GameSettingEvent`1" preserve="all" />
-    <type fullname="Core.Global.GameSettingManager" preserve="all" />
+    <type fullname="Core.Global.GameSetting" preserve="all" />
+    <type fullname="Core.Global.IGameSettingManager" preserve="all" />
     <type fullname="Core.GlobalEvent.Event" preserve="all" />
     <type fullname="Core.GlobalEvent.Events.CloseViewEvent" preserve="all" />
+    <type fullname="Core.GlobalEvent.Events.GameSettingUpdateEvent" preserve="all" />
     <type fullname="Core.GlobalEvent.Events.GlobalMessageEvent" preserve="all" />
     <type fullname="Core.GlobalEvent.Events.MouseVisibleChangedEvent" preserve="all" />
     <type fullname="Core.GlobalEvent.Events.OpenViewEvent" preserve="all" />
@@ -31,7 +32,9 @@
     <type fullname="Core.Loader.Object.IPrefabLoader" preserve="all" />
     <type fullname="Core.Loader.Sprite.ISpriteLoader" preserve="all" />
     <type fullname="Core.Log.LogManager" preserve="all" />
+    <type fullname="Core.Mono.EngineUtility" preserve="all" />
     <type fullname="Core.Mono.IMonoAdapter" preserve="all" />
+    <type fullname="Core.Mono.MonoFunction.IDestroyable" preserve="all" />
     <type fullname="Core.Music.MusicData" preserve="all" />
     <type fullname="Core.Pool.IPoolData" preserve="all" />
     <type fullname="Core.Pool.IPoolManager" preserve="all" />
@@ -49,10 +52,7 @@
     <type fullname="Core.Serialize.Json.E_JsonType" preserve="all" />
     <type fullname="Core.Serialize.Json.IJsonManager" preserve="all" />
     <type fullname="Core.Service.ServiceLocator" preserve="all" />
-    <type fullname="Core.Singleton.IInitializable" preserve="all" />
-    <type fullname="Core.Singleton.SingletonAutoMono`1" preserve="all" />
     <type fullname="Core.Singleton.SingletonBase`1" preserve="all" />
-    <type fullname="Core.Singleton.SingletonMono`1" preserve="all" />
     <type fullname="Core.Tasks.AssetBundleRequestTask`1" preserve="all" />
     <type fullname="Core.Tasks.Awaiter.AssetBundleRequestAwaiter`1" preserve="all" />
     <type fullname="Core.Tasks.Extensions.TaskAwaiterExtensions" preserve="all" />
@@ -251,6 +251,7 @@
     <type fullname="System.ParamArrayAttribute" preserve="all" />
     <type fullname="System.Predicate`1" preserve="all" />
     <type fullname="System.Reflection.Assembly" preserve="all" />
+    <type fullname="System.Reflection.BindingFlags" preserve="all" />
     <type fullname="System.Reflection.CustomAttributeExtensions" preserve="all" />
     <type fullname="System.Reflection.MemberInfo" preserve="all" />
     <type fullname="System.Reflection.MethodBase" preserve="all" />

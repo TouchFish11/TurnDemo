@@ -24,9 +24,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// Core.Collection.Collection<int,object>
 	// Core.Collection.Collection<object,object>
 	// Core.Collection.Generic.UniList<object>
-	// Core.Global.GameSettingEvent<byte>
-	// Core.Singleton.SingletonAutoMono<object>
-	// Core.Singleton.SingletonMono<object>
 	// Core.Tasks.AssetBundleRequestTask.<>c__DisplayClass9_0<object>
 	// Core.Tasks.AssetBundleRequestTask<object>
 	// Core.Tasks.Awaiter.AssetBundleRequestAwaiter<object>
@@ -252,8 +249,8 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 
 	public void RefMethods()
 	{
-		// System.Void Core.Collection.CollectionUtil.CollectUniList<object>(Core.Collection.Generic.UniList<object>)
-		// Core.Collection.Generic.UniList<object> Core.Collection.CollectionUtil.GetUniList<object>()
+		// System.Void Core.Collection.ListUtility.CollectUniList<object>(Core.Collection.Generic.UniList<object>)
+		// Core.Collection.Generic.UniList<object> Core.Collection.ListUtility.GetUniList<object>()
 		// object Core.Components.IEntityObject.AddComponent<object>()
 		// object Core.Components.IEntityObject.GetComponent<object>()
 		// object Core.Components.IEntityObject.GetComponentInChildren<object>()
@@ -269,7 +266,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// System.Threading.Tasks.Task<object> Core.Serialize.Json.IJsonManager.FromJsonAsync<object>(string,Core.Serialize.Json.E_JsonType,Newtonsoft.Json.JsonSerializerSettings)
 		// Core.Tasks.AssetBundleRequestTask<object> Core.Tasks.Extensions.TaskAwaiterExtensions.ToTask<object>(UnityEngine.AssetBundleRequest,System.Threading.CancellationToken)
 		// Core.Tasks.AssetBundleRequestTask<object> Core.Tasks.TaskFactory.Create<object>(UnityEngine.AssetBundleRequest,System.Threading.CancellationToken)
-		// System.Threading.Tasks.Task<object> Core.UI.IUIManager.CreateViewAsync<object,object,object>(string,Core.UI.E_UILayer,string)
+		// System.Threading.Tasks.Task<object> Core.UI.IUIManager.CreateViewAsync<object,object,object>(string,Core.UI.E_UILayer,string,UnityEngine.Vector2,UnityEngine.Quaternion)
 		// object Core.UI.IUIManager.GetController<object>()
 		// object Core.UI.UIComponentBinder.GetControl<object>(string)
 		// System.Collections.IEnumerator Core.Utility.TaskUtility.WaitForTask<object>(System.Threading.Tasks.Task<object>,System.Action<object>)

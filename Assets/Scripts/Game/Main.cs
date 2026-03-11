@@ -15,7 +15,7 @@ namespace Game
     public class Main : SingletonMono<Main>
     {
         // 默认包名称数组
-        private readonly string[] DefaultAbNames = { "default", "hotupdate" };
+        private readonly string[] DefaultAbNames = { "default", "fonts", "tmp_asset", "hotupdate" };
         // 默认程序集名称数组，按依赖排序
         private readonly string[] DefaultAssemblyNames = { "HotUpdate.Config.dll", "HotUpdate.Common.dll", "HotUpdate.Core.dll", "HotUpdate.Entry.dll" };
         
@@ -41,8 +41,8 @@ namespace Game
             }
             catch (Exception e)
             {
-                var logPath = Path.Combine(Application.persistentDataPath, "Game.Main_Start_Exception_log.txt");
-                await File.WriteAllTextAsync(logPath, $"{nameof(Main)}.{nameof(Start)}: {e.Message}，{e.StackTrace}");
+                // var logPath = Path.Combine(Application.persistentDataPath, "Game.Main_Start_Exception_log.txt");
+                // await File.WriteAllTextAsync(logPath, $"{nameof(Main)}.{nameof(Start)}: {e.Message}，{e.StackTrace}");
                 LogManager.LogError($"{nameof(Main)}.{nameof(Start)}: {e.Message}，{e.StackTrace}");
             }
         }
