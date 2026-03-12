@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Core.GlobalEvent;
 using Core.Loader.Object;
+using Core.Log;
 using Core.Mono;
 using Core.Serialize.Binary;
 using Core.Service;
@@ -21,8 +22,10 @@ namespace HotUpdate.Main
     /// <summary>
     /// 热更主模块
     /// </summary>
-    public class MainModule : IModule
+    public class MainModule : IMainModule
     {
+        public int Priority => 0;
+        
         public Task InitModuleAsync()
         {
             // 注册浮动文本管理器
@@ -45,6 +48,7 @@ namespace HotUpdate.Main
             ServiceLocator.Register<IMainUiHelper>(new MainUiHelper(ServiceLocator.Get<IUIManager>()));
             // 初始化场景生成器
             SceneGeneratorHelper.Init(new SceneGenerator());
+            LogManager.Log($"{nameof(MainModule)}.{nameof(InitModuleAsync)}：初始化完成");
             return Task.CompletedTask;
         }
     }

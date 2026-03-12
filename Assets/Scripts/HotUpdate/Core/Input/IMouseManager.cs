@@ -4,7 +4,7 @@ using UnityEngine;
 namespace HotUpdate.Core.Input
 {
     /// <summary>
-    /// ��������
+    /// 鼠标管理器接口
     /// </summary>
     public interface IMouseManager
     {

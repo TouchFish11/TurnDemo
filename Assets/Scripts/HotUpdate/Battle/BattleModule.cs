@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Core.Log;
 using Core.Pool;
 using Core.Scene;
 using Core.Service;
@@ -19,6 +20,8 @@ namespace HotUpdate.Battle
     /// </summary>
     public class BattleModule : IBattleModule
     {
+        public int Priority => 1;
+        
         public Task InitModuleAsync()
         {
             ServiceLocator.Register<IBattleManager>(new BattleManager(
@@ -28,6 +31,7 @@ namespace HotUpdate.Battle
                 ServiceLocator.Get<IPoolManager>()));
             // 初始化UIHelper
             ServiceLocator.Register<IBattleUiHelper>(new BattleUiHelper(ServiceLocator.Get<IUIManager>()));
+            LogManager.Log($"{nameof(BattleModule)}.{nameof(InitModuleAsync)}：初始化完成");
             return Task.CompletedTask;
         }
         

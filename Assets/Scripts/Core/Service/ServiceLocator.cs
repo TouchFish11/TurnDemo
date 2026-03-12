@@ -139,7 +139,7 @@ namespace Core.Service
             {
                 return;
             }
-            LogManager.LogError($"注册类型，{type.Name}已存在");
+            LogManager.LogError($"{nameof(ServiceLocator)}.{nameof(Register)}：注册类型{type.Name}已存在");
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace Core.Service
                 return service as T;
             }
             
-            LogManager.LogError($"该类型不存在：{typeof(T)}");
+            LogManager.LogError($"{nameof(ServiceLocator)}.{nameof(Get)}：该类型{typeof(T)}不存在");
             return null;
         }
 

@@ -2,8 +2,8 @@
   "keyToValueMap": {
     "default.assetbundle": {
       "name": "default.assetbundle",
-      "size": 10553578,
-      "hash": "ac526927611b49f1635aac413da6a4682c46790497fb4d1d71aec2288f0a9ecb",
+      "size": 10511392,
+      "hash": "1ae82fef3b237c6b939691d654598b96323064229d0374088e2ad9c48a5bbf29",
       "dependencies": [
         "fonts",
         "tmp_asset"

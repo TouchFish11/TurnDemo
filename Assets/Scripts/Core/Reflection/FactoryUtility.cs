@@ -114,7 +114,6 @@ namespace Core.Reflection
                     if (!dic.TryAdd(type.ToIdentifier(), factory))
                     {
                         LogManager.LogError($"{nameof(FactoryUtility)}.{nameof(ScanAllFactory)}：重复添加工厂类型：{type}");
-                        // FactoryUtility.ScanAllFactory：重复添加工厂类型：HotUpdate.Core.Component.ComponentFactory???
                     }
                 }
             }

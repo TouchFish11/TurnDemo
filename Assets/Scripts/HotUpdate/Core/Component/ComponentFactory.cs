@@ -185,6 +185,7 @@ namespace HotUpdate.Core.Component
                         if (entityObject.GameObject.GetComponent(requireAttr.m_Type0) is IComponent dependentComponent)
                         {
                             ic = dependentComponent;
+                            LogManager.Log($"{ic.GetType()}的依赖组件：{dependentComponent.GetType()}");
                             continue;
                         }
                     }

@@ -59,7 +59,7 @@ namespace HotUpdate.Main
             }
             catch (Exception e)
             {
-                LogManager.LogError($"{nameof(Main)}.{nameof(Init)}: {e.Message}，{e.StackTrace}");
+                LogManager.LogError($"{nameof(Main)}.{nameof(Init)}: {e.Message}");
             }
         }
     }

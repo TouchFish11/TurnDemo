@@ -65,11 +65,11 @@ namespace Core.Scene
                 _monoAdapter.StartCoroutine(UpdateProgress_Cor(ao, onLoadProgress));
                 // 等待场景加载结束
                 await TaskUtility.WaitUntil(() => ao != null && ao.isDone);
+                LogManager.Log($"{nameof(SceneManager)}.{nameof(LoadSceneAsync)}：场景({scenePath})加载结束");
             }
             catch (Exception exception)
             {
-                LogManager.LogError($"{typeof(SceneManager).FullName}.{nameof(LoadSceneAsync)}：{exception.Message}");
-                LogManager.LogError($"场景资源包加载失败：{scenePath}");
+                LogManager.LogError($"{nameof(SceneManager)}.{nameof(LoadSceneAsync)}：{exception.Message}");
             }
         }
 

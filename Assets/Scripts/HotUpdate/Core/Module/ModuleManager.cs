@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Core.Collection;
+using Core.Extensions;
 using Core.HotUpdate;
 
 namespace HotUpdate.Core.Module
@@ -47,8 +48,6 @@ namespace HotUpdate.Core.Module
                         
                     // 反射创建模块对象
                     var module = (IModule)Activator.CreateInstance(type);
-                    // 异步初始化模块
-                    await module.InitModuleAsync();
                     // 缓存模块
                     foreach (var interfaceType in uniList.List)
                     {
@@ -60,7 +59,29 @@ namespace HotUpdate.Core.Module
                 }
             }
             
+            ListUtility.CollectUniList(uniList);
             
+            var uniList2 = ListUtility.GetUniList<IModule>();
+            // 字典values转list
+            uniList2.AddRange(_modules.Values.ToArray(module => module));
+            // 按优先级排序
+            uniList2.Sort((m1, m2) =>
+            {
+                if (m1.Priority < m2.Priority)
+                {
+                    return -1;
+                }
+
+                return m1.Priority > m2.Priority ? 1 : 0;
+            });
+            
+            // 异步初始化模块
+            foreach (var module in uniList2.List)
+            {
+                await module.InitModuleAsync();
+            }
+            
+            ListUtility.CollectUniList(uniList2);
         }
 
         public T GetModule<T>() where T : class, IModule

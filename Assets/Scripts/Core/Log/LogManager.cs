@@ -54,7 +54,7 @@ namespace Core.Log
         /// <param name="msg"></param>
         public static void Log(object msg)
         {
-            Instance.GenerateLog(msg.ToString(), GetStackTrace(2), LogType.Log);
+            Instance.GenerateLog(msg.ToString(), GetStackTrace(2), ELogLevel.Log);
 #if UNITY_EDITOR
             UnityEngine.Debug.Log(msg);
 #endif
@@ -66,7 +66,7 @@ namespace Core.Log
         /// <param name="msgWarning">������־</param>
         public static void LogWarning(object msgWarning)
         {
-            Instance.GenerateLog(msgWarning.ToString(), GetStackTrace(2), LogType.Warning);
+            Instance.GenerateLog(msgWarning.ToString(), GetStackTrace(2), ELogLevel.Warning);
 #if UNITY_EDITOR
             UnityEngine.Debug.LogWarning(msgWarning);
 #endif
@@ -78,7 +78,7 @@ namespace Core.Log
         /// <param name="msgError">������־</param>
         public static void LogError(object msgError)
         {
-            Instance.GenerateLog(msgError.ToString(), GetStackTrace(2), LogType.Error);
+            Instance.GenerateLog(msgError.ToString(), GetStackTrace(2), ELogLevel.Error);
 #if UNITY_EDITOR
             UnityEngine.Debug.LogError(msgError);
 #endif
@@ -90,7 +90,7 @@ namespace Core.Log
         /// <param name="exception">�쳣��־</param>
         public static void LogException(Exception exception)
         {
-            Instance.GenerateLog(exception.ToString(), GetStackTrace(2), LogType.Exception);
+            Instance.GenerateLog(exception.ToString(), GetStackTrace(2), ELogLevel.Exception);
 #if UNITY_EDITOR
             UnityEngine.Debug.LogException(exception);
 #endif
@@ -146,7 +146,7 @@ namespace Core.Log
         /// <param name="condition"></param>
         /// <param name="stackTrace"></param>
         /// <param name="type"></param>
-        private void GenerateLog(string condition, string stackTrace, LogType type)
+        private void GenerateLog(string condition, string stackTrace, ELogLevel type)
         {
             // 不启用日志
             if (!EnableLog)
@@ -162,7 +162,11 @@ namespace Core.Log
             
             sb.Clear();
             // 拼接日志信息
-            sb.Append(++Id + Environment.NewLine).AppendLine($"[{type}]:{condition}").Append($"stackTrace:{stackTrace}\n");
+            sb.Append($"{++Id}\t").Append($"[{type}]:{condition}\n");
+            if (type is ELogLevel.Error or ELogLevel.Exception)
+            {
+                sb.Append($"stackTrace:{stackTrace}\n");
+            }
             // 放入日志队列
             _logs.Enqueue(sb.ToString());
         }

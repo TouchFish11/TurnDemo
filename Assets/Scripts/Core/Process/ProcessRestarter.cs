@@ -25,40 +25,45 @@ namespace Core.Process
 
             try
             {
-                var exePath = Process.GetCurrentProcess().MainModule?.FileName;
+                Process.GetCurrentProcess().Refresh();
+                foreach (ProcessModule module in Process.GetCurrentProcess().Modules)
+                {
+                    LogManager.Log($"{nameof(ProcessRestarter)}.{nameof(RestartProcess)}：模块文件：{module.FileName}，模块名称：{module.ModuleName}");
+                }
+                
+                var processModule = Process.GetCurrentProcess().MainModule;
+                if (processModule == null)
+                { 
+                    throw new Exception($"{nameof(ProcessRestarter)}.{nameof(RestartProcess)}：processModule为null");
+                }
+                
+                var exePath = processModule.FileName;
                 if (string.IsNullOrEmpty(exePath))
                 {
-                    LogManager.LogError($"{nameof(ProcessRestarter)}.{nameof(RestartProcess)}：exePath路径为null");
-                    return;
+                    throw new Exception($"{nameof(ProcessRestarter)}.{nameof(RestartProcess)}：exePath路径为null");
                 }
+                LogManager.Log($"{nameof(ProcessRestarter)}.{nameof(RestartProcess)}：exePath路径为:{exePath}");
 
                 // 防止无限重启
                 if (Environment.CommandLine.Contains("--noRestart"))
                 {
-                    LogManager.LogError($"{nameof(ProcessRestarter)}.{nameof(RestartProcess)}：CommandLine包含noRestart");
-                    return;
+                    throw new Exception($"{nameof(ProcessRestarter)}.{nameof(RestartProcess)}：CommandLine包含noRestart");
                 }
-
-                // 构造新参数
-                var originalArgs = Environment.CommandLine;
-                var argsWithoutExe = originalArgs
-                    .Substring(originalArgs.IndexOf('"', 1) + 1) // 跳过第一个引号包围的 exe 路径
-                    .Trim();
-                var newArgs = $"{argsWithoutExe} --noRestart";
-
+                LogManager.Log($"{nameof(ProcessRestarter)}.{nameof(RestartProcess)}：CommandLine不包含noRestart");
+                
                 var startInfo = new ProcessStartInfo
                 {
                     FileName = exePath,
-                    Arguments = newArgs,
-                    UseShellExecute = true,
-                    CreateNoWindow = false
+                    UseShellExecute = false,
+                    CreateNoWindow = true
                 };
 
                 Process.Start(startInfo);
                 Application.Quit();
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                LogManager.LogError($"{nameof(ProcessRestarter)}.{nameof(RestartProcess)}：{e.Message}，{e.StackTrace}");
                 Application.Quit(); // 至少退出
             }
         }

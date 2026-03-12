@@ -29,7 +29,7 @@ namespace Core.AssetBundles.Update.Enum
         /// <summary>
         /// 检查设备存储
         /// </summary>
-        [StateConfig(Order = 3, IsEnabled = true)]
+        [StateConfig(Order = 3, IsEnabled = false)]
         CheckDeviceStorage,
 
         /// <summary>

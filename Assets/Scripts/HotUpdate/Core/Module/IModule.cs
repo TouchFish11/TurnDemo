@@ -1,5 +1,3 @@
-using Core.Service;
-
 namespace HotUpdate.Core.Module
 {
     using Task = System.Threading.Tasks.Task;
@@ -9,6 +7,12 @@ namespace HotUpdate.Core.Module
     /// </summary>
     public interface IModule
     {
+        /// <summary>
+        /// 初始化优先级
+        /// 数值越小越先初始化
+        /// </summary>
+        int Priority { get; }
+        
         /// <summary>
         /// 异步初始化模块
         /// </summary>

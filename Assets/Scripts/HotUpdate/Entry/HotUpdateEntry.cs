@@ -35,18 +35,17 @@ namespace HotUpdate.Entry
                 {
                     // 更新成功，初始化AB包管理器，加载本地AB包资源
                     await ServiceLocator.Get<IAssetBundleManager>().Init();
-                    LogManager.Log($"初始化AB包管理器，加载本地AB包资源成功");
+                    LogManager.Log($"初始化AB包管理器");
             
                     // 重新初始化UI管理器
-                    await ServiceLocator.Get<IUIManager>().InitUIManagerAsync(
-                        AbKeyCollection.Default, ResKeyCollection.Canvas, ResKeyCollection.UICamera);
+                    await ServiceLocator.Get<IUIManager>().InitUIManagerAsync(AbKeyCollection.Default, ResKeyCollection.Canvas, ResKeyCollection.UICamera);
                     // 初始化场景管理器
                     await ServiceLocator.Get<ISceneManager>().InitAsync(AbKeyCollection.Scene);
                     // 初始化输入系统
                     await ServiceLocator.Get<IInputSystem>().InitInputsystemAsync(AbKeyCollection.Gameconfig);
                     // 加载热更程序集
                     await ServiceLocator.Get<IHotUpdateManager>().LoadAssembliesAsync(AbKeyCollection.Hotupdate);
-                    LogManager.Log($"加载所有热更程序集成功");
+                    LogManager.Log($"Load the hotfix assemblies");
 
                     var assembly = ServiceLocator.Get<IHotUpdateManager>().GetAssembly("HotUpdate.Main");
                     var type = assembly.GetType("HotUpdate.Main.MainProxy");

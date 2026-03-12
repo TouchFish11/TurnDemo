@@ -73,7 +73,12 @@ namespace HotUpdate.Input
                 inputSystem = ServiceLocator.Get<IInputSystem>();
                 // 初始化玩家输入，并注册输入动作触发回调
                 var container = ServiceLocator.Get<IGameManager>().GameDataManager.GetData<IMainDataCollection>().InputActionContainer;
-                inputSystem.InitPlayerInput(EntityObject.GetComponent<PlayerInputComponent>().PlayerInput, container, OnActionTrigger);
+                var playerInputComponent = EntityObject.GetComponent<PlayerInputComponent>();
+                LogManager.Log($"playerInputComponent为null？{!playerInputComponent}，{playerInputComponent}");
+                var playerInput = playerInputComponent.PlayerInput;
+                LogManager.Log($"playerInput为null？{!playerInput}，{playerInput}");
+                inputSystem.InitPlayerInput(playerInput, container, OnActionTrigger);
+                LogManager.Log($"inputSystem初始化完成");
                 EnableInput();
                 // 添加帧更新监听，处理每帧的输入逻辑
                 ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpdate);
@@ -81,7 +86,7 @@ namespace HotUpdate.Input
             catch (Exception e)
             {
                 // 记录初始化异常日志
-                LogManager.LogError($"{nameof(InputComponent)}.{nameof(Init)} error: {e.Message}");
+                LogManager.LogError($"{nameof(InputComponent)}.{nameof(Init)}，{e.Message}");
             }
         }
 
