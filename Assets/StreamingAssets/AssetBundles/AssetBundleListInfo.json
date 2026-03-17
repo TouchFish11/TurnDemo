@@ -4,10 +4,7 @@
       "name": "default.assetbundle",
       "size": 10511392,
       "hash": "1ae82fef3b237c6b939691d654598b96323064229d0374088e2ad9c48a5bbf29",
-      "dependencies": [
-        "fonts",
-        "tmp_asset"
-      ]
+      "dependencies": []
     },
     "fonts.assetbundle": {
       "name": "fonts.assetbundle",
@@ -17,17 +14,15 @@
     },
     "hotupdate.assetbundle": {
       "name": "hotupdate.assetbundle",
-      "size": 288622,
-      "hash": "49b4efe3ab2b540266b356477f812f299f42c6296bf1d8886640651b2fe1dfef",
+      "size": 290267,
+      "hash": "2a8b58c9507b5f662e9a1347397acddd0d16cd736a145fd2951bb7253a2aa825",
       "dependencies": []
     },
     "tmp_asset.assetbundle": {
       "name": "tmp_asset.assetbundle",
       "size": 29561,
       "hash": "014c2762dd19d60ab40c15305669713c373198fbd0078179c2b6663fb2275eda",
-      "dependencies": [
-        "fonts"
-      ]
+      "dependencies": []
     }
   }
 }

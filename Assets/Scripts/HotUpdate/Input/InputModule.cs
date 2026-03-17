@@ -13,18 +13,20 @@ namespace HotUpdate.Input
     /// </summary>
     public class InputModule : IInputModule
     {
-        public int Priority => 0;
+        public int Priority => 1;
         
         public Task InitModuleAsync()
         {
             ServiceLocator.Register<IMouseManager>(new MouseManager(ServiceLocator.Get<IEventCenter>()));
-            LogManager.Log($"{nameof(InputModule)}.{nameof(InitModuleAsync)}：初始化完成");
+            LogManager.Log($"{nameof(InputModule)}.{nameof(InitModuleAsync)}:Input module initialization completed");
             return Task.CompletedTask;
         }
 
         public IInputComponent AddInputComponent(IEntityObject entityObject)
         {
-            return entityObject.AddComponent<InputComponent>();
+            if (entityObject != null) return entityObject.AddComponent<InputComponent>();
+            LogManager.LogError($"{nameof(InputModule)}.{nameof(AddInputComponent)}: entityObject is null)");
+            return null;
         }
     }
 }

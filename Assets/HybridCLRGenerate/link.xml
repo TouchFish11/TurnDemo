@@ -15,6 +15,7 @@
     <type fullname="Core.Components.EntityProperty" preserve="all" />
     <type fullname="Core.Components.IComponent" preserve="all" />
     <type fullname="Core.Components.IEntityObject" preserve="all" />
+    <type fullname="Core.Extensions.DictionaryExtensions" preserve="all" />
     <type fullname="Core.Global.GameSetting" preserve="all" />
     <type fullname="Core.Global.IGameSettingManager" preserve="all" />
     <type fullname="Core.GlobalEvent.Event" preserve="all" />
@@ -199,6 +200,7 @@
     <type fullname="System.Attribute" preserve="all" />
     <type fullname="System.AttributeTargets" preserve="all" />
     <type fullname="System.AttributeUsageAttribute" preserve="all" />
+    <type fullname="System.Boolean" preserve="all" />
     <type fullname="System.Byte" preserve="all" />
     <type fullname="System.CodeDom.Compiler.GeneratedCodeAttribute" preserve="all" />
     <type fullname="System.Collections.Generic.CollectionExtensions" preserve="all" />

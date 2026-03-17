@@ -3,15 +3,15 @@ using Core.Components;
 using Core.GlobalEvent;
 using Core.GlobalEvent.Events;
 using Core.Loader.Object;
+using Core.Log;
 using Core.Service;
-using Core.Singleton;
 using HotUpdate.Common;
 using HotUpdate.Core.Animation;
 using HotUpdate.Core.Camera;
 using HotUpdate.Core.Input;
 using HotUpdate.Core.Main;
 using HotUpdate.Core.Module;
-using HotUpdate.Core.MVC;
+using HotUpdate.Core.UI.MVC;
 using HotUpdate.Main.Global.UI;
 using HotUpdate.Main.Move;
 using UnityEngine;
@@ -59,14 +59,22 @@ namespace HotUpdate.Main.Player
 
             // 添加主玩家核心逻辑组件
             var main = mainObj.AddComponent<MainPlayer>();
+            LogManager.Log($"{nameof(PlayerManager)}.{nameof(CreatePlayer)}：AddComponent<MainPlayer>是否返回null：{!main}");
+            
             // 从资源包加载战士预制体，并挂载到玩家节点下
-            var warrior = await _prefabLoader.GetGameObjectAsync(AbKeyCollection.Prefab, ResKeyCollection.Prefab_Main_Warrior, main.transform);
+            var warriorObj = await _prefabLoader.GetGameObjectAsync(AbKeyCollection.Prefab, ResKeyCollection.Prefab_Main_Warrior, main.transform);
+            LogManager.Log($"战士预制体是否为null：{!warriorObj}，{warriorObj}");
+            
             // 给战士预制体添加战士逻辑组件，并关联到主玩家
-            ServiceLocator.Get<IModuleManager>().GetModule<IBattleModule>().AddWarrior(warrior);
+            var warrior = ServiceLocator.Get<IModuleManager>().GetModule<IBattleModule>().AddWarrior(warriorObj);
+            LogManager.Log($"{nameof(PlayerManager)}.{nameof(CreatePlayer)}：AddWarrior是否返回null：{warrior == null}");
+            
             // 初始化主玩家基础数据（参数1为示例配置ID）
             main.BaseInit(1);
             // 初始化玩家相机
             var camera = await ServiceLocator.Get<IOrbitCameraGeter>().CreateMainCamera();
+            LogManager.Log($"{nameof(PlayerManager)}.{nameof(CreatePlayer)}：CreateMainCamera是否返回null：{camera == null}");
+            
             // 设置跟随对象
             camera.SetTarget(main);
             // 设置相机

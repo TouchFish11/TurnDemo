@@ -9,7 +9,7 @@ using HotUpdate.Activity.Data;
 using HotUpdate.Common;
 using HotUpdate.Core.Activity;
 using HotUpdate.Core.Manager;
-using HotUpdate.Core.MVC;
+using HotUpdate.Core.UI.MVC;
 
 namespace HotUpdate.Activity.UI.Base
 {

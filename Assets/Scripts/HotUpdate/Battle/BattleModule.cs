@@ -20,7 +20,7 @@ namespace HotUpdate.Battle
     /// </summary>
     public class BattleModule : IBattleModule
     {
-        public int Priority => 1;
+        public int Priority => 2;
         
         public Task InitModuleAsync()
         {
@@ -31,7 +31,7 @@ namespace HotUpdate.Battle
                 ServiceLocator.Get<IPoolManager>()));
             // 初始化UIHelper
             ServiceLocator.Register<IBattleUiHelper>(new BattleUiHelper(ServiceLocator.Get<IUIManager>()));
-            LogManager.Log($"{nameof(BattleModule)}.{nameof(InitModuleAsync)}：初始化完成");
+            LogManager.Log($"{nameof(BattleModule)}.{nameof(InitModuleAsync)}:Battle module initialization completed");
             return Task.CompletedTask;
         }
         

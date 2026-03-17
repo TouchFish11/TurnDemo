@@ -25,7 +25,7 @@ namespace HotUpdate.Main.UI.Logic
         
         /// <summary>
         /// 激活主界面
-        /// 作用：设置主界面为显示状态
+        /// 设置主界面为显示状态
         /// </summary>
         private async void Active()
         {
@@ -35,13 +35,13 @@ namespace HotUpdate.Main.UI.Logic
             }
             catch (Exception e)
             {
-                LogManager.LogError($"{nameof(DialogueLogic)}.{nameof(Active)}：{e.Message}，{e.StackTrace}");
+                LogManager.LogError($"{nameof(DialogueLogic)}.{nameof(Active)}：激活主界面错误，{e.Message}");
             }
         }
 
         /// <summary>
         /// 隐藏主界面
-        /// 作用：设置主界面为隐藏状态
+        /// 设置主界面为隐藏状态
         /// </summary>
         private async void InActive()
         {
@@ -51,7 +51,7 @@ namespace HotUpdate.Main.UI.Logic
             }
             catch (Exception e)
             {
-                LogManager.LogError($"{nameof(DialogueLogic)}.{nameof(InActive)}：{e.Message}，{e.StackTrace}");
+                LogManager.LogError($"{nameof(DialogueLogic)}.{nameof(InActive)}：隐藏主界面错误，{e.Message}");
             }
         }
 

@@ -16,15 +16,15 @@ namespace HotUpdate.Activity
     /// </summary>
     public class ActivityModule : IActivityModule
     {
-        public int Priority => 0;
+        public int Priority => 1;
         
         public Task InitModuleAsync()
         {
             // 注册活动数据提供器
             ServiceLocator.Get<IGameManager>().GameDataManager.RegisterProvider(typeof(IActivityDataCollection), new ActivityDataProvider());
-
+            // 注册活动UIhelper
             ServiceLocator.Register<IActivityUiHelper>(new ActivityUiHelper(ServiceLocator.Get<IUIManager>()));
-            LogManager.Log($"{nameof(ActivityModule)}.{nameof(InitModuleAsync)}：初始化完成");
+            LogManager.Log($"{nameof(ActivityModule)}.{nameof(InitModuleAsync)}:Activity module initialization completed");
             return Task.CompletedTask; 
         }
     }

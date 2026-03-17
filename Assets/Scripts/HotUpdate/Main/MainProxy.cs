@@ -1,16 +1,11 @@
 using System;
-using System.Collections.Generic;
-using Core.HotUpdate;
+using System.Threading.Tasks;
 using Core.Log;
-using Core.Mono;
-using Core.Reflection;
 using Core.Scene;
 using Core.Service;
 using Core.UI;
 using HotUpdate.Common;
 using HotUpdate.Core.Main;
-using HotUpdate.Core.Manager;
-using HotUpdate.Core.Module;
 using HotUpdate.Core.Scene;
 using HotUpdate.Main.Global.UI;
 using HotUpdate.Main.UI;
@@ -31,23 +26,57 @@ namespace HotUpdate.Main
         {
             try
             {
-                // 注册游戏管理器
-                ServiceLocator.Register<IGameManager>(new GameManager(ServiceLocator.Get<IMonoAdapter>()));
-                // 初始化模块管理器
-                var moduleManager = new ModuleManager(ServiceLocator.Get<IHotUpdateManager>());
-                ServiceLocator.Register<IModuleManager>(moduleManager);
-                await moduleManager.InitModules();
-                // 初始化游戏数据
-                await ServiceLocator.Get<IGameManager>().InitDataAsync();
-                
-                // 初始化热更工厂
-                ServiceLocator.Get<IFactoryManager>().InitHotFactorys();
-                // 切换场景
+                await LoadSceneAsync();
+                await CreatePlayerAsync();
+                await CreateInitPanelAsync();
+            }
+            catch (Exception e)
+            {
+                LogManager.LogError($"{nameof(MainProxy)}.{nameof(Init)}：初始化错误，{e.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 异步加载主场景
+        /// </summary>
+        private static async Task LoadSceneAsync()
+        {
+            try
+            {
+                // 切换到主场景
                 await ServiceLocator.Get<ISceneManager>().LoadSceneAsync(ResKeyCollection.MainScene, LoadSceneMode.Single, null);
                 // 初始化场景
                 await SceneGeneratorHelper.GetSceneGenerator().InitMainScene();
+            }
+            catch (Exception e)
+            {
+                LogManager.LogError($"{nameof(MainProxy)}.{nameof(LoadSceneAsync)}: 加载主场景错误，{e.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 异步创建玩家
+        /// </summary>
+        private static async Task CreatePlayerAsync()
+        {
+            try
+            {
                 // 创建玩家对象（参数为玩家配置ID，对应玩家基础配置表）
                 await ServiceLocator.Get<IPlayerManager>().CreatePlayer(1001);
+            }
+            catch (Exception e)
+            {
+                LogManager.LogError($"{nameof(MainProxy)}.{nameof(CreatePlayerAsync)}: 异步创建玩家错误，{e.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 异步创建初始界面
+        /// </summary>
+        private static async Task CreateInitPanelAsync()
+        {
+            try
+            {
                 // 初始化全局消息界面
                 await ServiceLocator.Get<IUIManager>()
                     .CreateViewAsync<GlobalMessageView, GlobalMessageModel, GlobalMessageController>(AbKeyCollection.Ui,
@@ -59,7 +88,7 @@ namespace HotUpdate.Main
             }
             catch (Exception e)
             {
-                LogManager.LogError($"{nameof(Main)}.{nameof(Init)}: {e.Message}");
+                LogManager.LogError($"{nameof(MainProxy)}.{nameof(CreateInitPanelAsync)}: 创建初始界面错误，{e.Message}");
             }
         }
     }

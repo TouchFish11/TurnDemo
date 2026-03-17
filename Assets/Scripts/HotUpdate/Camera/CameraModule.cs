@@ -10,14 +10,14 @@ namespace HotUpdate.Camera
     /// <summary>
     /// 相机模块
     /// </summary>
-    public class CameraModule : IModule
+    public class CameraModule : ICameraModule
     {
-        public int Priority => 0;
+        public int Priority => 1;
 
         public Task InitModuleAsync()
         {
             ServiceLocator.Register<IOrbitCameraGeter>(new OrbitCameraGeter(ServiceLocator.Get<IPrefabLoader>()));
-            LogManager.Log($"{nameof(CameraModule)}.{nameof(InitModuleAsync)}：初始化完成");
+            LogManager.Log($"{nameof(CameraModule)}.{nameof(InitModuleAsync)}:Camera module initialization completed");
             return Task.CompletedTask;
         }
     }

@@ -3,8 +3,8 @@ using Core.UI;
 using Core.UI.MVC;
 using HotUpdate.Activity.UI.Base;
 using HotUpdate.Common;
-using HotUpdate.Core.MVC;
 using HotUpdate.Core.UI.Helper;
+using HotUpdate.Core.UI.MVC;
 
 namespace HotUpdate.Activity.Core
 {

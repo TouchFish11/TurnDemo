@@ -15,12 +15,12 @@ namespace HotUpdate.Main.UI.Logic
         /// 初始化任务逻辑
         /// 初始化时检查所有任务的当前状态，确保任务栏显示与实际状态一致
         /// </summary>
-        /// <param name="mainController1"></param>
-        /// <param name="mainModel1"></param>
-        /// <param name="mainView1"></param>
-        public override void Init(MainController mainController1, MainModel mainModel1, MainView mainView1)
+        /// <param name="mainController"></param>
+        /// <param name="mainModel"></param>
+        /// <param name="mainView"></param>
+        public override void Init(MainController mainController, MainModel mainModel, MainView mainView)
         {
-            base.Init(mainController1, mainModel1, mainView1);
+            base.Init(mainController, mainModel, mainView);
             // 初始化任务栏状态：默认隐藏
             SetTaskbarActive(false);
             // 注册任务系统回调：任务更新时执行TaskLogic的UpdateTask方法

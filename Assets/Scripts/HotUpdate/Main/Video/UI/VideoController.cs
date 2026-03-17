@@ -5,7 +5,6 @@ using Core.UI;
 using Core.UI.MVC;
 using Core.Video;
 using HotUpdate.Common;
-using HotUpdate.Config;
 using UnityEngine.Video;
 
 namespace HotUpdate.Main.Video.UI

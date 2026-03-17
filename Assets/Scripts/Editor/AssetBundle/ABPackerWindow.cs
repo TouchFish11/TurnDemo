@@ -28,7 +28,7 @@ namespace Editor.AssetBundle
 
         // --- 配置参数 ---
         private BuildTarget _targetPlatform = BuildTarget.StandaloneWindows64; // 默认平台
-        private BuildAssetBundleOptions _buildOptions = BuildAssetBundleOptions.None; // 构建选项
+        private BuildAssetBundleOptions _buildOptions = BuildAssetBundleOptions.ChunkBasedCompression; // 构建选项
         private string _assemblyhotUpdateStrings;  // 热更新程序集名称列表
         private string _outputPath; // 输出路径
         private const string AB_COPY_PATH = "Assets/StreamingAssets/AssetBundles/";     // AssetBundle拷贝到StreamingAssets的目标路径

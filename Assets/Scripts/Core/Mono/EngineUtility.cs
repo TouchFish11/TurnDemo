@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Core.Mono
 {
@@ -8,9 +10,20 @@ namespace Core.Mono
     /// </summary>
     public static class EngineUtility
     {
+        /// <summary>
+        /// 创建Unity游戏对象
+        /// </summary>
+        /// <param name="name">对象名称</param>
+        /// <param name="types">创建时附加的组件类型</param>
+        /// <returns></returns>
+        public static GameObject Create(string name, params Type[] types)
+        {
+            return new GameObject(name, types);
+        }
+        
+        
         /// <summary>、
-        /// 销毁
-        /// 移除一个游戏对象、组件或资源。
+        /// 移除一个游戏对象、组件或资源
         /// </summary>
         /// <param name="obj">要销毁的对象在销毁对象之前可选择延迟的时间。</param>
         /// <param name="time">在销毁对象之前可选择延迟的时间，-1为不指定延迟时间</param>

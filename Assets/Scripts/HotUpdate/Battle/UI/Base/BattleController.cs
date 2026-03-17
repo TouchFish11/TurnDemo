@@ -1,7 +1,7 @@
 using Core.UI.MVC;
 using HotUpdate.Battle.UI.MonsterStateUI;
 using HotUpdate.Core.Battle;
-using HotUpdate.Core.MVC;
+using HotUpdate.Core.UI.MVC;
 
 namespace HotUpdate.Battle.UI.Base
 {

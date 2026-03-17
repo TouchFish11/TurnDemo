@@ -2,16 +2,17 @@ using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Collection;
 using Core.Global;
 using Core.Mono;
 using Core.Net;
 using Core.Service;
 using Core.Singleton;
 using Core.Utility;
-using UnityEngine;
 
 namespace Core.Log
 {
@@ -20,7 +21,7 @@ namespace Core.Log
     /// </summary>
     public class LogManager : SingletonBase<LogManager>, ILogManager
     {
-        public override int Priority => 0;
+        public override int Priority => -1;
         // 日志队列
         private readonly ConcurrentQueue<string> _logs = new();
         // 日志线程
@@ -178,11 +179,14 @@ namespace Core.Log
         /// <returns></returns>
         private static string GetStackTrace(int skipFrames = 0)
         {
+            var uniList = ListUtility.GetUniList<Assembly>();
+            //ServiceLocator.Get<IHotUpdateManager>().GetAssemblies(uniList.List);
+            
             try
             {
                 var stackTrace = new StackTrace(skipFrames, true);
                 var sb = new StringBuilder();
-                
+
                 for (var i = 0; i < stackTrace.FrameCount; i++)
                 {
                     var frame = stackTrace.GetFrame(i);
@@ -193,17 +197,22 @@ namespace Core.Log
 
                     // 获取方法
                     var method = frame.GetMethod();
-                    if (method == null)
-                    {
-                        continue;
-                    }
+                    if (method == null) continue;
+
+                    // if (!uniList.Contains(method.DeclaringType?.Assembly))
+                    // {
+                    //     continue;
+                    // }
 
                     // 空行
                     sb.Append(Environment.NewLine);
 
-                    // 
+                    // 声明该成员的类的Type对象不为null且存在于程序集列表中
                     if (method.DeclaringType != null)
+                    {
                         sb.Append($"{method.DeclaringType.Namespace}.{method.DeclaringType.Name}.{method.Name}:");
+                    }
+
                     // 获取文件名
                     var fileFunllName = frame.GetFileName();
                     if (fileFunllName != null)
@@ -215,6 +224,7 @@ namespace Core.Log
                             sb.Append($"{fileName}");
                         }
                     }
+
                     sb.Append($"({frame.GetFileLineNumber()})");
                 }
 
@@ -223,6 +233,10 @@ namespace Core.Log
             catch (Exception e)
             {
                 return $"调用堆栈获取失败:{e.Message}";
+            }
+            finally
+            {
+                ListUtility.CollectUniList(uniList);
             }
         }
 

@@ -2,10 +2,8 @@ using System;
 using System.Collections.Generic;
 using Core.Collection;
 using Core.GlobalEvent;
-using Core.Log;
 using Core.Serialize.Binary;
 using Core.Service;
-using Core.Singleton;
 using Core.Utility;
 using HotUpdate.Core.Manager;
 using HotUpdate.Core.Task;
@@ -15,57 +13,28 @@ using HotUpdate.Task.Data;
 namespace HotUpdate.Task.Core
 {
     /// <summary>
-    /// 任务管理器（单例模式）
+    /// 任务管理器
     /// 负责任务的接受、追踪、进度更新、取消，以及任务相关事件的监听与处理
     /// </summary>
-    public class TaskManager : SingletonBase<TaskManager>, ITaskManager
+    public class TaskManager : ITaskManager
     {
-        public override int Priority => -1;
         // 当前追踪的任务基础信息（配置表数据）
         private TaskInfo currentTaskInfo;
         // 当前任务的完成条件信息（配置表数据）
         private TaskConditionInfo currentConditionInfo;
         // 当前任务的运行时数据（进度、完成状态、追踪状态等）
         private ITaskData currentTaskData;
-
-        /// <summary>
-        /// 任务更新事件（任务信息/进度变化时触发）
-        /// 回调参数：当前任务信息、当前任务运行时数据
-        /// </summary>
+        
         public event Action<TaskInfo, ITaskData> OnUpdateTask;
 
-        /// <summary>
-        /// 任务取消事件（取消当前追踪任务时触发）
-        /// </summary>
         public event Action OnCancelTask;
 
-        /// <summary>
-        /// 私有构造函数（单例模式，禁止外部实例化）
-        /// </summary>
-        private TaskManager()
-        {
-
-        }
-
-        public override System.Threading.Tasks.Task InitAsync()
-        {
-            return  System.Threading.Tasks.Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// 检查当前任务状态（初始化/恢复任务追踪）
-        /// 从游戏管理器中获取正在追踪的任务，加载对应配置并监听事件
-        /// </summary>
         public void CheckTaskState()
         {
             var taskDataCollection = ServiceLocator.Get<IGameManager>().GameDataManager.GetData<ITaskDataCollection>();
             // 若没有正在追踪的任务，直接返回
-            if (!taskDataCollection.IsTracking(out var taskData))
-            {
-                LogManager.Log($"{nameof(TaskManager)}.{nameof(CheckTaskState)}，任务数据：{taskData}");
-                return;
-            }
-            
+            if (!taskDataCollection.IsTracking(out var taskData)) return;
+
             // 从配置表加载当前任务的基础信息和完成条件信息
             currentTaskInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<TaskInfoContainer>(EConfigLoadType.Excel).dataDic[taskData.CurrentTaskId];
             currentConditionInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<TaskConditionInfoContainer>(EConfigLoadType.Excel).dataDic[currentTaskInfo.f_completionConditionId];
@@ -78,11 +47,6 @@ namespace HotUpdate.Task.Core
             ListenTaskEvent();
         }
 
-        /// <summary>
-        /// 接受指定ID的任务（开始追踪该任务）
-        /// 若已有正在追踪的任务，先取消原有任务
-        /// </summary>
-        /// <param name="id">要接受的任务ID</param>
         public void AcceptTask(string id)
         {
             // 若当前已有正在追踪的任务，先取消该任务的追踪
@@ -262,10 +226,6 @@ namespace HotUpdate.Task.Core
             OnUpdateTask?.Invoke(currentTaskInfo, currentTaskData);
         }
 
-        /// <summary>
-        /// 取消当前追踪的任务
-        /// 移除事件监听、重置任务数据、触发取消事件
-        /// </summary>
         public void CancelTask()
         {
             // 取消当前任务的追踪状态

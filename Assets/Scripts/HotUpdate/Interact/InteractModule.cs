@@ -10,17 +10,19 @@ namespace HotUpdate.Interact
     /// </summary>
     public class InteractModule : IInteractModule
     {
-        public int Priority => 0;
+        public int Priority => 1;
         
         public Task InitModuleAsync()
         {
-            LogManager.Log($"{nameof(InteractModule)}.{nameof(InitModuleAsync)}：初始化完成");
+            LogManager.Log($"{nameof(InteractModule)}.{nameof(InitModuleAsync)}:Interact module initialization completed");
             return Task.CompletedTask;
         }
 
         public IInteractComponent AddInteractComponent(IEntityObject entityObject)
         {
-            return entityObject.AddComponent<InteractComponent>();
+            if (entityObject != null) return entityObject.AddComponent<InteractComponent>();
+            LogManager.LogError($"{nameof(InteractModule)}.{nameof(AddInteractComponent)}: entityObject is null");
+            return null;
         }
     }
 }

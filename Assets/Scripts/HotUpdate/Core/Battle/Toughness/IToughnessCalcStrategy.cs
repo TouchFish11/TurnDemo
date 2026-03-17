@@ -1,5 +1,5 @@
-using HotUpdate.Battle.Property;
 using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.Battle.Property;
 
 namespace HotUpdate.Core.Battle.Toughness
 {

@@ -2,8 +2,8 @@ using System.Threading.Tasks;
 using Core.UI;
 using Core.UI.MVC;
 using HotUpdate.Common;
-using HotUpdate.Core.MVC;
 using HotUpdate.Core.UI.Helper;
+using HotUpdate.Core.UI.MVC;
 using HotUpdate.Task.UI;
 
 namespace HotUpdate.Task.Core

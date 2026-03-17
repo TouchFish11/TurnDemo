@@ -8,7 +8,7 @@ using Core.UI;
 using Core.UI.MVC;
 using Core.Utility;
 using HotUpdate.Common;
-using HotUpdate.Core.MVC;
+using HotUpdate.Core.UI.MVC;
 using HotUpdate.Default.Update.Tip;
 
 namespace HotUpdate.Entry.Update.UI

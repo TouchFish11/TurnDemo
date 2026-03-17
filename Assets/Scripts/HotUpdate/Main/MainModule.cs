@@ -48,7 +48,7 @@ namespace HotUpdate.Main
             ServiceLocator.Register<IMainUiHelper>(new MainUiHelper(ServiceLocator.Get<IUIManager>()));
             // 初始化场景生成器
             SceneGeneratorHelper.Init(new SceneGenerator());
-            LogManager.Log($"{nameof(MainModule)}.{nameof(InitModuleAsync)}：初始化完成");
+            LogManager.Log($"{nameof(MainModule)}.{nameof(InitModuleAsync)}:Main module initialization completed");
             return Task.CompletedTask;
         }
     }

@@ -18,16 +18,17 @@ namespace HotUpdate.Task
     /// </summary>
     public class TaskModule : ITaskModule
     {
-        public int Priority => 0;
+        public int Priority => 1;
         
         public Task InitModuleAsync()
         {
-            ServiceLocator.Register<ITaskManager>(TaskManager.Instance);
+            // 注册任务管理器
+            ServiceLocator.Register<ITaskManager>(new TaskManager());
             // 初始化UIHelper
             ServiceLocator.Register<ITaskUiHelper>(new TaskUiHelper(ServiceLocator.Get<IUIManager>()));
             // 注册活动数据提供器
             ServiceLocator.Get<IGameManager>().GameDataManager.RegisterProvider(typeof(ITaskDataCollection), new TaskDataProvider(ServiceLocator.Get<IJsonManager>()));
-            LogManager.Log($"{nameof(TaskModule)}.{nameof(InitModuleAsync)}：初始化完成");
+            LogManager.Log($"{nameof(TaskModule)}.{nameof(InitModuleAsync)}:Task module initialization completed");
             return Task.CompletedTask;
         }
     }

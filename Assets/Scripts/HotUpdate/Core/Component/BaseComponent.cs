@@ -8,10 +8,8 @@ namespace HotUpdate.Core.Component
     /// 抽象类，需由具体组件继承并实现抽象方法
     /// </summary>
     /// <remarks>
-    /// 依赖 <see cref="IEntityObject"/> 组件，通过 [RequireComponent] 强制挂载
     /// 实现 <see cref="IComponent"/> 接口，遵循组件统一规范
     /// </remarks>
-    [RequireComponent(typeof(IEntityObject))]
     public abstract class BaseComponent : MonoBehaviour, IComponent
     {
         /// <summary>

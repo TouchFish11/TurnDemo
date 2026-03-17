@@ -1,6 +1,6 @@
-using HotUpdate.Battle.Property;
 using HotUpdate.Core.Battle.Data;
 using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.Battle.Property;
 using HotUpdate.Core.Battle.Skill;
 
 namespace HotUpdate.Core.Battle.Damage.Data

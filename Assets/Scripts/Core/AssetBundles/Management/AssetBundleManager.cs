@@ -89,7 +89,7 @@ namespace Core.AssetBundles.Management
             
             if (!_nameToWrapperMap.TryGetValue(abName, out var wrapper))
             {
-                LogManager.LogError($"AB包：{abName}不存在");
+                LogManager.LogError($"{nameof(AssetBundleManager)}.{nameof(LoadBundleAsync)}：AB包{abName}不存在");
                 return null;
             }
 
@@ -121,7 +121,7 @@ namespace Core.AssetBundles.Management
                 
                 var wrapper = _nameToWrapperMap[dependency];
                 await wrapper.LoadFromFileAsync(token);
-                LogManager.Log($"{abName}包依赖项：{dependency}，已加载");
+                LogManager.Log($"{nameof(AssetBundleManager)}.{nameof(LoadDependenciesAndTargetAsync)}：{abName}包依赖项{dependency}已加载");
             }
 
             // 加载目标包
@@ -171,12 +171,12 @@ namespace Core.AssetBundles.Management
                 {
                     if (bundleWrapper.RefCount != 0)
                     {
-                        LogManager.LogWarning($"{bundleWrapper.BundelName}包和已加载资源已卸载，剩余引用计数：{bundleWrapper.RefCount}，可能导致引用丢失");
+                        LogManager.LogWarning($"{nameof(AssetBundleManager)}.{nameof(UnloadAllBundles)}：{bundleWrapper.BundelName}包和已加载资源已卸载，剩余引用计数{bundleWrapper.RefCount}，可能导致引用丢失");
                     }
                 }
                 else
                 {
-                    LogManager.Log($"{bundleWrapper.BundelName}包已卸载，剩余引用计数：{bundleWrapper.RefCount}");
+                    LogManager.Log($"{nameof(AssetBundleManager)}.{nameof(UnloadAllBundles)}：{bundleWrapper.BundelName}包已卸载，剩余引用计数{bundleWrapper.RefCount}");
                 }
             }
             
@@ -211,7 +211,7 @@ namespace Core.AssetBundles.Management
             }
             catch (Exception e)
             {
-                LogManager.LogError($"{nameof(AssetBundleManager)}.{nameof(OnReport)}：{e.Message}，{e.StackTrace}");
+                LogManager.LogError($"{nameof(AssetBundleManager)}.{nameof(OnReport)}：{e.Message}");
             }
         }
     }

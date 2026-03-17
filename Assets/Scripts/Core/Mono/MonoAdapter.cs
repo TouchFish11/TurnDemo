@@ -41,7 +41,7 @@ namespace Core.Mono
         /// </summary>
         public event Func<bool, Task> OnAppFocus;
 
-        public int Priority => -1;
+        public int Priority => -99;
 
         public Task InitAsync()
         {

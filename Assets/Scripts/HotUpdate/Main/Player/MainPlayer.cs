@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Core.Log;
 using Core.Service;
@@ -31,20 +32,32 @@ namespace HotUpdate.Main.Player
         /// <param name="id">玩家实体的唯一标识ID</param>
         public override void BaseInit(int id)
         {
-            // 挂载输入组件：处理玩家的输入事件
-            ServiceLocator.Get<IModuleManager>().GetModule<IInputModule>().AddInputComponent(this);
+            try
+            {
+                // 挂载输入组件：处理玩家的输入事件
+                var inputComponent = ServiceLocator.Get<IModuleManager>().GetModule<IInputModule>().AddInputComponent(this);
+                LogManager.LogWarning($"{nameof(MainPlayer)}.{nameof(BaseInit)}：AddInputComponent是否返回null：{inputComponent == null}");
             
-            // 挂载普通动画组件：处理玩家基础动画状态
-            ServiceLocator.Get<IModuleManager>().GetModule<IAnimationModule>().AddNormalAnimationComponent(this);
+                // 挂载普通动画组件：处理玩家基础动画状态
+                var animationComponent = ServiceLocator.Get<IModuleManager>().GetModule<IAnimationModule>().AddNormalAnimationComponent(this);
+                LogManager.LogWarning($"{nameof(MainPlayer)}.{nameof(BaseInit)}：AddNormalAnimationComponent是否返回null：{animationComponent == null}");
             
-            // 挂载移动组件：处理玩家的位移逻辑（坐标更新、移动速度、碰撞检测等）
-            AddComponent<MoveComponent>();
+                // 挂载移动组件：处理玩家的位移逻辑（坐标更新、移动速度、碰撞检测等）
+                var moveComponent = AddComponent<MoveComponent>();
+                LogManager.LogWarning($"{nameof(MainPlayer)}.{nameof(BaseInit)}：AddComponent<MoveComponent>是否返回null：{!moveComponent}");
             
-            // 挂载交互组件：处理玩家与场景/其他实体的交互逻辑（拾取、对话触发等）
-            ServiceLocator.Get<IModuleManager>().GetModule<IInteractModule>().AddInteractComponent(this);
+                // 挂载交互组件：处理玩家与场景/其他实体的交互逻辑（拾取、对话触发等）
+                var interactComponent = ServiceLocator.Get<IModuleManager>().GetModule<IInteractModule>().AddInteractComponent(this);
+                LogManager.LogWarning($"{nameof(MainPlayer)}.{nameof(BaseInit)}：AddInteractComponent是否返回null：{interactComponent == null}");
             
-            // 挂载对话组件：处理玩家的对话流程、剧情触发、文本展示等逻辑
-            ServiceLocator.Get<IModuleManager>().GetModule<IDialogueModule>().AddDialogueComponent(this);
+                // 挂载对话组件：处理玩家的对话流程、剧情触发、文本展示等逻辑
+                var dialogueComponent = ServiceLocator.Get<IModuleManager>().GetModule<IDialogueModule>().AddDialogueComponent(this);
+                LogManager.LogWarning($"{nameof(MainPlayer)}.{nameof(BaseInit)}：AddDialogueComponent是否返回null：{dialogueComponent == null}");
+            }
+            catch (Exception e)
+            {
+                LogManager.LogError($"{nameof(MainPlayer)}.{nameof(BaseInit)}：初始化失败，{e.Message}");
+            }
         }
 
         /// <summary>

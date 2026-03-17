@@ -10,7 +10,7 @@ using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Object;
 using HotUpdate.Core.Battle.Point;
 using HotUpdate.Core.Battle.Turn;
-using HotUpdate.Core.MVC;
+using HotUpdate.Core.UI.MVC;
 
 namespace HotUpdate.Battle.StateMeachine
 {

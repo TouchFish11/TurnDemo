@@ -1,4 +1,4 @@
-namespace HotUpdate.Battle.Property
+namespace HotUpdate.Core.Battle.Property
 {
     /// <summary>
     /// ���Լӳ�����

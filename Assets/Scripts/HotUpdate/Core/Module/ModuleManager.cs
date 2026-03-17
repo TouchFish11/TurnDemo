@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Core.Collection;
 using Core.Extensions;
 using Core.HotUpdate;
+using Core.Log;
 
 namespace HotUpdate.Core.Module
 {
@@ -29,7 +30,7 @@ namespace HotUpdate.Core.Module
             {
                 foreach (var type in hotAssembly.GetTypes())
                 {
-                    if (typeof(IModule).IsAssignableFrom(type) && type.IsInterface)
+                    if (typeof(IModule).IsAssignableFrom(type) && type.IsInterface && type != typeof(IModule))
                     {
                         uniList.Add(type);
                     }
@@ -86,7 +87,13 @@ namespace HotUpdate.Core.Module
 
         public T GetModule<T>() where T : class, IModule
         {
-            return _modules[typeof(T)] as T;
+            if (_modules.TryGetValue(typeof(T), out var module))
+            {
+                return (T)module;
+            }
+            
+            LogManager.LogWarning($"{nameof(ModuleManager)}.{nameof(GetModule)}：Module {typeof(T).Name} not found");
+            return null;
         }
     }
 }

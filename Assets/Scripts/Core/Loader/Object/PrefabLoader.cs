@@ -113,7 +113,7 @@ namespace Core.Loader.Object
             {
                 return instanceObj;
             }
-            
+        
             // 是否已存在资源缓存
             if (_assetNameToData.TryGetValue(assetName, out var prefabData))
             {
@@ -135,7 +135,6 @@ namespace Core.Loader.Object
                 // 实例化预设体
                 instanceObj = UnityEngine.Object.Instantiate(objAsset);
             }
-
             // 避免实例化出的对象的名字后带有(Clone)
             instanceObj.name = assetName;
             return instanceObj;

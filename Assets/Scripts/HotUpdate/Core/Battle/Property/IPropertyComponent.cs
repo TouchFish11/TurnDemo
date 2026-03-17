@@ -1,5 +1,3 @@
-using HotUpdate.Battle.Property;
-
 namespace HotUpdate.Core.Battle.Property
 {
     public interface IPropertyComponent

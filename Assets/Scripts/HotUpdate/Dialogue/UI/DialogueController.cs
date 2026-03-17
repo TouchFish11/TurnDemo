@@ -7,7 +7,7 @@ using Core.Service;
 using Core.UI.MVC;
 using HotUpdate.Common;
 using HotUpdate.Core.Dialogue;
-using HotUpdate.Core.MVC;
+using HotUpdate.Core.UI.MVC;
 using UnityEngine;
 
 namespace HotUpdate.Dialogue.UI

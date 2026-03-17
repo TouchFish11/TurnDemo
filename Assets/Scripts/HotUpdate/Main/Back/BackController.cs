@@ -1,5 +1,5 @@
 using Core.UI.MVC;
-using HotUpdate.Core.MVC;
+using HotUpdate.Core.UI.MVC;
 
 namespace HotUpdate.Main.Back
 {

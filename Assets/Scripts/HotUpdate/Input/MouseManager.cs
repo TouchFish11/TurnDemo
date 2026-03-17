@@ -3,7 +3,6 @@ using Core.GlobalEvent;
 using Core.GlobalEvent.Events;
 using Core.Log;
 using HotUpdate.Core.Input;
-using HotUpdate.Core.MVC;
 using UnityEngine;
 
 namespace HotUpdate.Input

@@ -5,8 +5,8 @@ using Core.Service;
 using Core.UI.MVC;
 using HotUpdate.Common;
 using HotUpdate.Common.Item;
-using HotUpdate.Core.MVC;
 using HotUpdate.Core.Task;
+using HotUpdate.Core.UI.MVC;
 using HotUpdate.Task.Core;
 using HotUpdate.Task.Data;
 

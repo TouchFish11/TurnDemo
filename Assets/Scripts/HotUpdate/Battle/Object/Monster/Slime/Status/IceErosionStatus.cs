@@ -9,6 +9,7 @@ using HotUpdate.Common;
 using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Damage.Data;
 using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.Battle.Property;
 using HotUpdate.Core.VFX;
 using UnityEngine;
 

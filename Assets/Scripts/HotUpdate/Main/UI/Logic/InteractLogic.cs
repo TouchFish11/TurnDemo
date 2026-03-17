@@ -6,7 +6,6 @@ using Core.Loader.Object;
 using Core.Log;
 using Core.Service;
 using HotUpdate.Common;
-using HotUpdate.Config;
 using HotUpdate.Core.Interact;
 
 namespace HotUpdate.Main.UI.Logic
@@ -25,12 +24,12 @@ namespace HotUpdate.Main.UI.Logic
         /// 逻辑初始化方法
         /// 可在此添加交互逻辑初始化的前置操作（如数据预加载、事件注册等）
         /// </summary>
-        /// <param name="mainController1"></param>
-        /// <param name="mainModel1"></param>
-        /// <param name="mainView1"></param>
-        public override void Init(MainController mainController1, MainModel mainModel1, MainView mainView1)
+        /// <param name="mainController"></param>
+        /// <param name="mainModel"></param>
+        /// <param name="mainView"></param>
+        public override void Init(MainController mainController, MainModel mainModel, MainView mainView)
         {
-            base.Init(mainController1, mainModel1, mainView1);
+            base.Init(mainController, mainModel, mainView);
             // 订阅交互事件（当触发InteractEvent时，执行OnInteractEvent回调）
             _eventCenter.SubscribeEvent<InteractEvent>(OnInteractEvent);
         }

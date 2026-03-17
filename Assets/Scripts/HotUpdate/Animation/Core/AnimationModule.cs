@@ -12,17 +12,19 @@ namespace HotUpdate.Animation.Core
     /// </summary>
     public class AnimationModule : IAnimationModule
     {
-        public int Priority => 0;
+        public int Priority => 1;
         
         public Task InitModuleAsync()
         {
-            LogManager.Log($"{nameof(AnimationModule)}.{nameof(InitModuleAsync)}：初始化完成");
+            LogManager.Log($"{nameof(AnimationModule)}.{nameof(InitModuleAsync)}:Animation module initialization completed");
             return Task.CompletedTask;
         }
 
         public INormalAnimationComponent AddNormalAnimationComponent(IEntityObject entityObject)
         {
-            return entityObject.AddComponent<NormalAnimationComponent>();
+            if (entityObject != null) return entityObject.AddComponent<NormalAnimationComponent>();
+            LogManager.LogError($"{nameof(AnimationModule)}.{nameof(AddNormalAnimationComponent)}: entityObject is null");
+            return null;
         }
     }
 }

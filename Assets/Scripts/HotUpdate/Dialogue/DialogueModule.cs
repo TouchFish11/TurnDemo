@@ -13,19 +13,21 @@ namespace HotUpdate.Dialogue
     /// </summary>
     public class DialogueModule : IDialogueModule
     {
-        public int Priority => 0;
+        public int Priority => 1;
         
         public Task InitModuleAsync()
         {
             ServiceLocator.Register<IDialogueManager>(new DialogueManager());
             ServiceLocator.Register<IDialogueUiHelper>(new DialogueUiHelper(ServiceLocator.Get<IUIManager>()));
-            LogManager.Log($"{nameof(DialogueModule)}.{nameof(InitModuleAsync)}：初始化完成");
+            LogManager.Log($"{nameof(DialogueModule)}.{nameof(InitModuleAsync)}:Dialogue module initialization completed");
             return Task.CompletedTask;
         }
 
         public IDialogueComponent AddDialogueComponent(IEntityObject entityObject)
         {
-            return entityObject.AddComponent<DialogueComponent>();
+            if (entityObject != null) return entityObject.AddComponent<DialogueComponent>();
+            LogManager.LogError($"{nameof(DialogueModule)}.{nameof(AddDialogueComponent)}: entityObject is null");
+            return null;
         }
     }
 }

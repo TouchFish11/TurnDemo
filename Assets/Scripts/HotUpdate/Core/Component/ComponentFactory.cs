@@ -130,8 +130,13 @@ namespace HotUpdate.Core.Component
             var componentTypeName = typeof(T).Name;
             if (_nameToComponentTypeMap.TryGetValue(componentTypeName, out var type))
             {
+                LogManager.Log($"{nameof(ComponentFactory)}.{nameof(AddComponent)}：对象：{entityObject.GameObject.name}开始添加组件：{type}");
                 // 挂载组件到目标GameObject
                 var component = entityObject.GameObject.AddComponent(type);
+                LogManager.Log($"{nameof(ComponentFactory)}.{nameof(AddComponent)}：对象：{entityObject.GameObject.name}添加组件：{type}" +
+                               $"{(!component ? "失败" : "成功")}"+
+                               $"component为null：{!component}");
+                
                 // 类型转换并处理初始化
                 if (component is not IComponent ic)
                 {
@@ -146,7 +151,7 @@ namespace HotUpdate.Core.Component
             else
             {
                 // 类型未注册时记录详细错误日志
-                LogManager.LogError($"{nameof(AddComponent)}<{typeof(T).Name}>：未找到该类型的组件");
+                LogManager.LogError($"{nameof(ComponentFactory)}.{nameof(AddComponent)}：未找到该类型{typeof(T).Name}的组件");
             }
         }
 
@@ -182,13 +187,30 @@ namespace HotUpdate.Core.Component
                     if (typeof(IComponent).IsAssignableFrom(requireAttr.m_Type0))
                     {
                         // 存在有效依赖组件时，继续递归处理依赖的依赖
-                        if (entityObject.GameObject.GetComponent(requireAttr.m_Type0) is IComponent dependentComponent)
+                        var component = entityObject.GameObject.GetComponent(requireAttr.m_Type0);  // null
+                        if (component is IComponent dependentComponent)
                         {
+                            LogManager.Log($"{ic.GetType()}的依赖组件：已找到：{dependentComponent.GetType()}");
                             ic = dependentComponent;
-                            LogManager.Log($"{ic.GetType()}的依赖组件：{dependentComponent.GetType()}");
                             continue;
                         }
+                        else if (component)
+                        {
+                            LogManager.Log($"{ic.GetType()}的依赖类型：{requireAttr.m_Type0}，组件：{component.GetType().Name}不为IComponent");
+                        }
+                        else
+                        {
+                            LogManager.Log($"{ic.GetType()}的依赖类型：{requireAttr.m_Type0}组件为null");
+                        }
                     }
+                    else
+                    {
+                        LogManager.Log($"{ic.GetType()}的依赖类型{requireAttr.m_Type0}不从IComponent中派生");
+                    }
+                }
+                else
+                {
+                    LogManager.Log($"{ic.GetType()}的RequireComponent特性为null");
                 }
                 
                 // 无依赖/依赖非IComponent/依赖未挂载时，开始从栈顶初始化组件

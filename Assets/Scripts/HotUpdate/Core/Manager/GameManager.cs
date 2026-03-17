@@ -1,11 +1,8 @@
 using System;
 using Core.Log;
 using Core.Mono;
-using Core.Service;
-using Core.Singleton;
-using HotUpdate.Core.Manager;
 
-namespace HotUpdate.Main
+namespace HotUpdate.Core.Manager
 {
     using Task = System.Threading.Tasks.Task;
     

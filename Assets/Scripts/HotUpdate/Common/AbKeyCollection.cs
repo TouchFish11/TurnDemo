@@ -12,6 +12,7 @@ namespace HotUpdate.Common
 		public static string Fonts => "fonts";
 		public static string Gameconfig => "gameconfig";
 		public static string Hotupdate => "hotupdate";
+		public static string Hotupdate_Aotdll => "hotupdate_aotdll";
 		public static string Material => "material";
 		public static string Mesh => "mesh";
 		public static string Prefab => "prefab";

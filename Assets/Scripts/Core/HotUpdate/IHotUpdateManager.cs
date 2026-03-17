@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -44,5 +45,27 @@ namespace Core.HotUpdate
         Task LoadAssembliesAsync(string abName, params string[] assemblyNames);
 
         void LoadAssemblyAsyncByFile(params string[] assemblyNames);
+
+        /// <summary>
+        /// 获取所有程序集
+        /// </summary>
+        /// <param name="assemblies"></param>
+        /// <returns></returns>
+        int GetAssemblies(List<Assembly> assemblies);
+
+        /// <summary>
+        /// 获取所有热更程序集
+        /// </summary>
+        /// <param name="assemblies"></param>
+        /// <returns></returns>
+        int GetHotAssemblies(List<Assembly> assemblies);
+
+        Assembly GetGameModule();
+        
+        /// <summary>
+        /// 补充元数据
+        /// </summary>
+        /// <param name="aotDlls">补充程序集名称列表</param>
+        void LoadMetadataForAOTAssemblies(List<string> aotDlls);
     }
 }

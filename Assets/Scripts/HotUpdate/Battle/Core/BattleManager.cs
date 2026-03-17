@@ -24,8 +24,8 @@ using HotUpdate.Core.Battle.TargetSelect;
 using HotUpdate.Core.Battle.Turn;
 using HotUpdate.Core.Camera;
 using HotUpdate.Core.Input;
-using HotUpdate.Core.MVC;
 using HotUpdate.Core.UI.Helper;
+using HotUpdate.Core.UI.MVC;
 using UnityEngine;
 using UnityEngine.U2D;
 

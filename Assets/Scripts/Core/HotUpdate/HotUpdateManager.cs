@@ -120,6 +120,11 @@ namespace Core.HotUpdate
         {
             return Assembly.Load("CoreModule");
         }
+
+        public Assembly GetGameModule()
+        {
+            return Assembly.Load("GameModule");
+        }
         
         /// <summary>
         /// 获取所有程序集
@@ -127,6 +132,7 @@ namespace Core.HotUpdate
         /// <returns></returns>
         public Assembly[] GetAssemblies()
         {
+            ListUtility.GetUniList<Assembly>();
             var assemblies = new List<Assembly>
             {
                 GetCoreModule(),
@@ -136,7 +142,21 @@ namespace Core.HotUpdate
             assemblies.AddRange(ServiceLocator.Get<IHotUpdateManager>().GetHotAssemblies()); 
             return assemblies.ToArray();
         }
-
+        
+        /// <summary>
+        /// 获取所有程序集
+        /// </summary>
+        /// <param name="assemblies"></param>
+        /// <returns></returns>
+        public int GetAssemblies(List<Assembly> assemblies)
+        {
+            assemblies.Add(GetCoreModule());
+            assemblies.Add(GetGameModule());
+            // 获取所有热更后的程序集
+            assemblies.AddRange(ServiceLocator.Get<IHotUpdateManager>().GetHotAssemblies()); 
+            return assemblies.Count;
+        }
+        
         public Assembly[] GetHotAssemblies()
         {
             var assemblies = new List<Assembly>(_assemblyNames.Count);
@@ -146,11 +166,25 @@ namespace Core.HotUpdate
             }
             return assemblies.ToArray();
         }
+        
+        /// <summary>
+        /// 获取所有热更程序集
+        /// </summary>
+        /// <param name="assemblies"></param>
+        /// <returns></returns>
+        public int GetHotAssemblies(List<Assembly> assemblies)
+        {
+            foreach (var assemblyName in _assemblyNames)
+            {
+                assemblies.Add(Assembly.Load(assemblyName));
+            }
+            return assemblies.Count;
+        }
 
         /// <summary>
         /// 异步加载程序集
         /// </summary>
-        /// <param name="bytes"></param>
+        /// <param name="bytes">程序集字节数组</param>
         /// <returns></returns>
         internal Task LoadAssemblyAsyncInternal(byte[] bytes)
         {
@@ -159,15 +193,24 @@ namespace Core.HotUpdate
                 try
                 {
                     var assembly = Assembly.Load(bytes);
-                    RuntimeApi.LoadMetadataForAOTAssembly(bytes, HomologousImageMode.SuperSet);
                     _assemblyNames.Add(assembly.GetName().Name);
-                    LogManager.Log($"{nameof(HotUpdateManager)}.{nameof(LoadAssembliesAsync)}：已加载热更程序集，{assembly.GetName().Name}");
+                    LogManager.Log($"{nameof(HotUpdateManager)}.{nameof(LoadAssembliesAsync)}：已加载热更程序集{assembly.GetName().Name}");
                 }
                 catch (Exception e)
                 {
-                    LogManager.LogError($"{nameof(HotUpdateManager)}.{nameof(LoadAssemblyAsyncInternal)}：{e.Message}，{e.StackTrace}");
+                    LogManager.LogError($"{nameof(HotUpdateManager)}.{nameof(LoadAssemblyAsyncInternal)}：热更程序集加载错误{e.Message}");
                 }
             });
+        }
+
+        public void LoadMetadataForAOTAssemblies(List<string> aotDlls)
+        {
+            foreach (var aotDllName in aotDlls)
+            {
+                var assemblyBytes = GetAssemblyBytes(aotDllName);
+                var errorCode = RuntimeApi.LoadMetadataForAOTAssembly(assemblyBytes, HomologousImageMode.SuperSet);
+                LogManager.Log($"{nameof(HotUpdateManager)}.{nameof(LoadMetadataForAOTAssemblies)}：已补充元数据{aotDllName}，错误码：{errorCode}");
+            }
         }
 
         public void LoadAssemblyAsyncByFile(params string[] assemblyNames)
@@ -176,17 +219,26 @@ namespace Core.HotUpdate
             {
                 foreach (var assemblyName in assemblyNames)
                 {
-                    var assemblyBytes = File.ReadAllBytes(Path.Combine(Application.streamingAssetsPath, $"{assemblyName}.bytes"));
+                    var assemblyBytes = GetAssemblyBytes(assemblyName);
                     var assembly = Assembly.Load(assemblyBytes);
-                    RuntimeApi.LoadMetadataForAOTAssembly(assemblyBytes, HomologousImageMode.SuperSet);
                     _assemblyNames.Add(assembly.GetName().Name);
-                    LogManager.Log($"{nameof(HotUpdateManager)}.{nameof(LoadAssembliesAsync)}：已加载热更程序集，{assembly.GetName().Name}");
+                    LogManager.Log($"{nameof(HotUpdateManager)}.{nameof(LoadAssembliesAsync)}：已加载热更程序集{assembly.GetName().Name}");
                 }
             }
             catch (Exception e)
             {
-                LogManager.LogError($"{nameof(HotUpdateManager)}.{nameof(LoadAssemblyAsyncInternal)}：{e.Message}，{e.StackTrace}");
+                LogManager.LogError($"{nameof(HotUpdateManager)}.{nameof(LoadAssemblyAsyncByFile)}：程序集加载错误，{e.Message}");
             }
+        }
+
+        /// <summary>
+        /// 获取程序集字节数组
+        /// </summary>
+        /// <param name="assemblyNameWithExtension">包含拓展名的程序集名称</param>
+        /// <returns></returns>
+        private static byte[] GetAssemblyBytes(string assemblyNameWithExtension)
+        {
+            return File.ReadAllBytes(Path.Combine(Application.streamingAssetsPath, $"{assemblyNameWithExtension}.bytes"));
         }
     }
 }

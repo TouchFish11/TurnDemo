@@ -1,7 +1,9 @@
+using System;
 using System.Threading.Tasks;
 using Core.GlobalEvent;
 using Core.GlobalEvent.Events;
 using Core.Loader.Object;
+using Core.Log;
 using Core.Pool;
 using Core.Service;
 
@@ -22,9 +24,16 @@ namespace Core.UI.MVC
 
         public async Task Init(IuiView view, IuiModel model)
         {
-            this.view = (TView)view;
-            this.model = (TModel)model;
-            await OnInit();
+            try
+            {
+                this.view = (TView)view;
+                this.model = (TModel)model;
+                await OnInit();
+            }
+            catch (Exception e)
+            {
+                LogManager.LogError($"{nameof(UIController<TView, TModel>)}.{nameof(Init)}：控制器初始化异常，{e.Message}");
+            }
         }
 
         /// <summary>

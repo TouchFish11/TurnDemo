@@ -11,6 +11,7 @@ using HotUpdate.Battle.Toughness.CalcStrategy;
 using HotUpdate.Battle.Toughness.ReduceStrategy;
 using HotUpdate.Battle.Utility;
 using HotUpdate.Core.Battle.Object;
+using HotUpdate.Core.Battle.Property;
 using HotUpdate.Core.Battle.Toughness;
 using UnityEngine;
 

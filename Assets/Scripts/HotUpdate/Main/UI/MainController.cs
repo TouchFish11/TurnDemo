@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using Core.Log;
 using Core.Service;
 using Core.UI.MVC;
-using HotUpdate.Core.MVC;
-using HotUpdate.Core.UI;
 using HotUpdate.Core.UI.Helper;
+using HotUpdate.Core.UI.MVC;
 using HotUpdate.Main.UI.Logic;
 
 namespace HotUpdate.Main.UI
@@ -45,15 +44,23 @@ namespace HotUpdate.Main.UI
         /// <returns>异步任务</returns>
         protected override Task OnInit()
         {
-            // 初始化交互逻辑实例并加入字典
-            mainLogics.Add(typeof(InteractLogic), poolManager.GetData<InteractLogic>());
-            // 初始化任务逻辑实例并加入字典
-            mainLogics.Add(typeof(TaskLogic), poolManager.GetData<TaskLogic>());
-            // 初始化对话逻辑实例并加入字典
-            mainLogics.Add(typeof(DialogueLogic), poolManager.GetData<DialogueLogic>());
-            // 初始化所有子逻辑模块的状态
-            InitState();
-            return Task.CompletedTask;
+            try
+            {
+                // 初始化交互逻辑实例并加入字典
+                mainLogics.Add(typeof(InteractLogic), poolManager.GetData<InteractLogic>());
+                // 初始化任务逻辑实例并加入字典
+                mainLogics.Add(typeof(TaskLogic), poolManager.GetData<TaskLogic>());
+                // 初始化对话逻辑实例并加入字典
+                mainLogics.Add(typeof(DialogueLogic), poolManager.GetData<DialogueLogic>());
+                // 初始化所有子逻辑模块的状态
+                InitState();
+                return Task.FromResult(Task.CompletedTask);
+            }
+            catch (Exception e)
+            {
+                LogManager.LogError($"{nameof(MainController)}.{nameof(OnInit)}：主界面初始化错误，{e.Message}");
+                return Task.CompletedTask;
+            }
         }
         
         protected override Task OnHide()
