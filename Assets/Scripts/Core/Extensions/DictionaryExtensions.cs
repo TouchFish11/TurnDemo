@@ -14,7 +14,11 @@ namespace Core.Extensions
             var uniList = ListUtility.GetUniList<TReturn>();
             foreach (var value in valueCollection)
             {
-                uniList.Add(func(value));
+                var tReturn = func(value);
+                if (tReturn != null)
+                {
+                    uniList.Add(tReturn);
+                }
             }
             
             return uniList.List.ToArray();

@@ -12,7 +12,7 @@ namespace Core.Pool
     /// </summary>
     public class PoolManager : SingletonBase<PoolManager>, IPoolManager
     {
-        public override int Priority => 0;
+        public override int InitPriority => 0;
         // 存储继承Mono对象
         private readonly Dictionary<string, PoolObj> _poolObjDic = new();
         // 存储不继承Mono对象

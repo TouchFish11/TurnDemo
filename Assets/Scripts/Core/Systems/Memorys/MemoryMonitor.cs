@@ -15,7 +15,7 @@ namespace Core.Systems.Memorys
     /// </summary>
     public class MemoryMonitor : SingletonBase<MemoryMonitor>, IMemoryMonitor
     {
-        public override int Priority => 0;
+        public override int InitPriority => 0;
         // 监听者列表
         private readonly List<IMemoryListener> _listeners = new();
         // 当前内存占用级别

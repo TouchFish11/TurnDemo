@@ -31,7 +31,7 @@ namespace Core.AssetBundles.Update.State
             if (File.Exists(PathUtility.GetAbLoadPath(FileUtility.CacheDefaultName)))
             {
                 File.Delete(PathUtility.GetAbLoadPath(FileUtility.CacheDefaultName));
-                LogManager.Log($"已删除缓存文件");
+                LogManager.Log($"{nameof(FinishState)}.{nameof(Execute)}:已删除缓存文件{FileUtility.CacheDefaultName}");
             }
             
             // 触发更新完成回调

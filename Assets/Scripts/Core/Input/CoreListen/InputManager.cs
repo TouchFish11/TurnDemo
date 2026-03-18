@@ -167,7 +167,7 @@ namespace Core.Input.CoreListen
         //            }
         //        }
         //    }
-        public override int Priority => -1;
+        public override int InitPriority => -1;
 
         public override Task InitAsync()
         {

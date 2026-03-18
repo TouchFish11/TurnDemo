@@ -19,9 +19,10 @@ namespace Core.Log
     /// <summary>
     /// 日志管理器
     /// </summary>
-    public class LogManager : SingletonBase<LogManager>, ILogManager
+    public class LogManager : SingletonBase<LogManager>, ILogManager, IApplicationExitNotify
     {
-        public override int Priority => -1;
+        public override int InitPriority => -1;
+        public int QuitPriority => 1;
         // 日志队列
         private readonly ConcurrentQueue<string> _logs = new();
         // 日志线程
@@ -41,7 +42,6 @@ namespace Core.Log
 
         public override Task InitAsync()
         {
-            ServiceLocator.Get<IMonoAdapter>().OnAppQuit += OnApplicationQuit;
             LogSavePath = PathUtility.GetLogLocalSavePath(FileUtility.LocalLogFileName);
             WriteLogMaxIntervalTime = GlobalSettings.Instance.writeLogMaxIntervalTime;
             InitLogFile();
@@ -198,12 +198,7 @@ namespace Core.Log
                     // 获取方法
                     var method = frame.GetMethod();
                     if (method == null) continue;
-
-                    // if (!uniList.Contains(method.DeclaringType?.Assembly))
-                    // {
-                    //     continue;
-                    // }
-
+                    
                     // 空行
                     sb.Append(Environment.NewLine);
 
@@ -269,14 +264,14 @@ namespace Core.Log
                 startTime = DateTime.Now.AddSeconds(WriteLogMaxIntervalTime);
             }
         }
-
-        private async Task OnApplicationQuit()
+        
+        public void OnAppQuit()
         {
             // 停止日志写入线程
             _isLogRunning = false;
+            Log($"{nameof(LogManager)}.{nameof(OnAppQuit)}:---日志写入结束---");
             // 保存未写入的日志
             SaveRemainLog();
-            await Task.CompletedTask;
         }
 
         /// <summary>

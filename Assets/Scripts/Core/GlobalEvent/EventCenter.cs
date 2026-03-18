@@ -14,7 +14,7 @@ namespace Core.GlobalEvent
     /// </summary>
     public class EventCenter : SingletonBase<EventCenter>, IEventCenter
     {
-        public override int Priority => 0;
+        public override int InitPriority => 0;
 
         // 存储事件类型与对应事件信息列表的映射表
         // Key：事件类型（TEvent），Value：该类型下所有订阅的事件信息

@@ -21,27 +21,15 @@ namespace Core.Mono
         private List<IDestroyable> destroyables = new();
 
         
-        
         private List<Action> _fixedUpdates = new();
         private List<Action> _updates = new();
         private List<Action> _lateUpdates = new();
-
-        /// <summary>
-        /// 应用程序退出事件
-        /// </summary>
-        public event Func<Task> OnAppQuit;
         
-        /// <summary>
-        /// 应用程序暂停事件
-        /// </summary>
-        public event Func<bool, Task> OnAppPause; 
-        
-        /// <summary>
-        /// 应用程序焦点事件
-        /// </summary>
-        public event Func<bool, Task> OnAppFocus;
+        private List<IApplicationExitNotify> _applicationExits = new();
+        private List<IApplicationPauseNotify> _applicationPauses = new();
+        private List<IApplicationFocusNotify> _applicationFocus = new();
 
-        public int Priority => -99;
+        public int InitPriority => -99;
 
         public Task InitAsync()
         {
@@ -50,9 +38,9 @@ namespace Core.Mono
         
         private void Awake()
         {
-            for (var i = 0; i < awakables.Count; ++i)
+            foreach (var awakable in awakables)
             {
-                awakables[i].Awake();
+                awakable.Awake();
             }
         }
 
@@ -64,6 +52,41 @@ namespace Core.Mono
         private void Start()
         {
             
+        }
+        
+        public void AddApplicationPauseNotify(IApplicationPauseNotify applicationPauseNotify)
+        {
+            _applicationPauses.Add(applicationPauseNotify);
+        }
+
+        public bool RemoveApplicationPauseNotify(IApplicationPauseNotify applicationPauseNotify)
+        {
+            return _applicationPauses.Remove(applicationPauseNotify);
+        }
+        
+        public void AddApplicationFocusNotify(IApplicationFocusNotify applicationFocusNotify)
+        {
+            _applicationFocus.Add(applicationFocusNotify);
+        }
+        
+        public bool RemoveApplicationFocusNotify(IApplicationFocusNotify applicationFocusNotify)
+        {
+            return _applicationFocus.Remove(applicationFocusNotify);
+        }
+        
+        public void AddApplicationExitNotify(IApplicationExitNotify applicationExitNotify)
+        {
+            _applicationExits.Add(applicationExitNotify);
+        }
+        
+        public void AddApplicationExitNotifies(params IApplicationExitNotify[] applicationExitNotifies)
+        {
+            _applicationExits.AddRange(applicationExitNotifies);
+        }
+
+        public bool RemoveApplicationExitNotify(IApplicationExitNotify applicationExitNotify)
+        {
+            return _applicationExits.Remove(applicationExitNotify);
         }
 
         public new Coroutine StartCoroutine(IEnumerator coroutine)
@@ -154,57 +177,57 @@ namespace Core.Mono
             
         }
 
-        private async void OnApplicationQuit()
+        private void OnApplicationQuit()
         {
             try
             {
-                if (OnAppQuit == null)
+                // 按优先级排序
+                _applicationExits.Sort((i1, i2) =>
                 {
-                    return;
-                }
+                    if (i1.QuitPriority > i2.QuitPriority) return 1;
+                    if (i1.QuitPriority < i2.QuitPriority) return -1;
+                    return 0;
+                });
                 
-                await OnAppQuit();
-                OnAppQuit = null;
+                // 依次执行退出逻辑
+                foreach (var applicationExitNotify in _applicationExits)
+                {
+                    applicationExitNotify.OnAppQuit();
+                }
             }
             catch (Exception e)
             {
-                LogManager.LogError($"{nameof(MonoAdapter)}.{nameof(OnApplicationQuit)}：{e.Message}，{e.StackTrace}");
+                LogManager.LogError($"{nameof(MonoAdapter)}.{nameof(OnApplicationQuit)}:应用程序退出时逻辑执行错误，{e.Message}");
             }
         }
 
-        private async void OnApplicationPause(bool pauseStatus)
+        private void OnApplicationPause(bool pauseStatus)
         {
             try
             {
-                if (OnAppPause == null)
+                foreach (var applicationPauseNotify in _applicationPauses)
                 {
-                    return;
+                    applicationPauseNotify.OnAppPause(pauseStatus);
                 }
-                
-                await OnAppPause(pauseStatus);
-                OnAppPause = null;
             }
             catch (Exception e)
             {
-                LogManager.LogError($"{nameof(MonoAdapter)}.{nameof(OnApplicationPause)}：{e.Message}，{e.StackTrace}");
+                LogManager.LogError($"{nameof(MonoAdapter)}.{nameof(OnApplicationPause)}:应用程序暂停/恢复时逻辑执行错误，{e.Message}");
             }
         }
 
-        private async void OnApplicationFocus(bool hasFocus)
+        private void OnApplicationFocus(bool hasFocus)
         {
             try
             {
-                if (OnAppFocus == null)
+                foreach (var applicationFocusNotify in _applicationFocus)
                 {
-                    return;
+                    applicationFocusNotify.OnAppFocus(hasFocus);
                 }
-                
-                await OnAppFocus(hasFocus);
-                OnAppFocus = null;
             }
             catch (Exception e)
             {
-                LogManager.LogError($"{nameof(MonoAdapter)}.{nameof(OnApplicationFocus)}：{e.Message}，{e.StackTrace}");
+                LogManager.LogError($"{nameof(MonoAdapter)}.{nameof(OnApplicationFocus)}:应用程序聚焦/失焦时逻辑执行错误，{e.Message}");
             }
         }
 
@@ -219,6 +242,13 @@ namespace Core.Mono
             _fixedUpdates = null;
             _updates = null;
             _lateUpdates = null;
+            
+            _applicationExits.Clear();
+            _applicationPauses.Clear();
+            _applicationFocus.Clear();
+            _applicationExits = null;
+            _applicationPauses = null;
+            _applicationFocus = null;
             
             base.OnDestroy();
         }

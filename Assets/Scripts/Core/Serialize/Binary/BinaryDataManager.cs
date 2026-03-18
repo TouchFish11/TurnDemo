@@ -14,7 +14,7 @@ namespace Core.Serialize.Binary
     /// </summary>
     public class BinaryDataManager : SingletonBase<BinaryDataManager>, IBinaryDataManager
     {
-        public override int Priority => 0;
+        public override int InitPriority => 0;
         // 配置加载类型到加载器的映射
         private readonly Dictionary<EConfigLoadType, IConfigLoader> typeToLoaderMap = new();
 

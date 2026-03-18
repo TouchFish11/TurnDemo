@@ -10,7 +10,7 @@ namespace Core.ScriptableObject
     /// </summary>
     public class ScriptableObjectManager : SingletonBase<ScriptableObjectManager>, IScriptableObjectManager
     {
-        public override int Priority => 0;
+        public override int InitPriority => 0;
 
         private ScriptableObjectManager()
         {

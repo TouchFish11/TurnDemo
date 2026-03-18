@@ -17,7 +17,7 @@ namespace Core.Time
     /// </summary>
     public class TimerManager : SingletonBase<TimerManager>, ITimerManager
     {
-        public override int Priority => 0;
+        public override int InitPriority => 0;
         // 存储受游戏时间影响的定时器字典（Key：定时器唯一ID，Value：定时器对象）
         private readonly Dictionary<int, Timer> _timerDic = new();
         // 存储不受游戏时间影响的定时器字典（Key：定时器唯一ID，Value：定时器对象）

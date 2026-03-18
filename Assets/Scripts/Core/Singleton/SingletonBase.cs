@@ -51,7 +51,7 @@ namespace Core.Singleton
         /// </summary>
         public bool IsLive => _instance != null;
 
-        public abstract int Priority { get; }
+        public abstract int InitPriority { get; }
         
         public abstract Task InitAsync();
     }

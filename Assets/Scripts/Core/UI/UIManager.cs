@@ -16,7 +16,7 @@ namespace Core.UI
     /// </summary>
     public class UIManager : SingletonBase<UIManager>, IUIManager
     {
-        public override int Priority => 2;
+        public override int InitPriority => 2;
         // 存储打开的界面
         private readonly List<IPanelInfo> _panels = new();
         // 上层

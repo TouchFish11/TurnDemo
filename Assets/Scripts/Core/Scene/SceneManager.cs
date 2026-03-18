@@ -19,7 +19,7 @@ namespace Core.Scene
     /// </summary>
     public class SceneManager : SingletonBase<SceneManager>, ISceneManager
     {
-        public override int Priority => 2;
+        public override int InitPriority => 2;
 
         // 场景路径缓存
         private List<string> _scenePaths;

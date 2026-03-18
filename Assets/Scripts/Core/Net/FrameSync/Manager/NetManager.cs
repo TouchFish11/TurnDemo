@@ -9,32 +9,21 @@ using Core.Singleton;
 namespace Core.Net.FrameSync.Manager
 {
     /// <summary>
-    /// ���������
+    /// 网络管理器
     /// </summary>
-    public class NetManager : SingletonAutoMono<NetManager>, INetManager
+    public class NetManager : SingletonAutoMono<NetManager>, INetManager, IApplicationExitNotify
     {
-        // Tcp�߼�
         private TcpClient _tcpClient;
-        // Udp�߼�
         private UdpClient _udpClient;
-        // �������˵�
         public EndPoint serverEndPoint;
-        // ����UDP�˵�
         public EndPoint udpClientEndPoint;
 
-        /// <summary>
-        /// �ͻ���ID
-        /// </summary>
         public int ClientID { get; private set; }
 
-        /// <summary>
-        /// ��������״̬
-        /// </summary>
         public bool Connected => _tcpClient != null && _tcpClient.GetTcpConnectState() && _tcpClient.IsConnecting;
 
         private void Awake()
         {
-            ServiceLocator.Get<IMonoAdapter>().OnAppQuit += OnAppQuit;
             ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpdate);
         }
 
@@ -131,10 +120,11 @@ namespace Core.Net.FrameSync.Manager
             _udpClient?.OnUpdate();
         }
 
-        private async Task OnAppQuit()
+        public int QuitPriority => 0;
+
+        public void OnAppQuit()
         {
             RequestCloseConnect();
-            await Task.CompletedTask;
         }
     }
 }

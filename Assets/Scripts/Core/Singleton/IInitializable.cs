@@ -8,7 +8,7 @@ namespace Core.Singleton
         /// 初始化优先级
         /// 数值越小，越先初始化
         /// </summary>
-        public int Priority { get; }
+        public int InitPriority { get; }
         
         /// <summary>
         /// 异步初始化

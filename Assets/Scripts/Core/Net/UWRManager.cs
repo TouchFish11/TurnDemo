@@ -19,7 +19,7 @@ namespace Core.Net
     public class UWRManager : SingletonBase<UWRManager>, IUWRManager
     {
         // 单例优先级（数值越低优先级越高）
-        public override int Priority => 0;
+        public override int InitPriority => 0;
         // Mono适配器（用于在非Mono类中启动协程）
         private IMonoAdapter _monoAdapter;
 

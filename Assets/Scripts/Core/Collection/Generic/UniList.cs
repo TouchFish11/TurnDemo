@@ -18,9 +18,10 @@ namespace Core.Collection.Generic
             List.Add(item);
         }
 
-        public void AddRange(IEnumerable<T> collection)
+        public UniList<T> AddRange(IEnumerable<T> collection)
         {
             List.AddRange(collection);
+            return this;
         }
         
         public bool Remove(T item)

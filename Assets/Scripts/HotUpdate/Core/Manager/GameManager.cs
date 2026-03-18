@@ -9,15 +9,16 @@ namespace HotUpdate.Core.Manager
     /// <summary>
     /// 游戏管理器
     /// </summary>
-    public class GameManager : IGameManager
+    public class GameManager : IGameManager, IApplicationExitNotify
     {
+        public int QuitPriority => 0;
         // 游戏数据管理器
         public GameDataManager GameDataManager { get; }
 
         public GameManager(IMonoAdapter monoAdapter)
         {
             GameDataManager = new GameDataManager();
-            monoAdapter.OnAppQuit += OnAppQuit;
+            monoAdapter.AddApplicationExitNotify(this);
         }
         
         public async Task InitDataAsync()
@@ -31,14 +32,18 @@ namespace HotUpdate.Core.Manager
                 LogManager.LogError($"{nameof(GameManager)}.{nameof(InitDataAsync)}：{ex.Message}，{ex.StackTrace}");
             }
         }
-
-        /// <summary>
-        /// 应用退出事件回调
-        /// </summary>
-        /// <returns></returns>
-        private Task OnAppQuit()
+        
+        public async void OnAppQuit()
         {
-            return GameDataManager.SaveDataAsync();
+            try
+            {
+                await GameDataManager.SaveDataAsync();
+                LogManager.LogError($"{nameof(GameManager)}.{nameof(OnAppQuit)}:数据保存成功");
+            }
+            catch (Exception e)
+            {
+                LogManager.LogError($"{nameof(GameManager)}.{nameof(OnAppQuit)}:数据保存错误，{e.Message}");
+            }
         }
     }
 }

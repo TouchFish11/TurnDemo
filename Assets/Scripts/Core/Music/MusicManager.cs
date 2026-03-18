@@ -17,7 +17,7 @@ namespace Core.Music
     /// </summary>
     public class MusicManager : SingletonBase<MusicManager>, IMusicManager
     {
-        public override int Priority => 0;
+        public override int InitPriority => 0;
 
         // 音效播放器列表
         private readonly Dictionary<int, AudioSource> _sounds = new();

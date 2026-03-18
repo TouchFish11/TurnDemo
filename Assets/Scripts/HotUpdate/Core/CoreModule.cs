@@ -35,7 +35,7 @@ namespace HotUpdate.Core
             go.AddComponent<PlayerInputComponent>();
             // ...
             
-            // 立即销毁
+            // 销毁
             EngineUtility.Destroy(go);
         }
     }

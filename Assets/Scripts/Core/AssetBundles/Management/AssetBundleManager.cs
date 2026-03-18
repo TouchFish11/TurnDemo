@@ -18,7 +18,7 @@ namespace Core.AssetBundles.Management
     /// </summary>
     public class AssetBundleManager : SingletonBase<AssetBundleManager>, IAssetBundleManager
     {
-        public override int Priority => 1;
+        public override int InitPriority => 1;
         // 缓存活跃的包包装器
         private readonly Dictionary<string, BundleWrapper> _nameToWrapperMap = new();
         // 未被引用的包装器缓存

@@ -43,9 +43,7 @@ namespace Core.HotUpdate
         /// <param name="abName"></param>
         /// <param name="assemblyNames"></param>
         Task LoadAssembliesAsync(string abName, params string[] assemblyNames);
-
-        void LoadAssemblyAsyncByFile(params string[] assemblyNames);
-
+        
         /// <summary>
         /// 获取所有程序集
         /// </summary>

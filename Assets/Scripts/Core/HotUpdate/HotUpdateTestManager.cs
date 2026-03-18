@@ -17,16 +17,16 @@ using UnityEngine;
 namespace Core.HotUpdate
 {
     /// <summary>
-    /// 热更新管理器
+    /// 测试热更新管理器
     /// </summary>
-    public class HotUpdateManager : SingletonBase<HotUpdateManager>, IHotUpdateManager
+    public class HotUpdateTestManager : SingletonBase<HotUpdateTestManager>, IHotUpdateManager
     {
         public override int InitPriority => 2;
         // 缓存热更程序集名称
         private readonly ConcurrentBag<string> _assemblyNames = new();
         private IAssetBundleManager _assetBundleManager;
         
-        private HotUpdateManager(){}
+        private HotUpdateTestManager(){}
 
         public override Task InitAsync()
         {
@@ -39,36 +39,39 @@ namespace Core.HotUpdate
         /// </summary>
         /// <param name="abName"></param>
         /// <param name="assemblyNames"></param>
-        public async Task LoadAssembliesAsync(string abName, params string[] assemblyNames)
+        public Task LoadAssembliesAsync(string abName, params string[] assemblyNames)
         {
-            var uniList = ListUtility.GetUniList<string>().AddRange(assemblyNames);
-            // 加载热更新AB包资源
-            var assetBundle = await _assetBundleManager.LoadBundleAsync(abName);
-            var dllTexts = ListUtility.GetUniList<TextAsset>();
-            await assetBundle.LoadAllAssetsAsync<TextAsset>().ToTask(dllTexts.List);
-            foreach (var dllText in dllTexts.List)
+            try
             {
-                if (!uniList.Contains(dllText.name)) continue;
-                // 多线程加载程序集
-                await LoadAssemblyAsyncInternal(dllText.bytes);
+                foreach (var assemblyName in assemblyNames)
+                {
+                    var assemblyBytes = GetAssemblyBytes(assemblyName);
+                    var assembly = Assembly.Load(assemblyBytes);
+                    _assemblyNames.Add(assembly.GetName().Name);
+                    LogManager.Log($"{nameof(HotUpdateManager)}.{nameof(LoadAssembliesAsync)}:已加载热更程序集{assembly.GetName().Name}");
+                }
             }
-            
-            ListUtility.CollectUniList(uniList);
-            _assetBundleManager.UnloadBundle(abName);
+            catch (Exception e)
+            {
+                LogManager.LogError($"{nameof(HotUpdateManager)}.{nameof(LoadAssembliesAsync)}:程序集加载错误，{e.Message}");
+            }
+
+            return Task.CompletedTask;
         }
 
         public async Task LoadAssembliesAsync(string abName)
         {
-            // 加载热更新AB包资源
             var assetBundle = await _assetBundleManager.LoadBundleAsync(abName);
+            // 加载热更新AB包资源
             var dllTexts = ListUtility.GetUniList<TextAsset>();
             await assetBundle.LoadAllAssetsAsync<TextAsset>().ToTask(dllTexts.List);
             foreach (var dllText in dllTexts.List)
             {
-                if (_assemblyNames.Contains(dllText.name[..dllText.name.LastIndexOf('.')]))
+                if (_assemblyNames.Contains(dllText.name.Substring(0, dllText.name.LastIndexOf('.'))))
                 {
                     continue;
                 }
+                
                 // 多线程加载程序集
                 await LoadAssemblyAsyncInternal(dllText.bytes);
             }
@@ -161,7 +164,7 @@ namespace Core.HotUpdate
                 {
                     var assembly = Assembly.Load(bytes);
                     _assemblyNames.Add(assembly.GetName().Name);
-                    LogManager.Log($"{nameof(HotUpdateManager)}.{nameof(LoadAssembliesAsync)}：已加载热更程序集{assembly.GetName().Name}");
+                    LogManager.Log($"{nameof(HotUpdateManager)}.{nameof(LoadAssemblyAsyncInternal)}：已加载热更程序集{assembly.GetName().Name}");
                 }
                 catch (Exception e)
                 {
@@ -176,12 +179,11 @@ namespace Core.HotUpdate
             {
                 var assemblyBytes = GetAssemblyBytes(aotDllName);
                 var errorCode = RuntimeApi.LoadMetadataForAOTAssembly(assemblyBytes, HomologousImageMode.SuperSet);
-                LogManager.Log($"{nameof(HotUpdateManager)}.{nameof(LoadMetadataForAOTAssemblies)}:已补充元数据{aotDllName}，错误码:{errorCode}");
+                LogManager.Log($"{nameof(HotUpdateManager)}.{nameof(LoadMetadataForAOTAssemblies)}：已补充元数据{aotDllName}，错误码：{errorCode}");
             }
         }
-        
+
         /// <summary>
-        /// TODO：补充的程序集单独打包AB包加载
         /// 获取程序集字节数组
         /// </summary>
         /// <param name="assemblyNameWithExtension">包含拓展名的程序集名称</param>

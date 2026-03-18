@@ -2,6 +2,7 @@
 
 <linker>
     <!-- 保留热更新程序集的所有类型和成员 -->
+    <assembly fullname="CoreModule" preserve="all"/>
     <assembly fullname="HotUpdate.Activity" preserve="all"/>
     <assembly fullname="HotUpdate.Animation" preserve="all"/>
     <assembly fullname="HotUpdate.Battle" preserve="all"/>

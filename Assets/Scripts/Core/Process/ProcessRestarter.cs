@@ -63,7 +63,7 @@ namespace Core.Process
             }
             catch (Exception e)
             {
-                LogManager.LogError($"{nameof(ProcessRestarter)}.{nameof(RestartProcess)}：{e.Message}，{e.StackTrace}");
+                LogManager.LogError($"{nameof(ProcessRestarter)}.{nameof(RestartProcess)}：{e.Message}");
                 Application.Quit(); // 至少退出
             }
         }

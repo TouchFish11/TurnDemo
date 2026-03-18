@@ -12,7 +12,7 @@ namespace Core.Net.FrameSync.Manager
     /// </summary>
     public class NetGameManager : SingletonBase<NetGameManager>
     {
-        public override int Priority => -1;
+        public override int InitPriority => -1;
 
         //����������Ŀͻ��˻��棺�����ͻ���ID��ֵ����Ҷ���
         private readonly Dictionary<int, INetObject> _idToPlayerMap = new Dictionary<int, INetObject>();

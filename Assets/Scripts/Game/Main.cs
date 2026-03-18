@@ -40,10 +40,9 @@ namespace Game
                 await ServiceLocator.Get<IAssetBundleManager>().InitSpecifyAsync(DefaultAbNames);
                 var hotUpdateManager = ServiceLocator.Get<IHotUpdateManager>();
                 // 补充元数据
-                hotUpdateManager.LoadMetadataForAOTAssemblies(_aotDlls);
+                hotUpdateManager.LoadMetadataForAOTAssemblies(_aotDlls);  
                 // 加载指定程序集
-                hotUpdateManager.LoadAssemblyAsyncByFile(DefaultAssemblyNames);
-                //await hotUpdateManager.LoadAssembliesAsync(DefaultAbNames[3], DefaultAssemblyNames);
+                await hotUpdateManager.LoadAssembliesAsync(DefaultAbNames[3], DefaultAssemblyNames);
                 // 实例化热更入口对象
                 var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(DefaultAbNames[0]);
                 var entry = assetBundle.LoadAsset<GameObject>("HotUpdateEntry");

@@ -14,7 +14,7 @@ namespace Core.Res
     /// </summary>
     public class ResourcesManager : SingletonBase<ResourcesManager>, IResourcesManager
     {
-        public override int Priority => 0;
+        public override int InitPriority => 0;
 
         // 
         private readonly Dictionary<string, BaseResourcesInfo> _nameToResInfoMap = new Dictionary<string, BaseResourcesInfo>();

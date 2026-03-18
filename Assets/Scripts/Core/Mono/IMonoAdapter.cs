@@ -61,22 +61,28 @@ namespace Core.Mono
         void StopCoroutine(Coroutine coroutine);
 
         /// <summary>
-        /// 应用程序退出事件
-        /// 事件委托返回Task，支持异步退出逻辑处理
+        /// 将实现IApplicationExitNotify的管理器对象添加到适配器中
         /// </summary>
-        event Func<Task> OnAppQuit;
-
+        /// <param name="applicationExitNotify"></param>
+        void AddApplicationExitNotify(IApplicationExitNotify applicationExitNotify);
+        
         /// <summary>
-        /// 应用程序暂停事件
+        /// 将实现IApplicationExitNotify的管理器对象从适配器中移除
         /// </summary>
-        /// <returns>Task支持异步处理暂停逻辑</returns>
-        event Func<bool, Task> OnAppPause;
-
+        /// <param name="applicationExitNotify"></param>
+        /// <returns></returns>
+        bool RemoveApplicationExitNotify(IApplicationExitNotify applicationExitNotify);
+        
         /// <summary>
-        /// 应用程序焦点事件
-        /// 应用程序获取/失去焦点时
+        /// 将实现IApplicationExitNotify的管理器对象批量添加到适配器中
         /// </summary>
-        /// <returns>Task支持异步处理焦点逻辑</returns>
-        event Func<bool, Task> OnAppFocus;
+        /// <param name="applicationExitNotifies"></param>
+        void AddApplicationExitNotifies(params IApplicationExitNotify[] applicationExitNotifies);
+
+
+        void AddApplicationPauseNotify(IApplicationPauseNotify applicationPauseNotify);
+        bool RemoveApplicationPauseNotify(IApplicationPauseNotify applicationPauseNotify);
+        void AddApplicationFocusNotify(IApplicationFocusNotify applicationFocusNotify);
+        bool RemoveApplicationFocusNotify(IApplicationFocusNotify applicationFocusNotify);
     }
 }

@@ -15,9 +15,10 @@ namespace Core.AssetBundles.Update.Core
     /// <summary>
     /// AssetBundle更新管理器
     /// </summary>
-    public class AssetBundleUpdater : SingletonBase<AssetBundleUpdater>, IAssetBundleUpdater
+    public class AssetBundleUpdater : SingletonBase<AssetBundleUpdater>, IAssetBundleUpdater, IApplicationExitNotify
     {
-        public override int Priority => 1;
+        public override int InitPriority => 1;
+        public int QuitPriority => 0;
         // 更新上下文
         private ABUpdateContext _updateContext;
         // 更新状态列表
@@ -39,8 +40,6 @@ namespace Core.AssetBundles.Update.Core
         public override Task InitAsync()
         {
             _poolManager = ServiceLocator.Get<IPoolManager>();
-            // 注册应用退出事件，确保退出时能取消未完成的下载任务
-            ServiceLocator.Get<IMonoAdapter>().OnAppQuit += OnApplicationQuit;
             return Task.CompletedTask;
         }
 
@@ -135,18 +134,23 @@ namespace Core.AssetBundles.Update.Core
             _stateIndex = 0;
             _updateStates.Clear();
         }
-
-        /// <summary>
-        /// 应用退出时的回调处理
-        /// </summary>
-        private async Task OnApplicationQuit()
+        
+        public async void OnAppQuit()
         {
-            if (_currentUpdateState == null || UpdatePhase == EUpdatePhase.Finished)
+            try
             {
-                return;
-            }
+                if (_currentUpdateState == null || UpdatePhase == EUpdatePhase.Finished)
+                {
+                    return;
+                }
             
-            await _updateContext.CancelDownload();
+                await _updateContext.CancelDownload();
+                LogManager.Log($"{nameof(AssetBundleUpdater)}.{nameof(OnAppQuit)}:已取消下载)");
+            }
+            catch (System.Exception e)
+            {
+                LogManager.LogError($"{nameof(AssetBundleUpdater)}.{nameof(OnAppQuit)}:取消下载错误，{e.Message})");
+            }
         }
     }
 }

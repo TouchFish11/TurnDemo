@@ -15,7 +15,7 @@ namespace Core.Reflection
     /// </summary>
     public class FactoryManager : SingletonBase<FactoryManager> , IFactoryManager
     {
-        public override int Priority => 1;
+        public override int InitPriority => 1;
         // 工厂实例类型Type到工厂接口的映射
         private readonly Dictionary<TypeIdentifier, IFactory> typeToFactoryMap = new();
 

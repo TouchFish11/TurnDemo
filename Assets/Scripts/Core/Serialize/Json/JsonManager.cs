@@ -14,7 +14,7 @@ namespace Core.Serialize.Json
     /// </summary>
     public class JsonManager : SingletonBase<JsonManager>, IJsonManager
     {
-        public override int Priority => 0;
+        public override int InitPriority => 0;
 
         public static JsonSerializerSettings DefaultSettings => new()
         {

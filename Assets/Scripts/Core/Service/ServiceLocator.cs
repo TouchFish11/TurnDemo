@@ -69,8 +69,12 @@ namespace Core.Service
             Register<IScriptableObjectManager>(ScriptableObjectManager.Instance);
             Register<ITimerManager>(TimerManager.Instance);
             Register<IVideoManager>(VideoManager.Instance);
-            Register<IFactoryManager>(FactoryManager.Instance);
-            Register<IHotUpdateManager>(HotUpdateManager.Instance);
+            Register<IFactoryManager>(FactoryManager.Instance); 
+#if UNITY_EDITOR
+            Register<IHotUpdateManager>(HotUpdateMockManager.Instance);
+#else
+            Register<IHotUpdateManager>(HotUpdateTestManager.Instance);
+#endif
             Register<ISceneManager>(SceneManager.Instance);
             Register<IPreLoadManager>(PreLoadManager.Instance);
             Register<IGameSettingManager>(GameSettingManager.Instance);
@@ -91,6 +95,15 @@ namespace Core.Service
         /// </summary>
         private static async Task InitServices()
         {
+            await InitInitializable();
+            InitQuit();
+        }
+
+        /// <summary>
+        /// 初始化管理器
+        /// </summary>
+        private static async Task InitInitializable()
+        {
             var initializables = TypeToServerMap.Values.ToArray(service =>
             {
                 if (service is IInitializable initializable)
@@ -104,12 +117,12 @@ namespace Core.Service
             // 按优先级排序
             uniList.Sort((i1, i2) =>
             {
-                if (i1.Priority > i2.Priority)
+                if (i1.InitPriority > i2.InitPriority)
                 {
                     return 1;
                 }
 
-                if (i1.Priority < i2.Priority)
+                if (i1.InitPriority < i2.InitPriority)
                 {
                     return -1;
                 }
@@ -127,6 +140,22 @@ namespace Core.Service
             ListUtility.CollectUniList(uniList);
         }
 
+        /// <summary>
+        /// 注册到适配器中
+        /// </summary>
+        private static void InitQuit()
+        {
+            var applicationExitNotifies = TypeToServerMap.Values.ToArray(service =>
+            {
+                if (service is IApplicationExitNotify applicationExitNotify)
+                {
+                    return applicationExitNotify;
+                }
+                return null;
+            });
+            Get<IMonoAdapter>().AddApplicationExitNotifies(applicationExitNotifies);
+        }
+        
         /// <summary>
         /// 注册
         /// </summary>
