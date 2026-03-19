@@ -73,7 +73,7 @@ namespace Core.Service
 #if UNITY_EDITOR
             Register<IHotUpdateManager>(HotUpdateMockManager.Instance);
 #else
-            Register<IHotUpdateManager>(HotUpdateTestManager.Instance);
+            Register<IHotUpdateManager>(HotUpdateManager.Instance);
 #endif
             Register<ISceneManager>(SceneManager.Instance);
             Register<IPreLoadManager>(PreLoadManager.Instance);
@@ -104,40 +104,25 @@ namespace Core.Service
         /// </summary>
         private static async Task InitInitializable()
         {
-            var initializables = TypeToServerMap.Values.ToArray(service =>
+            var initializables = new List<IInitializable>(TypeToServerMap.Values.ToArray(service =>
             {
-                if (service is IInitializable initializable)
-                {
-                    return initializable;
-                }
+                if (service is IInitializable initializable) return initializable;
                 return null;
-            });
-            var uniList = ListUtility.GetUniList<IInitializable>();
-            uniList.AddRange(initializables);
+            }));
+            
             // 按优先级排序
-            uniList.Sort((i1, i2) =>
+            initializables.Sort((i1, i2) =>
             {
-                if (i1.InitPriority > i2.InitPriority)
-                {
-                    return 1;
-                }
-
-                if (i1.InitPriority < i2.InitPriority)
-                {
-                    return -1;
-                }
-
+                if (i1.InitPriority > i2.InitPriority) return 1;
+                if (i1.InitPriority < i2.InitPriority) return -1;
                 return 0;
             });
             
             // 顺序初始化
-            foreach (var initializable in uniList.List)
+            foreach (var initializable in initializables)
             {
                 await initializable.InitAsync();
             }
-
-            // 回收列表对象
-            ListUtility.CollectUniList(uniList);
         }
 
         /// <summary>
@@ -147,10 +132,7 @@ namespace Core.Service
         {
             var applicationExitNotifies = TypeToServerMap.Values.ToArray(service =>
             {
-                if (service is IApplicationExitNotify applicationExitNotify)
-                {
-                    return applicationExitNotify;
-                }
+                if (service is IApplicationExitNotify applicationExitNotify) return applicationExitNotify;
                 return null;
             });
             Get<IMonoAdapter>().AddApplicationExitNotifies(applicationExitNotifies);

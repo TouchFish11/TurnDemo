@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Threading;
-using Core.AssetBundles.Update.Core;
-using Core.AssetBundles.Update.Handler;
 using Core.Global;
 using Core.Log;
 using Core.Mono;
@@ -11,7 +9,7 @@ using Core.Service;
 using Core.Tasks.Extensions;
 using UnityEngine.Networking;
 
-namespace Core.AssetBundles.Update
+namespace Core.AssetBundles.Update.Core
 {
     /// <summary>
     /// AssetBundle资源网络请求器

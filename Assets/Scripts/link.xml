@@ -1,19 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <linker>
-    <!-- 保留热更新程序集的所有类型和成员 -->
-    <assembly fullname="CoreModule" preserve="all"/>
-    <assembly fullname="HotUpdate.Activity" preserve="all"/>
-    <assembly fullname="HotUpdate.Animation" preserve="all"/>
-    <assembly fullname="HotUpdate.Battle" preserve="all"/>
-    <assembly fullname="HotUpdate.Camera" preserve="all"/>
-    <assembly fullname="HotUpdate.Common" preserve="all"/>
-    <assembly fullname="HotUpdate.Config" preserve="all"/>
-    <assembly fullname="HotUpdate.Core" preserve="all"/>
-    <assembly fullname="HotUpdate.Dialogue" preserve="all"/>
-    <assembly fullname="HotUpdate.Entry" preserve="all"/>
-    <assembly fullname="HotUpdate.Input" preserve="all"/>
-    <assembly fullname="HotUpdate.Main" preserve="all"/>
-    <assembly fullname="HotUpdate.Task" preserve="all"/>
-    <assembly fullname="Shared" preserve="all"/>
+    <!-- 保留 PointInfo 类型本身 -->
+    <assembly fullname="HotUpdate.Core">
+        <type fullname="HotUpdate.Core.Battle.Point.PointInfo" preserve="all"/>
+    </assembly>
 </linker>

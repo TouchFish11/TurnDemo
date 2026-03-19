@@ -34,46 +34,51 @@ namespace Core.HotUpdate
             return Task.CompletedTask;
         }
 
-        /// <summary>
-        /// 加载指定程序集
-        /// </summary>
-        /// <param name="abName"></param>
-        /// <param name="assemblyNames"></param>
+        public void LoadMetadataForAOTAssemblies(IReadOnlyList<string> aotDlls)
+        {
+            foreach (var aotDllName in aotDlls)
+            {
+                var assemblyBytes = GetAssemblyBytes(aotDllName);
+                var errorCode = RuntimeApi.LoadMetadataForAOTAssembly(assemblyBytes, HomologousImageMode.SuperSet);
+                LogManager.Log($"{nameof(HotUpdateManager)}.{nameof(LoadMetadataForAOTAssemblies)}:已补充元数据{aotDllName}，错误码:{errorCode}");
+            }
+        }
+
         public async Task LoadAssembliesAsync(string abName, params string[] assemblyNames)
         {
-            var uniList = ListUtility.GetUniList<string>().AddRange(assemblyNames);
             // 加载热更新AB包资源
+            var dllTexts = new List<TextAsset>();
             var assetBundle = await _assetBundleManager.LoadBundleAsync(abName);
-            var dllTexts = ListUtility.GetUniList<TextAsset>();
-            await assetBundle.LoadAllAssetsAsync<TextAsset>().ToTask(dllTexts.List);
-            foreach (var dllText in dllTexts.List)
-            {
-                if (!uniList.Contains(dllText.name)) continue;
-                // 多线程加载程序集
-                await LoadAssemblyAsyncInternal(dllText.bytes);
-            }
+            await assetBundle.LoadAllAssetsAsync<TextAsset>().ToTask(dllTexts);
             
-            ListUtility.CollectUniList(uniList);
+            // 顺序加载程序集资源
+            foreach (var nameWithExtension in assemblyNames)
+            {
+                foreach (var dllText in dllTexts)
+                {
+                    if (nameWithExtension != dllText.name) continue;
+                    // 多线程加载程序集
+                    await LoadAssemblyAsyncInternal(dllText.bytes);
+                    break;
+                }
+            }
             _assetBundleManager.UnloadBundle(abName);
         }
 
         public async Task LoadAssembliesAsync(string abName)
         {
             // 加载热更新AB包资源
+            var dllTexts = new List<TextAsset>();
             var assetBundle = await _assetBundleManager.LoadBundleAsync(abName);
-            var dllTexts = ListUtility.GetUniList<TextAsset>();
-            await assetBundle.LoadAllAssetsAsync<TextAsset>().ToTask(dllTexts.List);
-            foreach (var dllText in dllTexts.List)
+            await assetBundle.LoadAllAssetsAsync<TextAsset>().ToTask(dllTexts);
+            
+            foreach (var dllText in dllTexts)
             {
-                if (_assemblyNames.Contains(dllText.name[..dllText.name.LastIndexOf('.')]))
-                {
-                    continue;
-                }
+                if (_assemblyNames.Contains(dllText.name[..dllText.name.LastIndexOf('.')])) continue;
                 // 多线程加载程序集
                 await LoadAssemblyAsyncInternal(dllText.bytes);
             }
             
-            ListUtility.CollectUniList(dllTexts);
             _assetBundleManager.UnloadBundle(abName);
         }
 
@@ -153,7 +158,7 @@ namespace Core.HotUpdate
         /// </summary>
         /// <param name="bytes">程序集字节数组</param>
         /// <returns></returns>
-        internal Task LoadAssemblyAsyncInternal(byte[] bytes)
+        private Task LoadAssemblyAsyncInternal(byte[] bytes)
         {
             return Task.Run(() =>
             {
@@ -161,23 +166,14 @@ namespace Core.HotUpdate
                 {
                     var assembly = Assembly.Load(bytes);
                     _assemblyNames.Add(assembly.GetName().Name);
-                    LogManager.Log($"{nameof(HotUpdateManager)}.{nameof(LoadAssembliesAsync)}：已加载热更程序集{assembly.GetName().Name}");
+                    LogManager.Log($"{nameof(HotUpdateManager)}.{nameof(LoadAssemblyAsyncInternal)}:已加载热更程序集{assembly.GetName().Name}");
                 }
                 catch (Exception e)
                 {
-                    LogManager.LogError($"{nameof(HotUpdateManager)}.{nameof(LoadAssemblyAsyncInternal)}：热更程序集加载错误{e.Message}");
+                    Debug.LogError($"{nameof(HotUpdateManager)}.{nameof(LoadAssemblyAsyncInternal)}:热更程序集加载错误{e.Message}");
+                    LogManager.LogError($"{nameof(HotUpdateManager)}.{nameof(LoadAssemblyAsyncInternal)}:热更程序集加载错误{e.Message}");
                 }
             });
-        }
-
-        public void LoadMetadataForAOTAssemblies(List<string> aotDlls)
-        {
-            foreach (var aotDllName in aotDlls)
-            {
-                var assemblyBytes = GetAssemblyBytes(aotDllName);
-                var errorCode = RuntimeApi.LoadMetadataForAOTAssembly(assemblyBytes, HomologousImageMode.SuperSet);
-                LogManager.Log($"{nameof(HotUpdateManager)}.{nameof(LoadMetadataForAOTAssemblies)}:已补充元数据{aotDllName}，错误码:{errorCode}");
-            }
         }
         
         /// <summary>

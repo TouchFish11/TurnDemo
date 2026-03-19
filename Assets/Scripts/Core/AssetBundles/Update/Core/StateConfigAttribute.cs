@@ -1,6 +1,6 @@
 using System;
 
-namespace Core.AssetBundles.Update
+namespace Core.AssetBundles.Update.Core
 {
     /// <summary>
     /// 更新状态配置特性

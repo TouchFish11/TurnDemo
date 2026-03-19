@@ -55,15 +55,26 @@ namespace Core.Serialize.Binary
             var bytes = Encoding.UTF8.GetBytes(jsonStr);
             return File.WriteAllBytesAsync(PathUtility.GetUserDataLocalSavePath(fileName), bytes);
         }
+        
+        public void Save(string fileName, object obj)
+        {
+            var jsonStr = JsonConvert.SerializeObject(obj);
+            var bytes = Encoding.UTF8.GetBytes(jsonStr);
+            File.WriteAllBytes(PathUtility.GetUserDataLocalSavePath(fileName), bytes);
+        }
 
         public async Task<T> LoadAsync<T>(string fileName) where T : new()
         {
-            if (!File.Exists(PathUtility.GetUserDataLocalSavePath(fileName)))
-            {
-                return new T();
-            }
-            
+            if (!File.Exists(PathUtility.GetUserDataLocalSavePath(fileName))) return new T();
             var bytes = await File.ReadAllBytesAsync(PathUtility.GetUserDataLocalSavePath(fileName));
+            var jsonStr = Encoding.UTF8.GetString(bytes);
+            return JsonConvert.DeserializeObject<T>(jsonStr);
+        }
+        
+        public T Load<T>(string fileName) where T : new()
+        {
+            if (!File.Exists(PathUtility.GetUserDataLocalSavePath(fileName))) return new T();
+            var bytes = File.ReadAllBytes(PathUtility.GetUserDataLocalSavePath(fileName));
             var jsonStr = Encoding.UTF8.GetString(bytes);
             return JsonConvert.DeserializeObject<T>(jsonStr);
         }

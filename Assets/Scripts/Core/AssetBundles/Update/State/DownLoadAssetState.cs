@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Collection;
 using Core.AssetBundles.Update.Core;
-using Core.AssetBundles.Update.Enum;
 using Core.AssetBundles.Update.Exception;
 using Core.Extensions;
 using Core.Global;
@@ -110,10 +109,10 @@ namespace Core.AssetBundles.Update.State
              * 处理下载失败的请求，更新失败队列
              */
             while (!context.IsPauseDownload && 
-                   (context.WaitListCount > 0 || context.LoadListCount > 0 || !(context.WaitListCount == 0 && context.LoadListCount == 0 && context.FailListCount >= 0)))
+                   (context.RequesterWaitList.Count > 0 || context.RequesterLoadingList.Count > 0 || !(context.RequesterWaitList.Count == 0 && context.RequesterLoadingList.Count == 0 && context.RequesterFailList.Count >= 0)))
             {
                 // 启动新的下载请求（控制并发数）
-                while (context.LoadListCount < maxConcurrencyNum && context.WaitListCount > 0)
+                while (context.RequesterLoadingList.Count < maxConcurrencyNum && context.RequesterWaitList.Count > 0)
                 {
                     // 取出待下载队列首个请求器
                     var requester = context.GetFirstRequester();
@@ -123,14 +122,14 @@ namespace Core.AssetBundles.Update.State
                     requester.DownLoadAsync(PathUtility.GetAbLoadPath(requester.FileName), isOver =>
                     {
                         // 下载完成后，从正在下载队列移除
-                        context.RemoveRequesterFromLoad(requester);
+                        context.RequesterLoadingList.Remove(requester);
                         if (isOver)
                         {
                             // 获取下载后的文件信息
                             var fileInfo = new FileInfo(PathUtility.GetAbLoadPath(requester.FileName));
                             // 更新缓存信息
                             var cacheInfo = new AbPackageCacheInfo(requester.FileName, requester.Hash, fileInfo.Length);
-                            assetBundleUpdater.GetContext().UpdateCacheFile(cacheInfo);
+                            UpdateUtil.UpdateCacheFile(context, cacheInfo);
                         }
                         // 下载失败，加入失败队列
                         else
@@ -143,13 +142,13 @@ namespace Core.AssetBundles.Update.State
                 }
 
                 // 等待正在下载的请求完成（直到并发数低于上限或待下载队列为空）
-                if (context.LoadListCount > 0)
+                if (context.RequesterLoadingList.Count > 0)
                 {
-                    await TaskUtility.WaitUntil(() => context.LoadListCount < maxConcurrencyNum || context.WaitListCount == 0);
+                    await TaskUtility.WaitUntil(() => context.RequesterLoadingList.Count < maxConcurrencyNum || context.RequesterWaitList.Count == 0);
                 }
 
                 // 处理下载失败的请求（重试/标记失败）
-                context.HandleFailReqeuster();
+                UpdateUtil.HandleFailReqeuster(context);
 
                 await Task.Yield(); // 帧间等待
             }
@@ -165,7 +164,7 @@ namespace Core.AssetBundles.Update.State
         /// <exception cref="Exception"></exception>
         private async Task CheckDownloadComplete()
         {
-            if (assetBundleUpdater.GetContext().FailListCount != 0)
+            if (assetBundleUpdater.GetContext().RequesterFailList.Count != 0)
             {
                 throw new AssetBunleIncompleteException(GetAssetBunleIncompleteExceptionMessage());
             }

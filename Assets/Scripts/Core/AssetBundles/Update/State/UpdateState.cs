@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Collection;
 using Core.AssetBundles.Update.Core;
-using Core.AssetBundles.Update.Enum;
 using Core.Pool;
 using Core.Serialize.Json;
 using Core.Service;

@@ -1,10 +1,9 @@
 using System.IO;
-using Core.AssetBundles.Update.Core;
 using Core.Log;
 using Core.Service;
 using UnityEngine.Networking;
 
-namespace Core.AssetBundles.Update.Handler
+namespace Core.AssetBundles.Update.Core
 {
     /// <summary>
     /// 流下载处理器

@@ -15,15 +15,9 @@ namespace Game
     public class Main : SingletonMono<Main>
     {
         // 默认包名称数组
-        private readonly string[] DefaultAbNames = { "default", "fonts", "tmp_asset", "hotupdate" };
+        private readonly string[] DefaultAbNames = { "default", "fonts", "tmp_asset", "hotupdate", "hotupdate_preload" };
         // 默认程序集名称数组，按依赖排序
         private readonly string[] DefaultAssemblyNames = { "HotUpdate.Config.dll", "HotUpdate.Common.dll", "HotUpdate.Core.dll", "HotUpdate.Entry.dll" };
-        // 补充的元数据数组
-        private readonly List<string> _aotDlls = new()
-        {
-            "CoreModule.dll",
-            "GameModule.dll",
-        };
         
         /// <summary>
         /// 游戏启动入口
@@ -39,10 +33,13 @@ namespace Game
                 // 初始化指定AB包
                 await ServiceLocator.Get<IAssetBundleManager>().InitSpecifyAsync(DefaultAbNames);
                 var hotUpdateManager = ServiceLocator.Get<IHotUpdateManager>();
+                Debug.Log($"开始补充元数据");
                 // 补充元数据
-                hotUpdateManager.LoadMetadataForAOTAssemblies(_aotDlls);  
+                hotUpdateManager.LoadMetadataForAOTAssemblies(AOTGenericReferences.PatchedAOTAssemblyList);  
+                Debug.Log($"补充元数据完成");
                 // 加载指定程序集
                 await hotUpdateManager.LoadAssembliesAsync(DefaultAbNames[3], DefaultAssemblyNames);
+                Debug.Log($"加载预热更程序集完成");
                 // 实例化热更入口对象
                 var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(DefaultAbNames[0]);
                 var entry = assetBundle.LoadAsset<GameObject>("HotUpdateEntry");

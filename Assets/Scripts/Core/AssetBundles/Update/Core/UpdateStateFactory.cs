@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Core.AssetBundles.Update.Core;
-using Core.AssetBundles.Update.Enum;
 using Core.AssetBundles.Update.State;
 using Core.Collection;
 using Core.Pool;
 using Core.Serialize.Json;
 
-namespace Core.AssetBundles.Update
+namespace Core.AssetBundles.Update.Core
 {
     /// <summary>
     /// 更新状态工厂

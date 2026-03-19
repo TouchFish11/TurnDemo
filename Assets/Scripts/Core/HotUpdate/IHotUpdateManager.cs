@@ -59,11 +59,11 @@ namespace Core.HotUpdate
         int GetHotAssemblies(List<Assembly> assemblies);
 
         Assembly GetGameModule();
-        
+
         /// <summary>
         /// 补充元数据
         /// </summary>
         /// <param name="aotDlls">补充程序集名称列表</param>
-        void LoadMetadataForAOTAssemblies(List<string> aotDlls);
+        void LoadMetadataForAOTAssemblies(IReadOnlyList<string> aotDlls);
     }
 }

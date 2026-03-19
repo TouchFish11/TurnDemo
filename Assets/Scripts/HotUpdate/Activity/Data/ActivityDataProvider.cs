@@ -43,9 +43,18 @@ namespace HotUpdate.Activity.Data
             await ServiceLocator.Get<IJsonManager>().SaveToJsonAsync(ActivityDataCollection,
                 PathUtility.GetUserDataLocalSavePath(FileUtility.LocalActivityDataFileName),
                 settings: activityDataSettings);
-            LogManager.Log($"活动数据保存成功，{ActivityDataCollection}");
+            LogManager.Log($"{nameof(ActivityDataProvider)}.{nameof(SaveDataAsync)}:活动数据保存成功，{FileUtility.LocalActivityDataFileName}");
         }
-        
+
+        public void SaveData()
+        {
+            // 活动数据
+            ServiceLocator.Get<IJsonManager>().SaveToJson(ActivityDataCollection,
+                PathUtility.GetUserDataLocalSavePath(FileUtility.LocalActivityDataFileName),
+                settings: activityDataSettings);
+            LogManager.Log($"{nameof(ActivityDataProvider)}.{nameof(SaveData)}:活动数据保存成功，{FileUtility.LocalActivityDataFileName}");
+        }
+
         public IActivityDataCollection GetData()
         {
             return ActivityDataCollection;

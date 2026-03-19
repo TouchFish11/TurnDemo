@@ -3,10 +3,11 @@
   <assembly fullname="CoreModule">
     <type fullname="Core.AssetBundles.Management.IAssetBundleManager" preserve="all" />
     <type fullname="Core.AssetBundles.Update.Core.ABUpdateContext" preserve="all" />
+    <type fullname="Core.AssetBundles.Update.Core.EUpdatePhase" preserve="all" />
     <type fullname="Core.AssetBundles.Update.Core.IAssetBundleUpdater" preserve="all" />
     <type fullname="Core.AssetBundles.Update.Core.UpdateResult" preserve="all" />
     <type fullname="Core.AssetBundles.Update.Core.UpdateResult/EUpdateError" preserve="all" />
-    <type fullname="Core.AssetBundles.Update.Enum.EUpdatePhase" preserve="all" />
+    <type fullname="Core.AssetBundles.Update.Core.UpdateUtil" preserve="all" />
     <type fullname="Core.Collection.Collection`2" preserve="all" />
     <type fullname="Core.Collection.Generic.UniList`1" preserve="all" />
     <type fullname="Core.Collection.ICollection" preserve="all" />
@@ -34,6 +35,7 @@
     <type fullname="Core.Loader.Sprite.ISpriteLoader" preserve="all" />
     <type fullname="Core.Log.LogManager" preserve="all" />
     <type fullname="Core.Mono.EngineUtility" preserve="all" />
+    <type fullname="Core.Mono.IApplicationExitNotify" preserve="all" />
     <type fullname="Core.Mono.IMonoAdapter" preserve="all" />
     <type fullname="Core.Mono.MonoFunction.IDestroyable" preserve="all" />
     <type fullname="Core.Music.MusicData" preserve="all" />

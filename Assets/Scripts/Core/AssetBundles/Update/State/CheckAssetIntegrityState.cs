@@ -4,7 +4,6 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Core;
-using Core.AssetBundles.Update.Enum;
 using Core.AssetBundles.Update.Exception;
 using Core.Pool;
 using Core.Serialize.Json;
@@ -52,7 +51,7 @@ namespace Core.AssetBundles.Update.State
                 File.Delete(tempListPath);
 
                 // 持久化缓存文件（记录已下载的AssetBundle信息）
-                await assetBundleUpdater.GetContext().WriteCacheFile();
+                await UpdateUtil.WriteCacheFileAsync(assetBundleUpdater.GetContext().CachePackageCollection);
             }
             catch (AssetBunleBrokenException assetBunleBrokenException)
             {

@@ -1,4 +1,4 @@
-namespace Core.AssetBundles.Update.Enum
+namespace Core.AssetBundles.Update.Core
 {
     /// <summary>
     /// 下载更新阶段枚举

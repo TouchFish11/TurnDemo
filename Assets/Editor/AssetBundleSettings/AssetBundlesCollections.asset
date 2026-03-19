@@ -244,67 +244,57 @@ MonoBehaviour:
   - assetBundleName: hotupdate
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Activity.dll.bytes
-      size: 44544
+      size: 45056
       name: HotUpdate.Activity.dll.bytes
-      hash: 5b488e2fef078e48f8a64e7afc2d4c5a3a1f2ec43576b1339151fab5d6137a19
+      hash: c8b3623cc0d500bc11801d6bf232d1b5b99eb65392990e314cdf9a8fe18b5900
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Animation.dll.bytes
       size: 13312
       name: HotUpdate.Animation.dll.bytes
-      hash: ed3271bc5c25e25ae59f690a44b3deb35b01f6bf10039cec0c593284d325c7a5
+      hash: 643e41130c68acac8bec5dfa233560a06cddae8439bc64f7ae40e5d9c9bf86bb
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Battle.dll.bytes
       size: 284160
       name: HotUpdate.Battle.dll.bytes
-      hash: 45df6887bd0933afacad78f68ef71fd654e3bb435541901b212dad42196d7938
+      hash: 2f7911076d598af31bcbd30468a91c94b8b39096269621c4909e443aa06dd0e0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Camera.dll.bytes
       size: 10240
       name: HotUpdate.Camera.dll.bytes
-      hash: 9e78f4c6e4e5376d9f7d86a96970e6d577ead670468fd8607998afd28ca729f4
+      hash: 80b22c8e5a49ec8441c53056a757140ebd269f4f9784367108987e32416f892d
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Common.dll.bytes
       size: 30720
       name: HotUpdate.Common.dll.bytes
-      hash: 6baf9b6baa113a93946251a0f2fa7228a38cc5ca410a636803eae14d0b146d38
+      hash: 9f61e2c11986b2fe9c4276ba3bf01a74a1b3a56b278f7ba71433e95399b0faaa
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Config.dll.bytes
       size: 10752
       name: HotUpdate.Config.dll.bytes
       hash: fffaa47057bcadb47985876506ebb671918f3d62b27322fdeb736555227f1024
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Core.dll.bytes
-      size: 78848
+      size: 77824
       name: HotUpdate.Core.dll.bytes
-      hash: cefe042683337a94dea5e29425d9d2293e19ce9f8cf3c7d736b3b4b42a19c20f
+      hash: e005c4045feff6d6c0ba83fc0453cb6e1ddc795fd91c4e5a7d6ecc9e9b9665e9
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Dialogue.dll.bytes
       size: 27136
       name: HotUpdate.Dialogue.dll.bytes
-      hash: 62b392cf9dde1c9bbcc016b5d8a404a353523d2dc3aab31c9673e0fcc4a02a25
+      hash: f97e830dc8ffd326c2ee29cc7e69f96d29b498a85ad11fa82dfa0aeb19a7d209
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Entry.dll.bytes
       size: 21504
       name: HotUpdate.Entry.dll.bytes
-      hash: ced606b2a210bc2955c7cb6c22c6df58ce24df1ff824c4f22a4174c58687c970
+      hash: 9528b0fb3a3e53e5957a33b81cc1d6ca3dce553a4f6ffb63954191fc367fa1fb
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Input.dll.bytes
       size: 12800
       name: HotUpdate.Input.dll.bytes
-      hash: 8590e312aac44fee309501f01d3c6d72523375f165874b4b8468b41368bd64c1
+      hash: 5b2e35b55a48c6622d9f84ba92286013f519d25062f734abc23ef77336e14e98
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Interact.dll.bytes
       size: 10240
       name: HotUpdate.Interact.dll.bytes
-      hash: 75fc1434e2bf51b9488121a8e14a952936c4156ad73583f30e8f4b8c1b478777
+      hash: 9fea8be912bce30d9acfd8610b6351cda68c7fb81c712a37f9dcc184ea496a53
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Main.dll.bytes
-      size: 53760
+      size: 54272
       name: HotUpdate.Main.dll.bytes
-      hash: 447dd2e2635dfde3962da1b77a715f0e1384c2b95b2bdfffa77b488236afde5f
+      hash: 5ef926ef2cf57ac2b5ae289108514b382198e1297efd1eecf3c42232390c9225
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Task.dll.bytes
-      size: 29696
+      size: 30208
       name: HotUpdate.Task.dll.bytes
-      hash: 914d65509e664c06242051e1fcabe20181cd2b08fc563e975d1f6538150eb54f
-  - assetBundleName: hotupdate_aotdll
-    assetInfos:
-    - assetPath: Assets\Editor\ArtRes\HotUpdate_AotDll\CoreModule.dll.bytes
-      size: 269824
-      name: CoreModule.dll.bytes
-      hash: c11af64e6de6cf219d4f752da0db2b029649247f7a58731d07b19494f3fadb37
-    - assetPath: Assets\Editor\ArtRes\HotUpdate_AotDll\GameModule.dll.bytes
-      size: 7680
-      name: GameModule.dll.bytes
-      hash: 85ba4f09d6c492762f856dfbb57618632c6eb68b6148f04c4cd3f3c0bfedd67f
+      hash: 4486326beb36f4d5d2958bb33c23657f545a4a6bca4dd2e5774b55b5cc6d49f1
   - assetBundleName: material
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\Material\Ground.mat
@@ -374,9 +364,9 @@ MonoBehaviour:
   - assetBundleName: scene
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\Scene\BeginScene.unity
-      size: 11917
+      size: 11869
       name: BeginScene.unity
-      hash: e36abb0fdb83c55a64a96b4eb6d69bf694451ae069f0407fb4b59e800d2273c3
+      hash: effb251f2ce88de0840bb816090d572ae8b01bde8870d8b82ce14674c3531bd8
     - assetPath: Assets\Editor\ArtRes\Scene\LevelScene.unity
       size: 107335
       name: LevelScene.unity

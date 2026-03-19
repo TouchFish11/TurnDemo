@@ -78,5 +78,16 @@ namespace HotUpdate.Core.Manager
                 await provider.SaveDataAsync();
             }
         }
+
+        /// <summary>
+        /// 同步保存数据
+        /// </summary>
+        public void SaveData()
+        {
+            foreach (var provider in _dataProviders.Values)
+            {
+                provider.SaveData();
+            }
+        }
     }
 }

@@ -33,17 +33,9 @@ namespace HotUpdate.Core.Manager
             }
         }
         
-        public async void OnAppQuit()
+        public void OnAppQuit()
         {
-            try
-            {
-                await GameDataManager.SaveDataAsync();
-                LogManager.LogError($"{nameof(GameManager)}.{nameof(OnAppQuit)}:数据保存成功");
-            }
-            catch (Exception e)
-            {
-                LogManager.LogError($"{nameof(GameManager)}.{nameof(OnAppQuit)}:数据保存错误，{e.Message}");
-            }
+            GameDataManager.SaveData();
         }
     }
 }

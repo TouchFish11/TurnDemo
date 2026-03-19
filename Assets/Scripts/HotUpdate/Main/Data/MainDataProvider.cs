@@ -68,13 +68,24 @@ namespace HotUpdate.Main.Data
         {
             // 保存音乐数据
             await _binaryDataManager.SaveAsync(FileUtility.LocalMusicDataFileName, _mainDataCollection.MusicData);
-            LogManager.Log($"音乐数据保存成功，{_mainDataCollection.MusicData}");
+            LogManager.Log($"{nameof(MainDataProvider)}.{nameof(SaveDataAsync)}:音乐数据保存成功，{FileUtility.LocalMusicDataFileName}");
             
             // 保存输入数据
             await _binaryDataManager.SaveAsync(FileUtility.LocalInputDataFileName, _mainDataCollection.InputActionContainer);
-            LogManager.Log($"输入数据保存成功，{_mainDataCollection.InputActionContainer}");
+            LogManager.Log($"{nameof(MainDataProvider)}.{nameof(SaveDataAsync)}:输入数据保存成功，{FileUtility.LocalInputDataFileName}");
         }
-        
+
+        public void SaveData()
+        {
+            // 保存音乐数据
+             _binaryDataManager.Save(FileUtility.LocalMusicDataFileName, _mainDataCollection.MusicData);
+             LogManager.Log($"{nameof(MainDataProvider)}.{nameof(SaveData)}:音乐数据保存成功，{FileUtility.LocalMusicDataFileName}");
+            
+            // 保存输入数据
+             _binaryDataManager.Save(FileUtility.LocalInputDataFileName, _mainDataCollection.InputActionContainer);
+             LogManager.Log($"{nameof(MainDataProvider)}.{nameof(SaveData)}:输入数据保存成功，{FileUtility.LocalInputDataFileName}");
+        }
+
         public IMainDataCollection GetData()
         {
             return _mainDataCollection;

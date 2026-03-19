@@ -36,7 +36,14 @@ namespace HotUpdate.Task.Data
         {
             // 保存任务数据
             await _jsonManager.SaveToJsonAsync(TaskDataCollection, PathUtility.GetUserDataLocalSavePath(FileUtility.LocalTaskDataFileName));
-            LogManager.Log($"任务数据保存成功，{TaskDataCollection}");
+            LogManager.Log($"{nameof(TaskDataProvider)}.{nameof(SaveDataAsync)}:任务数据保存成功，{FileUtility.LocalTaskDataFileName}");
+        }
+
+        public void SaveData()
+        {
+            // 保存任务数据
+            _jsonManager.SaveToJson(TaskDataCollection, PathUtility.GetUserDataLocalSavePath(FileUtility.LocalTaskDataFileName));
+            LogManager.Log($"{nameof(TaskDataProvider)}.{nameof(SaveData)}:任务数据保存成功，{FileUtility.LocalTaskDataFileName}");
         }
 
         public ITaskDataCollection GetData()

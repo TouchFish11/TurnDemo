@@ -1,5 +1,3 @@
-using Core.AssetBundles.Update.Enum;
-
 namespace Core.AssetBundles.Update.Core
 {
     /// <summary>

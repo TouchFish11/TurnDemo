@@ -14,6 +14,9 @@ using HotUpdate.Core.UI.MVC;
 
 namespace HotUpdate.Battle.StateMeachine
 {
+    /// <summary>
+    /// 战斗准备状态
+    /// </summary>
     public class PreparationState : BattleState
     {
         public PreparationState(IBattleStateMachine battleStateMachine, IBattleContext context) : base(battleStateMachine, context)
@@ -70,7 +73,7 @@ namespace HotUpdate.Battle.StateMeachine
             }
             catch (Exception e)
             {
-                LogManager.LogError($"{nameof(PreparationState)}.{nameof(Execute)} : {e.Message}，{e.StackTrace}");
+                LogManager.LogError($"{nameof(PreparationState)}.{nameof(Execute)}:战斗准备状态执行错误，{e.Message}");
             }
         }
 

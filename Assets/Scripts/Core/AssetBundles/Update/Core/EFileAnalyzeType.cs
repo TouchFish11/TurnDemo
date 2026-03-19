@@ -1,4 +1,4 @@
-namespace Core.AssetBundles.Update.Enum
+namespace Core.AssetBundles.Update.Core
 {
     /// <summary>
     /// 文件解析类型

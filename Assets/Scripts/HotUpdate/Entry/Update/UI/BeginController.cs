@@ -1,6 +1,5 @@
 using System;
 using Core.AssetBundles.Update.Core;
-using Core.AssetBundles.Update.Enum;
 using Core.Log;
 using Core.Process;
 using Core.Service;
@@ -278,7 +277,7 @@ namespace HotUpdate.Entry.Update.UI
             {
                 if (btnName == nameof(view.btnStop))
                 {
-                    await _assetBundleUpdater.GetContext().CancelDownload();
+                    await UpdateUtil.CancelDownloadAsync(_assetBundleUpdater.GetContext());
                 }
                 else if (btnName == nameof(view.btnEnter))
                 {

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -37,36 +38,28 @@ namespace Core.HotUpdate
         /// </summary>
         /// <param name="abName"></param>
         /// <param name="assemblyNames"></param>
-        public async Task LoadAssembliesAsync(string abName, params string[] assemblyNames)
+        public Task LoadAssembliesAsync(string abName, params string[] assemblyNames)
         {
-            var uniList = ListUtility.GetUniList<string>().AddRange(assemblyNames);
-            // 加载热更新AB包资源
-            var assetBundle = await _assetBundleManager.LoadBundleAsync(abName);
-            var dllTexts = ListUtility.GetUniList<TextAsset>();
-            await assetBundle.LoadAllAssetsAsync<TextAsset>().ToTask(dllTexts.List);
-            foreach (var dllText in dllTexts.List)
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            // 顺序加载程序集资源
+            foreach (var nameWithExtension in assemblyNames)
             {
-                if (!uniList.Contains(dllText.name))
-                {
-                    continue;
-                }
-                
                 // Editor环境下，HotUpdate.dll.bytes已经被自动加载，不需要加载，直接查找获得HotUpdate程序集，重复加载反而会出问题。
-                foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+                foreach (var assembly in assemblies)
                 {
-                    var assemblyName = dllText.name[..dllText.name.LastIndexOf('.')];
+                    var assemblyName = nameWithExtension[..nameWithExtension.LastIndexOf('.')];
                     if (assembly.GetName().Name != assemblyName)
                     {
                         continue;
                     }
                     
                     _assemblyNames.Add(assembly.GetName().Name);
-                    LogManager.Log($"{nameof(HotUpdateMockManager)}.{nameof(LoadAssembliesAsync)}:已缓存编辑器加载热更程序集名称，{dllText.name}");
+                    LogManager.Log($"{nameof(HotUpdateMockManager)}.{nameof(LoadAssembliesAsync)}:已缓存编辑器加载热更程序集名称{assemblyName}");
+                    break;
                 }
             }
-
-            ListUtility.CollectUniList(uniList);
             _assetBundleManager.UnloadBundle(abName);
+            return Task.CompletedTask;
         }
         
         public async Task LoadAssembliesAsync(string abName)
@@ -155,7 +148,7 @@ namespace Core.HotUpdate
             return assemblies.Count;
         }
         
-        public void LoadMetadataForAOTAssemblies(List<string> aotDlls)
+        public void LoadMetadataForAOTAssemblies(IReadOnlyList<string> aotDlls)
         {
             // 编辑器下不需要补充元数据
         }

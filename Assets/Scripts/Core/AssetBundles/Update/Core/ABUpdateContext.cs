@@ -1,15 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
 using Core.AssetBundles.Update.Collection;
-using Core.AssetBundles.Update.Enum;
-using Core.Collection;
-using Core.Log;
 using Core.Pool;
-using Core.Serialize.Json;
-using Core.Service;
-using Core.Utility;
 
 namespace Core.AssetBundles.Update.Core
 {
@@ -47,43 +39,25 @@ namespace Core.AssetBundles.Update.Core
         /// 存储等待下载的网络请求队列
         /// 待执行的AB包下载请求，按添加顺序排队执行
         /// </summary>
-        private readonly LinkedList<ABWebRequester> _requesterWaitList = new();
+        public LinkedList<ABWebRequester> RequesterWaitList { get; }
 
         /// <summary>
         /// 存储下载失败的网络请求队列
         /// 下载失败的请求，用于重试逻辑处理
         /// </summary>
-        private readonly LinkedList<ABWebRequester> _requesterFailList = new();
+        public LinkedList<ABWebRequester> RequesterFailList { get; }
 
         /// <summary>
         /// 存储正在下载的网络请求队列
         /// 正在执行的AB包下载请求，用于监控下载状态、取消下载等操作
         /// </summary>
-        private readonly LinkedList<ABWebRequester> _requesterLoadingList = new();
+        public LinkedList<ABWebRequester> RequesterLoadingList { get; }
 
         /// <summary>
         /// 是否暂停下载
         /// 标记全局下载状态，暂停后新的下载请求不会执行，正在下载的请求可被取消
         /// </summary>
         public bool IsPauseDownload { get; set; }
-
-        /// <summary>
-        /// 等待队列中的请求数量
-        /// 只读属性，返回待下载请求的总数
-        /// </summary>
-        public int WaitListCount => _requesterWaitList.Count;
-
-        /// <summary>
-        /// 下载中队列的请求数量
-        /// 只读属性，返回正在下载的请求总数
-        /// </summary>
-        public int LoadListCount => _requesterLoadingList.Count;
-
-        /// <summary>
-        /// 失败队列中的请求数量
-        /// 只读属性，返回下载失败的请求总数
-        /// </summary>
-        public int FailListCount => _requesterFailList.Count;
 
         /// <summary>
         /// 下载进度回调事件
@@ -124,10 +98,6 @@ namespace Core.AssetBundles.Update.Core
         private ulong currentDownloadedBytes;
         // 当前帧下载的总字节数（用于计算下载速度）
         private ulong _currentDownloadTotalSizes;
-        // AB包更新器
-        private IAssetBundleUpdater _assetBundleUpdater;
-        // Json管理器
-        private readonly IJsonManager _jsonManager;
         
         /// <summary>
         /// 是否存在更新
@@ -140,8 +110,9 @@ namespace Core.AssetBundles.Update.Core
         /// </summary>
         public ABUpdateContext()
         {
-            _assetBundleUpdater = ServiceLocator.Get<IAssetBundleUpdater>();
-            _jsonManager = ServiceLocator.Get<IJsonManager>();
+            RequesterWaitList = new LinkedList<ABWebRequester>();
+            RequesterFailList = new LinkedList<ABWebRequester>();
+            RequesterLoadingList = new LinkedList<ABWebRequester>();
             
             RemotePackageCollection = new ABPackageCollection();
             LocalPackageCollection = new ABPackageCollection();
@@ -155,7 +126,7 @@ namespace Core.AssetBundles.Update.Core
         /// <param name="requester">待添加的AB包下载请求对象</param>
         public void AddRequesterToWait(ABWebRequester requester)
         {
-            _requesterWaitList.AddLast(new LinkedListNode<ABWebRequester>(requester));
+            RequesterWaitList.AddLast(new LinkedListNode<ABWebRequester>(requester));
         }
 
         /// <summary>
@@ -164,7 +135,7 @@ namespace Core.AssetBundles.Update.Core
         /// <param name="requester">待添加的AB包下载请求对象</param>
         public void AddRequesterToLoad(ABWebRequester requester)
         {
-            _requesterLoadingList.AddLast(new LinkedListNode<ABWebRequester>(requester));
+            RequesterLoadingList.AddLast(new LinkedListNode<ABWebRequester>(requester));
         }
 
         /// <summary>
@@ -173,7 +144,7 @@ namespace Core.AssetBundles.Update.Core
         /// <param name="requester">待添加的AB包下载请求对象</param>
         public void AddRequesterToFail(ABWebRequester requester)
         {
-            _requesterFailList.AddLast(new LinkedListNode<ABWebRequester>(requester));
+            RequesterFailList.AddLast(new LinkedListNode<ABWebRequester>(requester));
         }
 
         /// <summary>
@@ -183,61 +154,11 @@ namespace Core.AssetBundles.Update.Core
         /// <returns>等待队列首个AB包下载请求对象</returns>
         public ABWebRequester GetFirstRequester()
         {
-            var requester = _requesterWaitList.First;
-            _requesterWaitList.RemoveFirst();
+            var requester = RequesterWaitList.First;
+            RequesterWaitList.RemoveFirst();
             return requester.Value;
         }
-
-        public IEnumerable<ABWebRequester> GetFailLists()
-        {
-            foreach (var abWebRequester in _requesterFailList)
-            {
-                yield return abWebRequester;
-            }
-        }
-
-        /// <summary>
-        /// 从下载中队列移除指定的下载请求
-        /// 用于下载完成/失败后清理队列
-        /// </summary>
-        /// <param name="requester">需要移除的AB包下载请求对象</param>
-        /// <returns>移除结果：true=移除成功，false=队列中无该请求</returns>
-        public bool RemoveRequesterFromLoad(ABWebRequester requester)
-        {
-            return _requesterLoadingList.Remove(requester);
-        }
-
-        /// <summary>
-        /// 处理失败队列中的请求
-        /// 遍历失败请求，若还有重试次数则移回等待队列，减少重试计数
-        /// 无重试次数的请求会保留在失败队列（可后续手动处理）
-        /// </summary>
-        public void HandleFailReqeuster()
-        {
-            if (FailListCount <= 0)
-            {
-                return;
-            }
-            
-            // 获取失败队列首个节点
-            var failedRequesterNode = _requesterFailList.First;
-            // 获取节点对应的请求对象
-            var failedRequester = failedRequesterNode.Value;
-            while (failedRequesterNode != null)
-            {
-                // 还有重试次数则重试
-                if (failedRequester.CurrentRetryCount != 0)
-                {
-                    _requesterFailList.RemoveFirst();
-                    _requesterWaitList.AddLast(failedRequesterNode);
-                    // 减少重试次数
-                    failedRequester.SubRetryCount();
-                }
-                // 移动到下一个失败请求节点
-                failedRequesterNode = failedRequesterNode.Next;
-            }
-        }
-    
+        
         /// <summary>
         /// 触发更新阶段变更事件
         /// 若当前处于暂停状态，则不触发事件
@@ -245,11 +166,7 @@ namespace Core.AssetBundles.Update.Core
         /// <param name="updatePhase">当前更新阶段枚举值</param>
         public void UpdatePhase(EUpdatePhase updatePhase)
         {
-            if (IsPauseDownload)
-            {
-                return;
-            }
-
+            if (IsPauseDownload) return;
             OnUpdatePhase?.Invoke(updatePhase);
         }
 
@@ -285,11 +202,6 @@ namespace Core.AssetBundles.Update.Core
         /// </summary>
         public void UpdateSpeed()
         {
-            if (OnUpdateSpeed == null)
-            {
-                LogManager.Log($"{nameof(OnUpdateSpeed)}事件为空");
-            }
-
             OnUpdateSpeed?.Invoke(_currentDownloadTotalSizes);
             // 重置当前帧下载字节数，用于下一次速度计算
             _currentDownloadTotalSizes = 0;
@@ -306,97 +218,7 @@ namespace Core.AssetBundles.Update.Core
         }
         
         /// <summary>
-        /// 取消所有下载请求并保存缓存信息
-        /// 标记暂停下载
-        /// 终止所有正在下载的请求
-        /// 保存未完成下载的AB包缓存信息（断点续传）
-        /// 将缓存信息写入本地文件
-        /// </summary>
-        /// <returns>异步任务</returns>
-        public async Task CancelDownload()
-        {
-            // 标记暂停下载
-            IsPauseDownload = true;
-            
-            LogManager.Log($"正在下载的请求数：{_requesterLoadingList.Count}");
-            // 终止并释放所有正在下载的请求
-            HandleLinkedList(_requesterLoadingList, requester =>
-            {
-                requester.Abort(); // 终止下载请求
-                LogManager.Log($"已终止：{requester.AbName}");
-            });
-            
-            // 临时收集所有未完成的请求（失败、下载中、等待）
-            var uniList = ListUtility.GetUniList<ABWebRequester>();
-            uniList.List.AddRange(_requesterFailList);
-            uniList.List.AddRange(_requesterLoadingList);
-            uniList.List.AddRange(_requesterWaitList);
-
-            // 遍历临时列表，保存未完成AB包的缓存信息
-            foreach (var abWebRequester in uniList.List)
-            {
-                var abLoadPath = PathUtility.GetAbLoadPath(abWebRequester.AbName);
-                // 本地文件不存在则跳过（未开始下载）
-                if (!File.Exists(abLoadPath))
-                {
-                    continue;
-                }
-
-                // 获取本地文件信息
-                var fileInfo = new FileInfo(abLoadPath);
-                // 封装缓存信息
-                var cacheInfo = new AbPackageCacheInfo(abWebRequester.AbName, abWebRequester.Hash, fileInfo.Length);
-                // 更新缓存集合
-                UpdateCacheFile(cacheInfo);
-            }
-
-            // 将缓存信息写入本地文件
-            await WriteCacheFile();
-            // 使用完毕，回收
-            ListUtility.CollectUniList(uniList);
-        }
-
-        /// <summary>
-        /// 更新AB包缓存信息
-        /// 若缓存集合中已存在该AB包，则更新Hash、已下载字节数、完成状态；
-        /// 若不存在，则添加新的缓存信息到集合
-        /// </summary>
-        /// <param name="cacheInfo">待更新的AB包缓存信息</param>
-        public void UpdateCacheFile(AbPackageCacheInfo cacheInfo)
-        {
-            // 检查缓存集合中是否已存在该AB包
-            if (CachePackageCollection.TryGetValue(cacheInfo.AbName, out var aBPackageCacheInfo))
-            {
-                // 更新已有缓存信息
-                aBPackageCacheInfo.Hash = cacheInfo.Hash;
-                aBPackageCacheInfo.DownloadedBytes = cacheInfo.DownloadedBytes;
-                // 标记是否下载完成（已下载字节数等于远程包总大小）
-                aBPackageCacheInfo.IsSuccess = cacheInfo.DownloadedBytes == RemotePackageCollection[cacheInfo.AbName].Size;
-            }
-            else
-            {
-                // 标记是否下载完成
-                cacheInfo.IsSuccess = cacheInfo.DownloadedBytes == RemotePackageCollection[cacheInfo.AbName].Size;
-                // 添加新缓存信息到集合
-                CachePackageCollection.TryAdd(cacheInfo.AbName, cacheInfo);
-            }
-        }
-
-        /// <summary>
-        /// 将缓存集合写入本地JSON文件
-        /// 持久化缓存信息，用于下次启动时断点续传
-        /// </summary>
-        /// <returns>异步任务</returns>
-        public async Task WriteCacheFile()
-        {
-            var cacheFilePath = PathUtility.GetAbLoadPath(FileUtility.CacheDefaultName);
-            await _jsonManager.SaveToJsonAsync(CachePackageCollection, cacheFilePath);
-        }
-
-        /// <summary>
         /// 重置所有更新上下文数据
-        /// 清空所有集合、队列、事件回调，重置下载计数和暂停状态
-        /// 用于重新开始更新流程时清理旧数据
         /// </summary>
         public void ResetData()
         {
@@ -407,9 +229,9 @@ namespace Core.AssetBundles.Update.Core
             CachePackageCollection.Clear();
 
             // 清空各类链表
-            _requesterWaitList.Clear();
-            _requesterLoadingList.Clear();
-            _requesterFailList.Clear();
+            RequesterWaitList.Clear();
+            RequesterLoadingList.Clear();
+            RequesterFailList.Clear();
 
             // 清空事件回调
             OnProgress = null;
@@ -421,26 +243,6 @@ namespace Core.AssetBundles.Update.Core
             // 重置下载计数和状态
             currentDownloadedBytes = 0;
             IsPauseDownload = false;
-        }
-        
-        /// <summary>
-        /// 处理链表
-        /// </summary>
-        /// <param name="list"></param>
-        /// <param name="action"></param>
-        /// <typeparam name="T"></typeparam>
-        private static void HandleLinkedList<T>(LinkedList<T> list, Action<T> action)
-        {
-            var node = list.First;
-            while (node != null)
-            {
-                // 先保存下一个节点（在处理当前节点前！）
-                var nextNode = node.Next; 
-                
-                action?.Invoke(node.Value);
-                node = nextNode;
-                LogManager.Log($"下一节点：{node}");
-            }
         }
     }
 }

@@ -44,5 +44,20 @@ namespace Core.Serialize.Binary
         /// <param name="loadType"></param>
         /// <param name="onConfigLoaded"></param>
         void AddConfig(EConfigLoadType loadType, Func<IConfigLoader, Task> onConfigLoaded);
+
+        /// <summary>
+        /// 保存文件到本地
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="obj"></param>
+        void Save(string fileName, object obj);
+
+        /// <summary>
+        /// 加载本地文件
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        T Load<T>(string fileName) where T : new();
     }
 }

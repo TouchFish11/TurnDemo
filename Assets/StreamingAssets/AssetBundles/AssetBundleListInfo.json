@@ -14,14 +14,14 @@
     },
     "hotupdate.assetbundle": {
       "name": "hotupdate.assetbundle",
-      "size": 290267,
-      "hash": "2a8b58c9507b5f662e9a1347397acddd0d16cd736a145fd2951bb7253a2aa825",
+      "size": 294079,
+      "hash": "54ec83154a909329ff342761cea4c1f618d288794c703af903d9cdc1845677c6",
       "dependencies": []
     },
     "tmp_asset.assetbundle": {
       "name": "tmp_asset.assetbundle",
-      "size": 29561,
-      "hash": "014c2762dd19d60ab40c15305669713c373198fbd0078179c2b6663fb2275eda",
+      "size": 13665310,
+      "hash": "75a10fdc76461ca1edca6a7fa4e4ec484754e3015add3eb91b7d34f95d73f7d9",
       "dependencies": []
     }
   }

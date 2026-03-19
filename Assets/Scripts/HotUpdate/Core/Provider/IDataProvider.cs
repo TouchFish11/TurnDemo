@@ -21,6 +21,11 @@ namespace HotUpdate.Core.Provider
         /// </summary>
         /// <returns></returns>
         Task SaveDataAsync();
+        
+        /// <summary>
+        /// 同步保存数据
+        /// </summary>
+        void SaveData();
     }
     
     /// <summary>

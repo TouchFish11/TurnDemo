@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Core.AssetBundles.Update.Enum;
 using Core.Log;
 using Core.Mono;
 using Core.Pool;
@@ -135,17 +134,13 @@ namespace Core.AssetBundles.Update.Core
             _updateStates.Clear();
         }
         
-        public async void OnAppQuit()
+        public void OnAppQuit()
         {
             try
             {
-                if (_currentUpdateState == null || UpdatePhase == EUpdatePhase.Finished)
-                {
-                    return;
-                }
-            
-                await _updateContext.CancelDownload();
-                LogManager.Log($"{nameof(AssetBundleUpdater)}.{nameof(OnAppQuit)}:已取消下载)");
+                if (_currentUpdateState == null || UpdatePhase == EUpdatePhase.Finished) return;
+                UpdateUtil.CancelDownload(_updateContext);
+                LogManager.Log($"{nameof(AssetBundleUpdater)}.{nameof(OnAppQuit)}:已取消下载");
             }
             catch (System.Exception e)
             {
