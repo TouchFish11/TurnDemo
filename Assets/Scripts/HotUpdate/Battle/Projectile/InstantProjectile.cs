@@ -24,7 +24,7 @@ namespace HotUpdate.Battle.Projectile
                 nowTime += Time.deltaTime;
                 if (nowTime >= triggerTimes[index])
                 {
-                    CauseDamageOnTrigger();
+                    ApplyEffectOnTrigger();
                     CreateVFXOnTrigger();
                     index++;
                 }

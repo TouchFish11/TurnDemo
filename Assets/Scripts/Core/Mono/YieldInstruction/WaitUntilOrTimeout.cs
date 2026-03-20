@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Core.YieldInstruction
+namespace Core.Mono.YieldInstruction
 {
     /// <summary>
     /// 等待条件满或超时

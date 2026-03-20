@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.Collection;
 using Core.Log;
+using Core.Serialize.Json;
 using Core.Service;
 using Core.Singleton;
 using Core.Tasks.Extensions;
@@ -24,13 +25,17 @@ namespace Core.HotUpdate
         public override int InitPriority => 2;
         // 缓存热更程序集名称
         private readonly ConcurrentBag<string> _assemblyNames = new();
+        // 热更新程序集设置
+        private HotUpdateAssemblySettings _hotupdateassemblySettings;
         private IAssetBundleManager _assetBundleManager;
+        private IJsonManager _jsonManager;
         
         private HotUpdateManager(){}
 
         public override Task InitAsync()
         {
             _assetBundleManager = ServiceLocator.Get<IAssetBundleManager>();
+            _jsonManager = ServiceLocator.Get<IJsonManager>();
             return Task.CompletedTask;
         }
 
@@ -44,15 +49,35 @@ namespace Core.HotUpdate
             }
         }
 
-        public async Task LoadAssembliesAsync(string abName, params string[] assemblyNames)
+        public async Task PreLoadAssembliesAsync(string abName)
         {
             // 加载热更新AB包资源
             var dllTexts = new List<TextAsset>();
             var assetBundle = await _assetBundleManager.LoadBundleAsync(abName);
             await assetBundle.LoadAllAssetsAsync<TextAsset>().ToTask(dllTexts);
+
+            var textAsset = dllTexts.Find(text => text.name.Contains(nameof(HotUpdateAssemblySettings)));
+            if (textAsset)
+            {
+                _hotupdateassemblySettings = _jsonManager.FromJson<HotUpdateAssemblySettings>(textAsset.text);
+                if (_hotupdateassemblySettings != null)
+                {
+                    LogManager.Log($"{nameof(HotUpdateManager)}.{nameof(PreLoadAssembliesAsync)}:内容长度{_hotupdateassemblySettings.preloadHotUpdateAssemblies.Length}");
+                }
+                else
+                {
+                    LogManager.LogWarning($"{nameof(HotUpdateManager)}.{nameof(PreLoadAssembliesAsync)}:HotUpdateAssemblySettings反序列化失败");
+                    return;
+                }
+            }
+            else
+            {
+                LogManager.LogWarning($"{nameof(HotUpdateManager)}.{nameof(PreLoadAssembliesAsync)}:HotUpdateAssemblySettings文件未找到");
+                return;
+            }
             
             // 顺序加载程序集资源
-            foreach (var nameWithExtension in assemblyNames)
+            foreach (var nameWithExtension in _hotupdateassemblySettings.preloadHotUpdateAssemblies)
             {
                 foreach (var dllText in dllTexts)
                 {
@@ -67,19 +92,27 @@ namespace Core.HotUpdate
 
         public async Task LoadAssembliesAsync(string abName)
         {
-            // 加载热更新AB包资源
-            var dllTexts = new List<TextAsset>();
-            var assetBundle = await _assetBundleManager.LoadBundleAsync(abName);
-            await assetBundle.LoadAllAssetsAsync<TextAsset>().ToTask(dllTexts);
-            
-            foreach (var dllText in dllTexts)
+            try
             {
-                if (_assemblyNames.Contains(dllText.name[..dllText.name.LastIndexOf('.')])) continue;
-                // 多线程加载程序集
-                await LoadAssemblyAsyncInternal(dllText.bytes);
-            }
+                // 加载热更新AB包资源
+                var dllTexts = new List<TextAsset>();
+                var assetBundle = await _assetBundleManager.LoadBundleAsync(abName);
+                await assetBundle.LoadAllAssetsAsync<TextAsset>().ToTask(dllTexts);
             
-            _assetBundleManager.UnloadBundle(abName);
+                foreach (var dllText in dllTexts)
+                {
+                    if (dllText.name == nameof(HotUpdateAssemblySettings)) continue;
+                    if (_assemblyNames.Contains(dllText.name[..dllText.name.LastIndexOf('.')])) continue;
+                    // 多线程加载程序集
+                    await LoadAssemblyAsyncInternal(dllText.bytes);
+                }
+            
+                _assetBundleManager.UnloadBundle(abName);
+            }
+            catch (Exception e)
+            {
+                LogManager.LogError($"{nameof(HotUpdateManager)}.{nameof(LoadAssembliesAsync)}:{e.Message}");   
+            }
         }
 
         public Assembly GetAssembly(string assemblyName)

@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Collection;
 using Core.Global;
+using Core.HotUpdate;
 using Core.Serialize.Json;
 using Core.Utility;
 using Editor.Generation;
@@ -29,7 +30,6 @@ namespace Editor.AssetBundle
         // --- 配置参数 ---
         private BuildTarget _targetPlatform = BuildTarget.StandaloneWindows64; // 默认平台
         private BuildAssetBundleOptions _buildOptions = BuildAssetBundleOptions.ChunkBasedCompression; // 构建选项
-        private string _assemblyhotUpdateStrings;  // 热更新程序集名称列表
         private string _outputPath; // 输出路径
         private const string AB_COPY_PATH = "Assets/StreamingAssets/AssetBundles/";     // AssetBundle拷贝到StreamingAssets的目标路径
         private string _mainBundlePath = "";  // 用于依赖分析的主包路径
@@ -58,6 +58,15 @@ namespace Editor.AssetBundle
         private AssetBundlesCollections _assetsCollection_Release;
         private const string _assetCollectionName_Release = "AssetBundlesCollections.asset";
         private readonly string serverDataPath = $"{Application.dataPath}/ServerData/";     // 服务器数据编辑器路径
+        private SerializedObject _serializedObject;
+        private SerializedProperty _hotUpdateAssembliesProp;
+        [SerializeField] private string[] hotUpdateAssemblies;  // 热更程序集名称数组
+        
+        private SerializedProperty _baseHotUpdateAssembliesProp;
+        [SerializeField] private string[] baseHotUpdateAssemblies;  // 基础的热更程序集名称数组
+        
+        // 用来记录左侧滚动位置
+        private Vector2 _leftScrollPos;
         
         [MenuItem("GameTool/AssetBundle/AssetBundle Packer")]
         public static void ShowWindow()
@@ -67,10 +76,24 @@ namespace Editor.AssetBundle
 
         private void OnEnable()
         {
+            // 绑定序列化对象
+            _serializedObject = new SerializedObject(this);
+            _hotUpdateAssembliesProp = _serializedObject.FindProperty(nameof(hotUpdateAssemblies));
+            _baseHotUpdateAssembliesProp = _serializedObject.FindProperty(nameof(baseHotUpdateAssemblies));
             // 初始化时设置默认输出路径
             _outputPath = Path.Combine(Application.dataPath, "AssetBundles", EditorUserBuildSettings.activeBuildTarget.ToString());
-            _assemblyhotUpdateStrings = "HotUpdate.Activity,HotUpdate.Animation,HotUpdate.Battle,HotUpdate.Camera,HotUpdate.Common,HotUpdate.Config," +
-                                        "HotUpdate.Core,HotUpdate.Dialogue,HotUpdate.Entry,HotUpdate.Input,HotUpdate.Interact,HotUpdate.Main,HotUpdate.Task";
+
+            hotUpdateAssemblies = new[]
+            {
+                "HotUpdate.Activity", "HotUpdate.Animation","HotUpdate.Battle","HotUpdate.Camera","HotUpdate.Common",
+                "HotUpdate.Config","HotUpdate.Core","HotUpdate.Dialogue","HotUpdate.Entry","HotUpdate.Input","HotUpdate.Interact",
+                "HotUpdate.Main","HotUpdate.Task"
+            };
+            baseHotUpdateAssemblies = new[]
+            {
+                "HotUpdate.Config.dll","HotUpdate.Common.dll","HotUpdate.Core.dll","HotUpdate.Entry.dll"
+            };
+            
             minSize = new Vector2(1389, 725);
         }
 
@@ -80,7 +103,11 @@ namespace Editor.AssetBundle
             
             // 左侧布局
             GUILayout.BeginVertical();
+            // 开始滚动视图
+            _leftScrollPos = EditorGUILayout.BeginScrollView(_leftScrollPos);
             OnDrawLeftArea();
+            // 结束滚动视图
+            EditorGUILayout.EndScrollView();
             GUILayout.EndVertical(); 
             
             EditorGUILayout.Space(1);
@@ -128,9 +155,6 @@ namespace Editor.AssetBundle
 
             // --- AB包拷贝 ---
             DrawCopySettingsView();
-            
-            // --- AB包清单 ---
-            //DrawListSettingsView();
             
             // --- 服务器 ---
             DrawServerSettingsView();
@@ -771,12 +795,36 @@ namespace Editor.AssetBundle
             EditorGUILayout.Space();
             GUILayout.Label("Assembly HotUpdate", EditorStyles.boldLabel);
             EditorGUILayout.TextField("HybridCLR Dlls Path", hybridCLRAssemblySourcesPath, GUILayout.ExpandWidth(true));
-            _assemblyhotUpdateStrings = EditorGUILayout.TextField("Assembly Names", _assemblyhotUpdateStrings, GUILayout.ExpandWidth(true));
+            // 刷新数据
+            _serializedObject.Update();
+            
+            //可拖入、可增删的数组列表；true = 展开显示子元素（必须写，否则数组不显示）
+            EditorGUILayout.PropertyField(_hotUpdateAssembliesProp, includeChildren: true);
             // 拷贝热更新程序集
             if (GUILayout.Button("Copy HotUpdate Assembly"))
             {
                 MoveHotUpdateAssembly();
             }
+            
+            // 生成基础程序集配置文件，用于运行时预先顺序加载的热更程序集
+            EditorGUILayout.PropertyField(_baseHotUpdateAssembliesProp, includeChildren: true);
+            // 应用修改
+            _serializedObject.ApplyModifiedProperties();
+            
+            GUILayout.BeginHorizontal();
+            
+            EditorGUI.BeginDisabledGroup(true);
+            var savePath = $"{Path.Combine(Application.dataPath, "Editor", "ArtRes", "HotUpdate", $"{nameof(HotUpdateAssemblySettings)}.json")}";
+            EditorGUILayout.TextField("Generate Path", savePath);
+            EditorGUI.EndDisabledGroup();
+            // 生成配置文件
+            if (GUILayout.Button("Generate HotUpdate BaseFile", GUILayout.Width(200)))
+            {
+                GenerateHotUpdateBaseFile(savePath);
+                AppendToLog($"HotUpdate BaseFile Generate At：{savePath}\n");
+            }
+            
+            GUILayout.EndHorizontal();
         }
 
         private void DrawReskeyView()
@@ -917,6 +965,10 @@ namespace Editor.AssetBundle
             EditorUtility.ClearProgressBar();
             
             AppendToLog($"--- Took Seconds：{(DateTime.Now - startTime).TotalSeconds:F2}s ---");
+            AppendToLog($"Collect AssetBundle Count：{_assetsColletion_Temp.assetBundleInfos.Count}");
+            var assetCount = 0;
+            foreach (var assetBundleInfo in _assetsColletion_Temp.assetBundleInfos) assetCount += assetBundleInfo.assetInfos.Count;
+            AppendToLog($"--- Collect Asset Count：{assetCount} ---");
             AppendToLog($"--- End Collect AssetInfos ---\n");
         }
 
@@ -1450,20 +1502,13 @@ namespace Editor.AssetBundle
             {
                 File.Delete(fileInfo.FullName);
             }
-
-            var assemblyNames = TextUtility.Split(_assemblyhotUpdateStrings, 2);
-            if (assemblyNames.Length == 0)
-            {
-                AppendToLog($"Split Error");
-                return;
-            }
             
             AppendToLog($"--- Copy HotUpdate Dlls ---");
             foreach (var fileInfo in sorcesInfo.GetFiles())
             {
                 if (fileInfo.Extension == ".dll" && fileInfo.Name.Contains("HotUpdate"))
                 {
-                    foreach (var assemblyName in assemblyNames)
+                    foreach (var assemblyName in hotUpdateAssemblies)
                     {
                         if (fileInfo.Name.Contains(assemblyName))
                         {
@@ -1477,6 +1522,34 @@ namespace Editor.AssetBundle
             }
             
             AppendToLog($"--- Copy HotUpdate Dlls End ---\n");
+            AssetDatabase.Refresh();
+        }
+
+        /// <summary>
+        /// 生成热更新基础文件，运行时先读取内容，按照依赖顺序加载热更新程序集
+        /// </summary>
+        /// <param name="savePath"></param>
+        private void GenerateHotUpdateBaseFile(string savePath)
+        {
+            var sb = new StringBuilder();
+            for (var i = 0; i < baseHotUpdateAssemblies.Length; i++)
+            {
+                var assemblyName = baseHotUpdateAssemblies[i];
+                if (i != baseHotUpdateAssemblies.Length - 1)
+                {
+                    sb.Append(assemblyName).Append(",");
+                }
+                else
+                {
+                    sb.Append(assemblyName);
+                }
+            }
+
+            var settings = new HotUpdateAssemblySettings
+            {
+                preloadHotUpdateAssemblies = baseHotUpdateAssemblies
+            };
+            JsonManager.Instance.SaveToJson(settings, savePath);
             AssetDatabase.Refresh();
         }
         

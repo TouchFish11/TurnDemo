@@ -57,7 +57,7 @@ namespace HotUpdate.Activity.UI.EmbersCanon
                 
                 var icon = await spriteLoader.LoadSpriteAsync(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Icon_Common, levelTipIconRes);
                 // 初始化关卡UI
-                battleLevelUI.Init(battleConfigEntry.levelName, icon, levelEntryData, battleConfigEntry);
+                battleLevelUI.Init(battleConfigEntry.levelName, icon, levelEntryData, battleConfigEntry, ActivityData);
                 // 缓存UI
                 _battleLevelUis.Add(battleLevelUI);
             }

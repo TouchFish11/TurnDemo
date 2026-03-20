@@ -98,9 +98,9 @@ namespace HotUpdate.Battle.Projectile
         protected abstract void AddStatusOnTrigger();
         
         /// <summary>
-        /// 在触发时造成伤害
+        /// 在触发时应用效果，伤害、回能
         /// </summary>
-        protected abstract void CauseDamageOnTrigger();
+        protected abstract void ApplyEffectOnTrigger();
         
         /// <summary>
         /// 在触发时创建特效

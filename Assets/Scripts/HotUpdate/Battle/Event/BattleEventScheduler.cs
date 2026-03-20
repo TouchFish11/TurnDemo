@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Core.Log;
 using Core.Mono.MonoFunction;
@@ -185,47 +186,58 @@ namespace HotUpdate.Battle.Event
         /// <param name="selectSkillEvent"></param>
         private async void SelectSkillEventScheduler(SelectSkillEvent selectSkillEvent)
         {
-            if (selectSkillEvent.Caster is not PlayerObject playerObject)
+            try
             {
-                return;
-            }
-            
-            // 读取技能信息
-            var skillInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<SkillInfoContainer>(EConfigLoadType.Excel)
-                .dataDic[selectSkillEvent.SkillId];
-            // 获取技能目标类型
-            var skillTargetType = (E_SkillTargetType)skillInfo.f_SkillTargetType;
-            switch (skillTargetType)
-            {
-                case E_SkillTargetType.None:
-                    LogManager.LogError($"{nameof(BattleEventScheduler)}.{nameof(SelectSkillEventScheduler)}：无效的目标类型，{skillTargetType}");
-                    break;
-                case E_SkillTargetType.Friend:
-                    // 更新相机看向玩家
-                    // TODO：计算相机世界坐标的位置和看向，数据暂时写死
-                    var worldPos = new Vector3(0, 1, 1.7f);
-                    var rotation = Quaternion.Euler(0, 180, 0);
-                    // 获取遮罩
-                    var mask = LayerGeter.GetRoleBitLayer() | LayerGeter.GetPreBitLayer();
-                    // 创建相机
-                    await ServiceLocator.Get<IBattleCameraManager>().CreateCamera(null, worldPos, rotation, mask);
-                    break;
-                case E_SkillTargetType.Enemy:
-                    // 更新相机看向怪物
-                    var roleCameraParent = ServiceLocator.Get<IBattlePointProxy>().BattlePoint
-                        .GetRoleCameraTransByIndex(playerObject.EntityPosIndex);
-                    // 设置Mask
-                    var mask2 = LayerGeter.GetPreBitLayer() | LayerGeter.GetMonsterBitLayer();
-                    // 根据当前玩家位置索引，只渲染符合的角色
-                    var roleLayers = LayerGeter.GetRoleLayers();
-                    for (var i = playerObject.EntityPosIndex; i < roleLayers.Length; i++)
-                    {
-                        mask2 |= 1 << roleLayers[i];
-                    }
-                    await ServiceLocator.Get<IBattleCameraManager>().CreateCamera(roleCameraParent, Vector3.zero, Quaternion.identity, mask2);
-                    break;
-                default:
+                if (selectSkillEvent.Caster is not PlayerObject playerObject)
+                {
                     return;
+                }
+            
+                // 读取技能信息
+                var skillInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<SkillInfoContainer>(EConfigLoadType.Excel)
+                    .dataDic[selectSkillEvent.SkillId];
+                // 获取技能目标类型
+                var skillTargetType = (E_SkillTargetType)skillInfo.f_SkillTargetType;
+                switch (skillTargetType)
+                {
+                    case E_SkillTargetType.None:
+                        LogManager.LogError($"{nameof(BattleEventScheduler)}.{nameof(SelectSkillEventScheduler)}:无效的目标类型，{skillTargetType}");
+                        break;
+                    case E_SkillTargetType.Friend:
+                        // 失活所有怪物UI显示
+                        ServiceLocator.Get<IUIManager>().GetController<BattleController>().MonsterStateUIManager.InActiveMonsterUIs();
+                        // 更新相机看向玩家
+                        // TODO：计算相机世界坐标的位置和看向，数据暂时写死
+                        var worldPos = new Vector3(0, 1, 1.7f);
+                        var rotation = Quaternion.Euler(0, 180, 0);
+                        // 获取遮罩
+                        var mask = LayerGeter.GetRoleBitLayer() | LayerGeter.GetPreBitLayer();
+                        // 创建相机
+                        await ServiceLocator.Get<IBattleCameraManager>().CreateCamera(null, worldPos, rotation, mask);
+                        break;
+                    case E_SkillTargetType.Enemy:
+                        // 激活所有怪物UI显示
+                        ServiceLocator.Get<IUIManager>().GetController<BattleController>().MonsterStateUIManager.ActiveMonsterUIs();
+                        // 更新相机看向怪物
+                        var roleCameraParent = ServiceLocator.Get<IBattlePointProxy>().BattlePoint
+                            .GetRoleCameraTransByIndex(playerObject.EntityPosIndex);
+                        // 设置Mask
+                        var mask2 = LayerGeter.GetPreBitLayer() | LayerGeter.GetMonsterBitLayer();
+                        // 根据当前玩家位置索引，只渲染符合的角色
+                        var roleLayers = LayerGeter.GetRoleLayers();
+                        for (var i = playerObject.EntityPosIndex; i < roleLayers.Length; i++)
+                        {
+                            mask2 |= 1 << roleLayers[i];
+                        }
+                        await ServiceLocator.Get<IBattleCameraManager>().CreateCamera(roleCameraParent, Vector3.zero, Quaternion.identity, mask2);
+                        break;
+                    default:
+                        return;
+                }
+            }
+            catch (Exception e)
+            {
+                LogManager.LogError($"{nameof(BattleEventScheduler)}.{nameof(SelectSkillEventScheduler)}:逻辑执行错误，{e.Message}");
             }
         }
 

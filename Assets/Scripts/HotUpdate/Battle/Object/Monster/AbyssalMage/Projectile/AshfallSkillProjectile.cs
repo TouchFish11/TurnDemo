@@ -31,7 +31,7 @@ namespace HotUpdate.Battle.Object.Monster.AbyssalMage.Projectile
             }
         }
 
-        protected override void CauseDamageOnTrigger()
+        protected override void ApplyEffectOnTrigger()
         {
             foreach (var target in projectileData.targets)
             {

@@ -142,7 +142,7 @@ namespace HotUpdate.Battle.Skill.Base
         public virtual void RecoverEnergy()
         {
             // 获取释放者当前能量值
-            int newValue = PropertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentEnergy);
+            var newValue = PropertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentEnergy);
             // 累加技能配置的能量恢复值并更新
             PropertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentEnergy, newValue + SkillInfo.f_recoveryEnergy);
         }

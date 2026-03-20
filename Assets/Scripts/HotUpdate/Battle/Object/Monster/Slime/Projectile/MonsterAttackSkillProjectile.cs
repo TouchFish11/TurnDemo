@@ -27,7 +27,7 @@ namespace HotUpdate.Battle.Object.Monster.Slime.Projectile
             }
 
             AddStatusOnTrigger();
-            CauseDamageOnTrigger();
+            ApplyEffectOnTrigger();
             CreateVFXOnTrigger();
             HandleTiming();
             vFXInfo.IsStop = true;
@@ -48,7 +48,7 @@ namespace HotUpdate.Battle.Object.Monster.Slime.Projectile
             }
         }
 
-        protected override void CauseDamageOnTrigger()
+        protected override void ApplyEffectOnTrigger()
         {
             foreach (var target in projectileData.targets)
             {

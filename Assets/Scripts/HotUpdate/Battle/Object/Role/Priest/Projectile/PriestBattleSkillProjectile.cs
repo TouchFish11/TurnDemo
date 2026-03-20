@@ -32,13 +32,15 @@ namespace HotUpdate.Battle.Object.Role.Priest.Projectile
             
         }
         
-        protected override void CauseDamageOnTrigger()
+        protected override void ApplyEffectOnTrigger()
         {
             // 回血
             foreach (var target in projectileData.targets)
             {
                 target.TakeHeal(100);
             }
+            // 恢复能量
+            projectileData.skill.RecoverEnergy();
         }
 
         protected override void HandleTiming()

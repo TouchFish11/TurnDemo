@@ -32,7 +32,7 @@ namespace HotUpdate.Battle.Object.Monster.Slime.Projectile
             
         }
         
-        protected override void CauseDamageOnTrigger()
+        protected override void ApplyEffectOnTrigger()
         {
 
         }

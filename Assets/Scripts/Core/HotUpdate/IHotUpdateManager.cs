@@ -38,11 +38,10 @@ namespace Core.HotUpdate
         Assembly GetCoreModule();
 
         /// <summary>
-        /// 加载指定程序集
+        /// 预加载HotUpdateAssemblySettings的preloadHotUpdateAssemblies程序集
         /// </summary>
         /// <param name="abName"></param>
-        /// <param name="assemblyNames"></param>
-        Task LoadAssembliesAsync(string abName, params string[] assemblyNames);
+        Task PreLoadAssembliesAsync(string abName);
         
         /// <summary>
         /// 获取所有程序集

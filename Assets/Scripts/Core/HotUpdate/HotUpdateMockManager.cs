@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.Collection;
+using Core.EditorRes;
 using Core.Log;
+using Core.Serialize.Json;
 using Core.Service;
 using Core.Singleton;
 using Core.Tasks.Extensions;
@@ -37,28 +38,11 @@ namespace Core.HotUpdate
         /// 加载指定程序集
         /// </summary>
         /// <param name="abName"></param>
-        /// <param name="assemblyNames"></param>
-        public Task LoadAssembliesAsync(string abName, params string[] assemblyNames)
+        public Task PreLoadAssembliesAsync(string abName)
         {
+            // Editor环境下，HotUpdate.dll已经被自动加载，不需要加载，直接查找获得HotUpdate程序集，重复加载反而会出问题。
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            // 顺序加载程序集资源
-            foreach (var nameWithExtension in assemblyNames)
-            {
-                // Editor环境下，HotUpdate.dll.bytes已经被自动加载，不需要加载，直接查找获得HotUpdate程序集，重复加载反而会出问题。
-                foreach (var assembly in assemblies)
-                {
-                    var assemblyName = nameWithExtension[..nameWithExtension.LastIndexOf('.')];
-                    if (assembly.GetName().Name != assemblyName)
-                    {
-                        continue;
-                    }
-                    
-                    _assemblyNames.Add(assembly.GetName().Name);
-                    LogManager.Log($"{nameof(HotUpdateMockManager)}.{nameof(LoadAssembliesAsync)}:已缓存编辑器加载热更程序集名称{assemblyName}");
-                    break;
-                }
-            }
-            _assetBundleManager.UnloadBundle(abName);
+            // ...
             return Task.CompletedTask;
         }
         
@@ -84,7 +68,7 @@ namespace Core.HotUpdate
                     }
                     
                     _assemblyNames.Add(assembly.GetName().Name);
-                    LogManager.Log($"{nameof(HotUpdateMockManager)}.{nameof(LoadAssembliesAsync)}:已缓存编辑器加载热更程序集{dllText.name}");
+                    LogManager.Log($"{nameof(HotUpdateMockManager)}.{nameof(PreLoadAssembliesAsync)}:已缓存编辑器加载热更程序集{dllText.name}");
                 }
             }
             

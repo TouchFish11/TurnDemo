@@ -29,7 +29,7 @@ namespace HotUpdate.Battle.Object.Role.Warrior.Projectile
             }
         }
         
-        protected override void CauseDamageOnTrigger()
+        protected override void ApplyEffectOnTrigger()
         {
             foreach (var target in projectileData.targets)
             {

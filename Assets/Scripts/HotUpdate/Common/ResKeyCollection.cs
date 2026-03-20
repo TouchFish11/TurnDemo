@@ -47,6 +47,7 @@ namespace HotUpdate.Common
 		public static string MSYH => "MSYH";
 		public static string BattleActivityConfig => "BattleActivityConfig";
 		public static string MainActionMap => "MainActionMap";
+		public static string HotUpdateAssemblySettings => "HotUpdateAssemblySettings";
 		public static string Ground => "Ground";
 		public static string MergedMesh => "MergedMesh";
 		public static string Prefab_Player => "Prefab_Player";

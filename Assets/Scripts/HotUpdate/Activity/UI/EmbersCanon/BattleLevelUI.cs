@@ -9,6 +9,7 @@ using Core.UI;
 using HotUpdate.Activity.UI.Base;
 using HotUpdate.Common;
 using HotUpdate.Config.Activity;
+using HotUpdate.Core.Activity;
 using HotUpdate.Core.Battle;
 using HotUpdate.Core.Battle.Turn;
 using HotUpdate.Core.Main;
@@ -37,6 +38,7 @@ namespace HotUpdate.Activity.UI.EmbersCanon
         private ISceneManager _sceneManager;
         
         private BattleConfigEntry _configEntry;
+        private IActivityData _activityData;
         private EmbersCanonLevelEntryData levelDataEntryData;
 
         protected override void Awake()
@@ -55,12 +57,14 @@ namespace HotUpdate.Activity.UI.EmbersCanon
         /// <param name="finishedIcon"></param>
         /// <param name="levelDataEntryData"></param>
         /// <param name="configEntry"></param>
-        public void Init(string levelName, Sprite finishedIcon, EmbersCanonLevelEntryData levelDataEntryData, BattleConfigEntry configEntry)
+        /// <param name="activityData"></param>
+        public void Init(string levelName, Sprite finishedIcon, EmbersCanonLevelEntryData levelDataEntryData, BattleConfigEntry configEntry, IActivityData activityData)
         {
             txtName.text = levelName;
             imgIsFinished.sprite = finishedIcon;
             this.levelDataEntryData =  levelDataEntryData;
             _configEntry = configEntry;
+            _activityData = activityData;
         }
 
         protected override void OnButtonClick(string btnName)
@@ -108,8 +112,10 @@ namespace HotUpdate.Activity.UI.EmbersCanon
                     await ChangedScene();
                     // 创建玩家对象（参数为玩家配置ID，对应玩家基础配置表）
                     await ServiceLocator.Get<IPlayerManager>().CreatePlayer(1001);
-                    // 更新当前活动数据，标记为完成
+                    // 更新当前关卡活动数据，标记为完成
                     levelDataEntryData.isComplete = true;
+                    // 更新当前活动数据
+                    _activityData.CurrentPro += 1;
                     // 激活活动界面
                     await _uiManager.SetViewActive(_uiManager.GetController<IActivityController>(), true);
                 });
