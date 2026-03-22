@@ -8,6 +8,6 @@ namespace Core.Global
         /// <summary>
         /// 游戏设置
         /// </summary>
-        GameSetting GameSetting { get; }
+        GameSettings GameSettings { get; }
     }
 }

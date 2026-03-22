@@ -23,7 +23,7 @@ namespace Core.Global
         private IEventCenter _eventCenter;
 
         // 游戏设置
-        public GameSetting GameSetting { get; private set; }
+        public GameSettings GameSettings { get; private set; }
         
         private GameSettingManager(){}
         
@@ -33,8 +33,8 @@ namespace Core.Global
             _monoAdapter = ServiceLocator.Get<IMonoAdapter>();
             _eventCenter = ServiceLocator.Get<IEventCenter>();
             
-            GameSetting = await _jsonManager.FromJsonAsync<GameSetting>($"{PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingFileName)}");
-            GameSetting.enableTypewriter = true;
+            GameSettings = await _jsonManager.FromJsonAsync<GameSettings>($"{PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingFileName)}");
+            GameSettings.enableTypewriter = true;
         }
         
         /// <summary>
@@ -43,14 +43,14 @@ namespace Core.Global
         /// <param name="enable"></param>
         public void SetEnableTypewriter(bool enable)
         {
-            GameSetting.enableTypewriter = enable;
-            _eventCenter.TriggerEvent(new GameSettingUpdateEvent {GameSetting = GameSetting});
+            GameSettings.enableTypewriter = enable;
+            _eventCenter.TriggerEvent(new GameSettingUpdateEvent {GameSettings = GameSettings});
         }
         
         public void OnAppQuit()
         {
-            _jsonManager.SaveToJson(GameSetting, $"{PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingFileName)}");
-            LogManager.Log($"{nameof(GameSettingManager)}.{nameof(OnAppQuit)}:游戏设置数据保存成功，{GameSetting}");
+            _jsonManager.SaveToJson(GameSettings, $"{PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingFileName)}");
+            LogManager.Log($"{nameof(GameSettingManager)}.{nameof(OnAppQuit)}:游戏设置数据保存成功，{GameSettings}");
         }
     }
 }

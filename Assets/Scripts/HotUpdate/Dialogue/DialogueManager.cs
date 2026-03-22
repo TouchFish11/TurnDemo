@@ -71,7 +71,7 @@ namespace HotUpdate.Dialogue
             _eventCenter = ServiceLocator.Get<IEventCenter>();
             _binaryDataManager = ServiceLocator.Get<IBinaryDataManager>();
             _monoAdapter = ServiceLocator.Get<IMonoAdapter>();
-            enableTypewriter = ServiceLocator.Get<IGameSettingManager>().GameSetting.enableTypewriter;
+            enableTypewriter = ServiceLocator.Get<IGameSettingManager>().GameSettings.enableTypewriter;
             _eventCenter.SubscribeEvent<GameSettingUpdateEvent>(OnGameSettingUpdateEvent);
         }
         
@@ -247,7 +247,7 @@ namespace HotUpdate.Dialogue
 
         private void OnGameSettingUpdateEvent(GameSettingUpdateEvent gameSettingUpdateEvent)
         {
-            enableTypewriter = gameSettingUpdateEvent.GameSetting.enableTypewriter;
+            enableTypewriter = gameSettingUpdateEvent.GameSettings.enableTypewriter;
         }
 
         public void OnDestroy()

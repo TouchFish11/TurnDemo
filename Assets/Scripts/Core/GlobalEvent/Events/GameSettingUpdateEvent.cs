@@ -7,6 +7,6 @@ namespace Core.GlobalEvent.Events
     /// </summary>
     public class GameSettingUpdateEvent : Event
     {
-        public GameSetting GameSetting { get; set; }
+        public GameSettings GameSettings { get; set; }
     }
 }
