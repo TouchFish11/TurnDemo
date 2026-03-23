@@ -1,4 +1,8 @@
 using System.Collections.Generic;
+using Core.Serialize.Json;
+using Test.Config;
+using Test.Equip;
+using Test.SO;
 using UnityEngine;
 
 namespace Test
@@ -8,6 +12,9 @@ namespace Test
     /// </summary>
     public class StatsTest : MonoBehaviour
     {
+        public TextAsset e1Config;
+        public TextAsset e2Config;
+        
         private void Start()
         {
             // 初始化
@@ -21,49 +28,30 @@ namespace Test
             var equipmentSystem = new EquipmentSystem();
             statsModifier.RegisterSource(equipmentSystem);
             
-            
             // 获取属性
             Debug.Log($"穿戴装备前生命值为：{statsComponent.GetFinalValue(EStatType.Hp)}");
             Debug.Log($"穿戴装备前攻击力为：{statsComponent.GetFinalValue(EStatType.Atk)}");
             Debug.Log($"穿戴装备前防御力为：{statsComponent.GetFinalValue(EStatType.Def)}");
             
             // 创建装备
-            var e1 = new Equipment
-            {
-                id = 1,
-                name = "Equipment 1",
-                bonusDatas = new List<BonusData>
-                {
-                    new(){ StatType = EStatType.Hp, BuildValue = 100, PercentValue = 0.5f },
-                    new(){ StatType = EStatType.Atk, BuildValue = 10, PercentValue = 0.1f },
-                    new(){ StatType = EStatType.Def, BuildValue = 20, PercentValue = 0.3f },
-                },
-            };
+            var config1 = JsonManager.Instance.FromJson<WeaponConfig>(e1Config.text, settings: Core.Utility.NewtonsoftJsonUtility.SerializerSettings);
+            var w1 = new Weapon(config1, null, null);
             
             // 穿戴装备
-            equipmentSystem.Equip(e1);
-            Debug.Log($"{e1}");
+            equipmentSystem.Equip(w1);
+            Debug.Log($"{w1}");
             
             Debug.Log($"穿戴装备后生命值为：{statsComponent.GetFinalValue(EStatType.Hp)}");
             Debug.Log($"穿戴装备后攻击力为：{statsComponent.GetFinalValue(EStatType.Atk)}");
             Debug.Log($"穿戴装备后防御力为：{statsComponent.GetFinalValue(EStatType.Def)}");
             
             // 创建装备
-            var e2 = new Equipment
-            {
-                id = 2,
-                name = "Equipment 2",
-                bonusDatas = new List<BonusData>
-                {
-                    new(){ StatType = EStatType.Atk, BuildValue = 20, PercentValue = 0.5f },
-                    new(){ StatType = EStatType.Hp, BuildValue = 30, PercentValue = 0.1f },
-                    new(){ StatType = EStatType.Def, BuildValue = 50, PercentValue = 0.1f },
-                },
-            };
+            var config2 = JsonManager.Instance.FromJson<WeaponConfig>(e2Config.text, settings: Core.Utility.NewtonsoftJsonUtility.SerializerSettings);
+            var w2 = new Weapon(config2,null, null);
             
             // 穿戴装备
-            equipmentSystem.Equip(e2);
-            Debug.Log($"{e2}");
+            equipmentSystem.Equip(w2);
+            Debug.Log($"{w2}");
             
             Debug.Log($"穿戴装备后生命值为：{statsComponent.GetFinalValue(EStatType.Hp)}");
             Debug.Log($"穿戴装备后攻击力为：{statsComponent.GetFinalValue(EStatType.Atk)}");

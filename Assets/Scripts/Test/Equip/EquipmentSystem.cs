@@ -1,25 +1,27 @@
 using System;
 using System.Collections.Generic;
 
-namespace Test
+namespace Test.Equip
 {
     /// <summary>
     /// 装备系统
     /// </summary>
     public class EquipmentSystem : IStatsModifierSource
     {
-        private readonly List<Equipment> _equipments = new();
+        private readonly List<IEquipment> _equipments = new();
         
         public event Action OnModifiersChanged;
         
-        public void Equip(Equipment eq) 
+        public void Equip(Equipment eq)
         {
+            eq.Equip(null);
             _equipments.Add(eq);
             OnModifiersChanged?.Invoke(); // 通知变化
         }
     
         public void Unequip(Equipment eq) 
         {
+            eq.UnEquip(null);
             _equipments.Remove(eq);
             OnModifiersChanged?.Invoke(); // 通知变化
         }
@@ -28,7 +30,7 @@ namespace Test
         {
             foreach (var equipment in _equipments)
             {
-                foreach (var equipmentBonusData in equipment.bonusDatas)
+                foreach (var equipmentBonusData in equipment.Config.bonusDatas)
                 {
                     if (bonusDatas.TryGetValue(equipmentBonusData.StatType, out var bonusData))
                     {
