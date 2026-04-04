@@ -24,6 +24,10 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// Core.Collection.Collection<int,object>
 	// Core.Collection.Collection<object,object>
 	// Core.Collection.Generic.UniList<object>
+	// Core.ReactiveProperty<byte>
+	// Core.ReactiveProperty<float>
+	// Core.ReactiveProperty<int>
+	// Core.ReactiveProperty<object>
 	// Core.Tasks.AssetBundleRequestTask.<>c__DisplayClass9_0<object>
 	// Core.Tasks.AssetBundleRequestTask<object>
 	// Core.Tasks.Awaiter.AssetBundleRequestAwaiter<object>
@@ -308,6 +312,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// int Unity.Collections.LowLevel.Unsafe.UnsafeUtility.SizeOf<float>()
 		// object Unity.VisualScripting.AttributeUtility.GetAttribute<object>(System.Reflection.MemberInfo,bool)
 		// object Unity.VisualScripting.AttributeUtility.AttributeCache.GetAttribute<object>(bool)
+		// object Unity.VisualScripting.ConversionUtility.ConvertTo<object>(object)
 		// UnityEngine.AssetBundleRequest UnityEngine.AssetBundle.LoadAssetAsync<object>(string)
 		// object UnityEngine.Component.GetComponent<object>()
 		// object UnityEngine.Component.GetComponentInChildren<object>()

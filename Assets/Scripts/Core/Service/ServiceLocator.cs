@@ -77,7 +77,6 @@ namespace Core.Service
 #endif
             Register<ISceneManager>(SceneManager.Instance);
             Register<IPreLoadManager>(PreLoadManager.Instance);
-            Register<IGameSettingManager>(GameSettingManager.Instance);
             
             // 初始化服务
             return InitServices();

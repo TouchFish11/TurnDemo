@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using Core.Global;
 using Core.UI.MVC;
+using HotUpdate.Core.Main.Settings;
 
-namespace HotUpdate.Main.Settings
+namespace HotUpdate.Main.Settings.UI
 {
     /// <summary>
     /// 设置界面数据

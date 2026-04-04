@@ -11,7 +11,7 @@ namespace HotUpdate.Task.Core
     {
         public static ITaskDataCollection GetTaskDataCollection()
         {
-            var taskDataCollection = ServiceLocator.Get<IGameManager>().GameDataManager.GetData<ITaskDataCollection>();
+            var taskDataCollection = ServiceLocator.Get<IGameManager>().GameDataManager.GetProvider<ITaskDataProvider>().TaskDataCollection;
             // 转换集合
             if (taskDataCollection is Collection<string, TaskData> collection)
             {

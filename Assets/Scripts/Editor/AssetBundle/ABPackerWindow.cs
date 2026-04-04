@@ -1367,7 +1367,7 @@ namespace Editor.AssetBundle
                         
                         req.Method = WebRequestMethods.Http.Post;
                         req.ContentType = "multipart/form-data;boundary=MrQiu";
-                        req.Timeout = 500000;
+                        req.Timeout = 30000;
 
                         // 配置身份验证（如果启用）
                         if (uploadUseUser)

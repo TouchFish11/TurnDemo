@@ -82,6 +82,14 @@ namespace Core.Utility
         /// GameSetting.json
         /// </value>
         public static string GameSettingFileName => "GameSetting.json";
+        
+        /// <summary>
+        /// 游戏设置配置文件名
+        /// </summary>
+        /// <value>
+        /// GameSettingConfig.json
+        /// </value>
+        public static string GameSettingConfigFileName => "GameSettingConfig.json";
         #endregion
 
         /// <summary>

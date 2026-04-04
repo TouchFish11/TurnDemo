@@ -1,4 +1,4 @@
-namespace Core.Global
+namespace HotUpdate.Core.Main.Settings
 {
     /// <summary>
     /// 游戏设置接口
@@ -6,8 +6,10 @@ namespace Core.Global
     public interface IGameSettingManager
     {
         /// <summary>
-        /// 游戏设置
+        /// 游戏设置数据
         /// </summary>
         GameSettings GameSettings { get; }
+        
+
     }
 }

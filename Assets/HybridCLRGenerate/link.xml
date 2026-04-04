@@ -17,11 +17,8 @@
     <type fullname="Core.Components.IComponent" preserve="all" />
     <type fullname="Core.Components.IEntityObject" preserve="all" />
     <type fullname="Core.Extensions.DictionaryExtensions" preserve="all" />
-    <type fullname="Core.Global.GameSetting" preserve="all" />
-    <type fullname="Core.Global.IGameSettingManager" preserve="all" />
     <type fullname="Core.GlobalEvent.Event" preserve="all" />
     <type fullname="Core.GlobalEvent.Events.CloseViewEvent" preserve="all" />
-    <type fullname="Core.GlobalEvent.Events.GameSettingUpdateEvent" preserve="all" />
     <type fullname="Core.GlobalEvent.Events.GlobalMessageEvent" preserve="all" />
     <type fullname="Core.GlobalEvent.Events.MouseVisibleChangedEvent" preserve="all" />
     <type fullname="Core.GlobalEvent.Events.OpenViewEvent" preserve="all" />
@@ -44,10 +41,12 @@
     <type fullname="Core.PreLoad.IPreLoadManager" preserve="all" />
     <type fullname="Core.PreLoad.PreLoadData" preserve="all" />
     <type fullname="Core.Process.ProcessRestarter" preserve="all" />
+    <type fullname="Core.ReactiveProperty`1" preserve="all" />
     <type fullname="Core.Reflection.FactoryUtility" preserve="all" />
     <type fullname="Core.Reflection.Factory`1" preserve="all" />
     <type fullname="Core.Reflection.IFactory" preserve="all" />
     <type fullname="Core.Reflection.IFactoryManager" preserve="all" />
+    <type fullname="Core.SO.SOBase" preserve="all" />
     <type fullname="Core.Scene.ISceneManager" preserve="all" />
     <type fullname="Core.Serialize.Binary.EConfigLoadType" preserve="all" />
     <type fullname="Core.Serialize.Binary.IBinaryDataManager" preserve="all" />
@@ -103,12 +102,14 @@
     <type fullname="UnityEngine.InputSystem.PlayerInput" preserve="all" />
   </assembly>
   <assembly fullname="Unity.TextMeshPro">
+    <type fullname="TMPro.TMP_Dropdown" preserve="all" />
     <type fullname="TMPro.TMP_Text" preserve="all" />
     <type fullname="TMPro.TextMeshPro" preserve="all" />
     <type fullname="TMPro.TextMeshProUGUI" preserve="all" />
   </assembly>
   <assembly fullname="Unity.VisualScripting.Core">
     <type fullname="Unity.VisualScripting.AttributeUtility" preserve="all" />
+    <type fullname="Unity.VisualScripting.ConversionUtility" preserve="all" />
   </assembly>
   <assembly fullname="UnityEngine.AnimationModule">
     <type fullname="UnityEngine.Animator" preserve="all" />
@@ -257,6 +258,7 @@
     <type fullname="System.Reflection.Assembly" preserve="all" />
     <type fullname="System.Reflection.BindingFlags" preserve="all" />
     <type fullname="System.Reflection.CustomAttributeExtensions" preserve="all" />
+    <type fullname="System.Reflection.FieldInfo" preserve="all" />
     <type fullname="System.Reflection.MemberInfo" preserve="all" />
     <type fullname="System.Reflection.MethodBase" preserve="all" />
     <type fullname="System.Reflection.MethodInfo" preserve="all" />

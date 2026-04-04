@@ -30,7 +30,7 @@ namespace HotUpdate.Activity.UI.EmbersCanon
         protected override async Task OnShow()
         {
             // 根据读取用户活动数据
-            var activityDataCollection = ServiceLocator.Get<IGameManager>().GameDataManager.GetData<IActivityDataCollection>() as ActivityDataCollection;
+            var activityDataCollection = ServiceLocator.Get<IGameManager>().GameDataManager.GetProvider<IActivityDataProvider>().ActivityDataCollection as ActivityDataCollection;
             // 获取该活动数据
             var embersCanonData = activityDataCollection[activityInfo.f_id] as EmbersCanonData;
             // AB包加载配置

@@ -7,7 +7,6 @@ using Core.Serialize.Binary;
 using Core.Service;
 using Core.UI;
 using HotUpdate.Common;
-using HotUpdate.Config;
 using UnityEngine.UI;
 
 namespace HotUpdate.Dialogue.UI

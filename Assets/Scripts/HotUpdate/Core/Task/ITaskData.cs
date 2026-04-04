@@ -2,7 +2,7 @@ using HotUpdate.Core.Data;
 
 namespace HotUpdate.Core.Task
 {
-    public interface ITaskData : IData
+    public interface ITaskData : IData<ITaskData>
     {
         public string CurrentTaskId { get; }
 

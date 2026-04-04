@@ -38,5 +38,7 @@ namespace HotUpdate.Task.Data
             get => isTracking;
             set => isTracking = value;
         }
+
+        public event Action<ITaskData> OnDataChanged;
     }
 }

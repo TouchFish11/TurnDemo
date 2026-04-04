@@ -24,65 +24,65 @@ namespace HotUpdate.Core.Module
         
         public async Task InitModules()
         {
-            var uniList = ListUtility.GetUniList<Type>();
-            // 临时缓存具体模块接口
-            foreach (var hotAssembly in _hotUpdateManager.GetHotAssemblies())
-            {
-                foreach (var type in hotAssembly.GetTypes())
+                var uniList = ListUtility.GetUniList<Type>();
+                // 临时缓存具体模块接口
+                foreach (var hotAssembly in _hotUpdateManager.GetHotAssemblies())
                 {
-                    if (typeof(IModule).IsAssignableFrom(type) && type.IsInterface && type != typeof(IModule))
+                    foreach (var type in hotAssembly.GetTypes())
                     {
-                        uniList.Add(type);
-                    }
-                }
-            }
-            
-            // 缓存模块接口类型到模块实例的映射
-            foreach (var hotAssembly in _hotUpdateManager.GetHotAssemblies())
-            {
-                foreach (var type in hotAssembly.GetTypes())
-                {
-                    if (!typeof(IModule).IsAssignableFrom(type) || type.IsInterface || type.IsAbstract)
-                    {
-                        continue;
-                    }
-                        
-                    // 反射创建模块对象
-                    var module = (IModule)Activator.CreateInstance(type);
-                    // 缓存模块
-                    foreach (var interfaceType in uniList.List)
-                    {
-                        if (interfaceType.IsAssignableFrom(type))
+                        if (typeof(IModule).IsAssignableFrom(type) && type.IsInterface && type != typeof(IModule))
                         {
-                            _modules.TryAdd(interfaceType, module);
+                            uniList.Add(type);
                         }
                     }
                 }
-            }
-            
-            ListUtility.CollectUniList(uniList);
-            
-            var uniList2 = ListUtility.GetUniList<IModule>();
-            // 字典values转list
-            uniList2.AddRange(_modules.Values.ToArray(module => module));
-            // 按优先级排序
-            uniList2.Sort((m1, m2) =>
-            {
-                if (m1.Priority < m2.Priority)
+                
+                // 缓存模块接口类型到模块实例的映射
+                foreach (var hotAssembly in _hotUpdateManager.GetHotAssemblies())
                 {
-                    return -1;
+                    foreach (var type in hotAssembly.GetTypes())
+                    {
+                        if (!typeof(IModule).IsAssignableFrom(type) || type.IsInterface || type.IsAbstract)
+                        {
+                            continue;
+                        }
+                            
+                        // 反射创建模块对象
+                        var module = (IModule)Activator.CreateInstance(type);
+                        // 缓存模块
+                        foreach (var interfaceType in uniList.List)
+                        {
+                            if (interfaceType.IsAssignableFrom(type))
+                            {
+                                _modules.TryAdd(interfaceType, module);
+                            }
+                        }
+                    }
                 }
+                
+                ListUtility.CollectUniList(uniList);
+                
+                var uniList2 = ListUtility.GetUniList<IModule>();
+                // 字典values转list
+                uniList2.AddRange(_modules.Values.ToArray(module => module));
+                // 按优先级排序
+                uniList2.Sort((m1, m2) =>
+                {
+                    if (m1.Priority < m2.Priority)
+                    {
+                        return -1;
+                    }
 
-                return m1.Priority > m2.Priority ? 1 : 0;
-            });
-            
-            // 异步初始化模块
-            foreach (var module in uniList2.List)
-            {
-                await module.InitModuleAsync();
-            }
-            
-            ListUtility.CollectUniList(uniList2);
+                    return m1.Priority > m2.Priority ? 1 : 0;
+                });
+                
+                // 异步初始化模块
+                foreach (var module in uniList2.List)
+                {
+                    await module.InitModuleAsync();
+                }
+                
+                ListUtility.CollectUniList(uniList2);
         }
 
         public T GetModule<T>() where T : class, IModule

@@ -54,5 +54,7 @@ namespace HotUpdate.Activity.Data
             var activityInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<ActivityInfoContainer>(EConfigLoadType.Excel).dataDic[activityId];
             isComplete = activityInfo.f_maxPro == currentPro;
         }
+
+        public event Action<IActivityData> OnDataChanged;
     }
 }

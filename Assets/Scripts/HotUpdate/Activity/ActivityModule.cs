@@ -21,7 +21,7 @@ namespace HotUpdate.Activity
         public Task InitModuleAsync()
         {
             // 注册活动数据提供器
-            ServiceLocator.Get<IGameManager>().GameDataManager.RegisterProvider(typeof(IActivityDataCollection), new ActivityDataProvider());
+            ServiceLocator.Get<IGameManager>().GameDataManager.RegisterProvider(typeof(IActivityDataProvider), new ActivityDataProvider());
             // 注册活动UIhelper
             ServiceLocator.Register<IActivityUiHelper>(new ActivityUiHelper(ServiceLocator.Get<IUIManager>()));
             LogManager.Log($"{nameof(ActivityModule)}.{nameof(InitModuleAsync)}:Activity module initialization completed");

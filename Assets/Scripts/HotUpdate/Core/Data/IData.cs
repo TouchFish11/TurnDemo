@@ -1,7 +1,9 @@
+using System;
+
 namespace HotUpdate.Core.Data
 {
-    public interface IData
+    public interface IData<out T> where T : class
     {
-
+        event Action<T> OnDataChanged;
     }
 }

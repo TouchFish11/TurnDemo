@@ -52,8 +52,12 @@ namespace Core.HotUpdate
             var assetBundle = await _assetBundleManager.LoadBundleAsync(abName);
             var dllTexts = ListUtility.GetUniList<TextAsset>();
             await assetBundle.LoadAllAssetsAsync<TextAsset>().ToTask(dllTexts.List);
+            
+            var textAsset = dllTexts.List.Find(text => text.name.Contains(nameof(HotUpdateAssemblySettings)));
             foreach (var dllText in dllTexts.List)
             {
+                if(textAsset.name == dllText.name) continue;
+                
                 if (_assemblyNames.Contains(dllText.name[..dllText.name.LastIndexOf('.')]))
                 {
                     continue;

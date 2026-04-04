@@ -17,12 +17,18 @@ namespace HotUpdate.Main.UI.Logic
         /// <param name="mainController"></param>
         /// <param name="mainModel"></param>
         /// <param name="mainView"></param>
-        public virtual void Init(MainController mainController, MainModel mainModel, MainView mainView)
+        public void Init(MainController mainController, MainModel mainModel, MainView mainView)
         {
             this.mainController = mainController;
             this.mainModel = mainModel;
             this.mainView = mainView;
+            OnInit();
         }
+
+        /// <summary>
+        /// 初始化后执行
+        /// </summary>
+        protected abstract void OnInit();
 
         public virtual void ResetData()
         {

@@ -78,23 +78,17 @@ namespace Core.UI
             // 初始化控制器
             var controller = new TController();
             var model = new TModel();
-            try
-            {
-                // 获取面板
-                var view = await ServiceLocator.Get<IPrefabLoader>().GetObjectAsync<TView>(abName, panelName, GetLayer(layer), pos, quaternion);
-                await controller.Init(view, model);
-                await controller.Show();
-                // 初始化面板信息
-                var newInfo = new PanelInfo<TView, TModel, TController>(view, model, controller);
-                // 存储面板信息
-                _panels.Add(newInfo);
-                return controller;
-            }
-            catch (Exception e)
-            {
-                LogManager.LogError($"{nameof(UIManager)}.{nameof(CreateViewAsync)}：异步创建界面错误，{e.Message}");
-                return controller;
-            }
+            // 获取面板
+            var view = await ServiceLocator.Get<IPrefabLoader>().GetObjectAsync<TView>(abName, panelName, GetLayer(layer), pos, quaternion);
+            if (!view) throw new NullReferenceException($"{nameof(UIManager)}.{nameof(CreateViewAsync)}: view is null");
+            
+            await controller.Init(view, model);
+            await controller.Show();
+            // 初始化面板信息
+            var newInfo = new PanelInfo<TView, TModel, TController>(view, model, controller);
+            // 存储面板信息
+            _panels.Add(newInfo);
+            return controller;
         }
         
         public async void DestroyView(string abName, IuiController controller)

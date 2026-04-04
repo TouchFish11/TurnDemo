@@ -1,6 +1,6 @@
 using Core.UI;
 
-namespace HotUpdate.Main.Settings
+namespace HotUpdate.Main.Settings.UI
 {
     /// <summary>
     /// 设置选项UI

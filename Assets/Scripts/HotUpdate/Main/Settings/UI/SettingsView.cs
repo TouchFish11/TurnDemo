@@ -3,7 +3,7 @@ using Core.UI.MVC;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace HotUpdate.Main.Settings
+namespace HotUpdate.Main.Settings.UI
 {
     /// <summary>
     /// 设置界面

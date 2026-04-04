@@ -3,25 +3,41 @@ using Core.Input.ActionAsset;
 using Core.Log;
 using Core.Music;
 using Core.Serialize.Binary;
+using Core.Serialize.Json;
 using Core.Utility;
 using HotUpdate.Common;
 using HotUpdate.Core.Main;
-using HotUpdate.Core.Provider;
+using HotUpdate.Core.Main.Settings;
 
 namespace HotUpdate.Main.Data
 {
     /// <summary>
     /// 主模块数据提供器
     /// </summary>
-    public class MainDataProvider : IDataProvider<IMainDataCollection>
+    public class MainDataProvider : IMainDataProvider
     {
         private readonly IBinaryDataManager _binaryDataManager;
-        // 主数据集合
-        private IMainDataCollection _mainDataCollection;
+        private readonly IJsonManager _jsonManager;
         
-        public MainDataProvider(IBinaryDataManager binaryDataManager)
+        /// <summary>
+        /// 主数据集合
+        /// </summary>
+        public IMainDataCollection MainDataCollection { get; private set; }
+        
+        /// <summary>
+        /// 游戏设置数据
+        /// </summary>
+        public GameSettings GameSettings { get; private set; }
+
+        /// <summary>
+        /// 游戏设置配置
+        /// </summary>
+        public GameSettingsConfig GameSettingsConfig { get; private set; }
+
+        public MainDataProvider(IBinaryDataManager binaryDataManager, IJsonManager jsonManager)
         {
             _binaryDataManager = binaryDataManager;
+            _jsonManager = jsonManager;
         }
 
         public async Task LoadDataAsync()
@@ -56,39 +72,53 @@ namespace HotUpdate.Main.Data
             LogManager.Log($"本地输入数据加载成功，{InputActionContainer}");
 
             // 构造主数据集合
-            _mainDataCollection = new MainDataCollection
+            MainDataCollection = new MainDataCollection
             {
                 InputActionContainer = InputActionContainer,
                 InputDataContainer = null,
                 MusicData = MusicData,
             };
+            
+            // 读取游戏设置数据
+            GameSettings = await _jsonManager.FromJsonAsync<GameSettings>($"{PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingFileName)}");
+            
+            // 读取游戏设置数据配置
+            GameSettingsConfig = await _jsonManager.FromJsonAsync<GameSettingsConfig>($"{PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingConfigFileName)}");
         }
 
         public async Task SaveDataAsync()
         {
             // 保存音乐数据
-            await _binaryDataManager.SaveAsync(FileUtility.LocalMusicDataFileName, _mainDataCollection.MusicData);
+            await _binaryDataManager.SaveAsync(FileUtility.LocalMusicDataFileName, MainDataCollection.MusicData);
             LogManager.Log($"{nameof(MainDataProvider)}.{nameof(SaveDataAsync)}:音乐数据保存成功，{FileUtility.LocalMusicDataFileName}");
             
             // 保存输入数据
-            await _binaryDataManager.SaveAsync(FileUtility.LocalInputDataFileName, _mainDataCollection.InputActionContainer);
+            await _binaryDataManager.SaveAsync(FileUtility.LocalInputDataFileName, MainDataCollection.InputActionContainer);
             LogManager.Log($"{nameof(MainDataProvider)}.{nameof(SaveDataAsync)}:输入数据保存成功，{FileUtility.LocalInputDataFileName}");
+            
+            // 保存设置数据
+            await _jsonManager.SaveToJsonAsync(GameSettings, $"{PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingFileName)}");
+            LogManager.Log($"{nameof(MainDataProvider)}.{nameof(SaveDataAsync)}:游戏设置数据保存成功，{GameSettings}");
         }
 
         public void SaveData()
         {
             // 保存音乐数据
-             _binaryDataManager.Save(FileUtility.LocalMusicDataFileName, _mainDataCollection.MusicData);
+             _binaryDataManager.Save(FileUtility.LocalMusicDataFileName, MainDataCollection.MusicData);
              LogManager.Log($"{nameof(MainDataProvider)}.{nameof(SaveData)}:音乐数据保存成功，{FileUtility.LocalMusicDataFileName}");
             
             // 保存输入数据
-             _binaryDataManager.Save(FileUtility.LocalInputDataFileName, _mainDataCollection.InputActionContainer);
+             _binaryDataManager.Save(FileUtility.LocalInputDataFileName, MainDataCollection.InputActionContainer);
              LogManager.Log($"{nameof(MainDataProvider)}.{nameof(SaveData)}:输入数据保存成功，{FileUtility.LocalInputDataFileName}");
+             
+             // 保存设置数据
+             _jsonManager.SaveToJson(GameSettings, $"{PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingFileName)}");
+             LogManager.Log($"{nameof(MainDataProvider)}.{nameof(SaveDataAsync)}:游戏设置数据保存成功，{GameSettings}");
         }
 
         public IMainDataCollection GetData()
         {
-            return _mainDataCollection;
+            return MainDataCollection;
         }
     }
 }

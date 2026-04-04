@@ -1,6 +1,6 @@
 using System;
 
-namespace Core.Global
+namespace HotUpdate.Core.Main.Settings
 {
     /// <summary>
     /// 设置类型特性

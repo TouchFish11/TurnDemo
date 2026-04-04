@@ -4,7 +4,6 @@ using Core.Serialize.Json;
 using Core.Service;
 using Core.Utility;
 using HotUpdate.Core.Activity;
-using HotUpdate.Core.Provider;
 using Newtonsoft.Json;
 
 namespace HotUpdate.Activity.Data
@@ -12,7 +11,7 @@ namespace HotUpdate.Activity.Data
     /// <summary>
     /// 活动数据提供器
     /// </summary>
-    public class ActivityDataProvider : IDataProvider<IActivityDataCollection>
+    public class ActivityDataProvider : IActivityDataProvider
     {
         // Newtonsoft设置配置
         private readonly JsonSerializerSettings activityDataSettings = new()

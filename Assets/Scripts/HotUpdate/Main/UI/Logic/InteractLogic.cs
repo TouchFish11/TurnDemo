@@ -20,20 +20,12 @@ namespace HotUpdate.Main.UI.Logic
         private readonly IEventCenter _eventCenter = ServiceLocator.Get<IEventCenter>();
         private readonly IPrefabLoader _prefabLoader = ServiceLocator.Get<IPrefabLoader>();
         
-        /// <summary>
-        /// 逻辑初始化方法
-        /// 可在此添加交互逻辑初始化的前置操作（如数据预加载、事件注册等）
-        /// </summary>
-        /// <param name="mainController"></param>
-        /// <param name="mainModel"></param>
-        /// <param name="mainView"></param>
-        public override void Init(MainController mainController, MainModel mainModel, MainView mainView)
+        protected override void OnInit()
         {
-            base.Init(mainController, mainModel, mainView);
             // 订阅交互事件（当触发InteractEvent时，执行OnInteractEvent回调）
             _eventCenter.SubscribeEvent<InteractEvent>(OnInteractEvent);
         }
-        
+
         /// <summary>
         /// 交互事件回调方法
         /// 执行时机：接收到InteractEvent事件时触发

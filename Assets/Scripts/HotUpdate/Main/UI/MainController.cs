@@ -2,9 +2,12 @@ using System;
 using System.Collections.Generic;
 using Core.Log;
 using Core.Service;
+using Core.UI;
 using Core.UI.MVC;
+using HotUpdate.Common;
 using HotUpdate.Core.UI.Helper;
 using HotUpdate.Core.UI.MVC;
+using HotUpdate.Main.Settings.UI;
 using HotUpdate.Main.UI.Logic;
 
 namespace HotUpdate.Main.UI
@@ -44,23 +47,15 @@ namespace HotUpdate.Main.UI
         /// <returns>异步任务</returns>
         protected override Task OnInit()
         {
-            try
-            {
-                // 初始化交互逻辑实例并加入字典
-                mainLogics.Add(typeof(InteractLogic), poolManager.GetData<InteractLogic>());
-                // 初始化任务逻辑实例并加入字典
-                mainLogics.Add(typeof(TaskLogic), poolManager.GetData<TaskLogic>());
-                // 初始化对话逻辑实例并加入字典
-                mainLogics.Add(typeof(DialogueLogic), poolManager.GetData<DialogueLogic>());
-                // 初始化所有子逻辑模块的状态
-                InitState();
-                return Task.FromResult(Task.CompletedTask);
-            }
-            catch (Exception e)
-            {
-                LogManager.LogError($"{nameof(MainController)}.{nameof(OnInit)}：主界面初始化错误，{e.Message}");
-                return Task.CompletedTask;
-            }
+            // 初始化交互逻辑实例并加入字典
+            mainLogics.Add(typeof(InteractLogic), poolManager.GetData<InteractLogic>());
+            // 初始化任务逻辑实例并加入字典
+            mainLogics.Add(typeof(TaskLogic), poolManager.GetData<TaskLogic>());
+            // 初始化对话逻辑实例并加入字典
+            mainLogics.Add(typeof(DialogueLogic), poolManager.GetData<DialogueLogic>());
+            // 初始化所有子逻辑模块的状态
+            InitState();
+            return Task.FromResult(Task.CompletedTask);
         }
         
         protected override Task OnHide()
@@ -101,6 +96,9 @@ namespace HotUpdate.Main.UI
                         break;
                     case "btnRole":
                         
+                        break;
+                    case "btnSettings":
+                        await uiManager.CreateViewAsync<SettingsView,  SettingsModel, SettingsController>(AbKeyCollection.Ui, E_UILayer.Mid, ResKeyCollection.SettingsView);
                         break;
                 }
             }

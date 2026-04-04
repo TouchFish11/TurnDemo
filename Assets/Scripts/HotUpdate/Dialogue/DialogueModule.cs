@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Core.Components;
 using Core.Log;
@@ -17,10 +18,17 @@ namespace HotUpdate.Dialogue
         
         public Task InitModuleAsync()
         {
-            ServiceLocator.Register<IDialogueManager>(new DialogueManager());
-            ServiceLocator.Register<IDialogueUiHelper>(new DialogueUiHelper(ServiceLocator.Get<IUIManager>()));
-            LogManager.Log($"{nameof(DialogueModule)}.{nameof(InitModuleAsync)}:Dialogue module initialization completed");
-            return Task.CompletedTask;
+            try
+            {
+                ServiceLocator.Register<IDialogueManager>(new DialogueManager());
+                ServiceLocator.Register<IDialogueUiHelper>(new DialogueUiHelper(ServiceLocator.Get<IUIManager>()));
+                LogManager.Log($"{nameof(DialogueModule)}.{nameof(InitModuleAsync)}:Dialogue module initialization completed");
+                return Task.CompletedTask;
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"{nameof(DialogueModule)}:Initialization Error,{e.Message}", e);
+            }
         }
 
         public IDialogueComponent AddDialogueComponent(IEntityObject entityObject)

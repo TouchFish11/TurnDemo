@@ -14,15 +14,14 @@ namespace HotUpdate.Main.UI.Logic
         private readonly IDialogueManager _dialogueManager = ServiceLocator.Get<IDialogueManager>();
         private readonly IUIManager _uiManager = ServiceLocator.Get<IUIManager>();
         
-        public override void Init(MainController mainController, MainModel mainModel, MainView mainView)
+        protected override void OnInit()
         {
-            base.Init(mainController, mainModel, mainView);
             // 注册对话系统回调：对话开始时隐藏主界面
             _dialogueManager.OnDialogueStart += InActive;
             // 注册对话系统回调：对话结束时显示主界面
             _dialogueManager.OnDialogueEnd += Active;
         }
-        
+
         /// <summary>
         /// 激活主界面
         /// 设置主界面为显示状态

@@ -42,6 +42,11 @@ namespace Core.UI
         /// 输入值变化事件
         /// </summary>
         public event UnityAction<string, string> OnInputFieldValueChanged;
+        
+        /// <summary>
+        /// 下拉组件变化事件
+        /// </summary>
+        public event UnityAction<string, int> OnDropdownValueChanged;
 
         public UIComponentBinder(UIBehaviour uIBehaviour)
         {
@@ -53,7 +58,7 @@ namespace Core.UI
             FindChildrenControl<Slider>();
             FindChildrenControl<InputField>();
             FindChildrenControl<ScrollRect>();
-            FindChildrenControl<Dropdown>();
+            FindChildrenControl<TMP_Dropdown>();
             FindChildrenControl<TextMeshProUGUI>();
             FindChildrenControl<VerticalLayoutGroup>();
             FindChildrenControl<HorizontalLayoutGroup>();
@@ -136,23 +141,26 @@ namespace Core.UI
                 else
                 {
                     // 存储控件
-                    controlDic.Add(controlName, new List<UIBehaviour>() { control });
+                    controlDic.Add(controlName, new List<UIBehaviour> { control });
                 }
 
                 switch (control)
                 {
                     // 事件监听
                     case Button button:
-                        button.onClick.AddListener(() => { OnButtonClick?.Invoke(controlName); });
+                        button.onClick.AddListener(() => OnButtonClick?.Invoke(controlName));
                         break;
                     case Slider slider:
-                        slider.onValueChanged.AddListener((value) => { OnSliderValueChanged?.Invoke(controlName, value); });
+                        slider.onValueChanged.AddListener(value => OnSliderValueChanged?.Invoke(controlName, value));
                         break;
                     case Toggle toggle:
-                        toggle.onValueChanged.AddListener((isOn) => { OnToggleValueChanged?.Invoke(controlName, isOn); });
+                        toggle.onValueChanged.AddListener(isOn => OnToggleValueChanged?.Invoke(controlName, isOn));
                         break;
                     case InputField inputField:
-                        inputField.onValueChanged.AddListener((inputValue) => { OnInputFieldValueChanged?.Invoke(controlName, inputValue); });
+                        inputField.onValueChanged.AddListener(inputValue => OnInputFieldValueChanged?.Invoke(controlName, inputValue));
+                        break;
+                    case TMP_Dropdown dropdown:
+                        dropdown.onValueChanged.AddListener(dropdownValue => OnDropdownValueChanged?.Invoke(controlName, dropdownValue));
                         break;
                 }
             }

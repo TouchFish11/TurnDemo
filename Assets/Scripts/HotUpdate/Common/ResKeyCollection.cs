@@ -45,8 +45,12 @@ namespace HotUpdate.Common
 		public static string Canvas => "Canvas";
 		public static string UpdateTipView => "UpdateTipView";
 		public static string MSYH => "MSYH";
-		public static string BattleActivityConfig => "BattleActivityConfig";
 		public static string MainActionMap => "MainActionMap";
+		public static string ArmourConfig => "ArmourConfig";
+		public static string BattleActivityConfig => "BattleActivityConfig";
+		public static string GameSettingsConfigSO => "GameSettingsConfigSO";
+		public static string HelmetConfig => "HelmetConfig";
+		public static string SwordConfig => "SwordConfig";
 		public static string HotUpdateAssemblySettings => "HotUpdateAssemblySettings";
 		public static string Ground => "Ground";
 		public static string MergedMesh => "MergedMesh";
@@ -67,6 +71,7 @@ namespace HotUpdate.Common
 		public static string LevelScene => "LevelScene";
 		public static string MainScene => "MainScene";
 		public static string RoleTestScene => "RoleTestScene";
+		public static string StatsTest => "StatsTest";
 		public static string UniTaskTestScene => "UniTaskTestScene";
 		public static string Atlas_Activity => "Atlas_Activity";
 		public static string Atlas_Generic => "Atlas_Generic";
@@ -173,6 +178,10 @@ namespace HotUpdate.Common
 		public static string BattleLoadingView => "BattleLoadingView";
 		public static string LoginView => "LoginView";
 		public static string MainView => "MainView";
+		public static string SettingDrowdownEntry => "SettingDrowdownEntry";
+		public static string SettingOpt => "SettingOpt";
+		public static string SettingSliderEntry => "SettingSliderEntry";
+		public static string SettingsView => "SettingsView";
 		public static string TaskItem => "TaskItem";
 		public static string TaskTypeContainer => "TaskTypeContainer";
 		public static string TaskView => "TaskView";

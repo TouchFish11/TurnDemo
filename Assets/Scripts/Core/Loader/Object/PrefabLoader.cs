@@ -14,35 +14,6 @@ namespace Core.Loader.Object
     /// </summary>
     public class PrefabLoader : IPrefabLoader
     {
-        /// <summary>
-        /// 预制体数据
-        /// </summary>
-        private class PrefabData : IPoolData
-        {
-            /// <summary>
-            /// 预制体资源
-            /// </summary>
-            public GameObject objAsset;
-            
-            /// <summary>
-            /// 该资源的引用计数，实例化数
-            /// </summary>
-            public int refCount;
-
-            public PrefabData Init(GameObject objAsset, int refCount)
-            {
-                this.objAsset = objAsset;
-                this.refCount = refCount;
-                return this;
-            }
-
-            public void ResetData()
-            {
-                objAsset = null;
-                refCount = 0;
-            }
-        }
-        
         // AB包管理器接口
         private readonly IAssetBundleManager _assetBundleManager = ServiceLocator.Get<IAssetBundleManager>();
         // 缓存池接口

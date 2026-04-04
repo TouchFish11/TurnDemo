@@ -1,3 +1,4 @@
+using System;
 using HotUpdate.Core.Battle.Skill;
 
 namespace HotUpdate.Battle.Skill.Base
@@ -12,6 +13,9 @@ namespace HotUpdate.Battle.Skill.Base
         {
             Skill = skill;
             SkillCastPostHandler = skillCastPostHandler;
+            OnDataChanged = null;
         }
+
+        public event Action<ISkillData> OnDataChanged;
     }
 }

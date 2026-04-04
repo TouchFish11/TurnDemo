@@ -1,0 +1,36 @@
+using Core.UI;
+using HotUpdate.Core.Main.Settings;
+using HotUpdate.Core.Main.Settings.ViewModel;
+using TMPro;
+using UnityEngine.UI;
+
+namespace HotUpdate.Main.Settings.UI
+{
+    /// <summary>
+    /// 滑动条设置
+    /// </summary>
+    public class SettingSliderEntry : UIBehaviourBase, ISettingsEntry
+    {
+        [Inject] public TextMeshProUGUI txtName;
+        [Inject] public TextMeshProUGUI txtVolume;
+        [Inject] public Slider sliderRange;
+
+        private SettingSliderViewModel _settingSliderViewModel;
+        
+        public void Init(string entryName, SettingSliderViewModel settingSliderViewModel)
+        {
+            txtName.text = entryName;
+            settingSliderViewModel.ProgressSlider.OnValueChanged += volumeValue => sliderRange.value = volumeValue;
+            settingSliderViewModel.ProgressText.OnValueChanged += volumeText => txtVolume.text = volumeText;
+            _settingSliderViewModel = settingSliderViewModel;
+        }
+
+        protected override void OnSliderValueChanged(string sliderName, float value)
+        {
+            if (sliderName == nameof(sliderRange))
+            {
+                _settingSliderViewModel.ProgressSlider.Value = value;
+            }
+        }
+    }
+}

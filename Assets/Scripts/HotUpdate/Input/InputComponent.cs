@@ -72,12 +72,15 @@ namespace HotUpdate.Input
                 // 获取输入系统实例
                 inputSystem = ServiceLocator.Get<IInputSystem>();
                 // 初始化玩家输入，并注册输入动作触发回调
-                var container = ServiceLocator.Get<IGameManager>().GameDataManager.GetData<IMainDataCollection>().InputActionContainer;
-                LogManager.Log($"{nameof(InputComponent)}.{nameof(Init)}: container is null：{container == null}");
+                var container = ServiceLocator.Get<IGameManager>().GameDataManager.GetProvider<IMainDataProvider>().MainDataCollection.InputActionContainer;
+                if(container == null) throw new NullReferenceException("container");
+                
                 var playerInputComponent = EntityObject.GetComponent<PlayerInputComponent>();
-                LogManager.Log($"playerInputComponent为null？{!playerInputComponent}，{playerInputComponent}");
+                if(!playerInputComponent) throw new NullReferenceException("playerInputComponent");
+                
                 var playerInput = playerInputComponent.PlayerInput;
-                LogManager.Log($"playerInput为null？{!playerInput}，{playerInput}");
+                if(!playerInput) throw new NullReferenceException("playerInput");
+                
                 inputSystem.InitPlayerInput(playerInput, container, OnActionTrigger);
                 LogManager.Log($"inputSystem初始化完成");
                 EnableInput();

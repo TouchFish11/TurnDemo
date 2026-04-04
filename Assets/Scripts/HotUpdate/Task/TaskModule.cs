@@ -27,7 +27,7 @@ namespace HotUpdate.Task
             // 初始化UIHelper
             ServiceLocator.Register<ITaskUiHelper>(new TaskUiHelper(ServiceLocator.Get<IUIManager>()));
             // 注册活动数据提供器
-            ServiceLocator.Get<IGameManager>().GameDataManager.RegisterProvider(typeof(ITaskDataCollection), new TaskDataProvider(ServiceLocator.Get<IJsonManager>()));
+            ServiceLocator.Get<IGameManager>().GameDataManager.RegisterProvider(typeof(ITaskDataProvider), new TaskDataProvider(ServiceLocator.Get<IJsonManager>()));
             LogManager.Log($"{nameof(TaskModule)}.{nameof(InitModuleAsync)}:Task module initialization completed");
             return Task.CompletedTask;
         }

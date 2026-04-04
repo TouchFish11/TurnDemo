@@ -31,13 +31,21 @@ namespace HotUpdate.Task.Core
 
         public void CheckTaskState()
         {
-            var taskDataCollection = ServiceLocator.Get<IGameManager>().GameDataManager.GetData<ITaskDataCollection>();
+            var taskDataCollection = ServiceLocator.Get<IGameManager>().GameDataManager.GetProvider<ITaskDataProvider>().TaskDataCollection;
+            if(taskDataCollection == null) throw new NullReferenceException($"{nameof(TaskManager)}.{nameof(CheckTaskState)}:{nameof(taskDataCollection)} is null");
+            
             // 若没有正在追踪的任务，直接返回
             if (!taskDataCollection.IsTracking(out var taskData)) return;
 
             // 从配置表加载当前任务的基础信息和完成条件信息
             currentTaskInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<TaskInfoContainer>(EConfigLoadType.Excel).dataDic[taskData.CurrentTaskId];
+            if (currentTaskInfo == null)
+                throw new NullReferenceException($"{nameof(TaskManager)}.{nameof(CheckTaskState)}:{nameof(currentTaskInfo)} is null");
+            
             currentConditionInfo = ServiceLocator.Get<IBinaryDataManager>().GetConfig<TaskConditionInfoContainer>(EConfigLoadType.Excel).dataDic[currentTaskInfo.f_completionConditionId];
+            if (currentConditionInfo == null)
+                throw new NullReferenceException($"{nameof(TaskManager)}.{nameof(CheckTaskState)}:{nameof(currentConditionInfo)} is null");
+            
             currentTaskData = taskData;
             
             // 触发任务更新事件，通知外部任务状态变化

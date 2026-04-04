@@ -1,6 +1,6 @@
-using Core.Global;
+using Core.GlobalEvent;
 
-namespace Core.GlobalEvent.Events
+namespace HotUpdate.Core.Main.Settings
 {
     /// <summary>
     /// 游戏设置更新事件

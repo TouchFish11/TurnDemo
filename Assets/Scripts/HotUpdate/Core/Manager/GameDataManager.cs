@@ -18,33 +18,13 @@ namespace HotUpdate.Core.Manager
         /// </summary>
         /// <typeparam name="T">该提供器的数据类型</typeparam>
         /// <returns></returns>
-        public IDataProvider<T> GetProvider<T>() where T : class
+        public T GetProvider<T>() where T : class, IDataProvider
         {
             if (!_dataProviders.ContainsKey(typeof(T)))
             {
                 return null;
             }
-            return _dataProviders[typeof(T)] as IDataProvider<T>;
-        }
-
-        /// <summary>
-        /// 获取数据
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public T GetData<T>() where T : class
-        {
-            if (!_dataProviders.TryGetValue(typeof(T), out var provider))
-            {
-                return null;
-            }
-
-            if (provider is IDataProvider<T> dataTProvider)
-            {
-                return dataTProvider.GetData();
-            }
-            
-            return null;
+            return _dataProviders[typeof(T)] as T;
         }
 
         /// <summary>

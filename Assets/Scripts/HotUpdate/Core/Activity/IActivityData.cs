@@ -2,7 +2,7 @@ using HotUpdate.Core.Data;
 
 namespace HotUpdate.Core.Activity
 {
-    public interface IActivityData : IData
+    public interface IActivityData : IData<IActivityData>
     {
         /// <summary>
         /// 活动ID

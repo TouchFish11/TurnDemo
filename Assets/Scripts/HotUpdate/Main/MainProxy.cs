@@ -75,21 +75,14 @@ namespace HotUpdate.Main
         /// </summary>
         private static async Task CreateInitPanelAsync()
         {
-            try
-            {
-                // 初始化全局消息界面
-                await ServiceLocator.Get<IUIManager>()
-                    .CreateViewAsync<GlobalMessageView, GlobalMessageModel, GlobalMessageController>(AbKeyCollection.Ui,
-                        E_UILayer.Bot, ResKeyCollection.GlobalMessageView, new Vector2(0, 299));
-                // 初始化主界面
-                await ServiceLocator.Get<IUIManager>()
-                    .CreateViewAsync<MainView, MainModel, MainController>(AbKeyCollection.Ui, 
-                        E_UILayer.Mid, ResKeyCollection.MainView);
-            }
-            catch (Exception e)
-            {
-                LogManager.LogError($"{nameof(MainProxy)}.{nameof(CreateInitPanelAsync)}: 创建初始界面错误，{e.Message}");
-            }
+            // 初始化全局消息界面
+            await ServiceLocator.Get<IUIManager>()
+                .CreateViewAsync<GlobalMessageView, GlobalMessageModel, GlobalMessageController>(AbKeyCollection.Ui,
+                    E_UILayer.Bot, ResKeyCollection.GlobalMessageView, new Vector2(0, 299));
+            // 初始化主界面
+            await ServiceLocator.Get<IUIManager>()
+                .CreateViewAsync<MainView, MainModel, MainController>(AbKeyCollection.Ui, 
+                    E_UILayer.Mid, ResKeyCollection.MainView);
         }
     }
 }

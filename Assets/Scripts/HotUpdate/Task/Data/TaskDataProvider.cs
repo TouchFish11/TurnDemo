@@ -1,7 +1,6 @@
 using Core.Log;
 using Core.Serialize.Json;
 using Core.Utility;
-using HotUpdate.Core.Provider;
 using HotUpdate.Core.Task;
 
 namespace HotUpdate.Task.Data
@@ -11,7 +10,7 @@ namespace HotUpdate.Task.Data
     /// <summary>
     /// 任务数据提供器
     /// </summary>
-    public class TaskDataProvider : IDataProvider<ITaskDataCollection>
+    public class TaskDataProvider : ITaskDataProvider
     {
         private readonly IJsonManager _jsonManager;
         

@@ -1,3 +1,4 @@
+using System;
 using Core.Loader.Object;
 using Core.Loader.Sprite;
 using Core.Reflection;
@@ -74,7 +75,9 @@ namespace HotUpdate.Activity.UI.Base
             }
             
             // 活动本地活动数据
-            var activityDataCollection = _gameManager.GameDataManager.GetData<IActivityDataCollection>() as ActivityDataCollection;
+            var activityDataCollection = _gameManager.GameDataManager.GetProvider<IActivityDataProvider>().ActivityDataCollection as ActivityDataCollection;
+            if(activityDataCollection == null) throw new NullReferenceException(nameof(activityDataCollection));
+            
             // 获取活动UI对象
             var activity = await prefabLoader.GetObjectAsync<ActivityUIBehaviourBase>(AbKeyCollection.Ui, activityInfo.f_detailUI_res,
                 view.ActivityDetailArea);

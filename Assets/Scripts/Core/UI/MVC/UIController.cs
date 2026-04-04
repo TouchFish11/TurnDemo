@@ -24,16 +24,12 @@ namespace Core.UI.MVC
 
         public async Task Init(IuiView view, IuiModel model)
         {
-            try
-            {
-                this.view = (TView)view;
-                this.model = (TModel)model;
-                await OnInit();
-            }
-            catch (Exception e)
-            {
-                LogManager.LogError($"{nameof(UIController<TView, TModel>)}.{nameof(Init)}：控制器初始化异常，{e.Message}");
-            }
+            if(view == null || model == null)
+                throw new ArgumentNullException($"{nameof(view)} or {nameof(model)} can't be null");
+            
+            this.view = (TView)view;
+            this.model = (TModel)model;
+            await OnInit();
         }
 
         /// <summary>
@@ -86,19 +82,19 @@ namespace Core.UI.MVC
         }
 
         /// <summary>
-        /// 显示时执行
+        /// 当界面显示时执行
         /// </summary>
         /// <returns></returns>
         protected abstract Task OnShow();
 
         /// <summary>
-        /// 隐藏时执行
+        /// 当界面隐藏时执行
         /// </summary>
         /// <returns></returns>
         protected abstract Task OnHide();
         
         /// <summary>
-        /// 初始化逻辑（子类实现）
+        /// 初始化逻辑，在控制器首次被创建时执行
         /// </summary>
         protected abstract Task OnInit();
 

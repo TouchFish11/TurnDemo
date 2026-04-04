@@ -106,6 +106,8 @@ namespace Core.UI
         protected virtual void OnInputFieldValueChanged(string inputFieldName, string value) { }
 
         protected virtual void OnToggleValueChanged(string togName, bool isOn) { }
+        
+        protected virtual void OnDropdownValueChanged(string dropdownName, int value) { }
 
         protected override void OnDestroy()
         {

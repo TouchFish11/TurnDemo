@@ -1,12 +1,15 @@
 using System.Threading.Tasks;
+using Core.Global;
 using Core.GlobalEvent;
 using Core.Loader.Object;
 using Core.Log;
 using Core.Mono;
 using Core.Serialize.Binary;
+using Core.Serialize.Json;
 using Core.Service;
 using Core.UI;
 using HotUpdate.Core.Main;
+using HotUpdate.Core.Main.Settings;
 using HotUpdate.Core.Manager;
 using HotUpdate.Core.Module;
 using HotUpdate.Core.Scene;
@@ -15,12 +18,13 @@ using HotUpdate.Core.VFX;
 using HotUpdate.Main.Data;
 using HotUpdate.Main.FloatingText;
 using HotUpdate.Main.Player;
+using HotUpdate.Main.Settings;
 using HotUpdate.Main.VFX;
 
 namespace HotUpdate.Main
 {
     /// <summary>
-    /// 热更主模块
+    /// 热更主界面模块
     /// </summary>
     public class MainModule : IMainModule
     {
@@ -42,13 +46,14 @@ namespace HotUpdate.Main
                 ServiceLocator.Get<IPrefabLoader>()));
             // 注册主数据提供器
             ServiceLocator.Get<IGameManager>().GameDataManager.RegisterProvider(
-                typeof(IMainDataCollection), 
-                new MainDataProvider(ServiceLocator.Get<IBinaryDataManager>()));
+                typeof(IMainDataProvider), 
+                new MainDataProvider(ServiceLocator.Get<IBinaryDataManager>(), ServiceLocator.Get<IJsonManager>()));
             // 注册主模块UIhelper
             ServiceLocator.Register<IMainUiHelper>(new MainUiHelper(ServiceLocator.Get<IUIManager>()));
             // 初始化场景生成器
             SceneGeneratorHelper.Init(new SceneGenerator());
             LogManager.Log($"{nameof(MainModule)}.{nameof(InitModuleAsync)}:Main module initialization completed");
+            
             return Task.CompletedTask;
         }
     }

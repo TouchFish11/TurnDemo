@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
 using System.Text;
-using Core.Global;
 using Core.GlobalEvent;
-using Core.GlobalEvent.Events;
 using Core.Loader.Object;
 using Core.Log;
 using Core.Mono;
@@ -14,6 +12,8 @@ using Core.UI;
 using Core.Utility;
 using HotUpdate.Common;
 using HotUpdate.Core.Dialogue;
+using HotUpdate.Core.Main;
+using HotUpdate.Core.Manager;
 using HotUpdate.Core.Task.Event;
 using HotUpdate.Dialogue.UI;
 using UnityEngine;
@@ -32,8 +32,6 @@ namespace HotUpdate.Dialogue
         private IBinaryDataManager _binaryDataManager;
         private IMonoAdapter _monoAdapter;
         
-        // 是否启用打字机效果
-        private bool enableTypewriter;
         // 当前单条对话是否播放完成（打字机/直接显示）
         private bool dialogueOver;
         // 打字机效果的协程引用
@@ -71,8 +69,6 @@ namespace HotUpdate.Dialogue
             _eventCenter = ServiceLocator.Get<IEventCenter>();
             _binaryDataManager = ServiceLocator.Get<IBinaryDataManager>();
             _monoAdapter = ServiceLocator.Get<IMonoAdapter>();
-            enableTypewriter = ServiceLocator.Get<IGameSettingManager>().GameSettings.enableTypewriter;
-            _eventCenter.SubscribeEvent<GameSettingUpdateEvent>(OnGameSettingUpdateEvent);
         }
         
         /// <summary>
@@ -124,6 +120,7 @@ namespace HotUpdate.Dialogue
             // 从配置表中获取说话者（NPC）信息
             npcInfo = _binaryDataManager.GetConfig<NpcInfoContainer>(EConfigLoadType.Excel).dataDic[dialogueInfo.f_speakerId];
 
+            var enableTypewriter = ServiceLocator.Get<IGameManager>().GameDataManager.GetProvider<IMainDataProvider>().GameSettings.EnableTypewriter;
             if (enableTypewriter)
             {
                 // 启用打字机效果：初始化状态+启动协程
@@ -245,14 +242,8 @@ namespace HotUpdate.Dialogue
             _prefabLoader.RealseAsset(AbKeyCollection.Ui, ResKeyCollection.DialogueReviewUI);
         }
 
-        private void OnGameSettingUpdateEvent(GameSettingUpdateEvent gameSettingUpdateEvent)
-        {
-            enableTypewriter = gameSettingUpdateEvent.GameSettings.enableTypewriter;
-        }
-
         public void OnDestroy()
         {
-            _eventCenter.UnsubscribeEvent<GameSettingUpdateEvent>(OnGameSettingUpdateEvent);
             _uiManager = null;
             _prefabLoader = null;
             _eventCenter = null;
