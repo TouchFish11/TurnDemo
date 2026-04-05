@@ -8,8 +8,7 @@ namespace Core
     public class ReactiveProperty<T>
     {
         private T _value;
-        
-        public event Action<T> OnValueChanged;
+        private event Action<T> _onValueChanged;
 
         public T Value
         {
@@ -18,8 +17,19 @@ namespace Core
             {
                 if(Equals(_value, value)) return;
                 _value = value;
-                OnValueChanged?.Invoke(value);
+                _onValueChanged?.Invoke(value);
             }
+        }
+
+        public void Subscribe(Action<T> onValueChanged)
+        {
+            _onValueChanged += onValueChanged;
+            _onValueChanged?.Invoke(_value);
+        }
+
+        public void Unsubscribe(Action<T> onValueChanged)
+        {
+            _onValueChanged -= onValueChanged;
         }
 
         public ReactiveProperty(T initialValue = default)

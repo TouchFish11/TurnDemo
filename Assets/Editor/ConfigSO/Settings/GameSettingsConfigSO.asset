@@ -13,4 +13,13 @@ MonoBehaviour:
   m_Name: GameSettingsConfigSO
   m_EditorClassIdentifier: 
   SettingsConfig:
+    volumeOpts:
+    - "\u5173"
+    - "\u5F00"
+    sfxOpts:
+    - "\u5173"
+    - "\u5F00"
+    typeWriterOpts:
+    - "\u7981\u7528"
+    - "\u542F\u7528"
     framerates: 1e0000002d0000003c000000

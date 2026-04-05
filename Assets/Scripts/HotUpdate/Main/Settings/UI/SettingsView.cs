@@ -10,8 +10,9 @@ namespace HotUpdate.Main.Settings.UI
     /// </summary>
     public class SettingsView : UIView
     {
-        [Inject] private ScrollRect svOpts;
-        [Inject] private ScrollRect svEntrys;
+        [Inject] public ScrollRect svOpts;
+        [Inject] public ScrollRect svEntrys;
+        [Inject] public Button btnClose;
 
         public Transform Opts => svOpts.content;
         

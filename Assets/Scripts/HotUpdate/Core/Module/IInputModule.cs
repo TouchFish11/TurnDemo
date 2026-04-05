@@ -1,6 +1,5 @@
 using Core.Components;
 using HotUpdate.Core.Input;
-using HotUpdate.Core.Main.Object;
 
 namespace HotUpdate.Core.Module
 {

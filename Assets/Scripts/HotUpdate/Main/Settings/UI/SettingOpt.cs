@@ -7,6 +7,6 @@ namespace HotUpdate.Main.Settings.UI
     /// </summary>
     public class SettingOpt : UIBehaviourBase
     {
-
+        
     }
 }

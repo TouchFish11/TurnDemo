@@ -9,6 +9,12 @@ namespace HotUpdate.Core.Main.Settings
     [Serializable]
     public class GameSettingsConfig
     {
+        // 音乐选项
+        public List<string> volumeOpts;
+        // 音效选项
+        public List<string> sfxOpts;
+        // 打字机效果选项
+        public List<string> typeWriterOpts;
         // 帧率选项
         public List<int> framerates;
     }

@@ -20,6 +20,7 @@ namespace Core.UI
             binder.OnSliderValueChanged += OnSliderValueChanged;
             binder.OnInputFieldValueChanged += OnInputFieldValueChanged;
             binder.OnToggleValueChanged += OnToggleValueChanged;
+            binder.OnDropdownValueChanged += OnDropdownValueChanged;
 
             ScanFieldAndPropertyInstance();
             ScanTransformInstance();

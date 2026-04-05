@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using HotUpdate.Core.Data;
+using Newtonsoft.Json;
 
 namespace HotUpdate.Core.Main.Settings
 {
@@ -7,81 +9,34 @@ namespace HotUpdate.Core.Main.Settings
     /// 游戏设置
     /// </summary>
     [Serializable]
+    [JsonObject(MemberSerialization.OptIn)]
     public class GameSettings : IData<GameSettings>
     {
-        [SettingType(IsRange = true)]
-        private float volume;
-        [SettingType(IsRange = true)]
-        private float sound;
-        [SettingType(IsRange = false)]
-        private bool isOpenVolume;
-        [SettingType(IsRange = false)]
-        private bool isOpenSound;
-        [SettingType(IsRange = false)]
-        private bool enableTypewriter;
-        [SettingType(IsRange = false)]
-        private int targetFrameRateIndex;
+        [JsonProperty] private Dictionary<ESettingType, ISettingItem> settings = new();
         
         public event Action<GameSettings> OnDataChanged;
 
-        public float Volume
+        public object this[ESettingType type]
         {
-            get => volume;
+            get => settings[type].Value;
             set
             {
-                volume = value;
+                settings[type].Value = value;
                 OnDataChanged?.Invoke(this);
             }
         }
 
-        public float Sound
-        {
-            get => sound;
-            set
-            {
-                sound = value;
-                OnDataChanged?.Invoke(this);
-            }
-        }
+        public Dictionary<ESettingType, ISettingItem>.ValueCollection Values => settings.Values;
+        public Dictionary<ESettingType, ISettingItem>.KeyCollection Keys => settings.Keys;
 
-        public bool IsOpenSound
+        public GameSettings()
         {
-            get => isOpenSound;
-            set
-            {
-                isOpenSound = value;
-                OnDataChanged?.Invoke(this);
-            }
-        }
-
-        public bool IsOpenVolume
-        {
-            get => isOpenVolume;
-            set
-            {
-                isOpenVolume = value;
-                OnDataChanged?.Invoke(this);
-            }
-        }
-        
-        public bool EnableTypewriter
-        {
-            get => enableTypewriter;
-            set
-            {
-                enableTypewriter = value;
-                OnDataChanged?.Invoke(this);
-            }
-        }
-
-        public int TargetFrameRateIndex
-        {
-            get => targetFrameRateIndex;
-            set
-            {
-                targetFrameRateIndex = value;
-                OnDataChanged?.Invoke(this);
-            }
+            settings.Add(ESettingType.VolumeValue, new SettingItem<float>(ESettingType.VolumeValue, true));
+            settings.Add(ESettingType.SFXValue, new SettingItem<float>(ESettingType.SFXValue, true));
+            settings.Add(ESettingType.VolumeOpen, new SettingItem<int>(ESettingType.VolumeOpen, false));
+            settings.Add(ESettingType.SFXOpen, new SettingItem<int>(ESettingType.SFXOpen, false));
+            settings.Add(ESettingType.TypeWriter, new SettingItem<int>(ESettingType.TypeWriter, false));
+            settings.Add(ESettingType.TargetFrameRateIndex, new SettingItem<int>(ESettingType.TargetFrameRateIndex, false));
         }
     }
 }

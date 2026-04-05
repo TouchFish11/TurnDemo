@@ -3,23 +3,23 @@ using Core;
 namespace HotUpdate.Core.Main.Settings.ViewModel
 {
     /// <summary>
-    /// 滑动条设置VM
+    /// 滑动条设置ViewModel
     /// </summary>
-    public class SettingSliderViewModel
+    public abstract class SettingSliderViewModel
     {
-        private GameSettings _settings;
+        protected readonly GameSettings _settings;
+        protected const int SLIDER_MULTIPLIER = 10;
         public ReactiveProperty<string> ProgressText { get; } =  new();
         public ReactiveProperty<float> ProgressSlider { get; } = new();
 
-        public SettingSliderViewModel(GameSettings gameSettings)
+        protected SettingSliderViewModel(GameSettings gameSettings)
         {
-            ProgressSlider.OnValueChanged += volumeValue => gameSettings.Volume = volumeValue;
-            gameSettings.OnDataChanged += settings =>
-            {
-                ProgressText.Value = $"{settings.Volume * 10}";
-                ProgressSlider.Value = settings.Volume;     // UI导致的变化内部会有相等性判断进行筛选，而这行代码是为了能响应数据本身的变化
-            };
             _settings = gameSettings;
         }
+
+        /// <summary>
+        /// 更新
+        /// </summary>
+        public abstract void Update();
     }
 }

@@ -48,7 +48,7 @@ namespace HotUpdate.Common
 		public static string MainActionMap => "MainActionMap";
 		public static string ArmourConfig => "ArmourConfig";
 		public static string BattleActivityConfig => "BattleActivityConfig";
-		public static string GameSettingsConfigSO => "GameSettingsConfigSO";
+		public static string GameSettingsConfig => "GameSettingsConfig";
 		public static string HelmetConfig => "HelmetConfig";
 		public static string SwordConfig => "SwordConfig";
 		public static string HotUpdateAssemblySettings => "HotUpdateAssemblySettings";

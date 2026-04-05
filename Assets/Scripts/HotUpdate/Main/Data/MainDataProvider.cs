@@ -1,13 +1,16 @@
 using System.Threading.Tasks;
+using Core.AssetBundles.Management;
 using Core.Input.ActionAsset;
 using Core.Log;
 using Core.Music;
 using Core.Serialize.Binary;
 using Core.Serialize.Json;
+using Core.Service;
 using Core.Utility;
 using HotUpdate.Common;
 using HotUpdate.Core.Main;
 using HotUpdate.Core.Main.Settings;
+using UnityEngine;
 
 namespace HotUpdate.Main.Data
 {
@@ -80,10 +83,15 @@ namespace HotUpdate.Main.Data
             };
             
             // 读取游戏设置数据
-            GameSettings = await _jsonManager.FromJsonAsync<GameSettings>($"{PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingFileName)}");
+            GameSettings = await _jsonManager.FromJsonAsync<GameSettings>($"{PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingFileName)}", settings:NewtonsoftJsonUtility.SerializerSettings);
             
             // 读取游戏设置数据配置
-            GameSettingsConfig = await _jsonManager.FromJsonAsync<GameSettingsConfig>($"{PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingConfigFileName)}");
+
+            var ab = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(AbKeyCollection.Gameconfig);
+            var textAsset = ab.LoadAsset<TextAsset>(ResKeyCollection.GameSettingsConfig);
+            ServiceLocator.Get<IAssetBundleManager>().UnloadBundle(AbKeyCollection.Gameconfig);
+            GameSettingsConfig = _jsonManager.FromJson<GameSettingsConfig>(textAsset.text);
+            //GameSettingsConfig = await _jsonManager.FromJsonAsync<GameSettingsConfig>($"{PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingConfigFileName)}");
         }
 
         public async Task SaveDataAsync()
@@ -97,7 +105,7 @@ namespace HotUpdate.Main.Data
             LogManager.Log($"{nameof(MainDataProvider)}.{nameof(SaveDataAsync)}:输入数据保存成功，{FileUtility.LocalInputDataFileName}");
             
             // 保存设置数据
-            await _jsonManager.SaveToJsonAsync(GameSettings, $"{PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingFileName)}");
+            await _jsonManager.SaveToJsonAsync(GameSettings, $"{PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingFileName)}", settings:NewtonsoftJsonUtility.SerializerSettings);
             LogManager.Log($"{nameof(MainDataProvider)}.{nameof(SaveDataAsync)}:游戏设置数据保存成功，{GameSettings}");
         }
 
@@ -112,7 +120,7 @@ namespace HotUpdate.Main.Data
              LogManager.Log($"{nameof(MainDataProvider)}.{nameof(SaveData)}:输入数据保存成功，{FileUtility.LocalInputDataFileName}");
              
              // 保存设置数据
-             _jsonManager.SaveToJson(GameSettings, $"{PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingFileName)}");
+             _jsonManager.SaveToJson(GameSettings, $"{PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingFileName)}", settings:NewtonsoftJsonUtility.SerializerSettings);
              LogManager.Log($"{nameof(MainDataProvider)}.{nameof(SaveDataAsync)}:游戏设置数据保存成功，{GameSettings}");
         }
 

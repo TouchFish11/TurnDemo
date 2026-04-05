@@ -13,6 +13,7 @@ using Core.Utility;
 using HotUpdate.Common;
 using HotUpdate.Core.Dialogue;
 using HotUpdate.Core.Main;
+using HotUpdate.Core.Main.Settings;
 using HotUpdate.Core.Manager;
 using HotUpdate.Core.Task.Event;
 using HotUpdate.Dialogue.UI;
@@ -120,7 +121,7 @@ namespace HotUpdate.Dialogue
             // 从配置表中获取说话者（NPC）信息
             npcInfo = _binaryDataManager.GetConfig<NpcInfoContainer>(EConfigLoadType.Excel).dataDic[dialogueInfo.f_speakerId];
 
-            var enableTypewriter = ServiceLocator.Get<IGameManager>().GameDataManager.GetProvider<IMainDataProvider>().GameSettings.EnableTypewriter;
+            var enableTypewriter = (bool)ServiceLocator.Get<IGameManager>().GameDataManager.GetProvider<IMainDataProvider>().GameSettings[ESettingType.TypeWriter];
             if (enableTypewriter)
             {
                 // 启用打字机效果：初始化状态+启动协程

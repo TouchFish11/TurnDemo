@@ -20,15 +20,18 @@ namespace HotUpdate.Main.Settings.UI
         public void Init(string entryName, SettingSliderViewModel settingSliderViewModel)
         {
             txtName.text = entryName;
-            settingSliderViewModel.ProgressSlider.OnValueChanged += volumeValue => sliderRange.value = volumeValue;
-            settingSliderViewModel.ProgressText.OnValueChanged += volumeText => txtVolume.text = volumeText;
+            settingSliderViewModel.ProgressSlider.Subscribe(volumeValue => sliderRange.value = volumeValue);
+            settingSliderViewModel.ProgressText.Subscribe(volumeText => txtVolume.text = volumeText);
             _settingSliderViewModel = settingSliderViewModel;
+            // 主动拉取数据
+            settingSliderViewModel.Update();
         }
 
         protected override void OnSliderValueChanged(string sliderName, float value)
         {
             if (sliderName == nameof(sliderRange))
             {
+                // 赋值滑动条的值
                 _settingSliderViewModel.ProgressSlider.Value = value;
             }
         }

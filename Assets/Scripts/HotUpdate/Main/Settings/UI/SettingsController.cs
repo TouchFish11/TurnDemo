@@ -1,4 +1,4 @@
-using System.Reflection;
+using System;
 using System.Threading.Tasks;
 using Core.Service;
 using Core.UI.MVC;
@@ -38,26 +38,57 @@ namespace HotUpdate.Main.Settings.UI
             var settingsConfig = ServiceLocator.Get<IGameManager>().GameDataManager.GetProvider<IMainDataProvider>().GameSettingsConfig;
             // 获取用户游戏设置数据
             var settings = ServiceLocator.Get<IGameManager>().GameDataManager.GetProvider<IMainDataProvider>().GameSettings;
-            // 创建设置UI
-            var fieldInfos = settings.GetType().GetFields();
-            foreach (var fieldInfo in fieldInfos)
+            
+            // 创建侧边栏
+            var settingOpt = await prefabLoader.GetObjectAsync<SettingOpt>(AbKeyCollection.Ui, ResKeyCollection.SettingOpt, view.Opts);
+            
+            // 创建设置项
+            foreach (var settingItem in settings.Values)
             {
-                if(!fieldInfo.IsDefined(typeof(SettingTypeAttribute), false)) continue;
-                var settingTypeAttribute = fieldInfo.GetCustomAttribute<SettingTypeAttribute>();
-                if (settingTypeAttribute.IsRange)
+                if (settingItem.IsRange)
                 {
                     var sliderEntry = await prefabLoader.GetObjectAsync<SettingSliderEntry>(AbKeyCollection.Ui,
                         ResKeyCollection.SettingSliderEntry, view.Entrys);
-                    var settingSliderViewModel = new SettingSliderViewModel(settings);
-                    sliderEntry.Init("测试滑动条", settingSliderViewModel);
+                    switch (settingItem.SettingType)
+                    {
+                        case ESettingType.VolumeValue:
+                            sliderEntry.Init("音乐音量", new VolumeSliderViewModel(settings));
+                            break;
+                        case ESettingType.SFXValue:
+                            sliderEntry.Init("音效音量", new SFXSliderViewModel(settings));
+                            break;
+                    }
                 }
                 else
                 {
-                    var drowdownEntry = await prefabLoader.GetObjectAsync<SettingDrowdownEntry>(AbKeyCollection.Ui,
+                    var DropdownEntry = await prefabLoader.GetObjectAsync<SettingDropdownEntry>(AbKeyCollection.Ui,
                         ResKeyCollection.SettingDrowdownEntry, view.Entrys);
-                    var settingDrowdownViewModel = new SettingDrowdownViewModel(settings, settingsConfig);
-                    drowdownEntry.Init("测试下拉列表", settingDrowdownViewModel);
+                    switch (settingItem.SettingType)
+                    {
+                        case ESettingType.VolumeOpen:
+                            DropdownEntry.Init("音乐开关", new VolumeOpenDropdownViewModel(settings, settingsConfig));
+                            break;
+                        case ESettingType.SFXOpen:
+                            DropdownEntry.Init("音效开关", new SFXOpenDropdownViewModel(settings, settingsConfig));
+                            break;
+                        case ESettingType.TypeWriter:
+                            DropdownEntry.Init("对话打字机效果", new TypeWriterDropdownViewModel(settings, settingsConfig));
+                            break;
+                        case ESettingType.TargetFrameRateIndex:
+                            DropdownEntry.Init("帧率", new FrameRateDropdownViewModel(settings, settingsConfig));
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
                 }
+            }
+        }
+
+        protected override void ButtonOnClick(string btnName)
+        {
+            if (btnName == nameof(view.btnClose))
+            {
+                uiManager.DestroyView(AbKeyCollection.Ui, this);
             }
         }
     }
