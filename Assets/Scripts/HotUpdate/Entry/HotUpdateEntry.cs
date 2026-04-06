@@ -7,9 +7,12 @@ using Core.Input.ActionAsset;
 using Core.Log;
 using Core.Reflection;
 using Core.Scene;
+using Core.Serialize.Json;
 using Core.Service;
 using Core.UI;
+using Core.Utility;
 using HotUpdate.Common;
+using HotUpdate.Core.Main.Settings;
 using HotUpdate.Core.Manager;
 using HotUpdate.Core.Module;
 using HotUpdate.Entry.Update.UI;
@@ -34,6 +37,8 @@ namespace HotUpdate.Entry
         {
             try
             {
+                // 初始化游戏设置
+                await InitSettings();
                 // 初始化UI管理器，创建画布和UI相机
                 await ServiceLocator.Get<IUIManager>().InitUIManagerAsync(AbKeyCollection.Default, ResKeyCollection.Canvas, ResKeyCollection.UICamera);
                 // 显示开始界面
@@ -49,6 +54,22 @@ namespace HotUpdate.Entry
             }
         }
 
+        /// <summary>
+        /// 初始化设置
+        /// </summary>
+        private static async Task InitSettings()
+        {
+            var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(AbKeyCollection.Gameconfig);
+            var textAsset = assetBundle.LoadAsset<TextAsset>(ResKeyCollection.GameSettingsConfig);
+            var settingsConfig = ServiceLocator.Get<IJsonManager>().FromJson<GameSettingsConfig>(textAsset.text);
+            var settings = await ServiceLocator.Get<IJsonManager>()
+                .FromJsonAsync<GameSettings>(PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingFileName));
+            
+            SettingsService.SetFrameRate(settingsConfig.framerates[(int)settings[ESettingType.TargetFrameRateIndex]]);
+            Application.runInBackground = true;
+            // ...
+        }
+        
         /// <summary>
         /// 进入游戏
         /// </summary>

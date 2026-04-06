@@ -9,6 +9,14 @@ namespace HotUpdate.Core.Main.Settings
     [Serializable]
     public class GameSettingsConfig
     {
+        // UI名称
+        public string volumeItemName;
+        public string sfxItemName;
+        public string volumeOpenItemName;
+        public string sfxOpenItemName;
+        public string typeWriterItemName;
+        public string frameRateItemName;
+        
         // 音乐选项
         public List<string> volumeOpts;
         // 音效选项

@@ -20,19 +20,12 @@ namespace HotUpdate.Core.Main.Settings.ViewModel
 
         protected override void OnSettingsChanged(GameSettings settings)
         {
-            var frameRate = (int)settings[ESettingType.TargetFrameRateIndex];
-            OptionIndex.Value = frameRate;
+            RefleshUI();
         }
 
-        public override void Update()
+        public override void RefleshUI()
         {
             OptionIndex.Value = (int)_settings[ESettingType.TargetFrameRateIndex];
-        }
-
-        public override void Dispose()
-        {
-            _settings.OnDataChanged -= OnSettingsChanged;
-            base.Dispose();
         }
     }
 }

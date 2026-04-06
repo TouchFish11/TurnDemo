@@ -1,5 +1,4 @@
 using Core.UI;
-using HotUpdate.Core.Main.Settings;
 using HotUpdate.Core.Main.Settings.ViewModel;
 using TMPro;
 using UnityEngine.UI;
@@ -24,7 +23,7 @@ namespace HotUpdate.Main.Settings.UI
             settingSliderViewModel.ProgressText.Subscribe(volumeText => txtVolume.text = volumeText);
             _settingSliderViewModel = settingSliderViewModel;
             // 主动拉取数据
-            settingSliderViewModel.Update();
+            settingSliderViewModel.RefleshUI();
         }
 
         protected override void OnSliderValueChanged(string sliderName, float value)
@@ -34,6 +33,12 @@ namespace HotUpdate.Main.Settings.UI
                 // 赋值滑动条的值
                 _settingSliderViewModel.ProgressSlider.Value = value;
             }
+        }
+
+        protected override void OnDestroy()
+        {
+            _settingSliderViewModel.Dispose();
+            _settingSliderViewModel = null;
         }
     }
 }

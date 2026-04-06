@@ -1,11 +1,9 @@
-using System;
 using System.Threading.Tasks;
 using Core.Service;
 using Core.UI.MVC;
 using HotUpdate.Common;
 using HotUpdate.Core.Main;
 using HotUpdate.Core.Main.Settings;
-using HotUpdate.Core.Main.Settings.ViewModel;
 using HotUpdate.Core.Manager;
 using HotUpdate.Core.UI.MVC;
 
@@ -38,7 +36,6 @@ namespace HotUpdate.Main.Settings.UI
             var settingsConfig = ServiceLocator.Get<IGameManager>().GameDataManager.GetProvider<IMainDataProvider>().GameSettingsConfig;
             // 获取用户游戏设置数据
             var settings = ServiceLocator.Get<IGameManager>().GameDataManager.GetProvider<IMainDataProvider>().GameSettings;
-            
             // 创建侧边栏
             var settingOpt = await prefabLoader.GetObjectAsync<SettingOpt>(AbKeyCollection.Ui, ResKeyCollection.SettingOpt, view.Opts);
             
@@ -47,39 +44,22 @@ namespace HotUpdate.Main.Settings.UI
             {
                 if (settingItem.IsRange)
                 {
-                    var sliderEntry = await prefabLoader.GetObjectAsync<SettingSliderEntry>(AbKeyCollection.Ui,
-                        ResKeyCollection.SettingSliderEntry, view.Entrys);
-                    switch (settingItem.SettingType)
-                    {
-                        case ESettingType.VolumeValue:
-                            sliderEntry.Init("音乐音量", new VolumeSliderViewModel(settings));
-                            break;
-                        case ESettingType.SFXValue:
-                            sliderEntry.Init("音效音量", new SFXSliderViewModel(settings));
-                            break;
-                    }
+                    // 获取UI
+                    var sliderEntry = await prefabLoader.GetObjectAsync<SettingSliderEntry>(AbKeyCollection.Ui, ResKeyCollection.SettingSliderEntry, view.Entrys);
+                    // 获取ViewModel
+                    var settingSliderViewModel = SettingsViewModelFactory.CreateSliderViewModel(settingItem.SettingType, settings);
+                    // 初始化UI
+                    sliderEntry.Init(SettingsUtil.SettingTypeTOStr(settingItem.SettingType, settingsConfig), settingSliderViewModel);
                 }
                 else
                 {
-                    var DropdownEntry = await prefabLoader.GetObjectAsync<SettingDropdownEntry>(AbKeyCollection.Ui,
+                    // 获取UI
+                    var dropdownEntry = await prefabLoader.GetObjectAsync<SettingDropdownEntry>(AbKeyCollection.Ui,
                         ResKeyCollection.SettingDrowdownEntry, view.Entrys);
-                    switch (settingItem.SettingType)
-                    {
-                        case ESettingType.VolumeOpen:
-                            DropdownEntry.Init("音乐开关", new VolumeOpenDropdownViewModel(settings, settingsConfig));
-                            break;
-                        case ESettingType.SFXOpen:
-                            DropdownEntry.Init("音效开关", new SFXOpenDropdownViewModel(settings, settingsConfig));
-                            break;
-                        case ESettingType.TypeWriter:
-                            DropdownEntry.Init("对话打字机效果", new TypeWriterDropdownViewModel(settings, settingsConfig));
-                            break;
-                        case ESettingType.TargetFrameRateIndex:
-                            DropdownEntry.Init("帧率", new FrameRateDropdownViewModel(settings, settingsConfig));
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    // 获取ViewModel
+                    var settingDropdownViewModel = SettingsViewModelFactory.CreateDropdownViewModel(settingItem.SettingType, settings, settingsConfig);
+                    // 初始化UI
+                    dropdownEntry.Init(SettingsUtil.SettingTypeTOStr(settingItem.SettingType, settingsConfig), settingDropdownViewModel);
                 }
             }
         }

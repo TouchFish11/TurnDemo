@@ -70,6 +70,7 @@ namespace HotUpdate.Common
 		public static string BeginScene => "BeginScene";
 		public static string LevelScene => "LevelScene";
 		public static string MainScene => "MainScene";
+		public static string OtherTest => "OtherTest";
 		public static string RoleTestScene => "RoleTestScene";
 		public static string StatsTest => "StatsTest";
 		public static string UniTaskTestScene => "UniTaskTestScene";

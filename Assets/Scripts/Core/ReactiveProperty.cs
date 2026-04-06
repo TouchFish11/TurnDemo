@@ -24,7 +24,6 @@ namespace Core
         public void Subscribe(Action<T> onValueChanged)
         {
             _onValueChanged += onValueChanged;
-            _onValueChanged?.Invoke(_value);
         }
 
         public void Unsubscribe(Action<T> onValueChanged)

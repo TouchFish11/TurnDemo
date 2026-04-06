@@ -37,30 +37,9 @@ namespace Core.AssetBundles.Management
             ServiceLocator.Get<IMemoryMonitor>().Register(this);
             return Task.CompletedTask;
         }
-
-        /// <summary>
-        /// 初始化指定包
-        /// 更新使用
-        /// </summary>
-        /// <param name="abNames"></param>
-        public async Task InitSpecifyAsync(params string[] abNames)
-        {
-            foreach (var abName in abNames)
-            {
-                // 读取本地清单文件
-                _abPackageCollection = await ServiceLocator.Get<IJsonManager>().FromJsonAsync<ABPackageCollection>(PathUtility.GetAbLoadPath(FileUtility.ListFileDefaultName));
-                if(_abPackageCollection.TryGetValue(abName, out var defaultPackage))
-                {
-                    _nameToWrapperMap.TryAdd(abName, new BundleWrapper(abName, PathUtility.GetAbLoadPath(defaultPackage.Name), this));
-                }   
-            }
-        }
         
         public async Task Init()
         {
-            // 先卸载原来的默认包
-            await UnloadAllBundles(false);
-            
             // 读取本地清单文件
             _abPackageCollection = await ServiceLocator.Get<IJsonManager>().FromJsonAsync<ABPackageCollection>(PathUtility.GetAbLoadPath(FileUtility.ListFileDefaultName));
             // 构建全部AB包信息

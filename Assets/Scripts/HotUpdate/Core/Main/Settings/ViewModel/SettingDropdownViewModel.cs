@@ -24,12 +24,13 @@ namespace HotUpdate.Core.Main.Settings.ViewModel
         protected abstract void OnSettingsChanged(GameSettings settings);
 
         /// <summary>
-        /// 更新
+        /// 刷新UI显示，UI初始化时需主动调用该方法，拉取数据来显示
         /// </summary>
-        public abstract void Update();
+        public abstract void RefleshUI();
 
-        public virtual void Dispose()
+        public void Dispose()
         {
+            _settings.OnDataChanged -= OnSettingsChanged;
             OptionIndex = null;
             Options = null;
             _settings = null;

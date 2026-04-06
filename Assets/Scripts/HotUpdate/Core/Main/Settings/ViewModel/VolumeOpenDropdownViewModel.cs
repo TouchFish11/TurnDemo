@@ -15,18 +15,12 @@ namespace HotUpdate.Core.Main.Settings.ViewModel
 
         protected override void OnSettingsChanged(GameSettings settings)
         {
-            OptionIndex.Value = (int)settings[ESettingType.VolumeOpen];
+            RefleshUI();
         }
 
-        public override void Update()
+        public override void RefleshUI()
         {
             OptionIndex.Value = (int)_settings[ESettingType.VolumeOpen];
-        }
-
-        public override void Dispose()
-        {
-            _settings.OnDataChanged -= OnSettingsChanged;
-            base.Dispose();
         }
     }
 }

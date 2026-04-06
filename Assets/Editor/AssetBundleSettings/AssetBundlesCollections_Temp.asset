@@ -246,9 +246,9 @@ MonoBehaviour:
       name: BattleActivityConfig.json
       hash: dbe188d750beb3f111ca386640fe08bf9eeaa807b45525a4cdbb3eea0bd383b2
     - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\GameSettingsConfig.json
-      size: 753
+      size: 993
       name: GameSettingsConfig.json
-      hash: 57b929d64be66a034b480c7ffab777796f204718711ce1b5a3ea3a1f0396e3db
+      hash: c9a1a30f2bb26036a6e9b4bcac27b530bf7a2ecf0e42b110d8bad6581b2be1d3
     - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\HelmetConfig.json
       size: 253
       name: HelmetConfig.json
@@ -395,6 +395,10 @@ MonoBehaviour:
       size: 46129
       name: MainScene.unity
       hash: 27e0cb0c89acb352b0e7013d7d6512cb4847506e7c2ec5b127c28d8f8723976d
+    - assetPath: Assets\Editor\ArtRes\Scene\Test\OtherTest.unity
+      size: 9401
+      name: OtherTest.unity
+      hash: c5583588f2760d79544b3241cf89bbb70f3744cd6d947669e14ae0736c5d5fad
     - assetPath: Assets\Editor\ArtRes\Scene\Test\RoleTestScene.unity
       size: 571677
       name: RoleTestScene.unity
@@ -614,9 +618,9 @@ MonoBehaviour:
       name: SettingSliderEntry.prefab
       hash: 4d3cc32fab149b3bdd770ddc3cabd36217a5ff735ef7fb289774af568a8f0e6c
     - assetPath: Assets\Editor\ArtRes\UI\Setting\SettingsView.prefab
-      size: 39944
+      size: 40014
       name: SettingsView.prefab
-      hash: a2ff22ecac0ebde0ab5a0d8d02529b2ecfd944e0a1c8b0b5f3d365a6f7e1d862
+      hash: f9a1ce7b52667f82b2aec40c6b37d91a5dc2ecd59df0c67fa83bf369d8375ed6
     - assetPath: Assets\Editor\ArtRes\UI\Task\TaskItem.prefab
       size: 13632
       name: TaskItem.prefab

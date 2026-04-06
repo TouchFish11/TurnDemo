@@ -23,7 +23,7 @@ namespace HotUpdate.Main.Settings.UI
             settingDropdownViewModel.OptionIndex.Subscribe(optionIndex => dpSettings.value = optionIndex);
             _settingDropdownViewModel = settingDropdownViewModel;
             // 主动更新，触发事件
-            settingDropdownViewModel.Update();
+            settingDropdownViewModel.RefleshUI();
         }
 
         protected override void OnDropdownValueChanged(string dropdownName, int value)
@@ -36,7 +36,8 @@ namespace HotUpdate.Main.Settings.UI
 
         protected override void OnDestroy()
         {
-            
+            _settingDropdownViewModel.Dispose();
+            _settingDropdownViewModel = null;
         }
     }
 }

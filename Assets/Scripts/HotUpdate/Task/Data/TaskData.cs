@@ -24,19 +24,31 @@ namespace HotUpdate.Task.Data
         public int CurrentPro
         {
             get => currentPro;
-            set => currentPro = value;
+            set
+            {
+                currentPro = value;
+                OnDataChanged?.Invoke(this);
+            }
         }
 
         public bool IsCompleted
         {
             get => isCompleted;
-            set => isCompleted = value;
+            set
+            {
+                isCompleted = value;
+                OnDataChanged?.Invoke(this);
+            }
         }
 
         public bool IsTracking
         {
             get => isTracking;
-            set => isTracking = value;
+            set
+            {
+                isTracking = value;
+                OnDataChanged?.Invoke(this);
+            }
         }
 
         public event Action<ITaskData> OnDataChanged;

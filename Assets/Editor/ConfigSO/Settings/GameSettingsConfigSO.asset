@@ -13,6 +13,12 @@ MonoBehaviour:
   m_Name: GameSettingsConfigSO
   m_EditorClassIdentifier: 
   SettingsConfig:
+    volumeItemName: "\u97F3\u4E50\u97F3\u91CF"
+    sfxItemName: "\u97F3\u6548\u97F3\u91CF"
+    volumeOpenItemName: "\u97F3\u4E50\u5F00\u5173"
+    sfxOpenItemName: "\u97F3\u6548\u5F00\u5173"
+    typeWriterItemName: "\u5BF9\u8BDD\u6587\u672C\u6253\u5B57\u673A\u6548\u679C"
+    frameRateItemName: "\u5E27\u7387"
     volumeOpts:
     - "\u5173"
     - "\u5F00"

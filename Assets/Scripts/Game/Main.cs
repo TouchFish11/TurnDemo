@@ -23,12 +23,10 @@ namespace Game
         {
             try
             {
-                // 初始化游戏设置
-                InitSettings();
                 // 注册框架核心服务
                 await ServiceLocator.RegisterServices();
-                // 初始化指定AB包
-                await ServiceLocator.Get<IAssetBundleManager>().InitSpecifyAsync(DefaultAbNames);
+                // 初始化AB包管理器
+                await ServiceLocator.Get<IAssetBundleManager>().Init();
                 var hotUpdateManager = ServiceLocator.Get<IHotUpdateManager>();
                 // 补充元数据
                 hotUpdateManager.LoadMetadataForAOTAssemblies(AOTGenericReferences.PatchedAOTAssemblyList);  
@@ -43,15 +41,6 @@ namespace Game
             {
                 LogManager.LogError($"{nameof(Main)}.{nameof(Start)}: 游戏启动错误，{e.Message}");
             }
-        }
-                                          
-        /// <summary>
-        /// 初始化设置
-        /// </summary>
-        private static void InitSettings()
-        {
-            Application.targetFrameRate = 60;
-            Application.runInBackground = true;
         }
     }
 }

@@ -41,13 +41,6 @@ namespace Core.AssetBundles.Management
         Task UnloadAllBundles(bool unloadAllObjects);
 
         /// <summary>
-        /// 初始化默认包
-        /// 更新使用
-        /// </summary>
-        /// <param name="abNames"></param>
-        Task InitSpecifyAsync(params string[] abNames);
-
-        /// <summary>
         /// 强制卸载未使用的AB包
         /// </summary>
         Task ForceUnloadUnuseBundle();

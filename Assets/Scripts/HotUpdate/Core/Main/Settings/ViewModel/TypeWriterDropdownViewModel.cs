@@ -18,15 +18,9 @@ namespace HotUpdate.Core.Main.Settings.ViewModel
             OptionIndex.Value = (int)settings[ESettingType.TypeWriter];
         }
 
-        public override void Update()
+        public override void RefleshUI()
         {
             OptionIndex.Value = (int)_settings[ESettingType.TypeWriter];
-        }
-
-        public override void Dispose()
-        {
-            _settings.OnDataChanged -= OnSettingsChanged;
-            base.Dispose();
         }
     }
 }
