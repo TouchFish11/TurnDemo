@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace HotUpdate.Task.Quest
+namespace HotUpdate.Config.Quest
 {
     /// <summary>
     /// 任务配置，任务项集合
@@ -16,8 +16,6 @@ namespace HotUpdate.Task.Quest
         public class QuestItem
         {
             public int id;
-            public string name;
-            public string description;
             public EQuestType questType;
             public List<QuestNodeConfig> nodeConfigs;
         }

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.Service;
+using Core.Tasks.Extensions;
 using UnityEngine;
 
 namespace Core.Loader.Text
@@ -14,11 +15,11 @@ namespace Core.Loader.Text
         // 资源名称到文本数据映射
         private readonly Dictionary<string, TextData> _assetNameToData = new();
 
-        public Task<TextAsset> LoadAssetAsync(string abName, string assetName)
+        public async Task<TextAsset> LoadAssetAsync(string abName, string assetName)
         {
-            return (Task<TextAsset>)Task.CompletedTask;
+            var assetBundle = await _assetBundleManager.LoadBundleAsync(abName);
+            var textAsset = await assetBundle.LoadAssetAsync<TextAsset>(assetName).ToTask<TextAsset>();
+            return textAsset;
         }
-        
-        
     }
 }

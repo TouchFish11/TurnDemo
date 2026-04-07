@@ -1,22 +1,27 @@
 using System;
 
-namespace HotUpdate.Task.Quest
+namespace HotUpdate.Config.Quest
 {
     /// <summary>
     /// 任务节点对象
     /// </summary>
     [Serializable]
-    public class QuestNode
+    public class QuestNode : IDisposable
     {
+        // 任务节点配置
+        private QuestNodeConfig _questNodeConfig;
         // 任务节点数据
-        private readonly QuestNodeData _questNodeData;
+        private QuestNodeData _questNodeData;
         // 任务条件
-        private readonly QuestCondition _questCondition;
+        private  QuestCondition _questCondition;
+        
+        public QuestNodeData QuestNodeData => _questNodeData;
         // 任务节点完成事件
         public event Action<int> OnComplete;
         
-        public QuestNode(QuestNodeData questNodeData, QuestCondition questCondition)
+        public QuestNode(QuestNodeConfig nodeConfig, QuestNodeData questNodeData, QuestCondition questCondition)
         {
+            _questNodeConfig = nodeConfig;
             _questNodeData = questNodeData;
             _questCondition = questCondition;
             _questCondition.OnComplete += Complete;
@@ -35,7 +40,10 @@ namespace HotUpdate.Task.Quest
         {
             // 取消监听任务关心的事件
             _questCondition.OnEnd();
-            _questNodeData.Phase = EQuestPhase.NoReceive;
+            if (_questNodeData.Phase == EQuestPhase.Processing)
+            {
+                _questNodeData.Phase = EQuestPhase.NoReceive;
+            }
         }
 
         // 完成任务节点
@@ -45,11 +53,16 @@ namespace HotUpdate.Task.Quest
             _questNodeData.Phase = EQuestPhase.Complete;
             // 先失活当前节点
             Inactive();
-            // 接取下一个节点任务(若有)
-            if (_questNodeData.NextNodeId == -1)
-                return;
-            
             OnComplete?.Invoke(_questNodeData.NextNodeId);
+            OnComplete = null;
+        }
+
+        public void Dispose()
+        {
+            _questNodeConfig = null;
+            _questNodeData = null;
+            _questCondition.Dispose();
+            _questCondition = null;
             OnComplete = null;
         }
     }

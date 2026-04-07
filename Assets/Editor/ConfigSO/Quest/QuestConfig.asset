@@ -14,27 +14,63 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questConfig:
     questItems:
-    - id: 0
-      name: 
-      description: 
+    - id: 1
       questType: 0
       nodeConfigs:
-      - maxProgress: 0
+      - nodeId: 1
+        name: "\u6D4B\u8BD5\u4E3B\u7EBF1"
+        description: "\u8FD9\u662F\u7B2C\u4E00\u4E2A\u4EFB\u52A1\u6D41\u7A0B"
+        maxProgress: 1
         conditionType: 0
-      - maxProgress: 0
+        rewardItemIds: 10001,100
+        nextNodeId: 2
+        condition:
+          rid: 798032297148547106
+      - nodeId: 2
+        name: "\u6D4B\u8BD5\u4E3B\u7EBF2"
+        description: "\u8FD9\u662F\u7B2C\u4E8C\u4E2A\u4EFB\u52A1\u6D41\u7A0B"
+        maxProgress: 1
+        conditionType: 1
+        rewardItemIds: 10001,100
+        nextNodeId: 3
+        condition:
+          rid: 798032297148547107
+      - nodeId: 3
+        name: "\u6D4B\u8BD5\u4E3B\u7EBF3"
+        description: "\u8FD9\u662F\u7B2C\u4E09\u4E2A\u4EFB\u52A1\u6D41\u7A0B"
+        maxProgress: 1
+        conditionType: 2
+        rewardItemIds: 10001,100
+        nextNodeId: 4
+        condition:
+          rid: 798032297148547108
+      - nodeId: 4
+        name: "\u6D4B\u8BD5\u4E3B\u7EBF4"
+        description: "\u8FD9\u662F\u7B2C\u56DB\u4E2A\u4EFB\u52A1\u6D41\u7A0B"
+        maxProgress: 1
         conditionType: 0
-    - id: 0
-      name: 
-      description: 
-      questType: 0
-      nodeConfigs: []
-    - id: 0
-      name: 
-      description: 
-      questType: 0
-      nodeConfigs: []
-    - id: 0
-      name: 
-      description: 
-      questType: 0
-      nodeConfigs: []
+        rewardItemIds: 10001,100
+        nextNodeId: -1
+        condition:
+          rid: 798032297148547109
+  references:
+    version: 2
+    RefIds:
+    - rid: 798032297148547106
+      type: {class: TalkCondition, ns: HotUpdate.Config.Quest.Condition, asm: HotUpdate.Config}
+      data:
+        targetNpcId: 1001
+    - rid: 798032297148547107
+      type: {class: KillCondition, ns: HotUpdate.Config.Quest.Condition, asm: HotUpdate.Config}
+      data:
+        targetId: 1001
+        count: 1
+    - rid: 798032297148547108
+      type: {class: CollectCondition, ns: HotUpdate.Config.Quest.Condition, asm: HotUpdate.Config}
+      data:
+        targetItemId: 10001
+        count: 10
+    - rid: 798032297148547109
+      type: {class: TalkCondition, ns: HotUpdate.Config.Quest.Condition, asm: HotUpdate.Config}
+      data:
+        targetNpcId: 1001

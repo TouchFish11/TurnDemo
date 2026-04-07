@@ -253,6 +253,10 @@ MonoBehaviour:
       size: 253
       name: HelmetConfig.json
       hash: d9ae9713015839f308c478c2427eeb0774a0a4b559e230d13473badbd83771a8
+    - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\QuestConfig.json
+      size: 3095
+      name: QuestConfig.json
+      hash: 77d38f127cf27f475ecb33f48fa3832156b99bbaa7ad3affc8e951f95db03c15
     - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\SwordConfig.json
       size: 429
       name: SwordConfig.json
@@ -392,9 +396,9 @@ MonoBehaviour:
       name: LevelScene.unity
       hash: ca1b3a14b5566ddee1c6c840c7536c0aac76d6838ca1cd395bd2d987440ac595
     - assetPath: Assets\Editor\ArtRes\Scene\MainScene.unity
-      size: 46129
+      size: 40248
       name: MainScene.unity
-      hash: 27e0cb0c89acb352b0e7013d7d6512cb4847506e7c2ec5b127c28d8f8723976d
+      hash: 91d8c291cc47e8ec02a8343b824ea275d777ed2523d9358d980b0abb34fe58bb
     - assetPath: Assets\Editor\ArtRes\Scene\Test\OtherTest.unity
       size: 9401
       name: OtherTest.unity
@@ -440,9 +444,9 @@ MonoBehaviour:
   - assetBundleName: tmp_asset
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\TMP_Asset\MSYH_SDF.asset
-      size: 8443960
+      size: 8486571
       name: MSYH_SDF.asset
-      hash: cf698890971ddc380f7dfc58a55c408ff1ae12c5ab94c39b09f583919fa17736
+      hash: b02b8463e55ce419af59cfb6a88bdfc2a738460d9908c4bcdb04f34eb3e0e7a0
   - assetBundleName: ui
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\UI\Activity\ActivityUI.prefab
@@ -602,9 +606,9 @@ MonoBehaviour:
       name: LoginView.prefab
       hash: 5ee6e2a627a59b3a90b4fbc798b22d67a1d71109b560d7658a9e633d0a5714aa
     - assetPath: Assets\Editor\ArtRes\UI\Main\MainView.prefab
-      size: 78008
+      size: 83150
       name: MainView.prefab
-      hash: 376c18a0a36bd6cf3358a8d23d048dc66e055ce199a6f69c03f2972b1fc0ace2
+      hash: 92f7645f2f5fe601ea9fecf1ed6f09511a387304ada1ae448d41ae6564535906
     - assetPath: Assets\Editor\ArtRes\UI\Setting\SettingDrowdownEntry.prefab
       size: 36827
       name: SettingDrowdownEntry.prefab
@@ -621,18 +625,18 @@ MonoBehaviour:
       size: 40014
       name: SettingsView.prefab
       hash: f9a1ce7b52667f82b2aec40c6b37d91a5dc2ecd59df0c67fa83bf369d8375ed6
-    - assetPath: Assets\Editor\ArtRes\UI\Task\TaskItem.prefab
-      size: 13632
-      name: TaskItem.prefab
-      hash: 5e1c89f005b1ed7980ad08cdeb19c244a7b47a4d1d79cbc255a629a83bdd556f
-    - assetPath: Assets\Editor\ArtRes\UI\Task\TaskTypeContainer.prefab
-      size: 12043
-      name: TaskTypeContainer.prefab
-      hash: e729dc8ee5926adf37e640abf718f8755f5f22923599b83926fbd8f408ca47f3
-    - assetPath: Assets\Editor\ArtRes\UI\Task\TaskView.prefab
-      size: 57011
-      name: TaskView.prefab
-      hash: 9c6c53b716681151ca3114672234ad45756a00cc1fd5b108290aaf4640edf252
+    - assetPath: Assets\Editor\ArtRes\UI\Task\QuestItem.prefab
+      size: 13633
+      name: QuestItem.prefab
+      hash: a39ef95094e5762c185ea39ec785ec187bbf2d23951f220281c44e812c4cf344
+    - assetPath: Assets\Editor\ArtRes\UI\Task\QuestTypeContainer.prefab
+      size: 12044
+      name: QuestTypeContainer.prefab
+      hash: 646511650c2425e44cca5bb4aa23beb6cfdc425978efd023f44b1da993be5475
+    - assetPath: Assets\Editor\ArtRes\UI\Task\QuestView.prefab
+      size: 57008
+      name: QuestView.prefab
+      hash: bb326c794838be6b0093a1100b1b55d5cf868e1142954e201c38dab86d64c830
     - assetPath: Assets\Editor\ArtRes\UI\Tip\BaseTipView.prefab
       size: 11726
       name: BaseTipView.prefab

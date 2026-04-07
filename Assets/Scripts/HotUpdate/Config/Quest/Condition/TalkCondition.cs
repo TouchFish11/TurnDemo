@@ -1,4 +1,6 @@
-namespace HotUpdate.Task.Quest.Condition
+using Newtonsoft.Json;
+
+namespace HotUpdate.Config.Quest.Condition
 {
     /// <summary>
     /// 对话条件
@@ -6,6 +8,6 @@ namespace HotUpdate.Task.Quest.Condition
     public class TalkCondition : QuestCondition
     {
         // 目标NPCID
-        public int targetNpcId;
+        [JsonProperty] public int targetNpcId;
     }
 }

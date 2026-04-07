@@ -19,7 +19,7 @@ namespace HotUpdate.Task.Core
         
         public async Task<ITaskController> CreateTaskController()
         {
-            return await _uiManager.CreateViewAsync<TaskView, TaskModel, TaskController>(AbKeyCollection.Ui, E_UILayer.Mid, ResKeyCollection.TaskView);
+            return await _uiManager.CreateViewAsync<TaskView, TaskModel, TaskController>(AbKeyCollection.Ui, E_UILayer.Mid, ResKeyCollection.QuestView);
         }
 
         public async Task<IuiController> GetUiController()

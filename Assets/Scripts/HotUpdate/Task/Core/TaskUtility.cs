@@ -1,21 +1,21 @@
 using Core.Collection;
 using Core.Log;
 using Core.Service;
+using HotUpdate.Config.Quest;
 using HotUpdate.Core.Manager;
 using HotUpdate.Core.Task;
-using HotUpdate.Task.Data;
 
 namespace HotUpdate.Task.Core
 {
     public static class TaskUtility
     {
-        public static ITaskDataCollection GetTaskDataCollection()
+        public static IQuestCollection GetTaskDataCollection()
         {
-            var taskDataCollection = ServiceLocator.Get<IGameManager>().GameDataManager.GetProvider<ITaskDataProvider>().TaskDataCollection;
+            var taskDataCollection = ServiceLocator.Get<IGameManager>().GameDataManager.GetProvider<ITaskDataProvider>().QuestCollection;
             // 转换集合
-            if (taskDataCollection is Collection<string, TaskData> collection)
+            if (taskDataCollection is Collection<int, QuestData> collection)
             {
-                return collection as TaskDataCollection;
+                return collection as IQuestCollection;
             }
 
             LogManager.LogError($"{nameof(TaskUtility)}.{nameof(GetTaskDataCollection)}：任务数据集合转换失败");

@@ -1,4 +1,4 @@
-namespace HotUpdate.Task.Quest
+namespace HotUpdate.Config.Quest
 {
     /// <summary>
     /// 任务类型

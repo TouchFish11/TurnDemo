@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using Core.Loader.Object;
 using Core.Service;
 using Core.UI;
-using Core.Utility;
 using HotUpdate.Common;
-using HotUpdate.Task.Core;
+using HotUpdate.Config.Quest;
+using HotUpdate.Task.Quest;
 using TMPro;
 
 namespace HotUpdate.Task.UI
@@ -12,14 +12,14 @@ namespace HotUpdate.Task.UI
     /// <summary>
     /// 任务类型容器
     /// </summary>
-    public class TaskTypeContainer : UIBehaviourBase
+    public class QuestTypeContainer : UIBehaviourBase
     {
         [Inject] private TextMeshProUGUI txtTaskName;
 
         private IPrefabLoader _prefabLoader;
         private readonly List<TaskItem> taskItems = new();
-        private readonly Dictionary<string, TaskItem> idToItemMap = new();
-        private int taskType;
+        private readonly Dictionary<int, TaskItem> idToItemMap = new();
+        private EQuestType taskType;
         private bool isExpand = true;
 
         protected override void Awake()
@@ -49,11 +49,11 @@ namespace HotUpdate.Task.UI
         /// <summary>
         /// 初始化容器
         /// </summary>
-        /// <param name="taskType"></param>
-        public void Init(int taskType)
+        /// <param name="questType"></param>
+        public void Init(EQuestType questType)
         {
-            this.taskType = taskType;
-            txtTaskName.text = taskType.TaskTypeToStr();
+            this.taskType = questType;
+            txtTaskName.text = QuestUtil.ConvetTo(questType);
         }
 
         /// <summary>
@@ -61,16 +61,9 @@ namespace HotUpdate.Task.UI
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public bool ContainTask(string id)
+        public bool ContainTask(int id)
         {
-            foreach (var cacheId in idToItemMap.Keys)
-            {
-                if (TextUtility.Split(cacheId, 7)[0] == TextUtility.Split(id, 7)[0])
-                {
-                    return true;
-                }
-            }
-            return false;
+            return idToItemMap.ContainsKey(id);
         }
 
         /// <summary>
@@ -100,7 +93,7 @@ namespace HotUpdate.Task.UI
         /// 使该任务项被选中
         /// </summary>
         /// <param name="id"></param>
-        public void SelectTask(string id)
+        public void SelectTask(int id)
         {
             if (idToItemMap.TryGetValue(id, out var taskItem))
             {
@@ -140,7 +133,7 @@ namespace HotUpdate.Task.UI
                 _prefabLoader.CollectAsset(taskItem.gameObject);
             }
             taskItems.Clear();
-            _prefabLoader.RealseAsset(AbKeyCollection.Ui,  ResKeyCollection.TaskItem);
+            _prefabLoader.RealseAsset(AbKeyCollection.Ui,  ResKeyCollection.QuestItem);
         }
     }
 }

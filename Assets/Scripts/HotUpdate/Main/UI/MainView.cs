@@ -39,7 +39,13 @@ namespace HotUpdate.Main.UI
         /// 任务描述文本组件
         /// 显示当前任务的描述及进度信息
         /// </summary>
-        [Inject] private TextMeshProUGUI txtTaskDescription;
+        [Inject] private TextMeshProUGUI txtTaskShortDescription;
+        
+        /// <summary>
+        /// 任务描述文本组件
+        /// 显示当前任务的描述及进度信息
+        /// </summary>
+        [Inject] private TextMeshProUGUI txtTaskProgress;
         #endregion
 
         #region 公共属性
@@ -60,6 +66,22 @@ namespace HotUpdate.Main.UI
             taskPart.gameObject.SetActive(active);
         }
 
+        public void SetQuestbarTitle(string title)
+        {
+            // 设置任务标题
+            txtTaskTitle.text = title;
+        }
+
+        public void SetQuestbarDescription(string description)
+        {
+            txtTaskShortDescription.text = description;
+        }
+
+        public void SetQuestbarProgress(string progressStr)
+        {
+            txtTaskProgress.text = progressStr;
+        }
+        
         /// <summary>
         /// 更新任务栏显示的任务信息（标题、描述、进度）
         /// </summary>
@@ -76,7 +98,7 @@ namespace HotUpdate.Main.UI
             var taskCondition = taskConditionContainer.dataDic[taskInfo.f_completionConditionId];
 
             // 3. 设置任务描述及进度（格式：任务描述 + 当前进度/最大进度）
-            txtTaskDescription.text = $"{taskInfo.f_taskDescription}  {taskData.CurrentPro}/{taskCondition.f_maxPro}";
+            txtTaskShortDescription.text = $"{taskInfo.f_taskDescription}  {taskData.CurrentPro}/{taskCondition.f_maxPro}";
         }
         #endregion
     }

@@ -8,6 +8,7 @@ using HotUpdate.Core.Task;
 using HotUpdate.Core.UI.Helper;
 using HotUpdate.Task.Core;
 using HotUpdate.Task.Data;
+using HotUpdate.Task.Quest;
 
 namespace HotUpdate.Task
 {
@@ -24,6 +25,7 @@ namespace HotUpdate.Task
         {
             // 注册任务管理器
             ServiceLocator.Register<ITaskManager>(new TaskManager());
+            ServiceLocator.Register<IQuestManager>(new QuestManager());
             // 初始化UIHelper
             ServiceLocator.Register<ITaskUiHelper>(new TaskUiHelper(ServiceLocator.Get<IUIManager>()));
             // 注册活动数据提供器

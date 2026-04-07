@@ -1,19 +1,18 @@
 using System;
 using System.Collections.Generic;
-using HotUpdate.Core.Data;
 
-namespace HotUpdate.Task.Quest
+namespace HotUpdate.Config.Quest
 {
     /// <summary>
-    /// 任务数据，表示单一任务
+    /// 任务数据，表示单一任务，只要接取了任务就会存在任务数据，即使又取消接取，数据不会被移除
     /// </summary>
     [Serializable]
-    public class QuestData : IData<QuestData>
+    public class QuestData
     {
         // 任务唯一ID
         private int questId;
-        // 任务阶段
-        private EQuestPhase questPhase;
+        // 是否完成，当该任务的所有节点都完成时，为true，否则为false
+        private bool isComplete;
         // 所有当前任务所有节点的运行时数据，只要激活了节点，就会被添加到数据中
         private List<QuestNodeData> nodeDatas;
         // 是否正在追踪任务
@@ -23,20 +22,26 @@ namespace HotUpdate.Task.Quest
         // 或者支持多激活节点：List<string> activeNodeIds
         // ...
 
+        public QuestData(int questId, List<QuestNodeData> nodeDatas)
+        {
+            this.questId = questId;
+            this.nodeDatas = nodeDatas;
+        }
+        
         /// <summary>
         /// 任务唯一ID
         /// </summary>
         public int QuestId => questId;
 
         /// <summary>
-        /// 任务阶段
+        /// 是否完成，当该任务的所有节点都完成时，为true，否则为false
         /// </summary>
-        public EQuestPhase QuestPhase
+        public bool IsComplete
         {
-            get => questPhase;
+            get => isComplete;
             set
             {
-                questPhase = value;
+                isComplete = value;
                 OnDataChanged?.Invoke(this);
             }
         }
@@ -55,7 +60,7 @@ namespace HotUpdate.Task.Quest
         }
 
         /// <summary>
-        /// 若正在追踪任务，则为任务节点ID，否则忽略该属性
+        /// 若正在追踪任务，则为任务节点ID，否则为-1
         /// </summary>
         public int CurActiveNodeId
         {

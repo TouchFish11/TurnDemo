@@ -1,14 +1,14 @@
 using System;
 using Newtonsoft.Json;
 
-namespace HotUpdate.Task.Quest
+namespace HotUpdate.Config.Quest
 {
     /// <summary>
     /// 任务条件类
     /// </summary>
     [Serializable]
     [JsonObject(MemberSerialization.OptIn)]
-    public abstract class QuestCondition
+    public abstract class QuestCondition : IDisposable
     {
         [JsonProperty] private EQuestConditionType _questConditionType;
         
@@ -22,6 +22,14 @@ namespace HotUpdate.Task.Quest
         }
         
         // 清理事件
-        public virtual void OnEnd() { }                      
+        public virtual void OnEnd()
+        {
+            
+        }
+        
+        public void Dispose()
+        {
+            OnComplete = null;
+        }
     }
 }

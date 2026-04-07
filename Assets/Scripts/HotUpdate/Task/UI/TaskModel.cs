@@ -4,6 +4,7 @@ using Core.Service;
 using Core.UI.MVC;
 using HotUpdate.Common;
 using HotUpdate.Common.Item.UI;
+using HotUpdate.Config.Quest;
 
 namespace HotUpdate.Task.UI
 {
@@ -16,9 +17,11 @@ namespace HotUpdate.Task.UI
     {
         private readonly IPrefabLoader _prefabLoader = ServiceLocator.Get<IPrefabLoader>();
         // 任务类型与对应任务容器的映射字典，Key：任务类型ID  Value：该类型下的任务容器
-        private readonly Dictionary<int, TaskTypeContainer> taskTypeToContainerMap = new();
+        private readonly Dictionary<EQuestType, QuestTypeContainer> taskTypeToContainerMap = new();
         // 当前选中任务的奖励物品格子列表
         private readonly List<ItemGrid> rewardItems = new();
+        // 任务配置缓存
+        public QuestConfig QuestConfig { get; set; }
         
         /// <summary>
         /// 是否正在追踪（跟随）当前任务
@@ -29,13 +32,13 @@ namespace HotUpdate.Task.UI
         /// <summary>
         /// 当前选中的任务详情信息
         /// </summary>
-        public TaskInfo CurrentTaskInfo { get; set; }
+        public QuestConfig.QuestItem CurrentQuestItemInfo { get; set; }
 
         /// <summary>
         /// 获取所有任务类型容器的枚举集合
         /// </summary>
         /// <returns>所有任务类型容器的可枚举序列</returns>
-        public IEnumerable<TaskTypeContainer> GetContainers()
+        public IEnumerable<QuestTypeContainer> GetContainers()
         {
             foreach (var taskTypeContainer in taskTypeToContainerMap.Values)
             {
@@ -55,21 +58,21 @@ namespace HotUpdate.Task.UI
         /// <summary>
         /// 检查指定类型的任务容器是否存在
         /// </summary>
-        /// <param name="taskType">任务类型ID</param>
+        /// <param name="questType">任务类型ID</param>
         /// <returns>存在返回true，否则返回false</returns>
-        public bool ContainContainer(int taskType)
+        public bool ContainContainer(EQuestType questType)
         {
-            return taskTypeToContainerMap.ContainsKey(taskType);
+            return taskTypeToContainerMap.ContainsKey(questType);
         }
 
         /// <summary>
         /// 添加任务类型容器到映射字典
         /// </summary>
         /// <param name="taskType">任务类型ID</param>
-        /// <param name="taskTypeContainer">该类型对应的任务容器实例</param>
-        public void AddTaskTypeContainers(int taskType, TaskTypeContainer taskTypeContainer)
+        /// <param name="questTypeContainer">该类型对应的任务容器实例</param>
+        public void AddTaskTypeContainers(EQuestType taskType, QuestTypeContainer questTypeContainer)
         {
-            taskTypeToContainerMap.Add(taskType, taskTypeContainer);
+            taskTypeToContainerMap.Add(taskType, questTypeContainer);
         }
 
         /// <summary>
@@ -78,7 +81,7 @@ namespace HotUpdate.Task.UI
         /// <param name="taskType">任务类型ID</param>
         /// <returns>对应类型的ITaskTypeContainer实例</returns>
         /// <exception cref="KeyNotFoundException">当指定任务类型不存在时抛出</exception>
-        public TaskTypeContainer GetContainer(int taskType)
+        public QuestTypeContainer GetContainer(EQuestType taskType)
         {
             return taskTypeToContainerMap[taskType];
         }
@@ -88,7 +91,7 @@ namespace HotUpdate.Task.UI
         /// 用于默认选中首个任务分类的场景
         /// </summary>
         /// <returns>第一个ITaskTypeContainer实例，无容器时返回null</returns>
-        public TaskTypeContainer GetFirstContainer()
+        public QuestTypeContainer GetFirstContainer()
         {
             foreach (var container in taskTypeToContainerMap.Values)
             {

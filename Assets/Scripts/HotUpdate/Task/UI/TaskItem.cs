@@ -21,12 +21,12 @@ namespace HotUpdate.Task.UI
         /// <summary>
         /// 当前任务项对应的任务ID
         /// </summary>
-        public string TaskId { get; private set; }
+        public int TaskId { get; private set; }
         
         /// <summary>
         /// 选中任务时触发的事件（携带选中任务的ID）
         /// </summary>
-        public event Action<string> OnSelectedTask;
+        public event Action<int> OnSelectedTask;
 
         /// <summary>
         /// 初始化时执行（重写父类Awake）
@@ -45,16 +45,17 @@ namespace HotUpdate.Task.UI
         /// <summary>
         /// 任务项数据初始化
         /// </summary>
-        /// <param name="taskInfo">任务信息数据模型（包含任务ID、任务名称等）</param>
+        /// <param name="questId"></param>
+        /// <param name="questName"></param>
         /// <param name="group">Toggle分组（用于保证同组内仅能选中一个任务项）</param>
-        public void Init(TaskInfo taskInfo, ToggleGroup group)
+        public void Init(int questId, string questName, ToggleGroup group)
         {
             // 赋值当前任务项的唯一标识
-            TaskId = taskInfo.f_id;
+            TaskId = questId;
+            // 设置任务名称显示文本
+            txtTaskName.text = questName;
             // 为Toggle绑定分组，确保分组内互斥选择
             toggle.group = group;
-            // 设置任务名称显示文本
-            txtTaskName.text = taskInfo.f_taskName;
         }
 
         /// <summary>

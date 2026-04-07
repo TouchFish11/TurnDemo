@@ -1,14 +1,17 @@
+using System;
 using System.Threading.Tasks;
-using Core.Collection;
-using Core.Serialize.Binary;
+using Core.Loader.Text;
+using Core.Serialize.Json;
 using Core.Service;
 using Core.UI.MVC;
+using Core.Utility;
 using HotUpdate.Common;
 using HotUpdate.Common.Item;
+using HotUpdate.Config.Quest;
 using HotUpdate.Core.Task;
 using HotUpdate.Core.UI.MVC;
-using HotUpdate.Task.Core;
-using HotUpdate.Task.Data;
+using HotUpdate.Task.Quest;
+using TaskUtility = HotUpdate.Task.Core.TaskUtility;
 
 namespace HotUpdate.Task.UI
 {
@@ -21,9 +24,8 @@ namespace HotUpdate.Task.UI
     public class TaskController : UIController<TaskView, TaskModel>, ITaskController
     {
         // 任务数据集合，存储当前所有任务的状态数据
-        private ITaskDataCollection taskDataCollection;
-        private readonly ITaskManager _taskManager = ServiceLocator.Get<ITaskManager>();
-        private readonly IBinaryDataManager _binaryDataManager = ServiceLocator.Get<IBinaryDataManager>();
+        private IQuestCollection _questCollection;
+        private readonly IQuestManager _questManager = ServiceLocator.Get<IQuestManager>();
         
         protected override async Task OnShow()
         {
@@ -35,13 +37,13 @@ namespace HotUpdate.Task.UI
             if (hasTask)
             {
                 // 检查是否有正在追踪的任务
-                if (taskDataCollection.IsTracking(out var taskData))
+                if (_questCollection.TryGetTrackQuest(out var questData))
                 {
                     // 标记当前处于追踪任务状态
                     model.IsFollowingTask = true;
                     view.UpdateFollowTask(model.IsFollowingTask);
                     // 选中当前正在追踪的任务
-                    SelectTrackingTask(taskData.CurrentTaskId);
+                    SelectTrackingQuest(questData.QuestId);
                 }
                 else
                 {
@@ -61,12 +63,7 @@ namespace HotUpdate.Task.UI
             // 显示主界面
             return uiManager.SetViewActive(uiManager.GetController<IMainController>(), true);
         }
-
-        /// <summary>
-        /// 控制器初始化
-        /// 完成任务数据初始化、视图状态初始化等核心初始化逻辑
-        /// </summary>
-        /// <returns>异步任务</returns>
+        
         protected override Task OnInit()
         {
             return Task.CompletedTask;
@@ -76,7 +73,7 @@ namespace HotUpdate.Task.UI
         /// 选中追踪的任务
         /// </summary>
         /// <param name="id"></param>
-        private void SelectTrackingTask(string id)
+        private void SelectTrackingQuest(int id)
         {
             foreach (var taskTypeContainer in model.GetContainers())
             {
@@ -105,12 +102,12 @@ namespace HotUpdate.Task.UI
                     if (model.IsFollowingTask)
                     {
                         // 接受当前选中的任务，开始追踪
-                        _taskManager.AcceptTask(model.CurrentTaskInfo.f_id);
+                        _questManager.AcceptQuest(model.CurrentQuestItemInfo.id);
                     }
                     else
                     {
                         // 取消当前追踪的任务
-                        _taskManager.CancelTask();
+                        _questManager.CancelQuest();
                     }
                     break;
             }
@@ -126,47 +123,42 @@ namespace HotUpdate.Task.UI
             // 临时设置任务分组允许取消选中，避免初始化过程中Toggle无法响应事件
             view.TaskItemGroup.allowSwitchOff = true;
             // 获取全局任务数据集合实例
-            taskDataCollection = TaskUtility.GetTaskDataCollection();
-            if (taskDataCollection == null)
-            {
-                return;
-            }
+            _questCollection = TaskUtility.GetTaskDataCollection();
+            if (_questCollection == null)
+                throw new NullReferenceException($"{nameof(_questCollection)} is null");
             
-            // 从二进制数据管理器加载任务配置表（Excel配置），获取任务ID到任务信息的映射表
-            var idToInfoMap = _binaryDataManager.GetConfig<TaskInfoContainer>(EConfigLoadType.Excel).dataDic;
-
-            // 遍历所有任务配置信息
-            foreach (var taskInfo in idToInfoMap.Values)
+            // AB包加载资源
+            var textAsset = await ServiceLocator.Get<ITextLoader>().LoadAssetAsync(AbKeyCollection.Gameconfig, ResKeyCollection.QuestConfig);
+            // 解析Json
+            model.QuestConfig = ServiceLocator.Get<IJsonManager>().FromJson<QuestConfig>(textAsset.text);
+            // 加载本地任务数据
+            var questCollection = await ServiceLocator.Get<IJsonManager>().FromJsonAsync<QuestCollection>(PathUtility.GetUserDataLocalSavePath(FileUtility.LocalTaskDataFileName));
+            // 初始化任务管理器
+            ServiceLocator.Get<IQuestManager>().InitQuests(model.QuestConfig, questCollection);
+            
+            foreach (var quest in ServiceLocator.Get<IQuestManager>().GetQuests())
             {
-                // 检查任务数据集合中是否包含当前任务ID（判断是否是已解锁/可显示的任务）
-                if (((Collection<string, TaskData>)taskDataCollection).ContainsKey(taskInfo.f_id))
-                {
-                    // 如果任务已完成，则跳过不显示
-                    if (taskDataCollection.IsFinished(taskInfo.f_id))
-                    {
-                        continue;
-                    }
-                }
-
                 // 初始化并显示任务列表UI
-                TaskTypeContainer taskTypeContainer;
-                // 检查模型中是否已存在当前任务类型的容器
-                if (!model.ContainContainer(taskInfo.f_taskType))
+                QuestTypeContainer questTypeContainer;
+                // 检查数据缓存中是否已存在当前任务类型的容器
+                if (!model.ContainContainer(quest.QuestItem.questType))
                 {
                     // 不存在则创建新的任务类型容器
-                    taskTypeContainer = await CreateTaskTypeContainer(taskInfo);
+                    questTypeContainer = await CreateQuestTypeContainer(quest.QuestItem.questType);
                 }
                 else
                 {
                     // 存在则直接获取已有容器
-                    taskTypeContainer = model.GetContainer(taskInfo.f_taskType);
+                    questTypeContainer = model.GetContainer(quest.QuestItem.questType);
                 }
-
+                
                 // 检查当前任务类型容器中是否已包含该任务项
-                if (!taskTypeContainer.ContainTask(taskInfo.f_id))
+                if (!questTypeContainer.ContainTask(quest.QuestItem.id))
                 {
+                    QuestData questData = null;
+                    if (questCollection.TryGetValue(quest.QuestItem.id, out var data)) questData = data;
                     // 不存在则创建新的任务项并添加到容器中
-                    await CreateTaskItem(taskInfo, taskTypeContainer);
+                    await CreateTaskItem(quest.QuestItem, questData, questTypeContainer);
                 }
             }
         }
@@ -174,33 +166,51 @@ namespace HotUpdate.Task.UI
         /// <summary>
         /// 创建任务类型容器（用于分类展示不同类型的任务）
         /// </summary>
-        /// <param name="taskInfo">任务信息，用于获取任务类型</param>
+        /// <param name="questType">任务信息，用于获取任务类型</param>
         /// <returns>创建好的任务类型容器接口实例</returns>
-        private async Task<TaskTypeContainer> CreateTaskTypeContainer(TaskInfo taskInfo)
+        private async Task<QuestTypeContainer> CreateQuestTypeContainer(EQuestType questType)
         {
             // 从资源包中异步加载任务类型容器预制体并创建实例
-            var taskTypeContainerWrapper = await prefabLoader.GetObjectAsync<TaskTypeContainer>(AbKeyCollection.Ui, ResKeyCollection.TaskTypeContainer, view.TaskContent);
+            var taskTypeContainerWrapper = await prefabLoader.GetObjectAsync<QuestTypeContainer>(AbKeyCollection.Ui, ResKeyCollection.QuestTypeContainer, view.TaskContent);
             // 初始化任务类型容器（设置对应的任务类型）
-            taskTypeContainerWrapper.Init(taskInfo.f_taskType);
+            taskTypeContainerWrapper.Init(questType);
             // 将创建的容器添加到模型中管理
-            model.AddTaskTypeContainers(taskInfo.f_taskType, taskTypeContainerWrapper);
+            model.AddTaskTypeContainers(questType, taskTypeContainerWrapper);
             return taskTypeContainerWrapper;
         }
 
         /// <summary>
         /// 创建任务项UI实例
         /// </summary>
-        /// <param name="taskInfo">任务信息（配置数据）</param>
+        /// <param name="questItem">任务信息（配置数据）</param>
+        /// <param name="questData"></param>
         /// <param name="container">该任务项所属的任务类型容器</param>
         /// <returns>异步任务</returns>
-        private async Task CreateTaskItem(TaskInfo taskInfo, TaskTypeContainer container)
+        private async Task CreateTaskItem(QuestConfig.QuestItem questItem, QuestData questData, QuestTypeContainer container)
         {
             // 从资源包中异步加载任务项预制体，并挂载到对应任务类型容器的Transform下
-            var taskItem = await prefabLoader.GetObjectAsync<TaskItem>(AbKeyCollection.Ui, ResKeyCollection.TaskItem, container.transform);
+            var taskItem = await prefabLoader.GetObjectAsync<TaskItem>(AbKeyCollection.Ui, ResKeyCollection.QuestItem, container.transform);
             // 注册任务项选中事件，选中时更新任务详情展示
             taskItem.OnSelectedTask += UpdateTaskDetail;
             // 初始化任务项UI（传入任务信息和任务分组组件）
-            taskItem.Init(taskInfo, view.TaskItemGroup);
+            var questNodeName = string.Empty;
+            // 用户没有该任务数据，显示该任务的第一个节点名称
+            if (questData == null)
+            {
+                questNodeName = questItem.nodeConfigs[0].name;
+            }
+            else
+            {
+                // 显示第一个找到的进行中或未接取的任务节点显示，跳过已完成节点的显示，因为任务是线性的，所以可以这样处理
+                foreach (var questNodeData in questData.GetNodeDatas())
+                {
+                    if (questNodeData.Phase == EQuestPhase.Complete) continue;
+                    questNodeName = questItem.nodeConfigs.Find(config => config.nodeId == questNodeData.NodeId).name;
+                    break;
+                }
+            }
+            
+            taskItem.Init(questItem.id, questNodeName, view.TaskItemGroup);
             // 将任务项添加到所属的任务类型容器中管理
             container.AddItem(taskItem);
         }
@@ -210,37 +220,40 @@ namespace HotUpdate.Task.UI
         /// 当任务项被选中时，触发该方法更新详情面板的任务信息
         /// </summary>
         /// <param name="id">选中的任务ID</param>
-        private void UpdateTaskDetail(string id)
+        private async void UpdateTaskDetail(int id)
         {
-            // 从配置中获取任务基础信息
-            var selectTaskInfo = _binaryDataManager.GetConfig<TaskInfoContainer>(EConfigLoadType.Excel).dataDic[id];
+            // 从配置中获取任务配置信息
+            var selectConfig = model.QuestConfig.questItems.Find(item => item.id == id);
             // 相等不用处理
-            if (model.CurrentTaskInfo != null && selectTaskInfo == model.CurrentTaskInfo)
-            {
-                return;
-            }
+            if (model.CurrentQuestItemInfo != null && selectConfig == model.CurrentQuestItemInfo) return;
 
             // 更新当前任务信息为选中的任务信息
-            model.CurrentTaskInfo = selectTaskInfo;
+            model.CurrentQuestItemInfo = selectConfig;
             model.ClearItemGrid();
+            
+            var questCollection = await ServiceLocator.Get<IJsonManager>().FromJsonAsync<QuestCollection>(PathUtility.GetUserDataLocalSavePath(FileUtility.LocalTaskDataFileName));
+            var questData = questCollection[id];
 
+            QuestNodeConfig nodeConfig = null;
+            foreach (var questNodeData in questData.GetNodeDatas())
+            {
+                if(questNodeData.Phase == EQuestPhase.Complete) continue;
+                nodeConfig = selectConfig.nodeConfigs.Find(nodeConfig => nodeConfig.nodeId == questNodeData.NodeId);
+                break;
+            }
+            
+            if(nodeConfig == null)
+                throw new NullReferenceException($"{nameof(nodeConfig)} is null");
+            
             // 解析奖励ID数组，获取物品格子
-            ItemUtility.GetItemGrid(selectTaskInfo.f_taskRewrardIds, view.RewardBox, grid => model.AddItemGrid(grid));
+            ItemUtility.GetItemGrid(nodeConfig.rewardItemIds, view.RewardBox, grid => model.AddItemGrid(grid));
             
             // 同步任务追踪状态：从任务数据集合中获取当前任务的追踪标记
-            if (((Collection<string, TaskData>)taskDataCollection).TryGetValue(id, out var taskData))
-            {
-                model.IsFollowingTask = taskData.isTracking;
-            }
-            else
-            {
-                model.IsFollowingTask = false;
-            }
-            
+            model.IsFollowingTask = questCollection.TryGetValue(id, out var data) && data.IsTracking;
             // 更新按钮显示
             view.UpdateFollowTask(model.IsFollowingTask);
             // 更新文本显示
-            view.UpdateTaskDetail(selectTaskInfo);
+            view.UpdateTaskDetail(nodeConfig);
         }
     }
 }

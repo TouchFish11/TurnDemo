@@ -1,5 +1,7 @@
 using Core.UI;
 using Core.UI.MVC;
+using HotUpdate.Config.Quest;
+using HotUpdate.Task.Quest;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -81,18 +83,18 @@ namespace HotUpdate.Task.UI
         /// </summary>
         public RectTransform RewardBox => rewardBox;
         #endregion
-
+        
         #region 公共方法
 
         /// <summary>
         /// 更新任务详情面板显示
         /// </summary>
-        /// <param name="taskInfo">当前选中的任务信息数据</param>
-        public void UpdateTaskDetail(TaskInfo taskInfo)
+        /// <param name="questNodeConfig">当前选中的任务信息数据</param>
+        public void UpdateTaskDetail(QuestNodeConfig questNodeConfig)
         {
             // 更新任务名称和描述
-            txtTaskName.text = taskInfo.f_taskName;
-            txtTaskDescription.text = taskInfo.f_taskDescription;
+            txtTaskName.text = questNodeConfig.name;
+            txtTaskDescription.text = questNodeConfig.description;
         }
 
         /// <summary>

@@ -8,5 +8,7 @@ namespace HotUpdate.Core.Task
         /// 任务数据集合
         /// </summary>
         ITaskDataCollection TaskDataCollection { get; }
+        
+        IQuestCollection QuestCollection { get; }
     }
 }

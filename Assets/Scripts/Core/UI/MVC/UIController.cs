@@ -94,7 +94,7 @@ namespace Core.UI.MVC
         protected abstract Task OnHide();
         
         /// <summary>
-        /// 初始化逻辑，在控制器首次被创建时执行
+        /// 初始化逻辑，在控制器首次被创建时执行，在OnShow之前调用
         /// </summary>
         protected abstract Task OnInit();
 

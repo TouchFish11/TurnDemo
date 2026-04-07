@@ -86,12 +86,10 @@ namespace HotUpdate.Main.Data
             GameSettings = await _jsonManager.FromJsonAsync<GameSettings>($"{PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingFileName)}", settings:NewtonsoftJsonUtility.SerializerSettings);
             
             // 读取游戏设置数据配置
-
             var ab = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(AbKeyCollection.Gameconfig);
             var textAsset = ab.LoadAsset<TextAsset>(ResKeyCollection.GameSettingsConfig);
             ServiceLocator.Get<IAssetBundleManager>().UnloadBundle(AbKeyCollection.Gameconfig);
             GameSettingsConfig = _jsonManager.FromJson<GameSettingsConfig>(textAsset.text);
-            //GameSettingsConfig = await _jsonManager.FromJsonAsync<GameSettingsConfig>($"{PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingConfigFileName)}");
         }
 
         public async Task SaveDataAsync()

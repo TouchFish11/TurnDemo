@@ -1,6 +1,6 @@
 using System;
 
-namespace HotUpdate.Task.Quest
+namespace HotUpdate.Config.Quest
 {
     /// <summary>
     /// 任务节点数据，表示单一任务中的单一节点
@@ -16,6 +16,8 @@ namespace HotUpdate.Task.Quest
         private int progress;                
         // 下一节点ID，若为-1则表示节点所处的任务完成
         private int nextNodeId;
+        
+        public event Action<QuestNodeData> OnDataChanged;
 
         public QuestNodeData(int nodeId, EQuestPhase phase, int progress, int nextNodeId)
         {
@@ -26,8 +28,27 @@ namespace HotUpdate.Task.Quest
         }
         
         public int NodeId => nodeId;
-        public EQuestPhase Phase {get => phase; set => phase = value; }
-        public int Progress {get => progress; set => progress = value; }
+
+        public EQuestPhase Phase
+        {
+            get => phase;
+            set
+            {
+                phase = value;
+                OnDataChanged?.Invoke(this);
+            }
+        }
+
+        public int Progress
+        {
+            get => progress;
+            set
+            {
+                progress = value;
+                OnDataChanged?.Invoke(this);
+            }
+        }
+        
         public int NextNodeId => nextNodeId;
     }
 }

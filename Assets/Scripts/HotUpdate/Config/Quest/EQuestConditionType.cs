@@ -1,4 +1,4 @@
-namespace HotUpdate.Task.Quest
+namespace HotUpdate.Config.Quest
 {
     /// <summary>
     /// 任务条件类型
@@ -7,6 +7,6 @@ namespace HotUpdate.Task.Quest
     {
         Talk,
         Kill,
-        GiveReward
+        Collect,
     }
 }

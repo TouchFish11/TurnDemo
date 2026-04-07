@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using Core.Pool;
+using HotUpdate.Config.Quest;
+using HotUpdate.Core.Task;
 using HotUpdate.Task.Quest.Condition;
 
 namespace HotUpdate.Task.Quest
@@ -7,35 +9,53 @@ namespace HotUpdate.Task.Quest
     /// <summary>
     /// 任务对象，由任务节点构成任务逻辑。可被复用
     /// </summary>
-    public class Quest : IPoolData
+    public class Quest : IQuest, IPoolData
     {
-        private QuestConfig _questConfig;
+        private QuestConfig.QuestItem _questItem;
         private QuestData _questData;
         private readonly Dictionary<int, QuestNode> _questNodes = new();
         private QuestNode _currentNode;
+
+        public QuestConfig.QuestItem QuestItem => _questItem;
+        public QuestData QuestData => _questData;
         
-        public Quest(QuestConfig questConfig, QuestData questData)
+        public Quest(QuestConfig.QuestItem questItem, QuestData questData)
         {
-            _questConfig = questConfig;
+            _questItem = questItem;
             _questData = questData;
             foreach (var questDataNodeData in questData.GetNodeDatas())
             {
-                var condition = new TalkCondition();   // TODO:通过工厂获取
-                var questNode = new QuestNode(questDataNodeData, condition);
+                var nodeConfig = _questItem.nodeConfigs.Find(config => config.nodeId == questDataNodeData.NodeId);
+                var condition = QuestConditionFactory.CreateCondition(nodeConfig.conditionType);
+                var questNode = new QuestNode(nodeConfig, questDataNodeData, condition);
                 _questNodes.Add(questDataNodeData.NodeId, questNode);
             }
 
             CheckTrack();
         }
 
-        public void Active(int nodeId)
+        /// <summary>
+        /// 接取该任务
+        /// </summary>
+        /// <exception cref="KeyNotFoundException"></exception>
+        public void Accept()
         {
-            if(!_questNodes.TryGetValue(nodeId, out var node)) 
-                throw new KeyNotFoundException($"{nameof(Quest)}.{nameof(Active)}: {nodeId} is not found.");
-            
-            node.OnComplete += SwitchNext;
-            node.Active();
-            _currentNode = node;
+            foreach (var questNode in _questNodes.Values)
+            {
+                if(questNode.QuestNodeData.Phase == EQuestPhase.Complete) continue;
+                questNode.OnComplete += SwitchNext;
+                questNode.Active();
+                _currentNode = questNode;
+                break;
+            }
+        }
+
+        public void CancelAccept()
+        {
+            if (_currentNode == null) return;
+            _currentNode.Inactive();
+            _questData.IsTracking = false;
+            _currentNode = null;
         }
 
         /// <summary>
@@ -49,23 +69,23 @@ namespace HotUpdate.Task.Quest
             if (_questNodes.TryGetValue(_questData.CurActiveNodeId, out var questNode))
             {
                 questNode.OnComplete += SwitchNext;
+                questNode.Active();
                 _currentNode = questNode;
             }
         }
 
         /// <summary>
-        /// 切换到下一个任务
+        /// 切换到下一个节点任务
         /// </summary>
         /// <param name="nextNodeId"></param>
         private void SwitchNext(int nextNodeId)
         {
-            _currentNode.Inactive();
             // 任务完成
             if (nextNodeId == QuestUtil.QUEST_NODE_END_ID)
             {
                 _questData.IsTracking = false;
                 _questData.CurActiveNodeId = QuestUtil.QUEST_NODE_END_ID;
-                _questData.QuestPhase = EQuestPhase.Complete;
+                _questData.IsComplete = true;
                 return;
             }
 
@@ -79,7 +99,7 @@ namespace HotUpdate.Task.Quest
 
         public void ResetData()
         {
-            _questConfig = null;
+            _questItem = null;
             _questData = null;
             _currentNode = null;
             _questNodes.Clear();

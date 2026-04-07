@@ -50,6 +50,7 @@ namespace HotUpdate.Common
 		public static string BattleActivityConfig => "BattleActivityConfig";
 		public static string GameSettingsConfig => "GameSettingsConfig";
 		public static string HelmetConfig => "HelmetConfig";
+		public static string QuestConfig => "QuestConfig";
 		public static string SwordConfig => "SwordConfig";
 		public static string HotUpdateAssemblySettings => "HotUpdateAssemblySettings";
 		public static string Ground => "Ground";
@@ -183,9 +184,9 @@ namespace HotUpdate.Common
 		public static string SettingOpt => "SettingOpt";
 		public static string SettingSliderEntry => "SettingSliderEntry";
 		public static string SettingsView => "SettingsView";
-		public static string TaskItem => "TaskItem";
-		public static string TaskTypeContainer => "TaskTypeContainer";
-		public static string TaskView => "TaskView";
+		public static string QuestItem => "QuestItem";
+		public static string QuestTypeContainer => "QuestTypeContainer";
+		public static string QuestView => "QuestView";
 		public static string BaseTipView => "BaseTipView";
 		public static string VFX_Environment_Rain => "VFX_Environment_Rain";
 		public static string VFX_SupportSkill_01 => "VFX_SupportSkill_01";

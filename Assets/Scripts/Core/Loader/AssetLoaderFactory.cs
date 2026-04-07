@@ -2,6 +2,7 @@ using Core.HotUpdate;
 using Core.Loader.Audio;
 using Core.Loader.Object;
 using Core.Loader.Sprite;
+using Core.Loader.Text;
 using Core.Reflection;
 using Core.Service;
 
@@ -30,6 +31,9 @@ namespace Core.Loader
                         break;
                     case IPrefabLoader prefabLoader:
                         ServiceLocator.Register(prefabLoader);
+                        break;
+                    case ITextLoader textLoader:
+                        ServiceLocator.Register(textLoader);
                         break;
                 }
             }
