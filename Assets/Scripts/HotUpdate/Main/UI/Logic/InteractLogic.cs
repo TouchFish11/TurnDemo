@@ -23,7 +23,7 @@ namespace HotUpdate.Main.UI.Logic
         protected override void OnInit()
         {
             // 订阅交互事件（当触发InteractEvent时，执行OnInteractEvent回调）
-            _eventCenter.SubscribeEvent<InteractEvent>(OnInteractEvent);
+            _eventCenter.Subscribe<InteractEvent>(OnInteractEvent);
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace HotUpdate.Main.UI.Logic
         public override void ResetData()
         {
             // 取消交互事件的订阅
-            _eventCenter.UnsubscribeEvent<InteractEvent>(OnInteractEvent);
+            _eventCenter.Unsubscribe<InteractEvent>(OnInteractEvent);
             base.ResetData();
         }
     }

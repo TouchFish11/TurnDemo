@@ -16,7 +16,7 @@ namespace HotUpdate.Main.Global.UI
         protected override Task OnShow()
         {
             // 注册全局消息事件
-            eventCenter.SubscribeEvent<GlobalMessageEvent>(OnGlobalMessageEvent);
+            eventCenter.Subscribe<GlobalMessageEvent>(OnGlobalMessageEvent);
             return Task.CompletedTask;
         }
 
@@ -53,7 +53,7 @@ namespace HotUpdate.Main.Global.UI
         
         protected override Task OnHide()
         {
-            eventCenter.UnsubscribeEvent<GlobalMessageEvent>(OnGlobalMessageEvent);
+            eventCenter.Unsubscribe<GlobalMessageEvent>(OnGlobalMessageEvent);
             return Task.CompletedTask;
         }
     }

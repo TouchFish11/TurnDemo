@@ -8,10 +8,10 @@ using Core.Utility;
 using HotUpdate.Common;
 using HotUpdate.Common.Item;
 using HotUpdate.Config.Quest;
+using HotUpdate.Config.Quest.Config;
+using HotUpdate.Core.Manager;
 using HotUpdate.Core.Task;
 using HotUpdate.Core.UI.MVC;
-using HotUpdate.Task.Quest;
-using TaskUtility = HotUpdate.Task.Core.TaskUtility;
 
 namespace HotUpdate.Task.UI
 {
@@ -122,19 +122,15 @@ namespace HotUpdate.Task.UI
         {
             // 临时设置任务分组允许取消选中，避免初始化过程中Toggle无法响应事件
             view.TaskItemGroup.allowSwitchOff = true;
-            // 获取全局任务数据集合实例
-            _questCollection = TaskUtility.GetTaskDataCollection();
+            // 获取任务数据集合
+            _questCollection = ServiceLocator.Get<IGameManager>().GameDataManager.GetProvider<ITaskDataProvider>().QuestCollection;
             if (_questCollection == null)
                 throw new NullReferenceException($"{nameof(_questCollection)} is null");
             
             // AB包加载资源
             var textAsset = await ServiceLocator.Get<ITextLoader>().LoadAssetAsync(AbKeyCollection.Gameconfig, ResKeyCollection.QuestConfig);
             // 解析Json
-            model.QuestConfig = ServiceLocator.Get<IJsonManager>().FromJson<QuestConfig>(textAsset.text);
-            // 加载本地任务数据
-            var questCollection = await ServiceLocator.Get<IJsonManager>().FromJsonAsync<QuestCollection>(PathUtility.GetUserDataLocalSavePath(FileUtility.LocalTaskDataFileName));
-            // 初始化任务管理器
-            ServiceLocator.Get<IQuestManager>().InitQuests(model.QuestConfig, questCollection);
+            model.QuestConfig = ServiceLocator.Get<IJsonManager>().FromJson<QuestConfig>(textAsset.text, settings:NewtonsoftJsonUtility.SerializerSettings);
             
             foreach (var quest in ServiceLocator.Get<IQuestManager>().GetQuests())
             {
@@ -156,7 +152,7 @@ namespace HotUpdate.Task.UI
                 if (!questTypeContainer.ContainTask(quest.QuestItem.id))
                 {
                     QuestData questData = null;
-                    if (questCollection.TryGetValue(quest.QuestItem.id, out var data)) questData = data;
+                    if (_questCollection.TryGetValue(quest.QuestItem.id, out var data)) questData = data;
                     // 不存在则创建新的任务项并添加到容器中
                     await CreateTaskItem(quest.QuestItem, questData, questTypeContainer);
                 }
@@ -191,7 +187,7 @@ namespace HotUpdate.Task.UI
             // 从资源包中异步加载任务项预制体，并挂载到对应任务类型容器的Transform下
             var taskItem = await prefabLoader.GetObjectAsync<TaskItem>(AbKeyCollection.Ui, ResKeyCollection.QuestItem, container.transform);
             // 注册任务项选中事件，选中时更新任务详情展示
-            taskItem.OnSelectedTask += UpdateTaskDetail;
+            taskItem.OnSelectedTask += UpdateQuestDetail;
             // 初始化任务项UI（传入任务信息和任务分组组件）
             var questNodeName = string.Empty;
             // 用户没有该任务数据，显示该任务的第一个节点名称
@@ -220,7 +216,7 @@ namespace HotUpdate.Task.UI
         /// 当任务项被选中时，触发该方法更新详情面板的任务信息
         /// </summary>
         /// <param name="id">选中的任务ID</param>
-        private async void UpdateTaskDetail(int id)
+        private void UpdateQuestDetail(int id)
         {
             // 从配置中获取任务配置信息
             var selectConfig = model.QuestConfig.questItems.Find(item => item.id == id);
@@ -230,15 +226,16 @@ namespace HotUpdate.Task.UI
             // 更新当前任务信息为选中的任务信息
             model.CurrentQuestItemInfo = selectConfig;
             model.ClearItemGrid();
-            
-            var questCollection = await ServiceLocator.Get<IJsonManager>().FromJsonAsync<QuestCollection>(PathUtility.GetUserDataLocalSavePath(FileUtility.LocalTaskDataFileName));
-            var questData = questCollection[id];
+
+            var questCollection = ServiceLocator.Get<IGameManager>().GameDataManager.GetProvider<ITaskDataProvider>().QuestCollection;
+            if (!questCollection.TryGetValue(id, out var questData))
+                throw new NullReferenceException($"{nameof(questData)} is null");
 
             QuestNodeConfig nodeConfig = null;
             foreach (var questNodeData in questData.GetNodeDatas())
             {
                 if(questNodeData.Phase == EQuestPhase.Complete) continue;
-                nodeConfig = selectConfig.nodeConfigs.Find(nodeConfig => nodeConfig.nodeId == questNodeData.NodeId);
+                nodeConfig = selectConfig.nodeConfigs.Find(config => config.nodeId == questNodeData.NodeId);
                 break;
             }
             

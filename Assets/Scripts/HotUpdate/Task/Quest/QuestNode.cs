@@ -1,11 +1,13 @@
 using System;
+using HotUpdate.Config.Quest;
+using HotUpdate.Config.Quest.Config;
+using HotUpdate.Core.Task;
 
-namespace HotUpdate.Config.Quest
+namespace HotUpdate.Task.Quest
 {
     /// <summary>
     /// 任务节点对象
     /// </summary>
-    [Serializable]
     public class QuestNode : IDisposable
     {
         // 任务节点配置
@@ -13,13 +15,16 @@ namespace HotUpdate.Config.Quest
         // 任务节点数据
         private QuestNodeData _questNodeData;
         // 任务条件
-        private  QuestCondition _questCondition;
+        private IQuestCondition _questCondition;
         
         public QuestNodeData QuestNodeData => _questNodeData;
-        // 任务节点完成事件
+        
+        /// <summary>
+        /// 任务节点完成事件，触发后自动置空
+        /// </summary>
         public event Action<int> OnComplete;
         
-        public QuestNode(QuestNodeConfig nodeConfig, QuestNodeData questNodeData, QuestCondition questCondition)
+        public QuestNode(QuestNodeConfig nodeConfig, QuestNodeData questNodeData, IQuestCondition questCondition)
         {
             _questNodeConfig = nodeConfig;
             _questNodeData = questNodeData;
@@ -31,7 +36,7 @@ namespace HotUpdate.Config.Quest
         public void Active()
         {
             // 监听任务关心的事件
-            _questCondition.OnStart(this);
+            _questCondition.Enable(_questNodeData);
             _questNodeData.Phase = EQuestPhase.Processing;
         }
 
@@ -39,7 +44,7 @@ namespace HotUpdate.Config.Quest
         public void Inactive()
         {
             // 取消监听任务关心的事件
-            _questCondition.OnEnd();
+            _questCondition.Disable();
             if (_questNodeData.Phase == EQuestPhase.Processing)
             {
                 _questNodeData.Phase = EQuestPhase.NoReceive;
@@ -61,7 +66,7 @@ namespace HotUpdate.Config.Quest
         {
             _questNodeConfig = null;
             _questNodeData = null;
-            _questCondition.Dispose();
+            (_questCondition as IDisposable)?.Dispose();
             _questCondition = null;
             OnComplete = null;
         }

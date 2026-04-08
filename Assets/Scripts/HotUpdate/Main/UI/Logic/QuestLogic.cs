@@ -5,7 +5,7 @@ using Core.Serialize.Json;
 using Core.Service;
 using Core.Utility;
 using HotUpdate.Common;
-using HotUpdate.Config.Quest;
+using HotUpdate.Config.Quest.Config;
 using HotUpdate.Core.Manager;
 using HotUpdate.Core.Task;
 
@@ -22,7 +22,6 @@ namespace HotUpdate.Main.UI.Logic
         {
             try
             {
-                mainView.SetTaskbarActive(false);
                 var textAsset = await ServiceLocator.Get<ITextLoader>().LoadAssetAsync(AbKeyCollection.Gameconfig, ResKeyCollection.QuestConfig);
                 var questConfig = ServiceLocator.Get<IJsonManager>().FromJson<QuestConfig>(textAsset.text, settings: NewtonsoftJsonUtility.SerializerSettings);
                 var provider = ServiceLocator.Get<IGameManager>().GameDataManager.GetProvider<ITaskDataProvider>();
@@ -32,11 +31,14 @@ namespace HotUpdate.Main.UI.Logic
             
                 _questViewModel.IsActiveQuestbar.Subscribe(isActive => mainView.SetTaskbarActive(isActive));
                 _questViewModel.QuestTitleName.Subscribe(titleName => mainView.SetQuestbarTitle(titleName));
-                _questViewModel.QuestDescription.Subscribe(description => mainView.SetQuestbarDescription(description));
-                _questViewModel.QuestDescription.Subscribe(progress => mainView.SetQuestbarProgress(progress));
+                _questViewModel.QuestTip.Subscribe(tip => mainView.SetQuestbarTip(tip));
+                _questViewModel.QuestProgress.Subscribe(progress => mainView.SetQuestbarProgress(progress));
                 
                 // 初始化任务管理器
                 ServiceLocator.Get<IQuestManager>().InitQuests(questConfig, provider.QuestCollection);
+                var nodeData = provider.QuestCollection.TryGetTrackQuest(out var questData) ? questData.GetNodeData(questData.CurActiveNodeId) : null;
+                // 主动拉取UI更新
+                _questViewModel.RefleshUI(questConfig, nodeData);
             }
             catch (Exception e)
             {

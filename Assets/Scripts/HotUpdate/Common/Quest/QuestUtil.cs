@@ -1,7 +1,7 @@
 using System;
 using HotUpdate.Config.Quest;
 
-namespace HotUpdate.Task.Quest
+namespace HotUpdate.Common.Quest
 {
     /// <summary>
     /// 任务工具类
@@ -12,6 +12,11 @@ namespace HotUpdate.Task.Quest
         /// 任务节点结束ID
         /// </summary>
         public const int QUEST_NODE_END_ID = -1;
+        
+        /// <summary>
+        /// 任务节点未接取默认ID
+        /// </summary>
+        public const int QUEST_INACTIVE_NODE_ID = -1;
 
         public static string ConvetTo(EQuestType questType)
         {

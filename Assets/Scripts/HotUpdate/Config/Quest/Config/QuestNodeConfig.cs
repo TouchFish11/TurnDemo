@@ -1,18 +1,23 @@
 using System;
+using Newtonsoft.Json;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-namespace HotUpdate.Config.Quest
+namespace HotUpdate.Config.Quest.Config
 {
     /// <summary>
     /// 任务节点配置
     /// </summary>
     [Serializable]
+    [JsonObject(MemberSerialization.Fields)]
     public class QuestNodeConfig
     {
         // 任务节点唯一ID，当前任务内的唯一ID，和其它任务的任务节点ID不冲突
         public int nodeId;
         // 任务节点名称
         public string name;
+        // 任务栏提示文本
+        public string questTip;
         // 任务节点描述
         public string description;
         // 当前节点的最大进度，达到最大进度则视为完成
@@ -23,7 +28,7 @@ namespace HotUpdate.Config.Quest
         public string rewardItemIds;
         // 下一个任务节点ID，若没有则为-1
         public int nextNodeId;
-        // 任务条件
-        [SerializeReference] public QuestCondition condition;
+        // 任务条件配置
+        [FormerlySerializedAs("condition")] [SerializeReference] public QuestConditionConfig conditionConfig;
     }
 }

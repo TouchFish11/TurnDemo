@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using HotUpdate.Config.Quest;
+using HotUpdate.Config.Quest.Config;
 
 namespace HotUpdate.Core.Task
 {

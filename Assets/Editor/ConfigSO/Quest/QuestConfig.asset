@@ -18,59 +18,61 @@ MonoBehaviour:
       questType: 0
       nodeConfigs:
       - nodeId: 1
-        name: "\u6D4B\u8BD5\u4E3B\u7EBF1"
-        description: "\u8FD9\u662F\u7B2C\u4E00\u4E2A\u4EFB\u52A1\u6D41\u7A0B"
+        name: "\u5F53\u6DF1\u6E0A\u7B2C\u4E00\u6B21\u5F00\u53E3"
+        questTip: "\u548C\u53F2\u8482\u592B\u4E86\u89E3\u8BE6\u60C5"
+        description: "\u4F60\u7AD9\u5728\u88C2\u9699\u8FB9\u7F18\uFF0C\u542C\u89C1\u9ED1\u6697\u4E2D\u4F20\u6765\u7B2C\u4E00\u58F0\u95EE\u5019\u2014\u2014\u90A3\u4E0D\u662F\u8BED\u8A00\uFF0C\u5374\u8BA9\u4F60\u60F3\u8D77\u4E86\u9057\u5FD8\u5DF2\u4E45\u7684\u540D\u5B57\u3002"
         maxProgress: 1
         conditionType: 0
         rewardItemIds: 10001,100
         nextNodeId: 2
-        condition:
-          rid: 798032297148547106
+        conditionConfig:
+          rid: 798032324312694794
       - nodeId: 2
-        name: "\u6D4B\u8BD5\u4E3B\u7EBF2"
-        description: "\u8FD9\u662F\u7B2C\u4E8C\u4E2A\u4EFB\u52A1\u6D41\u7A0B"
-        maxProgress: 1
-        conditionType: 1
-        rewardItemIds: 10001,100
-        nextNodeId: 3
-        condition:
-          rid: 798032297148547107
-      - nodeId: 3
-        name: "\u6D4B\u8BD5\u4E3B\u7EBF3"
-        description: "\u8FD9\u662F\u7B2C\u4E09\u4E2A\u4EFB\u52A1\u6D41\u7A0B"
-        maxProgress: 1
-        conditionType: 2
-        rewardItemIds: 10001,100
-        nextNodeId: 4
-        condition:
-          rid: 798032297148547108
-      - nodeId: 4
-        name: "\u6D4B\u8BD5\u4E3B\u7EBF4"
-        description: "\u8FD9\u662F\u7B2C\u56DB\u4E2A\u4EFB\u52A1\u6D41\u7A0B"
+        name: "\u6F6E\u6C50\u4E0E\u6697\u5F71\u7684\u5BF9\u8C08"
+        questTip: "\u548C\u6D41\u6D6A\u8005\u8BE6\u8C08"
+        description: "\u6F6E\u58F0\u9000\u53BB\u540E\uFF0C\u6697\u5F71\u5728\u7901\u77F3\u4E0A\u5750\u4E86\u4E0B\u6765\uFF0C\u5B83\u8BF4\u5B83\u8BB0\u5F97\u4F60\uFF0C\u5728\u4F60\u8FD8\u662F\u4E00\u7C92\u6C99\u7684\u65F6\u5019\u3002"
         maxProgress: 1
         conditionType: 0
-        rewardItemIds: 10001,100
+        rewardItemIds: 10002,110
+        nextNodeId: 3
+        conditionConfig:
+          rid: 798032324312694795
+      - nodeId: 3
+        name: "\u5728\u5BC2\u9759\u4E2D\u8046\u542C\u56DE\u58F0"
+        questTip: "\u518D\u6B21\u548C\u53F2\u8482\u592B\u8C08\u8BDD"
+        description: "\u4F60\u653E\u4E0B\u6B66\u5668\uFF0C\u8BA9\u4E16\u754C\u5B89\u9759\u7247\u523B\uFF0C\u53D1\u73B0\u90A3\u4E9B\u4F60\u4EE5\u4E3A\u5DF2\u7ECF\u6D88\u5931\u7684\u58F0\u97F3\uFF0C\u6B63\u4ECE\u4F60\u7684\u9AA8\u9ABC\u6DF1\u5904\u8F7B\u8F7B\u56DE\u54CD\u3002"
+        maxProgress: 1
+        conditionType: 0
+        rewardItemIds: 10001,130
+        nextNodeId: 4
+        conditionConfig:
+          rid: 798032324312694796
+      - nodeId: 4
+        name: "\u8A00\u8BED\u6C89\u843D\u4E4B\u5904"
+        questTip: "\u548C\u6D41\u6D6A\u8005\u544A\u522B"
+        description: "\u5BF9\u8BDD\u8D70\u5230\u4E86\u5C3D\u5934\uFF0C\u6709\u4E9B\u8BDD\u6CA1\u6709\u88AB\u8BF4\u51FA\uFF0C\u800C\u662F\u6C89\u5165\u4E86\u811A\u4E0B\u7684\u865A\u7A7A\u2014\u2014\u5728\u90A3\u91CC\uFF0C\u5B83\u4EEC\u53D8\u6210\u4E86\u661F\u3002"
+        maxProgress: 1
+        conditionType: 0
+        rewardItemIds: 10002,140
         nextNodeId: -1
-        condition:
-          rid: 798032297148547109
+        conditionConfig:
+          rid: 798032324312694797
   references:
     version: 2
     RefIds:
-    - rid: 798032297148547106
-      type: {class: TalkCondition, ns: HotUpdate.Config.Quest.Condition, asm: HotUpdate.Config}
+    - rid: 798032324312694794
+      type: {class: DialogueConditionConfig, ns: HotUpdate.Config.Quest.Config, asm: HotUpdate.Config}
       data:
-        targetNpcId: 1001
-    - rid: 798032297148547107
-      type: {class: KillCondition, ns: HotUpdate.Config.Quest.Condition, asm: HotUpdate.Config}
+        targetNpcId: 1
+    - rid: 798032324312694795
+      type: {class: DialogueConditionConfig, ns: HotUpdate.Config.Quest.Config, asm: HotUpdate.Config}
       data:
-        targetId: 1001
-        count: 1
-    - rid: 798032297148547108
-      type: {class: CollectCondition, ns: HotUpdate.Config.Quest.Condition, asm: HotUpdate.Config}
+        targetNpcId: 2
+    - rid: 798032324312694796
+      type: {class: DialogueConditionConfig, ns: HotUpdate.Config.Quest.Config, asm: HotUpdate.Config}
       data:
-        targetItemId: 10001
-        count: 10
-    - rid: 798032297148547109
-      type: {class: TalkCondition, ns: HotUpdate.Config.Quest.Condition, asm: HotUpdate.Config}
+        targetNpcId: 1
+    - rid: 798032324312694797
+      type: {class: DialogueConditionConfig, ns: HotUpdate.Config.Quest.Config, asm: HotUpdate.Config}
       data:
-        targetNpcId: 1001
+        targetNpcId: 2

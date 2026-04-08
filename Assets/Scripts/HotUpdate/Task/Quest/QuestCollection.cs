@@ -35,5 +35,10 @@ namespace HotUpdate.Task.Quest
             }
             return questDatas;
         }
+
+        public void AddQuestData(QuestData data)
+        {
+            keyToValueMap.Add(data.QuestId, data);
+        }
     }
 }

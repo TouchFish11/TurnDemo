@@ -72,7 +72,7 @@ namespace HotUpdate.Main.UI
             txtTaskTitle.text = title;
         }
 
-        public void SetQuestbarDescription(string description)
+        public void SetQuestbarTip(string description)
         {
             txtTaskShortDescription.text = description;
         }

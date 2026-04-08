@@ -11,11 +11,11 @@ using Core.Service;
 using Core.UI;
 using Core.Utility;
 using HotUpdate.Common;
+using HotUpdate.Common.Events;
 using HotUpdate.Core.Dialogue;
 using HotUpdate.Core.Main;
 using HotUpdate.Core.Main.Settings;
 using HotUpdate.Core.Manager;
-using HotUpdate.Core.Task.Event;
 using HotUpdate.Dialogue.UI;
 using UnityEngine;
 
@@ -121,7 +121,8 @@ namespace HotUpdate.Dialogue
             // 从配置表中获取说话者（NPC）信息
             npcInfo = _binaryDataManager.GetConfig<NpcInfoContainer>(EConfigLoadType.Excel).dataDic[dialogueInfo.f_speakerId];
 
-            var enableTypewriter = (bool)ServiceLocator.Get<IGameManager>().GameDataManager.GetProvider<IMainDataProvider>().GameSettings[ESettingType.TypeWriter];
+            var value = (int)ServiceLocator.Get<IGameManager>().GameDataManager.GetProvider<IMainDataProvider>().GameSettings[ESettingType.TypeWriter];
+            var enableTypewriter = value != 0;  // 0为false，1为true，自定义规则
             if (enableTypewriter)
             {
                 // 启用打字机效果：初始化状态+启动协程
@@ -234,7 +235,7 @@ namespace HotUpdate.Dialogue
             // 销毁对话UI
             _uiManager.DestroyView(AbKeyCollection.Ui, dialogueController);
             // 触发全局对话事件
-            _eventCenter.TriggerEvent(new DialogueEvent { NpcId = npcInfo.f_id });
+            _eventCenter.TriggerEvent(new DialogueEvent(npcInfo.f_id));
             // 触发对话结束事件
             OnDialogueEnd?.Invoke();
             // 清理对话选项UI对象池

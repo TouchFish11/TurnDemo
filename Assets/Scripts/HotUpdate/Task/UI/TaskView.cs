@@ -1,6 +1,7 @@
 using Core.UI;
 using Core.UI.MVC;
 using HotUpdate.Config.Quest;
+using HotUpdate.Config.Quest.Config;
 using HotUpdate.Task.Quest;
 using TMPro;
 using UnityEngine;

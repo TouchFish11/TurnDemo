@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
 using Core.Pool;
+using HotUpdate.Common.Quest;
 using HotUpdate.Config.Quest;
+using HotUpdate.Config.Quest.Config;
 using HotUpdate.Core.Task;
 using HotUpdate.Task.Quest.Condition;
 
@@ -17,8 +20,13 @@ namespace HotUpdate.Task.Quest
         private QuestNode _currentNode;
 
         public QuestConfig.QuestItem QuestItem => _questItem;
+        
         public QuestData QuestData => _questData;
         
+        public bool IsTracking => _questData.IsTracking;
+        
+        public event Action<int> OnQuestComplete;
+
         public Quest(QuestConfig.QuestItem questItem, QuestData questData)
         {
             _questItem = questItem;
@@ -26,16 +34,18 @@ namespace HotUpdate.Task.Quest
             foreach (var questDataNodeData in questData.GetNodeDatas())
             {
                 var nodeConfig = _questItem.nodeConfigs.Find(config => config.nodeId == questDataNodeData.NodeId);
-                var condition = QuestConditionFactory.CreateCondition(nodeConfig.conditionType);
+                var condition = QuestConditionFactory.CreateCondition(nodeConfig.conditionType, nodeConfig.conditionConfig);
                 var questNode = new QuestNode(nodeConfig, questDataNodeData, condition);
+                questNode.OnComplete += SwitchNext;
                 _questNodes.Add(questDataNodeData.NodeId, questNode);
             }
 
+            // 主动检查自己是否被追踪
             CheckTrack();
         }
 
         /// <summary>
-        /// 接取该任务
+        /// 接取该任务，任务将被追踪
         /// </summary>
         /// <exception cref="KeyNotFoundException"></exception>
         public void Accept()
@@ -43,8 +53,9 @@ namespace HotUpdate.Task.Quest
             foreach (var questNode in _questNodes.Values)
             {
                 if(questNode.QuestNodeData.Phase == EQuestPhase.Complete) continue;
-                questNode.OnComplete += SwitchNext;
                 questNode.Active();
+                _questData.IsTracking = true;
+                _questData.CurActiveNodeId = questNode.QuestNodeData.NodeId;
                 _currentNode = questNode;
                 break;
             }
@@ -55,23 +66,23 @@ namespace HotUpdate.Task.Quest
             if (_currentNode == null) return;
             _currentNode.Inactive();
             _questData.IsTracking = false;
+            _questData.CurActiveNodeId = QuestUtil.QUEST_INACTIVE_NODE_ID;
             _currentNode = null;
         }
 
         /// <summary>
-        /// 检查该任务是否被追踪
+        /// 检查该任务是否被追踪，若为追踪状态则激活对应任务节点，监听任务事件
         /// </summary>
         private void CheckTrack()
         {
             // 没有正在追踪的任务
             if(!_questData.IsTracking) return;
 
-            if (_questNodes.TryGetValue(_questData.CurActiveNodeId, out var questNode))
-            {
-                questNode.OnComplete += SwitchNext;
-                questNode.Active();
-                _currentNode = questNode;
-            }
+            if (!_questNodes.TryGetValue(_questData.CurActiveNodeId, out var questNode))
+                throw new KeyNotFoundException($"{nameof(Quest)}.{nameof(CheckTrack)}: {_questData.CurActiveNodeId} is not found.)");
+            
+            questNode.Active();
+            _currentNode = questNode;
         }
 
         /// <summary>
@@ -86,18 +97,19 @@ namespace HotUpdate.Task.Quest
                 _questData.IsTracking = false;
                 _questData.CurActiveNodeId = QuestUtil.QUEST_NODE_END_ID;
                 _questData.IsComplete = true;
+                OnQuestComplete?.Invoke(_questItem.id);
+                OnQuestComplete = null;
                 return;
             }
 
             if (!_questNodes.TryGetValue(nextNodeId, out var questNode))
                 throw new KeyNotFoundException($"{nameof(Quest)}.{nameof(SwitchNext)}: {nextNodeId} is not found.");
             
-            questNode.OnComplete += SwitchNext;
             questNode.Active();
             _currentNode = questNode;
         }
 
-        public void ResetData()
+        void IPoolData.ResetData()
         {
             _questItem = null;
             _questData = null;

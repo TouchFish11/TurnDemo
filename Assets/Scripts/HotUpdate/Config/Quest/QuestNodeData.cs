@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 
 namespace HotUpdate.Config.Quest
 {
@@ -6,16 +7,17 @@ namespace HotUpdate.Config.Quest
     /// 任务节点数据，表示单一任务中的单一节点
     /// </summary>
     [Serializable]
+    [JsonObject(MemberSerialization.OptIn)]
     public class QuestNodeData
     {
         // 节点唯一标识
-        private int nodeId;               
+        [JsonProperty] private int nodeId;               
         // 任务阶段
-        private EQuestPhase phase;           
+        [JsonProperty] private EQuestPhase phase;           
         // 通用进度（0~目标值），适用于大部分计数条件
-        private int progress;                
+        [JsonProperty] private int progress;                
         // 下一节点ID，若为-1则表示节点所处的任务完成
-        private int nextNodeId;
+        [JsonProperty] private int nextNodeId;
         
         public event Action<QuestNodeData> OnDataChanged;
 

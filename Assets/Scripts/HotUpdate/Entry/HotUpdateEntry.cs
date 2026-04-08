@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.HotUpdate;
 using Core.Input.ActionAsset;
+using Core.Loader.Text;
 using Core.Log;
 using Core.Reflection;
 using Core.Scene;
@@ -59,11 +60,10 @@ namespace HotUpdate.Entry
         /// </summary>
         private static async Task InitSettings()
         {
-            var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(AbKeyCollection.Gameconfig);
-            var textAsset = assetBundle.LoadAsset<TextAsset>(ResKeyCollection.GameSettingsConfig);
+            var textAsset = await ServiceLocator.Get<ITextLoader>().LoadAssetAsync(AbKeyCollection.Gameconfig, ResKeyCollection.GameSettingsConfig);
             var settingsConfig = ServiceLocator.Get<IJsonManager>().FromJson<GameSettingsConfig>(textAsset.text);
             var settings = await ServiceLocator.Get<IJsonManager>()
-                .FromJsonAsync<GameSettings>(PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingFileName));
+                .FromJsonAsync<GameSettings>(PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingFileName), settings:NewtonsoftJsonUtility.SerializerSettings);
             
             SettingsService.SetFrameRate(settingsConfig.framerates[(int)settings[ESettingType.TargetFrameRateIndex]]);
             Application.runInBackground = true;

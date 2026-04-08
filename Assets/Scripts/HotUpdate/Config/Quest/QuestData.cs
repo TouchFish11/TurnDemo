@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Core.Log;
+using Newtonsoft.Json;
 
 namespace HotUpdate.Config.Quest
 {
@@ -7,18 +9,19 @@ namespace HotUpdate.Config.Quest
     /// 任务数据，表示单一任务，只要接取了任务就会存在任务数据，即使又取消接取，数据不会被移除
     /// </summary>
     [Serializable]
+    [JsonObject(MemberSerialization.OptIn)]
     public class QuestData
     {
         // 任务唯一ID
-        private int questId;
+        [JsonProperty] private int questId;
         // 是否完成，当该任务的所有节点都完成时，为true，否则为false
-        private bool isComplete;
+        [JsonProperty] private bool isComplete;
         // 所有当前任务所有节点的运行时数据，只要激活了节点，就会被添加到数据中
-        private List<QuestNodeData> nodeDatas;
+        [JsonProperty] private List<QuestNodeData> nodeDatas;
         // 是否正在追踪任务
-        private bool isTracking;
+        [JsonProperty] private bool isTracking;
         // 当前激活的节点，适用于线性任务
-        private int curActiveNodeId;
+        [JsonProperty] private int curActiveNodeId;
         // 或者支持多激活节点：List<string> activeNodeIds
         // ...
 
@@ -26,6 +29,7 @@ namespace HotUpdate.Config.Quest
         {
             this.questId = questId;
             this.nodeDatas = nodeDatas;
+            curActiveNodeId = -1;
         }
         
         /// <summary>
@@ -56,6 +60,7 @@ namespace HotUpdate.Config.Quest
             {
                 isTracking = value;
                 OnDataChanged?.Invoke(this);
+                LogManager.Log($"任务：{QuestId}，是否追踪：{isTracking}");
             }
         }
 
@@ -88,6 +93,16 @@ namespace HotUpdate.Config.Quest
             {
                 yield return questNodeData;
             }
+        }
+
+        /// <summary>
+        /// 根据节点ID获取任务节点
+        /// </summary>
+        /// <param name="nodeId"></param>
+        /// <returns></returns>
+        public QuestNodeData GetNodeData(int nodeId)
+        {
+            return nodeDatas.Find(data => data.NodeId == nodeId);
         }
 
         public event Action<QuestData> OnDataChanged;

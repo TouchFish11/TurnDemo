@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
-namespace HotUpdate.Config.Quest
+namespace HotUpdate.Config.Quest.Config
 {
     /// <summary>
     /// 任务配置，任务项集合
@@ -13,13 +14,14 @@ namespace HotUpdate.Config.Quest
         /// 任务项
         /// </summary>
         [Serializable]
+        [JsonObject(MemberSerialization.OptIn)]
         public class QuestItem
         {
-            public int id;
-            public EQuestType questType;
-            public List<QuestNodeConfig> nodeConfigs;
+            [JsonProperty] public int id;
+            [JsonProperty] public EQuestType questType;
+            [JsonProperty] public List<QuestNodeConfig> nodeConfigs;
         }
         
-        public List<QuestItem> questItems;
+        [JsonProperty] public List<QuestItem> questItems;
     }
 }

@@ -83,7 +83,7 @@ namespace Core.GlobalEvent
         /// <typeparam name="TEvent">事件类型，需实现IEvent接口</typeparam>
         /// <param name="callBack">事件触发时执行的回调方法</param>
         /// <param name="filter">事件过滤条件（可选）：返回true则触发回调，false则跳过</param>
-        public void SubscribeEvent<TEvent>(Action<TEvent> callBack, Func<TEvent, bool> filter = null) where TEvent : IEvent
+        public void Subscribe<TEvent>(Action<TEvent> callBack, Func<TEvent, bool> filter = null) where TEvent : IEvent
         {
             var eventType = typeof(TEvent);
             // 封装事件回调与过滤条件为事件信息对象
@@ -105,7 +105,7 @@ namespace Core.GlobalEvent
         /// </summary>
         /// <typeparam name="TEvent">事件类型，需实现IEvent接口</typeparam>
         /// <param name="callBack">需要取消的事件回调方法</param>
-        public void UnsubscribeEvent<TEvent>(Action<TEvent> callBack) where TEvent : IEvent
+        public void Unsubscribe<TEvent>(Action<TEvent> callBack) where TEvent : IEvent
         {
             // 查找该事件类型下的所有订阅信息
             if (!_typeToEventInfoMap.TryGetValue(typeof(TEvent), out var eventInfos))

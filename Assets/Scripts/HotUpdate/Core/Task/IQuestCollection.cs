@@ -8,11 +8,13 @@ namespace HotUpdate.Core.Task
         bool TryGetValue(int id, out QuestData data);
         
         /// <summary>
-        /// 是否包含正在追踪的任务
+        /// 尝试获取正在追踪的任务，存在时QuestData的curActiveNodeId不为默认值
         /// </summary>
         /// <returns></returns>
         bool TryGetTrackQuest(out QuestData data);
         
         List<QuestData> GetQuestDatas();
+        
+        void AddQuestData(QuestData data);
     }
 }

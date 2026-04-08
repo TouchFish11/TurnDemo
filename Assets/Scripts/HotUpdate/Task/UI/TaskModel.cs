@@ -5,6 +5,8 @@ using Core.UI.MVC;
 using HotUpdate.Common;
 using HotUpdate.Common.Item.UI;
 using HotUpdate.Config.Quest;
+using HotUpdate.Config.Quest.Config;
+using HotUpdate.Task.Quest;
 
 namespace HotUpdate.Task.UI
 {
@@ -20,7 +22,10 @@ namespace HotUpdate.Task.UI
         private readonly Dictionary<EQuestType, QuestTypeContainer> taskTypeToContainerMap = new();
         // 当前选中任务的奖励物品格子列表
         private readonly List<ItemGrid> rewardItems = new();
-        // 任务配置缓存
+        
+        /// <summary>
+        /// 任务配置缓存
+        /// </summary>
         public QuestConfig QuestConfig { get; set; }
         
         /// <summary>

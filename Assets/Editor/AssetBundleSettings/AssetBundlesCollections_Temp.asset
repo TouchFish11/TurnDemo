@@ -254,9 +254,9 @@ MonoBehaviour:
       name: HelmetConfig.json
       hash: d9ae9713015839f308c478c2427eeb0774a0a4b559e230d13473badbd83771a8
     - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\QuestConfig.json
-      size: 3095
+      size: 3745
       name: QuestConfig.json
-      hash: 77d38f127cf27f475ecb33f48fa3832156b99bbaa7ad3affc8e951f95db03c15
+      hash: 97cbcde84912a8d5061086d5cb8b2051f399b91b7510f23df76ee7680c284aa4
     - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\SwordConfig.json
       size: 429
       name: SwordConfig.json
@@ -398,11 +398,15 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\Scene\MainScene.unity
       size: 40248
       name: MainScene.unity
-      hash: 91d8c291cc47e8ec02a8343b824ea275d777ed2523d9358d980b0abb34fe58bb
+      hash: 2068f0215a03dc308c9deddacadf7ea5f88279e26ab85e99cb41323688963381
     - assetPath: Assets\Editor\ArtRes\Scene\Test\OtherTest.unity
       size: 9401
       name: OtherTest.unity
       hash: c5583588f2760d79544b3241cf89bbb70f3744cd6d947669e14ae0736c5d5fad
+    - assetPath: Assets\Editor\ArtRes\Scene\Test\QuestTest.unity
+      size: 8123
+      name: QuestTest.unity
+      hash: 206b34479802a892586a37ba3e07351ea55c7e9387c164ec1e45bc17ec47baa2
     - assetPath: Assets\Editor\ArtRes\Scene\Test\RoleTestScene.unity
       size: 571677
       name: RoleTestScene.unity

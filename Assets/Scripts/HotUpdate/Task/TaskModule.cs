@@ -24,7 +24,6 @@ namespace HotUpdate.Task
         public Task InitModuleAsync()
         {
             // 注册任务管理器
-            ServiceLocator.Register<ITaskManager>(new TaskManager());
             ServiceLocator.Register<IQuestManager>(new QuestManager());
             // 初始化UIHelper
             ServiceLocator.Register<ITaskUiHelper>(new TaskUiHelper(ServiceLocator.Get<IUIManager>()));

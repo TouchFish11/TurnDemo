@@ -3,6 +3,7 @@ using Core.Loader.Object;
 using Core.Service;
 using Core.UI;
 using HotUpdate.Common;
+using HotUpdate.Common.Quest;
 using HotUpdate.Config.Quest;
 using HotUpdate.Task.Quest;
 using TMPro;

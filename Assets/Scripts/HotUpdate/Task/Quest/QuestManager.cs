@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using HotUpdate.Config.Quest;
+using HotUpdate.Config.Quest.Config;
 using HotUpdate.Core.Task;
 
 namespace HotUpdate.Task.Quest
@@ -24,19 +25,43 @@ namespace HotUpdate.Task.Quest
             // 创建任务对象，只创建没有完成的任务
             foreach (var questConfigQuestItem in questConfig.questItems)
             {
-                if (questCollection.TryGetValue(questConfigQuestItem.id, out var questData) && questData.IsComplete)
+                Quest quest;
+                if (questCollection.TryGetValue(questConfigQuestItem.id, out var questData))
                 {
+                    // 有且完成不创建对象
+                    if (questData.IsComplete)
+                    {
+                        continue;
+                    }
+
+                    // 有且未完成，仍要创建对象
+                    quest = new Quest(questConfigQuestItem, questData);
+                    quest.OnQuestComplete += OnQuestComplete;
+                    _quests.Add(questConfigQuestItem.id, quest);
                     continue;
                 }
-                // 构建任务节点数据
+
+                // 没有也要创建，构建任务节点数据
                 var nodeDatas = new List<QuestNodeData>();
                 foreach (var questItemNodeConfig in questConfigQuestItem.nodeConfigs)
                 {
                     nodeDatas.Add(new QuestNodeData(questItemNodeConfig.nodeId, EQuestPhase.NoReceive, 0, questItemNodeConfig.nextNodeId));
                 }
                 
-                var quest = new Quest(questConfigQuestItem, new QuestData(questConfigQuestItem.id, nodeDatas));
+                var newQuestData = new QuestData(questConfigQuestItem.id, nodeDatas);
+                // 保存到数据
+                questCollection.AddQuestData(newQuestData);
+                quest = new Quest(questConfigQuestItem, newQuestData);
+                quest.OnQuestComplete += OnQuestComplete;
                 _quests.Add(questConfigQuestItem.id, quest);
+            }
+
+            // 主动判断当前是否有接取的任务，用于逻辑状态恢复
+            foreach (var quests in _quests.Values)
+            {
+                if (!quests.IsTracking) continue;
+                _currentQuest = quests;
+                break;
             }
         }
 
@@ -44,37 +69,22 @@ namespace HotUpdate.Task.Quest
         {
             // 若当前已有正在追踪的任务，先取消该任务的追踪
             _currentQuest?.CancelAccept();
-
-            if (_quests.TryGetValue(questId, out var quest))
-            {
-                quest.Accept();
-                _currentQuest = quest;
-            }
-            else
-            {
-                QuestConfig.QuestItem questItem = null;
-                // 构建任务节点数据
-                var nodeDatas = new List<QuestNodeData>();
-                foreach (var questItemNodeConfig in questItem.nodeConfigs)
-                {
-                    nodeDatas.Add(new QuestNodeData(questItemNodeConfig.nodeId, EQuestPhase.NoReceive, 0, questItemNodeConfig.nextNodeId));
-                }
-                
-                // 初始化任务数据
-                var questData = new QuestData(questItem.id, nodeDatas);
-                
-                // 若不存在，创建新的任务运行时数据
-                var newQuest = new Quest(questItem, questData);
-                newQuest.Accept();
-                _currentQuest = newQuest;
-                _quests.Add(questId, newQuest);
-            }
+            if (!_quests.TryGetValue(questId, out var quest))
+                throw new KeyNotFoundException($"{nameof(QuestManager)}:Quest {questId} not found");
+            
+            quest.Accept();
+            _currentQuest = quest;
         }
 
         public void CancelQuest()
         {
             _currentQuest?.CancelAccept();
             _currentQuest = null;
+        }
+
+        private void OnQuestComplete(int questId)
+        {
+            _quests.Remove(questId);
         }
         
         public IEnumerable<IQuest> GetQuests()

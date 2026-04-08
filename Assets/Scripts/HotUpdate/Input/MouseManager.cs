@@ -23,7 +23,7 @@ namespace HotUpdate.Input
 
         public MouseManager(IEventCenter eventCenter)
         {
-            eventCenter.SubscribeEvent<MouseVisibleChangedEvent>(OnMouseVisibleChangedEvent);
+            eventCenter.Subscribe<MouseVisibleChangedEvent>(OnMouseVisibleChangedEvent);
             UpdateMouseState();
         }
 

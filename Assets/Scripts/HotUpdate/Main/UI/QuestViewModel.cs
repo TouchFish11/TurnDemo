@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using Core;
 using HotUpdate.Config.Quest;
+using HotUpdate.Config.Quest.Config;
 
-namespace HotUpdate.Core.Task
+namespace HotUpdate.Main.UI
 {
     /// <summary>
-    /// 任务界面ViewModel
+    /// 主界面和任务数据的ViewModel
     /// </summary>
     public class QuestViewModel
     {
@@ -14,7 +15,7 @@ namespace HotUpdate.Core.Task
         private List<QuestData> _questDatas;
         
         public ReactiveProperty<string> QuestTitleName { get; } =  new();
-        public ReactiveProperty<string> QuestDescription { get; } = new();
+        public ReactiveProperty<string> QuestTip { get; } = new();
         public ReactiveProperty<string> QuestProgress { get; } = new();
         public ReactiveProperty<bool> IsActiveQuestbar { get; } = new();
 
@@ -29,9 +30,11 @@ namespace HotUpdate.Core.Task
                     {
                         IsActiveQuestbar.Value = data.Phase == EQuestPhase.Processing;
                         var nodeConfig = GetNodeConfig(questConfig, data.NodeId);
-                        if (nodeConfig == null) throw new NullReferenceException($"{nameof(nodeConfig)} is null");
+                        if (nodeConfig == null) 
+                            throw new NullReferenceException($"{nameof(QuestViewModel)}:{nameof(nodeConfig)} is null");
+                        
                         QuestTitleName.Value = nodeConfig.name;
-                        QuestDescription.Value = nodeConfig.description;
+                        QuestTip.Value = nodeConfig.questTip;
                         QuestProgress.Value = $"{data.Progress}/{nodeConfig.maxProgress}";
                     };
                 }
@@ -39,6 +42,34 @@ namespace HotUpdate.Core.Task
             
             _questItems = questConfig.questItems;
             _questDatas = questDatas;
+        }
+
+        /// <summary>
+        /// 刷新主界面任务栏UI
+        /// </summary>
+        /// <param name="questConfig"></param>
+        /// <param name="nodeData"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="NullReferenceException"></exception>
+        public void RefleshUI(QuestConfig questConfig, QuestNodeData nodeData)
+        {
+            if(questConfig == null)
+                throw new ArgumentNullException($"{nameof(QuestViewModel)}:{nameof(questConfig)} is null");
+            
+            // 没有存在正在追踪的任务
+            if (nodeData == null)
+            {
+                IsActiveQuestbar.Value = true;
+                IsActiveQuestbar.Value = false;
+                return;
+            }
+
+            IsActiveQuestbar.Value = true;
+            var nodeConfig = GetNodeConfig(questConfig, nodeData.NodeId);
+            if (nodeConfig == null) throw new NullReferenceException($"{nameof(nodeConfig)} is null");
+            QuestTitleName.Value = nodeConfig.name;
+            QuestTip.Value = nodeConfig.questTip;
+            QuestProgress.Value = $"{nodeData.Progress}/{nodeConfig.maxProgress}";
         }
 
         /// <summary>

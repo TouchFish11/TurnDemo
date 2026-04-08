@@ -38,8 +38,8 @@ namespace HotUpdate.Main.Player
         public PlayerManager(IPrefabLoader prefabLoader,  IEventCenter eventCenter)
         {
             _prefabLoader = prefabLoader;
-            eventCenter.SubscribeEvent<OpenViewEvent>(OnOpenViewEvent, OpenViewEventFilter);
-            eventCenter.SubscribeEvent<CloseViewEvent>(OnCloseViewEvent, OpenViewEventFilter);
+            eventCenter.Subscribe<OpenViewEvent>(OnOpenViewEvent, OpenViewEventFilter);
+            eventCenter.Subscribe<CloseViewEvent>(OnCloseViewEvent, OpenViewEventFilter);
         }
 
         /// <summary>
