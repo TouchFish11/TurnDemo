@@ -1,5 +1,4 @@
 using System;
-using HotUpdate.Config.Quest;
 using HotUpdate.Config.Quest.Config;
 using HotUpdate.Core.Task;
 
@@ -12,9 +11,8 @@ namespace HotUpdate.Task.Quest.Condition
     public abstract class QuestCondition<T> : IQuestCondition, IDisposable where T : QuestConditionConfig
     {
         protected readonly T conditionConfig;
-        protected QuestNodeData questNodeData;
         
-        public event Action OnComplete;
+        public event Action<int> OnProgressChanged;
 
         protected QuestCondition(T questConditionConfig)
         {
@@ -24,23 +22,26 @@ namespace HotUpdate.Task.Quest.Condition
         /// <summary>
         /// 启用条件，监听相关类型的事件
         /// </summary>
-        /// <param name="questNodeData"></param>
-        public abstract void Enable(QuestNodeData questNodeData);
+        public abstract void Enable();
         
         /// <summary>
         /// 禁用条件，取消监听相关类型的事件
         /// </summary>
         public abstract void Disable();
 
-        protected void InvokeOnComplete()
+        /// <summary>
+        /// 更新进度，调用OnProgressChanged回调
+        /// </summary>
+        /// <param name="delta"></param>
+        protected void UpdateProgress(int delta)
         {
-            OnComplete?.Invoke();
-            OnComplete = null;
+            OnProgressChanged?.Invoke(delta);
         }
         
         public void Dispose()
         {
-            OnComplete = null;
+            Disable();
+            OnProgressChanged = null;
         }
     }
 }

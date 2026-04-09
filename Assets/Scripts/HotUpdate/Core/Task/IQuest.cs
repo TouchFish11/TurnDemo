@@ -12,10 +12,11 @@ namespace HotUpdate.Core.Task
     {
         QuestConfig.QuestItem QuestItem { get; }
         
-        QuestData QuestData { get; }
-        
         bool IsTracking { get; }
         
+        /// <summary>
+        /// 任务完成事件回调，传递完成的任务ID，执行后会置空
+        /// </summary>
         event Action<int> OnQuestComplete;
         
         /// <summary>
@@ -24,6 +25,9 @@ namespace HotUpdate.Core.Task
         /// <exception cref="KeyNotFoundException"></exception>
         void Accept();
 
+        /// <summary>
+        /// 取消接取当前追踪的任务
+        /// </summary>
         void CancelAccept();
     }
 }

@@ -13,6 +13,10 @@ namespace HotUpdate.Core.Task
         /// <returns></returns>
         bool TryGetTrackQuest(out QuestData data);
         
+        /// <summary>
+        /// 获取所有的任务数据，内部会new一个列表将缓存内容返回给外部
+        /// </summary>
+        /// <returns></returns>
         List<QuestData> GetQuestDatas();
         
         void AddQuestData(QuestData data);

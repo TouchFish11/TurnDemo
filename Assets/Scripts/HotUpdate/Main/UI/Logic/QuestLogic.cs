@@ -25,6 +25,10 @@ namespace HotUpdate.Main.UI.Logic
                 var textAsset = await ServiceLocator.Get<ITextLoader>().LoadAssetAsync(AbKeyCollection.Gameconfig, ResKeyCollection.QuestConfig);
                 var questConfig = ServiceLocator.Get<IJsonManager>().FromJson<QuestConfig>(textAsset.text, settings: NewtonsoftJsonUtility.SerializerSettings);
                 var provider = ServiceLocator.Get<IGameManager>().GameDataManager.GetProvider<ITaskDataProvider>();
+                
+                // 初始化任务管理器
+                ServiceLocator.Get<IQuestManager>().InitQuests(questConfig, provider.QuestCollection);
+                // 获取最新的任务数据列表
                 var questDatas = provider.QuestCollection.GetQuestDatas();
                 // 当前追踪的任务节点数据初始化VM
                 _questViewModel = new QuestViewModel(questConfig, questDatas);
@@ -34,11 +38,8 @@ namespace HotUpdate.Main.UI.Logic
                 _questViewModel.QuestTip.Subscribe(tip => mainView.SetQuestbarTip(tip));
                 _questViewModel.QuestProgress.Subscribe(progress => mainView.SetQuestbarProgress(progress));
                 
-                // 初始化任务管理器
-                ServiceLocator.Get<IQuestManager>().InitQuests(questConfig, provider.QuestCollection);
-                var nodeData = provider.QuestCollection.TryGetTrackQuest(out var questData) ? questData.GetNodeData(questData.CurActiveNodeId) : null;
                 // 主动拉取UI更新
-                _questViewModel.RefleshUI(questConfig, nodeData);
+                _questViewModel.RefleshUI(provider.QuestCollection.TryGetTrackQuest(out var questData) ? questData : null);
             }
             catch (Exception e)
             {

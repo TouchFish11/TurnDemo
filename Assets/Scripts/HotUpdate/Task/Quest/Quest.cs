@@ -21,8 +21,6 @@ namespace HotUpdate.Task.Quest
 
         public QuestConfig.QuestItem QuestItem => _questItem;
         
-        public QuestData QuestData => _questData;
-        
         public bool IsTracking => _questData.IsTracking;
         
         public event Action<int> OnQuestComplete;
@@ -50,15 +48,30 @@ namespace HotUpdate.Task.Quest
         /// <exception cref="KeyNotFoundException"></exception>
         public void Accept()
         {
-            foreach (var questNode in _questNodes.Values)
+            QuestNode currentNode = null;
+            // 存在追踪的任务，直接获取节点
+            if (_questNodes.TryGetValue(_questData.CurActiveNodeId, out var node))
             {
-                if(questNode.QuestNodeData.Phase == EQuestPhase.Complete) continue;
-                questNode.Active();
-                _questData.IsTracking = true;
-                _questData.CurActiveNodeId = questNode.QuestNodeData.NodeId;
-                _currentNode = questNode;
-                break;
+                currentNode = node;
             }
+            // 否则就找到当前任务的第一个未完成的节点
+            else
+            {
+                foreach (var questNode in _questNodes.Values)
+                {
+                    if(questNode.QuestNodeData.Phase == EQuestPhase.Complete) continue;
+                    currentNode = questNode;
+                    break;
+                }
+            }
+            
+            if(currentNode == null)
+                throw new NullReferenceException($"Quest {_questData.CurActiveNodeId} is not found.");
+            
+            currentNode.Active();
+            _questData.IsTracking = true;
+            _questData.CurActiveNodeId = currentNode.QuestNodeData.NodeId;
+            _currentNode = currentNode;
         }
 
         public void CancelAccept()
@@ -96,15 +109,20 @@ namespace HotUpdate.Task.Quest
             {
                 _questData.IsTracking = false;
                 _questData.CurActiveNodeId = QuestUtil.QUEST_NODE_END_ID;
+                _currentNode.QuestNodeData.SelNextNodeId = QuestUtil.QUEST_NODE_END_ID;
                 _questData.IsComplete = true;
                 OnQuestComplete?.Invoke(_questItem.id);
                 OnQuestComplete = null;
+                _currentNode.Dispose();
                 return;
             }
 
             if (!_questNodes.TryGetValue(nextNodeId, out var questNode))
                 throw new KeyNotFoundException($"{nameof(Quest)}.{nameof(SwitchNext)}: {nextNodeId} is not found.");
             
+            _questData.CurActiveNodeId = nextNodeId;
+            // 默认选择下一个节点，可拓展为根据玩家选择的分支记录对应的ID
+            _currentNode.QuestNodeData.SelNextNodeId = nextNodeId;
             questNode.Active();
             _currentNode = questNode;
         }
@@ -114,6 +132,10 @@ namespace HotUpdate.Task.Quest
             _questItem = null;
             _questData = null;
             _currentNode = null;
+            foreach (var nodesValue in _questNodes.Values)
+            {
+                nodesValue.Dispose();
+            }
             _questNodes.Clear();
         }
     }

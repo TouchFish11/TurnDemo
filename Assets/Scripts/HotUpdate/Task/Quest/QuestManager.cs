@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using HotUpdate.Config.Quest;
 using HotUpdate.Config.Quest.Config;
 using HotUpdate.Core.Task;
+using HotUpdate.Task.Quest.Condition;
 
 namespace HotUpdate.Task.Quest
 {
@@ -14,6 +15,14 @@ namespace HotUpdate.Task.Quest
         private readonly Dictionary<int, IQuest> _quests = new();
         // 当前接取的任务对象
         private IQuest _currentQuest;
+        // 可拓展为支持多任务接取
+        //private Dictionary<int, IQuest> _activeQuests = new();
+
+        public QuestManager()
+        {
+            // 初始化任务条件工厂
+            QuestConditionFactoryInitializer.Initialize();
+        }
         
         /// <summary>
         /// 初始化任务
@@ -29,10 +38,7 @@ namespace HotUpdate.Task.Quest
                 if (questCollection.TryGetValue(questConfigQuestItem.id, out var questData))
                 {
                     // 有且完成不创建对象
-                    if (questData.IsComplete)
-                    {
-                        continue;
-                    }
+                    if (questData.IsComplete) continue;
 
                     // 有且未完成，仍要创建对象
                     quest = new Quest(questConfigQuestItem, questData);
@@ -45,7 +51,7 @@ namespace HotUpdate.Task.Quest
                 var nodeDatas = new List<QuestNodeData>();
                 foreach (var questItemNodeConfig in questConfigQuestItem.nodeConfigs)
                 {
-                    nodeDatas.Add(new QuestNodeData(questItemNodeConfig.nodeId, EQuestPhase.NoReceive, 0, questItemNodeConfig.nextNodeId));
+                    nodeDatas.Add(new QuestNodeData(questItemNodeConfig.nodeId, EQuestPhase.NoReceive, 0));
                 }
                 
                 var newQuestData = new QuestData(questConfigQuestItem.id, nodeDatas);

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using HotUpdate.Config.Quest;
 using HotUpdate.Config.Quest.Config;
 using HotUpdate.Core.Task;
@@ -14,13 +15,14 @@ namespace HotUpdate.Task.Quest
         private QuestNodeConfig _questNodeConfig;
         // 任务节点数据
         private QuestNodeData _questNodeData;
-        // 任务条件
+        // 任务条件，可拓展为列表维护所有当前节点需完成的所有任务条件，支持单个阶段并行多个任务逻辑
         private IQuestCondition _questCondition;
+        //private List<IQuestCondition> _questConditions = new();
         
         public QuestNodeData QuestNodeData => _questNodeData;
         
         /// <summary>
-        /// 任务节点完成事件，触发后自动置空
+        /// 任务节点完成事件，传递下一个任务节点ID，触发后自动置空，外部无需-=
         /// </summary>
         public event Action<int> OnComplete;
         
@@ -29,14 +31,14 @@ namespace HotUpdate.Task.Quest
             _questNodeConfig = nodeConfig;
             _questNodeData = questNodeData;
             _questCondition = questCondition;
-            _questCondition.OnComplete += Complete;
+            _questCondition.OnProgressChanged += OnProgressChanged;
         }
 
         // 激活任务节点
         public void Active()
         {
             // 监听任务关心的事件
-            _questCondition.Enable(_questNodeData);
+            _questCondition.Enable();
             _questNodeData.Phase = EQuestPhase.Processing;
         }
 
@@ -51,14 +53,22 @@ namespace HotUpdate.Task.Quest
             }
         }
 
-        // 完成任务节点
-        private void Complete()
+        /// <summary>
+        /// 进度变化事件回调
+        /// </summary>
+        /// <param name="delta"></param>
+        private void OnProgressChanged(int delta)
         {
+            // 更新进度
+            _questNodeData.Progress += delta;
+            if (_questNodeData.Progress != _questNodeConfig.maxProgress) return;
+            
             // 更新阶段
             _questNodeData.Phase = EQuestPhase.Complete;
-            // 先失活当前节点
+            // 失活当前节点
             Inactive();
-            OnComplete?.Invoke(_questNodeData.NextNodeId);
+            // 调用当前节点完成回调，通知外部激活下一个任务节点
+            OnComplete?.Invoke(_questNodeConfig.nextNodeId);
             OnComplete = null;
         }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using HotUpdate.Config.Quest;
 using HotUpdate.Config.Quest.Config;
 using HotUpdate.Core.Task;
@@ -10,22 +11,27 @@ namespace HotUpdate.Task.Quest.Condition
     /// </summary>
     public class QuestConditionFactory
     {
+        private static readonly Dictionary<EQuestConditionType, Func<QuestConditionConfig, IQuestCondition>> _conditions = new();
+
         /// <summary>
-        /// 根据枚举创建对应任务条件类，新增类型需要新增实例
+        /// 注册任务条件类型
         /// </summary>
-        /// <param name="conditionType">条件类型</param>
-        /// <param name="conditionConfig">条件配置</param>
+        /// <param name="conditionType"></param>
+        /// <param name="condition"></param>
+        public static void Register(EQuestConditionType conditionType, Func<QuestConditionConfig, IQuestCondition> condition)
+        {
+            _conditions.Add(conditionType, condition);
+        }
+
+        /// <summary>
+        /// 根据枚举创建对应任务条件类，新增类型需要Register新实例，未找到类型返回null
+        /// </summary>
+        /// <param name="conditionType"></param>
+        /// <param name="conditionConfig"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public static IQuestCondition CreateCondition(EQuestConditionType conditionType, QuestConditionConfig conditionConfig)
         {
-            return conditionType switch
-            {
-                EQuestConditionType.Talk => new TalkCondition(conditionConfig as DialogueConditionConfig),
-                EQuestConditionType.Kill => new KillCondition(conditionConfig as KillConditionConfig),
-                EQuestConditionType.Collect => new CollectCondition(conditionConfig as CollectConditionConfig),
-                _ => throw new ArgumentOutOfRangeException(nameof(conditionType), conditionType, null)
-            };
+            return _conditions.TryGetValue(conditionType, out var condition) ? condition(conditionConfig) : null;
         }
     }
 }

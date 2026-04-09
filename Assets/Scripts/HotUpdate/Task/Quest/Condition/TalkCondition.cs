@@ -1,7 +1,6 @@
 using Core.GlobalEvent;
 using Core.Service;
 using HotUpdate.Common.Events;
-using HotUpdate.Config.Quest;
 using HotUpdate.Config.Quest.Config;
 
 namespace HotUpdate.Task.Quest.Condition
@@ -16,18 +15,15 @@ namespace HotUpdate.Task.Quest.Condition
             
         }
 
-        public override void Enable(QuestNodeData questNodeData)
+        public override void Enable()
         {
-            this.questNodeData = questNodeData;
             ServiceLocator.Get<IEventCenter>().Subscribe<DialogueEvent>(OnDialogueEvent);
         }
 
         private void OnDialogueEvent(DialogueEvent dialogueEvent)
         {
             if (dialogueEvent.EntityID != conditionConfig.targetNpcId) return;
-            
-            questNodeData.Progress += 1;
-            InvokeOnComplete();
+            UpdateProgress(1);
         }
 
         public override void Disable()

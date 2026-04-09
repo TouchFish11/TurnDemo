@@ -1,5 +1,4 @@
 using System;
-using HotUpdate.Config.Quest;
 
 namespace HotUpdate.Core.Task
 {
@@ -9,15 +8,14 @@ namespace HotUpdate.Core.Task
     public interface IQuestCondition
     {
         /// <summary>
-        /// 条件完成时触发的事件，触发后自动置空
+        /// 条件进度变化时时触发的事件，传递进度，由条件决定传递多少
         /// </summary>
-        event Action OnComplete;
+        event Action<int> OnProgressChanged;
 
         /// <summary>
         /// 启用条件，监听相关类型的事件
         /// </summary>
-        /// <param name="questNodeData"></param>
-        void Enable(QuestNodeData questNodeData);
+        void Enable();
 
         /// <summary>
         /// 禁用条件，取消监听相关类型的事件

@@ -81,25 +81,6 @@ namespace HotUpdate.Main.UI
         {
             txtTaskProgress.text = progressStr;
         }
-        
-        /// <summary>
-        /// 更新任务栏显示的任务信息（标题、描述、进度）
-        /// </summary>
-        /// <param name="taskInfo">任务基础配置信息</param>
-        /// <param name="taskData">任务当前进度数据</param>
-        public void UpdateTask(TaskInfo taskInfo, ITaskData taskData)
-        {
-            // 1. 设置任务标题
-            txtTaskTitle.text = taskInfo.f_taskName;
-
-            // 2. 获取任务完成条件配置（从二进制配置管理器中读取Excel配置）
-            var taskConditionContainer = ServiceLocator.Get<IBinaryDataManager>()
-                .GetConfig<TaskConditionInfoContainer>(EConfigLoadType.Excel);
-            var taskCondition = taskConditionContainer.dataDic[taskInfo.f_completionConditionId];
-
-            // 3. 设置任务描述及进度（格式：任务描述 + 当前进度/最大进度）
-            txtTaskShortDescription.text = $"{taskInfo.f_taskDescription}  {taskData.CurrentPro}/{taskCondition.f_maxPro}";
-        }
         #endregion
     }
 }

@@ -7,7 +7,7 @@ namespace HotUpdate.Core.Task
     public interface IQuestManager
     {
         /// <summary>
-        /// 初始化任务
+        /// 初始化任务对象，同时将新增玩家没有的任务数据，只会创建未完成的任务
         /// </summary>
         /// <param name="questConfig"></param>
         /// <param name="questCollection"></param>

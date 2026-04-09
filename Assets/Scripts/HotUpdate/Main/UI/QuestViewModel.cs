@@ -11,9 +11,8 @@ namespace HotUpdate.Main.UI
     /// </summary>
     public class QuestViewModel
     {
-        private List<QuestConfig.QuestItem> _questItems;
-        private List<QuestData> _questDatas;
-        
+        private readonly Dictionary<int, Dictionary<int, QuestNodeConfig>> _nodeConfigs = new();
+        private readonly Dictionary<int, Dictionary<int, QuestNodeData>> _nodeDatas = new();
         public ReactiveProperty<string> QuestTitleName { get; } =  new();
         public ReactiveProperty<string> QuestTip { get; } = new();
         public ReactiveProperty<string> QuestProgress { get; } = new();
@@ -21,6 +20,10 @@ namespace HotUpdate.Main.UI
 
         public QuestViewModel(QuestConfig questConfig, List<QuestData> questDatas)
         {
+            // 缓存所有任务配置/数据节点
+            CacheNodeConfigs(questConfig);
+            CacheNodeDatas(questDatas);
+            
             foreach (var questData in questDatas)
             {
                 foreach (var nodeData in questData.GetNodeDatas())
@@ -29,7 +32,7 @@ namespace HotUpdate.Main.UI
                     nodeData.OnDataChanged += data =>
                     {
                         IsActiveQuestbar.Value = data.Phase == EQuestPhase.Processing;
-                        var nodeConfig = GetNodeConfig(questConfig, data.NodeId);
+                        var nodeConfig = _nodeConfigs[questData.QuestId][data.NodeId];
                         if (nodeConfig == null) 
                             throw new NullReferenceException($"{nameof(QuestViewModel)}:{nameof(nodeConfig)} is null");
                         
@@ -39,56 +42,67 @@ namespace HotUpdate.Main.UI
                     };
                 }
             }
-            
-            _questItems = questConfig.questItems;
-            _questDatas = questDatas;
         }
 
         /// <summary>
         /// 刷新主界面任务栏UI
         /// </summary>
-        /// <param name="questConfig"></param>
-        /// <param name="nodeData"></param>
+        /// <param name="questData">正在追踪的任务的数据</param>
         /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="NullReferenceException"></exception>
-        public void RefleshUI(QuestConfig questConfig, QuestNodeData nodeData)
+        public void RefleshUI(QuestData questData)
         {
-            if(questConfig == null)
-                throw new ArgumentNullException($"{nameof(QuestViewModel)}:{nameof(questConfig)} is null");
-            
             // 没有存在正在追踪的任务
-            if (nodeData == null)
+            if (questData == null)
             {
+                QuestTitleName.Value = string.Empty;
+                QuestTip.Value = string.Empty;
+                QuestProgress.Value = string.Empty;
                 IsActiveQuestbar.Value = true;
-                IsActiveQuestbar.Value = false;
                 return;
             }
-
+            
             IsActiveQuestbar.Value = true;
-            var nodeConfig = GetNodeConfig(questConfig, nodeData.NodeId);
-            if (nodeConfig == null) throw new NullReferenceException($"{nameof(nodeConfig)} is null");
+            var nodeConfig = _nodeConfigs[questData.QuestId][questData.CurActiveNodeId];
+            if (nodeConfig == null) throw new NullReferenceException($"{nameof(QuestViewModel)}:{nameof(nodeConfig)} is null");
             QuestTitleName.Value = nodeConfig.name;
             QuestTip.Value = nodeConfig.questTip;
-            QuestProgress.Value = $"{nodeData.Progress}/{nodeConfig.maxProgress}";
+            QuestProgress.Value = $"{_nodeDatas[questData.QuestId][questData.CurActiveNodeId].Progress}/{nodeConfig.maxProgress}";
         }
 
         /// <summary>
-        /// 获取对应ID的任务节点配置
+        /// 缓存所有节点配置数据
         /// </summary>
         /// <param name="questConfig"></param>
-        /// <param name="nodeId"></param>
-        /// <returns></returns>
-        private static QuestNodeConfig GetNodeConfig(QuestConfig questConfig, int nodeId)
+        private void CacheNodeConfigs(QuestConfig questConfig)
         {
             foreach (var questItem in questConfig.questItems)
             {
-                var config = questItem.nodeConfigs.Find(config => config.nodeId == nodeId);
-                if (config != null)
+                // 单个任务对应其所有任务节点
+                _nodeConfigs.Add(questItem.id, new Dictionary<int, QuestNodeConfig>());
+                foreach (var nodeConfig in questItem.nodeConfigs)
                 {
-                    return config;
+                    // 每个节点ID对应一个任务节点
+                    _nodeConfigs[questItem.id].Add(nodeConfig.nodeId, nodeConfig);
                 }
             }
-            return null;
+        }
+        
+        /// <summary>
+        /// 缓存所有节点数据
+        /// </summary>
+        /// <param name="questDatas"></param>
+        private void CacheNodeDatas(List<QuestData> questDatas)
+        {
+            foreach (var questData in questDatas)
+            {
+                // 单个任务对应其所有任务节点
+                _nodeDatas.Add(questData.QuestId, new Dictionary<int, QuestNodeData>());
+                foreach (var nodeData in questData.GetNodeDatas())
+                {
+                    // 每个节点ID对应一个任务节点
+                    _nodeDatas[questData.QuestId].Add(nodeData.NodeId, nodeData);
+                }
+            }
         }
     }
 }

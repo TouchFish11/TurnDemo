@@ -20,10 +20,8 @@ namespace HotUpdate.Config.Quest
         [JsonProperty] private List<QuestNodeData> nodeDatas;
         // 是否正在追踪任务
         [JsonProperty] private bool isTracking;
-        // 当前激活的节点，适用于线性任务
+        // 当前激活的节点
         [JsonProperty] private int curActiveNodeId;
-        // 或者支持多激活节点：List<string> activeNodeIds
-        // ...
 
         public QuestData(int questId, List<QuestNodeData> nodeDatas)
         {
@@ -43,11 +41,7 @@ namespace HotUpdate.Config.Quest
         public bool IsComplete
         {
             get => isComplete;
-            set
-            {
-                isComplete = value;
-                OnDataChanged?.Invoke(this);
-            }
+            set => isComplete = value;
         }
 
         /// <summary>
@@ -59,7 +53,6 @@ namespace HotUpdate.Config.Quest
             set
             {
                 isTracking = value;
-                OnDataChanged?.Invoke(this);
                 LogManager.Log($"任务：{QuestId}，是否追踪：{isTracking}");
             }
         }
@@ -70,11 +63,7 @@ namespace HotUpdate.Config.Quest
         public int CurActiveNodeId
         {
             get => curActiveNodeId;
-            set
-            {
-                curActiveNodeId = value;
-                OnDataChanged?.Invoke(this);
-            }
+            set => curActiveNodeId = value;
         }
 
         /// <summary>
@@ -84,7 +73,6 @@ namespace HotUpdate.Config.Quest
         public void AddNodeData(QuestNodeData nodeData)
         {
             nodeDatas.Add(nodeData);
-            OnDataChanged?.Invoke(this);
         }
 
         public IEnumerable<QuestNodeData> GetNodeDatas()
@@ -104,7 +92,5 @@ namespace HotUpdate.Config.Quest
         {
             return nodeDatas.Find(data => data.NodeId == nodeId);
         }
-
-        public event Action<QuestData> OnDataChanged;
     }
 }

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Core.Collection;
 using HotUpdate.Config.Quest;
 using HotUpdate.Core.Task;
+using Newtonsoft.Json;
 
 namespace HotUpdate.Task.Quest
 {
@@ -10,6 +11,9 @@ namespace HotUpdate.Task.Quest
     /// </summary>
     public class QuestCollection : Collection<int, QuestData>, IQuestCollection
     {
+        // 玩家同时激活（接取）的多个任务缓存，支持多任务接取
+        [JsonProperty] private Dictionary<int, QuestData> _activeQuestDatas = new();
+        
         /// <summary>
         /// 尝试获取正在追踪的任务
         /// </summary>
