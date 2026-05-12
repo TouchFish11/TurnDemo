@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
+using Core.AssetBundles.Management;
 using Core.Singleton;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Editor.AssetBundle
 {
@@ -21,10 +21,10 @@ namespace Editor.AssetBundle
         [Serializable] // 标记可序列化，支持在Inspector面板显示和序列化存储
         public sealed class AssetBundleInfo
         {
-            // AB包的名称（唯一标识）
+            // AB包的名称，不带后缀（唯一标识）
             public string assetBundleName;
             // 该AB包下包含的所有资源信息列表
-            public List<AssetInfo> assetInfos = new List<AssetInfo>();
+            public List<AssetInfo> assetInfos = new();
 
             /// <summary>
             /// 构造函数：初始化AB包名称
@@ -66,6 +66,12 @@ namespace Editor.AssetBundle
             /// </summary>
             [Tooltip("Hash字符串")]
             public string hash;
+            
+            /// <summary>
+            /// 资源类型
+            /// </summary>
+            [Tooltip("资源类型枚举")]
+            public EAssetType assetType;
 
             /// <summary>
             /// 构造函数：初始化资源的核心信息
@@ -73,12 +79,15 @@ namespace Editor.AssetBundle
             /// <param name="assetPath">资源路径</param>
             /// <param name="assetBundleSize">资源大小（字节）</param>
             /// <param name="name">资源名称</param>
-            public AssetInfo(string assetPath, long assetBundleSize, string name, string hash)
+            /// <param name="hash"></param>
+            /// <param name="assetType"></param>
+            public AssetInfo(string assetPath, long assetBundleSize, string name, string hash, EAssetType assetType)
             {
                 this.assetPath = assetPath;
                 this.size = assetBundleSize;
                 this.name = name;
                 this.hash = hash;
+                this.assetType = assetType;
             }
         }
 

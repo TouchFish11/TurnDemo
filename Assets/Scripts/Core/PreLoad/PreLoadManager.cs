@@ -1,8 +1,7 @@
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
-using Core.Service;
+using Core.DI;
 using Core.Singleton;
-using Core.Tasks.Extensions;
 using UnityEngine;
 
 namespace Core.PreLoad
@@ -10,18 +9,13 @@ namespace Core.PreLoad
     /// <summary>
     /// 预加载管理器
     /// </summary>
-    public class PreLoadManager : SingletonBase<PreLoadManager>, IPreLoadManager
+    public class PreLoadManager : IPreLoadManager
     {
-        public override int InitPriority => 0;
-
-        private PreLoadManager()
-        {
+        private IAssetBundleManager _assetBundleManager;
         
-        }
-
-        public override Task InitAsync()
+        private PreLoadManager(IAssetBundleManager assetBundleManager)
         {
-            return Task.CompletedTask;
+            _assetBundleManager = assetBundleManager;
         }
 
         /// <summary>
@@ -32,8 +26,7 @@ namespace Core.PreLoad
         {
             foreach (var preLoadData in preLoadDatas)
             {
-                var assetBundle = await ServiceLocator.Get<IAssetBundleManager>().LoadBundleAsync(preLoadData.AbName);
-                await assetBundle.LoadAssetAsync(preLoadData.AssetName, preLoadData.AssetType).ToTask<Object>();
+                await GameAsset.LoadAssetAsync<Object>(preLoadData.AssetName);
             }
         }
     }

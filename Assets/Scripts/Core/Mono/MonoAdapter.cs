@@ -1,26 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Core.Log;
 using Core.Mono.MonoFunction;
-using Core.Singleton;
 using UnityEngine;
+using Logger = Core.Log.Logger;
 
 namespace Core.Mono
 {
     /// <summary>
     /// Mono适配器
     /// </summary>
-    public class MonoAdapter : SingletonAutoMono<MonoAdapter>, IMonoAdapter, IInitializable
+    public class MonoAdapter : MonoBehaviour, IMonoAdapter
     {
         private List<IAwakable> awakables = new();
-        private List<IEnable> enables = new();
-        private List<IStartable> startables = new();
-        private List<IDisable> disables = new();
-        private List<IDestroyable> destroyables = new();
-
-        
         private List<Action> _fixedUpdates = new();
         private List<Action> _updates = new();
         private List<Action> _lateUpdates = new();
@@ -28,13 +20,6 @@ namespace Core.Mono
         private List<IApplicationExitNotify> _applicationExits = new();
         private List<IApplicationPauseNotify> _applicationPauses = new();
         private List<IApplicationFocusNotify> _applicationFocus = new();
-
-        public int InitPriority => -99;
-
-        public Task InitAsync()
-        {
-            return Task.CompletedTask;
-        }
         
         private void Awake()
         {
@@ -197,7 +182,7 @@ namespace Core.Mono
             }
             catch (Exception e)
             {
-                LogManager.LogError($"{nameof(MonoAdapter)}.{nameof(OnApplicationQuit)}:应用程序退出时逻辑执行错误，{e.Message}");
+                Logger.LogError($"{nameof(MonoAdapter)}.{nameof(OnApplicationQuit)}:应用程序退出时逻辑执行错误，{e.Message}");
             }
         }
 
@@ -212,7 +197,7 @@ namespace Core.Mono
             }
             catch (Exception e)
             {
-                LogManager.LogError($"{nameof(MonoAdapter)}.{nameof(OnApplicationPause)}:应用程序暂停/恢复时逻辑执行错误，{e.Message}");
+                Logger.LogError($"{nameof(MonoAdapter)}.{nameof(OnApplicationPause)}:应用程序暂停/恢复时逻辑执行错误，{e.Message}");
             }
         }
 
@@ -227,11 +212,11 @@ namespace Core.Mono
             }
             catch (Exception e)
             {
-                LogManager.LogError($"{nameof(MonoAdapter)}.{nameof(OnApplicationFocus)}:应用程序聚焦/失焦时逻辑执行错误，{e.Message}");
+                Logger.LogError($"{nameof(MonoAdapter)}.{nameof(OnApplicationFocus)}:应用程序聚焦/失焦时逻辑执行错误，{e.Message}");
             }
         }
 
-        protected override void OnDestroy()
+        protected void OnDestroy()
         {
             awakables.Clear();
             awakables = null;
@@ -249,8 +234,6 @@ namespace Core.Mono
             _applicationExits = null;
             _applicationPauses = null;
             _applicationFocus = null;
-            
-            base.OnDestroy();
         }
     }
 }

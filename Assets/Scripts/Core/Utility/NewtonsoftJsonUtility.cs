@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Core.Utility
 {
@@ -8,12 +10,16 @@ namespace Core.Utility
     public static class NewtonsoftJsonUtility
     {
         /// <summary>
-        /// 处理类型名称、格式化设置
+        /// 处理类型名称、格式化设置、枚举字符串
         /// </summary>
         public static readonly JsonSerializerSettings SerializerSettings = new()
         {
             TypeNameHandling = TypeNameHandling.All,
             Formatting = Formatting.Indented,
+            Converters = new List<JsonConverter>
+            {
+                new StringEnumConverter()
+            }
         };
     }
 }

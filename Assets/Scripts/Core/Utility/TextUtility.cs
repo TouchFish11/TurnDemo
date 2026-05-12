@@ -28,7 +28,7 @@ namespace Core.Utility
             // 空字符串校验
             if (str == "")
             {
-                LogManager.LogWarning("待分割的字符串长度为0");
+                Logger.LogWarning("待分割的字符串长度为0");
                 return Array.Empty<string>();
             }
 
@@ -65,7 +65,7 @@ namespace Core.Utility
                     return newStr.Split('_');
                 default:
                     // 无效分隔符类型告警
-                    LogManager.LogError($"未提供该类型的分割方式，当前type值为，{type}。范围：1-7");
+                    Logger.LogError($"未提供该类型的分割方式，当前type值为，{type}。范围：1-7");
                     return Array.Empty<string>();
             }
         }
@@ -85,7 +85,7 @@ namespace Core.Utility
             var newStr = Split(str, type);
             if (newStr.Length == 0)
             {
-                LogManager.LogWarning("待转换的字符串数组长度为0，无法转为int数组");
+                Logger.LogWarning("待转换的字符串数组长度为0，无法转为int数组");
                 return Array.Empty<int>();
             }
 
@@ -97,7 +97,7 @@ namespace Core.Utility
                     return value;
                 
                 // 转换失败告警
-                LogManager.LogWarning($"字符串「{singleStr}」转换int失败，返回默认值0");
+                Logger.LogWarning($"字符串「{singleStr}」转换int失败，返回默认值0");
                 return 0;
             });
         }
@@ -117,7 +117,7 @@ namespace Core.Utility
             var newStr = Split(str, type);
             if (newStr.Length == 0)
             {
-                LogManager.LogWarning("待转换的字符串数组长度为0，无法转为float数组");
+                Logger.LogWarning("待转换的字符串数组长度为0，无法转为float数组");
                 return Array.Empty<float>();
             }
 
@@ -129,7 +129,7 @@ namespace Core.Utility
                     return value;
                 
                 // 转换失败告警
-                LogManager.LogWarning($"字符串「{singleStr}」转换float失败，返回默认值0.0f");
+                Logger.LogWarning($"字符串「{singleStr}」转换float失败，返回默认值0.0f");
                 return 0;
             });
         }
@@ -149,7 +149,7 @@ namespace Core.Utility
             var newStr = Split(str, firstSplitCharType);
             if (newStr.Length == 0)
             {
-                LogManager.LogWarning("第一层分割后的字符串数组长度为0，终止双层分割");
+                Logger.LogWarning("第一层分割后的字符串数组长度为0，终止双层分割");
                 return;
             }
 
@@ -180,7 +180,7 @@ namespace Core.Utility
             var newStr = Split(str, firstSplitCharType);
             if (newStr.Length == 0)
             {
-                LogManager.LogWarning("第一层分割后的字符串数组长度为0，终止双层分割");
+                Logger.LogWarning("第一层分割后的字符串数组长度为0，终止双层分割");
                 return;
             }
 

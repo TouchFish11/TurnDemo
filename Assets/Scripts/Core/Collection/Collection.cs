@@ -1,9 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Core.Log;
 using Newtonsoft.Json;
 using UnityEngine;
+using Logger = Core.Log.Logger;
 
 namespace Core.Collection
 {
@@ -30,7 +30,7 @@ namespace Core.Collection
         /// <param name="key">要查找的键</param>
         /// <exception cref="KeyNotFoundException">当指定的键不存在时抛出</exception>
         /// <returns>键对应的值</returns>
-        public TValue this[TKey key] => keyToValueMap[key];
+        public TValue this[TKey key] { get => keyToValueMap[key]; set => keyToValueMap[key] = value; }
 
         /// <summary>
         /// 获取集合中键值对的数量
@@ -64,7 +64,7 @@ namespace Core.Collection
                 return true;
             }
 
-            LogManager.Log($"已存在键{key}，值为{value}，添加失败");
+            Logger.Log($"已存在键{key}，值为{value}，添加失败");
             return false;
         }
 

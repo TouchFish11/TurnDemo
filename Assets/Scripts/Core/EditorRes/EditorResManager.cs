@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Core.Log;
 using Core.Singleton;
 using Core.Utility;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.U2D;
+using Logger = Core.Log.Logger;
 using Object = UnityEngine.Object;
 
 namespace Core.EditorRes
@@ -15,23 +15,17 @@ namespace Core.EditorRes
     /// <summary>
     /// 编辑器资源管理器
     /// </summary>
-    public class EditorResManager : SingletonBase<EditorResManager>, IEditorResManager
+    public class EditorResManager : IEditorResManager
     {
-        public override int InitPriority => 0;
-
         /// <summary>
         /// 编辑器资源根目录
         /// </summary>
         private const string RootPath = "Assets/Editor/ArtRes/";
+        
         // 文件信息列表
         private List<FileInfo> _fileInfoList = new();
 
         private EditorResManager(){}
-
-        public override Task InitAsync()
-        {
-            return Task.CompletedTask;
-        }
 
         public T LoadEditorAsset<T>(string assetName, string suffixName = "") where T : Object
         {
@@ -39,7 +33,7 @@ namespace Core.EditorRes
             // 文件夹不存在
             if (!Directory.Exists(RootPath))
             {
-                LogManager.Log($"路径不存在:{RootPath}");
+                Logger.Log($"路径不存在:{RootPath}");
                 return null;
             }
 
@@ -70,20 +64,19 @@ namespace Core.EditorRes
             var targetInfo = _fileInfoList.Find(fileInfo => fileInfo.Name == $"{assetName}{suffixName}");
             if (targetInfo == null)
             {
-                LogManager.LogError($"未找到该资源:{assetName}{suffixName}");
+                Logger.LogError($"未找到该资源:{assetName}{suffixName}");
                 return null;
             }
 
             // 加载资源
             var res = AssetDatabase.LoadAssetAtPath<T>(targetInfo.FullName[targetInfo.FullName.IndexOf("Assets", StringComparison.Ordinal)..]);
-            if (res != null)
+            if (res)
             {
-                return res;
+                return res is GameObject ? Object.Instantiate(res) : res;
             }
-            LogManager.LogError($"不存在该文件路径:{targetInfo.FullName[targetInfo.FullName.IndexOf("Assets", StringComparison.Ordinal)..]}");
+            Logger.LogError($"不存在该文件路径:{targetInfo.FullName[targetInfo.FullName.IndexOf("Assets", StringComparison.Ordinal)..]}");
             return null;
 #else
-            LogManager.LogError("发布环境不允许使用编辑器API");
             return null;
 #endif
         }

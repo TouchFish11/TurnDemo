@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Core.Collection;
 
 namespace Core.Extensions
 {
@@ -9,30 +8,48 @@ namespace Core.Extensions
     /// </summary>
     public static class DictionaryExtensions
     {
+        /// <summary>
+        /// 转换为数组，若返回值不为空才能转换成功，null会自动跳过，内部会new一个list
+        /// </summary>
+        /// <param name="valueCollection"></param>
+        /// <param name="func"></param>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <typeparam name="TReturn"></typeparam>
+        /// <returns></returns>
         public static TReturn[] ToArray<TKey, TValue, TReturn>(this Dictionary<TKey,TValue>.ValueCollection valueCollection, Func<TValue, TReturn> func)
         {
-            var uniList = ListUtility.GetUniList<TReturn>();
+            var list = new List<TReturn>();
             foreach (var value in valueCollection)
             {
                 var tReturn = func(value);
                 if (tReturn != null)
                 {
-                    uniList.Add(tReturn);
+                    list.Add(tReturn);
                 }
             }
             
-            return uniList.List.ToArray();
+            return list.ToArray();
         }
         
+        /// <summary>
+        /// 转换为数组，若返回值不为空才能转换成功，null会自动跳过，内部会new一个list
+        /// </summary>
+        /// <param name="keyCollection"></param>
+        /// <param name="func"></param>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <typeparam name="TReturn"></typeparam>
+        /// <returns></returns>
         public static TReturn[] ToArray<TKey, TValue, TReturn>(this Dictionary<TKey,TValue>.KeyCollection keyCollection, Func<TKey, TReturn> func)
         {
-            var uniList = ListUtility.GetUniList<TReturn>();
+            var list = new List<TReturn>();
             foreach (var value in keyCollection)
             {
-                uniList.Add(func(value));
+                list.Add(func(value));
             }
             
-            return uniList.List.ToArray();
+            return list.ToArray();
         }
 
         /// <summary>

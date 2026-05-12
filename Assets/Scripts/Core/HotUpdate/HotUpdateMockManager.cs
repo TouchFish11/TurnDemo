@@ -5,79 +5,43 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
-using Core.Collection;
-using Core.EditorRes;
-using Core.Log;
-using Core.Serialize.Json;
-using Core.Service;
-using Core.Singleton;
-using Core.Tasks.Extensions;
 using UnityEngine;
+using Logger = Core.Log.Logger;
 
 namespace Core.HotUpdate
 {
     /// <summary>
     /// 模拟热更新管理器
     /// </summary>
-    public class HotUpdateMockManager : SingletonBase<HotUpdateMockManager>, IHotUpdateManager
+    public class HotUpdateMockManager : IHotUpdateManager
     {
-        public override int InitPriority => 2;
         // 缓存热更程序集名称
         private readonly ConcurrentBag<string> _assemblyNames = new();
-        private IAssetBundleManager _assetBundleManager;
-        
-        private HotUpdateMockManager(){}
+        private readonly IAssetBundleManager _assetBundleManager;
 
-        public override Task InitAsync()
+        private HotUpdateMockManager(IAssetBundleManager assetBundleManager)
         {
-            _assetBundleManager = ServiceLocator.Get<IAssetBundleManager>();
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// 加载指定程序集
-        /// </summary>
-        /// <param name="abName"></param>
-        public Task PreLoadAssembliesAsync(string abName)
-        {
-            // Editor环境下，HotUpdate.dll已经被自动加载，不需要加载，直接查找获得HotUpdate程序集，重复加载反而会出问题。
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            // ...
-            return Task.CompletedTask;
+            _assetBundleManager = assetBundleManager;
         }
         
-        public async Task LoadAssembliesAsync(string abName)
+        public Task LoadAssembliesAsync(HotUpdateAssemblySettings settings, List<TextAsset> textAssets)
         {
-            // 加载热更新AB包资源
-            var assetBundle = await _assetBundleManager.LoadBundleAsync(abName);
-            var dllTexts = ListUtility.GetUniList<TextAsset>();
-            await assetBundle.LoadAllAssetsAsync<TextAsset>().ToTask(dllTexts.List);
-            
-            var textAsset = dllTexts.List.Find(text => text.name.Contains(nameof(HotUpdateAssemblySettings)));
-            foreach (var dllText in dllTexts.List)
+            foreach (var dllText in textAssets)
             {
-                if(textAsset.name == dllText.name) continue;
-                
                 if (_assemblyNames.Contains(dllText.name[..dllText.name.LastIndexOf('.')]))
-                {
                     continue;
-                }
                 
                 // Editor环境下，HotUpdate.dll.bytes已经被自动加载，不需要加载，直接查找获得HotUpdate程序集，重复加载反而会出问题。
                 foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
                 {
                     if (assembly.GetName().Name != dllText.name[..dllText.name.LastIndexOf('.')])
-                    {
                         continue;
-                    }
                     
                     _assemblyNames.Add(assembly.GetName().Name);
-                    LogManager.Log($"{nameof(HotUpdateMockManager)}.{nameof(PreLoadAssembliesAsync)}:已缓存编辑器加载热更程序集{dllText.name}");
+                    Logger.Log($"{nameof(HotUpdateMockManager)}.{nameof(LoadAssembliesAsync)}:Editor found hotfix dll({dllText.name})");
                 }
             }
-            
-            ListUtility.CollectUniList(dllTexts);
-            _assetBundleManager.UnloadBundle(abName);
+            return Task.CompletedTask;
         }
 
         public Assembly GetAssembly(string assemblyName)
@@ -97,7 +61,6 @@ namespace Core.HotUpdate
         
         public Assembly[] GetAssemblies()
         {
-            ListUtility.GetUniList<Assembly>();
             var assemblies = new List<Assembly>
             {
                 GetCoreModule(),
@@ -119,12 +82,12 @@ namespace Core.HotUpdate
         
         public Assembly[] GetHotAssemblies()
         {
-            var assemblies = ListUtility.GetUniList<Assembly>();
+            var assemblies = new List<Assembly>();
             foreach (var assemblyName in _assemblyNames)
             {
                 assemblies.Add(Assembly.Load(assemblyName));
             }
-            return assemblies.List.ToArray();
+            return assemblies.ToArray();
         }
         
         public int GetHotAssemblies(List<Assembly> assemblies)

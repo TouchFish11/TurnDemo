@@ -1,9 +1,8 @@
+using System;
 using System.Collections.Generic;
+using Core.DI;
 using Core.HotUpdate;
 using Core.Log;
-using Core.Service;
-using Core.Types;
-using Core.Utility;
 
 namespace Core.Reflection
 {
@@ -13,22 +12,23 @@ namespace Core.Reflection
     /// <typeparam name="TIValue">接口类型</typeparam>
     public abstract class Factory<TIValue> : IFactory where TIValue : class
     {
+        [Inject] private IHotUpdateManager _hotUpdateManager;
         // 具体类型到接口的映射
-        protected readonly Dictionary<TypeIdentifier, TIValue> typeToInterfaceMap = new();
+        protected readonly Dictionary<Type, TIValue> typeToInterfaceMap = new();
 
         public virtual void InitFactory()
         {
-            FactoryUtility.ScanAllType(typeToInterfaceMap, ServiceLocator.Get<IHotUpdateManager>().GetAssemblies());
+            FactoryUtility.ScanAllType(typeToInterfaceMap, _hotUpdateManager.GetAssemblies());
         }
 
         public virtual TInterface GetTypeInstance<TInterface, TInstance>() where TInterface : class where TInstance : TInterface
         {
-            if (typeToInterfaceMap.TryGetValue(typeof(TInstance).ToIdentifier(), out var instance))
+            if (typeToInterfaceMap.TryGetValue(typeof(TInstance), out var instance))
             {
                 return instance as TInterface;
             }
             
-            LogManager.LogError($"未找到类型实例：{typeof(TInstance)}");
+            Logger.LogError($"未找到类型实例：{typeof(TInstance)}");
             return null;
         }
     }

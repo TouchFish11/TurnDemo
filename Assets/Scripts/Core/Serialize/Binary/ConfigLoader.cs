@@ -8,13 +8,13 @@ namespace Core.Serialize.Binary
     /// </summary>
     public abstract class ConfigLoader : IConfigLoader
     {
-        protected string assetbundleName;
+        protected string assetBundleName;
         
         public event Func<IConfigLoader, Task> OnConfigLoaded;
         
         public async Task LoadConfig(string abName)
         {
-            assetbundleName = abName;
+            assetBundleName = abName;
             if (OnConfigLoaded != null)
             {
                 await OnConfigLoaded.Invoke(this); 

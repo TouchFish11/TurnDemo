@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using Core.Net.FrameSync.Manager;
-using Core.Serialize.Binary;
 using Core.Utility;
 using UnityEngine.Events;
 
@@ -25,12 +24,13 @@ namespace Core.Service.Login
 
         public void SaveLoginData(LoginData loginData)
         {
-            ServiceLocator.Get<IBinaryDataManager>().SaveAsync(FileUtility.LocalLoginDataFileName, loginData);
+            //DIContainer.GetInstance<IBinaryDataManager>().SaveAsync(FileUtility.LocalLoginDataFileName, loginData);
         }
 
-        public async Task<LoginData> LoadLoginData()
+        public Task<LoginData> LoadLoginData()
         {
-            return await ServiceLocator.Get<IBinaryDataManager>().LoadAsync<LoginData>(FileUtility.LocalLoginDataFileName);
+            //return await DIContainer.GetInstance<IBinaryDataManager>().LoadAsync<LoginData>(FileUtility.LocalLoginDataFileName);
+            return (Task<LoginData>)Task.CompletedTask;
         }
     }
 }

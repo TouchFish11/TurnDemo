@@ -1,5 +1,5 @@
 using System;
-using HotUpdate.Config.Quest;
+using HotUpdate.Common.Config.Quest;
 
 namespace HotUpdate.Common.Quest
 {

@@ -7,7 +7,7 @@ namespace Core.Singleton
     /// <summary>
     /// 单例基类
     /// </summary>
-    public abstract class SingletonBase<T> : IInitializable where T : class
+    public abstract class SingletonBase<T> where T : class
     {
         // 单例对象
         private static volatile T _instance;
@@ -39,7 +39,7 @@ namespace Core.Singleton
                     }
                     else
                     {
-                        throw new Exception($"{typeof(T).Name}没有实现私有无参构造函数");
+                        throw new Exception($"{typeof(T).Name}: no private constructor found");
                     }
                 }
                 return _instance;
@@ -50,9 +50,5 @@ namespace Core.Singleton
         /// 单例是否存在
         /// </summary>
         public bool IsLive => _instance != null;
-
-        public abstract int InitPriority { get; }
-        
-        public abstract Task InitAsync();
     }
 }

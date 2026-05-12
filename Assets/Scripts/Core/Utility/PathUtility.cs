@@ -54,18 +54,17 @@ namespace Core.Utility
         /// 根据全局配置决定使用StreamingAssets或PersistentPath
         /// </summary>
         public static string LoadAbPath => GlobalSettings.Instance.abLoadPath == EDataLoadPath.Streaming ? Path.Combine(_streamingAssetsPath, "AssetBundles") : Path.Combine(_persistentPath, "AssetBundles");
-
-        /// <summary>
-        /// Json文件调试模式加载路径
-        /// 指向编辑器下的Json资源目录，仅在编辑器调试时使用
-        /// </summary>
-        public static string JsonDebugLoadPath { get; }
-
+        
         /// <summary>
         /// Json文件运行时加载路径
         /// 指向持久化路径下的Json目录，运行时读取/写入Json配置
         /// </summary>
         public static string JsonRuntimeLoadPath { get; }
+        
+        /// <summary>
+        /// 全局配置SO加载路径
+        /// </summary>
+        public static string GlobalSettingsPath { get; }
 
         /// <summary>
         /// 静态构造函数
@@ -82,16 +81,16 @@ namespace Core.Utility
             // 初始化各业务模块的根路径
             LogLocalSavePath = Path.Combine(_persistentPath, "Log"); // 日志目录
             TableInfoLocalLoadPath = Path.Combine(_persistentPath, "GameData"); // 表格数据目录
-            JsonDebugLoadPath = Path.Combine(_dataPath, "Editor", "ArtRes", "GameData", "Json"); // 编辑器Json目录
             JsonRuntimeLoadPath = Path.Combine(_persistentPath, "Json"); // 运行时Json目录
-
+            GlobalSettingsPath = Path.Combine("Global");
+            
             // 自动创建所有核心业务目录（不存在则创建）
             CreateDirectory(UserDataLocalSavePath);
             CreateDirectory(LogLocalSavePath);
             CreateDirectory(TableInfoLocalLoadPath);
             CreateDirectory(LoadAbPath);
-            CreateDirectory(JsonDebugLoadPath);
             CreateDirectory(JsonRuntimeLoadPath);
+            CreateDirectory(GlobalSettingsPath);
         }
 
         /// <summary>
@@ -135,13 +134,13 @@ namespace Core.Utility
         }
 
         /// <summary>
-        /// 获取调试模式下Json文件的完整加载路径
+        /// 获取全局配置SO对象加载路径
         /// </summary>
-        /// <param name="fileName">Json文件名（包含扩展名，如config_debug.json）</param>
-        /// <returns>拼接后的调试模式Json文件完整路径</returns>
-        public static string GetJsonDebugLoadPath(string fileName)
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public static string GetGlobalSettingsPath(string fileName)
         {
-            return Path.Combine(JsonDebugLoadPath, fileName);
+            return Path.Combine(GlobalSettingsPath, fileName);
         }
 
         /// <summary>

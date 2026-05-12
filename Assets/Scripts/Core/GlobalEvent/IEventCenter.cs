@@ -32,14 +32,14 @@ namespace Core.GlobalEvent
         /// <typeparam name="TEvent">事件类型，必须实现IEvent接口</typeparam>
         /// <param name="callBack">事件触发时执行的回调方法</param>
         /// <param name="filter">可选的事件过滤器，返回true时才执行回调，默认null（不过滤）</param>
-        void Subscribe<TEvent>(Action<TEvent> callBack, Func<TEvent, bool> filter = null) where TEvent : IEvent;
+        void SubscribeEvent<TEvent>(Action<TEvent> callBack, Func<TEvent, bool> filter = null) where TEvent : IEvent;
 
         /// <summary>
         /// 取消订阅指定类型事件的指定回调方法
         /// </summary>
         /// <typeparam name="TEvent">事件类型，必须实现IEvent接口</typeparam>
         /// <param name="callBack">需要取消订阅的回调方法</param>
-        void Unsubscribe<TEvent>(Action<TEvent> callBack) where TEvent : IEvent;
+        void UnsubscribeEvent<TEvent>(Action<TEvent> callBack) where TEvent : IEvent;
 
         /// <summary>
         /// 移除指定类型事件的所有订阅回调

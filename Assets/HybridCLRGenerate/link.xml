@@ -30,7 +30,7 @@
     <type fullname="Core.Input.CoreListen.InputDataContainer" preserve="all" />
     <type fullname="Core.Loader.Object.IPrefabLoader" preserve="all" />
     <type fullname="Core.Loader.Sprite.ISpriteLoader" preserve="all" />
-    <type fullname="Core.Log.LogManager" preserve="all" />
+    <type fullname="CoreLogger.Log.LogManager" preserve="all" />
     <type fullname="Core.Mono.EngineUtility" preserve="all" />
     <type fullname="Core.Mono.IApplicationExitNotify" preserve="all" />
     <type fullname="Core.Mono.IMonoAdapter" preserve="all" />

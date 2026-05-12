@@ -16,5 +16,12 @@ namespace Core.SO
         /// 要序列化的目标对象
         /// </summary>
         [JsonProperty] public object target;
+
+        private void Awake()
+        {
+            OnAwake();
+        }
+        
+        protected abstract void OnAwake();
     }
 }

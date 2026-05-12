@@ -2,8 +2,6 @@ using System.IO;
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Core;
 using Core.AssetBundles.Update.Exception;
-using Core.Pool;
-using Core.Serialize.Json;
 using Core.Tasks.Extensions;
 using Core.Utility;
 using UnityEngine;
@@ -17,10 +15,6 @@ namespace Core.AssetBundles.Update.State
     /// </summary>
     public class GetLocalListFileState : UpdateState
     {
-        public GetLocalListFileState(IAssetBundleUpdater assetBundleUpdater, IPoolManager poolManager, IJsonManager jsonManager) : base(assetBundleUpdater, poolManager, jsonManager)
-        {
-        }
-
         /// <summary>
         /// 执行获取本地清单文件核心逻辑
         /// </summary>
@@ -51,17 +45,17 @@ namespace Core.AssetBundles.Update.State
         /// <returns>是否获取成功</returns>
         public async Task GetLocalCompareFileInfo()
         {
-            var persistentListPath = PathUtility.GetAbLoadPath(FileUtility.ListFileDefaultName);
+            var persistentListPath = PathUtility.GetAbLoadPath(FileUtility.CatalogDefaultName);
             // 优先读取持久化路径下的清单文件（已更新过的本地清单）
             if (File.Exists(persistentListPath))
             {
                 // 使用UnityWebRequest读取（兼容不同平台路径协议）
-                await GetLocaListFileInfo("file:///" + persistentListPath);
+                await GetLocalCatalog("file:///" + persistentListPath);
                 return;
             }
             
             // 读取StreamingAssets路径下的默认清单文件（首次启动/无持久化清单时）
-            if (File.Exists(Application.streamingAssetsPath + "/" + FileUtility.ListFileDefaultName))
+            if (File.Exists(Application.streamingAssetsPath + "/" + FileUtility.CatalogDefaultName))
             {
                 // 根据平台拼接路径协议（Android平台StreamingAssets无需file协议）
                 var path =
@@ -70,7 +64,7 @@ namespace Core.AssetBundles.Update.State
 #else
                     "file:///" + Application.streamingAssetsPath + "/";
 #endif
-                await GetLocaListFileInfo($"{path}{FileUtility.ListFileDefaultName}");
+                await GetLocalCatalog($"{path}{FileUtility.CatalogDefaultName}");
                 return;
             }
 
@@ -78,24 +72,25 @@ namespace Core.AssetBundles.Update.State
         }
 
         /// <summary>
-        /// 读取指定路径的本地清单文件并解析
+        /// 读取指定路径的本地目录并解析
         /// </summary>
         /// <param name="localFilePath">本地清单文件路径（带协议头，如file:///）</param>
         /// <returns>是否读取并解析成功</returns>
-        private async Task GetLocaListFileInfo(string localFilePath)
+        private async Task GetLocalCatalog(string localFilePath)
         {
             // 创建UnityWebRequest请求读取文件
             var req = UnityWebRequest.Get(localFilePath);
+            using var handle = req.SendWebRequest().ToTask();
             // 等待请求完成
-            await req.SendWebRequest().ToTask();
+            await handle.Task;
             // 请求失败，抛出异常
             if (req.result != UnityWebRequest.Result.Success)
             {
-                throw new LocalListFileHandleException($"读取本地清单文件失败，{req.result}，{req.error}，{req.responseCode}");
+                throw new LocalListFileHandleException($"读取本地目录文件失败，{req.result}，{req.error}，{req.responseCode}");
             }
             
             // 解析清单内容到本地包集合
-            AnalyzeCompareFileInfo(req.downloadHandler.text, EFileAnalyzeType.Local);
+            AnalyzeCatalog(req.downloadHandler.text, EFileAnalyzeType.Local);
             return;
         }
 

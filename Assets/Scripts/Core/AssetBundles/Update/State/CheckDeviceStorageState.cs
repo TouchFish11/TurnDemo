@@ -1,11 +1,9 @@
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Core.AssetBundles.Update.Collection;
+using Core.AssetBundles.Collection;
 using Core.AssetBundles.Update.Core;
 using Core.AssetBundles.Update.Exception;
-using Core.Pool;
-using Core.Serialize.Json;
 using Core.Utility;
 
 namespace Core.AssetBundles.Update.State
@@ -20,7 +18,7 @@ namespace Core.AssetBundles.Update.State
         // 用户设备信息
         private readonly DriveInfo _driveInfo;
         
-        public CheckDeviceStorageState(IAssetBundleUpdater assetBundleUpdater, IPoolManager poolManager, IJsonManager jsonManager) : base(assetBundleUpdater, poolManager, jsonManager)
+        public CheckDeviceStorageState()
         {
             // 获取路径所在的驱动器（比如C:/、D:/）
             _driveInfo = new DriveInfo(Path.GetPathRoot(PathUtility.LoadAbPath));

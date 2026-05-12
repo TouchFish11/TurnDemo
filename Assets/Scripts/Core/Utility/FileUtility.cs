@@ -39,17 +39,17 @@ namespace Core.Utility
         /// AB包清单文件默认名称
         /// </summary>
         /// <value>
-        /// AssetBundleListInfo.json
+        /// AssetCatalog.json
         /// </value>
-        public static string ListFileDefaultName => "AssetBundleListInfo.json";
+        public static string CatalogDefaultName => "AssetCatalog.json";
 
         /// <summary>
         /// AB包临时清单文件默认名称
         /// </summary>
         /// <value>
-        /// ABListInfo_Temp.json
+        /// AssetCatalog_Temp.json
         /// </value>
-        public static string TempListFileDefaultName => "ABListInfo_Temp.json";
+        public static string TempCatalogDefaultName => "AssetCatalog_Temp.json";
 
         /// <summary>
         /// AB包缓存文件默认名称

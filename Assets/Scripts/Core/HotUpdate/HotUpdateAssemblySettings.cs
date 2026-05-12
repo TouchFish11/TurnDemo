@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Core.HotUpdate
 {
@@ -6,9 +8,9 @@ namespace Core.HotUpdate
     /// 热更新程序集设置
     /// </summary>
     [Serializable]
+    [JsonObject(MemberSerialization.OptIn)]
     public class HotUpdateAssemblySettings
     {
-        /// 预先加载的热更程序集名称数组
-        public string[] preloadHotUpdateAssemblies;
+        [JsonProperty] public Dictionary<string, List<string>> dllDependencies = new();
     }
 }

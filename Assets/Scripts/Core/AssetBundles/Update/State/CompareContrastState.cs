@@ -1,11 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Core.AssetBundles.Update.Collection;
+using Core.AssetBundles.Collection;
 using Core.AssetBundles.Update.Core;
-using Core.Pool;
-using Core.Serialize.Json;
-using Core.Service;
 using Core.Utility;
 
 namespace Core.AssetBundles.Update.State
@@ -16,10 +13,6 @@ namespace Core.AssetBundles.Update.State
     /// </summary>
     public class CompareContrastState : UpdateState
     {
-        public CompareContrastState(IAssetBundleUpdater assetBundleUpdater, IPoolManager poolManager, IJsonManager jsonManager) : base(assetBundleUpdater, poolManager, jsonManager)
-        {
-        }
-
         /// <summary>
         /// 执行对比校验核心逻辑
         /// </summary>
@@ -92,7 +85,7 @@ namespace Core.AssetBundles.Update.State
             if (!string.IsNullOrEmpty(cacheContent))
             {
                 // 反序列化缓存文件到缓存集合
-                var abCacheCollection = ServiceLocator.Get<IJsonManager>().FromJson<AbPackageCacheCollection>(cacheContent);
+                var abCacheCollection = jsonManager.FromJson<AbPackageCacheCollection>(cacheContent);
                 foreach (var (abName, abPackageCacheInfo) in abCacheCollection)
                 {
                     cachePackageCollection.TryAdd(abName, abPackageCacheInfo);

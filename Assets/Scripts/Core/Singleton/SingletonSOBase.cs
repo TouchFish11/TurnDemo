@@ -1,4 +1,6 @@
+using Core.Utility;
 using UnityEngine;
+using Logger = Core.Log.Logger;
 
 namespace Core.Singleton
 {
@@ -6,10 +8,10 @@ namespace Core.Singleton
     /// ScriptableObject单例基类
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class SingletonSOBase<T> : UnityEngine.ScriptableObject where T : UnityEngine.ScriptableObject
+    public abstract class SingletonSOBase<T> : ScriptableObject where T : ScriptableObject
     {
         //锁引用
-        private static readonly object _lock = new object();
+        private static readonly object _lock = new();
 
         private static T instance;
 
@@ -17,23 +19,20 @@ namespace Core.Singleton
         {
             get
             {
-                if (instance == null)
+                if (!instance)
                 {
                     lock (_lock)
                     {
-                        if (instance == null)
+                        if (!instance)
                         {
-                            instance = Resources.Load<UnityEngine.ScriptableObject>($"Global/{typeof(T).Name}") as T;
-                            if (instance != null)
-                            {
+                            var loadPath = PathUtility.GetGlobalSettingsPath($"{typeof(T).Name}");
+                            instance = Resources.Load<ScriptableObject>(loadPath) as T;
+                            if (instance)
                                 return instance;
-                            }
-                            else
-                            {
-                                //创建ScriptableObject实例
-                                instance = CreateInstance<T>();
-                                Debug.Log($"没有在Resources/Global文件夹中找到{typeof(T).Name}，已创建新的实例");
-                            }
+
+                            // 创建ScriptableObject实例
+                            instance = CreateInstance<T>();
+                            Logger.Log($"{typeof(T).Name} was not found in {loadPath}. A new instance has been created.");
                         }
                     }
                 }

@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Threading.Tasks;
-using Core.Log;
+using Core.Mono;
+using UnityEngine;
+using Logger = Core.Log.Logger;
 
 namespace Core.Utility
 {
@@ -40,7 +42,7 @@ namespace Core.Utility
         {
             if (task == null)
             {
-                throw  new ArgumentNullException(nameof(task));
+                throw new ArgumentNullException(nameof(task));
             }
             
             while (!task.IsCompleted)
@@ -50,7 +52,7 @@ namespace Core.Utility
 
             if (task.IsFaulted)
             {
-                LogManager.LogError($"{nameof(TaskUtility)}.{nameof(WaitForTask)}: {task.Exception}，StackTrance：{task.Exception?.StackTrace}");
+                Logger.LogError($"{nameof(TaskUtility)}.{nameof(WaitForTask)}: {task.Exception}，StackTrance：{task.Exception?.StackTrace}");
             }
         }
         
@@ -71,11 +73,30 @@ namespace Core.Utility
 
             if (task.IsFaulted)
             {
-                LogManager.LogError($"{nameof(TaskUtility)}.{nameof(WaitForTask)}: {task.Exception}，StackTrance：{task.Exception?.StackTrace}");
+                Logger.LogError($"{nameof(TaskUtility)}.{nameof(WaitForTask)}: {task.Exception}，StackTrance：{task.Exception?.StackTrace}");
             }
             else
             {
                 callback?.Invoke(task.Result);
+            }
+        }
+
+        /// <summary>
+        /// 等待协程完成
+        /// </summary>
+        /// <param name="coroutine"></param>
+        /// <param name="monoAdapter"></param>
+        /// <returns></returns>
+        public static Task WaitForCoroutine(IEnumerator coroutine, IMonoAdapter monoAdapter)
+        {
+            var tcs = new TaskCompletionSource<bool>();
+            monoAdapter.StartCoroutine(RunCoroutine());
+            return tcs.Task;
+            
+            IEnumerator RunCoroutine()
+            {
+                yield return coroutine;
+                tcs.SetResult(true);
             }
         }
     }

@@ -1,23 +1,23 @@
-using Core.UI.MVC;
+using Core.AssetBundles.Management;
+using Core.UI.ViewController;
 
 namespace Core.UI
 {
     public interface IPanelInfo
     {
-        IuiController UiController { get; }
+        /// <summary>
+        /// 界面缓存对象
+        /// </summary>
+        PoolObject PoolObject { get; }
         
-        IuiView UiView { get; }
-    }
-    
-    /// <summary>
-    /// 界面信息接口
-    /// </summary>
-    public interface IPanelInfo<out TView, out TModel, out TController> : IPanelInfo where TView : IuiView where TModel : IuiModel where TController : IuiController
-    {
-        TView View { get; }
+        /// <summary>
+        /// 界面控制器接口
+        /// </summary>
+        IuiController Controller { get; }
         
-        TModel Model { get; }
-
-        TController Controller { get; }
+        /// <summary>
+        /// 界面视图接口
+        /// </summary>
+        IuiView View { get; }
     }
 }

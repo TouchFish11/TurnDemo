@@ -1,4 +1,3 @@
-using System;
 using Core.Log;
 using Core.Singleton;
 using UnityEngine;
@@ -130,6 +129,27 @@ namespace Core.Global
         [Tooltip("确定从哪个文件夹加载/保存用户数据")]
         public EDataLoadPath userDataPath = EDataLoadPath.Streaming;
 
+        /// <summary>
+        /// AB包访问活跃阈值，高于该数值则放入热包列表，小于则放入冷包列表
+        /// </summary>
+        [Header("AB包访问活跃阈值")] 
+        [Tooltip("AB包访问活跃阈值，高于该数值则放入热包列表，小于则放入冷包列表")]
+        public int criticalActiveThreshold = 2;
+        
+        /// <summary>
+        /// 单个AB包滑动窗口最大数
+        /// </summary>
+        [Header("单个AB包滑动窗口最大数")] 
+        [Tooltip("单个AB包滑动窗口最大数")]
+        public int bundleSlidingWindowMaxCount = 10;
+        
+        /// <summary>
+        /// 单个滑动窗口最大时间
+        /// </summary>
+        [Header("单个滑动窗口最大时间")] 
+        [Tooltip("单个滑动窗口最大时间")]
+        public float maxDurationPerWindow = 30f;
+        
         /// <summary>
         /// UDP接收缓冲区大小
         /// </summary>

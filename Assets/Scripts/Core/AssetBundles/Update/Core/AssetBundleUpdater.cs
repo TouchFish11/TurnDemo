@@ -1,12 +1,9 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
+using Core.AssetBundles.Update.State;
 using Core.Log;
 using Core.Mono;
 using Core.Pool;
-using Core.Serialize.Json;
-using Core.Service;
-using Core.Singleton;
 using Core.Utility;
 
 namespace Core.AssetBundles.Update.Core
@@ -14,9 +11,11 @@ namespace Core.AssetBundles.Update.Core
     /// <summary>
     /// AssetBundle更新管理器
     /// </summary>
-    public class AssetBundleUpdater : SingletonBase<AssetBundleUpdater>, IAssetBundleUpdater, IApplicationExitNotify
+    public class AssetBundleUpdater : IAssetBundleUpdater, IApplicationExitNotify
     {
-        public override int InitPriority => 1;
+        // 对象池管理器接口
+        private readonly IPoolManager _poolManager;
+        
         public int QuitPriority => 0;
         // 更新上下文
         private ABUpdateContext _updateContext;
@@ -26,20 +25,19 @@ namespace Core.AssetBundles.Update.Core
         private IUpdateState _currentUpdateState;
         // 当前更新状态索引
         private int _stateIndex;
-        // 对象池管理器接口
-        private IPoolManager _poolManager;
+        /// 更新服务
+        public UpdateService UpdateService { get; }
 
         /// <summary>
         /// 更新阶段
         /// </summary>
-        public EUpdatePhase UpdatePhase => _currentUpdateState.UpdatePhase;
-        
-        private AssetBundleUpdater(){}
-        
-        public override Task InitAsync()
+        public EUpdatePhase UpdatePhase => _currentUpdateState?.UpdatePhase ?? EUpdatePhase.None;
+
+        private AssetBundleUpdater(IMonoAdapter monoAdapter, IPoolManager poolManager, UpdateService updateService)
         {
-            _poolManager = ServiceLocator.Get<IPoolManager>();
-            return Task.CompletedTask;
+            monoAdapter.AddApplicationExitNotify(this);
+            UpdateService = updateService;
+            _poolManager = poolManager;
         }
 
         /// <summary>
@@ -52,9 +50,7 @@ namespace Core.AssetBundles.Update.Core
             InitLocalPath();
             // 初始化更新上下文
             _updateContext = _poolManager.GetData<ABUpdateContext>();
-
-            var factory = new UpdateStateFactory(this, _poolManager, ServiceLocator.Get<IJsonManager>());
-            foreach (var updateState in factory.GetStates())
+            foreach (var updateState in UpdateStateFactory.GetStates())
             {
                 _updateStates.Add(updateState);
             }
@@ -94,7 +90,7 @@ namespace Core.AssetBundles.Update.Core
             }
             catch (System.Exception e)
             {
-                LogManager.LogError($"{nameof(AssetBundleUpdater)}.{nameof(CheckUpdate)}：下载异常：{e.Message}");
+                Logger.LogError($"{nameof(AssetBundleUpdater)}.{nameof(CheckUpdate)}：下载异常：{e.Message}");
                 _updateContext.UpdateOver(UpdateResult.CreateFailure(UpdateResult.EUpdateError.Unknown, e));
             }
         }
@@ -139,12 +135,12 @@ namespace Core.AssetBundles.Update.Core
             try
             {
                 if (_currentUpdateState == null || UpdatePhase == EUpdatePhase.Finished) return;
-                UpdateUtil.CancelDownload(_updateContext);
-                LogManager.Log($"{nameof(AssetBundleUpdater)}.{nameof(OnAppQuit)}:已取消下载");
+                UpdateService.CancelDownload(_updateContext);
+                Logger.Log($"{nameof(AssetBundleUpdater)}.{nameof(OnAppQuit)}:已取消下载");
             }
             catch (System.Exception e)
             {
-                LogManager.LogError($"{nameof(AssetBundleUpdater)}.{nameof(OnAppQuit)}:取消下载错误，{e.Message})");
+                Logger.LogError($"{nameof(AssetBundleUpdater)}.{nameof(OnAppQuit)}:取消下载错误，{e.Message})");
             }
         }
     }

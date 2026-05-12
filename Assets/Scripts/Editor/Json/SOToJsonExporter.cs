@@ -1,7 +1,7 @@
 using System.IO;
+using Core.DI;
 using Core.Serialize.Json;
 using Core.SO;
-using Shared.ActivityConfigSO;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,15 +12,15 @@ namespace Editor.Json
         [MenuItem("GameTool/Export SO To JSON")]
         public static void ExportSelectedSOToJson()
         {
-            var selected = Selection.activeObject as SOBase;
-            if (!selected)
+            var selected = Selection.activeObject;
+            if (!selected || selected is not SOBase soBase)
             {
-                Debug.LogError("请先选择一个继承了SOBase的SO");
+                Debug.LogError($"请先选择一个继承 {nameof(SOBase)} 的 SO");
                 return;
             }
-
+            
             // 序列化数据
-            var json = JsonManager.Instance.ToJson(selected.target, settings: Core.Utility.NewtonsoftJsonUtility.SerializerSettings);
+            var json = DIContainer.Create<JsonManager>().ToJson(soBase.target, settings: Core.Utility.NewtonsoftJsonUtility.SerializerSettings);
             
             // 保存到文件
             var path = EditorUtility.SaveFilePanel(

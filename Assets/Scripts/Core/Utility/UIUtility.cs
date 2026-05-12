@@ -1,8 +1,8 @@
-using Core.Log;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using Logger = Core.Log.Logger;
 
 namespace Core.Utility
 {
@@ -11,7 +11,6 @@ namespace Core.Utility
     /// </summary>
     public static class UIUtility
     {
-
         /// <summary>
         /// 添加自定义事件监听
         /// </summary>
@@ -52,7 +51,7 @@ namespace Core.Utility
                 return true;
             }
 
-            LogManager.LogWarning("世界转UI坐标，转换失败");
+            Logger.LogWarning("世界转UI坐标，转换失败");
             return false;
         }
 

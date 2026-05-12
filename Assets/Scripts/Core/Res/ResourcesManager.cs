@@ -1,9 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Core.Mono;
-using Core.Service;
-using Core.Singleton;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -12,53 +9,38 @@ namespace Core.Res
     /// <summary>
     /// Resources
     /// </summary>
-    public class ResourcesManager : SingletonBase<ResourcesManager>, IResourcesManager
+    public class ResourcesManager : IResourcesManager
     {
-        public override int InitPriority => 0;
+        private readonly IMonoAdapter _monoAdapter;
+        
+        // 资源名称到资源信息的映射
+        private readonly Dictionary<string, BaseResourcesInfo> _nameToResInfoMap = new();
 
-        // 
-        private readonly Dictionary<string, BaseResourcesInfo> _nameToResInfoMap = new Dictionary<string, BaseResourcesInfo>();
-        private int priority;
-
-        private ResourcesManager()
+        private ResourcesManager(IMonoAdapter monoAdapter)
         {
-
+            _monoAdapter = monoAdapter;
         }
-
-        public override Task InitAsync()
-        {
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// ͬ��������Դ
-        /// </summary>
-        /// <typeparam name="T">��Դ����</typeparam>
-        /// <param name="resPath">��Դ·��</param>
-        /// <returns></returns>
+        
         public T Load<T>(string resPath) where T : Object
         {
             //�Զ���洢����
-            string cacheName = $"{resPath}_{typeof(T).Name}";
+            var cacheName = $"{resPath}_{typeof(T).Name}";
             ResourcesInfo<T> info = null;
-            if (_nameToResInfoMap.ContainsKey(cacheName))
+            if (_nameToResInfoMap.TryGetValue(cacheName, out var value))
             {
-                info = _nameToResInfoMap[cacheName] as ResourcesInfo<T>;
-                if (info.Asset == null)
+                info = value as ResourcesInfo<T>;
+                if (info != null && !info.Asset)
                 {
-                    ServiceLocator.Get<IMonoAdapter>().StopCoroutine(info.ResCoroutine);
+                    _monoAdapter.StopCoroutine(info.ResCoroutine);
                     //�ÿ�Э��
                     info.ResCoroutine = null;
                     //ͬ�����أ���¼��Դ
                     info.Asset = Resources.Load<T>(resPath);
                     //ִ�лص�
                     info.Invoke();
-                    return info.Asset;
                 }
-                else
-                {
-                    return info.Asset;
-                }
+
+                return info.Asset;
             }
 
             info = new ResourcesInfo<T>(null);
@@ -98,7 +80,7 @@ namespace Core.Res
             _nameToResInfoMap.Add(cacheName, info);
 
             //ͨ��Mono����������Э��
-            info.ResCoroutine = ServiceLocator.Get<IMonoAdapter>().StartCoroutine(LoadAsync_Cor());
+            info.ResCoroutine = _monoAdapter.StartCoroutine(LoadAsync_Cor());
 
             IEnumerator LoadAsync_Cor()
             {
@@ -164,7 +146,8 @@ namespace Core.Res
         /// <param name="callBack">ж����ɻص�</param>
         public void UnloadUnusedAssets(UnityAction callBack = null)
         {
-            ServiceLocator.Get<IMonoAdapter>().StartCoroutine(UnLoadUnusedAssets_Cor(callBack));
+            _monoAdapter.StartCoroutine(UnLoadUnusedAssets_Cor(callBack));
+            return;
 
             static IEnumerator UnLoadUnusedAssets_Cor(UnityAction callBack = null)
             {

@@ -1,11 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Core.DI;
 using Core.HotUpdate;
 using Core.Log;
-using Core.Service;
 using Core.Singleton;
-using Core.Types;
-using Core.Utility;
 
 namespace Core.Reflection
 {
@@ -13,38 +12,33 @@ namespace Core.Reflection
     /// 工厂管理器
     /// 管理器所有实现IFactory的工厂
     /// </summary>
-    public class FactoryManager : SingletonBase<FactoryManager> , IFactoryManager
+    public class FactoryManager : IFactoryManager
     {
-        public override int InitPriority => 1;
+        private readonly IHotUpdateManager _hotUpdateManager;
         // 工厂实例类型Type到工厂接口的映射
-        private readonly Dictionary<TypeIdentifier, IFactory> typeToFactoryMap = new();
+        private readonly Dictionary<Type, IFactory> typeToFactoryMap = new();
 
-        private FactoryManager()
+        private FactoryManager(IHotUpdateManager hotUpdateManager)
         {
-
-        }
-
-        public override Task InitAsync()
-        {
-            var coreAssembly = ServiceLocator.Get<IHotUpdateManager>().GetCoreModule();
+            var coreAssembly = hotUpdateManager.GetCoreModule();
             FactoryUtility.ScanAllFactory(typeToFactoryMap, coreAssembly);
-            return Task.CompletedTask;
+            _hotUpdateManager = hotUpdateManager;
         }
 
         public void InitHotFactorys()
         {
-            var hotAssemblies = ServiceLocator.Get<IHotUpdateManager>().GetHotAssemblies();
+            var hotAssemblies = _hotUpdateManager.GetHotAssemblies();
             FactoryUtility.ScanAllFactory(typeToFactoryMap, hotAssemblies);
         }
         
         public TISubFactory GetFactory<TISubFactory, TFactory>() where TISubFactory : class, IFactory where TFactory : TISubFactory
         {
-            if (typeToFactoryMap.TryGetValue(typeof(TFactory).ToIdentifier(), out var factory))
+            if (typeToFactoryMap.TryGetValue(typeof(TFactory), out var factory))
             {
                 return (TISubFactory)factory;
             }
             
-            LogManager.LogError($"未找到该工厂类型,{typeof(TFactory)}");
+            Logger.LogError($"未找到该工厂类型,{typeof(TFactory)}");
             return null;
         }
     }

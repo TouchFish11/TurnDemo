@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Core.AssetBundles.Update.Collection;
+using Core.AssetBundles.Collection;
 using Core.Pool;
 
 namespace Core.AssetBundles.Update.Core

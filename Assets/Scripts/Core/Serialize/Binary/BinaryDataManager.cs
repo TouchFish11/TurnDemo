@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Core.Singleton;
+using Core.DI;
+using Core.Serialize.Binary.Loader;
 using Core.Utility;
 using Newtonsoft.Json;
 
@@ -12,22 +13,20 @@ namespace Core.Serialize.Binary
     /// <summary>
     /// 二进制数据管理器
     /// </summary>
-    public class BinaryDataManager : SingletonBase<BinaryDataManager>, IBinaryDataManager
+    public class BinaryDataManager : IBinaryDataManager
     {
-        public override int InitPriority => 0;
         // 配置加载类型到加载器的映射
         private readonly Dictionary<EConfigLoadType, IConfigLoader> typeToLoaderMap = new();
 
         private BinaryDataManager()
         {
-
-        }
-
-        public override Task InitAsync()
-        {
-            typeToLoaderMap.Add(EConfigLoadType.Excel, new ExcelConfigLoader());
-            typeToLoaderMap.Add(EConfigLoadType.Editor, new EditorConfigLoader());
-            return Task.CompletedTask;
+#if !UNITY_EDITOR || EDITOR_TEST_AB
+            typeToLoaderMap.Add(EConfigLoadType.Excel, DIContainer.Create<ExcelConfigLoader>());
+            typeToLoaderMap.Add(EConfigLoadType.Editor, DIContainer.Create<EditorConfigLoader>());
+#else
+            typeToLoaderMap.Add(EConfigLoadType.Excel, DIContainer.Create<ExcelConfigMockLoader>());
+            typeToLoaderMap.Add(EConfigLoadType.Editor, DIContainer.Create<EditorConfigMockLoader>());
+#endif
         }
 
         public async Task LoadConfigAsync(string abName)

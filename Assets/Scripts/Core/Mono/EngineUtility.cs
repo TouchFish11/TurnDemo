@@ -21,7 +21,6 @@ namespace Core.Mono
             return new GameObject(name, types);
         }
         
-        
         /// <summary>、
         /// 移除一个游戏对象、组件或资源
         /// </summary>
@@ -37,6 +36,19 @@ namespace Core.Mono
             {
                 Object.Destroy(obj, time);
             }
+        }
+
+        /// <summary>
+        /// 实例化游戏对象
+        /// </summary>
+        /// <param name="original"></param>
+        /// <param name="parent"></param>
+        /// <param name="instantiateInWorldSpace"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T Instantiate<T>(T original, Transform parent = null, bool instantiateInWorldSpace = false) where T : Object
+        {
+            return Object.Instantiate(original, parent, instantiateInWorldSpace);
         }
     }
 }

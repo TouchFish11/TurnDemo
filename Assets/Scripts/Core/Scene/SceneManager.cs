@@ -3,49 +3,30 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
-using Core.Log;
 using Core.Mono;
-using Core.Service;
-using Core.Singleton;
 using Core.Utility;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Logger = Core.Log.Logger;
 
 namespace Core.Scene
 {
     /// <summary>
     /// 场景管理类，负责场景的异步加载，继承单例基类并实现ISceneManager接口
     /// </summary>
-    public class SceneManager : SingletonBase<SceneManager>, ISceneManager
+    public class SceneManager : ISceneManager
     {
-        public override int InitPriority => 2;
-
+        private readonly IMonoAdapter _monoAdapter;
+        private IAssetBundleManager _assetBundleManager;
         // 场景路径缓存
         private List<string> _scenePaths;
-        private IMonoAdapter _monoAdapter;
-        private IAssetBundleManager _assetBundleManager;
         
-        private SceneManager()
+        private SceneManager(IMonoAdapter monoAdapter, IAssetBundleManager assetBundleManager)
         {
-
-        }
-
-        public override Task InitAsync()
-        {
-            _monoAdapter = ServiceLocator.Get<IMonoAdapter>();
-            _assetBundleManager = ServiceLocator.Get<IAssetBundleManager>();
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// 初始化场景管理器
-        /// </summary>
-        /// <param name="abName"></param>
-        public async Task InitAsync(string abName)
-        {
-            // 初始化场景包
-            await InitSceneBundle(abName);
+            _monoAdapter = monoAdapter;
+            _assetBundleManager = assetBundleManager;
+            InitScenePaths();
         }
         
         public async Task LoadSceneAsync(string scenePath, LoadSceneMode mode, [CanBeNull] Action<float> onLoadProgress)
@@ -55,7 +36,7 @@ namespace Core.Scene
                 // 检查是否包含指定路径的场景
                 if (!ContainPath(scenePath))
                 {
-                    LogManager.LogError($"不存在该场景路径：{scenePath}");
+                    Logger.LogError($"不存在该场景路径：{scenePath}");
                     return;
                 }
                 
@@ -65,33 +46,24 @@ namespace Core.Scene
                 _monoAdapter.StartCoroutine(UpdateProgress_Cor(ao, onLoadProgress));
                 // 等待场景加载结束
                 await TaskUtility.WaitUntil(() => ao != null && ao.isDone);
-                LogManager.Log($"{nameof(SceneManager)}.{nameof(LoadSceneAsync)}：场景({scenePath})加载结束");
+                Logger.Log($"{nameof(SceneManager)}.{nameof(LoadSceneAsync)}：场景({scenePath})加载结束");
             }
             catch (Exception exception)
             {
-                LogManager.LogError($"{nameof(SceneManager)}.{nameof(LoadSceneAsync)}：{exception.Message}");
+                Logger.LogError($"{nameof(SceneManager)}.{nameof(LoadSceneAsync)}：{exception.Message}");
             }
         }
 
-        private async Task InitSceneBundle(string abName)
+        /// <summary>
+        /// 初始化场景路径
+        /// </summary>
+        private void InitScenePaths()
         {
+            if(_scenePaths != null)
+                return;
+            
             // 缓存所有场景名称
-            if (_scenePaths == null)
-            {
-                // 加载场景对应的AssetBundle资源包
-                var sceneBundle = await _assetBundleManager.LoadBundleAsync(abName);
-                _scenePaths = new List<string>();
-                foreach (var scenePath in sceneBundle.GetAllScenePaths())
-                {
-                    var sceneNames = scenePath.Split('/');
-                    var sceneName = sceneNames[sceneNames.Length - 1];
-                    _scenePaths.Add(sceneName.Substring(0, sceneName.LastIndexOf('.')));
-                }
-            }
-            else
-            {
-                LogManager.LogError($"{nameof(SceneManager)}.{nameof(InitSceneBundle)}；重复初始化");
-            }
+            _scenePaths = new List<string>(GameAsset.GetAllScenePath());
         }
 
         /// <summary>

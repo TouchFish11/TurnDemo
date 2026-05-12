@@ -52,7 +52,6 @@ namespace HotUpdate.Common
 		public static string HelmetConfig => "HelmetConfig";
 		public static string QuestConfig => "QuestConfig";
 		public static string SwordConfig => "SwordConfig";
-		public static string HotUpdateAssemblySettings => "HotUpdateAssemblySettings";
 		public static string Ground => "Ground";
 		public static string MergedMesh => "MergedMesh";
 		public static string Prefab_Player => "Prefab_Player";

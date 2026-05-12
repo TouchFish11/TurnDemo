@@ -36,7 +36,7 @@ namespace Core.Net.FrameSync.Udp
         /// <summary>
         /// ��¼�ͻ����Ѿ�ִ����ɵķ�����ȫ��֡ ID
         /// </summary>
-        public int LocalFrameID => fSFrameHandler.FrameId;
+        //public int LocalFrameID => fSFrameHandler.FrameId;
 
         public UdpClient()
         {
@@ -225,7 +225,7 @@ namespace Core.Net.FrameSync.Udp
             if (_receiveFromQueue.TryDequeue(out FrameCommand command))
             {
                 // ִ��
-                fSFrameHandler.ServerCommandInput(command as S2C_FrameCommand);
+                //fSFrameHandler.ServerCommandInput(command as S2C_FrameCommand);
             }
         }
 

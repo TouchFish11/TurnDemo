@@ -1,6 +1,6 @@
+using Core.DI;
 using Core.Log;
 using Core.Pool;
-using Core.Service;
 
 namespace Core.AssetBundles.Update.Core
 {
@@ -71,7 +71,7 @@ namespace Core.AssetBundles.Update.Core
 
         public static UpdateResult CreateSuccess()
         {
-            var result = ServiceLocator.Get<IPoolManager>().GetData<UpdateResult>();
+            var result = DIContainer.GetInstance<IPoolManager>().GetData<UpdateResult>();
             result.Success = true;
             result.UpdateException = null;
             result.UpdateError = EUpdateError.None;
@@ -80,13 +80,13 @@ namespace Core.AssetBundles.Update.Core
         
         public static UpdateResult CreateFailure(EUpdateError updateError, System.Exception exception)
         {
-            var result = ServiceLocator.Get<IPoolManager>().GetData<UpdateResult>();
+            var result = DIContainer.GetInstance<IPoolManager>().GetData<UpdateResult>();
             result.Success = false;
             result.UpdateException = exception;
             result.UpdateError = updateError;
             
             // 记录日志
-            LogManager.LogError($"{nameof(UpdateResult)}.{nameof(CreateFailure)}：错误类型：{updateError}；异常：{exception.Message}");
+            Logger.LogError($"{nameof(UpdateResult)}.{nameof(CreateFailure)}：错误类型：{updateError}；异常：{exception.Message}");
             return result;
         }
 

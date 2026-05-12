@@ -1,14 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
-using Core.Log;
+using Core.DI;
 using Core.Mono;
-using Core.Service;
-using Core.Singleton;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Networking;
+using Logger = Core.Log.Logger;
 
 namespace Core.Net
 {
@@ -16,26 +14,14 @@ namespace Core.Net
     /// UnityWebRequest管理类
     /// 封装网络请求相关操作：资源下载、文件上传
     /// </summary>
-    public class UWRManager : SingletonBase<UWRManager>, IUWRManager
+    public class UWRManager : IUWRManager
     {
-        // 单例优先级（数值越低优先级越高）
-        public override int InitPriority => 0;
-        // Mono适配器（用于在非Mono类中启动协程）
-        private IMonoAdapter _monoAdapter;
+        // Mono适配器
+        private readonly IMonoAdapter _monoAdapter;
 
-        private UWRManager()
+        private UWRManager(IMonoAdapter monoAdapter)
         {
-            
-        }
-        
-        /// <summary>
-        /// 初始化方法（单例初始化时调用）
-        /// 获取Mono适配器实例，用于协程调度
-        /// </summary>
-        public override Task InitAsync()
-        {
-            _monoAdapter = ServiceLocator.Get<IMonoAdapter>();
-            return Task.CompletedTask;
+            _monoAdapter = monoAdapter;
         }
 
         /// <summary>
@@ -118,7 +104,7 @@ namespace Core.Net
                 // 文件读取失败：打印错误并终止
                 if (!task.IsCompletedSuccessfully)
                 {
-                    LogManager.LogError(task.Exception.Message);
+                    Logger.LogError(task.Exception.Message);
                     yield break;
                 }
 
@@ -150,7 +136,7 @@ namespace Core.Net
                 else
                 {
                     // 上传失败：打印错误信息
-                    LogManager.LogError($"上传失败: {uwr.error}\nURL: {url}");
+                    Logger.LogError($"上传失败: {uwr.error}\nURL: {url}");
                 }
             }
         }

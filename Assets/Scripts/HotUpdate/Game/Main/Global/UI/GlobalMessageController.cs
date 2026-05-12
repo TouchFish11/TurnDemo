@@ -1,0 +1,64 @@
+using System;
+using Core.AssetBundles.Management;
+using Core.DI;
+using Core.GlobalEvent.Events;
+using Core.Log;
+using Core.UI.ViewController;
+using HotUpdate.Common;
+
+namespace HotUpdate.Game.Main.Global.UI
+{
+    using Task = System.Threading.Tasks.Task;
+
+    /// <summary>
+    /// 全局消息界面
+    /// </summary>
+    public class GlobalMessageController : UIController<GlobalMessageView>
+    {
+        [Inject] private ObjectSpawner _objectSpawner;
+        
+        protected override Task OnInit()
+        {
+            return Task.CompletedTask;
+        }
+
+        protected override Task OnActive()
+        {
+            // 注册全局消息事件
+            eventCenter.SubscribeEvent<GlobalMessageEvent>(OnGlobalMessageEvent);
+            return Task.CompletedTask;
+        }
+
+        protected override Task OnInactivate()
+        {
+            eventCenter.UnsubscribeEvent<GlobalMessageEvent>(OnGlobalMessageEvent);
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// 全局消息事件回调
+        /// </summary>
+        /// <param name="globalMessageEvent"></param>
+        private void OnGlobalMessageEvent(GlobalMessageEvent globalMessageEvent)
+        {
+            ShowMessage(globalMessageEvent.Message);
+        }
+
+        /// <summary>
+        /// 显示消息
+        /// </summary>
+        /// <param name="msg"></param>
+        private async void ShowMessage(string msg)
+        {
+            try
+            {
+                var poolObject = await _objectSpawner.SpawnAsync<MessageUI>(ResKeyCollection.MessageUI, view.MessageContainer);
+                poolObject.Obj.InitMessage(msg);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"{nameof(GlobalMessageController)}.{nameof(ShowMessage)}：{e.Message}");
+            }
+        }
+    }
+}

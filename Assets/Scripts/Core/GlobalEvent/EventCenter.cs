@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Core.Mono;
-using Core.Service;
-using Core.Singleton;
 
 namespace Core.GlobalEvent
 {
@@ -12,15 +9,13 @@ namespace Core.GlobalEvent
     /// 职责：统一管理事件的订阅、取消订阅、触发、延迟触发，支持按类型过滤事件
     /// 特性：单例模式、每帧限制延迟事件触发数量，避免单帧事件过多导致性能问题
     /// </summary>
-    public class EventCenter : SingletonBase<EventCenter>, IEventCenter
+    public class EventCenter : IEventCenter
     {
-        public override int InitPriority => 0;
-
         // 存储事件类型与对应事件信息列表的映射表
         // Key：事件类型（TEvent），Value：该类型下所有订阅的事件信息
-        private readonly Dictionary<Type, List<BaseEventInfo>> _typeToEventInfoMap = new Dictionary<Type, List<BaseEventInfo>>();
+        private readonly Dictionary<Type, List<BaseEventInfo>> _typeToEventInfoMap = new();
         // 延迟触发的事件队列，用于异步/分帧处理事件
-        private readonly Queue<DelayEventInfo> _delayEventQueue = new Queue<DelayEventInfo>();
+        private readonly Queue<DelayEventInfo> _delayEventQueue = new();
         // 当前帧已触发的延迟事件数量，用于控制单帧触发上限
         private byte _currentTriggeredEventCount;
 
@@ -34,12 +29,9 @@ namespace Core.GlobalEvent
         /// 私有构造函数（单例模式）
         /// 初始化：注册Update监听，用于每帧处理延迟事件队列
         /// </summary>
-        private EventCenter(){}
-
-        public override Task InitAsync()
+        private EventCenter(IMonoAdapter monoAdapter)
         {
-            ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpdate);
-            return Task.CompletedTask;
+            monoAdapter.AddUpdateListener(OnUpdate);
         }
 
         /// <summary>
@@ -83,7 +75,7 @@ namespace Core.GlobalEvent
         /// <typeparam name="TEvent">事件类型，需实现IEvent接口</typeparam>
         /// <param name="callBack">事件触发时执行的回调方法</param>
         /// <param name="filter">事件过滤条件（可选）：返回true则触发回调，false则跳过</param>
-        public void Subscribe<TEvent>(Action<TEvent> callBack, Func<TEvent, bool> filter = null) where TEvent : IEvent
+        public void SubscribeEvent<TEvent>(Action<TEvent> callBack, Func<TEvent, bool> filter = null) where TEvent : IEvent
         {
             var eventType = typeof(TEvent);
             // 封装事件回调与过滤条件为事件信息对象
@@ -105,7 +97,7 @@ namespace Core.GlobalEvent
         /// </summary>
         /// <typeparam name="TEvent">事件类型，需实现IEvent接口</typeparam>
         /// <param name="callBack">需要取消的事件回调方法</param>
-        public void Unsubscribe<TEvent>(Action<TEvent> callBack) where TEvent : IEvent
+        public void UnsubscribeEvent<TEvent>(Action<TEvent> callBack) where TEvent : IEvent
         {
             // 查找该事件类型下的所有订阅信息
             if (!_typeToEventInfoMap.TryGetValue(typeof(TEvent), out var eventInfos))

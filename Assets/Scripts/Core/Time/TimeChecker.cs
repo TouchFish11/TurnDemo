@@ -1,7 +1,7 @@
 using System.Collections.Generic;
+using Core.DI;
 using Core.Log;
 using Core.Pool;
-using Core.Service;
 using UnityEngine.Events;
 
 namespace Core.Time
@@ -11,13 +11,14 @@ namespace Core.Time
     /// </summary>
     public class TimeChecker : ITimeChecker
     {
+        [Inject] private IPoolManager _poolManager;
         // �洢ʱ������ֵ� Key��Ψһ����Value��ʱ�����
         private Dictionary<int, DateTime> _dateTimeDic = new();
 
         /// <summary>
         /// ʱ�����Ψһ��
         /// </summary>
-        private static int TIME_KEY = 0;
+        private static int TIME_KEY;
 
         /// <summary>
         /// ����Ŀ��ʱ��
@@ -31,7 +32,7 @@ namespace Core.Time
         public int CreateTargetTime(System.DateTime currentTime, int targetDay, int targetHour, int targetMin, int targetSec)
         {
             // ��������ָ��ʱ��� DateTime ����
-            DateTime tagetTime = ServiceLocator.Get<IPoolManager>().GetData<DateTime>("GameUtility");
+            var tagetTime = _poolManager.GetData<DateTime>();
             //��ʼ��ʱ�����
             tagetTime = tagetTime.Init(currentTime, targetDay, targetHour, targetMin, targetSec);
             //�洢���ֵ�
@@ -63,8 +64,8 @@ namespace Core.Time
                 return _dateTimeDic[key].CalcRemainTime(current);
             }
 
-            LogManager.LogError($"δ�ҵ���ָ����ʱ�����KEY��{key}");
-            return default;
+            Logger.LogError($"δ�ҵ���ָ����ʱ�����KEY��{key}");
+            return 0;
         }
 
         /// <summary>
@@ -74,11 +75,13 @@ namespace Core.Time
         /// <returns>ʱ�����</returns>
         public DateTime GetDateTime(int key)
         {
-            if (_dateTimeDic.ContainsKey(key))
-                return _dateTimeDic[key];
+            if (_dateTimeDic.TryGetValue(key, out var dateTime))
+            {
+                return dateTime;
+            }
 
-            LogManager.LogError($"δ�ҵ���ָ����ʱ�����KEY��{key}");
-            return default;
+            Logger.LogError($"δ�ҵ���ָ����ʱ�����KEY��{key}");
+            return null;
         }
 
         /// <summary>

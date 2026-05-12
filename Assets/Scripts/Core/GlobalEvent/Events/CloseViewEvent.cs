@@ -1,4 +1,4 @@
-using Core.UI.MVC;
+using Core.UI.ViewController;
 
 namespace Core.GlobalEvent.Events
 {

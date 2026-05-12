@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Core.HotUpdate
 {
@@ -9,13 +10,6 @@ namespace Core.HotUpdate
     /// </summary>
     public interface IHotUpdateManager
     {
-        /// <summary>
-        /// 加载所有热更程序集
-        /// </summary>
-        /// <param name="abName"></param>
-        /// <returns></returns>
-        Task LoadAssembliesAsync(string abName);
-
         /// <summary>
         /// 获取加载的指定热更程序集
         /// </summary>
@@ -36,12 +30,6 @@ namespace Core.HotUpdate
         Assembly[] GetAssemblies();
 
         Assembly GetCoreModule();
-
-        /// <summary>
-        /// 预加载HotUpdateAssemblySettings的preloadHotUpdateAssemblies程序集
-        /// </summary>
-        /// <param name="abName"></param>
-        Task PreLoadAssembliesAsync(string abName);
         
         /// <summary>
         /// 获取所有程序集
@@ -64,5 +52,7 @@ namespace Core.HotUpdate
         /// </summary>
         /// <param name="aotDlls">补充程序集名称列表</param>
         void LoadMetadataForAOTAssemblies(IReadOnlyList<string> aotDlls);
+
+        Task LoadAssembliesAsync(HotUpdateAssemblySettings settings, List<TextAsset> textAssets);
     }
 }

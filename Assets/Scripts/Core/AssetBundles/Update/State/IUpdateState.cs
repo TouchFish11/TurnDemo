@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Core;
 
-namespace Core.AssetBundles.Update
+namespace Core.AssetBundles.Update.State
 {
     /// <summary>
     /// 资源包更新状态接口

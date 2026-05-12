@@ -1,16 +1,10 @@
 using System;
-using System.Threading.Tasks;
-using Core.Singleton;
 
 namespace Core.Input.CoreListen
 {
-    /// <summary>
-    /// ���������
-    /// </summary>
     [Obsolete("ʹ��FrameworkInputSystem", true)]
-    public class InputManager : SingletonBase<InputManager>, IInputManager
+    public class InputManager : IInputManager
     {
-        private int priority;
         //    //�洢��������
         //    private Dictionary<E_EventType, InputData> _inputDataDic = new Dictionary<E_EventType, InputData>();
         //    //��ǰ��������
@@ -20,7 +14,7 @@ namespace Core.Input.CoreListen
 
         //    private InputManager()
         //    {
-        //        ServiceLocator.Get<IMonoManager>().AddUpdateListener(UpdateInput);
+        //        DIContainer.GetInstance<IMonoManager>().AddUpdateListener(UpdateInput);
         //    }
 
         //    /// <summary>
@@ -53,7 +47,7 @@ namespace Core.Input.CoreListen
         //    /// <param name="callBack">�Ľ������ص�</param>
         //    public void EditInput(Key oldKeyBoard, UnityAction callBack)
         //    {
-        //        ServiceLocator.Get<IMonoManager>().StartCoroutine(EditoInput_Cor());
+        //        DIContainer.GetInstance<IMonoManager>().StartCoroutine(EditoInput_Cor());
 
         //        IEnumerator EditoInput_Cor()
         //        {
@@ -99,15 +93,15 @@ namespace Core.Input.CoreListen
         //                {
         //                    case E_InputMode.Down:
         //                        if (Keyboard.current[_nowInputData.Key].wasPressedThisFrame)
-        //                            ServiceLocator.Get<IEventCenter>().TriggerEvent(eventType);
+        //                            DIContainer.GetInstance<IEventCenter>().TriggerEvent(eventType);
         //                        break;
         //                    case E_InputMode.Up:
         //                        if (Keyboard.current[_nowInputData.Key].wasReleasedThisFrame)
-        //                            ServiceLocator.Get<IEventCenter>().TriggerEvent(eventType);
+        //                            DIContainer.GetInstance<IEventCenter>().TriggerEvent(eventType);
         //                        break;
         //                    case E_InputMode.Press:
         //                        if (Keyboard.current[_nowInputData.Key].isPressed)
-        //                            ServiceLocator.Get<IEventCenter>().TriggerEvent(eventType);
+        //                            DIContainer.GetInstance<IEventCenter>().TriggerEvent(eventType);
         //                        break;
         //                }
         //            }
@@ -118,15 +112,15 @@ namespace Core.Input.CoreListen
         //                {
         //                    case E_InputMode.Down:
         //                        if (GetCurrentMouseButton(_nowInputData.Mouse).wasPressedThisFrame)
-        //                            ServiceLocator.Get<IEventCenter>().TriggerEvent(eventType);
+        //                            DIContainer.GetInstance<IEventCenter>().TriggerEvent(eventType);
         //                        break;
         //                    case E_InputMode.Up:
         //                        if (GetCurrentMouseButton(_nowInputData.Mouse).wasReleasedThisFrame)
-        //                            ServiceLocator.Get<IEventCenter>().TriggerEvent(eventType);
+        //                            DIContainer.GetInstance<IEventCenter>().TriggerEvent(eventType);
         //                        break;
         //                    case E_InputMode.Press:
         //                        if (GetCurrentMouseButton(_nowInputData.Mouse).isPressed)
-        //                            ServiceLocator.Get<IEventCenter>().TriggerEvent(eventType);
+        //                            DIContainer.GetInstance<IEventCenter>().TriggerEvent(eventType);
         //                        break;
         //                }
         //            }
@@ -167,11 +161,5 @@ namespace Core.Input.CoreListen
         //            }
         //        }
         //    }
-        public override int InitPriority => -1;
-
-        public override Task InitAsync()
-        {
-            return Task.CompletedTask;
-        }
     }
 }

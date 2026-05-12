@@ -1,9 +1,8 @@
 using System.Net;
-using System.Threading.Tasks;
+using Core.DI;
 using Core.Mono;
 using Core.Net.FrameSync.Udp;
 using Core.Net.Tcp;
-using Core.Service;
 using Core.Singleton;
 
 namespace Core.Net.FrameSync.Manager
@@ -13,6 +12,8 @@ namespace Core.Net.FrameSync.Manager
     /// </summary>
     public class NetManager : SingletonAutoMono<NetManager>, INetManager, IApplicationExitNotify
     {
+        [Inject] private IMonoAdapter _monoAdapter;
+        
         private TcpClient _tcpClient;
         private UdpClient _udpClient;
         public EndPoint serverEndPoint;
@@ -24,7 +25,7 @@ namespace Core.Net.FrameSync.Manager
 
         private void Awake()
         {
-            ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpdate);
+            _monoAdapter.AddUpdateListener(OnUpdate);
         }
 
         /// <summary>

@@ -42,17 +42,6 @@ namespace Editor.Menu
         }
 
         /// <summary>
-        /// 生成ResKeyCollection脚本
-        /// </summary>
-        [MenuItem("GameTool/Generate/Generate ResKeyCollection Code")]
-        public static void GenerateResKeyCollectionScript()
-        {
-            IScriptGenerator scriptGenerator = new ResKeyCollectionClassGenerator();
-            scriptGenerator.GenerateScript();
-            Debug.Log($"ResKeyCollection脚本已生成，位置：$\"{{Application.dataPath}}/Scripts/Core/Config/ResKeyCollection.cs\"");
-        }
-
-        /// <summary>
         /// 生成InputActionData
         /// </summary>
         [MenuItem("GameTool/Generate/Generate InputActionData")]

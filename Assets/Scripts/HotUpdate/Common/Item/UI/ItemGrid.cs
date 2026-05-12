@@ -10,9 +10,9 @@ namespace HotUpdate.Common.Item.UI
     /// </summary>
     public class ItemGrid : UIBehaviourBase
     {
-        [Inject] private Image imgQuality;
-        [Inject] private Image imgIcon;
-        [Inject] private TextMeshProUGUI txtNum;
+        [InjectUI] private Image imgQuality;
+        [InjectUI] private Image imgIcon;
+        [InjectUI] private TextMeshProUGUI txtNum;
 
         /// <summary>
         /// 初始化

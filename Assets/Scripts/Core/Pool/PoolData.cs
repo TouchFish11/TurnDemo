@@ -8,15 +8,15 @@ namespace Core.Pool
     public sealed class PoolData<T> : BasePoolData where T : class, IPoolData, new()
     {
         //存储未使用的数据对象队列
-        private readonly Queue<T> _unUsedDataList = new Queue<T>();
+        private readonly Queue<T> _unUsedDatas = new();
 
         /// <summary>
-        /// 获取缓存的数据对象
+        /// 获取缓存的数据对象，外部判断是否存在缓存
         /// </summary>
         /// <returns></returns>
         public T Get()
         {
-            return _unUsedDataList.Dequeue();
+            return _unUsedDatas.Dequeue();
         }
         
         /// <summary>
@@ -27,12 +27,20 @@ namespace Core.Pool
         {
             //重置数据
             data.ResetData();
-            _unUsedDataList.Enqueue(data);
+            _unUsedDatas.Enqueue(data);
+        }
+
+        /// <summary>
+        /// 清空所有缓存的C#类
+        /// </summary>
+        public void Clear()
+        {
+            _unUsedDatas.Clear();
         }
 
         /// <summary>
         /// 未使用对象数量
         /// </summary>
-        public int UnUsedCount => _unUsedDataList.Count;
+        public int UnUsedCount => _unUsedDatas.Count;
     }
 }

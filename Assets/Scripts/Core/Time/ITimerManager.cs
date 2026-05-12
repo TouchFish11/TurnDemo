@@ -3,7 +3,7 @@ using UnityEngine.Events;
 namespace Core.Time
 {
     /// <summary>
-    /// ʱ��������ӿ�
+    /// 计时器管理器
     /// </summary>
     public interface ITimerManager
     {

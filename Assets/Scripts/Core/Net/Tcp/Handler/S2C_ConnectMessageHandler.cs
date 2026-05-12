@@ -1,9 +1,6 @@
-using Core.GlobalEvent;
-using Core.GlobalEvent.Events;
 using Core.Net.FrameSync.Manager;
 using Core.Net.Tcp.Message;
 using Core.Net.Tcp.Message.S2C;
-using Core.Service;
 using UnityEngine;
 
 namespace Core.Net.Tcp.Handler
@@ -33,7 +30,7 @@ namespace Core.Net.Tcp.Handler
             }
 
             // ������ɺ�
-            ServiceLocator.Get<IEventCenter>().TriggerEvent(new PostConnectedEvent() { S2C_ConnectMessage = TcpMessage });
+            //DIContainer.GetInstance<IEventCenter>().TriggerEvent(new PostConnectedEvent() { S2C_ConnectMessage = TcpMessage });
         }
     }
 }

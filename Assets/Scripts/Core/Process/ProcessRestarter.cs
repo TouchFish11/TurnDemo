@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
-using Core.Log;
 using UnityEngine;
+using Logger = Core.Log.Logger;
 
 namespace Core.Process
 {
@@ -19,73 +19,53 @@ namespace Core.Process
         {
             if (Application.isEditor)
             {
-                LogManager.Log($"{nameof(ProcessRestarter)}.{nameof(RestartProcess)}：模拟重启成功，请退出播放模式，重新进入");
+                Logger.Log($"{nameof(ProcessRestarter)}.{nameof(RestartProcess)}：模拟重启成功，请退出播放模式，重新进入");
                 return;
             }
-            
+
             try
             {
-                var exePath = $"{Application.dataPath}/../{Application.productName}.exe";
+                Process.GetCurrentProcess().Refresh();
+                foreach (ProcessModule module in Process.GetCurrentProcess().Modules)
+                {
+                    Logger.Log($"{nameof(ProcessRestarter)}.{nameof(RestartProcess)}：模块文件：{module.FileName}，模块名称：{module.ModuleName}");
+                }
+                
+                var processModule = Process.GetCurrentProcess().MainModule;
+                if (processModule == null)
+                { 
+                    throw new Exception($"{nameof(ProcessRestarter)}.{nameof(RestartProcess)}：processModule为null");
+                }
+                
+                var exePath = processModule.FileName;
+                if (string.IsNullOrEmpty(exePath))
+                {
+                    throw new Exception($"{nameof(ProcessRestarter)}.{nameof(RestartProcess)}：exePath路径为null");
+                }
+                Logger.Log($"{nameof(ProcessRestarter)}.{nameof(RestartProcess)}：exePath路径为:{exePath}");
+
+                // 防止无限重启
+                if (Environment.CommandLine.Contains("--noRestart"))
+                {
+                    throw new Exception($"{nameof(ProcessRestarter)}.{nameof(RestartProcess)}：CommandLine包含noRestart");
+                }
+                Logger.Log($"{nameof(ProcessRestarter)}.{nameof(RestartProcess)}：CommandLine不包含noRestart");
+                
                 var startInfo = new ProcessStartInfo
                 {
                     FileName = exePath,
-                    UseShellExecute = true      // UseShellExecute 在 Windows 上通常建议设为 true，以获得更好的环境支持
+                    UseShellExecute = false,
+                    CreateNoWindow = true
                 };
+
                 Process.Start(startInfo);
                 Application.Quit();
             }
             catch (Exception e)
             {
-                LogManager.LogError($"{nameof(ProcessRestarter)}.{nameof(RestartProcess)}：重启失败，{e.Message}");
-                // 退出
-                Application.Quit();
+                Logger.LogError($"{nameof(ProcessRestarter)}.{nameof(RestartProcess)}：{e.Message}");
+                Application.Quit(); // 至少退出
             }
-            
-            #region MyRegion
-            // try
-            // {
-            //     Process.GetCurrentProcess().Refresh();
-            //     foreach (ProcessModule module in Process.GetCurrentProcess().Modules)
-            //     {
-            //         LogManager.Log($"{nameof(ProcessRestarter)}.{nameof(RestartProcess)}：模块文件：{module.FileName}，模块名称：{module.ModuleName}");
-            //     }
-            //     
-            //     var processModule = Process.GetCurrentProcess().MainModule;
-            //     if (processModule == null)
-            //     { 
-            //         throw new Exception($"{nameof(ProcessRestarter)}.{nameof(RestartProcess)}：processModule为null");
-            //     }
-            //     
-            //     var exePath = processModule.FileName;
-            //     if (string.IsNullOrEmpty(exePath))
-            //     {
-            //         throw new Exception($"{nameof(ProcessRestarter)}.{nameof(RestartProcess)}：exePath路径为null");
-            //     }
-            //     LogManager.Log($"{nameof(ProcessRestarter)}.{nameof(RestartProcess)}：exePath路径为:{exePath}");
-            //
-            //     // 防止无限重启
-            //     if (Environment.CommandLine.Contains("--noRestart"))
-            //     {
-            //         throw new Exception($"{nameof(ProcessRestarter)}.{nameof(RestartProcess)}：CommandLine包含noRestart");
-            //     }
-            //     LogManager.Log($"{nameof(ProcessRestarter)}.{nameof(RestartProcess)}：CommandLine不包含noRestart");
-            //     
-            //     var startInfo = new ProcessStartInfo
-            //     {
-            //         FileName = exePath,
-            //         UseShellExecute = false,
-            //         CreateNoWindow = true
-            //     };
-            //
-            //     Process.Start(startInfo);
-            //     Application.Quit();
-            // }
-            // catch (Exception e)
-            // {
-            //     LogManager.LogError($"{nameof(ProcessRestarter)}.{nameof(RestartProcess)}：{e.Message}");
-            //     Application.Quit(); // 至少退出
-            // }
-            #endregion
         }
     }
 }

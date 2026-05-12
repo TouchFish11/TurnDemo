@@ -1,21 +1,17 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Core.Log;
 using Core.Mono;
-using Core.Service;
-using Core.Singleton;
 using Core.Utility;
 using UnityEngine;
+using Logger = Core.Log.Logger;
 
 namespace Core.Systems.Memorys
 {
     /// <summary>
     /// 内存监视器
     /// </summary>
-    public class MemoryMonitor : SingletonBase<MemoryMonitor>, IMemoryMonitor
+    public class MemoryMonitor : IMemoryMonitor
     {
-        public override int InitPriority => 0;
         // 监听者列表
         private readonly List<IMemoryListener> _listeners = new();
         // 当前内存占用级别
@@ -34,16 +30,10 @@ namespace Core.Systems.Memorys
         private long currentSystemMemory;
         private float currentRatio;
 
-        private MemoryMonitor()
+        private MemoryMonitor(IMonoAdapter monoAdapter)
         {
-            
-        }
-        
-        public override Task InitAsync()
-        {
-            ServiceLocator.Get<IMonoAdapter>().AddUpdateListener(OnUpdate);
+            monoAdapter.AddUpdateListener(OnUpdate);
             Application.lowMemory += OnLowMemory;
-            return Task.CompletedTask;
         }
 
         public void Register(IMemoryListener listener)
@@ -83,15 +73,12 @@ namespace Core.Systems.Memorys
 
         private void SetCurrentOccupationLevel(EMemoryOccupationLevel currentOccupationLevel)
         {
-            LogManager.Log($"当前内存占用级别：{currentOccupationLevel}。" +
-                           $"当前内存占用：{TextUtility.ToByteUnit((ulong)currentMemory)}，" +
-                           $"系统内存：{TextUtility.ToByteUnit((ulong)currentSystemMemory)}，" +
-                           $"比值：{TextUtility.FloatToStr(currentRatio * 100, 2)}%");
+            if (this.currentOccupationLevel == currentOccupationLevel) return;
             
-            if (this.currentOccupationLevel == currentOccupationLevel)
-            {
-                return;
-            }
+            Logger.Log($"当前内存占用级别：{currentOccupationLevel}。" +
+                       $"当前内存占用：{TextUtility.ToByteUnit((ulong)currentMemory)}，" +
+                       $"系统内存：{TextUtility.ToByteUnit((ulong)currentSystemMemory)}，" +
+                       $"比值：{TextUtility.FloatToStr(currentRatio * 100, 2)}%");
             
             this.currentOccupationLevel = currentOccupationLevel;
             // 通知所有监听者
@@ -108,10 +95,10 @@ namespace Core.Systems.Memorys
 
         private void OnUpdate()
         {
-            if (UnityEngine.Time.realtimeSinceStartup - nowTime >= checkIntervalSeconds)
+            if (TimeUtil.RealtimeSinceStartup - nowTime >= checkIntervalSeconds)
             {
                 CheckMemory();
-                nowTime = UnityEngine.Time.realtimeSinceStartup;
+                nowTime = TimeUtil.RealtimeSinceStartup;
             }
         }
     }

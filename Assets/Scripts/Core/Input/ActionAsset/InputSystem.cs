@@ -3,15 +3,12 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
-using Core.Log;
-using Core.Service;
-using Core.Singleton;
-using Core.Tasks.Extensions;
 using Core.Utility;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
+using Logger = Core.Log.Logger;
 
 namespace Core.Input.ActionAsset
 {
@@ -20,9 +17,10 @@ namespace Core.Input.ActionAsset
     /// 负责输入动作的初始化、启用/禁用、按键修改、冲突检测等核心逻辑
     /// 继承单例基类，保证全局唯一实例；实现IInputSystem接口（接口未展示）
     /// </summary>
-    public class InputSystem : SingletonBase<InputSystem>, IInputSystem
+    public class InputSystem : IInputSystem
     {
-        public override int InitPriority => 2;
+        // AB包管理器接口
+        private readonly IAssetBundleManager _assetBundleManager;
         // 输入配置的JSON原始数据
         private string _jsonInputData;
         // 玩家输入组件引用，关联InputActionAsset
@@ -39,31 +37,19 @@ namespace Core.Input.ActionAsset
         private string newPath;
         // 数据容器
         private MainActionMapDataContainer _mapDataContainer;
-        // AB包管理器接口
-        private IAssetBundleManager _assetBundleManager;
         
-        /// <summary>
-        /// 私有构造函数
-        /// 单例模式，禁止外部实例化
-        /// </summary>
-        private InputSystem(){}
-        
-        public override Task InitAsync()
+        private InputSystem(IAssetBundleManager assetBundleManager)
         {
-            _assetBundleManager = ServiceLocator.Get<IAssetBundleManager>();
-            return Task.CompletedTask;
+            _assetBundleManager = assetBundleManager;
         }
 
         /// <summary>
         /// 初始化输入系统
         /// </summary>
-        /// <param name="abName"></param>
-        public async Task InitInputsystemAsync(string abName)
+        /// <param name="inputJson"></param>
+        public void InitInputSystem(string inputJson)
         {
-            // 从AssetBundle加载输入配置JSON
-            var assetBundle = await _assetBundleManager.LoadBundleAsync(abName);
-            var json = await assetBundle.LoadAssetAsync<TextAsset>(FileUtility.InputActionLocalFileName).ToTask<TextAsset>();
-            _jsonInputData = json.text;
+            _jsonInputData = inputJson;
         }
 
         /// <summary>
@@ -131,7 +117,7 @@ namespace Core.Input.ActionAsset
             {
                 // 解析按键路径，格式转换为InputSystem标准路径（<设备>/按键名）
                 var originalPaths = inputControl.path.Split('/');
-                var newpath = $"<{originalPaths[1]}>/{originalPaths[2]}";
+                var newPath = $"<{originalPaths[1]}>/{originalPaths[2]}";
 
                 // 尝试将按键名转换为Key枚举（不区分大小写）
                 // 非键盘按键会转换失败
@@ -151,7 +137,7 @@ namespace Core.Input.ActionAsset
                     return;
                 }
                 // 检查新按键是否与现有配置冲突
-                if (IsKeyConflict(keyMap, oldKey, newTempKey, newpath))
+                if (IsKeyConflict(keyMap, oldKey, newTempKey, newPath))
                 {
                     // 回调：按键已存在冲突
                     overCallBack?.Invoke(E_KeyConflict.ExistKey);
@@ -159,7 +145,7 @@ namespace Core.Input.ActionAsset
                 }
 
                 // 更新配置容器中的按键映射
-                _mapDataContainer.actionMap[keyMap] = new KeyPathMap(newTempKey, newpath);
+                _mapDataContainer.actionMap[keyMap] = new KeyPathMap(newTempKey, newPath);
                 // 刷新输入动作配置
                 UpdateActions();
                 // 回调：修改完成（无冲突）
@@ -234,12 +220,12 @@ namespace Core.Input.ActionAsset
             {
                 // 刷新现有PlayerInput的动作配置
                 _playerInput.actions = GetInputActionAsset();
-                LogManager.Log($"输入配置更新成功，{_playerInput.actions}");
+                Logger.Log($"输入配置更新成功，{_playerInput.actions}");
             }
             else
             {
                 // 日志：PlayerInput为空，更新失败
-                LogManager.LogError($"输入配置获取失败，{playerInput}");
+                Logger.LogError($"输入配置获取失败，{playerInput}");
                 return;
             }
         }

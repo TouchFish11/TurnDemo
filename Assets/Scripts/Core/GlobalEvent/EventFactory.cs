@@ -1,5 +1,4 @@
 using Core.Reflection;
-using Core.Utility;
 
 namespace Core.GlobalEvent
 {
@@ -20,7 +19,7 @@ namespace Core.GlobalEvent
         public TEvent GetEvent<TEvent>() where TEvent : class, IEvent
         {
             // 尝试从类型-接口映射字典中获取已缓存的事件实例
-            if (!typeToInterfaceMap.TryGetValue(typeof(TEvent).ToIdentifier(), out var value))
+            if (!typeToInterfaceMap.TryGetValue(typeof(TEvent), out var value))
             {
                 return null;
             }

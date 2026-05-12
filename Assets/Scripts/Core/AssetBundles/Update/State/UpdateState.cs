@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
-using Core.AssetBundles.Update.Collection;
+using Core.AssetBundles.Management;
 using Core.AssetBundles.Update.Core;
+using Core.DI;
 using Core.Pool;
 using Core.Serialize.Json;
-using Core.Service;
 
 namespace Core.AssetBundles.Update.State
 {
@@ -14,23 +14,13 @@ namespace Core.AssetBundles.Update.State
     public abstract class UpdateState : IUpdateState
     {
         // 持有AssetBundle更新器实例
-        protected readonly IAssetBundleUpdater assetBundleUpdater;
+        [Inject] protected readonly IAssetBundleUpdater assetBundleUpdater;
         // 对象池管理器接口
-        protected readonly IPoolManager poolManager;
-        protected  readonly IJsonManager jsonManager;
-        
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="assetBundleUpdater">AssetBundle更新器实例</param>
-        /// <param name="poolManager"></param>
-        /// <param name="jsonManager"></param>
-        protected UpdateState(IAssetBundleUpdater assetBundleUpdater, IPoolManager poolManager, IJsonManager jsonManager)
-        {
-            this.assetBundleUpdater = assetBundleUpdater;
-            this.poolManager = poolManager;
-            this.jsonManager = jsonManager;
-        }
+        [Inject] protected readonly IPoolManager poolManager;
+        // Json管理器接口
+        [Inject] protected readonly IJsonManager jsonManager;
+        // 更新服务
+        [Inject] protected readonly UpdateService updateService;
 
         /// <summary>
         /// 进入状态时的回调
@@ -58,12 +48,13 @@ namespace Core.AssetBundles.Update.State
         /// 解析AssetBundle对比文件（本地/远程清单）
         /// 将JSON格式的清单内容反序列化为包集合，并加入对应上下文集合
         /// </summary>
-        /// <param name="listInfo">清单文件的JSON内容</param>
+        /// <param name="catalogJson">目录Json</param>
         /// <param name="analyzeType">解析类型（本地/远程）</param>
-        protected void AnalyzeCompareFileInfo(string listInfo, EFileAnalyzeType analyzeType)
+        protected void AnalyzeCatalog(string catalogJson, EFileAnalyzeType analyzeType)
         {
             // 反序列化JSON到包集合
-            var collection = ServiceLocator.Get<IJsonManager>().FromJson<ABPackageCollection>(listInfo);
+            var catalog = jsonManager.FromJson<AssetCatalog>(catalogJson);
+            var collection = catalog.ABPackageCollection;
             
             // 根据解析类型，将包信息加入本地/远程集合
             if (analyzeType == EFileAnalyzeType.Local)

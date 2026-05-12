@@ -3,11 +3,9 @@ using System.IO;
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Core;
 using Core.AssetBundles.Update.Exception;
+using Core.DI;
 using Core.Global;
 using Core.Mono;
-using Core.Pool;
-using Core.Serialize.Json;
-using Core.Service;
 using Core.Utility;
 using UnityEngine;
 
@@ -19,12 +17,9 @@ namespace Core.AssetBundles.Update.State
     /// </summary>
     public class DownloadListFileState : UpdateState
     {
+        [Inject] private IMonoAdapter _monoAdapter;
         private ABWebRequester _abWebRequester;
         private Coroutine _coroutine;
-        
-        public DownloadListFileState(IAssetBundleUpdater assetBundleUpdater, IPoolManager poolManager, IJsonManager jsonManager) : base(assetBundleUpdater, poolManager, jsonManager)
-        {
-        }
 
         /// <summary>
         /// 执行下载远程清单文件核心逻辑
@@ -37,7 +32,7 @@ namespace Core.AssetBundles.Update.State
                 // 下载远程清单文件
                 await DownloadCompareFile();
                 // 解析远程清单文件内容
-                await AnalyzeRemoteCompareFileInfo();
+                await AnalyzeRemoteCatalog();
             }
             catch (DownloadFailureException downloadFailureException)
             {
@@ -63,9 +58,9 @@ namespace Core.AssetBundles.Update.State
         public async Task DownloadCompareFile()
         {
             // 创建清单文件下载请求器（无需Hash校验，清单文件本身由服务器保证正确性）
-            _abWebRequester = poolManager.GetData<ABWebRequester>().Init(GlobalSettings.Instance.resServerIp, FileUtility.ListFileDefaultName, false, string.Empty, string.Empty, 0);
+            _abWebRequester = poolManager.GetData<ABWebRequester>().Init(GlobalSettings.Instance.resServerIp, FileUtility.CatalogDefaultName, false, string.Empty, string.Empty, 0);
 
-            _coroutine = ServiceLocator.Get<IMonoAdapter>().StartCoroutine(CheckCancel());
+            _coroutine = _monoAdapter.StartCoroutine(CheckCancel());
             
             // 按配置的最大重试次数执行下载
             var maxRetry = GlobalSettings.Instance.reDownloadCompareFileMaxNum;
@@ -73,18 +68,18 @@ namespace Core.AssetBundles.Update.State
             {
                 var source = new TaskCompletionSource<bool>();
                 // 异步下载到临时清单文件路径
-                _abWebRequester.DownLoadAsync(PathUtility.GetAbLoadPath(FileUtility.TempListFileDefaultName), isOver => source.SetResult(isOver));
-                var isSuceess = await source.Task;
+                _abWebRequester.DownLoadAsync(PathUtility.GetAbLoadPath(FileUtility.TempCatalogDefaultName), isOver => source.SetResult(isOver));
+                var isSuccess = await source.Task;
 
                 // 下载成功，终止重试
-                if (!isSuceess)
+                if (!isSuccess)
                 {
                     continue;
                 }
                 
-                ServiceLocator.Get<IMonoAdapter>().StopCoroutine(_coroutine);
+                _monoAdapter.StopCoroutine(_coroutine);
                 _abWebRequester.Abort();
-                ServiceLocator.Get<IPoolManager>().PushData(_abWebRequester);
+                poolManager.PushData(_abWebRequester);
                 _abWebRequester = null;
                 return;
             }
@@ -103,22 +98,22 @@ namespace Core.AssetBundles.Update.State
         }
 
         /// <summary>
-        /// 解析远程下载的清单文件
+        /// 解析远程下载的目录文件
         /// 将清单内容反序列化为远程包集合，供后续对比校验使用
         /// </summary>
         /// <returns>是否解析成功</returns>
-        public async Task AnalyzeRemoteCompareFileInfo()
+        public async Task AnalyzeRemoteCatalog()
         {
-            var tempListPath = PathUtility.GetAbLoadPath(FileUtility.TempListFileDefaultName);
+            var tempCatalogPath = PathUtility.GetAbLoadPath(FileUtility.TempCatalogDefaultName);
             // 检查临时清单文件是否存在
-            if (!File.Exists(tempListPath))
+            if (!File.Exists(tempCatalogPath))
             {
-                throw new FileNotFoundException($"未找到本地清单文件，路径：{tempListPath}");
+                throw new FileNotFoundException($"未找到本地目录文件，路径：{tempCatalogPath}");
             }
             // 异步读取文件内容
-            var listInfo = await File.ReadAllTextAsync(tempListPath);
+            var catalogJson = await File.ReadAllTextAsync(tempCatalogPath);
             // 解析内容到远程包集合
-            AnalyzeCompareFileInfo(listInfo, EFileAnalyzeType.Remote);
+            AnalyzeCatalog(catalogJson, EFileAnalyzeType.Remote);
         }
 
         /// <summary>
