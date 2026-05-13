@@ -19,7 +19,8 @@ namespace HotUpdate.Game.Battle
     /// </summary>
     public class BattleCameraManager : IBattleCameraManager, IDestroyable
     {
-        private ObjectSpawner _objectSpawner;
+        [Inject] private ObjectSpawner _objectSpawner;
+        
         // X轴旋转角度限制
         private const float minXAngle = -3f;
         private const float maxXAngle = 3f;
@@ -40,7 +41,7 @@ namespace HotUpdate.Game.Battle
         // 相机起始角度
         private Quaternion _originRot;
 
-        public PoolObject<UnityEngine.Camera> CurrentActiveCameraPoolObject { get; private set; }
+        public PoolObject<Camera> CurrentActiveCameraPoolObject { get; private set; }
 
         public BattleCameraManager()
         {
@@ -51,7 +52,7 @@ namespace HotUpdate.Game.Battle
             DIContainer.GetInstance<IBattleManager>().GetContext().GetEventBus().AddListener<BattleOverEvent>(OnBattleOverEvent);
         }
 
-        public async Task<UnityEngine.Camera> CreateCamera(Transform cameraTrans, Vector3 localPos, Quaternion localRot)
+        public async Task<Camera> CreateCamera(Transform cameraTrans, Vector3 localPos, Quaternion localRot)
         {
             if(CurrentActiveCameraPoolObject.Obj)
             {
@@ -59,7 +60,7 @@ namespace HotUpdate.Game.Battle
                 CurrentActiveCameraPoolObject = default;
             }
             
-            CurrentActiveCameraPoolObject = await _objectSpawner.SpawnAsync<UnityEngine.Camera>(ResKeyCollection.BattleCamera, cameraTrans);
+            CurrentActiveCameraPoolObject = await _objectSpawner.SpawnAsync<Camera>(ResKeyCollection.BattleCamera, cameraTrans);
             CurrentActiveCameraPoolObject.Obj.transform.SetLocalPositionAndRotation(localPos, localRot);
             
             // 初始化当前旋转角度为相机初始角度
@@ -68,7 +69,7 @@ namespace HotUpdate.Game.Battle
             return CurrentActiveCameraPoolObject.Obj;
         }
 
-        public async Task<UnityEngine.Camera> CreateCamera(Transform cameraTrans, Vector3 localPos, Quaternion localRot, int mask)
+        public async Task<Camera> CreateCamera(Transform cameraTrans, Vector3 localPos, Quaternion localRot, int mask)
         {
             if(CurrentActiveCameraPoolObject.Obj)
             {
@@ -76,7 +77,7 @@ namespace HotUpdate.Game.Battle
                 CurrentActiveCameraPoolObject = default;
             }
             
-            CurrentActiveCameraPoolObject = await _objectSpawner.SpawnAsync<UnityEngine.Camera>(ResKeyCollection.BattleCamera, cameraTrans);
+            CurrentActiveCameraPoolObject = await _objectSpawner.SpawnAsync<Camera>(ResKeyCollection.BattleCamera, cameraTrans);
             CurrentActiveCameraPoolObject.Obj.transform.SetLocalPositionAndRotation(localPos, localRot);
             // 设置遮罩
             SetMask(CurrentActiveCameraPoolObject.Obj, mask);
@@ -91,7 +92,7 @@ namespace HotUpdate.Game.Battle
         /// </summary>
         /// <param name="camera"></param>
         /// <param name="mask"></param>
-        private static void SetMask(UnityEngine.Camera camera, int mask)
+        private static void SetMask(Camera camera, int mask)
         {
             camera.cullingMask = 0;
             camera.cullingMask = mask;

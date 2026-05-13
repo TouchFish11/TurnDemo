@@ -26,6 +26,7 @@ using HotUpdate.Game.Battle.UI.Base;
 using HotUpdate.Game.Battle.UI.SkillKey;
 using HotUpdate.Game.Battle.UI.SkillKey.Provider;
 using UnityEngine;
+using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.Battle.Event
 {
@@ -134,7 +135,7 @@ namespace HotUpdate.Game.Battle.Event
         {
             if (turnStartEvent.CurrentBattleEntity == null)
             {
-                LogManager.LogError($"{nameof(BattleEventScheduler)}.{nameof(OnTurnStartDispatch)}：当前战斗对象为null");
+                Logger.LogError($"{nameof(BattleEventScheduler)}.{nameof(OnTurnStartDispatch)}：当前战斗对象为null");
                 return;
             }
 
@@ -202,7 +203,7 @@ namespace HotUpdate.Game.Battle.Event
                 switch (skillTargetType)
                 {
                     case E_SkillTargetType.None:
-                        LogManager.LogError($"{nameof(BattleEventScheduler)}.{nameof(SelectSkillEventScheduler)}:无效的目标类型，{skillTargetType}");
+                        Logger.LogError($"{nameof(BattleEventScheduler)}.{nameof(SelectSkillEventScheduler)}:无效的目标类型，{skillTargetType}");
                         break;
                     case E_SkillTargetType.Friend:
                         // 失活所有怪物UI显示
@@ -238,7 +239,7 @@ namespace HotUpdate.Game.Battle.Event
             }
             catch (Exception e)
             {
-                LogManager.LogError($"{nameof(BattleEventScheduler)}.{nameof(SelectSkillEventScheduler)}:逻辑执行错误，{e.Message}");
+                Logger.LogError($"{nameof(BattleEventScheduler)}.{nameof(SelectSkillEventScheduler)}:逻辑执行错误，{e.Message}");
             }
         }
 

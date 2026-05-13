@@ -17,6 +17,8 @@ namespace HotUpdate.Game.Battle.UI
     /// </summary>
     public class SelectMarkerUI : UIBehaviourBase
     {
+        [Inject] private IBattleCameraManager _battleCameraManager;
+        
         // 标记旋转速度（每秒旋转角度）
         private const float markerRotationSpeed = 40f;
         // 标记缩放速度
@@ -126,7 +128,7 @@ namespace HotUpdate.Game.Battle.UI
 
             // 世界坐标转UI坐标，将标记定位到目标位置上方50像素处
             UIUtility.WorldToLocalPointInRectangle(
-                DIContainer.GetInstance<IBattleCameraManager>().CurrentActiveCamera,  // 战斗主相机
+                _battleCameraManager.CurrentActiveCameraPoolObject.Obj,  // 战斗主相机
                 DIContainer.GetInstance<IUIManager>().UICamera,                    // UI相机
                 selectMarkerArea,                                             // UI父节点
                 gameObject,                                                    // 当前标记UI对象

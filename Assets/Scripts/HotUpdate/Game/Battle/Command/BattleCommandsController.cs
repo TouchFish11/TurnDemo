@@ -13,6 +13,7 @@ using HotUpdate.Game.Battle.StateMeachine;
 using HotUpdate.Game.Battle.UI.Base;
 using HotUpdate.Game.Battle.Utility;
 using UnityEngine;
+using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.Battle.Command
 {
@@ -127,7 +128,7 @@ namespace HotUpdate.Game.Battle.Command
             {
                 if (!_battleCommands[i].IsValid)
                 {
-                    LogManager.Log($"已过滤无效指令：{_battleCommands[i]}");
+                    Logger.Log($"已过滤无效指令：{_battleCommands[i]}");
                     _battleCommands.RemoveAt(i);
                 }
             }

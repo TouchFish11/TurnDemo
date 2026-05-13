@@ -55,7 +55,6 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill
             
             // 等待第一段VFX结束
             yield return new WaitUntil(() => !vFXInfo.IsAlive);
-            LogManager.Log($"-------------------特效结束");
             
             // 技能结束前短暂延迟
             yield return new WaitForSeconds(0.2f);

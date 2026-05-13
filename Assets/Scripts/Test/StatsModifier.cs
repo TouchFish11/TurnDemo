@@ -32,7 +32,7 @@ namespace Test
         {
             if (!bonusDatas.TryGetValue(source, out var data))
             {
-                LogManager.Log($"No stats modifier found for {source}");
+                Logger.Log($"No stats modifier found for {source}");
                 return;
             }
             

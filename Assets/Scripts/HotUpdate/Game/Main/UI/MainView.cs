@@ -1,8 +1,8 @@
 using System.Collections.Generic;
+using Core.AssetBundles.Management;
 using Core.DI;
 using Core.UI;
 using Core.UI.ViewController;
-using HotUpdate.Base.Interact;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -49,7 +49,7 @@ namespace HotUpdate.Game.Main.UI
         #endregion
 
         // 交互UI列表
-        private readonly List<IInteractUI> interactUIs = new();
+        private readonly List<PoolObject> interactUIs = new();
         
         #region 公共属性
         /// <summary>
@@ -84,20 +84,19 @@ namespace HotUpdate.Game.Main.UI
         {
             txtTaskProgress.text = progressStr;
         }
-        
+
         /// <summary>
         /// 缓存交互UI对象
         /// </summary>
-        /// <param name="interactUIs"></param>
-        public void CacheInteracts(List<IInteractUI> interactUIs)
+        /// <param name="interact"></param>
+        public void CacheInteracts(List<PoolObject> interact)
         {
-            foreach (var interactUI in this.interactUIs)
+            foreach (var interactUI in interactUIs)
             {
-                // 释放资源
-                DIContainer.GetInstance<IPrefabLoader>().CollectAsset(interactUI.GameObject);
+                interactUI.Collect();
             }
-            this.interactUIs.Clear();
-            this.interactUIs.AddRange(interactUIs);
+            interactUIs.Clear();
+            this.interactUIs.AddRange(interact);
         }
         #endregion
     }

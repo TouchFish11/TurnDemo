@@ -25,7 +25,7 @@ namespace HotUpdate.Game.Battle.Summon
             //typeof(T).GetProperty("_initialActionTimes", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(summon, initialActionTimes);
 
             _summons.Add(summon);
-            LogManager.Log($"{BattleEntity.GameObject.name}�ٻ��ˣ�{summon.GameObject.name}");
+            //LogManager.Log($"{BattleEntity.GameObject.name}�ٻ��ˣ�{summon.GameObject.name}");
             // �㲥���ٻ��ﴴ���¼�����������ģ�������
             //BattleEventBus.Publish(new SummonCreatedEvent(_owner.GetBattleComponent<IBattleContext>(), summon, _owner));
         }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Core.Log;
 using Core.Utility;
 using HotUpdate.Base.Battle.Skill;
 using HotUpdate.Base.Battle.TargetSelect;
@@ -182,8 +183,8 @@ namespace HotUpdate.Game.Battle.Skill.Component
                 return data;
             }
             
-            LogManager.LogError($"{nameof(SkillComponent)}.{nameof(GetSkillData)}：该技能ID不存在,{skillId}");
-            return default;
+            Logger.LogError($"{nameof(SkillComponent)}.{nameof(GetSkillData)}：该技能ID不存在,{skillId}");
+            return null;
         }
     }
 }

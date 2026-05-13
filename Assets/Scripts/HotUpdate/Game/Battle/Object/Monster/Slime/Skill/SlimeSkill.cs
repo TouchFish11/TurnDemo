@@ -7,8 +7,10 @@ using HotUpdate.Base.Battle;
 using HotUpdate.Base.Battle.Object;
 using HotUpdate.Base.VFX;
 using HotUpdate.Common;
+using HotUpdate.Game.Animation.Core;
 using HotUpdate.Game.Battle.Skill.Base;
 using UnityEngine;
+using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.Battle.Object.Monster.Slime.Skill
 {
@@ -32,7 +34,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.Slime.Skill
         public SlimeSkill(IBattleEntityObject caster, int skillId) : base(caster, skillId)
         {
             // 注册动画攻击事件回调
-            Caster.GetComponentInChildren<IAnimationTrigger>().OnAttack += OnAttack;
+            Caster.GetComponentInChildren<AnimationTrigger>().OnAttack += OnAttack;
         }
 
         /// <summary>
@@ -80,7 +82,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.Slime.Skill
             {
                 sb.AppendLine($"怪物选择目标：{battleEntityObject}");
             }
-            LogManager.Log($"{sb}");
+            Logger.Log($"{sb}");
         }
 
         /// <summary>

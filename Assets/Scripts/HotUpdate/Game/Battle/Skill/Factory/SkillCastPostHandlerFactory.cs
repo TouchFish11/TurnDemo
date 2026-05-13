@@ -1,5 +1,6 @@
 using Core.DI;
 using Core.HotUpdate;
+using Core.Log;
 using Core.Reflection;
 using HotUpdate.Base.Battle.Skill;
 
@@ -20,12 +21,12 @@ namespace HotUpdate.Game.Battle.Skill.Factory
         
         public ISkillCastPostHandler GetSkillCastPostHandler<THandler>()where THandler : class, ISkillCastPostHandler
         {
-            if (typeToInterfaceMap.TryGetValue(typeof(THandler).ToIdentifier(), out var targetSelectStrategy))
+            if (typeToInterfaceMap.TryGetValue(typeof(THandler), out var targetSelectStrategy))
             {
                 return targetSelectStrategy;
             }
             
-            LogManager.LogError($"未找到技能释放后处理器，{typeof(THandler).ToIdentifier()}");
+            Logger.LogError($"未找到技能释放后处理器，{typeof(THandler)}");
             return null;
         }
     }

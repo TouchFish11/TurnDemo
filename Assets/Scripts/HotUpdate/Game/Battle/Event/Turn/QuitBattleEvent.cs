@@ -1,6 +1,6 @@
-using Core.UI.ViewController;
 using HotUpdate.Base.Battle;
 using HotUpdate.Base.Battle.Event;
+using HotUpdate.Game.Battle.UI.Base;
 
 namespace HotUpdate.Game.Battle.Event.Turn
 {
@@ -9,9 +9,9 @@ namespace HotUpdate.Game.Battle.Event.Turn
     /// </summary>
     public class QuitBattleEvent : BattleEvent
     {
-        public IuiController BattleUIController { get; }
+        public BattleController BattleUIController { get; }
         
-        public QuitBattleEvent(IBattleContext context, IuiController controller) : base(context)
+        public QuitBattleEvent(IBattleContext context, BattleController controller) : base(context)
         {
             BattleUIController = controller;
         }

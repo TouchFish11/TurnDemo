@@ -14,12 +14,12 @@ namespace HotUpdate.Game.Battle.UI.FloatText
     public class DamageTextUI : UIBehaviourBase
     {
         // 伤害类型文本（如"暴击"、"普通攻击"等）
-        [Inject] private TextMeshProUGUI txtDamageTip;
+        [InjectUI] private TextMeshProUGUI txtDamageTip;
         // 伤害数值文本（如"1000"、"500"等）
-        [Inject] private TextMeshProUGUI txtDamageNum;
+        [InjectUI] private TextMeshProUGUI txtDamageNum;
 
         // 伤害文字的移动根节点（用于控制位置和缩放）
-        [Inject(1)] private RectTransform DamageTextMover { get; set; }
+        [InjectUI(1)] private RectTransform DamageTextMover { get; set; }
 
         // 文字向上移动的速度（单位：像素/秒）
         private const float upMoveSpeed = 2.5f;

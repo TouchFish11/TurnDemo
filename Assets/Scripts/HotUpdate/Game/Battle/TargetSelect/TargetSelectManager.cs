@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Core.DI;
+using Core.Log;
 using Core.Mono.MonoFunction;
 using Core.Serialize.Binary;
 using HotUpdate.Base.Battle;
@@ -77,7 +78,7 @@ namespace HotUpdate.Game.Battle.TargetSelect
             DIContainer.GetInstance<IBattleInputHandler>().OnRightDrag += SelectNextMainTarget;     // 右拖拽：切换下一个主目标
             DIContainer.GetInstance<IBattleInputHandler>().OnSelectedObject += SelectClickMainTarget;// 点击：选中指定主目标
             
-            LogManager.Log($"激活目标选择");
+            Logger.Log($"激活目标选择");
         }
 
         /// <summary>
@@ -90,7 +91,7 @@ namespace HotUpdate.Game.Battle.TargetSelect
             DIContainer.GetInstance<IBattleInputHandler>().OnRightDrag -= SelectNextMainTarget;
             DIContainer.GetInstance<IBattleInputHandler>().OnSelectedObject -= SelectClickMainTarget;
             
-            LogManager.Log($"禁用目标选择");
+            Logger.Log($"禁用目标选择");
         }
 
         /// <summary>
@@ -110,7 +111,7 @@ namespace HotUpdate.Game.Battle.TargetSelect
             
             if (currentSelectStrategy == null)
             {
-                LogManager.LogError($"{nameof(TargetSelectManager)}.{nameof(SelectTarget)}：当前目标选择策略为null");
+                Logger.LogError($"{nameof(TargetSelectManager)}.{nameof(SelectTarget)}：当前目标选择策略为null");
                 return;
             }
             
@@ -118,12 +119,12 @@ namespace HotUpdate.Game.Battle.TargetSelect
             _mainTarget = SelectMainTarget(context, caster, skillInfo);
             if (_mainTarget == null)
             {
-                LogManager.LogError($"{nameof(TargetSelectManager)}.{nameof(SelectMainTarget)}：当前选择的主目标为null");
+                Logger.LogError($"{nameof(TargetSelectManager)}.{nameof(SelectMainTarget)}：当前选择的主目标为null");
                 return;
             }
             
             OnSelectChanged?.Invoke(_mainTarget);
-            LogManager.Log($"当前主目标：{_mainTarget}");
+            Logger.Log($"当前主目标：{_mainTarget}");
             // 基于主目标更新范围目标列表
             UpdateTargets();
         }
@@ -195,7 +196,7 @@ namespace HotUpdate.Game.Battle.TargetSelect
                     break;
                 }
                 default:
-                    LogManager.Log($"施法者不是：PlayerObject或MonsterObject");
+                    Logger.Log($"施法者不是：PlayerObject或MonsterObject");
                     break;
             }
         }
@@ -234,7 +235,7 @@ namespace HotUpdate.Game.Battle.TargetSelect
             {
                 mainIndex = _filterEntitys.Count / 2;
                 _mainTarget = _filterEntitys[mainIndex];
-                LogManager.LogError($"{nameof(TargetSelectManager)}.{nameof(SelectNextMainTarget)}：找不到目标，重置到中间");
+                Logger.LogError($"{nameof(TargetSelectManager)}.{nameof(SelectNextMainTarget)}：找不到目标，重置到中间");
             }
             
             // 索引未越界时，切换到下一个目标
@@ -242,7 +243,7 @@ namespace HotUpdate.Game.Battle.TargetSelect
             {
                 _mainTarget = _filterEntitys[++mainIndex];
                 OnSelectChanged?.Invoke(_mainTarget);
-                LogManager.Log($"当前主目标：{_mainTarget}");
+                Logger.Log($"当前主目标：{_mainTarget}");
                 // 切换后更新范围目标列表并同步UI
                 UpdateTargets();
             }
@@ -268,7 +269,7 @@ namespace HotUpdate.Game.Battle.TargetSelect
             {
                 mainIndex = _filterEntitys.Count / 2;
                 _mainTarget = _filterEntitys[mainIndex];
-                LogManager.LogError($"{nameof(TargetSelectManager)}.{nameof(SelectNextMainTarget)}：找不到目标，重置到中间");
+                Logger.LogError($"{nameof(TargetSelectManager)}.{nameof(SelectNextMainTarget)}：找不到目标，重置到中间");
             }
             
             // 索引未越界时，切换到上一个目标
@@ -276,7 +277,7 @@ namespace HotUpdate.Game.Battle.TargetSelect
             {
                 _mainTarget = _filterEntitys[--mainIndex];
                 OnSelectChanged?.Invoke(_mainTarget);
-                LogManager.Log($"当前主目标：{_mainTarget}");
+                Logger.Log($"当前主目标：{_mainTarget}");
                 // 切换后更新范围目标列表并同步UI
                 UpdateTargets();
             }

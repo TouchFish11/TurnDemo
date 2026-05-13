@@ -17,7 +17,7 @@ namespace HotUpdate.Game.Quests.Condition
 
         public override void Enable()
         {
-            DIContainer.GetInstance<IEventCenter>().Subscribe<DialogueEvent>(OnDialogueEvent);
+            DIContainer.GetInstance<IEventCenter>().SubscribeEvent<DialogueEvent>(OnDialogueEvent);
         }
 
         private void OnDialogueEvent(DialogueEvent dialogueEvent)
@@ -28,7 +28,7 @@ namespace HotUpdate.Game.Quests.Condition
 
         public override void Disable()
         {
-            DIContainer.GetInstance<IEventCenter>().Unsubscribe<DialogueEvent>(OnDialogueEvent);
+            DIContainer.GetInstance<IEventCenter>().UnsubscribeEvent<DialogueEvent>(OnDialogueEvent);
         }
     }
 }

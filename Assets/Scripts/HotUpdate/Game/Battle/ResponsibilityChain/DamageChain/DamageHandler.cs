@@ -1,3 +1,4 @@
+using Core.Log;
 using HotUpdate.Base.Animation;
 using HotUpdate.Base.Battle.Damage.Data;
 using HotUpdate.Base.Battle.Property;
@@ -15,7 +16,7 @@ namespace HotUpdate.Game.Battle.ResponsibilityChain.DamageChain
         {
             if (request.Source == null || request.Target == null)
             {
-                LogManager.LogError($"{nameof(DamageHandler)}.{nameof(HandleRequest)}：伤害处理异常。" +
+                Logger.LogError($"{nameof(DamageHandler)}.{nameof(HandleRequest)}：伤害处理异常。" +
                                     $"Source:{request.Source},Target:{request.Target},技能ID:{request.SkillId}");
                 successor.HandleRequest(request);
                 return;

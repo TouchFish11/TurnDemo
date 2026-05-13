@@ -15,5 +15,10 @@ namespace Test.SO
         {
             target = weaponConfig;
         }
+
+        protected override void OnAwake()
+        {
+            
+        }
     }
 }

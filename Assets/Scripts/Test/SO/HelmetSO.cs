@@ -15,5 +15,10 @@ namespace Test.SO
         {
             target = HelmetConfig;
         }
+
+        protected override void OnAwake()
+        {
+            
+        }
     }
 }

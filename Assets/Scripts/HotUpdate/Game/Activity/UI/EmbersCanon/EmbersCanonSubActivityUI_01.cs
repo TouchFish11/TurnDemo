@@ -24,7 +24,7 @@ namespace HotUpdate.Game.Activity.UI.EmbersCanon
     {
         [InjectUI] private ScrollRect svLevel;
 
-        private readonly IList<BattleLevelUI> _battleLevelUis = new List<BattleLevelUI>();
+        private readonly IList<PoolObject<BattleLevelUI>> _battleLevelUis = new List<PoolObject<BattleLevelUI>>();
         
         protected override async Task OnShow()
         {
@@ -32,15 +32,13 @@ namespace HotUpdate.Game.Activity.UI.EmbersCanon
             var activityDataCollection = DIContainer.GetInstance<IGameManager>().GameDataManager.GetProvider<IActivityDataProvider>().ActivityDataCollection as ActivityDataCollection;
             // 获取该活动数据
             var embersCanonData = activityDataCollection[activityInfo.f_id] as EmbersCanonData;
-            // AB包加载配置
-            var configAb = await DIContainer.GetInstance<IAssetBundleManager>().LoadBundleAsync(AbKeyCollection.Gameconfig);
-            var textAsset = await configAb.LoadAssetAsync<TextAsset>(ResKeyCollection.BattleActivityConfig).ToTask<TextAsset>();
+            using var handle = await GameAsset.LoadAssetAsync<TextAsset>(ResKeyCollection.BattleActivityConfig);
             // 解析该活动的关卡配置
-            var battleActivityConfig = DIContainer.GetInstance<IJsonManager>().FromJson<BattleActivityConfig>(textAsset.text, settings: NewtonsoftJsonUtility.SerializerSettings);
+            var battleActivityConfig = DIContainer.GetInstance<IJsonManager>().FromJson<BattleActivityConfig>(handle.Asset.text, settings: NewtonsoftJsonUtility.SerializerSettings);
             // 初始化关卡
             foreach (var battleConfigEntry in battleActivityConfig.BattleConfigEntryColletion.battleConfigs)
             {
-                var battleLevelUI = await _objectSpawner.GetObjectAsync<BattleLevelUI>(AbKeyCollection.Ui,
+                var battleLevelUI = await _objectSpawner.SpawnAsync<BattleLevelUI>(
                     ResKeyCollection.BattleLevelUI, svLevel.content);
                 // 获取用户数据中的战斗关卡条目
                 var levelEntryData = embersCanonData.GetLevelData(battleConfigEntry.levelId);
@@ -53,10 +51,9 @@ namespace HotUpdate.Game.Activity.UI.EmbersCanon
 
                 // 根据是否完成使用不同的Sprite
                 var levelTipIconRes = levelEntryData.isComplete ? ResKeyCollection.Icon_Common_Check : ResKeyCollection.Icon_Common_Battle;
-                
-                var icon = await spriteLoader.LoadSpriteAsync(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Icon_Common, levelTipIconRes);
+                var icon = await GameAsset.LoadAssetAsync<Sprite>(levelTipIconRes);
                 // 初始化关卡UI
-                battleLevelUI.Init(battleConfigEntry.levelName, icon, levelEntryData, battleConfigEntry, ActivityData);
+                battleLevelUI.Obj.Init(battleConfigEntry.levelName, icon.Asset, levelEntryData, battleConfigEntry, ActivityData);
                 // 缓存UI
                 _battleLevelUis.Add(battleLevelUI);
             }
@@ -66,12 +63,9 @@ namespace HotUpdate.Game.Activity.UI.EmbersCanon
         {
             foreach (var battleLevelUi in _battleLevelUis)
             {
-                _objectSpawner.CollectAsset(battleLevelUi.gameObject);
-                spriteLoader.ReleaseSprite(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Icon_Common, ResKeyCollection.Icon_Common_Check);
-                spriteLoader.ReleaseSprite(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Icon_Common, ResKeyCollection.Icon_Common_Battle);
+                battleLevelUi.Collect();
             }
             _battleLevelUis.Clear();
-            _objectSpawner.RealseAsset(AbKeyCollection.Ui, ResKeyCollection.BattleLevelUI);
         }
 
         protected override void OnButtonClick(string btnName)
@@ -79,8 +73,7 @@ namespace HotUpdate.Game.Activity.UI.EmbersCanon
             switch (btnName)
             {
                 case "btnClose":
-                    _objectSpawner.CollectAsset(GameObject);
-                    _objectSpawner.RealseAsset(AbKeyCollection.Ui, name);
+                    _objectSpawner.Dispose();
                     break;
             }
         }

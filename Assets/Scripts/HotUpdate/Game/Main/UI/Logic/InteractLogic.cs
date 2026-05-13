@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using Core.AssetBundles.Management;
 using Core.DI;
 using Core.GlobalEvent;
 using Core.Log;
 using HotUpdate.Base.Interact;
 using HotUpdate.Common;
+using HotUpdate.Game.Interact.UI;
 
 namespace HotUpdate.Game.Main.UI.Logic
 {
@@ -15,8 +17,8 @@ namespace HotUpdate.Game.Main.UI.Logic
     /// </summary>
     public class InteractLogic : MainLogic
     {
-        private readonly IEventCenter _eventCenter = DIContainer.GetInstance<IEventCenter>();
-        private readonly IPrefabLoader _prefabLoader = DIContainer.GetInstance<IPrefabLoader>();
+        [Inject] private IEventCenter _eventCenter;
+        [Inject] private ObjectSpawner _objectSpawner;
         
         protected override void OnInit()
         {
@@ -43,30 +45,28 @@ namespace HotUpdate.Game.Main.UI.Logic
         {
             try
             {
-                var uniList = ListUtility.GetUniList<IInteractUI>();
+                var list = new List<PoolObject>();
                 // 遍历可交互对象，为每个对象创建对应的交互UI
                 foreach (var interactable in interactables)
                 {
                     // 从UI资源包中异步加载交互UI预制体并实例化
-                    var interactUI = await _prefabLoader.GetObjectAsync<IInteractUI>(AbKeyCollection.Ui, ResKeyCollection.InteractUI, mainView.InteractContent);
+                    var interactUI = await _objectSpawner.SpawnAsync<InteractUI>(ResKeyCollection.InteractUI, mainView.InteractContent);
                     // 初始化交互UI的显示数据（设置发言者/交互对象名称）
-                    interactUI.Init(interactable.NpcInfo.f_speakerName);
-                    // 将初始化完成的交互UI加入列表
-                    uniList.List.Add(interactUI);
+                    interactUI.Obj.Init(interactable.NpcInfo.f_speakerName);
+                    list.Add(interactUI);
                 }
-            
                 // 将创建好的交互UI列表存入主数据模型，供全局业务逻辑调用
-                mainModel.CacheInteracts(uniList.List);
-                ListUtility.CollectUniList(uniList);
+                mainView.CacheInteracts(list);
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(InteractLogic)}.{nameof(CreateInteract)}: {e.Message}，{e.StackTrace}");
+                Logger.LogError($"{nameof(InteractLogic)}.{nameof(CreateInteract)}: {e.Message}");
             }
         }
 
         public override void ResetData()
         {
+            _objectSpawner.Dispose();
             // 取消交互事件的订阅
             _eventCenter.UnsubscribeEvent<InteractEvent>(OnInteractEvent);
             base.ResetData();

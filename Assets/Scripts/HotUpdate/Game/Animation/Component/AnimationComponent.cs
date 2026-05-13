@@ -2,6 +2,7 @@ using Core.Components;
 using HotUpdate.Base.Animation;
 using HotUpdate.Base.Component;
 using UnityEngine;
+using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.Animation.Component
 {
@@ -57,7 +58,7 @@ namespace HotUpdate.Game.Animation.Component
                 return animatorComponent.Animator.GetCurrentAnimatorStateInfo(animatorComponent.Animator.GetLayerIndex(layerName));
             }
             
-            LogManager.LogError($"动画控制器为null");
+            Logger.LogError($"动画控制器为null");
             return new AnimatorStateInfo();
         }
     }

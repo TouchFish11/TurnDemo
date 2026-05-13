@@ -4,6 +4,7 @@ using Core.UI;
 using Core.Utility;
 using HotUpdate.Base.Activity;
 using HotUpdate.Common.Config.ExcelInfo.Info;
+using HotUpdate.Game.Activity.Data;
 using HotUpdate.Game.Activity.UI.Base;
 using UnityEngine;
 using Logger = Core.Log.Logger;
@@ -20,7 +21,7 @@ namespace HotUpdate.Game.Activity.Core
         protected ObjectSpawner _objectSpawner;
         
         public GameObject GameObject { get; private set; }
-        public IActivityData ActivityData { get; private set; }
+        public ActivityData ActivityData { get; private set; }
 
         // 活动信息
         protected ActivityInfo activityInfo;

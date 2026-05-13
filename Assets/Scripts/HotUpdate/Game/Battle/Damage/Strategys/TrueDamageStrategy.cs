@@ -1,3 +1,4 @@
+using Core.Log;
 using HotUpdate.Base.Battle.Damage;
 using HotUpdate.Base.Battle.Damage.Data;
 using HotUpdate.Base.Battle.Object;
@@ -12,7 +13,7 @@ namespace HotUpdate.Game.Battle.Damage.Strategys
     {
         public void CalcDamage(IBattleEntityObject source, IBattleEntityObject target, SkillInfo skillInfo, out DamageResult damageResult)
         {
-            LogManager.Log("真实伤害策略执行");
+            Logger.Log("真实伤害策略执行");
             damageResult = new DamageResult();
         }
     }

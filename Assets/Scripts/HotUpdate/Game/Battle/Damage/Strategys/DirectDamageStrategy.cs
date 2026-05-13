@@ -6,6 +6,7 @@ using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.Utility;
 using UnityEngine;
+using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.Battle.Damage.Strategys
 {
@@ -25,7 +26,7 @@ namespace HotUpdate.Game.Battle.Damage.Strategys
         {
             if (attacker == null || defender == null)
             {
-                LogManager.LogError("ֱ�˼�����Բ���Ϊnull");
+                Logger.LogError("ֱ�˼�����Բ���Ϊnull");
             }
 
             //this.attacker = attacker;

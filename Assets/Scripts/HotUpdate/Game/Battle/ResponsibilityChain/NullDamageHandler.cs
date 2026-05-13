@@ -1,3 +1,4 @@
+using Core.Log;
 using HotUpdate.Base.Battle.Damage.Data;
 
 namespace HotUpdate.Game.Battle.ResponsibilityChain
@@ -9,7 +10,7 @@ namespace HotUpdate.Game.Battle.ResponsibilityChain
     {
         public override void HandleRequest(DamageResult request)
         {
-            LogManager.LogWarning($"{nameof(NullDamageHandler)}.{nameof(HandleRequest)}：该请求未被处理，{request}");
+            Logger.LogWarning($"{nameof(NullDamageHandler)}.{nameof(HandleRequest)}：该请求未被处理，{request}");
         }
     }
 }

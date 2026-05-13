@@ -1,3 +1,4 @@
+using Core.Log;
 using HotUpdate.Base.Battle.Event;
 using HotUpdate.Base.Battle.Object;
 
@@ -34,8 +35,8 @@ namespace HotUpdate.Game.Battle.Talent.Talents
         public void Execute(BattleEvent battleEvent, IBattleEntityObject owner)
         {
             //var turnEndEvt = (TurnEndEvent)battleEvent;
-            LogManager.Log($"\n���츳������{owner.GameObject.name}�����츳��{Name}����");
-            LogManager.Log($"{owner.GameObject.name}��ö����ж��غϣ�");
+            Logger.Log($"\n���츳������{owner.GameObject.name}�����츳��{Name}����");
+            Logger.Log($"{owner.GameObject.name}��ö����ж��غϣ�");
 
             // �����߼����޸��ж����У�����ɫ������ף����ú��Ĳ�API������ֱ�Ӳ�����(�޸�:Ӧ���ǻ�ö���غ�,�����ǲ������)
             // turnEndEvt.Context.GetTurnManager().InsertToActionHead(owner);

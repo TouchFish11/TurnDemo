@@ -3,6 +3,7 @@ using Core.AssetBundles.Management;
 using Core.DI;
 using Core.GlobalEvent.Events;
 using Core.Log;
+using Core.Time;
 using Core.UI.ViewController;
 using HotUpdate.Common;
 
@@ -16,7 +17,11 @@ namespace HotUpdate.Game.Main.Global.UI
     public class GlobalMessageController : UIController<GlobalMessageView>
     {
         [Inject] private ObjectSpawner _objectSpawner;
+        [Inject] private ITimerManager _timerManager;
         
+        // 显示时间
+        private const float Duration = 2.5f;
+
         protected override Task OnInit()
         {
             return Task.CompletedTask;
@@ -54,6 +59,7 @@ namespace HotUpdate.Game.Main.Global.UI
             {
                 var poolObject = await _objectSpawner.SpawnAsync<MessageUI>(ResKeyCollection.MessageUI, view.MessageContainer);
                 poolObject.Obj.InitMessage(msg);
+                _timerManager.CreateTimer(false, (int)(Duration * 1000), () => poolObject.Collect());
             }
             catch (Exception e)
             {

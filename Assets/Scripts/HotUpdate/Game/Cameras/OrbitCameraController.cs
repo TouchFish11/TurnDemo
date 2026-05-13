@@ -181,7 +181,7 @@ namespace HotUpdate.Game.Cameras
         private void OnMouseWheel()
         {
             // 获取滚轮输入（向前为正，向后为负）
-            float scroll = Input.GetAxis("Mouse ScrollWheel");
+            float scroll = UnityEngine.Input.GetAxis("Mouse ScrollWheel");
             // 调整半径并限制范围（滚轮每滚动1单位，半径变化2f）
             radius = Mathf.Clamp(radius - scroll * 2f, 2f, 10f);
         }

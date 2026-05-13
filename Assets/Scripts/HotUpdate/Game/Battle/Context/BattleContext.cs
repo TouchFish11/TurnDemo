@@ -21,10 +21,10 @@ namespace HotUpdate.Game.Battle.Context
     /// </summary>
     public class BattleContext : IBattleContext
     {
+        // 战斗点代理
+        [Inject] private IBattlePointProxy _battlePointProxy;
         // 战斗事件总线实例
         private BattleEventBus _eventBus;
-        // 战斗点代理
-        private IBattlePointProxy _battlePointProxy;
         // 战斗状态机
         private IBattleStateMachine _battleMachine;
         // 战斗实体总列表
@@ -44,12 +44,10 @@ namespace HotUpdate.Game.Battle.Context
         /// 最大战技点数
         public int MaxBattlePointCount { get; private set; } = 5;
 
-        public BattleContext(IBattlePointProxy battlePointProxy)
+        public BattleContext()
         {
-            _eventBus = new BattleEventBus();
-            _battlePointProxy = battlePointProxy;
-            _battleMachine = new BattleStateMachine(this);
-            
+            _eventBus = DIContainer.Create<BattleEventBus>();
+            _battleMachine = DIContainer.Create<BattleStateMachine>(parameterValues: this);
             // 更新起始战技点
             CurentBattlePointCount = 3;
         }

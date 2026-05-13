@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Pool;
 using HotUpdate.Base.Battle.Object;
@@ -12,14 +13,14 @@ namespace HotUpdate.Game.Battle.UI.MonsterStateUI
     public class MonsterStateUIManager
     {
         // 怪物实体到怪物血量UI的映射
-        private readonly Dictionary<IBattleEntityObject, NormalMonsterStateUI> normalMonsterStateUIs = new();
+        private readonly Dictionary<IBattleEntityObject, PoolObject<NormalMonsterStateUI>> normalMonsterStateUIs = new();
         
         /// <summary>
         /// 缓存怪物UI
         /// </summary>
         /// <param name="monsterObject"></param>
         /// <param name="normalMonsterStateUI"></param>
-        public void AddNormalMonsterStateUI(IBattleEntityObject monsterObject, NormalMonsterStateUI normalMonsterStateUI)
+        public void AddNormalMonsterStateUI(IBattleEntityObject monsterObject, PoolObject<NormalMonsterStateUI> normalMonsterStateUI)
         {
             normalMonsterStateUIs.Add(monsterObject, normalMonsterStateUI);
         }
@@ -35,7 +36,7 @@ namespace HotUpdate.Game.Battle.UI.MonsterStateUI
                 return;
             }
             
-            DIContainer.GetInstance<IPoolManager>().PushObj(normalMonsterStateUI.gameObject);
+            DIContainer.GetInstance<IPoolManager>().PushObj(normalMonsterStateUI.Obj.gameObject);
             normalMonsterStateUIs.Remove(deadMonster);
         }
 
@@ -46,7 +47,7 @@ namespace HotUpdate.Game.Battle.UI.MonsterStateUI
         {
             foreach (var normalMonsterStateUI in normalMonsterStateUIs.Values)
             {
-                normalMonsterStateUI.gameObject.SetActive(true);
+                normalMonsterStateUI.Obj.gameObject.SetActive(true);
             }
         }
         
@@ -57,7 +58,7 @@ namespace HotUpdate.Game.Battle.UI.MonsterStateUI
         {
             foreach (var normalMonsterStateUI in normalMonsterStateUIs.Values)
             {
-                normalMonsterStateUI.gameObject.SetActive(false);
+                normalMonsterStateUI.Obj.gameObject.SetActive(false);
             }
         }
         
@@ -70,7 +71,7 @@ namespace HotUpdate.Game.Battle.UI.MonsterStateUI
             // 先把所有 UI 设为隐藏
             foreach (var stateUi in normalMonsterStateUIs.Values)
             {
-                stateUi.gameObject.SetActive(false);
+                stateUi.Obj.gameObject.SetActive(false);
             }
 
             // 再把匹配的设为显示
@@ -78,7 +79,7 @@ namespace HotUpdate.Game.Battle.UI.MonsterStateUI
             {
                 if (normalMonsterStateUIs.TryGetValue(monster, out var stateUI))
                 {
-                    stateUI.gameObject.SetActive(true);
+                    stateUI.Obj.gameObject.SetActive(true);
                 }
             }
         }
@@ -93,7 +94,7 @@ namespace HotUpdate.Game.Battle.UI.MonsterStateUI
             // 先把所有 UI 设为显示
             foreach (var stateUi in normalMonsterStateUIs.Values)
             {
-                stateUi.gameObject.SetActive(true);
+                stateUi.Obj.gameObject.SetActive(true);
             }
 
             // 再把匹配的设为显示
@@ -101,7 +102,7 @@ namespace HotUpdate.Game.Battle.UI.MonsterStateUI
             {
                 if (normalMonsterStateUIs.TryGetValue(monster, out var stateUI))
                 {
-                    stateUI.gameObject.SetActive(false);
+                    stateUI.Obj.gameObject.SetActive(false);
                 }
             }
         }
@@ -113,7 +114,7 @@ namespace HotUpdate.Game.Battle.UI.MonsterStateUI
         {
             foreach (var normalMonsterStateUI in normalMonsterStateUIs.Values)
             {
-                DIContainer.GetInstance<IPoolManager>().PushObj(normalMonsterStateUI.gameObject);
+                normalMonsterStateUI.Collect();
             }
             normalMonsterStateUIs.Clear();
         }

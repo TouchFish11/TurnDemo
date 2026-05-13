@@ -1,10 +1,12 @@
 using System;
-using System.Collections.Generic;
+using Core.AssetBundles.Management;
+using Core.DI;
 using HotUpdate.Common;
 using HotUpdate.Common.Item;
-using HotUpdate.Common.Item.UI;
 using HotUpdate.Game.Activity.Core;
 using HotUpdate.Game.Activity.UI.Common;
+using UnityEngine;
+using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.Activity.UI.EmbersCanon
 {
@@ -15,6 +17,8 @@ namespace HotUpdate.Game.Activity.UI.EmbersCanon
     /// </summary>
     public class EmbersCanonActivityUI : ActivityUIBehaviourBase
     {
+        [Inject] private ItemService _itemService;
+        
         private ActivityBkComponent _activityBkComponent;
         private ActivityJoinComponent _activityJoinComponent;
         
@@ -24,8 +28,6 @@ namespace HotUpdate.Game.Activity.UI.EmbersCanon
         
         private AwardPreviewComponent _awardPreviewComponent;
         private LimitTimeAwardComponent _limitTimeAwardComponent;
-
-        private readonly IList<ItemGrid> _itemGrids = new List<ItemGrid>();
         
         protected override void Awake()
         {
@@ -43,9 +45,8 @@ namespace HotUpdate.Game.Activity.UI.EmbersCanon
         {
             await base.OnInit();
             // 初始化界面背景
-            var backGround = await spriteLoader.LoadSpriteAsync(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Activity,
-                    activityInfo.f_bkUi_Res);
-            _activityBkComponent.SetBackGround(backGround);
+            using var backGround = await GameAsset.LoadAssetAsync<Sprite>(activityInfo.f_bkUi_Res);
+            _activityBkComponent.SetBackGround(backGround.Asset);
 
             _activityJoinComponent.OnClickJoin += OnTriggerJoin;
             _limitTimeAwardComponent.OnClickAward += OnTriggerLimitTimeAward;
@@ -60,14 +61,7 @@ namespace HotUpdate.Game.Activity.UI.EmbersCanon
             txtTime.text = $"{ToDurationStr(activityInfo.f_duration)}";
             
             // 解析奖励ID数组，获取物品格子
-            ItemService.GetItemGrid(activityInfo.f_awardIds, grid =>
-            {
-                if (grid != null)
-                {
-                    _awardPreviewComponent.SetAward(grid);
-                    _itemGrids.Add(grid);
-                }
-            });
+            _itemService.GetItemGrid(activityInfo.f_awardIds, null);
         }
 
         protected override Task OnShow()
@@ -80,38 +74,27 @@ namespace HotUpdate.Game.Activity.UI.EmbersCanon
             try
             {
                 // 创建关卡界面到活动界面下
-                var subActivityUi = await _objectSpawner.GetObjectAsync<EmbersCanonSubActivityUI_01>(AbKeyCollection.Ui, ResKeyCollection.EmbersCanonSubActivityUI_01,
+                var subActivityUi = await _objectSpawner.SpawnAsync<EmbersCanonSubActivityUI_01>(ResKeyCollection.EmbersCanonSubActivityUI_01,
                     activityView);
                 // 初始化关卡子界面
-                subActivityUi.Init(ActivityData, activityInfo);
+                subActivityUi.Obj.Init(ActivityData, activityInfo);
             }
             catch (Exception e)
             {
-                LogManager.LogError($"{nameof(EmbersCanonActivityUI)}.{nameof(OnTriggerJoin)}：{e.Message}，{e.StackTrace}");
+                Logger.LogError($"{nameof(EmbersCanonActivityUI)}.{nameof(OnTriggerJoin)}：{e.Message}，{e.StackTrace}");
             }
         }
 
         private void OnTriggerLimitTimeAward()
         {
-            LogManager.Log($"限时奖励按钮点击");
+            Logger.Log($"限时奖励按钮点击");
         }
-
-        /// <summary>
-        /// 清理物品UI
-        /// </summary>
-        private void ClearItem()
-        {
-            foreach (var itemGrid in _itemGrids)
-            {
-                _objectSpawner.CollectAsset(itemGrid.gameObject);
-            }
-            _itemGrids.Clear();
-            _objectSpawner.RealseAsset(AbKeyCollection.Ui, ResKeyCollection.ItemGrid);
-        }
+        
         
         protected override void OnHide()
         {
-            ClearItem();
+            _itemService.Dispose();
+            _objectSpawner.Dispose();
             _activityJoinComponent.OnClickJoin -= OnTriggerJoin;
             _limitTimeAwardComponent.OnClickAward -= OnTriggerLimitTimeAward;
         }

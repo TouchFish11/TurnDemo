@@ -410,32 +410,26 @@ namespace Core.DI
                 return t2;
             return null;
         }
-
+        
         /// <summary>
         /// 解绑接口对该类型的映射，且从缓存中移除实例，移除后需重新BindSingleton或BindType
         /// </summary>
-        /// <param name="implementationType">具体类型，为空则直接return，</param>
-        /// <param name="interfaceType">若实现类型存在接口，则传入对应接口，否则为null</param>
-        /// <returns></returns>
-        public static void Unbind(Type implementationType, Type interfaceType = null)
+        /// <typeparam name="TInstance">具体类型</typeparam>
+        /// <typeparam name="TInterface">若实现类型存在接口，则传入对应接口</typeparam>
+        public static void Unbind<TInstance, TInterface>()
         {
-            if(implementationType == null) return;
+            var implementationType = typeof(TInstance);
+            var interfaceType = typeof(TInterface);
 
-            if (interfaceType == null)
+            var interfaces = implementationType.GetInterfaces();
+            foreach (var face in interfaces)
             {
-                var interfaces = implementationType.GetInterfaces();
-                foreach (var face in interfaces)
-                {
-                    _interfaceToImplTypeMap.Remove(face, out _);
-                    _interfaceMap.Remove(face, out _);
-                }
-            }
-            else
-            {
-                _interfaceToImplTypeMap.Remove(interfaceType, out _);
-                _interfaceMap.Remove(interfaceType, out _);
+                _interfaceToImplTypeMap.Remove(face, out _);
+                _interfaceMap.Remove(face, out _);
             }
             
+            _interfaceToImplTypeMap.Remove(interfaceType, out _);
+            _interfaceMap.Remove(interfaceType, out _);
             _lifetimes.Remove(implementationType, out _);
             _instanceMap.Remove(implementationType, out _);
         }

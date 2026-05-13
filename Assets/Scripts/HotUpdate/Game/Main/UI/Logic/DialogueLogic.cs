@@ -1,5 +1,6 @@
 using System;
 using Core.DI;
+using Core.Log;
 using Core.UI;
 using HotUpdate.Base.Dialogue;
 
@@ -29,11 +30,11 @@ namespace HotUpdate.Game.Main.UI.Logic
         {
             try
             {
-                await _uiManager.SetViewActive(mainController,true);
+                await _uiManager.SetViewActive(mainController.panelId,true);
             }
             catch (Exception e)
             {
-                LogManager.LogError($"{nameof(DialogueLogic)}.{nameof(Active)}：激活主界面错误，{e.Message}");
+                Logger.LogError($"{nameof(DialogueLogic)}.{nameof(Active)}：激活主界面错误，{e.Message}");
             }
         }
 
@@ -45,11 +46,11 @@ namespace HotUpdate.Game.Main.UI.Logic
         {
             try
             {
-                await _uiManager.SetViewActive(mainController,false);
+                await _uiManager.SetViewActive(mainController.panelId,false);
             }
             catch (Exception e)
             {
-                LogManager.LogError($"{nameof(DialogueLogic)}.{nameof(InActive)}：隐藏主界面错误，{e.Message}");
+                Logger.LogError($"{nameof(DialogueLogic)}.{nameof(InActive)}：隐藏主界面错误，{e.Message}");
             }
         }
 

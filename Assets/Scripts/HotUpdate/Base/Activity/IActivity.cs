@@ -14,7 +14,7 @@ namespace HotUpdate.Base.Activity
         /// <summary>
         /// 活动数据
         /// </summary>
-        IActivityData ActivityData { get; }
+        ActivityData ActivityData { get; }
 
         /// <summary>
         /// 初始化活动

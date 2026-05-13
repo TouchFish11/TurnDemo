@@ -1,3 +1,4 @@
+using Core.Log;
 using HotUpdate.Base.Battle.Damage.Data;
 
 namespace HotUpdate.Game.Battle.ResponsibilityChain.DamageChain
@@ -11,7 +12,7 @@ namespace HotUpdate.Game.Battle.ResponsibilityChain.DamageChain
         {
             if (!CanTakeDamage(request))
             {
-                LogManager.Log($"{nameof(DamageJudgeHandler)}.{nameof(HandleRequest)}：不可受伤");
+                Logger.Log($"{nameof(DamageJudgeHandler)}.{nameof(HandleRequest)}：不可受伤");
                 return;
             }
             

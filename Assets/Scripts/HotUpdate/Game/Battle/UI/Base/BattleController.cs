@@ -1,3 +1,4 @@
+using Core.UI.ViewController;
 using HotUpdate.Base.Battle;
 using HotUpdate.Game.Battle.UI.MonsterStateUI;
 
@@ -8,28 +9,28 @@ namespace HotUpdate.Game.Battle.UI.Base
     /// <summary>
     /// 战斗界面控制器
     /// </summary>
-    public class BattleController : UIController<BattleView, BattleModel>, IBattleController
+    public class BattleController : UIController<BattleView>
     {
         public BattleUIInitializer UiInitializer { get; private set; }
         public BattleEventProcessor EventProcessor { get; private set; }
         public BattleUIManager BattleUiManager { get; private set; }
         public MonsterStateUIManager MonsterStateUIManager { get; private set; }
-
-        protected override Task OnShow()
+        
+        protected override Task OnInit()
         {
-            UiInitializer = new BattleUIInitializer(view, model, this);
-            BattleUiManager = new BattleUIManager(view, model, this);
+            return Task.CompletedTask;
+        }
+
+        protected override Task OnActive()
+        {
+            UiInitializer = new BattleUIInitializer(view, this);
+            BattleUiManager = new BattleUIManager(view, this);
             EventProcessor = new BattleEventProcessor(this, BattleUiManager, UiInitializer);
             MonsterStateUIManager = new MonsterStateUIManager();
             return Task.CompletedTask;
         }
 
-        protected override Task OnHide()
-        {
-            return Task.CompletedTask;
-        }
-
-        protected override Task OnInit()
+        protected override Task OnInactivate()
         {
             return Task.CompletedTask;
         }

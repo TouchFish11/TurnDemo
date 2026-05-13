@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Mono;
 using Core.Pool;
@@ -25,6 +26,10 @@ namespace HotUpdate.Game.Battle.UI.MonsterStateUI
     /// </summary>
     public class NormalMonsterStateUI : UIBehaviourBase
     {
+        [Inject] private ObjectSpawner _objectSpawner;
+        [Inject] private IBattleCameraManager _battleCameraManager;
+        [Inject] private IUIManager _uiManager;
+        
         // 血量渐变遮罩（用于血量变化时的渐变动画效果）
         [InjectUI] private Image imgFade;
         // 血量填充图（实时显示当前血量比例）
@@ -37,8 +42,7 @@ namespace HotUpdate.Game.Battle.UI.MonsterStateUI
         /// InjectUI(1) 表示注入索引为1的RectTransform组件
         /// </summary>
         [InjectUI(1)] private RectTransform WeaknessBar { get; set; }
-
-        private IPrefabLoader _prefabLoader;
+        
         // 血量渐变动画速度（控制fade遮罩的动画速率）
         private const float fadeSpeed = 1f;
         // 弱点图标集合（存储当前怪物的所有弱点图标，便于后续回收）
@@ -59,7 +63,6 @@ namespace HotUpdate.Game.Battle.UI.MonsterStateUI
         protected override void Awake()
         {
             base.Awake();
-            _prefabLoader = DIContainer.GetInstance<IPrefabLoader>();
             // 获取战斗管理器的事件总线，注册血量变化事件监听
             DIContainer.GetInstance<IBattleManager>().GetContext().GetEventBus().AddListener<HpChangedEvent>(OnHpChangedEvent);
             // 注册韧性变化事件监听
@@ -113,8 +116,8 @@ namespace HotUpdate.Game.Battle.UI.MonsterStateUI
             foreach (var elementType in toughnessComponent.WeakPropertys)
             {
                 // 从资源包加载弱点UI预制体，并挂载到弱点容器下
-                var weaknessIconObj = await _prefabLoader.GetGameObjectAsync(AbKeyCollection.Ui, ResKeyCollection.WeaknessUI, WeaknessBar);
-                var weaknessIcon = weaknessIconObj.GetComponent<Image>();
+                var weaknessIconObj = await _objectSpawner.SpawnAsync<GameObject>(ResKeyCollection.WeaknessUI, WeaknessBar);
+                var weaknessIcon = weaknessIconObj.Obj.GetComponent<Image>();
                 // 设置弱点图标颜色（根据元素类型转换为对应颜色）
                 weaknessIcon.color = ((int)elementType).ToElementTypeColor();
                 weakneses.Add(weaknessIcon); // 将图标加入集合，便于后续回收
@@ -196,8 +199,8 @@ namespace HotUpdate.Game.Battle.UI.MonsterStateUI
 
             // 将怪物世界坐标转换为UI本地坐标，并应用Y轴偏移，更新UI位置
             UIUtility.WorldToLocalPointInRectangle(
-                DIContainer.GetInstance<IBattleCameraManager>().CurrentActiveCamera, // 战斗主相机
-                DIContainer.GetInstance<IUIManager>().UICamera, // UI相机
+                _battleCameraManager.CurrentActiveCameraPoolObject.Obj, // 战斗主相机
+                _uiManager.UICamera, // UI相机
                 monsterStateArea,    // UI父节点
                 gameObject, // 当前UI对象
                 BattleEntity.GameObject.transform.position + Vector3.up * _bloodUiYOffset  // 怪物世界坐标 

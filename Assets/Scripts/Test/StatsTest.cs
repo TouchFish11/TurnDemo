@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Core.DI;
 using Core.Serialize.Json;
 using Test.Config;
 using Test.Equip;
@@ -34,7 +35,7 @@ namespace Test
             Debug.Log($"穿戴装备前防御力为：{statsComponent.GetFinalValue(EStatType.Def)}");
             
             // 创建装备
-            var config1 = JsonManager.Instance.FromJson<WeaponConfig>(e1Config.text, settings: Core.Utility.NewtonsoftJsonUtility.SerializerSettings);
+            var config1 = DIContainer.Create<JsonManager>().FromJson<WeaponConfig>(e1Config.text, settings: Core.Utility.NewtonsoftJsonUtility.SerializerSettings);
             var w1 = new Weapon(config1, null, null);
             
             // 穿戴装备
@@ -46,7 +47,7 @@ namespace Test
             Debug.Log($"穿戴装备后防御力为：{statsComponent.GetFinalValue(EStatType.Def)}");
             
             // 创建装备
-            var config2 = JsonManager.Instance.FromJson<WeaponConfig>(e2Config.text, settings: Core.Utility.NewtonsoftJsonUtility.SerializerSettings);
+            var config2 = DIContainer.Create<JsonManager>().FromJson<WeaponConfig>(e2Config.text, settings: Core.Utility.NewtonsoftJsonUtility.SerializerSettings);
             var w2 = new Weapon(config2,null, null);
             
             // 穿戴装备

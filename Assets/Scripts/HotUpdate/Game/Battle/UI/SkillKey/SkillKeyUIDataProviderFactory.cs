@@ -1,5 +1,6 @@
 using Core.DI;
 using Core.HotUpdate;
+using Core.Log;
 using Core.Reflection;
 using HotUpdate.Game.Battle.UI.SkillKey.Provider;
 
@@ -17,12 +18,12 @@ namespace HotUpdate.Game.Battle.UI.SkillKey
         
         public ISkillKeyUIDataProvider GetCastSkillCondition<TProvider>()where TProvider : class, ISkillKeyUIDataProvider
         {
-            if (typeToInterfaceMap.TryGetValue(typeof(TProvider).ToIdentifier(), out var targetSelectStrategy))
+            if (typeToInterfaceMap.TryGetValue(typeof(TProvider), out var targetSelectStrategy))
             {
                 return targetSelectStrategy;
             }
             
-            LogManager.LogError($"未找到按键UI数据提供器，{typeof(TProvider).ToIdentifier()}");
+            Logger.LogError($"未找到按键UI数据提供器，{typeof(TProvider)}");
             return null;
         }
     }

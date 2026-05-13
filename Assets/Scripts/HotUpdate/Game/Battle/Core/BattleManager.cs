@@ -19,11 +19,14 @@ using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Event;
 using HotUpdate.Game.Battle.Event.Turn;
-using HotUpdate.Game.Battle.Input;
+using HotUpdate.Game.Battle.Inputs;
 using HotUpdate.Game.Battle.TargetSelect;
 using HotUpdate.Game.Battle.Turn;
+using HotUpdate.Game.Main.Back;
+using HotUpdate.Game.Main.Loading.Battle;
 using UnityEngine;
 using UnityEngine.U2D;
+using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.Battle.Core
 {
@@ -34,41 +37,39 @@ namespace HotUpdate.Game.Battle.Core
     /// </summary>
     public class BattleManager : IBattleManager
     {
-        private readonly IUIManager _uiManager;
-        private readonly ISceneManager _sceneManager;
-        private readonly IMouseManager _mouseManager;
-        private readonly IPoolManager _poolManager;
+        [Inject] private IUIManager _uiManager;
+        [Inject] private ISceneManager _sceneManager;
+        [Inject] private IMouseManager _mouseManager;
+        [Inject] private IPoolManager _poolManager;
         
         // 战斗上下文
         private IBattleContext _context;
         // 回合创建器
         private TurnCreator _creator;
+        // 主界面ID
+        private readonly int _mainControllerId;
         
         /// <summary>
         /// 战斗结束事件
         /// </summary>
         private Func<Task> OnBattleOver;
 
-        public BattleManager(IUIManager uiManager, ISceneManager sceneManager, IMouseManager mouseManager, IPoolManager poolManager)
+        public BattleManager(int mainControllerId)
         {
-            _uiManager = uiManager;
-            _sceneManager = sceneManager;
-            _mouseManager = mouseManager;
-            _poolManager = poolManager;
+            _mainControllerId = mainControllerId;
         }
 
         /// <summary>
-        /// 注册战斗相关管理器
+        /// 注册绑定战斗相关管理器
         /// </summary>
-        private static void RegisterManager(IBattleContext context)
+        private static void BindManager()
         {
-            DIContainer.GetInstance.Register<ITargetSelectManager>(new TargetSelectManager(context));
-            // IDamageCalcManager 依赖 ITargetSelectManager
-            DIContainer.GetInstance.Register<IDamageCalcManager>(new DamageCalcManager(context));
-            DIContainer.GetInstance.Register<IBattleInputHandler>(new BattleInputHandler(context));
-            DIContainer.GetInstance.Register<IBattleEventScheduler>(new BattleEventScheduler(context));
-            //  IBattleCameraManager 依赖 IBattleInputHandler
-            DIContainer.GetInstance.Register<IBattleCameraManager>(new BattleCameraManager(DIContainer.GetInstance<IPrefabLoader>()));
+            DIContainer.BindSingleton<ITargetSelectManager, TargetSelectManager>();
+            DIContainer.BindSingleton<IDamageCalcManager, DamageCalcManager>();
+            DIContainer.BindSingleton<IBattleInputHandler, BattleInputHandler>();
+            DIContainer.BindSingleton<IBattleEventScheduler, BattleEventScheduler>();
+            DIContainer.BindSingleton<IBattleCameraManager, BattleCameraManager>();
+            DIContainer.BindSingleton<IBattlePointProxy, BattlePointProxy>();
         }
 
         /// <summary>
@@ -76,12 +77,12 @@ namespace HotUpdate.Game.Battle.Core
         /// </summary>
         private static void UnregisterManager()
         {
-            DIContainer.GetInstance.Unregister<IBattleCameraManager>();
-            DIContainer.GetInstance.Unregister<ITargetSelectManager>();
-            DIContainer.GetInstance.Unregister<IDamageCalcManager>();
-            DIContainer.GetInstance.Unregister<IBattleInputHandler>();
-            DIContainer.GetInstance.Unregister<IBattlePointProxy>();
-            DIContainer.GetInstance.Unregister<IBattleEventScheduler>();
+            DIContainer.Unbind<ITargetSelectManager, TargetSelectManager>();
+            DIContainer.Unbind<IDamageCalcManager, DamageCalcManager>();
+            DIContainer.Unbind<IBattleInputHandler, BattleInputHandler>();
+            DIContainer.Unbind<IBattleEventScheduler, BattleEventScheduler>();
+            DIContainer.Unbind<IBattleCameraManager, BattleCameraManager>();
+            DIContainer.Unbind<IBattlePointProxy, BattlePointProxy>();
         }
 
         /// <summary>
@@ -96,7 +97,7 @@ namespace HotUpdate.Game.Battle.Core
             // 缓存回调
             OnBattleOver = onBattleOver;
             // 创建战斗加载界面
-            var battleLoadingController = await DIContainer.GetInstance<IMainUiHelper>().CreateBattleLoadingController();
+            var battleLoadingController = await _uiManager.CreateViewAsync<BattleLoadingView, BattleLoadingController>("", E_UILayer.Bot);
             // 在加载界面显示后，在执行该回调
             if (OnpreEnter != null)
             {
@@ -104,20 +105,17 @@ namespace HotUpdate.Game.Battle.Core
             }
             
             // 加载战斗场景
-            await _sceneManager.LoadSceneAsync(ResKeyCollection.LevelScene, UnityEngine.SceneManagement.LoadSceneMode.Single, progress => battleLoadingController.UpdateProgress(progress));
-            
+            await _sceneManager.LoadSceneAsync(ResKeyCollection.LevelScene, UnityEngine.SceneManagement.LoadSceneMode.Single, battleLoadingController.UpdateProgress);
             // 隐藏主界面
-            await _uiManager.SetViewActive(_uiManager.GetController<IMainController>(), false);
-            // 注册战斗点，依赖战斗场景加载完成
-            DIContainer.GetInstance.Register<IBattlePointProxy>(new BattlePointProxy());
+            await _uiManager.SetViewActive(_mainControllerId, false);
             // 预加载资源
             await PreLoad();
             // 创建战斗上下文，依赖战斗点代理
-            _context = new BattleContext(DIContainer.GetInstance<IBattlePointProxy>());
+            _context = DIContainer.Create<BattleContext>();
             // 监听战斗退出事件
             _context.GetEventBus().AddListener<QuitBattleEvent>(OnQuitBattleEvent);
             // 注册战斗相关管理器
-            RegisterManager(_context);
+            BindManager();
             // 创建回合创建器
             _creator = _poolManager.GetData<TurnCreator>();
             _creator.Init(_context, turnData.TotalTurnNumber, turnData.Waves);
@@ -180,23 +178,23 @@ namespace HotUpdate.Game.Battle.Core
                 _context.CleanupBattle();
 
                 // 创建黑背景界面遮挡
-                var backController = await DIContainer.GetInstance<IMainUiHelper>().CreateBackController();
+                var backController = await _uiManager.CreateViewAsync<BackView, BackController>("", E_UILayer.Bot);
                 // 强制不可见，暂时这样处理，正常流程Bug：battleLoadingController销毁时未正确释放
                 _mouseManager.ForceInVisible();
                 // 销毁战斗界面
-                _uiManager.DestroyView(AbKeyCollection.Ui, quitBattleEvent.BattleUIController);
+                await _uiManager.DestroyView(quitBattleEvent.BattleUIController.panelId);
                 // 执行战斗结束回调，在背景界面销毁前执行
                 if (OnBattleOver != null)
                 {
                     await OnBattleOver();
                     OnBattleOver = null;
                     // 销毁黑背景界面
-                    _uiManager.DestroyView(AbKeyCollection.Ui, backController);
+                    await _uiManager.DestroyView(backController.panelId);
                 }
             }
             catch (Exception e)
             {
-                LogManager.LogError($"{nameof(BattleManager)}.{nameof(OnQuitBattleEvent)}：{e.Message}，{e.StackTrace}");
+                Logger.LogError($"{nameof(BattleManager)}.{nameof(OnQuitBattleEvent)}：{e.Message}，{e.StackTrace}");
             }
         }
     }

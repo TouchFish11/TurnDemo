@@ -1,10 +1,9 @@
-using System.Collections.Generic;
+using Core.AssetBundles.Management;
 using Core.DI;
-using HotUpdate.Common;
 using HotUpdate.Common.Item;
-using HotUpdate.Common.Item.UI;
 using HotUpdate.Game.Activity.Core;
 using HotUpdate.Game.Activity.UI.Common;
+using UnityEngine;
 
 namespace HotUpdate.Game.Activity.UI.OrbitalDeparture
 {
@@ -15,6 +14,8 @@ namespace HotUpdate.Game.Activity.UI.OrbitalDeparture
     /// </summary>
     public class OrbitalDepartureActivityUI : ActivityUIBehaviourBase
     {
+        [Inject] private ItemService _itemService;
+        
         private ActivityBkComponent _activityBkComponent;
         private ActivityJoinComponent _activityJoinComponent;
         
@@ -23,8 +24,6 @@ namespace HotUpdate.Game.Activity.UI.OrbitalDeparture
         private ActivityTimeComponent _activityTimeComponent;
         
         private AwardPreviewComponent _awardPreviewComponent;
-        
-        private readonly IList<ItemGrid> _itemGrids = new List<ItemGrid>();
 
         protected override void Awake()
         {
@@ -50,11 +49,9 @@ namespace HotUpdate.Game.Activity.UI.OrbitalDeparture
             _awardPreviewComponent.Init(this, activityInfo, ActivityData);
             
             // 初始化界面背景
-            var backGround = await DIContainer.GetInstance<ISpriteLoader>().LoadSpriteAsync(
-                AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Activity,
-                activityInfo.f_bkUi_Res);
+            using var handle = await GameAsset.LoadAssetAsync<Sprite>(activityInfo.f_bkUi_Res);
             // 设置界面背景
-            _activityBkComponent.SetBackGround(backGround);
+            _activityBkComponent.SetBackGround(handle.Asset);
             
             UpdateBtnJoin();
             // 监听按钮
@@ -70,14 +67,7 @@ namespace HotUpdate.Game.Activity.UI.OrbitalDeparture
             txtTime.text = $"{ToDurationStr(activityInfo.f_duration)}";
             
             // 解析奖励ID数组，获取物品格子
-            ItemService.GetItemGrid(activityInfo.f_awardIds, grid =>
-            {
-                if (grid)
-                {
-                    _awardPreviewComponent.SetAward(grid);
-                    _itemGrids.Add(grid);
-                }
-            });
+            _itemService.GetItemGrid(activityInfo.f_awardIds, null);
         }
 
         protected override Task OnShow()
@@ -104,22 +94,10 @@ namespace HotUpdate.Game.Activity.UI.OrbitalDeparture
             txtJoin.text = !ActivityData.IsComplete ? "立即领取" : "已领取";
         }
         
-        /// <summary>
-        /// 清理物品UI
-        /// </summary>
-        private void ClearItem()
-        {
-            foreach (var itemGrid in _itemGrids)
-            {
-                _objectSpawner.CollectAsset(itemGrid.gameObject);
-            }
-            _itemGrids.Clear();
-            _objectSpawner.RealseAsset(AbKeyCollection.Ui, ResKeyCollection.ItemGrid);
-        }
-        
         protected override void OnHide()
         {
-            ClearItem();
+            _itemService.Dispose();
+            _objectSpawner.Dispose();
             _activityJoinComponent.OnClickJoin -= OnTriggerJoin;
         }
     }

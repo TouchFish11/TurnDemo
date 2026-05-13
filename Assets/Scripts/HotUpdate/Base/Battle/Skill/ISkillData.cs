@@ -2,7 +2,7 @@ using HotUpdate.Base.Data;
 
 namespace HotUpdate.Base.Battle.Skill
 {
-    public interface ISkillData : IData<ISkillData>
+    public interface ISkillData
     {
         ISkill Skill { get; }
         

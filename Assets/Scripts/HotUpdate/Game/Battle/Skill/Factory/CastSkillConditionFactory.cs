@@ -1,5 +1,6 @@
 using Core.DI;
 using Core.HotUpdate;
+using Core.Log;
 using Core.Reflection;
 using HotUpdate.Game.Battle.Skill.Conditions;
 
@@ -17,12 +18,12 @@ namespace HotUpdate.Game.Battle.Skill.Factory
         
         public ICastSkillCondition GetCastSkillCondition<TCondition>()where TCondition : class, ICastSkillCondition
         {
-            if (typeToInterfaceMap.TryGetValue(typeof(TCondition).ToIdentifier(), out var targetSelectStrategy))
+            if (typeToInterfaceMap.TryGetValue(typeof(TCondition), out var targetSelectStrategy))
             {
                 return targetSelectStrategy;
             }
             
-            LogManager.LogError($"未找到释放技能条件，{typeof(TCondition).ToIdentifier()}");
+            Logger.LogError($"未找到释放技能条件，{typeof(TCondition)}");
             return null;
         }
     }

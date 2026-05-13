@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Core.Log;
 using Core.Mono.MonoFunction;
 using HotUpdate.Base.Battle;
 using HotUpdate.Base.Battle.Damage;
@@ -53,7 +54,7 @@ namespace HotUpdate.Game.Battle.Damage
             else
             {
                 damageResult = default;
-                LogManager.LogError($"{nameof(DamageCalcManager)}.{nameof(CalcBrokenDamage)}：未注册伤害策略，{damageType}");
+                Logger.LogError($"{nameof(DamageCalcManager)}.{nameof(CalcBrokenDamage)}：未注册伤害策略，{damageType}");
             }
         }
 
@@ -94,7 +95,7 @@ namespace HotUpdate.Game.Battle.Damage
             }
             else
             {
-                LogManager.LogError($"{nameof(DamageCalcManager)}.{nameof(CalcBrokenDamage)}：未注册击破伤害策略");
+                Logger.LogError($"{nameof(DamageCalcManager)}.{nameof(CalcBrokenDamage)}：未注册击破伤害策略");
             }
         }
         
@@ -112,7 +113,7 @@ namespace HotUpdate.Game.Battle.Damage
             }
             else
             {
-                LogManager.LogError($"{nameof(DamageCalcManager)}.{nameof(CalcBrokenDamage)}：未注册Dot伤害策略");
+                Logger.LogError($"{nameof(DamageCalcManager)}.{nameof(CalcBrokenDamage)}：未注册Dot伤害策略");
             }
         }
 

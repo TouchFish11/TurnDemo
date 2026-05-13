@@ -13,6 +13,7 @@ using HotUpdate.Base.Manager;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.Input
 {
@@ -66,31 +67,16 @@ namespace HotUpdate.Game.Input
         /// <param name="entityObject">所属的实体对象</param>
         public override void Init(IEntityObject entityObject)
         {
-            try
-            {
-                // 获取输入系统实例
-                inputSystem = DIContainer.GetInstance<IInputSystem>();
-                // 初始化玩家输入，并注册输入动作触发回调
-                var container = DIContainer.GetInstance<IGameManager>().GameDataManager.GetProvider<IMainDataProvider>().MainDataCollection.InputActionContainer;
-                if(container == null) throw new NullReferenceException("container");
-                
-                var playerInputComponent = EntityObject.GetComponent<PlayerInputComponent>();
-                if(!playerInputComponent) throw new NullReferenceException("playerInputComponent");
-                
-                var playerInput = playerInputComponent.PlayerInput;
-                if(!playerInput) throw new NullReferenceException("playerInput");
-                
-                inputSystem.InitPlayerInput(playerInput, container, OnActionTrigger);
-                LogManager.Log($"inputSystem初始化完成");
-                EnableInput();
-                // 添加帧更新监听，处理每帧的输入逻辑
-                DIContainer.GetInstance<IMonoAdapter>().AddUpdateListener(OnUpdate);
-            }
-            catch (Exception e)
-            {
-                // 记录初始化异常日志
-                LogManager.LogError($"{nameof(InputComponent)}.{nameof(Init)}，输入组件初始化错误，{e.Message}");
-            }
+            // 获取输入系统实例
+            inputSystem = DIContainer.GetInstance<IInputSystem>();
+            // 初始化玩家输入，并注册输入动作触发回调
+            var container = DIContainer.GetInstance<IGameManager>().GameDataManager.GetProvider<IMainDataProvider>().MainDataCollection.InputActionContainer;
+            var playerInputComponent = EntityObject.GetComponent<PlayerInputComponent>();
+            var playerInput = playerInputComponent.PlayerInput;
+            inputSystem.InitPlayerInput(playerInput, container, OnActionTrigger);
+            EnableInput();
+            // 添加帧更新监听，处理每帧的输入逻辑
+            DIContainer.GetInstance<IMonoAdapter>().AddUpdateListener(OnUpdate);
         }
 
         /// <summary>
@@ -163,7 +149,7 @@ namespace HotUpdate.Game.Input
                     // 普通攻击（鼠标左键）：鼠标不可见时触发
                     if (context.phase == InputActionPhase.Performed)
                     {
-                        LogManager.Log($"触发普攻");
+                        Logger.Log($"触发普攻");
                         OnMouseLeftClick?.Invoke();
                     }
                     break;

@@ -8,7 +8,6 @@ namespace HotUpdate.Game.Main.UI.Logic
     public abstract class MainLogic : IPoolData
     {
         protected MainController mainController;
-        protected MainModel mainModel;
         protected MainView mainView;
 
         /// <summary>
@@ -31,7 +30,6 @@ namespace HotUpdate.Game.Main.UI.Logic
         public virtual void ResetData()
         {
             mainController = null;
-            mainModel = null;
             mainView = null;
         }
     }

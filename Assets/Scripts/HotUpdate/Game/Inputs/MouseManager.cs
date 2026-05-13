@@ -3,6 +3,7 @@ using Core.GlobalEvent;
 using Core.GlobalEvent.Events;
 using HotUpdate.Base.Input;
 using UnityEngine;
+using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.Input
 {
@@ -22,7 +23,7 @@ namespace HotUpdate.Game.Input
 
         public MouseManager(IEventCenter eventCenter)
         {
-            eventCenter.Subscribe<MouseVisibleChangedEvent>(OnMouseVisibleChangedEvent);
+            eventCenter.SubscribeEvent<MouseVisibleChangedEvent>(OnMouseVisibleChangedEvent);
             UpdateMouseState();
         }
 
@@ -57,7 +58,7 @@ namespace HotUpdate.Game.Input
             // 记录请求来源并更新鼠标状态
             mouseVisibleSources.Push(source);
             UpdateMouseState();
-            LogManager.Log($"{source}请求显示鼠标，来源数：{mouseVisibleSources.Count}");
+            Logger.Log($"{source}请求显示鼠标，来源数：{mouseVisibleSources.Count}");
         }
 
         /// <summary>
@@ -76,7 +77,7 @@ namespace HotUpdate.Game.Input
             // 弹出栈顶来源并更新鼠标状态
             mouseVisibleSources.TryPop(out _);
             UpdateMouseState();
-            LogManager.Log($"{source}释放鼠标显示，来源数：{mouseVisibleSources.Count}");
+            Logger.Log($"{source}释放鼠标显示，来源数：{mouseVisibleSources.Count}");
         }
 
         /// <summary>

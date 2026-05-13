@@ -1,5 +1,6 @@
 using System.Collections;
 using Core.DI;
+using Core.Log;
 using Core.Reflection;
 using Core.UI;
 using Core.Utility;
@@ -42,7 +43,7 @@ namespace HotUpdate.Game.Battle.Skill.Handler
                 yield break;
             }
             
-            LogManager.Log($"角色：{skill.Caster}，终结技释放完毕，且可以执行后处理逻辑，当前行动角色：{currentEntity}");
+            Logger.Log($"角色：{skill.Caster}，终结技释放完毕，且可以执行后处理逻辑，当前行动角色：{currentEntity}");
             
             // 获取当前玩家的普通攻击技能信息（终极技能释放后，切回普攻的目标选择逻辑）
             var currentEntitySkillInfo = GetNormalSkillInfo(currentEntity);
@@ -94,7 +95,7 @@ namespace HotUpdate.Game.Battle.Skill.Handler
                 }
             }
 
-            LogManager.LogError($"{nameof(BaseUltimateSkillCastPostHandler)}.{nameof(GetNormalSkillInfo)}：未找到普攻技能信息");
+            Logger.LogError($"{nameof(BaseUltimateSkillCastPostHandler)}.{nameof(GetNormalSkillInfo)}：未找到普攻技能信息");
             return null;
         }
 

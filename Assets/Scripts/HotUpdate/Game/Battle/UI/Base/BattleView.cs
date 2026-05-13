@@ -1,5 +1,12 @@
+using System.Collections.Generic;
+using System.Linq;
+using Core.AssetBundles.Management;
 using Core.UI;
 using Core.UI.ViewController;
+using HotUpdate.Game.Battle.UI.ActionLine;
+using HotUpdate.Game.Battle.UI.BattlePoint;
+using HotUpdate.Game.Battle.UI.Role;
+using HotUpdate.Game.Battle.UI.SkillKey;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -95,6 +102,23 @@ namespace HotUpdate.Game.Battle.UI.Base
         /// �ж���ʾUI����
         /// </summary>
         public ActingTipUI ActingTipUI { get; private set; }
+        
+        
+        // �ж�������UI�б�
+        private readonly List<PoolObject<ActionGridUI>> actions = new();
+        // ���ܰ���UI�б�
+        private readonly List<PoolObject<SkillKeyUI>> skillKeyUIs = new();
+        // ��ɫ״̬UI�б�
+        private readonly List<PoolObject<RoleStateUI>> roleStateUIs = new();
+        // ս����UI�б�
+        private readonly List<PoolObject<BattlePointUI>> battlePointUIs = new();
+        // ѡ����UI�б�
+        private readonly List<PoolObject> selectMarkerUIs = new();
+        // �ȴ��ж������б�
+        private readonly List<PoolObject<WaitingActUI>> waitingActUIs = new();
+        // ��ǰ�ۼ��˺�
+        private long currentCalcDamage;
+        
 
         protected override void Awake()
         {
@@ -157,6 +181,156 @@ namespace HotUpdate.Game.Battle.UI.Base
         public void UpdateBattlePointCount(int current)
         {
             txtCount.text = current.ToString();
+        }
+        
+        /// <summary>
+        /// ͨ��ID��ȡ��ɫ״̬UI
+        /// ʹ��Linq��ѯ
+        /// </summary>
+        /// <param name="roleId"></param>
+        /// <returns>δ�ҵ�����null</returns>
+        public RoleStateUI GetRoleStateUIById(int roleId)
+        {
+            return roleStateUIs.FirstOrDefault(r => r.Obj.RoleId == roleId).Obj;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="waitingActUI"></param>
+        public void CacheWaitingCommmand(PoolObject<WaitingActUI> waitingActUI)
+        {
+            waitingActUIs.Add(waitingActUI);
+        }
+
+        public void ClearWaitingActUI()
+        {
+            foreach (var waitingActUI in waitingActUIs)
+            {
+                waitingActUI.Collect();
+            }
+            waitingActUIs.Clear();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void ClearActionBar()
+        {
+            foreach (var actionGridUI in actions)
+            {
+                actionGridUI.Collect();
+            }
+            actions.Clear();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="actionGridUI"></param>
+        public void UpdateAcitonbar(PoolObject<ActionGridUI> actionGridUI)
+        {
+            actions.Add(actionGridUI);
+        }
+
+        /// <summary>
+        /// ��ȡ���е��ж�����
+        /// </summary>
+        /// <returns></returns>
+        public List<ActionGridUI> GetActionGridUIs()
+        {
+            return actions.ConvertAll(p => p.Obj);
+        }
+
+        /// <summary>
+        /// ���ò���UI
+        /// </summary>
+        /// <param name="skillKeyUIs"></param>
+        public void SetOperator(List<PoolObject<SkillKeyUI>> skillKeyUIs)
+        {
+            foreach (var skillKeyUI in this.skillKeyUIs)
+            {
+                skillKeyUI.Collect();
+            }
+            this.skillKeyUIs.Clear();
+            this.skillKeyUIs.AddRange(skillKeyUIs);
+        }
+
+        /// <summary>
+        /// �������UI
+        /// </summary>
+        public void ClearOperator()
+        {
+            foreach (var skillKeyUI in skillKeyUIs)
+            {
+                skillKeyUI.Collect();
+            }
+            skillKeyUIs.Clear();
+        }
+
+        /// <summary>
+        /// ����ս������
+        /// </summary>
+        /// <param name="current"></param>
+        /// <param name="battlePointUIs"></param>
+        public void UpdateBattlePointCount(int current, IEnumerable<PoolObject<BattlePointUI>> battlePointUIs)
+        {
+            foreach (var battlePointUI in this.battlePointUIs)
+            {
+                battlePointUI.Collect();
+            }
+            this.battlePointUIs.Clear();
+            this.battlePointUIs.AddRange(battlePointUIs);
+        }
+        
+        /// <summary>
+        ///  缓存目标标记
+        /// </summary>
+        /// <param name="selectMarkerUI"></param>
+        public void AddSelectMarker(PoolObject selectMarkerUI)
+        {
+            selectMarkerUIs.Add(selectMarkerUI);
+        }
+        
+        /// <summary>
+        /// 清理所有标记
+        /// </summary>
+        public void ClearSelectMarkers()
+        {
+            foreach (var selectMarkerUI in selectMarkerUIs)
+            {
+                selectMarkerUI.Collect();
+            }
+            selectMarkerUIs.Clear();
+        }
+
+        /// <summary>
+        /// ��ʼ����ɫ״̬UI
+        /// </summary>
+        /// <param name="roleStateUI"></param>
+        public void InitRoleStateUI(PoolObject<RoleStateUI> roleStateUI)
+        {
+            roleStateUIs.Add(roleStateUI);
+        }
+
+        /// <summary>
+        /// �����ۼ��˺��ı�
+        /// </summary>
+        /// <param name="dmg"></param>
+        /// <param name="isClear"></param>
+        /// <returns></returns>
+        public long SetCumulativeDamage(int dmg, bool isClear)
+        {
+            if (!isClear)
+            {
+                currentCalcDamage += dmg;
+            }
+            else
+            {
+                currentCalcDamage = 0;
+            }
+
+            return currentCalcDamage;
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Core.AssetBundles.Management;
 using Core.DI;
 using HotUpdate.Base.Battle.Object;
 using HotUpdate.Base.Battle.Skill;
@@ -8,6 +9,8 @@ using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.Skill.Component;
 using HotUpdate.Game.Battle.UI.MonsterStateUI;
 using HotUpdate.Game.Battle.UI.Role;
+using UnityEngine;
+using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.Battle.UI.Base
 {
@@ -17,10 +20,10 @@ namespace HotUpdate.Game.Battle.UI.Base
     /// </summary>
     public class BattleUIInitializer
     {
+        [Inject] private ObjectSpawner _objectSpawner;
+        
         // 战斗视图接口，用于获取UI挂载节点等视图相关信息
         private readonly BattleView _view;
-        // 战斗数据模型接口，用于缓存和管理UI相关数据
-        private readonly BattleModel _model;
         // 战斗控制器
         private readonly BattleController _battleController;
 
@@ -28,12 +31,10 @@ namespace HotUpdate.Game.Battle.UI.Base
         /// 构造函数
         /// </summary>
         /// <param name="view">战斗视图实例</param>
-        /// <param name="model">战斗数据模型实例</param>
         /// <param name="controller"></param>
-        public BattleUIInitializer(BattleView view, BattleModel model, BattleController controller)
+        public BattleUIInitializer(BattleView view, BattleController controller)
         {
             _view = view;
-            _model = model;
             _battleController = controller;
         }
 
@@ -49,9 +50,8 @@ namespace HotUpdate.Game.Battle.UI.Base
             foreach (var battleEntity in battleEntities)
             {
                 // 从资源包加载角色状态UI预制体，并挂载到玩家UI区域
-                //var roleStateUI = await ObjectBuilder.GetObject<IRoleStateUI>(AbKeyCollection.Ui, ResKeyCollection.RoleStateUI, _view.PlayerArea);
-                var roleStateUI = await DIContainer.GetInstance<IPrefabLoader>().GetObjectAsync<RoleStateUI>(AbKeyCollection.Ui, ResKeyCollection.RoleStateUI, _view.PlayerArea);
-                LogManager.Log($"{nameof(InitPlayerUIs)}：{roleStateUI}-{roleStateUI}");
+                var roleStateUI = await _objectSpawner.SpawnAsync<RoleStateUI>(ResKeyCollection.RoleStateUI, _view.PlayerArea);
+
                 // 获取当前实体的技能组件，用于查找必杀技
                 var skillComponent = battleEntity.GetComponent<SkillComponent>();
                 var skillId = -1;
@@ -76,17 +76,16 @@ namespace HotUpdate.Game.Battle.UI.Base
                 // 根据战斗实体获取对应的图标名称
                 var iconName = BattleUIManager.GetIconByEntity(battleEntity);
                 // 从图集加载角色图标
-                var icon = await DIContainer.GetInstance<ISpriteLoader>().LoadSpriteAsync(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Icon_BattleEntity, iconName);
-                DIContainer.GetInstance<ISpriteLoader>().ReleaseSprite(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Icon_BattleEntity, iconName);
+                using var iconHandle = await GameAsset.LoadAssetAsync<Sprite>(iconName);
                 // 获取当前实体的玩家属性组件
                 var playerPropertyComponent = battleEntity.GetComponent<PlayerPropertyComponent>();
                 // 获取角色核心属性数据
                 var roleProperty = playerPropertyComponent.GetProperty<RoleProperty>();
                 
                 // 初始化角色状态UI（传入属性、图标、必杀技ID、战斗实体）
-                roleStateUI.Init(roleProperty, icon, skillId, battleEntity);
+                roleStateUI.Obj.Init(roleProperty, iconHandle.Asset, skillId, battleEntity);
                 // 将初始化后的角色状态UI缓存到数据模型中
-                _model.InitRoleStateUI(roleStateUI);
+                _view.InitRoleStateUI(roleStateUI);
             }
         }
 
@@ -102,9 +101,9 @@ namespace HotUpdate.Game.Battle.UI.Base
                 foreach (var battleEntity in battleEntities)
                 {
                     // 从资源包加载怪物状态UI预制体，并挂载到怪物UI区域
-                    var monsterStateUI = await DIContainer.GetInstance<IPrefabLoader>().GetObjectAsync<NormalMonsterStateUI>(AbKeyCollection.Ui, ResKeyCollection.MonsterStateUI, _view.MonsterStateArea);
+                    var monsterStateUI = await _objectSpawner.SpawnAsync<NormalMonsterStateUI>(ResKeyCollection.MonsterStateUI, _view.MonsterStateArea);
                     // 初始化怪物状态UI（传入战斗实体、UI挂载区域）
-                    await monsterStateUI.Init(battleEntity, _view.MonsterStateArea);
+                    await monsterStateUI.Obj.Init(battleEntity, _view.MonsterStateArea);
                     // 将初始化后的怪物UI缓存
                     _battleController.MonsterStateUIManager.AddNormalMonsterStateUI(battleEntity, monsterStateUI);
                 }
@@ -112,7 +111,7 @@ namespace HotUpdate.Game.Battle.UI.Base
             catch (Exception e)
             {
                 // 捕获初始化过程中的异常并记录错误日志
-                LogManager.LogError($"{nameof(BattleUIInitializer)}.{nameof(InitMonsterUIs)}: {e.Message}");
+                Logger.LogError($"{nameof(BattleUIInitializer)}.{nameof(InitMonsterUIs)}: {e.Message}");
             }
         }
     }

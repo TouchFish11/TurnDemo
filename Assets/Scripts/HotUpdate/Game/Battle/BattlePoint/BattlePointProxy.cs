@@ -73,7 +73,7 @@ namespace HotUpdate.Game.Battle.BattlePoint
         /// 传入行动的玩家或被攻击的玩家
         /// </summary>
         /// <param name="battleEntity">当前操作的玩家对象</param>
-        public async System.Threading.Tasks.Task UpdateCamera(IBattleEntityObject battleEntity)
+        public async Task UpdateCamera(IBattleEntityObject battleEntity)
         {
             try
             {
@@ -178,7 +178,7 @@ namespace HotUpdate.Game.Battle.BattlePoint
         /// 创建相机到指定位置
         /// </summary>
         /// <param name="entityPosIndex"></param>
-        private Task<UnityEngine.Camera> CreateCameraAtPos(int entityPosIndex)
+        private Task<Camera> CreateCameraAtPos(int entityPosIndex)
         {
             // 创建相机到指定位置点
             var cameraTrans = BattlePoint.GetRoleCameraTransByIndex(entityPosIndex);
@@ -190,7 +190,7 @@ namespace HotUpdate.Game.Battle.BattlePoint
         /// </summary>
         /// <param name="CurrentActiveCamera"></param>
         /// <param name="currentPosIndex"></param>
-        private static void UpdateCameraMask(UnityEngine.Camera CurrentActiveCamera, int currentPosIndex)
+        private static void UpdateCameraMask(Camera CurrentActiveCamera, int currentPosIndex)
         {
             var mask = ResetCameraMask();
             // 根据当前玩家位置索引，只渲染符合的角色

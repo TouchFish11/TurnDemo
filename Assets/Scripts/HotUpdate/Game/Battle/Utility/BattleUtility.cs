@@ -6,6 +6,7 @@ using HotUpdate.Base.Battle.Skill;
 using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Property;
 using UnityEngine;
+using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.Battle.Utility
 {
@@ -108,7 +109,7 @@ namespace HotUpdate.Game.Battle.Utility
                     finalTargets.AddRange(filterObjects);
                     break;
                 default:
-                    LogManager.LogError($"{nameof(rangeType)}, {rangeType}");
+                    Logger.LogError($"{nameof(rangeType)}, {rangeType}");
                     break;
             }
         }

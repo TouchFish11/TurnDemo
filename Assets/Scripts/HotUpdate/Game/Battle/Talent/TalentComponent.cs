@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Core.Log;
 using HotUpdate.Base.Battle.Event;
 using HotUpdate.Base.Battle.Object;
 using HotUpdate.Game.Battle.Core;
@@ -59,7 +60,7 @@ namespace HotUpdate.Game.Battle.Talent
         public void AddTalent(ITalent talent)
         {
             _talents.Add(talent);
-            LogManager.Log($"{BattleEntity.GameObject.name}�����츳��{talent.Name}");
+            Logger.Log($"{BattleEntity.GameObject.name}�����츳��{talent.Name}");
         }
     }
 }

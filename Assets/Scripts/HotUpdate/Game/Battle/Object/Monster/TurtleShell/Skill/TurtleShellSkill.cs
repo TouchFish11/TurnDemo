@@ -7,8 +7,10 @@ using HotUpdate.Base.Battle;
 using HotUpdate.Base.Battle.Object;
 using HotUpdate.Base.VFX;
 using HotUpdate.Common;
+using HotUpdate.Game.Animation.Core;
 using HotUpdate.Game.Battle.Skill.Base;
 using UnityEngine;
+using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.Battle.Object.Monster.TurtleShell.Skill
 {
@@ -25,7 +27,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.TurtleShell.Skill
 
         public TurtleShellSkill(IBattleEntityObject caster, int skillId) : base(caster, skillId)
         {
-            Caster.GetComponentInChildren<IAnimationTrigger>().OnAttack += OnAttack;
+            Caster.GetComponentInChildren<AnimationTrigger>().OnAttack += OnAttack;
         }
 
         private async void OnAttack(int skillId)
@@ -67,7 +69,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.TurtleShell.Skill
             {
                 sb.AppendLine($"怪物选择目标：{battleEntityObject}");
             }
-            LogManager.Log($"{sb}");
+            Logger.Log($"{sb}");
         }
 
         /// <summary>

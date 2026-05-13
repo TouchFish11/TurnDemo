@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
+using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Mono;
-using Core.Pool;
 using Core.Serialize.Binary;
 using Core.UI;
 using HotUpdate.Base.Battle;
@@ -31,6 +31,8 @@ namespace HotUpdate.Game.Battle.UI.Role
     /// </summary>
     public class RoleStateUI : UIBehaviourBase
     {
+        [Inject] private ObjectSpawner _objectSpawner;
+        
         // UI控件引用
         [InjectUI] private Image imgIcon;              // 角色图标
         [InjectUI] private Image imgFade;              // 血量渐变填充条（用于血量减少时的延迟效果）
@@ -57,7 +59,7 @@ namespace HotUpdate.Game.Battle.UI.Role
         private IBattleEntityObject battleEntity;  // 战斗实体对象
 
         // 状态UI列表
-        private readonly List<StatusGridUI> statusGridUIs = new();
+        private readonly List<PoolObject<StatusGridUI>> statusGridUIs = new();
 
         /// <summary>
         /// 当前UI绑定的角色ID
@@ -231,12 +233,12 @@ namespace HotUpdate.Game.Battle.UI.Role
         private async void OnConflict_Add(IStatus status)
         {
             // 判断是否已存在相同ID的状态
-            var hasStatus = statusGridUIs.Any(s => s.GetStatusId() == status.StatusProperty.StatusInfo.f_id);
+            var hasStatus = statusGridUIs.Any(s => s.Obj.GetStatusId() == status.StatusProperty.StatusInfo.f_id);
             if (!hasStatus)
             {
                 // 创建新的状态图标
-                var statusGridUI = await DIContainer.GetInstance<IPrefabLoader>().GetObjectAsync<StatusGridUI>(AbKeyCollection.Ui, ResKeyCollection.StatusGridUI, svBuffBox.content);
-                statusGridUI.Init(status);
+                var statusGridUI = await _objectSpawner.SpawnAsync<StatusGridUI>(ResKeyCollection.StatusGridUI, svBuffBox.content);
+                statusGridUI.Obj.Init(status);
                 statusGridUIs.Add(statusGridUI);
             }
         }
@@ -248,8 +250,8 @@ namespace HotUpdate.Game.Battle.UI.Role
         private async void OnConflict_Lonel(IStatus newStatus)
         {
             // 直接创建新的状态图标（独占类型总是创建新的）
-            var statusGridUI = await DIContainer.GetInstance<IPrefabLoader>().GetObjectAsync<StatusGridUI>(AbKeyCollection.Ui, ResKeyCollection.StatusGridUI, svBuffBox.content);
-            statusGridUI.Init(newStatus);
+            var statusGridUI = await _objectSpawner.SpawnAsync<StatusGridUI>(ResKeyCollection.StatusGridUI, svBuffBox.content);
+            statusGridUI.Obj.Init(newStatus);
             statusGridUIs.Add(statusGridUI);
         }
 
@@ -260,17 +262,18 @@ namespace HotUpdate.Game.Battle.UI.Role
         private async void OnConflict_Cover(IStatus newStatus)
         {
             // 查找已存在的相同ID状态
-            var statusGrid = statusGridUIs.FirstOrDefault(s => s.GetStatusId() == newStatus.StatusProperty.StatusInfo.f_id);
-            if (statusGrid)
+            var index = statusGridUIs.FindIndex(s => s.Obj.GetStatusId() == newStatus.StatusProperty.StatusInfo.f_id);
+            if (index != -1)
             {
+                var statusGrid = statusGridUIs[index];
                 // 将旧状态图标回收到对象池
-                DIContainer.GetInstance<IPoolManager>().PushObj(statusGrid.gameObject);
-                statusGridUIs.Remove(statusGrid);
+                statusGrid.Collect();
+                statusGridUIs.RemoveAt(index);
             }
             
             // 创建新的状态图标
-            var statusGridUI = await DIContainer.GetInstance<IPrefabLoader>().GetObjectAsync<StatusGridUI>(AbKeyCollection.Ui, ResKeyCollection.StatusGridUI, svBuffBox.content);
-            statusGridUI.Init(newStatus);
+            var statusGridUI = await _objectSpawner.SpawnAsync<StatusGridUI>(ResKeyCollection.StatusGridUI, svBuffBox.content);
+            statusGridUI.Obj.Init(newStatus);
             statusGridUIs.Add(statusGridUI);
         }
 
@@ -283,12 +286,11 @@ namespace HotUpdate.Game.Battle.UI.Role
             // 从后向前遍历，避免删除时索引问题
             for (var i = statusGridUIs.Count - 1; i >= 0; i--)
             {
-                if (!statusGridUIs[i].IsValid)
-                {
-                    // 移除已失效的状态图标
-                    DIContainer.GetInstance<IPoolManager>().PushObj(statusGridUIs[i].gameObject);
-                    statusGridUIs.RemoveAt(i);
-                }
+                if (statusGridUIs[i].Obj.IsValid) 
+                    continue;
+                // 移除已失效的状态图标
+                statusGridUIs[i].Collect();
+                statusGridUIs.RemoveAt(i);
             }
         }
 

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Core.Log;
 using HotUpdate.Base.Battle;
 using HotUpdate.Base.Battle.Object;
 using HotUpdate.Base.Battle.Property;
@@ -116,7 +117,7 @@ namespace HotUpdate.Game.Battle.Property
                     return battleProperty.CurrentShield;
                 default:
                     // 未匹配到属性类型时打印错误日志
-                    LogManager.LogError($"未找到动态属性类型：{dynamicPropertyType}，已返回默认值{default}");
+                    Logger.LogError($"未找到动态属性类型：{dynamicPropertyType}，已返回默认值{default}");
                     return 0;
             }
         }
@@ -159,7 +160,7 @@ namespace HotUpdate.Game.Battle.Property
             }
 
             // 未找到加成类型时打印警告日志
-            LogManager.LogWarning($"属性加成映射不存在：{bonusType}，已返回{default}");
+            Logger.LogWarning($"属性加成映射不存在：{bonusType}，已返回{default}");
             return 0;
         }
     }

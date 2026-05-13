@@ -1,5 +1,6 @@
 using Core.DI;
 using Core.HotUpdate;
+using Core.Log;
 using Core.Reflection;
 using HotUpdate.Base.Battle.TargetSelect;
 
@@ -17,12 +18,12 @@ namespace HotUpdate.Game.Battle.TargetSelect
         
         public ITargetSelectStrategy GetTargetSelectStrategy<TStrategy>()where TStrategy : class, ITargetSelectStrategy
         {
-            if (typeToInterfaceMap.TryGetValue(typeof(TStrategy).ToIdentifier(), out var targetSelectStrategy))
+            if (typeToInterfaceMap.TryGetValue(typeof(TStrategy), out var targetSelectStrategy))
             {
                 return targetSelectStrategy;
             }
             
-            LogManager.LogError($"未找到目标选择策略，{typeof(TStrategy).ToIdentifier()}");
+            Logger.LogError($"未找到目标选择策略，{typeof(TStrategy)}");
             return null;
         }
     }
