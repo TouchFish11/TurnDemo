@@ -6,7 +6,6 @@ using Core.Pool;
 using Core.UI;
 using Core.UI.ViewController;
 using HotUpdate.Common;
-using HotUpdate.Game.Activity.UI.Base;
 using HotUpdate.Game.Main.Settings.UI;
 using HotUpdate.Game.Main.UI.Logic;
 using HotUpdate.Game.Quests.UI;
@@ -78,7 +77,7 @@ namespace HotUpdate.Game.Main.UI
                 switch (btnName)
                 {
                     case "btnActivity":
-                        await uiManager.CreateViewAsync<ActivityView, ActivityController>("", E_UILayer.Bot);
+                        //await uiManager.CreateViewAsync<ActivityView, ActivityController>("", E_UILayer.Bot);
                         break;
                     case "btnJourney":
                         

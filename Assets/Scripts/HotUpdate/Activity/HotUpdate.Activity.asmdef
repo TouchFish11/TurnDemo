@@ -1,0 +1,21 @@
+{
+    "name": "HotUpdate.Activity",
+    "rootNamespace": "",
+    "references": [
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:a4a6af4070a88c44295e96802cdc9fef",
+        "GUID:62c6899ee7f45a643977578937697546",
+        "GUID:8c083432f5a27e446bf2cd94f7a39a12",
+        "GUID:8fb1b3eff4bffc7458ecb800ee11a7e0",
+        "GUID:7e7cced48d829634fa9da2fb7e25ae58"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

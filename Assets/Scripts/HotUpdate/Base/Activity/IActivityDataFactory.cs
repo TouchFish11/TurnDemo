@@ -9,6 +9,6 @@ namespace HotUpdate.Base.Activity
         /// </summary>
         /// <param name="activityId"></param>
         /// <returns></returns>
-        IActivityData GetData(int activityId);
+        ActivityData GetData(int activityId);
     }
 }

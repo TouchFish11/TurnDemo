@@ -15,9 +15,9 @@ namespace HotUpdate.Base.Battle
         /// 唯一入口
         /// </summary>
         /// <param name="turnData">战斗回合数据</param>
-        /// <param name="OnpreEnter"></param>
+        /// <param name="OnPreEnter"></param>
         /// <param name="onBattleOver">战斗结束回调</param>
-        System.Threading.Tasks.Task EnterBattle(TurnData turnData, Func<System.Threading.Tasks.Task> OnpreEnter,
+        System.Threading.Tasks.Task EnterBattle(TurnData turnData, Func<System.Threading.Tasks.Task> OnPreEnter,
             Func<System.Threading.Tasks.Task> onBattleOver);
 
         ITurnCreator GetTurnCreator();

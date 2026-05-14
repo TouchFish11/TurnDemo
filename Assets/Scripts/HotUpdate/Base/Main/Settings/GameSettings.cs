@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using HotUpdate.Base.Data;
 using Newtonsoft.Json;
 
 namespace HotUpdate.Base.Main.Settings
@@ -10,7 +9,7 @@ namespace HotUpdate.Base.Main.Settings
     /// </summary>
     [Serializable]
     [JsonObject(MemberSerialization.OptIn)]
-    public class GameSettings : IData<GameSettings>
+    public class GameSettings
     {
         [JsonProperty] private Dictionary<ESettingType, ISettingItem> settings = new();
         

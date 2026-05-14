@@ -192,7 +192,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -220,9 +220,8 @@ GameObject:
   - component: {fileID: 354131478858373477}
   - component: {fileID: 2403670941212972233}
   - component: {fileID: 4049480372503491096}
-  - component: {fileID: 6310342837603307416}
   m_Layer: 5
-  m_Name: ActivityNameComponent
+  m_Name: ActivityNameBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -288,18 +287,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 0
---- !u!114 &6310342837603307416
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 735795578983943329}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8191a650170818418d2dba232fbd795, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1079253472525017341
 GameObject:
   m_ObjectHideFlags: 0
@@ -311,9 +298,8 @@ GameObject:
   - component: {fileID: 845797672681775647}
   - component: {fileID: 5820990776698141320}
   - component: {fileID: 6153678067689899857}
-  - component: {fileID: 8063682282843612570}
   m_Layer: 5
-  m_Name: ActvityTimeComponent
+  m_Name: ActvityTimeBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -379,18 +365,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 0
---- !u!114 &8063682282843612570
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1079253472525017341}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81d2b3bb0da402e4694362f0e64edbd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2197876154670022957
 GameObject:
   m_ObjectHideFlags: 0
@@ -658,9 +632,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3809618034039340976}
-  - component: {fileID: 5746669024715436392}
   m_Layer: 5
-  m_Name: ActivityBkComponent
+  m_Name: ActivityBkBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -686,18 +659,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &5746669024715436392
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4278134669838310703}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd18ef7ec971e584da215b74d57da286, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &4627051335661729748
 GameObject:
   m_ObjectHideFlags: 0
@@ -2018,9 +1979,8 @@ GameObject:
   - component: {fileID: 9009208353750154459}
   - component: {fileID: 1308478109547008542}
   - component: {fileID: 4104685425658278532}
-  - component: {fileID: 4465241011986343551}
   m_Layer: 5
-  m_Name: ActivityDescritionComponent
+  m_Name: ActivityDescritionBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2086,18 +2046,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
   m_VerticalFit: 2
---- !u!114 &4465241011986343551
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8711844377829007563}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17992368500737c41a3719aa5eed3a09, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &9110581365680961650
 GameObject:
   m_ObjectHideFlags: 0

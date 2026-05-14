@@ -10,17 +10,14 @@ namespace HotUpdate.Base.Activity
         /// 活动游戏对象
         /// </summary>
         GameObject GameObject { get; }
-        
-        /// <summary>
-        /// 活动数据
-        /// </summary>
-        ActivityData ActivityData { get; }
 
+        int ActivityId { get; }
+        
         /// <summary>
         /// 初始化活动
         /// </summary>
-        /// <param name="activityData"></param>
+        /// <param name="activityId"></param>
         /// <param name="activityInfo"></param>
-        void Init(IActivityData activityData, ActivityInfo activityInfo);
+        void Init(int activityId, ActivityInfo activityInfo);
     }
 }
