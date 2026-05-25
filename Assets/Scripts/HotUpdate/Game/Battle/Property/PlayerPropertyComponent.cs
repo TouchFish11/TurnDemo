@@ -1,7 +1,8 @@
 using Core.Components;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Battle.Property;
+using Core.DI;
+using HotUpdate.Base;
 using HotUpdate.Game.Battle.Event.General;
+using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.Property
 {
@@ -17,7 +18,7 @@ namespace HotUpdate.Game.Battle.Property
         {
             base.BattleInit(battleEntity);
 
-            battleProperty = new RoleProperty();
+            battleProperty = DIContainer.Create<RoleProperty>();
             battleProperty.InitProperty(battleEntity.BattleEntityId);
         }
 
@@ -28,7 +29,7 @@ namespace HotUpdate.Game.Battle.Property
             switch (dynamicPropertyType)
             {
                 case E_DynamicPropertyType.CurrentEnergy:
-                    int currentEnergyDelta = RoleProperty.CurrentEnergy - newValue;
+                    var currentEnergyDelta = RoleProperty.CurrentEnergy - newValue;
                     RoleProperty.CurrentEnergy = newValue;
                     battleContext.GetEventBus().TriggerEvent(new EnergyChangedEvent(battleContext, BattleEntity, RoleProperty.CurrentEnergy, RoleProperty.BaseEnergy, currentEnergyDelta));
                     break;

@@ -9,9 +9,8 @@ using Core.Serialize.Binary;
 using Core.UI;
 using Core.Utility;
 using HotUpdate.Base.Dialogue;
-using HotUpdate.Base.Main;
-using HotUpdate.Base.Main.Settings;
 using HotUpdate.Base.Manager;
+using HotUpdate.Base.Settings;
 using HotUpdate.Common;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Common.Config.ExcelInfo.Info;
@@ -32,7 +31,7 @@ namespace HotUpdate.Game.Dialogue
         [Inject] private IEventCenter _eventCenter;
         [Inject] private IBinaryDataManager _binaryDataManager;
         [Inject] private IMonoAdapter _monoAdapter;
-        [Inject] private IGameManager _gameManager;
+        [Inject] private IMainDataManager _mainDataManger;
         
         // 当前单条对话是否播放完成（打字机/直接显示）
         private bool dialogueOver;
@@ -113,7 +112,7 @@ namespace HotUpdate.Game.Dialogue
             // 从配置表中获取说话者（NPC）信息
             npcInfo = _binaryDataManager.GetConfig<NpcInfoContainer>(EConfigLoadType.Excel).dataDic[dialogueInfo.f_speakerId];
 
-            var value = (int)_gameManager.GameDataManager.GetProvider<IMainDataProvider>().GameSettings[ESettingType.TypeWriter];
+            var value = (int)_mainDataManger.GameSettings[ESettingType.TypeWriter];
             var enableTypewriter = value != 0;  // 0为false，1为true，自定义规则
             if (enableTypewriter)
             {

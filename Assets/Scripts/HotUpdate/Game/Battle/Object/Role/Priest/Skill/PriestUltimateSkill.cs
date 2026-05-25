@@ -1,17 +1,16 @@
 using System.Collections;
 using Core.DI;
-using Core.Pool;
-using Core.UI;
 using Core.Utility;
-using HotUpdate.Base.Animation;
-using HotUpdate.Base.Battle;
-using HotUpdate.Base.Battle.Layer;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Camera;
-using HotUpdate.Base.VFX;
+using HotUpdate.Base;
+using HotUpdate.Base.Component;
+using HotUpdate.Base.UI;
+using HotUpdate.Base.Utility;
 using HotUpdate.Common;
+using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Skill.Base;
-using HotUpdate.Game.Battle.UI.Base;
+using HotUpdate.Game.Battle.UI;
+using HotUpdate.Game.VFX;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
@@ -21,6 +20,8 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
     /// </summary>
     public class PriestUltimateSkill : UltimateSkill
     {
+        [Inject] private IUIService _uiService;
+        
         private const string Priest_Ultimate_01 = nameof(Priest_Ultimate_01);
         private const string Priest_Ultimate_02 = nameof(Priest_Ultimate_02);
         
@@ -32,9 +33,9 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
         {
             projectileData = new ProjectileData(Caster, MainTarget, AllTargets, this);
             projectileTrans = new ProjectileTrans(Caster.GameObject.transform.position, Quaternion.identity);
-            vFXInfo = DIContainer.GetInstance<IPoolManager>().GetData<VFXInfo>();
+            vFXInfo = poolManager.GetData<VFXInfo>();
             //
-            await DIContainer.GetInstance<IVFXManager>().CreateVFX(ResKeyCollection.VFX_Priest_UltimatePose, projectileTrans, projectileData, vFXInfo);
+            await vfxManager.CreateVFX(ResKeyCollection.VFX_Priest_UltimatePose, projectileTrans, projectileData, vFXInfo);
         }
 
         protected override IEnumerator OnUltimateCast(IBattleContext context)
@@ -61,7 +62,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
         private IEnumerator UpdateCamera_01()
         {
             // 隐藏怪物UI
-            DIContainer.GetInstance<IUIManager>().GetController<BattleController>().MonsterStateUIManager.InActiveMonsterUIs();
+            (_uiService.GetPanel(EUIPanelId.BattlePanel) as IBattleController).MonsterStateUIManager.InActiveMonsterUIs();
             
             // 设置Mask，只看当前角色
             var mask = LayerGeter.GetPreBitLayer();
@@ -71,13 +72,13 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
             var pos = Caster.GameObject.transform.position + Vector3.forward * 2.5f;
             pos = new Vector3(pos.x, 1, pos.z);
             var rot = Quaternion.Euler(0, 180, 0);
-            yield return TaskUtility.WaitForTask(DIContainer.GetInstance<IBattleCameraManager>().CreateCamera(null, pos, rot, mask));
+            yield return TaskUtility.WaitForTask(battleCameraManager.CreateCamera(null, pos, rot, mask));
         }
         
         private IEnumerator UpdateCamera_02()
         {
             // 显示怪物UI
-            DIContainer.GetInstance<IUIManager>().GetController<BattleController>().MonsterStateUIManager.ActiveMonsterUI(AllTargets.ToArray());
+            (_uiService.GetPanel(EUIPanelId.BattlePanel) as IBattleController).MonsterStateUIManager.ActiveMonsterUI(AllTargets.ToArray());
             
             // 设置Mask，看向怪物主目标、渲染所有目标
             var mask = LayerGeter.GetPreBitLayer();
@@ -87,8 +88,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
             }
             
             var pos = new Vector3(MainTarget.GameObject.transform.position.x, 1, -2.5f);
-            yield return TaskUtility.WaitForTask(DIContainer.GetInstance<IBattleCameraManager>().
-                CreateCamera(null, pos, Quaternion.identity, mask));
+            yield return TaskUtility.WaitForTask(battleCameraManager.CreateCamera(null, pos, Quaternion.identity, mask));
         }
 
         private async void CreateVFX()
@@ -98,9 +98,9 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
             var pos = new Vector3(MainTarget.GameObject.transform.position.x, 5, 2.5f);
             // 更新投射物变换信息（基于主目标位置，无旋转）
             projectileTrans = new ProjectileTrans(pos, Quaternion.identity);
-            vFXInfo = DIContainer.GetInstance<IPoolManager>().GetData<VFXInfo>();
+            vFXInfo = poolManager.GetData<VFXInfo>();
             // 创建终结技核心特效（命中目标处）
-            await DIContainer.GetInstance<IVFXManager>().CreateVFX(ResKeyCollection.VFX_Priest_UltiamteSkill, projectileTrans, projectileData, vFXInfo);
+            await vfxManager.CreateVFX(ResKeyCollection.VFX_Priest_UltiamteSkill, projectileTrans, projectileData, vFXInfo);
         }
     }
 }

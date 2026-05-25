@@ -1,11 +1,11 @@
 using Core.DI;
 using Core.Serialize.Binary;
-using HotUpdate.Base.Battle.Damage;
-using HotUpdate.Base.Battle.Damage.Data;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Battle.Skill;
+using HotUpdate.Base;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Common.Config.ExcelInfo.Info;
+using HotUpdate.Game.Battle.Damage.Data;
+using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Utility;
 
 namespace HotUpdate.Game.Battle.Damage.Strategys

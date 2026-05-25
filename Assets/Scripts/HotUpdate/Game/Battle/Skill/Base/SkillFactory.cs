@@ -1,11 +1,10 @@
 using System.Collections.Generic;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Battle.Skill;
+using HotUpdate.Base;
 
 namespace HotUpdate.Game.Battle.Skill.Base
 {
     /// <summary>
-    /// ���ܹ���
+    /// 技能工厂
     /// </summary>
     public abstract class SkillFactory : ISkillFactory
     {
@@ -18,7 +17,7 @@ namespace HotUpdate.Game.Battle.Skill.Base
         }
 
         /// <summary>
-        /// �������ܶ���
+        /// 创建技能
         /// </summary>
         /// <param name="caster"></param>
         /// <param name="skillId"></param>

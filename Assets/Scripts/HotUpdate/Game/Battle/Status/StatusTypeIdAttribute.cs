@@ -3,7 +3,7 @@ using System;
 namespace HotUpdate.Game.Battle.Status
 {
     /// <summary>
-    /// ״̬����ID����
+    /// 状态类型ID特性
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public class StatusTypeIdAttribute : Attribute

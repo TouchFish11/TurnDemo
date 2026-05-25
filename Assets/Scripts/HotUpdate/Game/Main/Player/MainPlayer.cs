@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Camera;
-using HotUpdate.Base.Main;
-using HotUpdate.Base.Main.Object;
+using HotUpdate.Base;
+using HotUpdate.Base.Object;
 using HotUpdate.Game.Animation.Component;
+using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Cameras;
 using HotUpdate.Game.Dialogue;
-using HotUpdate.Game.Input;
+using HotUpdate.Game.Inputs;
 using HotUpdate.Game.Interact;
 using HotUpdate.Game.Main.Move;
 
@@ -66,7 +66,7 @@ namespace HotUpdate.Game.Main.Player
             //GetComponent<NormalAnimationComponent>().SetAnimator(defaultEntity.GetComponentInChildren<AnimatorComponent>().Animator);
         }
 
-        public void InitCamera(IOrbitCameraController orbitCameraController)
+        public void InitCamera(OrbitCameraController orbitCameraController)
         {
             this.GetComponent<IMoveComponent>().SetCamera(orbitCameraController);
         }

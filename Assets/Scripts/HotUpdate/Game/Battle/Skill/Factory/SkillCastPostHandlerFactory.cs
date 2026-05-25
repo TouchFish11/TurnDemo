@@ -2,7 +2,6 @@ using Core.DI;
 using Core.HotUpdate;
 using Core.Log;
 using Core.Reflection;
-using HotUpdate.Base.Battle.Skill;
 
 namespace HotUpdate.Game.Battle.Skill.Factory
 {

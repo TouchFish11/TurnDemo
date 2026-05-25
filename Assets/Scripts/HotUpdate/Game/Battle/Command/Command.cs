@@ -1,12 +1,11 @@
 using System.Collections;
-using HotUpdate.Base.Battle;
-using HotUpdate.Base.Battle.Command;
-using HotUpdate.Base.Battle.Object;
+using HotUpdate.Base;
+using HotUpdate.Game.Battle.Context;
 
 namespace HotUpdate.Game.Battle.Command
 {
     /// <summary>
-    /// �������
+    /// 战斗指令基类
     /// </summary>
     public abstract class Command : ICommand
     {
@@ -15,8 +14,8 @@ namespace HotUpdate.Game.Battle.Command
         public abstract int Priority { get; protected set; }
 
         /// <summary>
-        /// �Ƿ���Ч
-        /// �����߲�Ϊnull��δ����
+        /// 指令是否有效
+        /// 若发送方为null且发送方死亡则无效
         /// </summary>
         public virtual bool IsValid => Sender != null && !Sender.IsDead;
 

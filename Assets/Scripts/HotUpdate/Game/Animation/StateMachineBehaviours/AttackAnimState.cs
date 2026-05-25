@@ -1,4 +1,5 @@
-using HotUpdate.Base.Main;
+using HotUpdate.Game.Main;
+using HotUpdate.Game.Main.Move;
 using UnityEngine;
 
 namespace HotUpdate.Game.Animation.StateMachineBehaviours

@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using Core.DI;
 using Core.Serialize.Binary;
 using Core.Utility;
-using HotUpdate.Base.Battle;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Battle.Property;
-using HotUpdate.Base.Battle.Skill;
-using HotUpdate.Base.Battle.TargetSelect;
-using HotUpdate.Base.VFX;
+using HotUpdate.Base;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Common.Config.ExcelInfo.Info;
+using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Property;
+using HotUpdate.Game.Battle.TargetSelect;
+using HotUpdate.Game.VFX;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.Skill.Base
@@ -23,6 +21,7 @@ namespace HotUpdate.Game.Battle.Skill.Base
     /// </summary>
     public abstract class Skill : ISkill
     {
+        [Inject] protected SkillService skillService;
         // 投射物数据
         protected ProjectileData projectileData;
         // 投射物变换组件（控制投射物的位置/旋转等）

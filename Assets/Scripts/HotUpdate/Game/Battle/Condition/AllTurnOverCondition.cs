@@ -1,7 +1,7 @@
 using Core.DI;
-using HotUpdate.Base.Battle;
-using HotUpdate.Base.Battle.Condition;
+using HotUpdate.Base;
 using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Core;
 
 namespace HotUpdate.Game.Battle.Condition
 {

@@ -1,5 +1,5 @@
 using System.Collections;
-using HotUpdate.Base.Battle.Object;
+using HotUpdate.Base;
 using HotUpdate.Game.Battle.Event.UI;
 
 namespace HotUpdate.Game.Battle.Object.StateMeachine

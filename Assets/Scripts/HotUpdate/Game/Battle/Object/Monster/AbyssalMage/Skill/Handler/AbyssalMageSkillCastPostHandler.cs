@@ -1,5 +1,5 @@
 using System.Collections;
-using HotUpdate.Base.Battle.Skill;
+using HotUpdate.Game.Battle.Skill;
 
 namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill.Handler
 {

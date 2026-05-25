@@ -1,12 +1,12 @@
-using HotUpdate.Base.Battle;
-using HotUpdate.Base.Battle.Event;
-using HotUpdate.Base.Battle.Object;
+using HotUpdate.Base;
+using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.Event.UI
 {
     /// <summary>
-    /// ���������¼�
-    /// �Ƴ���Ӧ����UI
+    /// 怪物死亡事件
+    /// 隐藏怪物UI
     /// </summary>
     public class MonsterDeadEvent : BattleEvent
     {

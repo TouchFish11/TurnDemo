@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using Core.Log;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Battle.Skill;
-using HotUpdate.Base.Battle.TargetSelect;
+using HotUpdate.Base;
 using HotUpdate.Common.Config.ExcelInfo.Info;
+using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.Skill;
 
 namespace HotUpdate.Game.Battle.TargetSelect.Strategys
 {
@@ -26,50 +26,8 @@ namespace HotUpdate.Game.Battle.TargetSelect.Strategys
         /// <param name="caster">施法者实体（玩家/怪物）</param>
         /// <param name="skillInfo">技能信息，包含技能目标类型配置</param>
         /// <returns>选中的主要目标实体，无有效目标时返回null</returns>
-        public IBattleEntityObject SelectMainTarget(List<IBattleEntityObject> targets, IBattleEntityObject caster,
-            SkillInfo skillInfo)
+        public IBattleEntityObject SelectMainTarget(List<IBattleEntityObject> targets, IBattleEntityObject caster, SkillInfo skillInfo)
         {
-            // // 从技能配置中解析目标类型（敌人/友方）
-            // var targetType = (E_SkillTargetType)skillInfo.f_targetType;
-            //
-            // // 根据施法者类型（玩家/怪物）筛选对应目标
-            // switch (caster)
-            // {
-            //     // 施法者为玩家的情况
-            //     case PlayerObject:
-            //     {
-            //         if (targetType == E_SkillTargetType.Enemy)
-            //         {
-            //             // 技能目标为敌人：查询战斗内所有存活的怪物实体
-            //             context.GetAliveMonsterEntitys(targets);
-            //         }
-            //         else
-            //         {
-            //             // 技能目标为友方：查询战斗内所有存活的玩家实体
-            //             context.GetAlivePlayerEntitys(targets);
-            //         }
-            //         break;
-            //     }
-            //     // 施法者为怪物的情况
-            //     case MonsterObject:
-            //     {
-            //         if (targetType == E_SkillTargetType.Enemy)
-            //         {
-            //             // 技能目标为敌人：查询战斗内所有存活的玩家实体
-            //             context.GetAlivePlayerEntitys(targets);
-            //         }
-            //         else
-            //         {
-            //             // 技能目标为友方：查询战斗内所有存活的怪物实体
-            //             context.GetAliveMonsterEntitys(targets);
-            //         }
-            //         break;
-            //     }
-            //     default:
-            //         LogManager.Log($"施法者不是：PlayerObject或MonsterObject");
-            //         break;
-            // }
-            
             // 声明选中的主目标变量
             IBattleEntityObject currentMainTarget;
             // 获取筛选后的有效目标数量

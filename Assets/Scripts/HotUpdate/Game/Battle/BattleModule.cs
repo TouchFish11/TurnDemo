@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using HotUpdate.Base.Battle.Object;
+using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Role.Warrior;
 using UnityEngine;
 using Logger = Core.Log.Logger;

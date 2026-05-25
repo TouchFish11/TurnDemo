@@ -2,14 +2,17 @@ using System.Collections;
 using Core.DI;
 using Core.Pool;
 using Core.Utility;
+using HotUpdate.Base;
 using HotUpdate.Base.Animation;
-using HotUpdate.Base.Battle;
-using HotUpdate.Base.Battle.Layer;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Camera;
-using HotUpdate.Base.VFX;
+using HotUpdate.Base.Component;
+using HotUpdate.Base.Manager;
+using HotUpdate.Base.Utility;
 using HotUpdate.Common;
+using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Core;
+using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Skill.Base;
+using HotUpdate.Game.VFX;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill

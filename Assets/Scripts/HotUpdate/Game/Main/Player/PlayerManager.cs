@@ -4,16 +4,17 @@ using Core.Components;
 using Core.DI;
 using Core.GlobalEvent;
 using Core.GlobalEvent.Events;
+using Core.Mono;
 using HotUpdate.Base.Animation;
-using HotUpdate.Base.Camera;
-using HotUpdate.Base.Input;
-using HotUpdate.Base.Main;
+using HotUpdate.Base.Component;
+using HotUpdate.Base.Enums;
 using HotUpdate.Common;
 using HotUpdate.Game.Battle.Object.Role.Warrior;
+using HotUpdate.Game.Cameras;
 using HotUpdate.Game.Dialogue.UI;
-using HotUpdate.Game.Main.Global.UI;
+using HotUpdate.Game.Inputs;
+using HotUpdate.Game.Main.FloatingText;
 using HotUpdate.Game.Main.Move;
-using HotUpdate.Game.Main.UI;
 using UnityEngine;
 
 namespace HotUpdate.Game.Main.Player
@@ -27,6 +28,7 @@ namespace HotUpdate.Game.Main.Player
     public class PlayerManager : IPlayerManager
     {
         [Inject] private ObjectSpawner _objectSpawner;
+        private OrbitCameraController _cameraController;
 
         // 字典：玩家UID映射到对应的实体对象，用于快速查找玩家
         private readonly Dictionary<uint, IEntityObject> uidToEntityMap = new();
@@ -65,11 +67,11 @@ namespace HotUpdate.Game.Main.Player
             // 初始化主玩家基础数据（参数1为示例配置ID）
             main.BaseInit(1);
             // 初始化玩家相机
-            var camera = await DIContainer.GetInstance<IOrbitCameraGeter>().CreateMainCamera();
+            await CreateMainCamera();
             // 设置跟随对象
-            camera.SetTarget(main);
+            _cameraController.SetTarget(main);
             // 设置相机
-            main.InitCamera(camera);
+            main.InitCamera(_cameraController);
             // 将玩家对象加入字典管理
             uidToEntityMap.Add(uid, main);
             DIContainer.GetInstance<IFloatingTextManager>().SetPlayer(main.transform);
@@ -90,7 +92,14 @@ namespace HotUpdate.Game.Main.Player
             // 清空字典，释放引用
             uidToEntityMap.Clear();
             // 销毁主摄像机
-            DIContainer.GetInstance<IOrbitCameraGeter>().DestroyMainCamera();
+            EngineUtility.Destroy(_cameraController.gameObject);
+            _cameraController = null;
+        }
+
+        private async Task CreateMainCamera()
+        {
+            var poolObject = await _objectSpawner.SpawnAsync<OrbitCameraController>(ResKeyCollection.MainCamera);
+            _cameraController = poolObject.Obj;
         }
 
         /// <summary>

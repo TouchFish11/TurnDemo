@@ -1,9 +1,9 @@
 using Core.DI;
-using Core.UI;
-using HotUpdate.Base.Battle;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Battle.TargetSelect;
-using HotUpdate.Game.Battle.UI.Base;
+using HotUpdate.Base;
+using HotUpdate.Base.UI;
+using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.TargetSelect;
+using HotUpdate.Game.Battle.UI;
 
 namespace HotUpdate.Game.Battle.Skill.Base
 {
@@ -13,6 +13,8 @@ namespace HotUpdate.Game.Battle.Skill.Base
     /// </summary>
     public abstract class MonsterSkill : Skill
     {
+        [Inject] private IUIService _uiService;
+        
         /// <summary>
         /// 怪物技能构造函数
         /// </summary>
@@ -34,13 +36,13 @@ namespace HotUpdate.Game.Battle.Skill.Base
             DIContainer.GetInstance<ITargetSelectManager>().SelectTarget(context, Caster, SkillInfo, TargetSelectStrategy);
             
             // 初始化技能目标数据，将选中的目标绑定到当前技能实例
-            SkillUtility.InitSkillTarget(this);
+            skillService.InitSkillTarget(this);
             
             // 关闭目标选择状态，避免技能释放过程中重复选目标
             DIContainer.GetInstance<ITargetSelectManager>().InActiveSelectTarget();
             
             // 获取战斗UI控制器，重置怪物相关UI（清空之前的选中/操作状态）
-            var controller = DIContainer.GetInstance<IUIManager>().GetController<BattleController>();
+            var controller = _uiService.GetPanel(EUIPanelId.BattlePanel) as IBattleController;
             controller.MonsterStateUIManager.InActiveMonsterUIs();
             
             // 清除所有目标选中标记（UI层面隐藏选中框）

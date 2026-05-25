@@ -5,6 +5,7 @@ using Core.DI;
 using Core.Mono;
 using Core.UI.ViewController;
 using HotUpdate.Base.Dialogue;
+using HotUpdate.Base.Manager;
 using HotUpdate.Common;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using UnityEngine;
@@ -105,7 +106,7 @@ namespace HotUpdate.Game.Dialogue.UI
                     // 对话框激活时，触发下一条对话
                     if (IsActiveBox)
                     {
-                        DIContainer.GetInstance<IDialogueManager>().NextDialogue();
+                        _dialogueManager.NextDialogue();
                     }
                     else
                     {
@@ -217,7 +218,7 @@ namespace HotUpdate.Game.Dialogue.UI
                     // 初始化分支选项UI
                     optUIPoolObject.Obj.Init(branchInfo);
                     // 绑定选项选择事件到对话管理器的处理方法
-                    optUIPoolObject.Obj.OnSelectOpt += DIContainer.GetInstance<IDialogueManager>().OnSelectOpt;
+                    optUIPoolObject.Obj.OnSelectOpt += _dialogueManager.OnSelectOpt;
                     // 将选项UI缓存到模型中（便于后续管理）
                     view.CacheBranchOpt(optUIPoolObject);
                 }

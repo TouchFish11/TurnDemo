@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using Core.DI;
 using Core.Scene;
-using HotUpdate.Base.Main;
 using HotUpdate.Base.Scene;
 using HotUpdate.Common;
 using UnityEngine.SceneManagement;
@@ -15,6 +14,8 @@ namespace HotUpdate.Game.Main
     /// </summary>
     public class MainProxy
     {
+        [Inject] private static ISceneGenerator _sceneGenerator;
+        
         /// <summary>
         /// 游戏启动入口方法
         /// </summary>
@@ -42,7 +43,7 @@ namespace HotUpdate.Game.Main
                 // 切换到主场景
                 await DIContainer.GetInstance<ISceneManager>().LoadSceneAsync(ResKeyCollection.MainScene, LoadSceneMode.Single, null);
                 // 初始化场景
-                await SceneGeneratorHelper.GetSceneGenerator().InitMainScene();
+                await _sceneGenerator.InitMainScene();
             }
             catch (Exception e)
             {

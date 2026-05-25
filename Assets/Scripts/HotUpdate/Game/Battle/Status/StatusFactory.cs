@@ -4,8 +4,8 @@ using System.Reflection;
 using Core.DI;
 using Core.HotUpdate;
 using Core.Reflection;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Battle.Status;
+using HotUpdate.Base;
+using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.Status
 {

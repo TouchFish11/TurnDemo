@@ -1,5 +1,5 @@
-using HotUpdate.Base.Battle;
-using HotUpdate.Base.Battle.Object;
+using HotUpdate.Base;
+using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Status;
 
 namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Status

@@ -1,6 +1,5 @@
 using Core.Components;
-using HotUpdate.Base.Battle;
-using HotUpdate.Base.Battle.Object;
+using HotUpdate.Base;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.Core

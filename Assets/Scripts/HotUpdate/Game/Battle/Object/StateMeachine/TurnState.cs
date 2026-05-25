@@ -1,4 +1,4 @@
-using HotUpdate.Base.Battle.Object;
+using HotUpdate.Base;
 
 namespace HotUpdate.Game.Battle.Object.StateMeachine
 {

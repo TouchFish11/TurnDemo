@@ -2,12 +2,13 @@ using System.Collections;
 using Core.DI;
 using Core.Pool;
 using Core.Utility;
-using HotUpdate.Base.Animation;
-using HotUpdate.Base.Battle;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.VFX;
+using HotUpdate.Base;
+using HotUpdate.Base.Component;
+using HotUpdate.Base.Utility;
 using HotUpdate.Common;
+using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Skill.Base;
+using HotUpdate.Game.VFX;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill

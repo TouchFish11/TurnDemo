@@ -1,10 +1,11 @@
 using System.Collections;
-using HotUpdate.Base.Battle;
-using HotUpdate.Base.Battle.Damage;
-using HotUpdate.Base.Battle.Damage.Data;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Battle.Property;
-using HotUpdate.Base.Main.Object;
+using Core.DI;
+using HotUpdate.Base;
+using HotUpdate.Base.Object;
+using HotUpdate.Game.Battle.Command;
+using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Damage;
+using HotUpdate.Game.Battle.Damage.Data;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.ResponsibilityChain;
@@ -18,6 +19,8 @@ namespace HotUpdate.Game.Battle.Object
     /// </summary>
     public abstract class BattleObject : EntityObject, IBattleEntityObject, IDamagable
     {
+        [Inject] protected CommandFactory commandFactory;
+        
         /// <summary>
         /// 战斗上下文，提供战斗环境、事件总线、规则等核心战斗数据访问
         /// </summary>

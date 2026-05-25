@@ -1,16 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using Core.DI;
-using Core.UI;
 using Core.Utility;
-using HotUpdate.Base.Battle;
-using HotUpdate.Base.Battle.Command;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Camera;
+using HotUpdate.Base;
+using HotUpdate.Base.Manager;
+using HotUpdate.Base.UI;
 using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.StateMeachine;
-using HotUpdate.Game.Battle.UI.Base;
+using HotUpdate.Game.Battle.UI;
 using HotUpdate.Game.Battle.Utility;
 using UnityEngine;
 using Logger = Core.Log.Logger;
@@ -23,14 +22,15 @@ namespace HotUpdate.Game.Battle.Command
     /// </summary>
     public class BattleCommandsController
     {
-        // 战斗指令队列：存储待执行的战斗指令
+        [Inject] private IUIService _uiService;
+        // 战斗指令列表：存储待执行的战斗指令
         private readonly List<ICommand> _battleCommands = new();
         // 回合循环状态
         private readonly TurnLoopState _turnLoopState;
         // 是否退出战斗：标记战斗是否结束，用于终止指令执行循环
         private bool _isQuit;
         // 当前正在执行的指令
-        private ICommand _command;
+        private ICommand _currentCommand;
 
         public BattleCommandsController(TurnLoopState turnLoopState)
         {
@@ -45,25 +45,22 @@ namespace HotUpdate.Game.Battle.Command
         public IEnumerator ExcuteCommand()
         {
             // 循环条件：有正在执行的指令 或 待执行队列有指令 且 未退出战斗
-            while ((_command != null || _battleCommands.Count > 0) && !_isQuit)
+            while ((_currentCommand != null || _battleCommands.Count > 0) && !_isQuit)
             {
                 // 获取队列首个指令作为当前执行命令
                 GetFirst();
-                // 执行当前命令（指令自身的执行逻辑）
-                yield return _command.Execute(_turnLoopState.Context);
-                // 执行完命令内容后的处理逻辑
+                // 执行当前指令
+                yield return _currentCommand?.Execute(_turnLoopState.Context);
+                // 执行完指令后的处理逻辑
                 yield return OnPostCommandExcute();
-
                 // 判断是否退出战斗
-                if (_isQuit)
-                {
+                if (_isQuit) 
                     yield break;
-                }
                 
                 // 命令执行完后逻辑
-                yield return _command.ExcutePostProcess(_turnLoopState.Context);
+                yield return _currentCommand?.ExcutePostProcess(_turnLoopState.Context);
                 // 执行完成后清空当前命令
-                _command = null;
+                _currentCommand = null;
             }
         }
 
@@ -94,7 +91,7 @@ namespace HotUpdate.Game.Battle.Command
             
                 // 显示战斗开始协程
                 // TODO：可拓展ShowBattleStart方法，显示当前是第几回合的文本
-                var controller = DIContainer.GetInstance<IUIManager>().GetController<BattleController>();
+                var controller = _uiService.GetPanel(EUIPanelId.BattlePanel) as IBattleController;
                 controller.BattleUiManager.ShowBattleStart();
             
                 // 创建入场特效
@@ -144,7 +141,7 @@ namespace HotUpdate.Game.Battle.Command
         {
             if (_battleCommands.Count > 0)
             {
-                _command = _battleCommands[0];
+                _currentCommand = _battleCommands[0];
                 RemoveFirst();
             }
         }
@@ -157,10 +154,10 @@ namespace HotUpdate.Game.Battle.Command
         /// <param name="command">待插入的战斗指令</param>
         public void InsertCommand(ICommand command)
         {
-            if (_command == null)
+            if (_currentCommand == null)
             {
                 // 当前无执行指令，直接执行新指令
-                _command = command;
+                _currentCommand = command;
                 return;
             }
 
@@ -196,16 +193,15 @@ namespace HotUpdate.Game.Battle.Command
                     // c1优先级更高，排在前面（返回-1表示c1在c2前）
                     return -1;
                 }
-                else if (c1.Priority < c2.Priority)
+
+                if (c1.Priority < c2.Priority)
                 {
                     // c2优先级更高，c1排在后面
                     return 1;
                 }
-                else
-                {
-                    // 优先级相同，保持原有顺序
-                    return 0;
-                }
+
+                // 优先级相同，保持原有顺序
+                return 0;
             });
         }
 

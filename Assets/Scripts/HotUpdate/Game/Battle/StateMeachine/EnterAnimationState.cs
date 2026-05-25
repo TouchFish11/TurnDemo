@@ -3,11 +3,11 @@ using Core.DI;
 using Core.Mono;
 using Core.UI;
 using Core.Utility;
-using HotUpdate.Base.Battle;
-using HotUpdate.Base.Battle.Layer;
-using HotUpdate.Base.Battle.Turn;
-using HotUpdate.Base.Camera;
-using HotUpdate.Game.Battle.UI.Base;
+using HotUpdate.Base;
+using HotUpdate.Base.Manager;
+using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Layer;
+using HotUpdate.Game.Battle.Turn;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.StateMeachine

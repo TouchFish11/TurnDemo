@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using Core.Log;
 using Core.Mono.MonoFunction;
-using HotUpdate.Base.Battle;
-using HotUpdate.Base.Battle.Damage;
-using HotUpdate.Base.Battle.Damage.Data;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Battle.Skill;
+using HotUpdate.Base;
 using HotUpdate.Common.Config.ExcelInfo.Info;
+using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Damage.Data;
 using HotUpdate.Game.Battle.Damage.Strategys;
 using HotUpdate.Game.Battle.Event.General;
+using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Utility;
 
 namespace HotUpdate.Game.Battle.Damage
@@ -120,9 +120,9 @@ namespace HotUpdate.Game.Battle.Damage
         public void OnDestroy()
         {
             _strategys.Clear();
-            // 监听击破事件
+            // 取消监听击破事件
             context.GetEventBus().RemoveListener<ToughnessBrokenEvent>(OnToughnessBrokenEvent);
-            // 监听Dot事件
+            // 取消监听Dot事件
             context.GetEventBus().RemoveListener<CalcDotDamageEvent>(OnCalcDotDamageEvent);
             context = null;
         }

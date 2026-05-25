@@ -1,8 +1,7 @@
-using HotUpdate.Base.Battle.Damage;
-using HotUpdate.Base.Battle.Damage.Data;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Battle.Property;
+using HotUpdate.Base;
 using HotUpdate.Common.Config.ExcelInfo.Info;
+using HotUpdate.Game.Battle.Damage.Data;
+using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.Utility;
 using UnityEngine;
@@ -11,7 +10,7 @@ using Logger = Core.Log.Logger;
 namespace HotUpdate.Game.Battle.Damage.Strategys
 {
     /// <summary>
-    /// ֱ�˴���������
+    /// 直接伤害计算策略
     /// </summary>
     public class DirectDamageStrategy : IDamageStrategy
     {
@@ -19,14 +18,14 @@ namespace HotUpdate.Game.Battle.Damage.Strategys
         //private IBattleEntityObject defender;
         //private SkillInfo skillInfo;
 
-        ////���ܱ�������
+        ////技能倍率数组
         //private int[] skillMuls;
 
         public void CalcDamage(IBattleEntityObject attacker, IBattleEntityObject defender, SkillInfo skillInfo, out DamageResult damageResult)
         {
             if (attacker == null || defender == null)
             {
-                Logger.LogError("ֱ�˼�����Բ���Ϊnull");
+                Logger.LogError("直接伤害计算参数为null");
             }
 
             //this.attacker = attacker;
@@ -34,14 +33,14 @@ namespace HotUpdate.Game.Battle.Damage.Strategys
             //this.skillInfo = skill.SkillInfo;
             ////this.skillMuls = TextUtility.SplitToIntArr(skillInfo.f_skill_mul, 2);
 
-            ////�����˺� = �������˺����������˺�(��ѡ) + �˺����� * �������ԣ��� * �������������ʣ�1 + ������ * �����˺�����* �������������ʡ� * �����Գ������ʣ�1 - ��Ч���� + ���Խ��ͣ���
-            ////��������˺�
+            ////最终伤害 = 基础伤害区(固定伤害(可选) + 伤害系数 * 基础属性(攻) * 技能倍率(1 + 伤害增加 * 技能伤害加成) * 防御减免率(1 - 减伤率 + 防御降低)) * 暴击区(暴击时 * (1 + 暴击伤害倍率)) * 抗性减免区(1 - 有效抗性 + 抗性降低)
+            ////计算基础伤害区
             //int finalDamage = CalcBaseDamageZone();
-            ////���㱩���˺�
+            ////计算暴击伤害区
             //finalDamage = CalcCritDamageZone(finalDamage);
-            ////�����������
+            ////计算防御减免区
             //finalDamage = CalcDefendZone(finalDamage);
-            ////���㿹�Գ���
+            ////计算抗性减免区
             //finalDamage = CalcResistanceZone(finalDamage);
             //return finalDamage;
 
@@ -52,67 +51,67 @@ namespace HotUpdate.Game.Battle.Damage.Strategys
         }
 
         ///// <summary>
-        ///// ��������˺���
+        ///// 计算基础伤害区
         ///// </summary>
         ///// <param name="damage"></param>
         ///// <returns></returns>
         //private int CalcBaseDamageZone()
         //{
-        //    //�����˺��� = ��ɫ��ά �� ��Ӧ���ʡ����н�ɫ��ά�Թ���Ϊ���������� = ��ֵ �� (1 + �󹥻�) + С��������ֵ���������������㷨Ϊ��ɫ���������� + ��׶����������
+        //    //基础伤害值 = 角色属性 * 对应系数(所有角色属性以攻击为主) = 基础值 * (1 + 大攻击%) + 小攻击固定值(该部分算法为角色基础攻击 + 装备额外攻击)
 
-        //    //��ȡ�˺�ģ��
+        //    //获取伤害模型
         //    E_DamageModel damageModel = (E_DamageModel)skillInfo.f_dmg_model;
-        //    //��¼��������
+        //    //记录最终属性值
         //    int finalPropertyValue = 0;
         //    switch (damageModel)
         //    {
         //        case E_DamageModel.Life:
-        //            //�������������ٷֱȼӳɣ�= ��׶�ӳ� + �����ӳ� + BuffЧ��
+        //            //生命值大攻击百分比加成：= 装备加成 + 天赋加成 + Buff效果
         //            float totalHpPercentBonus = (0 + 0 + attacker.BuffController.GetTotalHpPercentBonus()) / 100f;
-        //            //С�����������̶���ֵ�ӳɣ�= ��׶�ӳ� + �����ӳ� + BuffЧ��
+        //            //小攻击(生命值固定值加成)：= 装备加成 + 天赋加成 + Buff效果
         //            int totalHpBuildBonus = 0 + 0 + attacker.BuffController.GetTotalHpBuildBonus();
-        //            //��������ֵ = ����ɫ��������ֵ + ��׶��������ֵ��* (1 + ������) + С����
+        //            //最终生命值 = (角色基础生命值 + 装备基础生命值) * (1 + 大攻击%) + 小攻击
         //            finalPropertyValue = (int)((attacker.GetProperty<BaseProperty>().F_basicHp + 0) * (1 + totalHpPercentBonus) + totalHpBuildBonus);
         //            break;
         //        case E_DamageModel.NormalAttack:
-        //            //�󹥻��������ٷֱȼӳɣ�= ��׶�ӳ� + �����ӳ� + BuffЧ��
+        //            //攻击力大攻击百分比加成：= 装备加成 + 天赋加成 + Buff效果
         //            float totalAtkPercentBonus = (0 + 0 + attacker.BuffController.GetTotalAtkPercentBonus()) / 100f;
-        //            //С�����������̶���ֵ�ӳɣ�= ��׶�ӳ� + �����ӳ� + BuffЧ��
+        //            //小攻击(攻击力固定值加成)：= 装备加成 + 天赋加成 + Buff效果
         //            int totalAtkBuildBonus = 0 + 0 + attacker.BuffController.GetTotalAtkBuildBonus();
-        //            //���չ����� = ����ɫ���������� + ��׶������������* (1 + �󹥻�) + С����
+        //            //最终攻击力 = (角色基础攻击力 + 装备基础攻击力) * (1 + 大攻击%) + 小攻击
         //            finalPropertyValue = (int)((attacker.GetProperty<BaseProperty>().F_basicAtk + 0) * (1 + totalAtkPercentBonus) + totalAtkBuildBonus);
         //            break;
         //        case E_DamageModel.Defend:
-        //            //������������ٷֱȼӳɣ�= ��׶�ӳ� + �����ӳ� + BuffЧ��
+        //            //防御力大攻击百分比加成：= 装备加成 + 天赋加成 + Buff效果
         //            float totalDefPercentBonus = (0 + 0 + attacker.BuffController.GetTotalDefPercentBonus()) / 100f;
-        //            //С�����������̶���ֵ�ӳɣ�= ��׶�ӳ� + �����ӳ� + BuffЧ��
+        //            //小攻击(防御力固定值加成)：= 装备加成 + 天赋加成 + Buff效果
         //            int totalDefBuildBonus = (0 + 0 + attacker.BuffController.GetTotalDefBuildBonus());
-        //            //���շ����� = ����ɫ���������� + ��׶������������* (1 + �����) + С����
+        //            //最终防御力 = (角色基础防御力 + 装备基础防御力) * (1 + 大攻击%) + 小攻击
         //            finalPropertyValue = (int)((attacker.GetProperty<BaseProperty>().F_basicDef + 0) * (1 + totalDefPercentBonus) + totalDefBuildBonus);
         //            break;
         //    }
 
-        //    //�����˺� = ����ģ������ * ���ܱ���(���ݽ�ɫ��ǰ���ܵȼ���ȡ)
+        //    //基础伤害 = 伤害模型数值 * 技能倍率(根据角色当前技能等级获取)
         //    return (int)(finalPropertyValue * (this.skillMuls[0] / 100f));
         //}
 
         ///// <summary>
-        ///// ���㱩����
+        ///// 计算暴击区
         ///// </summary>
         //private int CalcCritDamageZone(int damage)
         //{
-        //    //��ȡ������
+        //    //获取暴击率
         //    float critRate = attacker.GetComponent<PropertyComponent>().GetProperty<BattleProperty>().F_crit / 100f;
         //    float critDmgRate = attacker.GetProperty<BaseProperty>().F_critDmg / 100f;
-        //    //�Ƿ񱩻�
+        //    //是否暴击
         //    bool isCrit = Random.Range(0, 1f) < critRate;
-        //    //����
+        //    //暴击
         //    if(isCrit)
         //    {
-        //        //�����˺� = ���˺� *��1 + �����˺����ʣ�
+        //        //暴击伤害 = 原伤害 * (1 + 暴击伤害倍率)
         //        return (int)(damage * (1 + critDmgRate));
         //    }
-        //    //�ޱ���
+        //    //未暴击
         //    else
         //    {
         //        return damage;
@@ -120,31 +119,31 @@ namespace HotUpdate.Game.Battle.Damage.Strategys
         //}
 
         ///// <summary>
-        ///// ���������
+        ///// 计算防御区
         ///// </summary>
         ///// <param name="damage"></param>
         ///// <returns></returns>
         //private int CalcDefendZone(int damage)
         //{
         //    /*
-        //     * ������ת��Ϊ ���˺����ʡ���ʽ���˺����ʣ�����������= �������ȼ�ϵ�� / (�з�ʵ�ʷ��� + �������ȼ�ϵ��)
+        //     * 防御区转化为 伤害减免率，公式：伤害减免率(防御承伤率) = 攻击方等级系数 / (敌方实际防御 + 攻击方等级系数)
         //     * 
-        //     * ���У�
-        //     * �������ȼ�ϵ�� = 200 + �������ȼ� �� 10
-        //     * �з�ʵ�ʷ��� = �з��������� �� (1 + �з������ӳ�) �� (1 - �����ٷֱ�) �� (1 - ���ӷ����ٷֱ�)
+        //     * 其中：
+        //     * 攻击方等级系数 = 200 + 攻击方等级 * 10
+        //     * 敌方实际防御 = 敌方基础防御 * (1 + 敌方防御加成) * (1 - 防御降低百分比) * (1 - 无视防御百分比)
         //    */
 
-        //    //������������ٷֱȼӳɣ�= BuffЧ���ӳ�
+        //    //防御力大攻击百分比加成：= Buff效果加成
         //    float totalDefPercentBonus = defender.BuffController.GetTotalDefPercentBonus() / 100f;
-        //    //С�����������̶���ֵ�ӳɣ�= BuffЧ���ӳ�
+        //    //小攻击(防御力固定值加成)：= Buff效果加成
         //    int totalDefBuildBonus = defender.BuffController.GetTotalDefBuildBonus();
-        //    //���շ����� = ��ɫ���������� * (1 + �����) + С����
+        //    //最终防御力 = 角色基础防御 * (1 + 大攻击%) + 小攻击
         //    int totalDefValue = (int)(defender.GetProperty<BaseProperty>().F_basicDef + (1 + totalDefPercentBonus) + totalDefBuildBonus);
-        //    //�����ٷֱ�֮�� = BuffЧ��Ӱ��
+        //    //防御降低百分比之和 = Buff效果影响
         //    float totalSubDefPercent = defender.BuffController.GetTotalSubDefPercent() / 100f;
-        //    //���ӷ����ٷֱ�֮�� = BuffЧ��Ӱ��
+        //    //无视防御百分比之和 = Buff效果影响
         //    float totalIgnoreDefPercent = attacker.BuffController.GetTotalIgnoreDefPercent() / 100f;
-        //    //��������
+        //    //防御减免率
         //    float damageRate = (200 + attacker.GetProperty<BaseProperty>().F_lev * 10) / 
         //                       (totalDefValue * (1 - totalSubDefPercent) * (1 - totalIgnoreDefPercent) + 200 + attacker.GetProperty<BaseProperty>().F_lev * 10);
 
@@ -152,18 +151,18 @@ namespace HotUpdate.Game.Battle.Damage.Strategys
         //}
 
         ///// <summary>
-        ///// ���㿹����
+        ///// 计算抗性区
         ///// </summary>
         ///// <param name="damage"></param>
         ///// <returns></returns>
         //private int CalcResistanceZone(int damage)
         //{
         //    /*
-        //     * ��Ӧ���Կ��ԣ�
-        //     * ���Գ�������(�ٷֱ�) = Clamp(-100, 1 - (�з��������� + ���������� - �����߿��Դ�͸), 90)
-        //     * �з��������� = ����������������
-        //     * ���������� = BuffЧ������ֵΪ��������ֵΪ���ͣ�
-        //     * �����߿��Դ�͸ = BuffЧ��
+        //     * 对应属性抗性：
+        //     * 抗性减免率(百分比) = Clamp(-100, 1 - (敌方属性抗性 + 抗性降低 - 攻击方抗性穿透), 90)
+        //     * 敌方属性抗性 = 基础属性抗性
+        //     * 抗性降低 = Buff效果(正值增加抗性，负值降低)
+        //     * 攻击方抗性穿透 = Buff效果
         //     */
 
         //    return damage;

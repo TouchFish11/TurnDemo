@@ -1,7 +1,7 @@
 using Core.DI;
 using Core.Reflection;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Battle.Skill;
+using HotUpdate.Base;
+using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Factory;
 using HotUpdate.Game.Battle.Skill.Handler;
@@ -9,11 +9,10 @@ using HotUpdate.Game.Battle.Skill.Handler;
 namespace HotUpdate.Game.Battle.Object.Monster.TurtleShell.Skill
 {
     /// <summary>
-    /// TurtleShell���ܹ�����
+    /// TurtleShell技能工厂
     /// </summary>
     public class TurtleShellSkillFactory : SkillFactory
     {
-        // ReSharper disable Unity.PerformanceAnalysis
         public override ISkillData CreateSkill(IBattleEntityObject caster, int skillId)
         {
             switch (skillId)
@@ -23,7 +22,8 @@ namespace HotUpdate.Game.Battle.Object.Monster.TurtleShell.Skill
                         GetFactory<ISkillCastPostHandlerFactory, SkillCastPostHandlerFactory>().
                         GetSkillCastPostHandler<BaseSkillCastPostHandler>();
                     
-                    return new SkillData(new TurtleShellSkill(caster, skillId), handler);
+                    var turtleShellSkill = DIContainer.Create<TurtleShellSkill>(parameterValues: new object[] { caster, skillId });
+                    return new SkillData(turtleShellSkill, handler);
                 default:
                     return null;
             }

@@ -1,8 +1,8 @@
-using HotUpdate.Base.Battle.Damage;
-using HotUpdate.Base.Battle.Damage.Data;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Battle.Skill;
+using HotUpdate.Base;
 using HotUpdate.Common.Config.ExcelInfo.Info;
+using HotUpdate.Game.Battle.Damage.Data;
+using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.Skill;
 
 namespace HotUpdate.Game.Battle.Damage.Strategys
 {

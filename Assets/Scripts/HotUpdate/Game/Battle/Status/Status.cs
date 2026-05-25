@@ -1,8 +1,9 @@
+using Core.DI;
 using Core.Pool;
-using HotUpdate.Base.Battle;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Battle.Status;
-using HotUpdate.Base.Battle.Status.Data;
+using HotUpdate.Base;
+using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.Status.Data;
 
 namespace HotUpdate.Game.Battle.Status
 {
@@ -64,7 +65,7 @@ namespace HotUpdate.Game.Battle.Status
         /// <param name="statusId">状态配置ID</param>
         public void InitStatus(IBattleEntityObject sorucer, IBattleEntityObject owner, int statusId)
         {
-            StatusProperty = new StatusProperty(statusId); // 初始化状态属性
+            StatusProperty = DIContainer.Create<StatusProperty>(parameterValues: statusId); // 初始化状态属性
             bonusData = new StatusBonusData(); // 初始化加成数据
             Sourcer = sorucer; // 赋值施加者
             Owner = owner; // 赋值拥有者

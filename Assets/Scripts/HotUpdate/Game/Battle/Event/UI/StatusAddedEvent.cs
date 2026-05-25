@@ -1,6 +1,6 @@
-using HotUpdate.Base.Battle;
-using HotUpdate.Base.Battle.Event;
-using HotUpdate.Base.Battle.Status;
+using HotUpdate.Base;
+using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Status;
 
 namespace HotUpdate.Game.Battle.Event.UI
 {

@@ -1,13 +1,13 @@
-using HotUpdate.Base.Battle;
-using HotUpdate.Base.Battle.Event;
-using HotUpdate.Base.Battle.Object;
+using HotUpdate.Base;
+using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.Event.Turn
 {
     public class TurnStartEvent : BattleEvent
     {
         /// <summary>
-        /// ���غ��ж���ʵ��
+        /// 回合开始事件
         /// </summary>
         public IBattleEntityObject CurrentBattleEntity { get; private set; } 
 

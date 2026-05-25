@@ -20,7 +20,9 @@ namespace Core.UI.ViewController
         // 控制器（界面）唯一ID
         public int panelId;
         protected TView view;
-        
+
+        public int PanelId => panelId;
+
         public async Task Init(int id, IuiView view)
         {
             try

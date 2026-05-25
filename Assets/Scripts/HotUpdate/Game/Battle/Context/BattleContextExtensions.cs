@@ -1,9 +1,12 @@
 using System.Collections.Generic;
-using HotUpdate.Base.Battle;
-using HotUpdate.Base.Battle.Object;
+using HotUpdate.Base;
+using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.Context
 {
+    /// <summary>
+    /// 战斗上下文拓展
+    /// </summary>
     public static class BattleContextExtensions
     {
         /// <summary>

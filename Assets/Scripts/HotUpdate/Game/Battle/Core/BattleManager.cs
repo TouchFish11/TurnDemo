@@ -4,17 +4,9 @@ using Core.Pool;
 using Core.PreLoad;
 using Core.Scene;
 using Core.UI;
-using HotUpdate.Base.Battle;
-using HotUpdate.Base.Battle.Damage;
-using HotUpdate.Base.Battle.Event;
-using HotUpdate.Base.Battle.Input;
-using HotUpdate.Base.Battle.Point;
-using HotUpdate.Base.Battle.TargetSelect;
-using HotUpdate.Base.Battle.Turn;
-using HotUpdate.Base.Camera;
-using HotUpdate.Base.Input;
+using HotUpdate.Base.Manager;
+using HotUpdate.Base.UI;
 using HotUpdate.Common;
-using HotUpdate.Game.Battle.BattlePoint;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Event;
@@ -22,8 +14,8 @@ using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Inputs;
 using HotUpdate.Game.Battle.TargetSelect;
 using HotUpdate.Game.Battle.Turn;
-using HotUpdate.Game.Main.Back;
-using HotUpdate.Game.Main.Loading.Battle;
+using HotUpdate.Game.Inputs;
+using HotUpdate.Game.Point;
 using UnityEngine;
 using UnityEngine.U2D;
 using Logger = Core.Log.Logger;
@@ -41,6 +33,7 @@ namespace HotUpdate.Game.Battle.Core
         [Inject] private ISceneManager _sceneManager;
         [Inject] private IMouseManager _mouseManager;
         [Inject] private IPoolManager _poolManager;
+        [Inject] private IUIService _uiService;
         
         // 战斗上下文
         private IBattleContext _context;
@@ -97,7 +90,7 @@ namespace HotUpdate.Game.Battle.Core
             // 缓存回调
             OnBattleOver = onBattleOver;
             // 创建战斗加载界面
-            var battleLoadingController = await _uiManager.CreateViewAsync<BattleLoadingView, BattleLoadingController>("", E_UILayer.Bot);
+            var battleLoadingController = (IBattleLoadingController)await _uiService.OpenAsync(EUIPanelId.BattleLoadingkPanel, E_UILayer.Bot);
             // 在加载界面显示后，在执行该回调
             if (OnpreEnter != null)
             {
@@ -178,18 +171,18 @@ namespace HotUpdate.Game.Battle.Core
                 _context.CleanupBattle();
 
                 // 创建黑背景界面遮挡
-                var backController = await _uiManager.CreateViewAsync<BackView, BackController>("", E_UILayer.Bot);
+                var controller = await _uiService.OpenAsync(EUIPanelId.BlackBackPanel, E_UILayer.Bot);
                 // 强制不可见，暂时这样处理，正常流程Bug：battleLoadingController销毁时未正确释放
                 _mouseManager.ForceInVisible();
                 // 销毁战斗界面
-                await _uiManager.DestroyView(quitBattleEvent.BattleUIController.panelId);
+                await _uiManager.DestroyView(quitBattleEvent.BattleUIController.PanelId);
                 // 执行战斗结束回调，在背景界面销毁前执行
                 if (OnBattleOver != null)
                 {
                     await OnBattleOver();
                     OnBattleOver = null;
                     // 销毁黑背景界面
-                    await _uiManager.DestroyView(backController.panelId);
+                    await _uiManager.DestroyView(controller.PanelId);
                 }
             }
             catch (Exception e)

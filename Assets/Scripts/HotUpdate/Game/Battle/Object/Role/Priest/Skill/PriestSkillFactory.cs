@@ -1,13 +1,16 @@
 using Core.DI;
 using Core.Reflection;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Battle.Skill;
+using HotUpdate.Base;
+using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Factory;
 using HotUpdate.Game.Battle.Skill.Handler;
 
 namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
 {
+    /// <summary>
+    /// 牧师技能工厂
+    /// </summary>
     public class PriestSkillFactory : SkillFactory
     {
         public override ISkillData CreateSkill(IBattleEntityObject caster, int skillId)
@@ -19,19 +22,22 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
                         GetFactory<ISkillCastPostHandlerFactory, SkillCastPostHandlerFactory>().
                         GetSkillCastPostHandler<BaseSkillCastPostHandler>();
                     
-                    return new SkillData(new PriestNormalSkill(caster, skillId), handler);
+                    var priestNormalSkill = DIContainer.Create<PriestNormalSkill>(parameterValues: new object[] { caster, skillId });
+                    return new SkillData(priestNormalSkill, handler);
                 case 31:
                     handler = DIContainer.GetInstance<IFactoryManager>().
                         GetFactory<ISkillCastPostHandlerFactory, SkillCastPostHandlerFactory>().
                         GetSkillCastPostHandler<BaseSkillCastPostHandler>();
                     
-                    return new SkillData(new PriestBattleSkill(caster, skillId), handler);
+                    var priestBattleSkill = DIContainer.Create<PriestBattleSkill>(parameterValues: new object[] { caster, skillId });
+                    return new SkillData(priestBattleSkill, handler);
                 case 32:
                     handler = DIContainer.GetInstance<IFactoryManager>().
                         GetFactory<ISkillCastPostHandlerFactory, SkillCastPostHandlerFactory>().
                         GetSkillCastPostHandler<BaseUltimateSkillCastPostHandler>();
                     
-                    return new SkillData(new PriestUltimateSkill(caster, skillId), handler);
+                    var priestUltimateSkill = DIContainer.Create<PriestUltimateSkill>(parameterValues: new object[] { caster, skillId });
+                    return new SkillData(priestUltimateSkill, handler);
                 default:
                     return null;
             }

@@ -6,25 +6,23 @@ using Core.Reflection;
 using Core.Serialize.Binary;
 using Core.UI;
 using Core.Utility;
-using HotUpdate.Base.Battle;
-using HotUpdate.Base.Battle.Event;
-using HotUpdate.Base.Battle.Event.UI;
-using HotUpdate.Base.Battle.Input;
-using HotUpdate.Base.Battle.Layer;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Battle.Point;
-using HotUpdate.Base.Battle.Skill;
-using HotUpdate.Base.Battle.TargetSelect;
-using HotUpdate.Base.Camera;
+using HotUpdate.Base;
+using HotUpdate.Base.Manager;
+using HotUpdate.Base.UI;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Common.Config.ExcelInfo.Info;
+using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Event.Skill;
 using HotUpdate.Game.Battle.Event.Turn;
+using HotUpdate.Game.Battle.Event.UI;
+using HotUpdate.Game.Battle.Inputs;
+using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Object;
-using HotUpdate.Game.Battle.UI.Base;
-using HotUpdate.Game.Battle.UI.SkillKey;
-using HotUpdate.Game.Battle.UI.SkillKey.Provider;
+using HotUpdate.Game.Battle.Skill;
+using HotUpdate.Game.Battle.TargetSelect;
+using HotUpdate.Game.Battle.UI;
+using HotUpdate.Game.Point;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
@@ -36,6 +34,7 @@ namespace HotUpdate.Game.Battle.Event
     /// </summary>
     public class BattleEventScheduler : IBattleEventScheduler, IDestroyable
     {
+        [Inject] private IUIService _uiService;
         private IBattleContext _context;
 
         public BattleEventScheduler(IBattleContext context)
@@ -75,7 +74,7 @@ namespace HotUpdate.Game.Battle.Event
             // 启用输入
             DIContainer.GetInstance<IBattleInputHandler>().SetInputState(true);
             // 更新UI
-            var controller = DIContainer.GetInstance<IUIManager>().GetController<BattleController>();
+            var controller = _uiService.GetPanel(EUIPanelId.BattlePanel) as IBattleController;
             // 隐藏行动提示
             controller.BattleUiManager.SetActTipActive(E_ActTipType.Hide);
             // 激活怪物血量UI显示
@@ -96,7 +95,7 @@ namespace HotUpdate.Game.Battle.Event
         /// <param name="postCastEvent"></param>
         private void OnPostCastDispatch(PostCastEvent postCastEvent)
         {
-            var controller = DIContainer.GetInstance<IUIManager>().GetController<BattleController>();
+            var controller = _uiService.GetPanel(EUIPanelId.BattlePanel) as IBattleController;
             // 更新累计伤害UI
             controller.BattleUiManager.UpdateCumulativeDamage(false, 0);
         }
@@ -111,7 +110,7 @@ namespace HotUpdate.Game.Battle.Event
             DIContainer.GetInstance<ITargetSelectManager>().InActiveSelectTarget();
             // 禁用输入
             DIContainer.GetInstance<IBattleInputHandler>().SetInputState(false);
-            var controller = DIContainer.GetInstance<IUIManager>().GetController<BattleController>();
+            var controller = _uiService.GetPanel(EUIPanelId.BattlePanel) as IBattleController;
             controller.BattleUiManager.ClearSelectMarker();
             controller.BattleUiManager.SetOperator(null);
             controller.BattleUiManager.SetActTipActive(E_ActTipType.Hide);
@@ -123,7 +122,7 @@ namespace HotUpdate.Game.Battle.Event
         /// <param name="updateWaitCmdEvent"></param>
         private void OnUpdateWaitCmdDispatch(UpdateWaitCmdEvent updateWaitCmdEvent)
         {
-            var controller = DIContainer.GetInstance<IUIManager>().GetController<BattleController>();
+            var controller = _uiService.GetPanel(EUIPanelId.BattlePanel) as IBattleController;
             controller.BattleUiManager.UpdateWaitingCommmand(updateWaitCmdEvent.BattleEntities);
         }
         
@@ -147,7 +146,7 @@ namespace HotUpdate.Game.Battle.Event
                 await _context.GetProxy().UpdateCamera(turnStartEvent.CurrentBattleEntity);
             }
             
-            var controller = DIContainer.GetInstance<IUIManager>().GetController<BattleController>();
+            var controller = _uiService.GetPanel(EUIPanelId.BattlePanel) as IBattleController;
             switch (turnStartEvent.CurrentBattleEntity)
             {
                 case PlayerObject:
@@ -207,7 +206,7 @@ namespace HotUpdate.Game.Battle.Event
                         break;
                     case E_SkillTargetType.Friend:
                         // 失活所有怪物UI显示
-                        DIContainer.GetInstance<IUIManager>().GetController<BattleController>().MonsterStateUIManager.InActiveMonsterUIs();
+                        (_uiService.GetPanel(EUIPanelId.BattlePanel) as IBattleController).MonsterStateUIManager.InActiveMonsterUIs();
                         // 更新相机看向玩家
                         // TODO：计算相机世界坐标的位置和看向，数据暂时写死
                         var worldPos = new Vector3(0, 1, 1.7f);
@@ -219,7 +218,7 @@ namespace HotUpdate.Game.Battle.Event
                         break;
                     case E_SkillTargetType.Enemy:
                         // 激活所有怪物UI显示
-                        DIContainer.GetInstance<IUIManager>().GetController<BattleController>().MonsterStateUIManager.ActiveMonsterUIs();
+                        (_uiService.GetPanel(EUIPanelId.BattlePanel) as IBattleController).MonsterStateUIManager.ActiveMonsterUIs();
                         // 更新相机看向怪物
                         var roleCameraParent = DIContainer.GetInstance<IBattlePointProxy>().BattlePoint
                             .GetRoleCameraTransByIndex(playerObject.EntityPosIndex);

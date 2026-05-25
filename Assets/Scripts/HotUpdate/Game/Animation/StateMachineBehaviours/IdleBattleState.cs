@@ -1,5 +1,6 @@
-using HotUpdate.Base.Battle.Object;
+using HotUpdate.Base;
 using HotUpdate.Game.Animation.Component;
+using HotUpdate.Game.Battle.Object;
 using UnityEngine;
 
 namespace HotUpdate.Game.Animation.StateMachineBehaviours

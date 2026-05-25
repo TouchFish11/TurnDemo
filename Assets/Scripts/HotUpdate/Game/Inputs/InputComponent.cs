@@ -7,15 +7,13 @@ using Core.GlobalEvent.Events;
 using Core.Input.ActionAsset;
 using Core.Mono;
 using HotUpdate.Base.Component;
-using HotUpdate.Base.Input;
-using HotUpdate.Base.Main;
 using HotUpdate.Base.Manager;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using Logger = Core.Log.Logger;
 
-namespace HotUpdate.Game.Input
+namespace HotUpdate.Game.Inputs
 {
     /// <summary>
     /// 输入组件，负责处理玩家的各类输入事件（键鼠、摇杆等），并对外暴露输入相关的事件回调
@@ -24,6 +22,10 @@ namespace HotUpdate.Game.Input
     [RequireComponent(typeof(PlayerInputComponent))]
     public class InputComponent : BaseComponent, IInputComponent
     {
+        // 主界面数据管理器
+        [Inject] private IMainDataManager _mainDataManager;
+        [Inject] private IMouseManager _mouseManager;
+        
         // 输入系统接口，封装底层输入逻辑
         private IInputSystem inputSystem;
         // 受限制的输入动作名称列表
@@ -70,7 +72,7 @@ namespace HotUpdate.Game.Input
             // 获取输入系统实例
             inputSystem = DIContainer.GetInstance<IInputSystem>();
             // 初始化玩家输入，并注册输入动作触发回调
-            var container = DIContainer.GetInstance<IGameManager>().GameDataManager.GetProvider<IMainDataProvider>().MainDataCollection.InputActionContainer;
+            var container = _mainDataManager.MainDataCollection.InputActionContainer;
             var playerInputComponent = EntityObject.GetComponent<PlayerInputComponent>();
             var playerInput = playerInputComponent.PlayerInput;
             inputSystem.InitPlayerInput(playerInput, container, OnActionTrigger);
@@ -145,7 +147,7 @@ namespace HotUpdate.Game.Input
                         OnKeyInputChanged?.Invoke(Vector3.zero);
                     }
                     break;
-                case "NormalAttack" when !DIContainer.GetInstance<IMouseManager>().Visible:
+                case "NormalAttack" when !_mouseManager.Visible:
                     // 普通攻击（鼠标左键）：鼠标不可见时触发
                     if (context.phase == InputActionPhase.Performed)
                     {

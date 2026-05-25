@@ -1,30 +1,24 @@
-using Core.DI;
 using Core.Serialize.Binary;
-using HotUpdate.Base.Battle.Property;
 using HotUpdate.Common.Config.ExcelInfo.Container;
-using HotUpdate.Common.Config.ExcelInfo.Info;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.Property
 {
     /// <summary>
-    /// ��ɫ����
+    /// 角色属性
     /// </summary>
     public class RoleProperty : BattleProperty
     {
-        // ��������
-        protected int baseEnergy;   // ��������
-
-
-
-        // ��̬����
-        protected int currentEnergy;    // ��ǰ����
-
-
+        // 基础能量
+        protected int baseEnergy;
+        
+        // 当前能量
+        protected int currentEnergy;
+        
         public override void InitProperty(int id)
         {
             base.InitProperty(id);
-            RoleInfo roleInfo = DIContainer.GetInstance<IBinaryDataManager>().GetConfig<RoleInfoContainer>(EConfigLoadType.Excel).dataDic[id];
+            var roleInfo = binaryDataManager.GetConfig<RoleInfoContainer>(EConfigLoadType.Excel).dataDic[id];
 
             baseHp = roleInfo.f_baseHp;
             baseAtk = roleInfo.f_baseAtk;
@@ -47,7 +41,7 @@ namespace HotUpdate.Game.Battle.Property
 
 
 
-        public int CurrentEnergy { get => currentEnergy; set => currentEnergy = Mathf.Clamp(value, default, baseEnergy); }
+        public int CurrentEnergy { get => currentEnergy; set => currentEnergy = Mathf.Clamp(value, 0, baseEnergy); }
 
     }
 }

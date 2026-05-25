@@ -1,5 +1,6 @@
 using Core.Log;
-using HotUpdate.Base.Battle.Damage.Data;
+using HotUpdate.Base;
+using HotUpdate.Game.Battle.Damage.Data;
 
 namespace HotUpdate.Game.Battle.ResponsibilityChain
 {

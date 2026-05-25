@@ -1,16 +1,16 @@
 namespace HotUpdate.Game.Battle.Status.Enum
 {
     /// <summary>
-    /// Buff�����仯
+    /// Buff层数变化类型
     /// </summary>
     public enum E_LayerVariationType : byte
     {
         /// <summary>
-        /// ���Ͳ���
+        /// 减少层数
         /// </summary>
         Sub,
         /// <summary>
-        /// �Ƴ�����
+        /// 移除层数
         /// </summary>
         Remove,
     }

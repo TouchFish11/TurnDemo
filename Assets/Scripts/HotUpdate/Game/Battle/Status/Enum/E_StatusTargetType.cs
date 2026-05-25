@@ -1,16 +1,16 @@
 namespace HotUpdate.Game.Battle.Status.Enum
 {
     /// <summary>
-    /// ״̬Ŀ������
+    /// 状态目标类型
     /// </summary>
     public enum E_StatusTargetType : byte
     {
         /// <summary>
-        /// �ѷ�
+        /// 友方
         /// </summary>
         Friend = 1,
         /// <summary>
-        /// �з�
+        /// 敌方
         /// </summary>
         Enermy,
     }

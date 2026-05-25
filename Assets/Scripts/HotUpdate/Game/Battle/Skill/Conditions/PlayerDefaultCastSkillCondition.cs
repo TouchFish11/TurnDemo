@@ -1,9 +1,8 @@
 using Core.DI;
 using Core.GlobalEvent;
 using Core.GlobalEvent.Events;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Battle.Property;
-using HotUpdate.Base.Battle.Skill;
+using HotUpdate.Base;
+using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Property;
 
 namespace HotUpdate.Game.Battle.Skill.Conditions

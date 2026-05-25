@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using HotUpdate.Base.Collection;
+using HotUpdate.Base.Manager;
 using HotUpdate.Base.Quest;
 using HotUpdate.Common.Config.Quest;
 using HotUpdate.Common.Config.Quest.Config;

@@ -1,20 +1,17 @@
-using Core.DI;
 using Core.Serialize.Binary;
-using HotUpdate.Base.Battle.Property;
 using HotUpdate.Common.Config.ExcelInfo.Container;
-using HotUpdate.Common.Config.ExcelInfo.Info;
 
 namespace HotUpdate.Game.Battle.Property
 {
     /// <summary>
-    /// ��������
+    /// 怪物属性
     /// </summary>
     public class MonsterProperty : BattleProperty
     {
         public override void InitProperty(int id)
         {
             base.InitProperty(id);
-            MonsterInfo monsterInfo = DIContainer.GetInstance<IBinaryDataManager>().GetConfig<MonsterInfoContainer>(EConfigLoadType.Excel).dataDic[id];
+            var monsterInfo = binaryDataManager.GetConfig<MonsterInfoContainer>(EConfigLoadType.Excel).dataDic[id];
 
             baseHp = monsterInfo.f_baseHp;
             baseAtk = monsterInfo.f_baseAtk;

@@ -4,8 +4,10 @@ using Core.Input.ActionAsset;
 using HotUpdate.Base.Animation;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Dialogue;
-using HotUpdate.Base.Input;
-using HotUpdate.Base.Main;
+using HotUpdate.Base.Enums;
+using HotUpdate.Base.Manager;
+using HotUpdate.Game.Inputs;
+using HotUpdate.Game.Main.Move;
 
 namespace HotUpdate.Game.Dialogue
 {
@@ -15,7 +17,7 @@ namespace HotUpdate.Game.Dialogue
     [ComponentId(typeof(DialogueComponent))]
     public class DialogueComponent : BaseComponent, IDialable
     {
-        private IDialogueManager _dialogueManager = DIContainer.GetInstance<IDialogueManager>();
+        [Inject] private IDialogueManager _dialogueManager;
         
         public override void Init(IEntityObject entityObject)
         {

@@ -1,4 +1,4 @@
-using HotUpdate.Base.Battle.Object;
+using HotUpdate.Base;
 using HotUpdate.Game.Battle.Event.Turn;
 
 namespace HotUpdate.Game.Battle.Object.StateMeachine

@@ -1,12 +1,12 @@
 using System.Collections;
 using Core.DI;
-using Core.UI;
 using Core.Utility;
-using HotUpdate.Base.Battle.Layer;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Camera;
+using HotUpdate.Base;
+using HotUpdate.Base.Manager;
+using HotUpdate.Base.UI;
+using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Status;
-using HotUpdate.Game.Battle.UI.Base;
+using HotUpdate.Game.Battle.UI;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.Object.StateMeachine
@@ -16,6 +16,8 @@ namespace HotUpdate.Game.Battle.Object.StateMeachine
     /// </summary>
     public class SettlementBuffState : TurnState
     {
+        [Inject] private IUIService _uiService;
+        
         public SettlementBuffState(IBattleEntityObject battleEntity) : base(battleEntity)
         {
             
@@ -33,7 +35,7 @@ namespace HotUpdate.Game.Battle.Object.StateMeachine
             if (hasDot)
             {
                 // 隐藏所有怪物血量UI显示
-                DIContainer.GetInstance<IUIManager>().GetController<BattleController>().MonsterStateUIManager.InActiveMonsterUIs();
+                (_uiService.GetPanel(EUIPanelId.BattlePanel) as IBattleController).MonsterStateUIManager.InActiveMonsterUIs();
                 // 调整相机角度
                 var rolePos = PlayerObject.GameObject.transform.position;
                 rolePos = new Vector3(rolePos.x, 1, rolePos.z);

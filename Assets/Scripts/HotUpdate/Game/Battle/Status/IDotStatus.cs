@@ -1,5 +1,3 @@
-using HotUpdate.Base.Battle.Status;
-
 namespace HotUpdate.Game.Battle.Status
 {
     /// <summary>

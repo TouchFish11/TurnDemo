@@ -1,10 +1,10 @@
-using HotUpdate.Base.Battle;
-using HotUpdate.Base.Battle.Event;
+using HotUpdate.Base;
+using HotUpdate.Game.Battle.Context;
 
 namespace HotUpdate.Game.Battle.Event.General
 {
     /// <summary>
-    /// ����仯�¼�
+    /// 弱点变化事件
     /// </summary>
     public class WeaknessChangeEvent : BattleEvent
     {

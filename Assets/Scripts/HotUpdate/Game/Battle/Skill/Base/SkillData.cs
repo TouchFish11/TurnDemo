@@ -1,6 +1,3 @@
-using System;
-using HotUpdate.Base.Battle.Skill;
-
 namespace HotUpdate.Game.Battle.Skill.Base
 {
     public struct SkillData : ISkillData
@@ -13,9 +10,6 @@ namespace HotUpdate.Game.Battle.Skill.Base
         {
             Skill = skill;
             SkillCastPostHandler = skillCastPostHandler;
-            OnDataChanged = null;
         }
-
-        public event Action<ISkillData> OnDataChanged;
     }
 }

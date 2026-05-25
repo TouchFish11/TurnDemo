@@ -1,5 +1,5 @@
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Battle.Skill;
+using HotUpdate.Base;
+using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.Skill.Conditions
 {

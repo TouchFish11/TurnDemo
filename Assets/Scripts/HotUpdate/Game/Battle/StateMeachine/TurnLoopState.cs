@@ -2,17 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using Core.DI;
 using Core.Mono;
-using HotUpdate.Base.Battle;
-using HotUpdate.Base.Battle.Condition;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Battle.Property;
-using HotUpdate.Base.Battle.Turn;
+using HotUpdate.Base;
 using HotUpdate.Game.Battle.Command;
 using HotUpdate.Game.Battle.Condition;
+using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Property;
+using HotUpdate.Game.Battle.Turn;
 using HotUpdate.Game.Battle.Utility;
 
 namespace HotUpdate.Game.Battle.StateMeachine
@@ -22,6 +20,8 @@ namespace HotUpdate.Game.Battle.StateMeachine
     /// </summary>
     public class TurnLoopState : BattleState
     {
+        [Inject] private IMonoAdapter _monoAdapter;
+        
         // 战斗指令控制器
         private BattleCommandsController _commandsController;
         // 战斗是否结束
@@ -51,7 +51,7 @@ namespace HotUpdate.Game.Battle.StateMeachine
 
         public override void Execute()
         {
-            DIContainer.GetInstance<IMonoAdapter>().StartCoroutine(TurnLoop_Cor());
+            _monoAdapter.StartCoroutine(TurnLoop_Cor());
         }
         
         /// <summary>

@@ -1,7 +1,6 @@
 using Core.DI;
 using Core.Reflection;
 using Core.Time;
-using HotUpdate.Base.Battle.Status;
 using HotUpdate.Game.Battle.Projectile;
 using HotUpdate.Game.Battle.Status;
 

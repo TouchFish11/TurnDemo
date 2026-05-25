@@ -1,8 +1,8 @@
 using Core.DI;
 using Core.Reflection;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Battle.Skill;
+using HotUpdate.Base;
 using HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill.Handler;
+using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Factory;
 using HotUpdate.Game.Battle.Skill.Handler;
@@ -22,26 +22,30 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill
                     var handler = DIContainer.GetInstance<IFactoryManager>().
                         GetFactory<ISkillCastPostHandlerFactory, SkillCastPostHandlerFactory>().
                         GetSkillCastPostHandler<BaseSkillCastPostHandler>();
-                    
-                    return new SkillData(new FrostfallSkill(caster, skillId), handler);
+
+                    var frostfallSkill = DIContainer.Create<FrostfallSkill>(parameterValues: new object[] { caster, skillId });
+                    return new SkillData(frostfallSkill, handler);
                 case 104:
                     handler = DIContainer.GetInstance<IFactoryManager>().
                         GetFactory<ISkillCastPostHandlerFactory, SkillCastPostHandlerFactory>().
                         GetSkillCastPostHandler<BaseSkillCastPostHandler>();
                     
-                    return new SkillData(new AshfallSkill(caster, skillId), handler);
+                    var ashfallSkill = DIContainer.Create<AshfallSkill>(parameterValues: new object[] { caster, skillId });
+                    return new SkillData(ashfallSkill, handler);
                 case 105:
                     handler = DIContainer.GetInstance<IFactoryManager>().
                         GetFactory<ISkillCastPostHandlerFactory, SkillCastPostHandlerFactory>().
                         GetSkillCastPostHandler<AbyssalMageSkillCastPostHandler>();
                     
-                    return new SkillData(new AbyssGiftSkill(caster, skillId), handler);
+                    var abyssGiftSkill = DIContainer.Create<AbyssGiftSkill>(parameterValues: new object[] { caster, skillId });
+                    return new SkillData(abyssGiftSkill, handler);
                 case 106:
                     handler = DIContainer.GetInstance<IFactoryManager>().
                         GetFactory<ISkillCastPostHandlerFactory, SkillCastPostHandlerFactory>().
                         GetSkillCastPostHandler<AbyssalMageSkillCastPostHandler>();
                     
-                    return new SkillData(new AbyssLockSkill(caster, skillId), handler);
+                    var abyssLockSkill = DIContainer.Create<AbyssLockSkill>(parameterValues: new object[] { caster, skillId });
+                    return new SkillData(abyssLockSkill, handler);
                 default:
                     return null;
             }

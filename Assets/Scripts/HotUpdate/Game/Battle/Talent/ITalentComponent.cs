@@ -1,10 +1,7 @@
-using HotUpdate.Base.Battle;
+using HotUpdate.Game.Battle.Core;
 
 namespace HotUpdate.Game.Battle.Talent
 {
-    /// <summary>
-    /// �츳����ӿ�
-    /// </summary>
     public interface ITalentComponent : IBattleComponent
     {
 

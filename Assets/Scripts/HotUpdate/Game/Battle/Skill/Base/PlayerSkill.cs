@@ -1,6 +1,5 @@
-using HotUpdate.Base.Battle;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Battle.Skill;
+using HotUpdate.Base;
+using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Event.UI;
 
 namespace HotUpdate.Game.Battle.Skill.Base
@@ -30,7 +29,7 @@ namespace HotUpdate.Game.Battle.Skill.Base
         protected sealed override void OnPreCast(IBattleContext context)
         {
             // 初始化技能的目标对象（如选定的敌人、友方等）
-            SkillUtility.InitSkillTarget(this);
+            skillService.InitSkillTarget(this);
             // 消耗战斗点数（BP），消耗数值取自技能配置表的f_costBP字段
             context.ConsumeSkillPoint(SkillInfo.f_costBP);
             // 触发UI事件总线，通知前端更新技能释放相关的UI界面

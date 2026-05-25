@@ -1,13 +1,13 @@
 using System.Collections.Generic;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Battle.TargetSelect;
+using HotUpdate.Base;
 using HotUpdate.Common.Config.ExcelInfo.Info;
+using HotUpdate.Game.Battle.Object;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.TargetSelect.Strategys
 {
     /// <summary>
-    /// �������Ŀ��ѡ�����
+    /// 怪物基础目标选择策略类
     /// </summary>
     public class MonsterBaseTargetSelectStrategy : ITargetSelectStrategy
     {

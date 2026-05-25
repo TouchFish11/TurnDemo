@@ -1,6 +1,7 @@
 using Core.Components;
 using HotUpdate.Base.Animation;
 using HotUpdate.Base.Component;
+using HotUpdate.Base.Enums;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 

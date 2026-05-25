@@ -1,11 +1,11 @@
-using HotUpdate.Base.Battle;
-using HotUpdate.Base.Battle.Event;
-using HotUpdate.Base.Battle.Object;
+using HotUpdate.Base;
+using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.Event.General
 {
     /// <summary>
-    /// �����仯�¼�
+    /// 能量变化事件
     /// </summary>
     public class EnergyChangedEvent : BattleEvent
     {
@@ -14,8 +14,8 @@ namespace HotUpdate.Game.Battle.Event.General
         public int MaxEnergy { get; private set; }
 
         /// <summary>
-        /// ������ֵ��ԭ��ֵ - ����ֵ��
-        /// ����Ϊ�������ٸ���Ϊ��������
+        /// 能量变化量
+        /// 正数为增加，负数为减少
         /// </summary>
         public int DeltaEnergy { get; private set; }
 

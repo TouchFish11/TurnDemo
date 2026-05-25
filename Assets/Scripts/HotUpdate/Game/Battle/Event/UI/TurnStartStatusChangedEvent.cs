@@ -1,12 +1,11 @@
-using HotUpdate.Base.Battle;
-using HotUpdate.Base.Battle.Event;
-using HotUpdate.Base.Battle.Object;
+using HotUpdate.Base;
+using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.Event.UI
 {
     /// <summary>
-    /// �غϿ�ʼ״̬�仯�¼�
-    /// ���½�ɫ״̬��UI
+    /// 回合开始状态变化事件
     /// </summary>
     public class TurnStartStatusChangedEvent : BattleEvent
     {

@@ -1,14 +1,13 @@
 using System.Collections;
 using Core.DI;
-using Core.UI;
 using Core.Utility;
-using HotUpdate.Base.Battle;
-using HotUpdate.Base.Battle.Command;
-using HotUpdate.Base.Battle.Layer;
-using HotUpdate.Base.Battle.Toughness;
-using HotUpdate.Base.Camera;
+using HotUpdate.Base.Manager;
+using HotUpdate.Base.UI;
+using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Status;
-using HotUpdate.Game.Battle.UI.Base;
+using HotUpdate.Game.Battle.Toughness;
+using HotUpdate.Game.Battle.UI;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.Command
@@ -17,18 +16,20 @@ namespace HotUpdate.Game.Battle.Command
     /// 怪物行动指令
     /// 包括韧性恢复和技能执行
     /// </summary>
-    public class MonsterActCommand : Command, IMonsterActCommand
+    public class MonsterActCommand : Command
     {
+        [Inject] private IUIService _uiService;
+        
         // 韧性恢复速度
         private const float recoverySpeed = 55f;
         // 韧性组件
         public IToughnessComponent ToughnessComponent { get; private set; }
         // 技能指令
-        private ISkillCommand _skillCommand;
+        private SkillCommand _skillCommand;
         
         public override int Priority { get; protected set; }
 
-        public void Init(IToughnessComponent toughnessComponent, ISkillCommand skillCommand)
+        public void Init(IToughnessComponent toughnessComponent, SkillCommand skillCommand)
         {
             Sender = toughnessComponent.BattleEntity;
             ToughnessComponent = toughnessComponent;
@@ -61,7 +62,7 @@ namespace HotUpdate.Game.Battle.Command
             if (hasDot)
             {
                 // 隐藏其他怪物血量UI显示
-                DIContainer.GetInstance<IUIManager>().GetController<BattleController>().MonsterStateUIManager.ActiveMonsterUI(Sender);
+                (_uiService.GetPanel(EUIPanelId.BattlePanel) as IBattleController).MonsterStateUIManager.ActiveMonsterUI(Sender);
                 // 调整相机角度
                 var monsterPos = Sender.GameObject.transform.position;
                 monsterPos = new Vector3(monsterPos.x, 1, monsterPos.z);
@@ -100,7 +101,7 @@ namespace HotUpdate.Game.Battle.Command
             }
             
             // 隐藏其他怪物血量UI显示
-            DIContainer.GetInstance<IUIManager>().GetController<BattleController>().MonsterStateUIManager.ActiveMonsterUI(Sender);
+            (_uiService.GetPanel(EUIPanelId.BattlePanel) as IBattleController).MonsterStateUIManager.ActiveMonsterUI(Sender);
             // 计算相机世界坐标的位置和看向
             var monsterPos = Sender.GameObject.transform.position;
             monsterPos = new Vector3(monsterPos.x, 1, monsterPos.z);

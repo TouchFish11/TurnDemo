@@ -4,8 +4,8 @@ using Core.DI;
 using Core.GlobalEvent;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Dialogue;
-using HotUpdate.Base.Interact;
-using HotUpdate.Game.Input;
+using HotUpdate.Base.Manager;
+using HotUpdate.Game.Inputs;
 
 namespace HotUpdate.Game.Interact
 {
@@ -14,8 +14,10 @@ namespace HotUpdate.Game.Interact
     /// 负责管理实体的交互逻辑，包括交互对象的添加/移除、交互触发、对话结束后退出交互等核心逻辑
     /// </summary>
     [ComponentId(typeof(InteractComponent))]
-    public class InteractComponent : BaseComponent, IInteractComponent
+    public class InteractComponent : BaseComponent
     {
+        [Inject] private IDialogueManager _dialogueManager;
+        [Inject] private IEventCenter _eventCenter;
         // 存储当前可交互的所有交互对象
         private readonly List<IInteractable> interactables = new();
         // 当前正在进行交互的目标对象
@@ -29,7 +31,7 @@ namespace HotUpdate.Game.Interact
         public override void Init(IEntityObject entityObject)
         {
             // 注册对话结束事件的回调，对话结束时退出交互状态
-            DIContainer.GetInstance<IDialogueManager>().OnDialogueEnd += QuitInteract;
+            _dialogueManager.OnDialogueEnd += QuitInteract;
             // 获取输入组件，注册交互输入触发的回调
             EntityObject.GetComponent<InputComponent>().OnIniteract += OnIniteract;
         }
@@ -61,7 +63,7 @@ namespace HotUpdate.Game.Interact
         {
             interactables.Add(interactable);
             // 触发交互事件，通知外部交互对象列表已更新
-            DIContainer.GetInstance<IEventCenter>().TriggerEvent(new InteractEvent { Interactables = interactables });
+            _eventCenter.TriggerEvent(new InteractEvent { Interactables = interactables });
         }
 
         /// <summary>
@@ -73,7 +75,7 @@ namespace HotUpdate.Game.Interact
         {
             interactables.Remove(interactable);
             // 触发交互事件，通知外部交互对象列表已更新
-            DIContainer.GetInstance<IEventCenter>().TriggerEvent(new InteractEvent { Interactables = interactables });
+            _eventCenter.TriggerEvent(new InteractEvent { Interactables = interactables });
         }
 
         /// <summary>

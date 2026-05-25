@@ -1,11 +1,11 @@
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Battle.Skill;
+using HotUpdate.Base;
+using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Utility;
 
 namespace HotUpdate.Game.Battle.Skill.Conditions
 {
     /// <summary>
-    /// ����Ĭ���ͷż�������
+    /// 怪物默认释放技能条件
     /// </summary>
     public class MonsterDefaultCastSkillCondition : ICastSkillCondition
     {

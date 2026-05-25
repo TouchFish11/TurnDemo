@@ -1,4 +1,4 @@
-using HotUpdate.Base.Battle;
+using HotUpdate.Game.Battle.Core;
 
 namespace HotUpdate.Game.Battle.Relic
 {

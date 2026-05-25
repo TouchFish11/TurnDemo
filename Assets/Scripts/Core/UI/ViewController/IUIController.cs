@@ -4,6 +4,8 @@ namespace Core.UI.ViewController
 {
     public interface IuiController
     {
+        int PanelId { get; }
+        
         /// <summary>
         /// 初始化
         /// </summary>

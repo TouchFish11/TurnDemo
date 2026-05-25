@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using Core.Log;
 using Core.Utility;
-using HotUpdate.Base.Battle.Skill;
-using HotUpdate.Base.Battle.TargetSelect;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Skill.Conditions;
+using HotUpdate.Game.Battle.TargetSelect;
 
 namespace HotUpdate.Game.Battle.Skill.Component
 {

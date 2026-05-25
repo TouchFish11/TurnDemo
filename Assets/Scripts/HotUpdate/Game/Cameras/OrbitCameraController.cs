@@ -1,8 +1,7 @@
 using Core.Components;
 using Core.DI;
 using Core.Mono;
-using HotUpdate.Base.Camera;
-using HotUpdate.Base.Input;
+using HotUpdate.Game.Inputs;
 using UnityEngine;
 
 namespace HotUpdate.Game.Cameras
@@ -11,11 +10,12 @@ namespace HotUpdate.Game.Cameras
     /// 环绕式相机控制器（第三人称轨道相机）
     /// 核心功能：围绕目标（玩家）旋转、滚轮缩放、对话时切换光标状态
     /// </summary>
-    public class OrbitCameraController : MonoBehaviour, IOrbitCameraController
+    public class OrbitCameraController : MonoBehaviour
     {
-        private IMouseManager _mouseManager;
-        private IMonoAdapter _monoAdapter;
-        // 相机自身Transform缓存
+        [Inject] private IMouseManager _mouseManager;
+        [Inject] private IMonoAdapter _monoAdapter;
+        
+        /// 相机自身Transform缓存
         public Transform Transform { get; private set; }
 
         [Header("相机基础配置")]
@@ -49,9 +49,7 @@ namespace HotUpdate.Game.Cameras
         
         protected void Awake()
         {
-            _mouseManager = DIContainer.GetInstance<IMouseManager>();
-            _monoAdapter = DIContainer.GetInstance<IMonoAdapter>();
-            
+            DIContainer.InjectIntoInstance(this);
             // 注册帧更新监听
             _monoAdapter.AddUpdateListener(OnUpdate);
             // 缓存自身Transform

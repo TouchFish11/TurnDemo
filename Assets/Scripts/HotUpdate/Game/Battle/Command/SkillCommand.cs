@@ -1,15 +1,14 @@
 using System.Collections;
-using HotUpdate.Base.Battle;
-using HotUpdate.Base.Battle.Command;
-using HotUpdate.Base.Battle.Skill;
+using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Event.Skill;
+using HotUpdate.Game.Battle.Skill;
 
 namespace HotUpdate.Game.Battle.Command
 {
     /// <summary>
     /// 技能指令
     /// </summary>
-    public class SkillCommand : Command, ISkillCommand
+    public class SkillCommand : Command
     {
         public override int Priority { get; protected set; }
         

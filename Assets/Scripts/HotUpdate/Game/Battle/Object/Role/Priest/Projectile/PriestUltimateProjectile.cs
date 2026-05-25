@@ -2,11 +2,10 @@ using Core.DI;
 using Core.Pool;
 using Core.Reflection;
 using Core.Time;
-using HotUpdate.Base.Battle.Status;
-using HotUpdate.Base.VFX;
 using HotUpdate.Common;
 using HotUpdate.Game.Battle.Projectile;
 using HotUpdate.Game.Battle.Status;
+using HotUpdate.Game.VFX;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.Object.Role.Priest.Projectile

@@ -2,12 +2,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.DI;
 using Core.Pool;
-using HotUpdate.Base.Battle;
-using HotUpdate.Base.Battle.Layer;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Battle.Point;
-using HotUpdate.Base.Battle.Turn;
+using HotUpdate.Base;
+using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Point;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.Turn

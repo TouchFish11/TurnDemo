@@ -2,21 +2,22 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Core.DI;
-using Core.Reflection;
 using Core.Serialize.Binary;
 using Core.Utility;
+using HotUpdate.Base;
 using HotUpdate.Base.Animation;
-using HotUpdate.Base.Battle;
-using HotUpdate.Base.Battle.Command;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Battle.Skill;
+using HotUpdate.Base.Component;
+using HotUpdate.Base.Enums;
+using HotUpdate.Base.Utility;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Common.Config.ExcelInfo.Info;
-using HotUpdate.Game.Battle.Command;
+using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Object.StateMeachine;
 using HotUpdate.Game.Battle.ResponsibilityChain.DamageChain;
+using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Component;
+using HotUpdate.Game.Battle.Utility;
 
 namespace HotUpdate.Game.Battle.Object
 {
@@ -114,8 +115,7 @@ namespace HotUpdate.Game.Battle.Object
                 skillComponent.IsRelease = false;
             }
             
-            var skillCommand = DIContainer.GetInstance<IFactoryManager>().GetFactory<ICommandFactory, CommandFactory>()
-                .GetSkillCommand(skillData);
+            var skillCommand = commandFactory.GetSkillCommand(skillData);
             // 发送指令
             Context.GetEventBus().TriggerEvent(new InsertCommandEvent(Context, skillCommand));
         }

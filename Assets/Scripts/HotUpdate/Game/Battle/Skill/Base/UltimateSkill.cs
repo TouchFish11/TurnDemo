@@ -1,13 +1,15 @@
 using System.Collections;
 using Core.DI;
-using HotUpdate.Base.Animation;
-using HotUpdate.Base.Battle;
-using HotUpdate.Base.Battle.Event;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Battle.Property;
-using HotUpdate.Base.VFX;
+using Core.Pool;
+using HotUpdate.Base;
+using HotUpdate.Base.Component;
+using HotUpdate.Base.Manager;
+using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Event;
 using HotUpdate.Game.Battle.Event.Skill;
+using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.Skill.Component;
+using HotUpdate.Game.VFX;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.Skill.Base
@@ -18,6 +20,11 @@ namespace HotUpdate.Game.Battle.Skill.Base
     /// </summary>
     public abstract class UltimateSkill : PlayerSkill
     {
+        [Inject] protected IBattleEventScheduler _battleEventScheduler;
+        [Inject] protected IVFXManager vfxManager;
+        [Inject] protected IPoolManager poolManager;
+        [Inject] protected IBattleCameraManager battleCameraManager;
+        
         /// <summary>
         /// 技能组件引用（用于判断技能释放状态）
         /// </summary>
@@ -57,7 +64,7 @@ namespace HotUpdate.Game.Battle.Skill.Base
             // 终结技动画Pose
             Caster.GetComponent<IBattleAnimationComponent>().SetUltimatePose();
             InitProjectileAndPoseVfx();
-            yield return DIContainer.GetInstance<IBattleEventScheduler>().PreUltimateCastDispatch(Caster, SkillInfo);
+            yield return _battleEventScheduler.PreUltimateCastDispatch(Caster, SkillInfo);
         }
 
         /// <summary>
@@ -68,11 +75,11 @@ namespace HotUpdate.Game.Battle.Skill.Base
         private void OnPreUltimateCast(IBattleContext context)
         {
             // 移除Pose特效
-            DIContainer.GetInstance<IVFXManager>().RemoveVFX(vFXInfo);
+            vfxManager.RemoveVFX(vFXInfo);
             // 清空释放者当前能量（终结技消耗所有能量）
             PropertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentEnergy, 0);
             // 初始化技能目标
-            SkillUtility.InitSkillTarget(this);
+            skillService.InitSkillTarget(this);
             // 终结释放通用逻辑、禁用输入、更新UI显示
             context.GetEventBus().TriggerEvent(new UltimateCastEvent(context));
         }

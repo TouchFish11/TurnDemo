@@ -1,8 +1,7 @@
 using Core.Components;
-using HotUpdate.Base.Camera;
 using HotUpdate.Base.Component;
-using HotUpdate.Base.Input;
-using HotUpdate.Base.Main;
+using HotUpdate.Game.Cameras;
+using HotUpdate.Game.Inputs;
 using UnityEngine;
 
 namespace HotUpdate.Game.Main.Move
@@ -28,7 +27,7 @@ namespace HotUpdate.Game.Main.Move
         // 最终移动方向（结合相机视角转换后的世界空间方向）
         private Vector3 moveDir;
         // 主相机控制器（用于获取相机视角，计算相对移动方向）
-        private IOrbitCameraController mainCamera;
+        private OrbitCameraController mainCamera;
         // 移动开关：控制是否允许执行移动/旋转逻辑
         private bool _canMove;
 
@@ -46,7 +45,7 @@ namespace HotUpdate.Game.Main.Move
             Enable();
         }
         
-        public void SetCamera(IOrbitCameraController camera)
+        public void SetCamera(OrbitCameraController camera)
         {
             mainCamera = camera;
         }

@@ -1,7 +1,7 @@
 using Core.Input.ActionAsset;
 using Core.Input.CoreListen;
 using Core.Music;
-using HotUpdate.Base.Main;
+using HotUpdate.Base.Collection;
 
 namespace HotUpdate.Game.Main.Data
 {

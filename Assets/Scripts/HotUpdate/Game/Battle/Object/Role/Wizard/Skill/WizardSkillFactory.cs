@@ -1,7 +1,7 @@
 using Core.DI;
 using Core.Reflection;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Battle.Skill;
+using HotUpdate.Base;
+using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Factory;
 using HotUpdate.Game.Battle.Skill.Handler;
@@ -9,11 +9,10 @@ using HotUpdate.Game.Battle.Skill.Handler;
 namespace HotUpdate.Game.Battle.Object.Role.Wizard.Skill
 {
     /// <summary>
-    /// Herta���ܹ�����
+    /// 法师技能工厂
     /// </summary>
     public class WizardSkillFactory : SkillFactory
     {
-        // ReSharper disable Unity.PerformanceAnalysis
         public override ISkillData CreateSkill(IBattleEntityObject caster, int skillId)
         {
             switch (skillId)
@@ -23,19 +22,22 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard.Skill
                         GetFactory<ISkillCastPostHandlerFactory, SkillCastPostHandlerFactory>().
                         GetSkillCastPostHandler<BaseSkillCastPostHandler>();
                     
-                    return new SkillData(new WizardNormalSkill(caster, skillId), handler);
+                    var wizardNormalSkill = DIContainer.Create<WizardNormalSkill>(parameterValues: new object[] { caster, skillId });
+                    return new SkillData(wizardNormalSkill, handler);
                 case 21:
                     handler = DIContainer.GetInstance<IFactoryManager>().
                         GetFactory<ISkillCastPostHandlerFactory, SkillCastPostHandlerFactory>().
                         GetSkillCastPostHandler<BaseSkillCastPostHandler>();
                     
-                    return new SkillData(new WizardBattleSkill(caster, skillId), handler);
+                    var wizardBattleSkill = DIContainer.Create<WizardBattleSkill>(parameterValues: new object[] { caster, skillId });
+                    return new SkillData(wizardBattleSkill, handler);
                 case 22:
                     handler = DIContainer.GetInstance<IFactoryManager>().
                         GetFactory<ISkillCastPostHandlerFactory, SkillCastPostHandlerFactory>().
                         GetSkillCastPostHandler<BaseUltimateSkillCastPostHandler>();
                     
-                    return new SkillData(new WizardUltimateSkill(caster, skillId), handler);
+                    var wizardUltimateSkill = DIContainer.Create<WizardUltimateSkill>(parameterValues: new object[] { caster, skillId });
+                    return new SkillData(wizardUltimateSkill, handler);
                 default:
                     return null;
             }

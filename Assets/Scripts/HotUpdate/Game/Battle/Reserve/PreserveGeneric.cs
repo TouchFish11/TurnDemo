@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using HotUpdate.Base.Battle.Point;
+using HotUpdate.Game.Point;
 
 namespace HotUpdate.Game.Battle.Reserve
 {

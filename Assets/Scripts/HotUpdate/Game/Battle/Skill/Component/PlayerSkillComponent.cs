@@ -1,8 +1,8 @@
 using Core.Components;
 using Core.DI;
 using Core.Reflection;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Battle.TargetSelect;
+using HotUpdate.Base;
+using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Skill.Conditions;
 using HotUpdate.Game.Battle.Skill.Factory;
 using HotUpdate.Game.Battle.TargetSelect;

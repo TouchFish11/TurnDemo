@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using Core.GlobalEvent;
 using Core.GlobalEvent.Events;
-using HotUpdate.Base.Input;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
-namespace HotUpdate.Game.Input
+namespace HotUpdate.Game.Inputs
 {
     /// <summary>
     /// 鼠标管理器

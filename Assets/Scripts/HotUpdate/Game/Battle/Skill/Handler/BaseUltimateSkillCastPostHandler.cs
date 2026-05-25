@@ -4,18 +4,14 @@ using Core.Log;
 using Core.Reflection;
 using Core.UI;
 using Core.Utility;
-using HotUpdate.Base.Battle.Input;
-using HotUpdate.Base.Battle.Object;
-using HotUpdate.Base.Battle.Skill;
-using HotUpdate.Base.Battle.TargetSelect;
+using HotUpdate.Base;
 using HotUpdate.Common.Config.ExcelInfo.Info;
+using HotUpdate.Game.Battle.Inputs;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Skill.Component;
 using HotUpdate.Game.Battle.TargetSelect;
 using HotUpdate.Game.Battle.TargetSelect.Strategys;
-using HotUpdate.Game.Battle.UI.Base;
-using HotUpdate.Game.Battle.UI.SkillKey;
-using HotUpdate.Game.Battle.UI.SkillKey.Provider;
+using HotUpdate.Game.Battle.UI;
 
 namespace HotUpdate.Game.Battle.Skill.Handler
 {
