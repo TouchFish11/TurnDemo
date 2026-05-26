@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
-using Core.Reflection;
+using HotUpdate.Base.Factory;
 using HotUpdate.Common;
 using HotUpdate.Game.Battle.Object.Monster.AbyssalMage;
 using HotUpdate.Game.Battle.Object.Monster.Slime;
@@ -13,7 +13,7 @@ namespace HotUpdate.Game.Battle.Object
     /// <summary>
     /// 怪物工厂
     /// </summary>
-    public class MonsterFactory : IFactory
+    public class MonsterFactory : IMonsterFactory
     {
         [Inject] private ObjectSpawner _objectSpawner;
         

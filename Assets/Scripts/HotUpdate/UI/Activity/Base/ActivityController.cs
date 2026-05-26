@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Core.AssetBundles.Management;
 using Core.DI;
-using Core.Reflection;
 using Core.Scene;
 using Core.Serialize.Binary;
 using Core.UI.ViewController;
@@ -33,6 +32,7 @@ namespace HotUpdate.UI.Activity.Base
         [Inject] private IBattleManager _battleManager;
         [Inject] private IPlayerManager _playerManager;
         [Inject] private ISceneManager _sceneManager;
+        [Inject] private IActivityDataFactory _activityDataFactory;
         
         private int mainControllerId;
 
@@ -121,9 +121,7 @@ namespace HotUpdate.UI.Activity.Base
             if (!activityDataCollection.TryGetValue(activityInfo.f_id, out var activityData))
             {
                 // 新增活动数据
-                activityData = DIContainer.GetInstance<IFactoryManager>()
-                    .GetFactory<IActivityDataFactory, ActivityDataFactory>()
-                    .GetData(activityInfo.f_id);
+                activityData = _activityDataFactory.GetData(activityInfo.f_id);
                 // 初始化ID
                 activityData.ActivityId = activityInfo.f_id;
                 // 缓存

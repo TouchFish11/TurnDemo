@@ -99,8 +99,7 @@ namespace HotUpdate.Game.Battle.UI
         /// 设置技能操作区UI
         /// 传入null则清空操作区
         /// </summary>
-        /// <param name="skillKeyUIs">技能按键UI列表</param>
-        void SetOperator(List<PoolObject<SkillKeyUI>> skillKeyUIs);
+        void ClearOperator();
 
         /// <summary>
         /// 设置行动提示的激活状态

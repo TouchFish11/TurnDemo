@@ -125,23 +125,23 @@ namespace HotUpdate.Game.Battle.Core
             var preLoadDatas = new PreLoadData[]
             {
                 // GameObject
-                new(AbKeyCollection.Prefab, ResKeyCollection.Prefab_Warrior, typeof(GameObject)),
-                new(AbKeyCollection.Prefab, ResKeyCollection.Prefab_Wizard, typeof(GameObject)),
-                new(AbKeyCollection.Prefab, ResKeyCollection.Prefab_Slime, typeof(GameObject)),
-                new(AbKeyCollection.Prefab, ResKeyCollection.Prefab_TurtleShell, typeof(GameObject)),
-                new(AbKeyCollection.Prefab, ResKeyCollection.Prefab_TurtleShell, typeof(GameObject)),
+                new(ResKeyCollection.Prefab_Warrior),
+                new(ResKeyCollection.Prefab_Wizard),
+                new(ResKeyCollection.Prefab_Slime),
+                new(ResKeyCollection.Prefab_TurtleShell),
+                new(ResKeyCollection.Prefab_TurtleShell),
                 
                 // UI
-                new(AbKeyCollection.Ui, ResKeyCollection.SelectMarkerUI, typeof(GameObject)),
-                new(AbKeyCollection.Ui, ResKeyCollection.MonsterStateUI, typeof(GameObject)),
-                new(AbKeyCollection.Ui, ResKeyCollection.RoleStateUI, typeof(GameObject)),
-                new(AbKeyCollection.Ui, ResKeyCollection.ActionGridUI, typeof(GameObject)),
-                new(AbKeyCollection.Ui, ResKeyCollection.WaitingActUI, typeof(GameObject)),
-                new(AbKeyCollection.Ui, ResKeyCollection.SkillKeyUI, typeof(GameObject)),
+                new(ResKeyCollection.SelectMarkerUI),
+                new(ResKeyCollection.MonsterStateUI),
+                new(ResKeyCollection.RoleStateUI),
+                new(ResKeyCollection.ActionGridUI),
+                new(ResKeyCollection.WaitingActUI),
+                new(ResKeyCollection.SkillKeyUI),
                 
                 // SpriteAtlas
-                new(AbKeyCollection.Spriteatlas, ResKeyCollection.Atlas_Icon_BattleEntity, typeof(SpriteAtlas)),
-                new(AbKeyCollection.Spriteatlas, ResKeyCollection.BrightIcons, typeof(SpriteAtlas)),
+                new(ResKeyCollection.Atlas_Icon_BattleEntity),
+                new(ResKeyCollection.BrightIcons),
             };
             
             await DIContainer.GetInstance<IPreLoadManager>().PreLoads(preLoadDatas);

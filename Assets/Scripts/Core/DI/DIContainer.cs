@@ -126,8 +126,7 @@ namespace Core.DI
         /// <param name="isSingleton">是否是单例，true创建为单例，false则是瞬态对象</param>
         /// <param name="parameterValues">构造参数值，需按参数顺序匹配，否则无法赋值</param>
         /// <typeparam name="T">非接口引用类型</typeparam>
-        /// <returns>新类型实例</returns>
-        /// <exception cref="ArgumentException">重复创建单例类型则抛出异常</exception>
+        /// <returns>类型实例</returns>
         public static T Create<T>(bool isSingleton = false, params object[] parameterValues) where T : class
         {
             var instance = _instanceMap.GetValueOrDefault(typeof(T)) ?? _interfaceMap.GetValueOrDefault(typeof(T));
@@ -160,7 +159,9 @@ namespace Core.DI
             {
                 return (T)newInstance;
             }
-            return _instanceMap.TryAdd(typeof(T), newInstance) ? (T)newInstance : throw new ArgumentException($"{typeof(T)} already exists.");
+
+            _instanceMap.TryAdd(typeof(T), newInstance);
+            return (T)newInstance;
         }
 
         /// <summary>

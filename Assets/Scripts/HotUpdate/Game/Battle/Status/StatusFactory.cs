@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using Core.DI;
 using Core.HotUpdate;
-using Core.Reflection;
 using HotUpdate.Base;
+using HotUpdate.Base.Factory;
 using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.Status

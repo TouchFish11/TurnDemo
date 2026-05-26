@@ -1,7 +1,7 @@
 using Core.DI;
 using Core.HotUpdate;
 using Core.Log;
-using Core.Reflection;
+using HotUpdate.Base.Factory;
 
 namespace HotUpdate.Game.Battle.TargetSelect
 {

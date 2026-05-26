@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Core.DI;
 using HotUpdate.Base;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.StateMeachine;
@@ -18,10 +19,10 @@ namespace HotUpdate.Game.Battle.Turn
         
         public BattleStateMachine(IBattleContext context)
         {
-            _battleStates.Add(EBattlePhase.Preparation, new PreparationState(this, context));
-            _battleStates.Add(EBattlePhase.EnterAnimation, new EnterAnimationState(this, context));
-            _battleStates.Add(EBattlePhase.TurnLoop, new TurnLoopState(this, context));
-            _battleStates.Add(EBattlePhase.Over, new BattleOverState(this, context));
+            _battleStates.Add(EBattlePhase.Preparation, DIContainer.Create<PreparationState>(parameterValues: new object[] { this, context }));
+            _battleStates.Add(EBattlePhase.EnterAnimation, DIContainer.Create<EnterAnimationState>(parameterValues: new object[] { this, context }));
+            _battleStates.Add(EBattlePhase.TurnLoop, DIContainer.Create<TurnLoopState>(parameterValues: new object[] { this, context }));
+            _battleStates.Add(EBattlePhase.Over, DIContainer.Create<BattleOverState>(parameterValues: new object[] { this, context }));
         }
         
         /// <summary>

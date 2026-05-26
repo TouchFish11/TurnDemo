@@ -6,6 +6,7 @@ using Core.Mono;
 using Core.UI.ViewController;
 using HotUpdate.Base.Dialogue;
 using HotUpdate.Base.Manager;
+using HotUpdate.Base.UI;
 using HotUpdate.Common;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using UnityEngine;
@@ -19,7 +20,7 @@ namespace HotUpdate.Game.Dialogue.UI
     /// 对话控制器核心类
     /// 处理对话界面的交互逻辑、对话内容展示、分支选项设置等核心功能
     /// </summary>
-    public class DialogueController : UIController<DialogueView>
+    public class DialogueController : UIController<DialogueView>, IBlockOperation
     {
         private static readonly WaitForSeconds s_waitForSeconds0_25 = new(0.25f);
 
@@ -53,6 +54,13 @@ namespace HotUpdate.Game.Dialogue.UI
         /// 对话弹窗是否处于激活状态
         /// </summary>
         public bool IsActiveBox { get; set; }
+        
+        public bool BlockOperation { get; private set; }
+        
+        public void SetBlock(bool isBlock)
+        {
+            BlockOperation = isBlock;
+        }
         
         /// <summary>
         /// 控制器初始化方法（异步）

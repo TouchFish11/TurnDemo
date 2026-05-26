@@ -1,10 +1,9 @@
 using System.Collections;
 using Core.DI;
 using Core.Log;
-using Core.Reflection;
-using Core.UI;
 using Core.Utility;
 using HotUpdate.Base;
+using HotUpdate.Base.UI;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Inputs;
 using HotUpdate.Game.Battle.Object;
@@ -12,6 +11,7 @@ using HotUpdate.Game.Battle.Skill.Component;
 using HotUpdate.Game.Battle.TargetSelect;
 using HotUpdate.Game.Battle.TargetSelect.Strategys;
 using HotUpdate.Game.Battle.UI;
+using HotUpdate.Game.Battle.UI.Provider;
 
 namespace HotUpdate.Game.Battle.Skill.Handler
 {
@@ -21,6 +21,10 @@ namespace HotUpdate.Game.Battle.Skill.Handler
     /// </summary>
     public class BaseUltimateSkillCastPostHandler : ISkillCastPostHandler
     {
+        [Inject] private IUIService _uiService;
+        [Inject] private ISkillKeyUIDataProviderFactory _skillKeyUIDataProviderFactory;
+        [Inject] private ITargetSelectStrategyFactory _targetSelectStrategyFactory;
+        
         /// <summary>
         /// 处理终极技能释放后的后续逻辑
         /// </summary>
@@ -45,20 +49,12 @@ namespace HotUpdate.Game.Battle.Skill.Handler
             var currentEntitySkillInfo = GetNormalSkillInfo(currentEntity);
             
             // 隐藏战斗界面的行动提示UI（如技能释放提示、行动按钮等）
-            DIContainer.GetInstance<IUIManager>()
-                .GetController<BattleController>()
-                .BattleUiManager
-                .SetActTipActive(E_ActTipType.Hide);
+            (_uiService.GetPanel(EUIPanelId.BattlePanel) as IBattleController).BattleUiManager.SetActTipActive(E_ActTipType.Hide);
             
             // 获取技能按键UI数据提供者（用于更新玩家操作区的技能按键状态）
-            var provider = DIContainer.GetInstance<IFactoryManager>().
-                GetFactory<ISkillKeyUIDataProviderFactory, SkillKeyUIDataProviderFactory>().
-                GetCastSkillCondition<BaseSkillKeyUIDataProvider>();
+            var provider = _skillKeyUIDataProviderFactory.GetCastSkillCondition<BaseSkillKeyUIDataProvider>();
             // 更新玩家操作界面（技能按键、可操作状态等）
-            DIContainer.GetInstance<IUIManager>()
-                .GetController<BattleController>()
-                .BattleUiManager
-                .UpdateOperator(currentEntity, provider);
+            (_uiService.GetPanel(EUIPanelId.BattlePanel) as IBattleController).BattleUiManager.UpdateOperator(currentEntity, provider);
             
             // 更新怪物位置
             context.GetProxy().UpdateMonsterPos(currentEntity);
@@ -66,9 +62,7 @@ namespace HotUpdate.Game.Battle.Skill.Handler
             yield return TaskUtility.WaitForTask(context.GetProxy().UpdateCamera(currentEntity));
             
             // 获取玩家基础目标选择策略
-            var strategy = DIContainer.GetInstance<IFactoryManager>().
-                GetFactory<ITargetSelectStrategyFactory, TargetSelectStrategyFactory>()
-                .GetTargetSelectStrategy<PlayerBaseTargetSelectStrategy>();
+            var strategy = _targetSelectStrategyFactory.GetTargetSelectStrategy<PlayerBaseTargetSelectStrategy>();
             
             // 激活目标选择
             DIContainer.GetInstance<ITargetSelectManager>().ActiveSelectTarget();
@@ -77,7 +71,7 @@ namespace HotUpdate.Game.Battle.Skill.Handler
             // 执行目标选择逻辑
             DIContainer.GetInstance<ITargetSelectManager>().SelectTarget(context, currentEntity, currentEntitySkillInfo, strategy);
             // 重新激活怪物UI的血量显示
-            DIContainer.GetInstance<IUIManager>().GetController<BattleController>().MonsterStateUIManager.ActiveMonsterUIs();
+            (_uiService.GetPanel(EUIPanelId.BattlePanel) as IBattleController).MonsterStateUIManager.ActiveMonsterUIs();
         }
 
         private static SkillInfo GetNormalSkillInfo(IBattleEntityObject currentEntity)

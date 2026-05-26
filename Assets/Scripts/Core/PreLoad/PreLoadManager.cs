@@ -1,7 +1,5 @@
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
-using Core.DI;
-using Core.Singleton;
 using UnityEngine;
 
 namespace Core.PreLoad
@@ -11,13 +9,6 @@ namespace Core.PreLoad
     /// </summary>
     public class PreLoadManager : IPreLoadManager
     {
-        private IAssetBundleManager _assetBundleManager;
-        
-        private PreLoadManager(IAssetBundleManager assetBundleManager)
-        {
-            _assetBundleManager = assetBundleManager;
-        }
-
         /// <summary>
         /// 预加载资源
         /// </summary>

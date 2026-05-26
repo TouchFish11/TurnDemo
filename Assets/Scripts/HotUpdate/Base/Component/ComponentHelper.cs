@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Core.Components;
-using Core.Reflection;
+using HotUpdate.Base.Factory;
 using Unity.VisualScripting;
 using UnityEngine;
 using Logger = Core.Log.Logger;
@@ -17,7 +17,7 @@ namespace HotUpdate.Base.Component
     /// 3. 统一管理组件生命周期，确保依赖组件（RequireComponent）优先初始化
     /// 依赖说明：依赖Unity引擎的Component体系、自定义IComponent接口、日志系统、反射工具类
     /// </summary>
-    public class ComponentFactory : IFactory
+    public class ComponentHelper
     {
         // 静态映射字典：组件名称 -> 组件Type类型
         // 键：组件类名（typeof(T).Name）；值：组件的运行时Type对象
@@ -26,14 +26,13 @@ namespace HotUpdate.Base.Component
         // 组件初始化栈：用于处理RequireComponent依赖时的初始化顺序
         // 栈特性保证：依赖组件先初始化（栈顶先出），当前组件后初始化
         private static readonly Stack<IComponent> _componentStack = new();
-        
+
         /// <summary>
-        /// 工厂初始化方法（实现IFactory接口）
         /// 执行时机：游戏启动阶段/工厂首次使用前（需确保先于所有AddComponent调用）
         /// 核心逻辑：调用FactoryUtility工具类扫描程序集中所有实现IComponent的组件类型，
         /// 并将类型名称与Type对象映射注册到_nameToComponentTypeMap字典
         /// </summary>
-        void IFactory.InitFactory()
+        static ComponentHelper()
         {
             FactoryUtility.ScanComponents(_nameToComponentTypeMap);
         }
@@ -130,10 +129,10 @@ namespace HotUpdate.Base.Component
             var componentTypeName = typeof(T).Name;
             if (_nameToComponentTypeMap.TryGetValue(componentTypeName, out var type))
             {
-                Logger.Log($"{nameof(ComponentFactory)}.{nameof(AddComponent)}：对象：{entityObject.GameObject.name}开始添加组件：{type}");
+                Logger.Log($"{nameof(ComponentHelper)}.{nameof(AddComponent)}：对象：{entityObject.GameObject.name}开始添加组件：{type}");
                 // 挂载组件到目标GameObject
                 var component = entityObject.GameObject.AddComponent(type);
-                Logger.Log($"{nameof(ComponentFactory)}.{nameof(AddComponent)}：对象：{entityObject.GameObject.name}添加组件：{type}" +
+                Logger.Log($"{nameof(ComponentHelper)}.{nameof(AddComponent)}：对象：{entityObject.GameObject.name}添加组件：{type}" +
                            $"{(!component ? "失败" : "成功")}"+
                            $"component为null：{!component}");
                 
@@ -151,7 +150,7 @@ namespace HotUpdate.Base.Component
             else
             {
                 // 类型未注册时记录详细错误日志
-                Logger.LogError($"{nameof(ComponentFactory)}.{nameof(AddComponent)}：未找到该类型{typeof(T).Name}的组件");
+                Logger.LogError($"{nameof(ComponentHelper)}.{nameof(AddComponent)}：未找到该类型{typeof(T).Name}的组件");
             }
         }
 

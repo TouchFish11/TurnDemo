@@ -99,7 +99,7 @@ namespace Core.Pool
             }
         }
         
-        public T GetData<T>() where T : class, IPoolData, new()
+        public T GetData<T>() where T : class, IPoolData
         {
             // 自定义获取名称，与存储名称一致
             var dataName = $"{typeof(T).FullName}";

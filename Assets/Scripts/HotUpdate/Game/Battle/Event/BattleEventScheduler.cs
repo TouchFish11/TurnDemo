@@ -2,9 +2,7 @@ using System;
 using System.Collections;
 using Core.DI;
 using Core.Mono.MonoFunction;
-using Core.Reflection;
 using Core.Serialize.Binary;
-using Core.UI;
 using Core.Utility;
 using HotUpdate.Base;
 using HotUpdate.Base.Manager;
@@ -22,6 +20,7 @@ using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.TargetSelect;
 using HotUpdate.Game.Battle.UI;
+using HotUpdate.Game.Battle.UI.Provider;
 using HotUpdate.Game.Point;
 using UnityEngine;
 using Logger = Core.Log.Logger;
@@ -34,6 +33,7 @@ namespace HotUpdate.Game.Battle.Event
     /// </summary>
     public class BattleEventScheduler : IBattleEventScheduler, IDestroyable
     {
+        [Inject] private ISkillKeyUIDataProviderFactory _skillKeyUIDataProviderFactory;
         [Inject] private IUIService _uiService;
         private IBattleContext _context;
 
@@ -82,9 +82,7 @@ namespace HotUpdate.Game.Battle.Event
             // 显示终结技立绘
             yield return controller.BattleUiManager.ShowPaiting((caster as PlayerObject)?.RoleInfo, skillInfo);
             // 获取终结技技能按键UI数据提供器
-            var provider = DIContainer.GetInstance<IFactoryManager>()
-                .GetFactory<ISkillKeyUIDataProviderFactory, SkillKeyUIDataProviderFactory>()
-                .GetCastSkillCondition<UltimateSkillKeyUIDataProvider>();
+            var provider = _skillKeyUIDataProviderFactory.GetCastSkillCondition<UltimateSkillKeyUIDataProvider>();
             // 根据数据更新玩家操作按键，按键触发技能选择事件
             controller.BattleUiManager.UpdateOperator(caster, provider);
         }
@@ -112,7 +110,7 @@ namespace HotUpdate.Game.Battle.Event
             DIContainer.GetInstance<IBattleInputHandler>().SetInputState(false);
             var controller = _uiService.GetPanel(EUIPanelId.BattlePanel) as IBattleController;
             controller.BattleUiManager.ClearSelectMarker();
-            controller.BattleUiManager.SetOperator(null);
+            controller.BattleUiManager.ClearOperator();
             controller.BattleUiManager.SetActTipActive(E_ActTipType.Hide);
         }
 
@@ -160,10 +158,7 @@ namespace HotUpdate.Game.Battle.Event
                     // 隐藏行动提示
                     controller.BattleUiManager.SetActTipActive(E_ActTipType.Hide);
                     // 获取技能按键UI数据提供器
-                    var provider = DIContainer.GetInstance<IFactoryManager>().
-                        GetFactory<ISkillKeyUIDataProviderFactory, SkillKeyUIDataProviderFactory>().
-                        GetCastSkillCondition<BaseSkillKeyUIDataProvider>();
-                    
+                    var provider = _skillKeyUIDataProviderFactory.GetCastSkillCondition<BaseSkillKeyUIDataProvider>();
                     // 根据数据更新玩家操作按键，按键触发技能选择事件
                     controller.BattleUiManager.UpdateOperator(turnStartEvent.CurrentBattleEntity, provider);
                     break;
@@ -174,7 +169,7 @@ namespace HotUpdate.Game.Battle.Event
                     // 清除选中目标的标记UI
                     controller.BattleUiManager.ClearSelectMarker();
                     // 清空操作面板
-                    controller.BattleUiManager.SetOperator(null);
+                    controller.BattleUiManager.ClearOperator();
                     // 显示怪物行动提示
                     controller.BattleUiManager.SetActTipActive(E_ActTipType.Monster);
                     break;

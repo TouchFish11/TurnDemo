@@ -340,9 +340,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1185659751}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e0b5a2801cfd6b4584d8baa7094ac80, type: 3}
+  m_Script: {fileID: 11500000, guid: bf51afc813c760548a37a1a222e87497, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bootConfigFileName: BootConfig.json
 --- !u!1 &1286936300
 GameObject:
   m_ObjectHideFlags: 0

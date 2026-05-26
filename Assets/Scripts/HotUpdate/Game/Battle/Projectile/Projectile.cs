@@ -3,6 +3,7 @@ using System.Collections;
 using Core.DI;
 using Core.Utility;
 using HotUpdate.Game.Battle.Damage;
+using HotUpdate.Game.Battle.Status;
 using HotUpdate.Game.VFX;
 using UnityEngine;
 
@@ -15,6 +16,16 @@ namespace HotUpdate.Game.Battle.Projectile
     [RequireComponent(typeof(ParticleSystem))] // 强制挂载粒子系统组件，用于抛射物视觉表现
     public abstract class Projectile : MonoBehaviour, IProjectile
     {
+        /// <summary>
+        /// 状态工厂
+        /// </summary>
+        [Inject] protected IStatusFactory statusFactory;
+        
+        /// <summary>
+        /// 伤害计算管理器（用于计算抛射物命中后的伤害数值）
+        /// </summary>
+        [Inject] protected IDamageCalcManager damageCalcManager;
+        
         /// <summary>
         /// 视觉特效信息（存储抛射物对应的特效配置）
         /// </summary>
@@ -30,12 +41,7 @@ namespace HotUpdate.Game.Battle.Projectile
         /// 重命名以覆盖UnityEngine的默认命名，避免歧义
         /// </summary>
         protected new ParticleSystem particleSystem;
-
-        /// <summary>
-        /// 伤害计算管理器（用于计算抛射物命中后的伤害数值）
-        /// </summary>
-        protected IDamageCalcManager damageCalcManager;
-
+        
         /// <summary>
         /// 触发时间点数组（记录抛射物在哪些时间点触发判定）
         /// </summary>
@@ -52,10 +58,9 @@ namespace HotUpdate.Game.Battle.Projectile
         /// </summary>
         private void Awake()
         {
+            DIContainer.InjectIntoInstance(this);
             // 获取挂载在当前GameObject上的粒子系统组件
             particleSystem = GetComponent<ParticleSystem>();
-            // 从服务定位器获取伤害计算管理器实例（依赖注入）
-            damageCalcManager = DIContainer.GetInstance<IDamageCalcManager>();
         }
 
         /// <summary>

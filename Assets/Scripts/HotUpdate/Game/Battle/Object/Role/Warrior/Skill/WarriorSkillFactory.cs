@@ -1,10 +1,11 @@
 using Core.DI;
-using Core.Reflection;
 using HotUpdate.Base;
+using HotUpdate.Base.Factory;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Factory;
 using HotUpdate.Game.Battle.Skill.Handler;
+using HotUpdate.Game.Core;
 
 namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill
 {
@@ -18,24 +19,15 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill
             switch (skillId)
             {
                 case 10:
-                    var handler = DIContainer.GetInstance<IFactoryManager>().
-                        GetFactory<ISkillCastPostHandlerFactory, SkillCastPostHandlerFactory>().
-                        GetSkillCastPostHandler<BaseSkillCastPostHandler>();
-                    
+                    var handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
                     var warriorNormalSkill = DIContainer.Create<WarriorNormalSkill>(parameterValues: new object[] { caster, skillId });
                     return new SkillData(warriorNormalSkill, handler);
                 case 11:
-                    handler = DIContainer.GetInstance<IFactoryManager>().
-                        GetFactory<ISkillCastPostHandlerFactory, SkillCastPostHandlerFactory>().
-                        GetSkillCastPostHandler<BaseSkillCastPostHandler>();
-                    
+                    handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
                     var warriorBattleSkill = DIContainer.Create<WarriorBattleSkill>(parameterValues: new object[] { caster, skillId });
                     return new SkillData(warriorBattleSkill, handler);
                 case 12:
-                    handler = DIContainer.GetInstance<IFactoryManager>().
-                        GetFactory<ISkillCastPostHandlerFactory, SkillCastPostHandlerFactory>().
-                        GetSkillCastPostHandler<BaseUltimateSkillCastPostHandler>();
-                    
+                    handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseUltimateSkillCastPostHandler>();
                     var warriorUltimateSkill = DIContainer.Create<WarriorUltimateSkill>(parameterValues: new object[] { caster, skillId });
                     return new SkillData(warriorUltimateSkill, handler);
                 default:

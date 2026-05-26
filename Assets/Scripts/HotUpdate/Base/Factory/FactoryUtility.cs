@@ -6,7 +6,7 @@ using Core.DI;
 using Core.HotUpdate;
 using Core.Log;
 
-namespace Core.Reflection
+namespace HotUpdate.Base.Factory
 {
     /// <summary>
     /// 工厂工具类
@@ -90,35 +90,7 @@ namespace Core.Reflection
                 }
             }
         }
-
-        /// <summary>
-        /// 扫描所有实现IFactory的工厂
-        /// </summary>
-        /// <typeparam name="TValue"></typeparam>
-        /// <param name="dic"></param>
-        /// <param name="assemblies"></param>
-        public static void ScanAllFactory<TValue>(Dictionary<Type, TValue> dic, params Assembly[] assemblies) where TValue : class, IFactory
-        {
-            foreach (var assembly in assemblies)
-            {
-                foreach (var type in assembly.GetTypes())
-                {
-                    if (!typeof(TValue).IsAssignableFrom(type) || type.IsAbstract)
-                    {
-                        continue;
-                    }
-                    
-                    // 通过DI创建类型
-                    var factory = DIContainer.Create(null, type) as TValue;
-                    factory?.InitFactory();
-                    if (!dic.TryAdd(type, factory))
-                    {
-                        Logger.LogError($"{nameof(FactoryUtility)}.{nameof(ScanAllFactory)}：重复添加工厂类型：{type}");
-                    }
-                }
-            }
-        }
-
+        
         /// <summary>
         /// 扫描所有热更组件
         /// </summary>

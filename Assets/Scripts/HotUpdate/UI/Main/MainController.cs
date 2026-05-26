@@ -5,6 +5,7 @@ using Core.Log;
 using Core.Pool;
 using Core.UI;
 using Core.UI.ViewController;
+using HotUpdate.Base.UI;
 using HotUpdate.Common;
 using HotUpdate.Game.Main.UI.Logic;
 using HotUpdate.UI.Main.Logic;
@@ -20,7 +21,7 @@ namespace HotUpdate.Game.Main.UI
     /// 职责：处理主界面的业务逻辑、事件订阅/取消、按钮点击、状态初始化等
     /// 继承：UIController（基础UI控制器），实现IMainController接口
     /// </summary>
-    public class MainController : UIController<MainView>
+    public class MainController : UIController<MainView>, IBlockOperation
     {
         [Inject] private IPoolManager _poolManager;
         
@@ -30,6 +31,13 @@ namespace HotUpdate.Game.Main.UI
         /// 值：对应逻辑类实例，用于解耦不同模块的业务逻辑
         /// </summary>
         private readonly Dictionary<Type, MainLogic> mainLogics = new();
+        
+        public bool BlockOperation { get; private set; }
+        
+        public void SetBlock(bool isBlock)
+        {
+            BlockOperation = isBlock;
+        }
         
         /// <summary>
         /// 控制器初始化方法

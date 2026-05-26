@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using HotUpdate.Base;
 using HotUpdate.Base.Object;
 using HotUpdate.Game.Animation.Component;
-using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Cameras;
 using HotUpdate.Game.Dialogue;
 using HotUpdate.Game.Inputs;
@@ -16,7 +15,7 @@ namespace HotUpdate.Game.Main.Player
     /// 负责玩家实体的初始化、组件挂载、战斗实体管理、相机创建等核心逻辑
     /// 继承自 EntityObject，作为游戏内可交互的实体基类
     /// </summary>
-    public class MainPlayer : EntityObject, IMainPlayer
+    public class MainPlayer : EntityObject
     {
         // 战斗实体对象的索引映射字典
         // Key：实体的索引序号（自增），Value：对应的战斗实体对象接口实例

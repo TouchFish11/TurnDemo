@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
-using Core.Reflection;
 using HotUpdate.Base;
+using HotUpdate.Base.Factory;
 using HotUpdate.Common;
 using HotUpdate.Game.Battle.Object.Role.Priest;
 using HotUpdate.Game.Battle.Object.Role.Warrior;
@@ -14,7 +14,7 @@ namespace HotUpdate.Game.Battle.Object
     /// <summary>
     /// 角色工厂
     /// </summary>
-    public class RoleFactory : IFactory
+    public class RoleFactory : IRoleFactory
     {
         [Inject] private ObjectSpawner _obectSpawner;
         

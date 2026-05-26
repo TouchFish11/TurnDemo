@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Core.DI;
 using HotUpdate.Base;
 
 namespace HotUpdate.Game.Battle.Skill.Base
@@ -8,6 +9,8 @@ namespace HotUpdate.Game.Battle.Skill.Base
     /// </summary>
     public abstract class SkillFactory : ISkillFactory
     {
+        [Inject] protected ISkillCastPostHandlerFactory skillCastPostHandlerFactory;
+        
         public IEnumerable<ISkillData> CreateSkills(IBattleEntityObject caster, params int[] skillIds)
         {
             foreach (var skillId in skillIds)

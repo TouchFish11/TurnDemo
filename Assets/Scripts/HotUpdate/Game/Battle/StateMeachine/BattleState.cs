@@ -1,11 +1,14 @@
+using Core.DI;
 using HotUpdate.Base;
+using HotUpdate.Base.UI;
 using HotUpdate.Game.Battle.Context;
-using HotUpdate.Game.Battle.Turn;
 
 namespace HotUpdate.Game.Battle.StateMeachine
 {
     public abstract class BattleState : IBattleState
     {
+        [Inject] protected IUIService uiService;
+        
         public IBattleStateMachine BattleStateMachine { get; private set; }
         
         public IBattleContext Context { get; private set; }

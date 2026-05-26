@@ -1,5 +1,4 @@
 using Core.DI;
-using Core.Reflection;
 using Core.UI;
 using Core.Utility;
 using HotUpdate.Base;
@@ -7,7 +6,6 @@ using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.UI;
-using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Component;
 using HotUpdate.Game.Battle.TargetSelect;
@@ -18,7 +16,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace HotUpdate.Game.Battle.UI.SkillKey
+namespace HotUpdate.UI.Battle.SkillKey
 {
     /// <summary>
     /// 技能按键UI组件
@@ -51,6 +49,8 @@ namespace HotUpdate.Game.Battle.UI.SkillKey
             Trigger,
         }
 
+        [Inject] private ITargetSelectStrategyFactory _targetSelectStrategyFactory;
+        
         // 技能提示文本（显示技能类型信息）
         [InjectUI] private TextMeshProUGUI txtSkillTip;
 
@@ -126,10 +126,7 @@ namespace HotUpdate.Game.Battle.UI.SkillKey
             // 绑定战斗实体
             this.battleEntity = battleEntity;
             // 从工厂获取玩家基础目标选择策略（目标选择的规则逻辑）
-            _targetSelectStrategy = DIContainer.GetInstance<IFactoryManager>()
-                .GetFactory<ITargetSelectStrategyFactory, TargetSelectStrategyFactory>()
-                .GetTargetSelectStrategy<PlayerBaseTargetSelectStrategy>();
-            
+            _targetSelectStrategy = _targetSelectStrategyFactory.GetTargetSelectStrategy<PlayerBaseTargetSelectStrategy>();
             // 设置技能提示文本（显示技能类型）
             txtSkillTip.text = skillInfo.f_skillRangeType.ToSkillRangeTypeText();
             // 直接转换技能类型

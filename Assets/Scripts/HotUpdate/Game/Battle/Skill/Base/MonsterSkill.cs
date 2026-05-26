@@ -49,7 +49,7 @@ namespace HotUpdate.Game.Battle.Skill.Base
             controller.BattleUiManager.ClearSelectMarker();
             
             // 重置操作对象，取消当前选中的可操作实体
-            controller.BattleUiManager.SetOperator(null);
+            controller.BattleUiManager.ClearOperator();
             
             // 激活战斗提示，显示怪物行动相关的提示类型（告知玩家当前是怪物回合/技能释放）
             controller.BattleUiManager.SetActTipActive(E_ActTipType.Monster);

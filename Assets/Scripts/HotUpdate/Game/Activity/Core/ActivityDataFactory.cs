@@ -4,15 +4,15 @@ using System.Reflection;
 using Core.DI;
 using Core.HotUpdate;
 using Core.Log;
-using Core.Reflection;
 using HotUpdate.Base.Data;
+using HotUpdate.Base.Factory;
 
 namespace HotUpdate.Game.Activity.Core
 {
     /// <summary>
     /// 活动数据工厂
     /// </summary>
-    public class ActivityDataFactory
+    public class ActivityDataFactory : IActivityDataFactory
     {
         private readonly IHotUpdateManager _hotUpdateManager = DIContainer.GetInstance<IHotUpdateManager>();
         private readonly Dictionary<int, ActivityData> _data = new();

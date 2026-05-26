@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using HotUpdate.Base;
 using HotUpdate.Common.Config.ExcelInfo.Info;
-using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Component;
 
-namespace HotUpdate.Game.Battle.UI.SkillKey.Provider
+namespace HotUpdate.Game.Battle.UI.Provider
 {
     /// <summary>
     /// 基础技能按键UI数据提供器

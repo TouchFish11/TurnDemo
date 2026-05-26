@@ -5,17 +5,17 @@ using Core.GlobalEvent.Events;
 using Core.Log;
 using Core.Time;
 using Core.UI.ViewController;
+using HotUpdate.Base.UI;
 using HotUpdate.Common;
-using HotUpdate.UI.Global.UI;
 
-namespace HotUpdate.Game.Main.Global.UI
+namespace HotUpdate.UI.Global.UI
 {
     using Task = System.Threading.Tasks.Task;
 
     /// <summary>
     /// 全局消息界面
     /// </summary>
-    public class GlobalMessageController : UIController<GlobalMessageView>
+    public class GlobalMessageController : UIController<GlobalMessageView>, IBlockOperation
     {
         [Inject] private ObjectSpawner _objectSpawner;
         [Inject] private ITimerManager _timerManager;
@@ -23,6 +23,13 @@ namespace HotUpdate.Game.Main.Global.UI
         // 显示时间
         private const float Duration = 2.5f;
 
+        public bool BlockOperation { get; private set; }
+        
+        public void SetBlock(bool isBlock)
+        {
+            BlockOperation = isBlock;
+        }
+        
         protected override Task OnInit()
         {
             return Task.CompletedTask;

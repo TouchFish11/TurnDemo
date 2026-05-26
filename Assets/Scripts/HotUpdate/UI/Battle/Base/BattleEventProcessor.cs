@@ -179,7 +179,7 @@ namespace HotUpdate.UI.Battle.Base
             // 清除选中目标的标记UI
             _uiManager.ClearSelectMarker();
             // 清空操作面板
-            _uiManager.SetOperator(null);
+            _uiManager.ClearOperator();
             // 显示玩家行动提示
             _uiManager.SetActTipActive(E_ActTipType.Player);
         }

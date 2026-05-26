@@ -1,5 +1,4 @@
 using Core.DI;
-using Core.Reflection;
 using Core.Time;
 using HotUpdate.Game.Battle.Projectile;
 using HotUpdate.Game.Battle.Status;
@@ -18,8 +17,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Projectile
                 foreach (var statusId in statusIds)
                 {
                     // 获取状态实例
-                    var status = DIContainer.GetInstance<IFactoryManager>().GetFactory<IStatusFactory, StatusFactory>().
-                        GetStatus(projectileData.caster, target, statusId);
+                    var status = statusFactory.GetStatus(projectileData.caster, target, statusId);
                     // 添加状态
                     target.GetComponent<StatusComponent>().AddStatus(status);
                 } 

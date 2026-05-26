@@ -1,10 +1,11 @@
 using Core.DI;
 using Core.Pool;
-using Core.Reflection;
 using Core.Time;
+using HotUpdate.Base.Factory;
 using HotUpdate.Common;
 using HotUpdate.Game.Battle.Projectile;
 using HotUpdate.Game.Battle.Status;
+using HotUpdate.Game.Core;
 using HotUpdate.Game.VFX;
 using UnityEngine;
 
@@ -20,8 +21,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Projectile
             foreach (var statusId in statusIds)
             {
                 // 获取状态实例
-                var status = DIContainer.GetInstance<IFactoryManager>().GetFactory<IStatusFactory, StatusFactory>().
-                    GetStatus(projectileData.caster, projectileData.caster, statusId);
+                var status = statusFactory.GetStatus(projectileData.caster, projectileData.caster, statusId);
                 // 添加状态
                 projectileData.caster.GetComponent<StatusComponent>().AddStatus(status);
             }

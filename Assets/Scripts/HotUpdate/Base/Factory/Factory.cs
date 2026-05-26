@@ -4,7 +4,7 @@ using Core.DI;
 using Core.HotUpdate;
 using Core.Log;
 
-namespace Core.Reflection
+namespace HotUpdate.Base.Factory
 {
     /// <summary>
     /// 工厂基类

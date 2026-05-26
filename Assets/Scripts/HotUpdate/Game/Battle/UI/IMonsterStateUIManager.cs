@@ -1,5 +1,6 @@
-using Core.AssetBundles.Management;
+using System.Threading.Tasks;
 using HotUpdate.Base;
+using UnityEngine;
 
 namespace HotUpdate.Game.Battle.UI
 {
@@ -9,8 +10,8 @@ namespace HotUpdate.Game.Battle.UI
         /// 缓存怪物UI
         /// </summary>
         /// <param name="monsterObject"></param>
-        /// <param name="normalMonsterStateUI"></param>
-        void AddNormalMonsterStateUI(IBattleEntityObject monsterObject, PoolObject<NormalMonsterStateUI> normalMonsterStateUI);
+        /// <param name="monsterStateArea"></param>
+        Task CreateNormalMonsterStateUI(IBattleEntityObject monsterObject, RectTransform monsterStateArea);
 
         /// <summary>
         /// 移除指定怪物UI

@@ -27,7 +27,7 @@ namespace Game.Main
                 // 注册框架
                 await RegisterCore.InitCore();
                 // 加载启动配置
-                LoadBootConfig();
+                LoadLaunchConfig();
                 // 加载热更程序集
                 await LoadHotfixDll();
                 // 创建热更入口
@@ -37,7 +37,7 @@ namespace Game.Main
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(GameLauncher)}:Game startup failed {e.Message})");
+                Logger.LogError($"{nameof(GameLauncher)}: Game startup failed {e.Message}");
             }
         }
         
@@ -49,30 +49,31 @@ namespace Game.Main
             if (bootConfig == null)
             {
                 Logger.LogError($"{nameof(GameLauncher)}:无法加载启动配置，使用默认硬编码包名");
-                bootConfig = new BootConfig { hotfixDllBundleName = "hotupdate" };
+                bootConfig = new BootConfig { hotfixDllBundleName = "hotupdate.assetbundle" };
             }
             
             // 加载所有dll资源
-            var handle = await GameAsset.LoadAllAssetAsync<TextAsset>(bootConfig.hotfixDllBundleName);
+            using var handle = await GameAsset.LoadAllAssetAsync<TextAsset>(bootConfig.hotfixDllBundleName);
             var list = new List<TextAsset>(handle.Assets);
             // 获取热更程序集依赖设置
             var settingsTextAsset = list.Find(text => text.name.Contains(nameof(HotUpdateAssemblySettings)));
             list.Remove(settingsTextAsset);
+            
             var settings = DIContainer.Create<JsonManager>().FromJson<HotUpdateAssemblySettings>(settingsTextAsset.text);
             var hotUpdateManager = DIContainer.Create<HotUpdateMockManager>();
             // 补充元数据
             hotUpdateManager.LoadMetadataForAOTAssemblies(AOTGenericReferences.PatchedAOTAssemblyList);  
             // 加载所有热更程序集
             await hotUpdateManager.LoadAssembliesAsync(settings, list);
-            Logger.Log($"{nameof(GameLauncher)}:Load the hotfix assemblies complete");
+            Logger.Log($"{nameof(GameLauncher)}: Load the hotfix assemblies complete");
         }
         
         /// <summary>
         /// 加载启动配置
         /// </summary>
-        private void LoadBootConfig()
+        private void LoadLaunchConfig()
         {
-            var jsonManager = DIContainer.GetInstance<IJsonManager>();
+            var jsonManager = DIContainer.Create<IJsonManager>();
             // 优先从持久化目录读取（热更可能更新配置，但通常不需要）
             var persistentPath = Path.Combine(Application.persistentDataPath, bootConfigFileName);
             if (File.Exists(persistentPath))

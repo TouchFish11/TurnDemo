@@ -1,4 +1,4 @@
-namespace Core.Reflection
+namespace HotUpdate.Base.Factory
 {
     /// <summary>
     /// 工厂接口

@@ -4,11 +4,11 @@ using Core.DI;
 using Core.Log;
 using Core.UI;
 using HotUpdate.Base;
-using HotUpdate.Common;
+using HotUpdate.Base.UI;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;
-using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Turn;
+using HotUpdate.Game.Battle.UI;
 using HotUpdate.Game.Battle.Utility;
 using HotUpdate.Game.Point;
 
@@ -19,8 +19,6 @@ namespace HotUpdate.Game.Battle.StateMeachine
     /// </summary>
     public class PreparationState : BattleState
     {
-        [Inject] private IUIManager _uiManager;
-        
         public PreparationState(IBattleStateMachine battleStateMachine, IBattleContext context) : base(battleStateMachine, context)
         {
             
@@ -36,7 +34,7 @@ namespace HotUpdate.Game.Battle.StateMeachine
             try
             {
                 // 创建战斗界面
-                var battleController = await DIContainer.GetInstance<IUIManager>().CreateViewAsync<BattleView,BattleController>(ResKeyCollection.BattleView, E_UILayer.Mid);
+                var battleController = await uiService.OpenAsync(EUIPanelId.BattlePanel, E_UILayer.Mid) as IBattleController;
                 // 初始化战斗控制器
                 battleController.InitBattleController(Context);
             
@@ -68,7 +66,7 @@ namespace HotUpdate.Game.Battle.StateMeachine
                 // 初始化行动顺序
                 BattleUtility.InitOrder(Context);
                 // 销毁战斗加载界面
-                await _uiManager.DestroyView(_uiManager.GetController<BattleLoadingController>().panelId);
+                await uiService.CloseAsync(uiService.GetPanel(EUIPanelId.BattleLoadingkPanel).PanelId);
             
                 BattleStateMachine.ChangeState(EBattlePhase.EnterAnimation);
             }

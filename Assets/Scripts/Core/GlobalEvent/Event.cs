@@ -1,3 +1,5 @@
+using Core.Pool;
+
 namespace Core.GlobalEvent
 {
     /// <summary>
@@ -7,7 +9,7 @@ namespace Core.GlobalEvent
     /// 该抽象类实现了 <see cref="IEvent"/> 接口，为所有事件提供统一的基类定义，
     /// 确保事件体系的一致性和可扩展性。
     /// </remarks>
-    public abstract class Event : IEvent
+    public abstract class Event : IEvent, IPoolData
     {
         /// <summary>
         /// 重置事件对象的状态，用于事件对象池复用场景
@@ -19,6 +21,11 @@ namespace Core.GlobalEvent
         public virtual void ResetEvent()
         {
             // 基类默认无重置逻辑，由子类按需重写
+        }
+
+        void IPoolData.ResetData()
+        {
+            ResetEvent();
         }
     }
 }

@@ -1,13 +1,11 @@
 using System.Collections.Generic;
 using Core.Components;
 using Core.DI;
-using Core.Reflection;
 using Core.Utility;
 using HotUpdate.Base;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Object;
-using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.Toughness.CalcStrategy;
 using HotUpdate.Game.Battle.Toughness.ReduceStrategy;
 using HotUpdate.Game.Battle.Utility;
@@ -23,6 +21,8 @@ namespace HotUpdate.Game.Battle.Toughness
     [ComponentId(typeof(ToughnessComponent))] // 标记组件唯一标识，用于组件注册和获取
     public class ToughnessComponent : BattleComponent, IToughnessComponent
     {
+        [Inject] protected IToughnessStrategyFactory toughnessStrategyFactory;
+        
         // 当前韧性状态（封装了韧性值、最大值、弱点属性、破韧状态等核心数据）
         private ToughnessState _toughness;
         // 韧性扣除策略集合（不同规则的扣除判断逻辑，按优先级排序执行）
@@ -63,15 +63,11 @@ namespace HotUpdate.Game.Battle.Toughness
             (this as IToughnessComponent).Init(battleEntity, TextUtility.SplitToIntArr(monsterInfo.f_weaknesses, 2), monsterInfo.f_baseToughness);
 
             // 注册默认韧性扣除策略（从策略工厂获取）
-            var reduceStrategy = DIContainer.GetInstance<IFactoryManager>()
-                .GetFactory<IToughnessStrategyFactory, ToughnessStrategyFactory>()
-                .GetReduceStrategy<DefaultToughnessReduceStrategy>();
+            var reduceStrategy = toughnessStrategyFactory.GetReduceStrategy<DefaultToughnessReduceStrategy>();
             _toughnessReduceStrategies.Add(reduceStrategy);
             
             // 注册默认韧性计算策略（从策略工厂获取）
-            var calcStrategy = DIContainer.GetInstance<IFactoryManager>()
-                .GetFactory<IToughnessStrategyFactory, ToughnessStrategyFactory>()
-                .GetCalcStrategy<DefaultToughnessCalcStrategy>();
+            var calcStrategy = toughnessStrategyFactory.GetCalcStrategy<DefaultToughnessCalcStrategy>();
             _toughnessCalcStrategies.Add(calcStrategy);
         }
 

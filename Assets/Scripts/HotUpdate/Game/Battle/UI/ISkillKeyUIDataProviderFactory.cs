@@ -1,6 +1,6 @@
-using Core.Reflection;
+using HotUpdate.Base.Factory;
 
-namespace HotUpdate.Game.Battle.UI.SkillKey.Provider
+namespace HotUpdate.Game.Battle.UI
 {
     /// <summary>
     /// 技能按键UI数据提供器工厂接口

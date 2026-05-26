@@ -17,7 +17,6 @@ using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Status;
 using HotUpdate.Game.Battle.UI;
 using HotUpdate.Game.Battle.UI.FloatText;
-using HotUpdate.Game.Battle.UI.SkillKey.Provider;
 using HotUpdate.Game.Battle.UI.Status;
 using HotUpdate.Game.Battle.Utility;
 using HotUpdate.UI.Battle.ActionLine;
@@ -25,7 +24,7 @@ using UnityEngine;
 using BattlePointUI = HotUpdate.Game.Battle.UI.BattlePoint.BattlePointUI;
 using Logger = Core.Log.Logger;
 using Random = UnityEngine.Random;
-using SkillKeyUI = HotUpdate.Game.Battle.UI.SkillKey.SkillKeyUI;
+using SkillKeyUI = HotUpdate.UI.Battle.SkillKey.SkillKeyUI;
 using TaskUtility = Core.Utility.TaskUtility;
 
 namespace HotUpdate.UI.Battle.Base
@@ -425,17 +424,10 @@ namespace HotUpdate.UI.Battle.Base
         /// 设置技能操作区UI
         /// 传入null则清空操作区
         /// </summary>
-        /// <param name="skillKeyUIs">技能按键UI列表</param>
-        public void SetOperator(List<PoolObject<SkillKeyUI>> skillKeyUIs)
+        public void ClearOperator()
         {
-            if (skillKeyUIs == null)
-            {
-                // 清空操作区UI
-                _view.ClearOperator();
-                return;
-            }
-            // 设置操作区UI列表
-            _view.SetOperator(skillKeyUIs);
+            // 清空操作区UI
+            _view.ClearOperator();
         }
 
         /// <summary>
@@ -479,8 +471,8 @@ namespace HotUpdate.UI.Battle.Base
                 skillKeyUIs.Add(skillKeyUI);
             }
             
-            // 设置技能操作区UI
-            SetOperator(skillKeyUIs);
+            // 设置操作区UI列表
+            _view.SetOperator(skillKeyUIs);
         }
 
         /// <summary>

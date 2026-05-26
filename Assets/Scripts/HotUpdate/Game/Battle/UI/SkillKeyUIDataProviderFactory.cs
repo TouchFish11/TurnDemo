@@ -1,10 +1,9 @@
 using Core.DI;
 using Core.HotUpdate;
 using Core.Log;
-using Core.Reflection;
-using HotUpdate.Game.Battle.UI.SkillKey.Provider;
+using HotUpdate.Base.Factory;
 
-namespace HotUpdate.Game.Battle.UI.SkillKey
+namespace HotUpdate.Game.Battle.UI
 {
     /// <summary>
     /// 技能按键UI数据提供器工厂

@@ -32,7 +32,7 @@ namespace Core.Pool
         /// </summary>
         /// <typeparam name="T">类名</typeparam>
         /// <returns></returns>
-        T GetData<T>() where T : class, IPoolData, new();
+        T GetData<T>() where T : class, IPoolData;
         
         /// <summary>
         /// 清除指定资源缓存

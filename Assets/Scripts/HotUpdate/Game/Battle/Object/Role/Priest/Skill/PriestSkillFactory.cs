@@ -1,10 +1,11 @@
 using Core.DI;
-using Core.Reflection;
 using HotUpdate.Base;
+using HotUpdate.Base.Factory;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Factory;
 using HotUpdate.Game.Battle.Skill.Handler;
+using HotUpdate.Game.Core;
 
 namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
 {
@@ -18,24 +19,15 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
             switch (skillId)
             {
                 case 30:
-                    var handler = DIContainer.GetInstance<IFactoryManager>().
-                        GetFactory<ISkillCastPostHandlerFactory, SkillCastPostHandlerFactory>().
-                        GetSkillCastPostHandler<BaseSkillCastPostHandler>();
-                    
+                    var handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
                     var priestNormalSkill = DIContainer.Create<PriestNormalSkill>(parameterValues: new object[] { caster, skillId });
                     return new SkillData(priestNormalSkill, handler);
                 case 31:
-                    handler = DIContainer.GetInstance<IFactoryManager>().
-                        GetFactory<ISkillCastPostHandlerFactory, SkillCastPostHandlerFactory>().
-                        GetSkillCastPostHandler<BaseSkillCastPostHandler>();
-                    
+                    handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
                     var priestBattleSkill = DIContainer.Create<PriestBattleSkill>(parameterValues: new object[] { caster, skillId });
                     return new SkillData(priestBattleSkill, handler);
                 case 32:
-                    handler = DIContainer.GetInstance<IFactoryManager>().
-                        GetFactory<ISkillCastPostHandlerFactory, SkillCastPostHandlerFactory>().
-                        GetSkillCastPostHandler<BaseUltimateSkillCastPostHandler>();
-                    
+                    handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseUltimateSkillCastPostHandler>();
                     var priestUltimateSkill = DIContainer.Create<PriestUltimateSkill>(parameterValues: new object[] { caster, skillId });
                     return new SkillData(priestUltimateSkill, handler);
                 default:

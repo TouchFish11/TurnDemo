@@ -5,7 +5,7 @@ namespace Core.Pool
     /// <summary>
     /// 不继承Mono对象
     /// </summary>
-    public sealed class PoolData<T> : BasePoolData where T : class, IPoolData, new()
+    public sealed class PoolData<T> : BasePoolData where T : class, IPoolData
     {
         //存储未使用的数据对象队列
         private readonly Queue<T> _unUsedDatas = new();

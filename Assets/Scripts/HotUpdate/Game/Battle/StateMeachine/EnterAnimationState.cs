@@ -1,13 +1,14 @@
 using System.Collections;
 using Core.DI;
 using Core.Mono;
-using Core.UI;
 using Core.Utility;
 using HotUpdate.Base;
 using HotUpdate.Base.Manager;
+using HotUpdate.Base.UI;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Turn;
+using HotUpdate.Game.Battle.UI;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.StateMeachine
@@ -34,7 +35,7 @@ namespace HotUpdate.Game.Battle.StateMeachine
         
         private IEnumerator PlayEnterAnimation()
         {
-            var controller =  DIContainer.GetInstance<IUIManager>().GetController<BattleController>();
+            var controller = uiService.GetPanel(EUIPanelId.BattlePanel) as IBattleController;
             // 显示战斗开始协程
             controller.BattleUiManager.ShowBattleStart();
             

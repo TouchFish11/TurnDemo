@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Core.AssetBundles.Management;
 using Core.DI;
@@ -9,9 +8,7 @@ using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Component;
 using HotUpdate.Game.Battle.UI;
 using HotUpdate.Game.Battle.UI.Role;
-using HotUpdate.UI.Battle.MonsterStateUI;
 using UnityEngine;
-using Logger = Core.Log.Logger;
 
 namespace HotUpdate.UI.Battle.Base
 {
@@ -97,22 +94,10 @@ namespace HotUpdate.UI.Battle.Base
         /// <param name="battleEntities">怪物战斗实体集合</param>
         public async System.Threading.Tasks.Task InitMonsterUIs(IEnumerable<IBattleEntityObject> battleEntities)
         {
-            try
+            foreach (var battleEntity in battleEntities)
             {
-                foreach (var battleEntity in battleEntities)
-                {
-                    // 从资源包加载怪物状态UI预制体，并挂载到怪物UI区域
-                    var monsterStateUI = await _objectSpawner.SpawnAsync<NormalMonsterStateUI>(ResKeyCollection.MonsterStateUI, _view.MonsterStateArea);
-                    // 初始化怪物状态UI（传入战斗实体、UI挂载区域）
-                    await monsterStateUI.Obj.Init(battleEntity, _view.MonsterStateArea);
-                    // 将初始化后的怪物UI缓存
-                    _battleController.MonsterStateUIManager.AddNormalMonsterStateUI(battleEntity, monsterStateUI);
-                }
-            }
-            catch (Exception e)
-            {
-                // 捕获初始化过程中的异常并记录错误日志
-                Logger.LogError($"{nameof(BattleUIInitializer)}.{nameof(InitMonsterUIs)}: {e.Message}");
+                // 将初始化后的怪物UI缓存
+                await _battleController.MonsterStateUIManager.CreateNormalMonsterStateUI(battleEntity, _view.MonsterStateArea);
             }
         }
     }

@@ -12,7 +12,6 @@ using Core.Music;
 using Core.Net;
 using Core.Pool;
 using Core.PreLoad;
-using Core.Reflection;
 using Core.Res;
 using Core.Scene;
 using Core.Serialize.Binary;
@@ -44,20 +43,20 @@ namespace Core.Registration
             DIContainer.BindSingleton<IBinaryDataManager, BinaryDataManager>();
             DIContainer.BindSingleton<IEditorResManager, EditorResManager>();
             DIContainer.BindSingleton<IEventCenter, EventCenter>();
+            DIContainer.BindSingleton<IEventFactory, EventFactory>();
             DIContainer.BindSingleton<IInputSystem, InputSystem>();
             DIContainer.BindSingleton<IJsonManager, JsonManager>();
             DIContainer.BindSingleton<IMusicManager, MusicManager>();
             DIContainer.BindSingleton<IResourcesManager, ResourcesManager>();
             DIContainer.BindSingleton<ITimerManager, TimerManager>();
             DIContainer.BindSingleton<IVideoManager, VideoPlayManager>();
-            DIContainer.BindSingleton<IFactoryManager, FactoryManager>(); 
+            DIContainer.BindSingleton<ISceneManager, SceneManager>();
+            DIContainer.BindSingleton<IPreLoadManager, PreLoadManager>();
 #if UNITY_EDITOR
             DIContainer.BindSingleton<IHotUpdateManager, HotUpdateMockManager>();
 #else
             DIContainer.BindSingleton<IHotUpdateManager, HotUpdateManager>();
 #endif
-            DIContainer.BindSingleton<ISceneManager, SceneManager>();
-            DIContainer.BindSingleton<IPreLoadManager, PreLoadManager>();
             
             // 初始化AB包管理器
             var assetBundleManager = DIContainer.Create<AssetBundleManager>(parameterValues: new object[]

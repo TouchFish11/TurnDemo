@@ -5,13 +5,12 @@ using Core.DI;
 using Core.GlobalEvent;
 using Core.GlobalEvent.Events;
 using Core.Mono;
-using HotUpdate.Base.Animation;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Enums;
+using HotUpdate.Base.UI;
 using HotUpdate.Common;
 using HotUpdate.Game.Battle.Object.Role.Warrior;
 using HotUpdate.Game.Cameras;
-using HotUpdate.Game.Dialogue.UI;
 using HotUpdate.Game.Inputs;
 using HotUpdate.Game.Main.FloatingText;
 using HotUpdate.Game.Main.Move;
@@ -115,10 +114,7 @@ namespace HotUpdate.Game.Main.Player
 
         private bool OpenViewEventFilter(OpenViewEvent openViewEvent)
         {
-            return openViewEvent.UIController is not MainController &&
-                   openViewEvent.UIController is not DialogueController &&
-                   openViewEvent.UIController is not GlobalMessageController && 
-                   uidToEntityMap.ContainsKey(1001);
+            return openViewEvent.UIController is IBlockOperation blockOperation && blockOperation.BlockOperation && uidToEntityMap.ContainsKey(1001);
         }
         
         /// <summary>
@@ -133,10 +129,7 @@ namespace HotUpdate.Game.Main.Player
 
         private bool OpenViewEventFilter(CloseViewEvent closeViewEvent)
         {
-            return closeViewEvent.UIController is not MainController &&
-                   closeViewEvent.UIController is not DialogueController &&
-                   closeViewEvent.UIController is not GlobalMessageController &&
-                   uidToEntityMap.ContainsKey(1001);
+            return closeViewEvent.UIController is IBlockOperation blockOperation && blockOperation.BlockOperation && uidToEntityMap.ContainsKey(1001);
         }
     }
 }

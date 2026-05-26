@@ -1,4 +1,4 @@
-using Core.Reflection;
+using HotUpdate.Base.Factory;
 
 namespace HotUpdate.Game.Battle.Toughness
 {

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Core.DI;
 using Core.Log;
 using Core.Utility;
 using HotUpdate.Game.Battle.Core;
@@ -14,6 +15,9 @@ namespace HotUpdate.Game.Battle.Skill.Component
     /// </summary>
     public abstract class SkillComponent : BattleComponent, ISkillComponent
     {
+        [Inject] protected ICastSkillConditionFactory castSkillConditionFactory;
+        [Inject] protected ITargetSelectStrategyFactory targetSelectStrategyFactory;
+        
         // 技能数据字典：Key为技能ID，Value为对应的技能数据对象，用于快速索引技能
         protected readonly Dictionary<int, ISkillData> skillDatas = new();
         // 施法条件集合：存储当前技能组件生效的所有施法条件，施法前需校验所有条件

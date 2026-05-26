@@ -38,7 +38,7 @@ namespace Core.HotUpdate
                         continue;
                     
                     _assemblyNames.Add(assembly.GetName().Name);
-                    Logger.Log($"{nameof(HotUpdateMockManager)}.{nameof(LoadAssembliesAsync)}:Editor found hotfix dll({dllText.name})");
+                    Logger.Log($"{nameof(HotUpdateMockManager)}.{nameof(LoadAssembliesAsync)}: Editor found hotfix dll({dllText.name})");
                 }
             }
             return Task.CompletedTask;

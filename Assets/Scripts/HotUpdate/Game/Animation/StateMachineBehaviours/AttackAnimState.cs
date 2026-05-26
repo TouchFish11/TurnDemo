@@ -1,5 +1,5 @@
-using HotUpdate.Game.Main;
 using HotUpdate.Game.Main.Move;
+using HotUpdate.Game.Main.Player;
 using UnityEngine;
 
 namespace HotUpdate.Game.Animation.StateMachineBehaviours
@@ -11,24 +11,24 @@ namespace HotUpdate.Game.Animation.StateMachineBehaviours
     {
         public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            if (animator.GetComponentInParent<IMainPlayer>() == null || animator.GetComponentInParent<IMainPlayer>().GetComponent<IMoveComponent>() == null)
+            if (!animator.GetComponentInParent<MainPlayer>() || animator.GetComponentInParent<MainPlayer>().GetComponent<IMoveComponent>() == null)
             {
                 return;
             }
 
             // �����ƶ�
-            animator.GetComponentInParent<IMainPlayer>().GetComponent<IMoveComponent>().SetMoveFlag(false);
+            animator.GetComponentInParent<MainPlayer>().GetComponent<IMoveComponent>().SetMoveFlag(false);
         }
 
         public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            if (animator.GetComponentInParent<IMainPlayer>() == null || animator.GetComponentInParent<IMainPlayer>().GetComponent<IMoveComponent>() == null)
+            if (!animator.GetComponentInParent<MainPlayer>() || animator.GetComponentInParent<MainPlayer>().GetComponent<IMoveComponent>() == null)
             {
                 return;
             }
 
             // ����ƶ�
-            animator.GetComponentInParent<IMainPlayer>().GetComponent<IMoveComponent>().SetMoveFlag(true);
+            animator.GetComponentInParent<MainPlayer>().GetComponent<IMoveComponent>().SetMoveFlag(true);
         }
     }
 }

@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using HotUpdate.Base;
 using HotUpdate.Common.Config.ExcelInfo.Info;
-using HotUpdate.Game.Battle.Object;
 
-namespace HotUpdate.Game.Battle.UI.SkillKey
+namespace HotUpdate.Game.Battle.UI
 {
     /// <summary>
     /// 技能按键UI数据结构体

@@ -1,7 +1,6 @@
 using HotUpdate.Base;
-using HotUpdate.Game.Battle.Object;
 
-namespace HotUpdate.Game.Battle.UI.SkillKey.Provider
+namespace HotUpdate.Game.Battle.UI
 {
     /// <summary>
     /// 技能按键UI数据提供器接口

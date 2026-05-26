@@ -3,7 +3,7 @@ using Core.UI.ViewController;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace HotUpdate.Game.Main.Global.UI
+namespace HotUpdate.UI.Global.UI
 {
     /// <summary>
     /// ȫ����Ϣ����
