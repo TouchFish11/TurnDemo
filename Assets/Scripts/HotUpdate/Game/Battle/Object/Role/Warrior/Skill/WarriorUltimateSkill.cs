@@ -2,10 +2,9 @@ using System.Collections;
 using Core.DI;
 using Core.Utility;
 using HotUpdate.Base;
-using HotUpdate.Base.Animation;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Utility;
-using HotUpdate.Common;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.VFX;
@@ -44,7 +43,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill
             vFXInfo = new VFXInfo();
             
             // 创建终结技前置POSE特效（展示特效）
-            await DIContainer.GetInstance<IVFXManager>().CreateVFX(ResKeyCollection.VFX_WarriorUltimatePose, projectileTrans, projectileData, vFXInfo);
+            await DIContainer.GetInstance<IVFXManager>().CreateVFX(AssetKeys.VFX_WarriorUltimatePose, projectileTrans, projectileData, vFXInfo);
         }
 
         /// <summary>
@@ -74,7 +73,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill
             
             // 创建终结技核心攻击特效
             yield return TaskUtility.WaitForTask(DIContainer.GetInstance<IVFXManager>().CreateVFX(
-                ResKeyCollection.VFX_WarriorUltimateSkill,
+                AssetKeys.VFX_WarriorUltimateSkill,
                 projectileTrans, projectileData, vFXInfo));
             
             // 等待动画播放到90%（确保特效播放完成）

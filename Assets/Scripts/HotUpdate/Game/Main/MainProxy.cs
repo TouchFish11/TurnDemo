@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Core.DI;
 using Core.Scene;
 using HotUpdate.Base.Scene;
-using HotUpdate.Common;
+using HotUpdate.Common.Generated;
 using UnityEngine.SceneManagement;
 using Logger = Core.Log.Logger;
 
@@ -14,8 +14,6 @@ namespace HotUpdate.Game.Main
     /// </summary>
     public class MainProxy
     {
-        [Inject] private static ISceneGenerator _sceneGenerator;
-        
         /// <summary>
         /// 游戏启动入口方法
         /// </summary>
@@ -23,31 +21,12 @@ namespace HotUpdate.Game.Main
         {
             try
             {
-                await LoadSceneAsync();
                 await CreatePlayerAsync();
                 await CreateInitPanelAsync();
             }
             catch (Exception e)
             {
                 Logger.LogError($"{nameof(MainProxy)}.{nameof(Init)}：初始化错误，{e.Message}");
-            }
-        }
-
-        /// <summary>
-        /// 异步加载主场景
-        /// </summary>
-        private static async Task LoadSceneAsync()
-        {
-            try
-            {
-                // 切换到主场景
-                await DIContainer.GetInstance<ISceneManager>().LoadSceneAsync(ResKeyCollection.MainScene, LoadSceneMode.Single, null);
-                // 初始化场景
-                await _sceneGenerator.InitMainScene();
-            }
-            catch (Exception e)
-            {
-                Logger.LogError($"{nameof(MainProxy)}.{nameof(LoadSceneAsync)}: 加载主场景错误，{e.Message}");
             }
         }
 
@@ -76,11 +55,11 @@ namespace HotUpdate.Game.Main
             // // 初始化全局消息界面
             // await DIContainer.GetInstance<IUIManager>()
             //     .CreateViewAsync<GlobalMessageView, GlobalMessageModel, GlobalMessageController>(AbKeyCollection.Ui,
-            //         E_UILayer.Bot, ResKeyCollection.GlobalMessageView, new Vector2(0, 299));
+            //         E_UILayer.Bot, AssetKeys.GlobalMessageView, new Vector2(0, 299));
             // // 初始化主界面
             // await DIContainer.GetInstance<IUIManager>()
             //     .CreateViewAsync<MainView, MainModel, MainController>(AbKeyCollection.Ui, 
-            //         E_UILayer.Mid, ResKeyCollection.MainView);
+            //         E_UILayer.Mid, AssetKeys.MainView);
         }
     }
 }

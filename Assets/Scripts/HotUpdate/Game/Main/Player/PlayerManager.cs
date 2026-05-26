@@ -8,7 +8,7 @@ using Core.Mono;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Enums;
 using HotUpdate.Base.UI;
-using HotUpdate.Common;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Battle.Object.Role.Warrior;
 using HotUpdate.Game.Cameras;
 using HotUpdate.Game.Inputs;
@@ -60,7 +60,7 @@ namespace HotUpdate.Game.Main.Player
             // 添加主玩家核心逻辑组件
             var main = mainObj.AddComponent<MainPlayer>();
             // 从资源包加载战士预制体，并挂载到玩家节点下
-            var warriorObj = await _objectSpawner.SpawnAsync<GameObject>(ResKeyCollection.Prefab_Main_Warrior, main.transform);
+            var warriorObj = await _objectSpawner.SpawnAsync<GameObject>(AssetKeys.Prefab_Main_Warrior, main.transform);
             // 给战士预制体添加战士逻辑组件，并关联到主玩家
             var warrior = warriorObj.Obj.AddComponent<Warrior>();
             // 初始化主玩家基础数据（参数1为示例配置ID）
@@ -97,7 +97,7 @@ namespace HotUpdate.Game.Main.Player
 
         private async Task CreateMainCamera()
         {
-            var poolObject = await _objectSpawner.SpawnAsync<OrbitCameraController>(ResKeyCollection.MainCamera);
+            var poolObject = await _objectSpawner.SpawnAsync<OrbitCameraController>(AssetKeys.MainCamera);
             _cameraController = poolObject.Obj;
         }
 

@@ -3,11 +3,10 @@ using Core.DI;
 using Core.Pool;
 using Core.Utility;
 using HotUpdate.Base;
-using HotUpdate.Base.Animation;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Utility;
-using HotUpdate.Common;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Layer;
@@ -84,7 +83,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill
         private async void CreateVFX_01()
         {
             // 创建特效
-            await DIContainer.GetInstance<IVFXManager>().CreateVFX(ResKeyCollection.VFX_AbyssLockSkillProjectile, projectileTrans, projectileData, vFXInfo);
+            await DIContainer.GetInstance<IVFXManager>().CreateVFX(AssetKeys.VFX_AbyssLockSkillProjectile, projectileTrans, projectileData, vFXInfo);
         }
     }
 }

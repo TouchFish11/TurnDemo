@@ -7,6 +7,7 @@ using Core.Utility;
 using HotUpdate.Base.Manager;
 using HotUpdate.Common;
 using HotUpdate.Common.Config.Activity;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Activity.Core;
 using HotUpdate.UI.Activity.Base;
 using UnityEngine;
@@ -34,13 +35,13 @@ namespace HotUpdate.UI.Activity.EmbersCanon
             var activityDataCollection = _activityDataManager.ActivityDataCollection as ActivityDataCollection;
             // 获取该活动数据
             var embersCanonData = activityDataCollection[activityInfo.f_id] as EmbersCanonData;
-            using var handle = await GameAsset.LoadAssetAsync<TextAsset>(ResKeyCollection.BattleActivityConfig);
+            using var handle = await GameAsset.LoadAssetAsync<TextAsset>(AssetKeys.BattleActivityConfig);
             // 解析该活动的关卡配置
             var battleActivityConfig = DIContainer.GetInstance<IJsonManager>().FromJson<BattleActivityConfig>(handle.Asset.text, settings: NewtonsoftJsonUtility.SerializerSettings);
             // 初始化关卡
             foreach (var battleConfigEntry in battleActivityConfig.BattleConfigEntryColletion.battleConfigs)
             {
-                var battleLevelUI = await _objectSpawner.SpawnAsync<BattleLevelUI>(ResKeyCollection.BattleLevelUI, svLevel.content);
+                var battleLevelUI = await _objectSpawner.SpawnAsync<BattleLevelUI>(AssetKeys.BattleLevelUI, svLevel.content);
                 // 获取用户数据中的战斗关卡条目
                 var levelEntryData = embersCanonData.GetLevelData(battleConfigEntry.levelId);
                 // 新增数据
@@ -51,7 +52,7 @@ namespace HotUpdate.UI.Activity.EmbersCanon
                 }
 
                 // 根据是否完成使用不同的Sprite
-                var levelTipIconRes = levelEntryData.isComplete ? ResKeyCollection.Icon_Common_Check : ResKeyCollection.Icon_Common_Battle;
+                var levelTipIconRes = levelEntryData.isComplete ? AssetKeys.Icon_Common_Check : AssetKeys.Icon_Common_Battle;
                 var icon = await GameAsset.LoadAssetAsync<Sprite>(levelTipIconRes);
                 // 初始化关卡UI
                 battleLevelUI.Obj.Init(battleConfigEntry.levelName, icon.Asset, levelEntryData.isComplete);

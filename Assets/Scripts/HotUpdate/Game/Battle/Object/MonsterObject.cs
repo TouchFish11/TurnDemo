@@ -2,14 +2,12 @@ using System.Collections;
 using Core.DI;
 using Core.Serialize.Binary;
 using Core.Utility;
-using HotUpdate.Base;
-using HotUpdate.Base.Animation;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Enums;
 using HotUpdate.Base.Utility;
-using HotUpdate.Common;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Common.Config.ExcelInfo.Info;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Event.UI;
@@ -107,7 +105,7 @@ namespace HotUpdate.Game.Battle.Object
             // 创建并播放怪物死亡特效
             // 参数说明：特效资源Key → 特效挂载节点 → 投射数据（关联当前怪物）→ 特效信息（用于后续判断）
             yield return TaskUtility.WaitForTask(DIContainer.GetInstance<IVFXManager>().CreateVFX(
-                ResKeyCollection.VFX_MonsterDead,
+                AssetKeys.VFX_MonsterDead,
                 new ProjectileTrans(transform, false),
                 new ProjectileData(this, null, null, null),
                 vFXInfo));

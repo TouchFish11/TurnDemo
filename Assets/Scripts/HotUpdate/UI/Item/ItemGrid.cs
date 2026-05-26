@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace HotUpdate.Common.Item.UI
+namespace HotUpdate.UI.Item
 {
     /// <summary>
     /// 物品格子

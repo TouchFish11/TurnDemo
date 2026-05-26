@@ -6,7 +6,7 @@ using Core.Scene;
 using Core.UI;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.UI;
-using HotUpdate.Common;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Event;
@@ -16,8 +16,6 @@ using HotUpdate.Game.Battle.TargetSelect;
 using HotUpdate.Game.Battle.Turn;
 using HotUpdate.Game.Inputs;
 using HotUpdate.Game.Point;
-using UnityEngine;
-using UnityEngine.U2D;
 using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.Battle.Core
@@ -98,7 +96,7 @@ namespace HotUpdate.Game.Battle.Core
             }
             
             // 加载战斗场景
-            await _sceneManager.LoadSceneAsync(ResKeyCollection.LevelScene, UnityEngine.SceneManagement.LoadSceneMode.Single, battleLoadingController.UpdateProgress);
+            await _sceneManager.LoadSceneAsync(AssetKeys.LevelScene, UnityEngine.SceneManagement.LoadSceneMode.Single, battleLoadingController.UpdateProgress);
             // 隐藏主界面
             await _uiManager.SetViewActive(_mainControllerId, false);
             // 预加载资源
@@ -125,23 +123,23 @@ namespace HotUpdate.Game.Battle.Core
             var preLoadDatas = new PreLoadData[]
             {
                 // GameObject
-                new(ResKeyCollection.Prefab_Warrior),
-                new(ResKeyCollection.Prefab_Wizard),
-                new(ResKeyCollection.Prefab_Slime),
-                new(ResKeyCollection.Prefab_TurtleShell),
-                new(ResKeyCollection.Prefab_TurtleShell),
+                new(AssetKeys.Prefab_Warrior),
+                new(AssetKeys.Prefab_Wizard),
+                new(AssetKeys.Prefab_Slime),
+                new(AssetKeys.Prefab_TurtleShell),
+                new(AssetKeys.Prefab_TurtleShell),
                 
                 // UI
-                new(ResKeyCollection.SelectMarkerUI),
-                new(ResKeyCollection.MonsterStateUI),
-                new(ResKeyCollection.RoleStateUI),
-                new(ResKeyCollection.ActionGridUI),
-                new(ResKeyCollection.WaitingActUI),
-                new(ResKeyCollection.SkillKeyUI),
+                new(AssetKeys.SelectMarkerUI),
+                new(AssetKeys.MonsterStateUI),
+                new(AssetKeys.RoleStateUI),
+                new(AssetKeys.ActionGridUI),
+                new(AssetKeys.WaitingActUI),
+                new(AssetKeys.SkillKeyUI),
                 
                 // SpriteAtlas
-                new(ResKeyCollection.Atlas_Icon_BattleEntity),
-                new(ResKeyCollection.BrightIcons),
+                new(AssetKeys.Atlas_Icon_BattleEntity),
+                new(AssetKeys.BrightIcons),
             };
             
             await DIContainer.GetInstance<IPreLoadManager>().PreLoads(preLoadDatas);

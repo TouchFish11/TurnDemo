@@ -1,4 +1,4 @@
-namespace HotUpdate.Common.Item
+namespace HotUpdate.UI.Item
 {
     /// <summary>
     /// 物品品质

@@ -1,7 +1,6 @@
 using Core.Components;
 using Core.DI;
 using Core.Input.ActionAsset;
-using HotUpdate.Base.Animation;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Dialogue;
 using HotUpdate.Base.Enums;

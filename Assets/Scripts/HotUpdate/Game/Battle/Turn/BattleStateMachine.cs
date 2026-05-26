@@ -75,7 +75,7 @@ namespace HotUpdate.Game.Battle.Turn
         // {
         //     //currentMonsterCount = _context.GetAliveMonsterEntitys().Count();
         //     // 创建战斗界面
-        //     var battleController = await DIContainer.GetInstance<IUIManager>().CreateViewAsync<BattleView, BattleModel,BattleController>(E_UILayer.Mid, ResKeyCollection.BattleView);
+        //     var battleController = await DIContainer.GetInstance<IUIManager>().CreateViewAsync<BattleView, BattleModel,BattleController>(E_UILayer.Mid, AssetKeys.BattleView);
         //     // 注册战斗界面UI调度器，依赖于战斗控制器
         //     DIContainer.GetInstance.Register<IBattleUIScheduler>(BattleUIScheduler.Instance); 
         //     // 显示战斗UI

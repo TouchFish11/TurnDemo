@@ -3,7 +3,6 @@ using Core.Components;
 using Core.DI;
 using Core.GlobalEvent;
 using HotUpdate.Base.Component;
-using HotUpdate.Base.Dialogue;
 using HotUpdate.Base.Manager;
 using HotUpdate.Game.Inputs;
 

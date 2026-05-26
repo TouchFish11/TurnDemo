@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using HotUpdate.Base;
 using HotUpdate.Common.Config.ExcelInfo.Info;
-using HotUpdate.Game.Battle.Object;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.TargetSelect.Strategys

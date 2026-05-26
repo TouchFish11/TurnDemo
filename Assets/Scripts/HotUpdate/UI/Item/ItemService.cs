@@ -5,11 +5,11 @@ using Core.DI;
 using Core.Serialize.Binary;
 using Core.Utility;
 using HotUpdate.Common.Config.ExcelInfo.Container;
-using HotUpdate.Common.Item.UI;
+using HotUpdate.Common.Generated;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
-namespace HotUpdate.Common.Item
+namespace HotUpdate.UI.Item
 {
     /// <summary>
     /// 物品工具类
@@ -39,7 +39,7 @@ namespace HotUpdate.Common.Item
 
                 foreach (var pair in itemInfos)
                 {
-                    var poolObject = await _objectSpawner.SpawnAsync<ItemGrid>(ResKeyCollection.ItemGrid, parent);
+                    var poolObject = await _objectSpawner.SpawnAsync<ItemGrid>(AssetKeys.ItemGrid, parent);
                     // 获取UI
                     var itemGrid = poolObject.Obj;
                     // 读取配置
@@ -75,7 +75,7 @@ namespace HotUpdate.Common.Item
             
                 foreach (var pair in itemInfos)
                 {
-                    var poolObject = await _objectSpawner.SpawnAsync<ItemGrid>(ResKeyCollection.ItemGrid);
+                    var poolObject = await _objectSpawner.SpawnAsync<ItemGrid>(AssetKeys.ItemGrid);
                     // 获取UI
                     var itemGrid = poolObject.Obj;
                     // 读取配置

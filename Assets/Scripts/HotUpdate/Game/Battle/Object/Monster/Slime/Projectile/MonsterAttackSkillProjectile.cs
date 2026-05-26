@@ -1,10 +1,8 @@
 using System.Collections;
 using Core.DI;
-using HotUpdate.Base.Factory;
-using HotUpdate.Common;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Battle.Projectile;
 using HotUpdate.Game.Battle.Status;
-using HotUpdate.Game.Core;
 using HotUpdate.Game.VFX;
 using UnityEngine;
 
@@ -62,7 +60,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.Slime.Projectile
             {
                 var projectileTrans = new ProjectileTrans(target.GameObject.transform.position + Vector3.up * 0.5f, Quaternion.identity);
                 var vfxInfo = new VFXInfo();
-                await DIContainer.GetInstance<IVFXManager>().CreateVFX(ResKeyCollection.VFX_MonsterHit, projectileTrans, default, vfxInfo);
+                await DIContainer.GetInstance<IVFXManager>().CreateVFX(AssetKeys.VFX_MonsterHit, projectileTrans, default, vfxInfo);
             }
         }
 

@@ -9,9 +9,10 @@ using Core.Utility;
 using HotUpdate.Base.Collection;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Settings;
-using HotUpdate.Common;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Common.Config.ExcelInfo.Info;
+using HotUpdate.Common.Config.Settings;
+using HotUpdate.Common.Generated;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
@@ -57,7 +58,7 @@ namespace HotUpdate.Game.Main.Data
             });
             
             // 加载二进制配置
-            await _binaryDataManager.LoadConfigAsync(AbKeyCollection.Gameconfig);
+            await _binaryDataManager.LoadConfigAsync(AssetBundleKeys.Gameconfig);
             Logger.Log($"配置数据加载成功");
             
             // 读取本地音乐数据
@@ -80,7 +81,7 @@ namespace HotUpdate.Game.Main.Data
             GameSettings = await _jsonManager.FromJsonAsync<GameSettings>($"{PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingFileName)}", settings:NewtonsoftJsonUtility.SerializerSettings);
             
             // 读取游戏设置数据配置
-            using var handle = await GameAsset.LoadAssetAsync<TextAsset>(ResKeyCollection.GameSettingsConfig);
+            using var handle = await GameAsset.LoadAssetAsync<TextAsset>(AssetKeys.GameSettingsConfig);
             GameSettingsConfig = _jsonManager.FromJson<GameSettingsConfig>(handle.Asset.text);
         }
 

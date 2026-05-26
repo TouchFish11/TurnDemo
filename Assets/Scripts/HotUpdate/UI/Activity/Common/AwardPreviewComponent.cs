@@ -1,6 +1,6 @@
 using Core.DI;
-using HotUpdate.Common.Item.UI;
 using HotUpdate.UI.Activity.Base;
+using HotUpdate.UI.Item;
 using UnityEngine.UI;
 
 namespace HotUpdate.Activity.UI.Common

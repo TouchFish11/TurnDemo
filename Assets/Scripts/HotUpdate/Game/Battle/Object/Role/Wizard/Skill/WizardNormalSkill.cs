@@ -2,10 +2,9 @@ using System.Collections;
 using Core.DI;
 using Core.Utility;
 using HotUpdate.Base;
-using HotUpdate.Base.Animation;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Utility;
-using HotUpdate.Common;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.VFX;
@@ -63,7 +62,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard.Skill
             
             // 创建普攻特效（从资源配置中获取普攻特效资源）
             yield return TaskUtility.WaitForTask(DIContainer.GetInstance<IVFXManager>()
-                .CreateVFX(ResKeyCollection.VFX_WizardNormalSkill, projectileTrans, projectileData, vFXInfo));
+                .CreateVFX(AssetKeys.VFX_WizardNormalSkill, projectileTrans, projectileData, vFXInfo));
             
             // 等待动画播放至90%且特效已结束，确保技能流程完整结束
             yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).normalizedTime >= 0.9f && !vFXInfo.IsAlive);

@@ -5,6 +5,7 @@ using Core.UI;
 using Core.UI.ViewController;
 using HotUpdate.Base.UI;
 using HotUpdate.Common;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Dialogue.UI;
 using HotUpdate.Game.Main.Back;
 using HotUpdate.Game.Main.Loading.Battle;
@@ -31,27 +32,27 @@ namespace HotUpdate.UI
             switch (panelId)
             {
                 case EUIPanelId.MainPanel: 
-                   controller = await _uiManager.CreateViewAsync<MainView, MainController>(ResKeyCollection.MainView, layer);
+                   controller = await _uiManager.CreateViewAsync<MainView, MainController>(AssetKeys.MainView, layer);
                    break;
                 case EUIPanelId.BagPanel:
                     break;
                 case EUIPanelId.BattlePanel:
-                    controller = await _uiManager.CreateViewAsync<BattleView, BattleController>(ResKeyCollection.BattleView, layer);
+                    controller = await _uiManager.CreateViewAsync<BattleView, BattleController>(AssetKeys.BattleView, layer);
                     break;
                 case EUIPanelId.ActivityPanel:
-                    controller = await _uiManager.CreateViewAsync<ActivityView, ActivityController>(ResKeyCollection.ActivityView, layer);
+                    controller = await _uiManager.CreateViewAsync<ActivityView, ActivityController>(AssetKeys.ActivityView, layer);
                     break;
                 case EUIPanelId.QuestPanel:
-                    controller = await _uiManager.CreateViewAsync<TaskView, TaskController>(ResKeyCollection.QuestView, layer);
+                    controller = await _uiManager.CreateViewAsync<TaskView, TaskController>(AssetKeys.QuestView, layer);
                     break;
                 case EUIPanelId.DialoguePanel:
-                    controller = await _uiManager.CreateViewAsync<DialogueView, DialogueController>(ResKeyCollection.DialogueView, layer);
+                    controller = await _uiManager.CreateViewAsync<DialogueView, DialogueController>(AssetKeys.DialogueView, layer);
                     break;
                 case EUIPanelId.BattleLoadingkPanel:
-                    controller = await _uiManager.CreateViewAsync<BattleLoadingView, BattleLoadingController>(ResKeyCollection.BattleLoadingView, layer);
+                    controller = await _uiManager.CreateViewAsync<BattleLoadingView, BattleLoadingController>(AssetKeys.BattleLoadingView, layer);
                     break;
                 case EUIPanelId.BlackBackPanel:
-                    controller = await _uiManager.CreateViewAsync<BackView, BackController>(ResKeyCollection.BackView, layer);
+                    controller = await _uiManager.CreateViewAsync<BackView, BackController>(AssetKeys.BackView, layer);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(panelId), panelId, null);

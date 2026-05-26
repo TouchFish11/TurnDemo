@@ -1,4 +1,5 @@
 using Core.SO;
+using HotUpdate.Common.Config.Settings;
 using UnityEngine;
 
 namespace HotUpdate.Base.Settings

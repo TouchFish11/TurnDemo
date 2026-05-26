@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Core.DI;
 using Core.HotUpdate;
-using HotUpdate.Base.Factory;
+using HotUpdate.Base.Utility;
 
 namespace HotUpdate.Game.Activity.Core
 {

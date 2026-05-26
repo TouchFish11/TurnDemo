@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
 using Core.DI;
-using Core.HotUpdate;
-using Core.Log;
-using HotUpdate.Base.Factory;
+using HotUpdate.Base.Manager;
 using HotUpdate.Game.Activity.Core;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Skill;

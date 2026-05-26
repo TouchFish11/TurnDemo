@@ -7,6 +7,7 @@ using Core.Time;
 using Core.UI.ViewController;
 using HotUpdate.Base.UI;
 using HotUpdate.Common;
+using HotUpdate.Common.Generated;
 
 namespace HotUpdate.UI.Global.UI
 {
@@ -65,7 +66,7 @@ namespace HotUpdate.UI.Global.UI
         {
             try
             {
-                var poolObject = await _objectSpawner.SpawnAsync<MessageUI>(ResKeyCollection.MessageUI, view.MessageContainer);
+                var poolObject = await _objectSpawner.SpawnAsync<MessageUI>(AssetKeys.MessageUI, view.MessageContainer);
                 poolObject.Obj.InitMessage(msg);
                 _timerManager.CreateTimer(false, (int)(Duration * 1000), () => poolObject.Collect());
             }

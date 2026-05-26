@@ -5,7 +5,7 @@ using Core.DI;
 using Core.HotUpdate;
 using Core.Log;
 using HotUpdate.Base.Data;
-using HotUpdate.Base.Factory;
+using HotUpdate.Base.Utility;
 
 namespace HotUpdate.Game.Activity.Core
 {

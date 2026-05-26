@@ -11,6 +11,7 @@ using HotUpdate.Common;
 using HotUpdate.Common.Config.Activity;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Common.Config.ExcelInfo.Info;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Activity.Core;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Turn;
@@ -48,7 +49,7 @@ namespace HotUpdate.UI.Activity.Base
             // 创建UI
             foreach (var activityInfo in infoDic.Values)
             {
-                var poolObject = await _objectSpawner.SpawnAsync<ActivityUI>(ResKeyCollection.ActivityUI, view.SvActivityContent);
+                var poolObject = await _objectSpawner.SpawnAsync<ActivityUI>(AssetKeys.ActivityUI, view.SvActivityContent);
                 var activityUI = poolObject.Obj;
                 // 加载图标
                 var handle = await GameAsset.LoadAssetAsync<Sprite>(activityInfo.f_bkUi_Res);
@@ -95,7 +96,7 @@ namespace HotUpdate.UI.Activity.Base
 
         private async Task ChangedScene()
         {
-            await _sceneManager.LoadSceneAsync(ResKeyCollection.MainScene, UnityEngine.SceneManagement.LoadSceneMode.Single, null);
+            await _sceneManager.LoadSceneAsync(AssetKeys.MainScene, UnityEngine.SceneManagement.LoadSceneMode.Single, null);
             await _sceneGenerator.InitMainScene();
         }
 

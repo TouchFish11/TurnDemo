@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Core.Collection;
 using HotUpdate.Base.Collection;
-using HotUpdate.Base.Quest;
 using HotUpdate.Common.Config.Quest;
 using Newtonsoft.Json;
 

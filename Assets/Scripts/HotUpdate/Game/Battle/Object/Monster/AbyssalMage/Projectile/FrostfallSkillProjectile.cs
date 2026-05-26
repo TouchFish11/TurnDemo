@@ -1,8 +1,7 @@
 using Core.DI;
 using Core.Pool;
 using Core.Time;
-using HotUpdate.Base.Factory;
-using HotUpdate.Common;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Battle.Projectile;
 using HotUpdate.Game.Battle.Status;
 using HotUpdate.Game.VFX;
@@ -47,7 +46,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Projectile
             {
                 var projectileTrans = new ProjectileTrans(target.GameObject.transform.position, Quaternion.identity);
                 var newVFXInfo = DIContainer.GetInstance<IPoolManager>().GetData<VFXInfo>();
-                await DIContainer.GetInstance<IVFXManager>().CreateVFX(ResKeyCollection.VFX_IcePropertySkill_Hit, projectileTrans, default, newVFXInfo);
+                await DIContainer.GetInstance<IVFXManager>().CreateVFX(AssetKeys.VFX_IcePropertySkill_Hit, projectileTrans, default, newVFXInfo);
                 DIContainer.GetInstance<ITimerManager>().CreateTimer(false, 500, () =>
                 {
                     newVFXInfo.IsStop = true;

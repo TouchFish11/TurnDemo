@@ -10,6 +10,7 @@ using HotUpdate.Base;
 using HotUpdate.Base.Manager;
 using HotUpdate.Common;
 using HotUpdate.Common.Config.ExcelInfo.Info;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Object;
@@ -145,7 +146,7 @@ namespace HotUpdate.UI.Battle.Base
         public async void ShowBattleMessage(string msg)
         {
             // 从资源包异步加载战斗提示UI预制体
-            var battleMessageUIWrapper= await _objectSpawner.SpawnAsync<BattleMessageUI>(ResKeyCollection.BattleMessageUI, _view.BattleMsgArea);
+            var battleMessageUIWrapper= await _objectSpawner.SpawnAsync<BattleMessageUI>(AssetKeys.BattleMessageUI, _view.BattleMsgArea);
             // 初始化提示文本（红色字体）
             battleMessageUIWrapper.Obj.InitMessage(Color.red, msg);
         }
@@ -158,7 +159,7 @@ namespace HotUpdate.UI.Battle.Base
         public async void ShowDamageText(DamageResult damageResult)
         {
             // 从资源包异步加载伤害文本UI预制体
-            var damageTextUI = await _objectSpawner.SpawnAsync<DamageTextUI>(ResKeyCollection.DamageTextUI);
+            var damageTextUI = await _objectSpawner.SpawnAsync<DamageTextUI>(AssetKeys.DamageTextUI);
             // 获取伤害文本的显示偏移位置（随机偏移）
             var dmgTextOffset = GetDamageTextUIPos(damageResult.Target, textXOffsetRange, textYOffsetRange);
 
@@ -195,7 +196,7 @@ namespace HotUpdate.UI.Battle.Base
             try
             {
                 // 从资源包异步加载护盾文本UI预制体
-                var shieldTextUI = await _objectSpawner.SpawnAsync<ShieldTextUI>(ResKeyCollection.ShieldTextUI);
+                var shieldTextUI = await _objectSpawner.SpawnAsync<ShieldTextUI>(AssetKeys.ShieldTextUI);
                 // 获取护盾文本的显示偏移位置（随机偏移）
                 var dmgTextOffset = GetDamageTextUIPos(target, textXOffsetRange, textYOffsetRange);
             
@@ -233,7 +234,7 @@ namespace HotUpdate.UI.Battle.Base
         public async void ShowHealText(IBattleEntityObject target, int healAmount)
         {
             // 从资源包异步加载治疗文本UI预制体
-            var healTextUI = await _objectSpawner.SpawnAsync<HealTextUI>(ResKeyCollection.HealTextUI);
+            var healTextUI = await _objectSpawner.SpawnAsync<HealTextUI>(AssetKeys.HealTextUI);
             // 获取治疗文本的显示偏移位置（随机偏移）
             var dmgTextOffset = GetDamageTextUIPos(target, textXOffsetRange, textYOffsetRange);
             
@@ -267,7 +268,7 @@ namespace HotUpdate.UI.Battle.Base
             try
             {
                 // 从资源包异步加载状态文本UI预制体
-                var statusEffectTextUI = await _objectSpawner.SpawnAsync<StatusEffectTextUI>(ResKeyCollection.StatusEffectTextUI);
+                var statusEffectTextUI = await _objectSpawner.SpawnAsync<StatusEffectTextUI>(AssetKeys.StatusEffectTextUI);
                 // 计算状态文本显示位置
                 if (UIUtility.WorldToLocalPointInRectangle(
                         _battleCameraManager.CurrentActiveCameraPoolObject.Obj, 
@@ -314,7 +315,7 @@ namespace HotUpdate.UI.Battle.Base
                 foreach (var battleEntity in battleEntities)
                 {
                     // 异步加载等待行动UI预制体
-                    var waitingActUIWrapper = await _objectSpawner.SpawnAsync<WaitingActUI>(ResKeyCollection.WaitingActUI, _view.WaitQueueContent);
+                    var waitingActUIWrapper = await _objectSpawner.SpawnAsync<WaitingActUI>(AssetKeys.WaitingActUI, _view.WaitQueueContent);
                     // 获取实体对应的图标名称
                     var iconName = GetIconByEntity(battleEntity);
                     // 加载图标精灵并初始化UI
@@ -348,7 +349,7 @@ namespace HotUpdate.UI.Battle.Base
                 foreach (var battleEntity in battleEntities)
                 {
                     // 异步加载行动格子UI预制体
-                    var actionGridUI = await _objectSpawner.SpawnAsync<ActionGridUI>(ResKeyCollection.ActionGridUI, _view.ActionBarContent);
+                    var actionGridUI = await _objectSpawner.SpawnAsync<ActionGridUI>(AssetKeys.ActionGridUI, _view.ActionBarContent);
                     // 获取实体对应的图标名称
                     var iconName = GetIconByEntity(battleEntity);
                     // 加载图标精灵
@@ -465,7 +466,7 @@ namespace HotUpdate.UI.Battle.Base
             foreach (var info in infos)
             {
                 // 异步加载技能按键UI预制体
-                var skillKeyUI = await _objectSpawner.SpawnAsync<SkillKeyUI>(ResKeyCollection.SkillKeyUI, _view.OperatorArea);
+                var skillKeyUI = await _objectSpawner.SpawnAsync<SkillKeyUI>(AssetKeys.SkillKeyUI, _view.OperatorArea);
                 // 初始化技能按键UI
                 skillKeyUI.Obj.Init(info, _view.SkillKeyGroup, currentObject);
                 skillKeyUIs.Add(skillKeyUI);
@@ -494,7 +495,7 @@ namespace HotUpdate.UI.Battle.Base
             foreach (var battleEntity in selectedTargets)
             {
                 // 异步加载目标标记UI预制体
-                var selectMarkerUI = await _objectSpawner.SpawnAsync<SelectMarkerUI>(ResKeyCollection.SelectMarkerUI);
+                var selectMarkerUI = await _objectSpawner.SpawnAsync<SelectMarkerUI>(AssetKeys.SelectMarkerUI);
                 // 初始化目标标记
                 selectMarkerUI.Obj.InitSelectMarker(battleEntity, skillTargetType, _view.SelectMarkerArea);
                 // 缓存标记
@@ -517,7 +518,7 @@ namespace HotUpdate.UI.Battle.Base
             for (var i = 0; i < max; i++)
             {
                 // 异步加载战斗点数UI预制体
-                var battlePointUIWrapper = await _objectSpawner.SpawnAsync<BattlePointUI>( ResKeyCollection.BattlePointUI, _view.PointContent);
+                var battlePointUIWrapper = await _objectSpawner.SpawnAsync<BattlePointUI>( AssetKeys.BattlePointUI, _view.PointContent);
                 // 设置点数激活状态（i < current 表示已解锁）
                 battlePointUIWrapper.Obj.SetActivePoint(i < current);
                 battlePointUIs.Add(battlePointUIWrapper);

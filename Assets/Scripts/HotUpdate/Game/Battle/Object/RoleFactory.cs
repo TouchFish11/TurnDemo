@@ -2,8 +2,7 @@ using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
 using HotUpdate.Base;
-using HotUpdate.Base.Factory;
-using HotUpdate.Common;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Battle.Object.Role.Priest;
 using HotUpdate.Game.Battle.Object.Role.Warrior;
 using HotUpdate.Game.Battle.Object.Role.Wizard;
@@ -27,9 +26,9 @@ namespace HotUpdate.Game.Battle.Object
         {
             return roleId switch
             {
-                1 => (await _obectSpawner.SpawnAsync<Warrior>(ResKeyCollection.Prefab_Warrior, parent, worldSpace:stay)).Obj,
-                2 => (await _obectSpawner.SpawnAsync<Wizard>(ResKeyCollection.Prefab_Wizard, parent, worldSpace:stay)).Obj,
-                3 => (await _obectSpawner.SpawnAsync<Priest>(ResKeyCollection.Prefab_Priest, parent, worldSpace:stay)).Obj,
+                1 => (await _obectSpawner.SpawnAsync<Warrior>(AssetKeys.Prefab_Warrior, parent, worldSpace:stay)).Obj,
+                2 => (await _obectSpawner.SpawnAsync<Wizard>(AssetKeys.Prefab_Wizard, parent, worldSpace:stay)).Obj,
+                3 => (await _obectSpawner.SpawnAsync<Priest>(AssetKeys.Prefab_Priest, parent, worldSpace:stay)).Obj,
                 _ => null
             };
         }

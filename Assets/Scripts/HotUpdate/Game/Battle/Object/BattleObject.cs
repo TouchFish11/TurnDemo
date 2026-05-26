@@ -5,7 +5,6 @@ using HotUpdate.Base.Object;
 using HotUpdate.Game.Battle.Command;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage;
-using HotUpdate.Game.Battle.Damage.Data;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.ResponsibilityChain;

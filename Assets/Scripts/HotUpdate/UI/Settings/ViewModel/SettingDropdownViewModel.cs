@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Core.UI;
 using HotUpdate.Base.Settings;
+using HotUpdate.Common.Config.Settings;
 
 namespace HotUpdate.UI.Settings.ViewModel
 {

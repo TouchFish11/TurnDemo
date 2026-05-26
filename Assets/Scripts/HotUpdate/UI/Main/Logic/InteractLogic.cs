@@ -6,6 +6,7 @@ using Core.GlobalEvent;
 using Core.Log;
 using HotUpdate.Base.Interact;
 using HotUpdate.Common;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Interact;
 using HotUpdate.Game.Interact.UI;
 using HotUpdate.Game.Main.UI.Logic;
@@ -52,7 +53,7 @@ namespace HotUpdate.UI.Main.Logic
                 foreach (var interactable in interactables)
                 {
                     // 从UI资源包中异步加载交互UI预制体并实例化
-                    var interactUI = await _objectSpawner.SpawnAsync<InteractUI>(ResKeyCollection.InteractUI, mainView.InteractContent);
+                    var interactUI = await _objectSpawner.SpawnAsync<InteractUI>(AssetKeys.InteractUI, mainView.InteractContent);
                     // 初始化交互UI的显示数据（设置发言者/交互对象名称）
                     interactUI.Obj.Init(interactable.NpcInfo.f_speakerName);
                     list.Add(interactUI);

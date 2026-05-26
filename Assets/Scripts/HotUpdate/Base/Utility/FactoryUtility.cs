@@ -4,9 +4,8 @@ using System.Reflection;
 using Core.Components;
 using Core.DI;
 using Core.HotUpdate;
-using Core.Log;
 
-namespace HotUpdate.Base.Factory
+namespace HotUpdate.Base.Utility
 {
     /// <summary>
     /// 工厂工具类

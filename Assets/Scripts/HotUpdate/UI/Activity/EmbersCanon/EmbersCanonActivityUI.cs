@@ -3,8 +3,9 @@ using Core.AssetBundles.Management;
 using Core.DI;
 using HotUpdate.Activity.UI.Common;
 using HotUpdate.Common;
-using HotUpdate.Common.Item;
+using HotUpdate.Common.Generated;
 using HotUpdate.UI.Activity.Base;
+using HotUpdate.UI.Item;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
@@ -74,7 +75,7 @@ namespace HotUpdate.UI.Activity.EmbersCanon
             try
             {
                 // 创建关卡界面到活动界面下
-                var subActivityUi = await _objectSpawner.SpawnAsync<EmbersCanonSubActivityUI_01>(ResKeyCollection.EmbersCanonSubActivityUI_01,
+                var subActivityUi = await _objectSpawner.SpawnAsync<EmbersCanonSubActivityUI_01>(AssetKeys.EmbersCanonSubActivityUI_01,
                     activityView);
                 // 初始化关卡子界面
                 //subActivityUi.Obj.Init(activityId, activityInfo);

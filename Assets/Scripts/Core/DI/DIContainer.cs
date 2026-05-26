@@ -168,8 +168,8 @@ namespace Core.DI
         /// 通过反射创建实例。先尝试构造函数注入（选择参数都能解析的构造函数），再对标记了[Inject]的字段/属性进行补充注入
         /// 若类型已经通过BindSingleton绑定，则忽略参数isSingleton
         /// </summary>
-        /// <param name="interfaceType">实例类型</param>
-        /// <param name="instanceType"></param>
+        /// <param name="interfaceType">接口类型</param>
+        /// <param name="instanceType">实例类型</param>
         /// <param name="isSingleton">是否是单例，true创建为单例，false则是瞬态对象</param>
         /// <param name="constructorArgs">构造参数</param>
         /// <returns>新类型实例</returns>

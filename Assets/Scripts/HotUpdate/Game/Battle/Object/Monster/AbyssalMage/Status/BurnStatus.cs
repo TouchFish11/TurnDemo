@@ -2,12 +2,11 @@ using Core.DI;
 using Core.Pool;
 using Core.Time;
 using HotUpdate.Base;
-using HotUpdate.Common;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage.Data;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Event.UI;
-using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.Status;
 using HotUpdate.Game.VFX;
 using UnityEngine;
@@ -40,7 +39,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Status
             var vfxInfo = DIContainer.GetInstance<IPoolManager>().GetData<VFXInfo>();
             var pos = Owner.GameObject.transform.position + Vector3.forward * 0.5f;
             pos = new Vector3(pos.x, 0.5f, pos.z);
-            await DIContainer.GetInstance<IVFXManager>().CreateVFX(ResKeyCollection.VFX_Dot_Burn, 
+            await DIContainer.GetInstance<IVFXManager>().CreateVFX(AssetKeys.VFX_Dot_Burn, 
                 null, pos, Quaternion.identity, vfxInfo);
 
             DIContainer.GetInstance<ITimerManager>().CreateTimer(false, 500, () =>

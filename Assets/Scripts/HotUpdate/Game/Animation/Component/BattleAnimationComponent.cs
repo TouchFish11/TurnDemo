@@ -2,7 +2,6 @@ using Core.Components;
 using Core.DI;
 using Core.Serialize.Binary;
 using HotUpdate.Base;
-using HotUpdate.Base.Animation;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Enums;
 using HotUpdate.Base.Utility;

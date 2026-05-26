@@ -8,6 +8,7 @@ using Core.Utility;
 using HotUpdate.Base;
 using HotUpdate.Base.Manager;
 using HotUpdate.Common;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Object;
@@ -115,7 +116,7 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
             foreach (var elementType in toughnessComponent.WeakPropertys)
             {
                 // 从资源包加载弱点UI预制体，并挂载到弱点容器下
-                var weaknessIconObj = await _objectSpawner.SpawnAsync<GameObject>(ResKeyCollection.WeaknessUI, WeaknessBar);
+                var weaknessIconObj = await _objectSpawner.SpawnAsync<GameObject>(AssetKeys.WeaknessUI, WeaknessBar);
                 var weaknessIcon = weaknessIconObj.Obj.GetComponent<Image>();
                 // 设置弱点图标颜色（根据元素类型转换为对应颜色）
                 weaknessIcon.color = ((int)elementType).ToElementTypeColor();

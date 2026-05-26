@@ -1,7 +1,6 @@
 using Core.Components;
 using Core.DI;
 using Core.Serialize.Binary;
-using HotUpdate.Base.Dialogue;
 using HotUpdate.Base.Interact;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Object;

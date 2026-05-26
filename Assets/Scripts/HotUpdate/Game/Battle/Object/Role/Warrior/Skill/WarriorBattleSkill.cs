@@ -2,10 +2,9 @@ using System.Collections;
 using Core.DI;
 using Core.Utility;
 using HotUpdate.Base;
-using HotUpdate.Base.Animation;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Utility;
-using HotUpdate.Common;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.VFX;
@@ -60,7 +59,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill
             yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).IsName(battleAttackState));
             // 创建战技特效
             yield return TaskUtility.WaitForTask(DIContainer.GetInstance<IVFXManager>()
-                .CreateVFX(ResKeyCollection.VFX_WarriorBattleSkill, projectileTrans, projectileData, vFXInfo));
+                .CreateVFX(AssetKeys.VFX_WarriorBattleSkill, projectileTrans, projectileData, vFXInfo));
             // 等待动画播放到90%且特效已结束
             yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).normalizedTime >= 0.9f && !vFXInfo.IsAlive);
         }

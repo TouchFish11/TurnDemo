@@ -2,10 +2,9 @@ using System.Collections;
 using Core.DI;
 using Core.Utility;
 using HotUpdate.Base;
-using HotUpdate.Base.Animation;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Utility;
-using HotUpdate.Common;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.VFX;
@@ -61,7 +60,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill
             projectileTrans = new ProjectileTrans(Caster.GameObject.transform.position, Quaternion.identity);
             vFXInfo = new VFXInfo();
             yield return TaskUtility.WaitForTask(DIContainer.GetInstance<IVFXManager>()
-                .CreateVFX(ResKeyCollection.VFX_NormalSkill_Wave, projectileTrans, default, vFXInfo));
+                .CreateVFX(AssetKeys.VFX_NormalSkill_Wave, projectileTrans, default, vFXInfo));
 
             // 动画匹配目标位置（让角色朝向/移动到目标位置）
             var matchPos = MainTarget.GameObject.transform.position - Vector3.forward * 1.5f; // 目标前1.5米位置
@@ -77,7 +76,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill
             projectileData = new ProjectileData(Caster, MainTarget, AllTargets, this);
             vFXInfo = new VFXInfo();
             yield return TaskUtility.WaitForTask(DIContainer.GetInstance<IVFXManager>()
-                .CreateVFX(ResKeyCollection.VFX_WarriorNormalSkill, projectileTrans, projectileData, vFXInfo));
+                .CreateVFX(AssetKeys.VFX_WarriorNormalSkill, projectileTrans, projectileData, vFXInfo));
 
             // 等待动画播放到90%且特效结束
             yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).normalizedTime >= 0.9f && !vFXInfo.IsAlive);

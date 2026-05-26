@@ -2,7 +2,7 @@ using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Pool;
 using HotUpdate.Base.Scene;
-using HotUpdate.Common;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Cameras;
 using HotUpdate.Game.Interact;
 using HotUpdate.Game.Main;
@@ -32,13 +32,13 @@ namespace HotUpdate.Game.Scene
         public async Task InitMainScene()
         {
             // 创建村民NPC对象
-            var villager = await _objectSpawner.SpawnAsync<NpcObject>(ResKeyCollection.Prefab_Npc);
+            var villager = await _objectSpawner.SpawnAsync<NpcObject>(AssetKeys.Prefab_Npc);
             villager.Obj.Transform.SetPositionAndRotation(new Vector3(0, 1, 8.39f), Quaternion.identity);
             // 初始化NPC基础属性（参数为NPC配置ID，对应配置表）
             villager.Obj.InitNpc(1);
 
             // 创建流浪汉NPC对象
-            var Vagrant = await _objectSpawner.SpawnAsync<NpcObject>(ResKeyCollection.Prefab_Npc);
+            var Vagrant = await _objectSpawner.SpawnAsync<NpcObject>(AssetKeys.Prefab_Npc);
             Vagrant.Obj.Transform.SetPositionAndRotation(new Vector3(6.94f, 1, 8.39f), Quaternion.identity);
             Vagrant.Obj.InitNpc(2);
         }

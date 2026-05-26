@@ -1,5 +1,4 @@
 using Core.Components;
-using HotUpdate.Base.Interact;
 using UnityEngine;
 
 namespace HotUpdate.Game.Interact

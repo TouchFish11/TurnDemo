@@ -7,6 +7,7 @@ using Core.UI;
 using Core.UI.ViewController;
 using HotUpdate.Base.UI;
 using HotUpdate.Common;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Main.UI.Logic;
 using HotUpdate.UI.Main.Logic;
 using HotUpdate.UI.Quests;
@@ -105,7 +106,7 @@ namespace HotUpdate.Game.Main.UI
                         
                         break;
                     case "btnSettings":
-                        await uiManager.CreateViewAsync<SettingsView, SettingsController>(ResKeyCollection.SettingsView, E_UILayer.Mid);
+                        await uiManager.CreateViewAsync<SettingsView, SettingsController>(AssetKeys.SettingsView, E_UILayer.Mid);
                         break;
                 }
             }

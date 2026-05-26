@@ -2,7 +2,7 @@ using Core.DI;
 using Core.Pool;
 using Core.Time;
 using HotUpdate.Base;
-using HotUpdate.Common;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Status;
 using HotUpdate.Game.VFX;
@@ -30,7 +30,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Status
             var vfxInfo = DIContainer.GetInstance<IPoolManager>().GetData<VFXInfo>();
             var pos = Owner.GameObject.transform.position;
             pos = new Vector3(pos.x, 0.5f, pos.z);
-            await DIContainer.GetInstance<IVFXManager>().CreateVFX(ResKeyCollection.VFX_Heal, 
+            await DIContainer.GetInstance<IVFXManager>().CreateVFX(AssetKeys.VFX_Heal, 
                 null, pos, Quaternion.identity, vfxInfo);
 
             DIContainer.GetInstance<ITimerManager>().CreateTimer(false, 700, () =>

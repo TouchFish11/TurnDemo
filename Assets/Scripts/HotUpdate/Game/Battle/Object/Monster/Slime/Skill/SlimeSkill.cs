@@ -3,10 +3,9 @@ using System.Text;
 using Core.DI;
 using Core.Pool;
 using HotUpdate.Base;
-using HotUpdate.Base.Animation;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Utility;
-using HotUpdate.Common;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Animation.Core;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Skill.Base;
@@ -52,7 +51,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.Slime.Skill
             }
             
             // 创建普攻特效：从资源配置中获取普攻特效资源并生成
-            await DIContainer.GetInstance<IVFXManager>().CreateVFX(ResKeyCollection.VFX_MonsterAttackSkill, projectileTrans, projectileData, vFXInfo);
+            await DIContainer.GetInstance<IVFXManager>().CreateVFX(AssetKeys.VFX_MonsterAttackSkill, projectileTrans, projectileData, vFXInfo);
         }
 
         /// <summary>

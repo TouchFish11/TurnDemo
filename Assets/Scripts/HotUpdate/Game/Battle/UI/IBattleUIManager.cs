@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Core.AssetBundles.Management;
 using HotUpdate.Base;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Context;

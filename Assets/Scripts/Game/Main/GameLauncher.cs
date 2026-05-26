@@ -65,7 +65,7 @@ namespace Game.Main
             hotUpdateManager.LoadMetadataForAOTAssemblies(AOTGenericReferences.PatchedAOTAssemblyList);  
             // 加载所有热更程序集
             await hotUpdateManager.LoadAssembliesAsync(settings, list);
-            Logger.Log($"{nameof(GameLauncher)}: Load the hotfix assemblies complete");
+            Logger.Log($"{nameof(GameLauncher)}: Load the hotfix assemblies complete!!!");
         }
         
         /// <summary>

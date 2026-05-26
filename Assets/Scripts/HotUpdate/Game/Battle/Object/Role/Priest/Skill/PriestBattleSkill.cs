@@ -5,7 +5,7 @@ using Core.Utility;
 using HotUpdate.Base;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Utility;
-using HotUpdate.Common;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.VFX;
@@ -63,7 +63,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
             
             // 通过特效管理器创建牧师战技特效
             yield return TaskUtility.WaitForTask(DIContainer.GetInstance<IVFXManager>()
-                .CreateVFX(ResKeyCollection.VFX_Priest_BattleSkill, projectileTrans, projectileData, vFXInfo));
+                .CreateVFX(AssetKeys.VFX_Priest_BattleSkill, projectileTrans, projectileData, vFXInfo));
             
             // 等待动画播放进度达到90%以上，且特效已播放完毕，确保技能的动画和特效都完成后再结束技能流程，避免流程提前终止导致表现异常
             yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).normalizedTime >= 0.9f && !vFXInfo.IsAlive);

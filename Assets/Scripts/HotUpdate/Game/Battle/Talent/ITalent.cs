@@ -1,6 +1,4 @@
 using HotUpdate.Base;
-using HotUpdate.Game.Battle.Event;
-using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.Talent
 {

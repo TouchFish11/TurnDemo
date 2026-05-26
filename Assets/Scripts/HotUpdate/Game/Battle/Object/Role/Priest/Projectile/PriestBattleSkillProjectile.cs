@@ -1,9 +1,7 @@
 using Core.DI;
 using Core.Time;
-using HotUpdate.Base.Factory;
 using HotUpdate.Game.Battle.Projectile;
 using HotUpdate.Game.Battle.Status;
-using HotUpdate.Game.Core;
 
 namespace HotUpdate.Game.Battle.Object.Role.Priest.Projectile
 {

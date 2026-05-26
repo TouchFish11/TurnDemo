@@ -5,9 +5,9 @@ using Core.DI;
 using Core.Log;
 using Core.Serialize.Binary;
 using Core.UI;
-using HotUpdate.Common;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Common.Config.ExcelInfo.Info;
+using HotUpdate.Common.Generated;
 using UnityEngine.UI;
 
 namespace HotUpdate.Game.Dialogue.UI
@@ -89,7 +89,7 @@ namespace HotUpdate.Game.Dialogue.UI
             foreach (var dialogueInfo in historicalDialogueInfos)
             {
                 // 从资源包异步加载对话回顾UI预制体，并挂载到滚动容器的内容节点下
-                var poolObject = await _objectSpawner.SpawnAsync<DialogueReviewUI>(ResKeyCollection.DialogueReviewUI, svReview.content);
+                var poolObject = await _objectSpawner.SpawnAsync<DialogueReviewUI>(AssetKeys.DialogueReviewUI, svReview.content);
                 
                 // 从二进制数据管理器中获取NPC配置容器，根据说话者ID查询NPC信息
                 var npcInfo = DIContainer.GetInstance<IBinaryDataManager>()

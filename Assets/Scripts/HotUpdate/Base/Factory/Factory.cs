@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Core.DI;
 using Core.HotUpdate;
 using Core.Log;
+using HotUpdate.Base.Utility;
 
 namespace HotUpdate.Base.Factory
 {

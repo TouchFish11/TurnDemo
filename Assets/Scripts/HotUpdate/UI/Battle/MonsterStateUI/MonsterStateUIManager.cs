@@ -5,6 +5,7 @@ using Core.DI;
 using Core.Pool;
 using HotUpdate.Base;
 using HotUpdate.Common;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Battle.UI;
 using UnityEngine;
 
@@ -29,7 +30,7 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
         public async Task CreateNormalMonsterStateUI(IBattleEntityObject monsterObject, RectTransform monsterStateArea)
         {
             // 从资源包加载怪物状态UI预制体，并挂载到怪物UI区域
-            var monsterStateUI = await _objectSpawner.SpawnAsync<NormalMonsterStateUI>(ResKeyCollection.MonsterStateUI, monsterStateArea);
+            var monsterStateUI = await _objectSpawner.SpawnAsync<NormalMonsterStateUI>(AssetKeys.MonsterStateUI, monsterStateArea);
             // 初始化怪物状态UI（传入战斗实体、UI挂载区域）
             await monsterStateUI.Obj.Init(monsterObject, monsterStateArea);
             normalMonsterStateUIs.Add(monsterObject, monsterStateUI);

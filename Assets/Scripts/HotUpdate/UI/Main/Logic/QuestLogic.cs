@@ -6,6 +6,7 @@ using Core.Utility;
 using HotUpdate.Base.Manager;
 using HotUpdate.Common;
 using HotUpdate.Common.Config.Quest.Config;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Main.UI;
 using HotUpdate.Game.Main.UI.Logic;
 using UnityEngine;
@@ -28,7 +29,7 @@ namespace HotUpdate.UI.Main.Logic
         {
             try
             {
-                using var handle = await GameAsset.LoadAssetAsync<TextAsset>(ResKeyCollection.QuestConfig);
+                using var handle = await GameAsset.LoadAssetAsync<TextAsset>(AssetKeys.QuestConfig);
                 var questConfig = _jsonManager.FromJson<QuestConfig>(handle.Asset.text, settings: NewtonsoftJsonUtility.SerializerSettings);
                 
                 // 初始化任务管理器

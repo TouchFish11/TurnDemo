@@ -8,13 +8,12 @@ using Core.Mono.MonoFunction;
 using Core.Serialize.Binary;
 using Core.UI;
 using Core.Utility;
-using HotUpdate.Base.Dialogue;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Settings;
-using HotUpdate.Common;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Common.Events;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Dialogue.UI;
 using UnityEngine;
 using Logger = Core.Log.Logger;
@@ -78,7 +77,7 @@ namespace HotUpdate.Game.Dialogue
                 }
 
                 // 加载并创建对话UI，获取控制器
-                dialogueController = await _uiManager.CreateViewAsync<DialogueView, DialogueController>(ResKeyCollection.DialogueView, E_UILayer.Mid);
+                dialogueController = await _uiManager.CreateViewAsync<DialogueView, DialogueController>(AssetKeys.DialogueView, E_UILayer.Mid);
                 // 标记对话为进行中
                 IsDialogueActive = true;
                 // 触发对话开始事件

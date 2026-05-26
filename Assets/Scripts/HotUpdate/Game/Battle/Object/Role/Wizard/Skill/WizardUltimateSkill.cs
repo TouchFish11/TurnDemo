@@ -2,10 +2,9 @@ using System.Collections;
 using Core.DI;
 using Core.Utility;
 using HotUpdate.Base;
-using HotUpdate.Base.Animation;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Utility;
-using HotUpdate.Common;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.VFX;
@@ -43,7 +42,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard.Skill
             // 初始化特效信息容器
             vFXInfo = new VFXInfo();
             // 创建释放姿势的特效
-            await DIContainer.GetInstance<IVFXManager>().CreateVFX(ResKeyCollection.VFX_WizardUltimatePose, projectileTrans, projectileData, vFXInfo);
+            await DIContainer.GetInstance<IVFXManager>().CreateVFX(AssetKeys.VFX_WizardUltimatePose, projectileTrans, projectileData, vFXInfo);
         }
 
         /// <summary>
@@ -67,7 +66,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard.Skill
             projectileTrans = new ProjectileTrans(MainTarget.GameObject.transform.position, Quaternion.identity);
             // 创建终结技核心特效（命中目标处）
             yield return TaskUtility.WaitForTask(DIContainer.GetInstance<IVFXManager>()
-                .CreateVFX(ResKeyCollection.VFX_WizardUltimateSkill, projectileTrans, projectileData, vFXInfo));
+                .CreateVFX(AssetKeys.VFX_WizardUltimateSkill, projectileTrans, projectileData, vFXInfo));
             
             // 等待动画播放到90%且特效已结束，确保技能流程完成
             yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).normalizedTime >= 0.9f && !vFXInfo.IsAlive);

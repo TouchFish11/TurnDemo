@@ -1,4 +1,3 @@
-using HotUpdate.Base;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Object.Role.Wizard.Skill;
 using HotUpdate.Game.Battle.Skill.Component;

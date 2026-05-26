@@ -10,7 +10,8 @@ using HotUpdate.Base.Manager;
 using HotUpdate.Common;
 using HotUpdate.Common.Config.Quest;
 using HotUpdate.Common.Config.Quest.Config;
-using HotUpdate.Common.Item;
+using HotUpdate.Common.Generated;
+using HotUpdate.UI.Item;
 using UnityEngine;
 
 namespace HotUpdate.UI.Quests
@@ -147,7 +148,7 @@ namespace HotUpdate.UI.Quests
                 throw new NullReferenceException($"{nameof(_questCollection)} is null");
             
             // AB包加载资源
-            using var handle = await GameAsset.LoadAssetAsync<TextAsset>(ResKeyCollection.QuestConfig);
+            using var handle = await GameAsset.LoadAssetAsync<TextAsset>(AssetKeys.QuestConfig);
             // 解析Json
             QuestConfig = DIContainer.GetInstance<IJsonManager>().FromJson<QuestConfig>(handle.Asset.text, settings:NewtonsoftJsonUtility.SerializerSettings);
             
@@ -186,7 +187,7 @@ namespace HotUpdate.UI.Quests
         private async Task<QuestTypeContainer> CreateQuestTypeContainer(EQuestType questType)
         {
             // 从资源包中异步加载任务类型容器预制体并创建实例
-            var poolObject = await _objectSpawner.SpawnAsync<QuestTypeContainer>(ResKeyCollection.QuestTypeContainer, view.TaskContent);
+            var poolObject = await _objectSpawner.SpawnAsync<QuestTypeContainer>(AssetKeys.QuestTypeContainer, view.TaskContent);
             // 初始化任务类型容器（设置对应的任务类型）
             poolObject.Obj.Init(questType);
             // 将创建的容器添加到模型中管理
@@ -204,7 +205,7 @@ namespace HotUpdate.UI.Quests
         private async Task CreateTaskItem(QuestConfig.QuestItem questItem, QuestData questData, QuestTypeContainer container)
         {
             // 从资源包中异步加载任务项预制体，并挂载到对应任务类型容器的Transform下
-            var poolObject = await _objectSpawner.SpawnAsync<TaskItem>(ResKeyCollection.QuestItem, container.transform);
+            var poolObject = await _objectSpawner.SpawnAsync<TaskItem>(AssetKeys.QuestItem, container.transform);
             // 注册任务项选中事件，选中时更新任务详情展示
             poolObject.Obj.OnSelectedTask += UpdateQuestDetail;
             // 初始化任务项UI（传入任务信息和任务分组组件）

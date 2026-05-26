@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace HotUpdate.Base.Settings
+namespace HotUpdate.Common.Config.Settings
 {
     /// <summary>
     /// 游戏设置配置，定义可供选择的设置类型和内容

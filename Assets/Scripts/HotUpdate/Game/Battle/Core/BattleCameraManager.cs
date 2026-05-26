@@ -5,7 +5,7 @@ using Core.Mono;
 using Core.Mono.MonoFunction;
 using HotUpdate.Base;
 using HotUpdate.Base.Manager;
-using HotUpdate.Common;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Battle.Event;
 using HotUpdate.Game.Battle.Inputs;
 using HotUpdate.Game.Battle.TargetSelect;
@@ -59,7 +59,7 @@ namespace HotUpdate.Game.Battle.Core
                 CurrentActiveCameraPoolObject = default;
             }
             
-            CurrentActiveCameraPoolObject = await _objectSpawner.SpawnAsync<Camera>(ResKeyCollection.BattleCamera, cameraTrans);
+            CurrentActiveCameraPoolObject = await _objectSpawner.SpawnAsync<Camera>(AssetKeys.BattleCamera, cameraTrans);
             CurrentActiveCameraPoolObject.Obj.transform.SetLocalPositionAndRotation(localPos, localRot);
             
             // 初始化当前旋转角度为相机初始角度
@@ -76,7 +76,7 @@ namespace HotUpdate.Game.Battle.Core
                 CurrentActiveCameraPoolObject = default;
             }
             
-            CurrentActiveCameraPoolObject = await _objectSpawner.SpawnAsync<Camera>(ResKeyCollection.BattleCamera, cameraTrans);
+            CurrentActiveCameraPoolObject = await _objectSpawner.SpawnAsync<Camera>(AssetKeys.BattleCamera, cameraTrans);
             CurrentActiveCameraPoolObject.Obj.transform.SetLocalPositionAndRotation(localPos, localRot);
             // 设置遮罩
             SetMask(CurrentActiveCameraPoolObject.Obj, mask);

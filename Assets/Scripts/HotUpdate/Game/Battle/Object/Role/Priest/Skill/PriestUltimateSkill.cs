@@ -5,7 +5,7 @@ using HotUpdate.Base;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.UI;
 using HotUpdate.Base.Utility;
-using HotUpdate.Common;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Skill.Base;
@@ -35,7 +35,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
             projectileTrans = new ProjectileTrans(Caster.GameObject.transform.position, Quaternion.identity);
             vFXInfo = poolManager.GetData<VFXInfo>();
             //
-            await vfxManager.CreateVFX(ResKeyCollection.VFX_Priest_UltimatePose, projectileTrans, projectileData, vFXInfo);
+            await vfxManager.CreateVFX(AssetKeys.VFX_Priest_UltimatePose, projectileTrans, projectileData, vFXInfo);
         }
 
         protected override IEnumerator OnUltimateCast(IBattleContext context)
@@ -100,7 +100,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
             projectileTrans = new ProjectileTrans(pos, Quaternion.identity);
             vFXInfo = poolManager.GetData<VFXInfo>();
             // 创建终结技核心特效（命中目标处）
-            await vfxManager.CreateVFX(ResKeyCollection.VFX_Priest_UltiamteSkill, projectileTrans, projectileData, vFXInfo);
+            await vfxManager.CreateVFX(AssetKeys.VFX_Priest_UltiamteSkill, projectileTrans, projectileData, vFXInfo);
         }
     }
 }

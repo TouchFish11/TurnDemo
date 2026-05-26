@@ -3,6 +3,7 @@ using Core.AssetBundles.Management;
 using Core.DI;
 using HotUpdate.Base;
 using HotUpdate.Common;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Component;
@@ -48,7 +49,7 @@ namespace HotUpdate.UI.Battle.Base
             foreach (var battleEntity in battleEntities)
             {
                 // 从资源包加载角色状态UI预制体，并挂载到玩家UI区域
-                var roleStateUI = await _objectSpawner.SpawnAsync<RoleStateUI>(ResKeyCollection.RoleStateUI, _view.PlayerArea);
+                var roleStateUI = await _objectSpawner.SpawnAsync<RoleStateUI>(AssetKeys.RoleStateUI, _view.PlayerArea);
 
                 // 获取当前实体的技能组件，用于查找必杀技
                 var skillComponent = battleEntity.GetComponent<SkillComponent>();

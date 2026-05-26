@@ -5,7 +5,6 @@ using Core.Serialize.Json;
 using Core.Utility;
 using HotUpdate.Base.Collection;
 using HotUpdate.Base.Manager;
-using HotUpdate.Base.Quest;
 
 namespace HotUpdate.Game.Quests.Data
 {

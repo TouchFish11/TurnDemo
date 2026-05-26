@@ -2,8 +2,6 @@ using System.Collections.Generic;
 using Core.Log;
 using HotUpdate.Base;
 using HotUpdate.Game.Battle.Core;
-using HotUpdate.Game.Battle.Event;
-using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.Talent
 {

@@ -5,6 +5,7 @@ namespace HotUpdate.Base.UI
     /// </summary>
     public enum EUIPanelId
     {
+        BeginPanel,
         MainPanel,
         BagPanel,
         BattlePanel,

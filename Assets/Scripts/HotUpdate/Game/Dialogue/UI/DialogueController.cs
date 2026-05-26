@@ -4,11 +4,10 @@ using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Mono;
 using Core.UI.ViewController;
-using HotUpdate.Base.Dialogue;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.UI;
-using HotUpdate.Common;
 using HotUpdate.Common.Config.ExcelInfo.Info;
+using HotUpdate.Common.Generated;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
@@ -221,7 +220,7 @@ namespace HotUpdate.Game.Dialogue.UI
                 foreach (var branchInfo in branchInfos)
                 {
                     // 从资源包异步加载分支选项UI预制体，并挂载到对话框节点下
-                    var optUIPoolObject = await _objectSpawner.SpawnAsync<DialogueOptUI>(ResKeyCollection.DialogueOptUI, view.DialogueOptBox);
+                    var optUIPoolObject = await _objectSpawner.SpawnAsync<DialogueOptUI>(AssetKeys.DialogueOptUI, view.DialogueOptBox);
                     
                     // 初始化分支选项UI
                     optUIPoolObject.Obj.Init(branchInfo);

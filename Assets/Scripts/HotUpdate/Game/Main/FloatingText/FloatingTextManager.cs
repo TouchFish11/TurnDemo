@@ -4,7 +4,7 @@ using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Mono;
 using HotUpdate.Base.Interact;
-using HotUpdate.Common;
+using HotUpdate.Common.Generated;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
@@ -75,7 +75,7 @@ namespace HotUpdate.Game.Main.FloatingText
                             npcObject.IsShowFloatingText = true;
                             
                             // 从对象池/资源加载浮动文本对象
-                            var floatingTextObj = await _objectSpawner.SpawnAsync<FloatingTextObj>(ResKeyCollection.UI_3D_FloatingText);
+                            var floatingTextObj = await _objectSpawner.SpawnAsync<FloatingTextObj>(AssetKeys.UI_3D_FloatingText);
                             // 初始化浮动文本（绑定NPC位置、玩家视角、显示名称/身份）
                             floatingTextObj.Obj.Init(npcObject.Transform, player, npcObject.NpcInfo.f_speakerName, npcObject.NpcInfo.f_identity);
                             // 将NPC与文本对象映射存储

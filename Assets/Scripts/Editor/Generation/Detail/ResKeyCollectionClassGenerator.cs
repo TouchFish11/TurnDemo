@@ -45,10 +45,10 @@ namespace Editor.Generation.Detail
 
     /// <summary>
     /// 资源Key集合类生成器
-    /// 作用：扫描指定目录下的资源文件，自动生成包含资源名称常量的ResKeyCollection类
+    /// 作用：扫描指定目录下的资源文件，自动生成包含资源名称常量的AssetKeys类
     /// 继承自ClassGenerator（自定义的代码生成基类）
     /// </summary>
-    public class ResKeyCollectionClassGenerator : ClassGenerator
+    public class AssetKeysClassGenerator : ClassGenerator
     {
         /// <summary>资源文件根目录路径</summary>
         /// <value>默认指向Unity工程的 Assets/Editor/ArtRes 目录</value>
@@ -62,8 +62,8 @@ namespace Editor.Generation.Detail
         private readonly List<FileInfo> fileInfos = new List<FileInfo>();
 
         /// <summary>生成的类名称</summary>
-        /// <value>默认值：ResKeyCollection</value>
-        private const string className = "ResKeyCollection";
+        /// <value>默认值：AssetKeys</value>
+        private const string className = "AssetKeys";
 
         /// <summary>生成字段的访问修饰符</summary>
         /// <value>默认值：public</value>
@@ -78,7 +78,7 @@ namespace Editor.Generation.Detail
         private const string staticModifier = "static";
 
         /// <summary>生成的C#脚本文件保存路径</summary>
-        private readonly string filePath = $"{Application.dataPath}/Scripts/HotUpdate/Common/ResKeyCollection.cs";
+        private readonly string filePath = $"{Application.dataPath}/Scripts/HotUpdate/Common/AssetKeys.cs";
         
         /// <summary>生成类的命名空间</summary>
         /// <value>固定为Common命名空间</value>

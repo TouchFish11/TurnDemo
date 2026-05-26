@@ -1,11 +1,9 @@
 using System;
 using System.Collections;
 using HotUpdate.Base;
-using HotUpdate.Base.Animation;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Enums;
 using HotUpdate.Base.Utility;
-using HotUpdate.Game.Battle.Object;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.Utility

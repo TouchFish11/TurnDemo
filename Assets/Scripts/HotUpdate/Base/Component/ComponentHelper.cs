@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Core.Components;
 using HotUpdate.Base.Factory;
+using HotUpdate.Base.Utility;
 using Unity.VisualScripting;
 using UnityEngine;
 using Logger = Core.Log.Logger;

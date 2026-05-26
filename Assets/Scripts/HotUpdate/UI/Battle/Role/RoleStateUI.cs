@@ -8,6 +8,7 @@ using Core.UI;
 using HotUpdate.Base;
 using HotUpdate.Common;
 using HotUpdate.Common.Config.ExcelInfo.Container;
+using HotUpdate.Common.Generated;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.General;
@@ -237,7 +238,7 @@ namespace HotUpdate.Game.Battle.UI.Role
             if (!hasStatus)
             {
                 // 创建新的状态图标
-                var statusGridUI = await _objectSpawner.SpawnAsync<StatusGridUI>(ResKeyCollection.StatusGridUI, svBuffBox.content);
+                var statusGridUI = await _objectSpawner.SpawnAsync<StatusGridUI>(AssetKeys.StatusGridUI, svBuffBox.content);
                 statusGridUI.Obj.Init(status);
                 statusGridUIs.Add(statusGridUI);
             }
@@ -250,7 +251,7 @@ namespace HotUpdate.Game.Battle.UI.Role
         private async void OnConflict_Lonel(IStatus newStatus)
         {
             // 直接创建新的状态图标（独占类型总是创建新的）
-            var statusGridUI = await _objectSpawner.SpawnAsync<StatusGridUI>(ResKeyCollection.StatusGridUI, svBuffBox.content);
+            var statusGridUI = await _objectSpawner.SpawnAsync<StatusGridUI>(AssetKeys.StatusGridUI, svBuffBox.content);
             statusGridUI.Obj.Init(newStatus);
             statusGridUIs.Add(statusGridUI);
         }
@@ -272,7 +273,7 @@ namespace HotUpdate.Game.Battle.UI.Role
             }
             
             // 创建新的状态图标
-            var statusGridUI = await _objectSpawner.SpawnAsync<StatusGridUI>(ResKeyCollection.StatusGridUI, svBuffBox.content);
+            var statusGridUI = await _objectSpawner.SpawnAsync<StatusGridUI>(AssetKeys.StatusGridUI, svBuffBox.content);
             statusGridUI.Obj.Init(newStatus);
             statusGridUIs.Add(statusGridUI);
         }

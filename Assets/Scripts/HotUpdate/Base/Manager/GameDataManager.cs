@@ -1,14 +1,22 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Core.Mono;
 
 namespace HotUpdate.Base.Manager
 {
     /// <summary>
     /// 游戏数据管理器
     /// </summary>
-    public class GameDataManager
+    public class GameDataManager : IGameDataManager, IApplicationExitNotify
     {
         private readonly List<IDataManager> _dataManagers = new();
+
+        public int QuitPriority => 0;
+        
+        public GameDataManager(IMonoAdapter monoAdapter)
+        {
+            monoAdapter.AddApplicationExitNotify(this);
+        }
         
         /// <summary>
         /// 异步加载数据
@@ -41,6 +49,11 @@ namespace HotUpdate.Base.Manager
             {
                 dataManager.SaveData();
             }
+        }
+        
+        public void OnAppQuit()
+        {
+            SaveData();
         }
     }
 }
