@@ -1,5 +1,4 @@
 using System;
-using Core.Components;
 using HotUpdate.Base;
 
 namespace HotUpdate.Game.Battle.Relic.Relics.Quantum
@@ -18,12 +17,8 @@ namespace HotUpdate.Game.Battle.Relic.Relics.Quantum
 
         public IBattleEntityObject BattleEntity { get; private set; }
 
-        IEntityObject IComponent.EntityObject { get; }
-
         // private float _additionalDamageRatio = 0.5f; // ׷���˺����ʣ����ñ���ȡ��
-
-        void IComponent.Init(IEntityObject entityObject) { }
-
+        
         public virtual void BattleInit(IBattleEntityObject battleEntity)
         {
             BattleEntity = battleEntity;

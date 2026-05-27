@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
-using HotUpdate.Common.Generated;
+
 using HotUpdate.Game.Battle.Object.Monster.AbyssalMage;
 using HotUpdate.Game.Battle.Object.Monster.Slime;
 using HotUpdate.Game.Battle.Object.Monster.TurtleShell;

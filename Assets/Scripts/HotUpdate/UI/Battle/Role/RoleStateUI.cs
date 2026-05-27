@@ -8,7 +8,7 @@ using Core.UI;
 using HotUpdate.Base;
 using HotUpdate.Common;
 using HotUpdate.Common.Config.ExcelInfo.Container;
-using HotUpdate.Common.Generated;
+
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.General;

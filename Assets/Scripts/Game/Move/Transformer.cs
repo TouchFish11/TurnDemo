@@ -1,9 +1,8 @@
-using Animation;
 using Game.Animation;
-using Input;
+using Game.Inputs;
 using UnityEngine;
 
-namespace Move
+namespace Game.Move
 {
     public class Transformer : MonoBehaviour
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace Animation
+namespace Game.Animation
 {
     /// <summary>
     /// 动画忽略

@@ -3,7 +3,7 @@ using Core.AssetBundles.Management;
 using Core.DI;
 using HotUpdate.Activity.UI.Common;
 using HotUpdate.Common;
-using HotUpdate.Common.Generated;
+
 using HotUpdate.UI.Activity.Base;
 using HotUpdate.UI.Item;
 using UnityEngine;

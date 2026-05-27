@@ -6,7 +6,7 @@ using Core.Utility;
 using HotUpdate.Base.Manager;
 using HotUpdate.Common;
 using HotUpdate.Common.Config.Quest.Config;
-using HotUpdate.Common.Generated;
+
 using HotUpdate.Game.Main.UI;
 using HotUpdate.Game.Main.UI.Logic;
 using UnityEngine;

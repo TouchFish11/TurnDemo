@@ -29,7 +29,7 @@ namespace HotUpdate.Game.Battle.Command
         
         public override int Priority { get; protected set; }
 
-        public void Init(IToughnessComponent toughnessComponent, SkillCommand skillCommand)
+        public void Init(ToughnessComponent toughnessComponent, SkillCommand skillCommand)
         {
             Sender = toughnessComponent.BattleEntity;
             ToughnessComponent = toughnessComponent;
@@ -93,7 +93,7 @@ namespace HotUpdate.Game.Battle.Command
         private IEnumerator RestoreToughness()
         {
             // 获取当前怪物的韧性组件
-            var toughnessComponent = Sender.GetComponent<IToughnessComponent>();
+            var toughnessComponent = Sender.GetComponent<ToughnessComponent>();
             // 若韧性未被击破，切换为操作状态
             if (!toughnessComponent.IsToughnessBroken())
             {

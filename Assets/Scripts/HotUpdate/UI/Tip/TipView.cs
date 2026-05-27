@@ -1,6 +1,6 @@
 using Core.UI.ViewController;
 
-namespace HotUpdate.Update.Update.Tip
+namespace HotUpdate.UI.Tip
 {
     /// <summary>
     /// 提示界面基类

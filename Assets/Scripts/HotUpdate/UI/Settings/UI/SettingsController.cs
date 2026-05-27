@@ -5,7 +5,7 @@ using Core.UI.ViewController;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Settings;
 using HotUpdate.Common;
-using HotUpdate.Common.Generated;
+
 using HotUpdate.UI.Settings.ViewModel;
 
 namespace HotUpdate.UI.Settings.UI

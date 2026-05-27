@@ -1,6 +1,6 @@
 using System.Collections;
 using Core.DI;
-using HotUpdate.Common.Generated;
+
 using HotUpdate.Game.Battle.Projectile;
 using HotUpdate.Game.Battle.Status;
 using HotUpdate.Game.VFX;

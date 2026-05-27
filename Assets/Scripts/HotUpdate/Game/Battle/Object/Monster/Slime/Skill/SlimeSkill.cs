@@ -5,7 +5,7 @@ using Core.Pool;
 using HotUpdate.Base;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Utility;
-using HotUpdate.Common.Generated;
+
 using HotUpdate.Game.Animation.Core;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Skill.Base;

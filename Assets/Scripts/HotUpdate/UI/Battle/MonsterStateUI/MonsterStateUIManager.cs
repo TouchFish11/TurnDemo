@@ -4,8 +4,7 @@ using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Pool;
 using HotUpdate.Base;
-using HotUpdate.Common;
-using HotUpdate.Common.Generated;
+
 using HotUpdate.Game.Battle.UI;
 using UnityEngine;
 

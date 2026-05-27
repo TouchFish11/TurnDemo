@@ -10,7 +10,7 @@ using HotUpdate.Base.Manager;
 using HotUpdate.Common;
 using HotUpdate.Common.Config.Quest;
 using HotUpdate.Common.Config.Quest.Config;
-using HotUpdate.Common.Generated;
+
 using HotUpdate.UI.Item;
 using UnityEngine;
 

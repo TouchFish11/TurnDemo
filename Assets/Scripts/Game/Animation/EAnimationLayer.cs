@@ -1,4 +1,4 @@
-namespace Animation
+namespace Game.Animation
 {
     /// <summary>
     /// 动画层级枚举

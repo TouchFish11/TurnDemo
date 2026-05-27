@@ -162,16 +162,16 @@ namespace HotUpdate.Game.Battle.Inputs
             if (Mouse.current.leftButton.wasPressedThisFrame)
             {
                 // 记录按下时的鼠标屏幕坐标，作为拖拽起始点
-                _dragStartPosition = UnityEngine.Input.mousePosition;
+                _dragStartPosition = Input.mousePosition;
             }
             
             if (Mouse.current.leftButton.isPressed)
             {
                 // 未进入拖拽状态时，判断鼠标移动距离是否超过阈值，超过则标记为拖拽状态
-                if (!_isDragging && Vector2.Distance(UnityEngine.Input.mousePosition, _dragStartPosition) > activateThreshold)
+                if (!_isDragging && Vector2.Distance(Input.mousePosition, _dragStartPosition) > activateThreshold)
                 {
                     nowDeltaX = 0;
-                    lastMouseX = UnityEngine.Input.mousePosition.x;
+                    lastMouseX = Input.mousePosition.x;
                     _isDragging = true;
                 }
 
@@ -179,7 +179,7 @@ namespace HotUpdate.Game.Battle.Inputs
                 if (_isDragging)
                 {
                     // 获取当前鼠标X，计算【本次帧内】的偏移增量（核心修正）
-                    var currentMouseX = UnityEngine.Input.mousePosition.x;
+                    var currentMouseX = Input.mousePosition.x;
                     var deltaX = currentMouseX - lastMouseX;
                     lastMouseX = currentMouseX; // 更新上一帧鼠标X
 
@@ -243,7 +243,7 @@ namespace HotUpdate.Game.Battle.Inputs
                 }
                 
                 // 从鼠标屏幕位置发射射线，检测对应层级的战斗对象
-                if (Physics.Raycast(_battleCameraManager.CurrentActiveCameraPoolObject.Obj.ScreenPointToRay(UnityEngine.Input.mousePosition), out var hitInfo, 500, layerMask))
+                if (Physics.Raycast(_battleCameraManager.CurrentActiveCameraPoolObject.Obj.ScreenPointToRay(Input.mousePosition), out var hitInfo, 500, layerMask))
                 {
                     // 获取射线命中对象挂载的战斗对象组件
                     var currentMainTarget = hitInfo.collider.GetComponent<BattleObject>();

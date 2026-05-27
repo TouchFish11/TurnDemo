@@ -1,12 +1,11 @@
 using HotUpdate.Base;
-using HotUpdate.Game.Battle.Core;
 
 namespace HotUpdate.Game.Battle.Relic
 {
     /// <summary>
     /// ������װЧ���ӿ�
     /// </summary>
-    public interface IRelicSetEffect : IBattleComponent
+    public interface IRelicSetEffect
     {
         /// <summary>
         /// ��װ����

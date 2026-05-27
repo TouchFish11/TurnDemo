@@ -5,7 +5,7 @@ using Core.UI;
 using Core.UI.ViewController;
 using HotUpdate.Base.UI;
 using HotUpdate.Common;
-using HotUpdate.Common.Generated;
+
 using HotUpdate.Game.Dialogue.UI;
 using HotUpdate.Game.Main.Back;
 using HotUpdate.Game.Main.Loading.Battle;

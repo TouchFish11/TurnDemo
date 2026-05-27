@@ -7,7 +7,7 @@ using HotUpdate.Base.Enums;
 using HotUpdate.Base.Utility;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Common.Config.ExcelInfo.Info;
-using HotUpdate.Common.Generated;
+
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Event.UI;

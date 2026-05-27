@@ -5,16 +5,16 @@ using Core.DI;
 using Core.Serialize.Json;
 using Core.UI;
 using Core.Utility;
+using Game.Module;
 using HotUpdate.Base.Module;
 using HotUpdate.Base.Settings;
 using HotUpdate.Base.UI;
 using HotUpdate.Common.Config.Settings;
-using HotUpdate.Common.Generated;
 using HotUpdate.Update.Update.UI;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
-namespace HotUpdate.Update
+namespace HotUpdate.Entry
 {
     /// <summary>
     /// 热更新入口
@@ -34,7 +34,7 @@ namespace HotUpdate.Update
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(HotUpdateEntry)}: hotfix entry error {e.Message}");
+                Logger.LogError($"{nameof(HotUpdateEntry)}: hotfix entry error,{e.Message}");
             }
         }
 
@@ -48,7 +48,7 @@ namespace HotUpdate.Update
                 // 初始化游戏设置
                 await InitSettings();
                 // 初始化UI管理器，创建画布和UI相机
-                await _uiManager.InitUIManagerAsync("AssetKeys.UIRoot");
+                await _uiManager.InitUIManagerAsync(AssetKeys.UIRoot);
                 // 显示开始界面
                 var controller = await _uiService.OpenAsync(EUIPanelId.BeginPanel, E_UILayer.Mid) as BeginController;
                 // 进入游戏
@@ -71,6 +71,7 @@ namespace HotUpdate.Update
             var gameSettingsConfig = _jsonManager.FromJson<GameSettingsConfig>(handle.Asset.text);
             var settings = await _jsonManager.FromJsonAsync<GameSettings>(PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingFileName), settings:NewtonsoftJsonUtility.SerializerSettings);
             
+            // TODO：逻辑可优化
             SettingsService.SetFrameRate(gameSettingsConfig.framerates[(int)settings[ESettingType.TargetFrameRateIndex]]);
             Application.runInBackground = true;
             
@@ -87,7 +88,7 @@ namespace HotUpdate.Update
                 // 注册模块相关内容
                 _moduleService.RegisterModules();
                 // 初始化模块
-                await _moduleService.InitModulesAsync();
+                await _moduleService.InitModuleAsync(typeof(IMainModule));
                 // 打开主界面
                 await _uiService.OpenAsync(EUIPanelId.MainPanel, E_UILayer.Mid);
             }

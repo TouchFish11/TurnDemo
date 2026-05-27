@@ -4,7 +4,7 @@ using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Mono;
 using HotUpdate.Base.Interact;
-using HotUpdate.Common.Generated;
+
 using UnityEngine;
 using Logger = Core.Log.Logger;
 

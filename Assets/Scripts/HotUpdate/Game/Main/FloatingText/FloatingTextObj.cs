@@ -24,7 +24,7 @@ namespace HotUpdate.Game.Main.FloatingText
         // �����ٶ�
         private const float scaleSpeed = 1.1f;
         // �����
-        private UnityEngine.Camera mainCamera;
+        private Camera mainCamera;
         // �����
         private Transform mainPlayer;
         // �ϴξ���
@@ -35,7 +35,7 @@ namespace HotUpdate.Game.Main.FloatingText
             txtName = transform.Find($"{nameof(txtName)}")?.GetComponent<TextMeshPro>();
             txtTip = transform.Find($"{nameof(txtTip)}")?.GetComponent<TextMeshPro>();
             
-            mainCamera = UnityEngine.Camera.main;
+            mainCamera = Camera.main;
         }
 
         private void OnEnable()

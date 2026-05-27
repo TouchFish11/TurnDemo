@@ -1,4 +1,4 @@
-namespace HotUpdate.Update.Update.Tip
+namespace HotUpdate.UI.Tip
 {
     public class UpdateTipModel
     {

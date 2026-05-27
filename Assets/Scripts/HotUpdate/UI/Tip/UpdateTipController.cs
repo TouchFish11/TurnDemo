@@ -1,6 +1,6 @@
 using System;
 
-namespace HotUpdate.Update.Update.Tip
+namespace HotUpdate.UI.Tip
 {
     using Task = System.Threading.Tasks.Task;
     

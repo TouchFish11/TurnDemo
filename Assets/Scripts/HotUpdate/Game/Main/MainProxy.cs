@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Core.DI;
 using Core.Scene;
 using HotUpdate.Base.Scene;
-using HotUpdate.Common.Generated;
+
 using UnityEngine.SceneManagement;
 using Logger = Core.Log.Logger;
 

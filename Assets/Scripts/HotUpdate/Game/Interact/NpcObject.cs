@@ -22,7 +22,7 @@ namespace HotUpdate.Game.Interact
         
         private InteractTrigger _interactTrigger;
         
-        public Transform Transform => this.gameObject.transform;
+        public Transform Transform => gameObject.transform;
 
         public bool IsShowFloatingText { get; set; }
 

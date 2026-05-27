@@ -8,7 +8,7 @@ namespace HotUpdate.Game.Battle.Toughness
     /// 韧性组件接口
     /// 定义了战斗实体韧性系统的核心行为，包括韧性初始化、增减、策略管理、破韧状态判断等
     /// </summary>
-    public interface IToughnessComponent : IBattleComponent
+    public interface IToughnessComponent
     {
         /// <summary>
         /// 初始化韧性组件

@@ -1,4 +1,4 @@
-namespace Input
+namespace Game.Inputs
 {
     public interface IPlayerInput : IInputEvent
     {

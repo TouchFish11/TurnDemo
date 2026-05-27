@@ -28,7 +28,7 @@ namespace HotUpdate.Game.Battle.Command
         /// <param name="component"></param>
         /// <param name="skillData"></param>
         /// <returns></returns>
-        public MonsterActCommand GetMonsterActCommand(IToughnessComponent component, ISkillData skillData)
+        public MonsterActCommand GetMonsterActCommand(ToughnessComponent component, ISkillData skillData)
         {
             var skillCommand = DIContainer.GetInstance<IPoolManager>().GetData<SkillCommand>();
             skillCommand.Init(skillData);

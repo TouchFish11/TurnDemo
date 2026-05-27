@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Shared.ActivityConfigSO;
+using Game.ActivityConfigSO;
 using UnityEngine;
 
 namespace Generic

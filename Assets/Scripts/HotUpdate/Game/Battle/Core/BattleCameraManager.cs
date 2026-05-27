@@ -5,7 +5,6 @@ using Core.Mono;
 using Core.Mono.MonoFunction;
 using HotUpdate.Base;
 using HotUpdate.Base.Manager;
-using HotUpdate.Common.Generated;
 using HotUpdate.Game.Battle.Event;
 using HotUpdate.Game.Battle.Inputs;
 using HotUpdate.Game.Battle.TargetSelect;

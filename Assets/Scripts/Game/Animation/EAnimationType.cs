@@ -1,6 +1,6 @@
 using System;
 
-namespace Animation
+namespace Game.Animation
 {
     /// <summary>
     /// 动画类型（位标记枚举，支持组合使用）

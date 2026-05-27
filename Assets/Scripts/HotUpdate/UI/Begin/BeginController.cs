@@ -5,7 +5,7 @@ using Core.Process;
 using Core.UI;
 using Core.UI.ViewController;
 using Core.Utility;
-using HotUpdate.Update.Update.Tip;
+using HotUpdate.UI.Tip;
 
 namespace HotUpdate.Update.Update.UI
 {

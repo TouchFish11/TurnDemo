@@ -7,7 +7,7 @@ using Core.UI;
 using Core.UI.ViewController;
 using HotUpdate.Base.UI;
 using HotUpdate.Common;
-using HotUpdate.Common.Generated;
+
 using HotUpdate.Game.Main.UI.Logic;
 using HotUpdate.UI.Main.Logic;
 using HotUpdate.UI.Quests;

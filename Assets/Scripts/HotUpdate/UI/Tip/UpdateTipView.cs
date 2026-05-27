@@ -2,7 +2,7 @@ using Core.UI;
 using TMPro;
 using UnityEngine.UI;
 
-namespace HotUpdate.Update.Update.Tip
+namespace HotUpdate.UI.Tip
 {
     /// <summary>
     /// 更新提示界面

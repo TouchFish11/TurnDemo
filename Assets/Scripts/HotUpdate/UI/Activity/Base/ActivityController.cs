@@ -11,7 +11,7 @@ using HotUpdate.Common;
 using HotUpdate.Common.Config.Activity;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Common.Config.ExcelInfo.Info;
-using HotUpdate.Common.Generated;
+
 using HotUpdate.Game.Activity.Core;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Turn;

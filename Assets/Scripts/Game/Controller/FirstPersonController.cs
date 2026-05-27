@@ -1,9 +1,8 @@
-using Animation;
 using Game.Animation;
-using Input;
+using Game.Inputs;
 using UnityEngine;
 
-namespace Controller
+namespace Game.Controller
 {
     /// <summary>
     /// 第一人称控制器

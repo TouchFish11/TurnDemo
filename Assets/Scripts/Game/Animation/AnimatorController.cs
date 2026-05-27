@@ -1,6 +1,5 @@
 using System.Collections.Generic;
-using Animation;
-using Input;
+using Game.Inputs;
 using UnityEngine;
 
 namespace Game.Animation

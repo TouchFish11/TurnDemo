@@ -1,16 +1,16 @@
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
-using Core.HotUpdate;
 using Core.Input.ActionAsset;
 using Core.Mono;
 using Core.Scene;
 using Core.Utility;
+using Game.Module;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Module;
 using HotUpdate.Base.Scene;
-using HotUpdate.Common.Generated;
+
 using HotUpdate.Game.Core;
 using HotUpdate.Game.Main.FloatingText;
 using HotUpdate.Game.Main.Player;
@@ -25,6 +25,7 @@ namespace HotUpdate.Game.Main
     /// <summary>
     /// 游戏主场景模块
     /// </summary>
+    [ModuleExport(typeof(IMainModule))]
     public class MainModule : IMainModule
     {
         [Inject] private IInputSystem _inputSystem;
@@ -32,7 +33,9 @@ namespace HotUpdate.Game.Main
         [Inject] private IFactoryManager _factoryManager;
         [Inject] private ISceneGenerator _sceneGenerator;
         [Inject] private ISceneManager _sceneManager;
-        
+
+        public int Priority => 10;
+
         public void Register()
         {
             // 注册浮动文本管理器
@@ -55,11 +58,11 @@ namespace HotUpdate.Game.Main
             using var handle = await GameAsset.LoadAssetAsync<TextAsset>(FileUtility.InputActionLocalFileName);
             _inputSystem.InitInputSystem(handle.Asset.text);
             
-            // 初始化热更工厂
+            // 初始化所有游戏工厂
             _factoryManager.BindFactory();
             
             // 初始化游戏数据
-            // 先加载配置
+            // TODO：先加载配置
             await _gameDataManager.LoadDataAsync();
             // 再加载数据，数据依赖配置
             await _gameDataManager.LoadDataAsync();

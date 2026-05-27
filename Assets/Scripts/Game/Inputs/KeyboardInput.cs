@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Input
+namespace Game.Inputs
 {
     using Input = UnityEngine.Input;
 

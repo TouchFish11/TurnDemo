@@ -8,7 +8,7 @@ using Core.Mono;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Enums;
 using HotUpdate.Base.UI;
-using HotUpdate.Common.Generated;
+
 using HotUpdate.Game.Battle.Object.Role.Warrior;
 using HotUpdate.Game.Cameras;
 using HotUpdate.Game.Inputs;

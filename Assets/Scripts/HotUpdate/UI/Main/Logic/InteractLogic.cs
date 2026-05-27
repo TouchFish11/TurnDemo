@@ -6,7 +6,7 @@ using Core.GlobalEvent;
 using Core.Log;
 using HotUpdate.Base.Interact;
 using HotUpdate.Common;
-using HotUpdate.Common.Generated;
+
 using HotUpdate.Game.Interact;
 using HotUpdate.Game.Interact.UI;
 using HotUpdate.Game.Main.UI.Logic;

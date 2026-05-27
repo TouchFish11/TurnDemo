@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Shared.ActivityConfigSO
+namespace Game.ActivityConfigSO
 {
     /// <summary>
     /// 活动配置基类

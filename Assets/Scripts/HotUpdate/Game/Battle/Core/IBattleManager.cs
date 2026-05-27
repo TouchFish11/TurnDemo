@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Turn;
 
@@ -16,10 +17,9 @@ namespace HotUpdate.Game.Battle.Core
         /// 唯一入口
         /// </summary>
         /// <param name="turnData">战斗回合数据</param>
-        /// <param name="OnPreEnter"></param>
+        /// <param name="OnPreEnter">战斗进入回调</param>
         /// <param name="onBattleOver">战斗结束回调</param>
-        System.Threading.Tasks.Task EnterBattle(TurnData turnData, Func<System.Threading.Tasks.Task> OnPreEnter,
-            Func<System.Threading.Tasks.Task> onBattleOver);
+        Task EnterBattle(TurnData turnData, Func<Task> OnPreEnter, Func<Task> onBattleOver);
 
         ITurnCreator GetTurnCreator();
     }

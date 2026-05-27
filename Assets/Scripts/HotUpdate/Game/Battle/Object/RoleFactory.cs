@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
 using HotUpdate.Base;
-using HotUpdate.Common.Generated;
+
 using HotUpdate.Game.Battle.Object.Role.Priest;
 using HotUpdate.Game.Battle.Object.Role.Warrior;
 using HotUpdate.Game.Battle.Object.Role.Wizard;

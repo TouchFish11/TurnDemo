@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Animation
+namespace Game.Animation
 {
     /// <summary>
     /// 动画配置

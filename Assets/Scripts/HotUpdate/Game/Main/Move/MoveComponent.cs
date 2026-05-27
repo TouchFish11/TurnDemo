@@ -86,7 +86,7 @@ namespace HotUpdate.Game.Main.Move
         /// <param name="canMove">是否允许移动</param>
         public void SetMoveFlag(bool canMove)
         {
-            this._canMove = canMove;
+            _canMove = canMove;
         }
 
         /// <summary>

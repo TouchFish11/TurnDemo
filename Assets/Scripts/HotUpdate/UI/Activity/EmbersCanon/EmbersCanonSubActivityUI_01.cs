@@ -7,7 +7,7 @@ using Core.Utility;
 using HotUpdate.Base.Manager;
 using HotUpdate.Common;
 using HotUpdate.Common.Config.Activity;
-using HotUpdate.Common.Generated;
+
 using HotUpdate.Game.Activity.Core;
 using HotUpdate.UI.Activity.Base;
 using UnityEngine;

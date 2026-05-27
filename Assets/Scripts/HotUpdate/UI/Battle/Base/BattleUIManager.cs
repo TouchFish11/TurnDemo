@@ -10,7 +10,7 @@ using HotUpdate.Base;
 using HotUpdate.Base.Manager;
 using HotUpdate.Common;
 using HotUpdate.Common.Config.ExcelInfo.Info;
-using HotUpdate.Common.Generated;
+
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Object;

@@ -7,8 +7,7 @@ using Core.UI;
 using Core.Utility;
 using HotUpdate.Base;
 using HotUpdate.Base.Manager;
-using HotUpdate.Common;
-using HotUpdate.Common.Generated;
+
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Object;
@@ -107,7 +106,7 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
             imgHp.fillAmount = imgFade.fillAmount = currentHp / maxHp; // 同步血量填充值和渐变遮罩值
 
             // 获取怪物韧性组件，初始化韧性显示
-            var toughnessComponent = battleEntity.GetComponent<IToughnessComponent>();
+            var toughnessComponent = battleEntity.GetComponent<ToughnessComponent>();
             var currentToughnessValue = toughnessComponent.CurrentToughnessValue;
             var maxToughnessVaue = toughnessComponent.MaxToughnessVaue;
             imgToughness.fillAmount = currentToughnessValue / (float)maxToughnessVaue;

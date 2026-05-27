@@ -1,7 +1,7 @@
 using Core.DI;
 using Core.Pool;
 using Core.Time;
-using HotUpdate.Common.Generated;
+
 using HotUpdate.Game.Battle.Projectile;
 using HotUpdate.Game.Battle.Status;
 using HotUpdate.Game.VFX;

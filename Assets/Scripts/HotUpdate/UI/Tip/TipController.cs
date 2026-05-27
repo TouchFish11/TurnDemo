@@ -1,6 +1,6 @@
 using Core.UI.ViewController;
 
-namespace HotUpdate.Update.Update.Tip
+namespace HotUpdate.UI.Tip
 {
     public abstract class TipController<TView> : UIController<TView> where TView : UIView
     {

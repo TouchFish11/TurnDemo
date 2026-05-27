@@ -6,7 +6,7 @@ using HotUpdate.Base;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Utility;
-using HotUpdate.Common.Generated;
+
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Skill.Base;

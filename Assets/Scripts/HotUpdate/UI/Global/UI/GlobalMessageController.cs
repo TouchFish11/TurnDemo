@@ -7,7 +7,7 @@ using Core.Time;
 using Core.UI.ViewController;
 using HotUpdate.Base.UI;
 using HotUpdate.Common;
-using HotUpdate.Common.Generated;
+
 
 namespace HotUpdate.UI.Global.UI
 {

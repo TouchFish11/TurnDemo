@@ -4,18 +4,11 @@ using Core.Pool;
 using Core.PreLoad;
 using Core.Scene;
 using Core.UI;
-using HotUpdate.Base.Manager;
 using HotUpdate.Base.UI;
-using HotUpdate.Common.Generated;
 using HotUpdate.Game.Battle.Context;
-using HotUpdate.Game.Battle.Damage;
-using HotUpdate.Game.Battle.Event;
 using HotUpdate.Game.Battle.Event.Turn;
-using HotUpdate.Game.Battle.Inputs;
-using HotUpdate.Game.Battle.TargetSelect;
 using HotUpdate.Game.Battle.Turn;
 using HotUpdate.Game.Inputs;
-using HotUpdate.Game.Point;
 using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.Battle.Core
@@ -49,33 +42,7 @@ namespace HotUpdate.Game.Battle.Core
         {
             _mainControllerId = mainControllerId;
         }
-
-        /// <summary>
-        /// 注册绑定战斗相关管理器
-        /// </summary>
-        private static void BindManager()
-        {
-            DIContainer.BindSingleton<ITargetSelectManager, TargetSelectManager>();
-            DIContainer.BindSingleton<IDamageCalcManager, DamageCalcManager>();
-            DIContainer.BindSingleton<IBattleInputHandler, BattleInputHandler>();
-            DIContainer.BindSingleton<IBattleEventScheduler, BattleEventScheduler>();
-            DIContainer.BindSingleton<IBattleCameraManager, BattleCameraManager>();
-            DIContainer.BindSingleton<IBattlePointProxy, BattlePointProxy>();
-        }
-
-        /// <summary>
-        /// 取消战斗相关管理器的注册
-        /// </summary>
-        private static void UnregisterManager()
-        {
-            DIContainer.Unbind<ITargetSelectManager, TargetSelectManager>();
-            DIContainer.Unbind<IDamageCalcManager, DamageCalcManager>();
-            DIContainer.Unbind<IBattleInputHandler, BattleInputHandler>();
-            DIContainer.Unbind<IBattleEventScheduler, BattleEventScheduler>();
-            DIContainer.Unbind<IBattleCameraManager, BattleCameraManager>();
-            DIContainer.Unbind<IBattlePointProxy, BattlePointProxy>();
-        }
-
+        
         /// <summary>
         /// 进入战斗
         /// 唯一入口
@@ -105,8 +72,6 @@ namespace HotUpdate.Game.Battle.Core
             _context = DIContainer.Create<BattleContext>();
             // 监听战斗退出事件
             _context.GetEventBus().AddListener<QuitBattleEvent>(OnQuitBattleEvent);
-            // 注册战斗相关管理器
-            BindManager();
             // 创建回合创建器
             _creator = _poolManager.GetData<TurnCreator>();
             _creator.Init(_context, turnData.TotalTurnNumber, turnData.Waves);
@@ -163,8 +128,6 @@ namespace HotUpdate.Game.Battle.Core
         {
             try
             {
-                // 移除注册
-                UnregisterManager();
                 // 清理战斗数据
                 _context.CleanupBattle();
 

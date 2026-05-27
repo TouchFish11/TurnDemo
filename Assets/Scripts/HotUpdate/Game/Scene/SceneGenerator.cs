@@ -2,7 +2,7 @@ using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Pool;
 using HotUpdate.Base.Scene;
-using HotUpdate.Common.Generated;
+
 using HotUpdate.Game.Cameras;
 using HotUpdate.Game.Interact;
 using HotUpdate.Game.Main;
