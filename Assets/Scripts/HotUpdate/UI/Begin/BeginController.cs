@@ -1,13 +1,17 @@
 using System;
 using Core.AssetBundles.Update.Core;
+using Core.DI;
 using Core.Log;
 using Core.Process;
 using Core.UI;
 using Core.UI.ViewController;
 using Core.Utility;
+using HotUpdate.Base.Data;
+using HotUpdate.Base.Enums;
+using HotUpdate.Base.UI;
 using HotUpdate.UI.Tip;
 
-namespace HotUpdate.Update.Update.UI
+namespace HotUpdate.UI.Begin
 {
     using Task = System.Threading.Tasks.Task;
     
@@ -16,7 +20,8 @@ namespace HotUpdate.Update.Update.UI
     /// </summary>
     public class BeginController : UIController<BeginView>
     {
-        private readonly IAssetBundleUpdater _assetBundleUpdater;
+        [Inject] private readonly IAssetBundleUpdater _assetBundleUpdater;
+        [Inject] private IUIService _uiService;
         private string _speed;
         
         /// <summary>
@@ -104,10 +109,10 @@ namespace HotUpdate.Update.Update.UI
                     view.SetTextPhase("正在检查更新...");
                     break;
                 case EUpdatePhase.DownLoadRemoteListFile:
-                    view.SetTextPhase("正在下载资源清单文件...");
+                    view.SetTextPhase("正在下载资源目录...");
                     break;
                 case EUpdatePhase.GetLocalCompareFile:
-                    view.SetTextPhase("正在读取本地资源清单文件...");
+                    view.SetTextPhase("正在读取本地资源目录...");
                     break;
                 case EUpdatePhase.CompareContrast:
                     view.SetTextPhase("对比资源差异...");
@@ -181,12 +186,17 @@ namespace HotUpdate.Update.Update.UI
                 {
                     if (_assetBundleUpdater.GetContext().IsHasUpdate)
                     {
-                        var controller = await uiManager.CreateViewAsync<UpdateTipView, UpdateTipController>("", E_UILayer.Mid);
-                        // 设置消息
-                        controller.SetUpdateMessage("更新成功，请重新启动游戏");
-                        // 暂时这样处理，可根据枚举类型决定如何处理按钮点击逻辑
-                        controller.SetTipActive(true, "点击确认后将重启游戏");
-                        controller.OnSure += ProcessRestarter.RestartProcess;
+                        var controller = await _uiService.OpenAsync(EUIPanelId.TipPanel, E_UILayer.Mid) as TipController;
+                        // 初始化确认数据
+                        var confirmData = DIContainer.Create<ConfirmData>();
+                        confirmData.ConfirmTitle = "更新提示";
+                        confirmData.ConfirmContent = EConfirmContent.AssetUpdate;
+                        confirmData.ContentData = "点击确认后将重启游戏";
+                        confirmData.ConfirmMessage = "更新成功，请重新启动游戏";
+                        confirmData.OnConfirm = ProcessRestarter.RestartProcess;
+                        confirmData.OnCancel = null;
+                        // 设置提示界面
+                        controller.SetTip(confirmData);
                     }
                     else
                     {
@@ -198,13 +208,14 @@ namespace HotUpdate.Update.Update.UI
                 else
                 {
                     // 更新失败
-                    var controller = await uiManager.CreateViewAsync<UpdateTipView, UpdateTipController>("", E_UILayer.Mid);
-                    // 设置消息
-                    controller.SetUpdateMessage(GetErrorMessage(updateResult.UpdateError));
-                
-                    // 暂时这样处理，可根据枚举类型决定如何处理按钮点击逻辑
-                    controller.SetTipActive(true, "点击确认后将重新下载");
-                    controller.OnSure += () =>
+                    var controller = await _uiService.OpenAsync(EUIPanelId.TipPanel, E_UILayer.Mid) as TipController;
+                    // 初始化确认数据
+                    var confirmData = DIContainer.Create<ConfirmData>();
+                    confirmData.ConfirmTitle = "更新提示";
+                    confirmData.ConfirmContent = EConfirmContent.AssetUpdate;
+                    confirmData.ContentData = "点击确认后将重新下载";
+                    confirmData.ConfirmMessage = GetErrorMessage(updateResult.UpdateError);
+                    confirmData.OnConfirm = () =>
                     {
                         uiManager.DestroyView(controller.panelId);
                     
@@ -213,6 +224,10 @@ namespace HotUpdate.Update.Update.UI
                         RegisterUpdateEvent();
                         _assetBundleUpdater.CheckUpdate();
                     };
+                    confirmData.OnCancel = null;
+                    
+                    // 设置提示界面
+                    controller.SetTip(confirmData);
                 }
             }
             catch (Exception e)

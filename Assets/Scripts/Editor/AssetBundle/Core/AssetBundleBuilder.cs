@@ -11,6 +11,7 @@ using UnityEditor;
 using UnityEditor.U2D;
 using UnityEngine;
 using UnityEngine.U2D;
+using Object = UnityEngine.Object;
 
 namespace Editor.AssetBundle.Core
 {
@@ -282,15 +283,14 @@ namespace Editor.AssetBundle.Core
         /// <summary>
         /// 将选中的 AB 包拷贝到 StreamingAssets
         /// </summary>
-        public void MoveToStreamingAssets(string streamingAssetsPath, UnityEngine.Object[] selectedAssets)
+        public void MoveToStreamingAssets(string streamingAssetsPath, string outputPath, Object[] selectedAssets)
         {
             AssetBundleUtility.EnsureDirectoryExists(streamingAssetsPath);
-
-            if (selectedAssets.Length == 0) return;
-
-            // 清空目标目录
             AssetBundleUtility.ClearDirectory(streamingAssetsPath);
             AssetDatabase.Refresh();
+
+            // 记录本次拷贝的包名
+            var copiedBundles = new List<string>();
 
             // 在 Unity 编辑器中，当你选择一个 .assetBundle 文件时，
             // Unity 的 Selection 系统会自动把同名的 .manifest 文件也视为选中状态（虽然界面上可能只高亮了一个文件）
@@ -301,9 +301,52 @@ namespace Editor.AssetBundle.Core
                 string assetPath = AssetDatabase.GetAssetPath(selectedAssets[i]);
                 string fileName = Path.GetFileName(assetPath);
                 if (!fileName.Contains(FileUtility.AbSuffix)) continue;
+
                 AssetDatabase.CopyAsset(assetPath, Path.Combine(streamingAssetsPath, fileName));
+                string bundleName = Path.GetFileNameWithoutExtension(fileName);
+                copiedBundles.Add(bundleName);
             }
+
+            // 生成首包精简目录（基于 outputPath 中的完整目录，但只保留拷贝过的包）
+            GenerateStreamingCatalog(streamingAssetsPath, outputPath, copiedBundles);
+
             EditorUtility.ClearProgressBar();
+        }
+        
+        private void GenerateStreamingCatalog(string streamingAssetsPath, string outputPath, List<string> copiedBundles)
+        {
+            // 读取 outputPath 中的完整目录
+            string fullCatalogPath = Path.Combine(outputPath, AssetCatalogName);
+            if (!File.Exists(fullCatalogPath))
+            {
+                Log($"警告：完整目录不存在 {fullCatalogPath}，首包目录将为空。");
+                return;
+            }
+
+            var fullCatalog = jsonManager.FromJson<AssetCatalog>(File.ReadAllText(fullCatalogPath));
+            var streamingCatalog = new AssetCatalog();
+
+            // 只保留首包中存在的包信息
+            foreach (var bundleName in copiedBundles)
+            {
+                if (fullCatalog.ABPackageCollection.TryGetValue(bundleName, out var pkgInfo))
+                {
+                    streamingCatalog.ABPackageCollection.Add(bundleName, pkgInfo);
+                }
+
+                // 保留该包的资源映射条目
+                var entries = fullCatalog.Assets.Where(e => e.bundleName == bundleName);
+                foreach (var entry in entries)
+                {
+                    streamingCatalog.AddOrUpdateEntry(entry.key, entry);
+                }
+            }
+
+            // 保存到 StreamingAssets
+            string streamingCatalogPath = Path.Combine(streamingAssetsPath, AssetCatalogName);
+            var json = jsonManager.ToJson(streamingCatalog);
+            File.WriteAllText(streamingCatalogPath, json);
+            Log($"首包资源目录已生成：{streamingCatalogPath}，包含 {copiedBundles.Count} 个包。");
         }
 
         /// <summary>

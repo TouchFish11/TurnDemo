@@ -2,7 +2,6 @@ using System;
 using Core.DI;
 using Core.Log;
 using Core.UI;
-using HotUpdate.Base.Dialogue;
 using HotUpdate.Base.Manager;
 using HotUpdate.Game.Main.UI.Logic;
 

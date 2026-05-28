@@ -6,11 +6,11 @@ using Core.Serialize.Json;
 using Core.UI;
 using Core.Utility;
 using Game.Module;
-using HotUpdate.Base.Module;
 using HotUpdate.Base.Settings;
 using HotUpdate.Base.UI;
 using HotUpdate.Common.Config.Settings;
-using HotUpdate.Update.Update.UI;
+using HotUpdate.UI;
+using HotUpdate.UI.Begin;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
@@ -25,7 +25,13 @@ namespace HotUpdate.Entry
         [Inject] private IUIManager _uiManager;
         [Inject] private ModuleService _moduleService;
         [Inject] private IJsonManager _jsonManager;
-        
+
+        private void Awake()
+        {
+            DIContainer.BindSingleton<IUIService, UIService>();
+            DIContainer.InjectIntoInstance(this);
+        }
+
         private async void Start()
         {
             try
@@ -68,7 +74,7 @@ namespace HotUpdate.Entry
         private async Task InitSettings()
         {
             using var handle = await GameAsset.LoadAssetAsync<TextAsset>(AssetKeys.GameSettingsConfig);
-            var gameSettingsConfig = _jsonManager.FromJson<GameSettingsConfig>(handle.Asset.text);
+            var gameSettingsConfig = _jsonManager.FromJson<GameSettingsConfig>(handle.Asset.text, settings:NewtonsoftJsonUtility.SerializerSettings);
             var settings = await _jsonManager.FromJsonAsync<GameSettings>(PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingFileName), settings:NewtonsoftJsonUtility.SerializerSettings);
             
             // TODO：逻辑可优化
@@ -85,12 +91,13 @@ namespace HotUpdate.Entry
         {
             try
             {
-                // 注册模块相关内容
-                _moduleService.RegisterModules();
-                // 初始化模块
-                await _moduleService.InitModuleAsync(typeof(IMainModule));
-                // 打开主界面
-                await _uiService.OpenAsync(EUIPanelId.MainPanel, E_UILayer.Mid);
+                Logger.Log($"进入游戏Test!!!");
+                // // 注册模块相关内容
+                // _moduleService.RegisterModules();
+                // // 初始化模块
+                // await _moduleService.InitModuleAsync(typeof(IMainModule));
+                // // 打开主界面
+                // await _uiService.OpenAsync(EUIPanelId.MainPanel, E_UILayer.Mid);
             }
             catch (Exception e)
             {

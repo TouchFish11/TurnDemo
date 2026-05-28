@@ -2,7 +2,6 @@ using Core.DI;
 using Core.Mono;
 using Core.UI;
 using HotUpdate.Base;
-using HotUpdate.Game.Battle.Object;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

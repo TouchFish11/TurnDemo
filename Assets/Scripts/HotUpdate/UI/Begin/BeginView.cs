@@ -7,7 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace HotUpdate.Update.Update.UI
+namespace HotUpdate.UI.Begin
 {
     /// <summary>
     /// 开始界面

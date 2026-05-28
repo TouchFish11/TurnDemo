@@ -7,7 +7,6 @@ using Core.UI.ViewController;
 using Core.Utility;
 using HotUpdate.Base.Collection;
 using HotUpdate.Base.Manager;
-using HotUpdate.Common;
 using HotUpdate.Common.Config.Quest;
 using HotUpdate.Common.Config.Quest.Config;
 

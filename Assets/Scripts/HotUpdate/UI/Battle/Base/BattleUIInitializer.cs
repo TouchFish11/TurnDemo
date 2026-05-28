@@ -2,8 +2,6 @@ using System.Collections.Generic;
 using Core.AssetBundles.Management;
 using Core.DI;
 using HotUpdate.Base;
-using HotUpdate.Common;
-
 using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Component;

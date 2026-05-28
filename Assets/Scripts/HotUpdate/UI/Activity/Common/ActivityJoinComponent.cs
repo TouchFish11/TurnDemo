@@ -1,5 +1,4 @@
 using System;
-using Core.DI;
 using Core.UI;
 using HotUpdate.UI.Activity.Base;
 using TMPro;

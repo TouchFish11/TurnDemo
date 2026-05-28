@@ -4,7 +4,6 @@ using Core.DI;
 using Core.Serialize.Json;
 using Core.Utility;
 using HotUpdate.Base.Manager;
-using HotUpdate.Common;
 using HotUpdate.Common.Config.Quest.Config;
 
 using HotUpdate.Game.Main.UI;

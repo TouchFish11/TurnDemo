@@ -12,13 +12,11 @@ namespace Game.Module
     /// </summary>
     public class ModuleService
     {
-        [Inject] private IHotUpdateManager _hotUpdateManager;
-        
         private readonly Dictionary<Type, IModule> _modules = new();
 
-        public ModuleService()
+        public ModuleService(IHotUpdateManager hotUpdateManager)
         {
-            foreach (var hotAssembly in _hotUpdateManager.GetHotAssemblies())
+            foreach (var hotAssembly in hotUpdateManager.GetHotAssemblies())
             {
                 foreach (var type in hotAssembly.GetTypes())
                 {

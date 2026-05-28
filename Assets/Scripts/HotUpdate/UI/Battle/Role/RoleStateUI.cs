@@ -6,7 +6,6 @@ using Core.Mono;
 using Core.Serialize.Binary;
 using Core.UI;
 using HotUpdate.Base;
-using HotUpdate.Common;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 
 using HotUpdate.Game.Battle.Context;

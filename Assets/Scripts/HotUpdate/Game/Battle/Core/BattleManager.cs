@@ -104,7 +104,8 @@ namespace HotUpdate.Game.Battle.Core
                 
                 // SpriteAtlas
                 new(AssetKeys.Atlas_Icon_BattleEntity),
-                new(AssetKeys.BrightIcons),
+                new(AssetKeys.Atlas_Icon_Common),
+                new(AssetKeys.Atlas_Default),
             };
             
             await DIContainer.GetInstance<IPreLoadManager>().PreLoads(preLoadDatas);

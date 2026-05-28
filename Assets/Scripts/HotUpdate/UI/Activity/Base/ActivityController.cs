@@ -7,7 +7,6 @@ using Core.Serialize.Binary;
 using Core.UI.ViewController;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Scene;
-using HotUpdate.Common;
 using HotUpdate.Common.Config.Activity;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Common.Config.ExcelInfo.Info;

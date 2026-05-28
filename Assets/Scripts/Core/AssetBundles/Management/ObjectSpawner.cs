@@ -181,8 +181,9 @@ namespace Core.AssetBundles.Management
         private static T InstantiateInternal<T>(AssetHandle assetHandle, string key, Transform parent = null, 
             Vector3 pos = default, Quaternion rot = default, bool worldSpace = false) where T : Object
         {
+            var asset = assetHandle.ConvertTo<T>().Asset;
             // 实例化对象
-            var newObj = Object.Instantiate(assetHandle.ConvertTo<T>().Asset);
+            var newObj = Object.Instantiate(asset);
             // 不是UI对象
             if (newObj is not UIBehaviour uiBehaviour)
             {

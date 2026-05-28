@@ -90,7 +90,7 @@ namespace Core.AssetBundles.Update.Core
             }
             catch (System.Exception e)
             {
-                Logger.LogError($"{nameof(AssetBundleUpdater)}.{nameof(CheckUpdate)}：下载异常：{e.Message}");
+                Logger.LogError($"{nameof(AssetBundleUpdater)}: 下载异常,{e.Message}");
                 _updateContext.UpdateOver(UpdateResult.CreateFailure(UpdateResult.EUpdateError.Unknown, e));
             }
         }
@@ -136,11 +136,11 @@ namespace Core.AssetBundles.Update.Core
             {
                 if (_currentUpdateState == null || UpdatePhase == EUpdatePhase.Finished) return;
                 UpdateService.CancelDownload(_updateContext);
-                Logger.Log($"{nameof(AssetBundleUpdater)}.{nameof(OnAppQuit)}:已取消下载");
+                Logger.Log($"{nameof(AssetBundleUpdater)}: 已取消下载");
             }
             catch (System.Exception e)
             {
-                Logger.LogError($"{nameof(AssetBundleUpdater)}.{nameof(OnAppQuit)}:取消下载错误，{e.Message})");
+                Logger.LogError($"{nameof(AssetBundleUpdater)}: 取消下载错误,{e.Message})");
             }
         }
     }

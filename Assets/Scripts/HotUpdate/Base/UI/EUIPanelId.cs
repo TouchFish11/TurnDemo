@@ -14,5 +14,6 @@ namespace HotUpdate.Base.UI
         DialoguePanel,
         BattleLoadingkPanel,
         BlackBackPanel,
+        TipPanel,
     }
 }

@@ -5,7 +5,6 @@ using Core.Serialize.Json;
 using Core.UI;
 using Core.Utility;
 using HotUpdate.Base.Manager;
-using HotUpdate.Common;
 using HotUpdate.Common.Config.Activity;
 
 using HotUpdate.Game.Activity.Core;

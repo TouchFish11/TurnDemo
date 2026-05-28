@@ -44,8 +44,8 @@ namespace Editor.AssetBundle
         private bool uploadBytesIsCustomSetting;
         private uint maxBytesCapacity = 4096;
 
-        private const string hotUpdateAssemblyTargetPath = @"D:\UnityProject\AnimationSystem\Assets\Editor\ArtRes\HotUpdate\";
-        private const string hybridCLRAssemblySourcesPath = @"D:\UnityProject\AnimationSystem\HybridCLRData\HotUpdateDlls\StandaloneWindows64\";
+        private const string hotUpdateAssemblyTargetPath = @"D:\UnityProject\TurnDemo\Assets\Editor\ArtRes\HotUpdate\";
+        private const string hybridCLRAssemblySourcesPath = @"D:\UnityProject\TurnDemo\HybridCLRData\HotUpdateDlls\StandaloneWindows64\";
         private const string AssetsInputPath = "Assets/Editor/ArtRes/";
         private readonly string[] filterDirectories = { "Texture" };
         private readonly string[] filterSuffixes = { ".meta" };
@@ -340,7 +340,7 @@ namespace Editor.AssetBundle
             EditorGUILayout.TextField("StreamingAssets Path", AB_COPY_PATH);
             EditorGUI.EndDisabledGroup();
             if (GUILayout.Button("Move AssetBundle To StreamingAssets", GUILayout.Width(300)))
-                builder.MoveToStreamingAssets(AB_COPY_PATH, Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets));
+                builder.MoveToStreamingAssets(AB_COPY_PATH, outputPath, Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets));
             GUILayout.EndHorizontal();
         }
 

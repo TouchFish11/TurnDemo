@@ -13,7 +13,6 @@ public static class AssetBundleKeys
     public const string Prefab = "prefab";
     public const string Scene = "scene";
     public const string Spriteatlas = "spriteatlas";
-    public const string Texture = "texture";
     public const string TmpAsset = "tmp_asset";
     public const string Ui = "ui";
     public const string Vfx = "vfx";

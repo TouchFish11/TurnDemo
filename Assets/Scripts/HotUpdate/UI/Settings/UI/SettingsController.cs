@@ -4,8 +4,6 @@ using Core.DI;
 using Core.UI.ViewController;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Settings;
-using HotUpdate.Common;
-
 using HotUpdate.UI.Settings.ViewModel;
 
 namespace HotUpdate.UI.Settings.UI

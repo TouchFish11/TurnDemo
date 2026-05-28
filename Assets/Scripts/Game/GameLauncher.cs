@@ -32,8 +32,7 @@ namespace Game
                 await LoadHotfixDll();
                 // 创建热更入口
                 using var spawner = DIContainer.Create<ObjectSpawner>();
-                var entryObj = await spawner.SpawnAsync<GameObject>(bootConfig.hotfixObjKey);
-                DIContainer.InjectIntoInstance(entryObj.Obj);
+                await spawner.SpawnAsync<GameObject>(bootConfig.hotfixObjKey);
             }
             catch (Exception e)
             {

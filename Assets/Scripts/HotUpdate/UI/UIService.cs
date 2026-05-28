@@ -4,8 +4,6 @@ using Core.DI;
 using Core.UI;
 using Core.UI.ViewController;
 using HotUpdate.Base.UI;
-using HotUpdate.Common;
-
 using HotUpdate.Game.Dialogue.UI;
 using HotUpdate.Game.Main.Back;
 using HotUpdate.Game.Main.Loading.Battle;
@@ -13,9 +11,12 @@ using HotUpdate.Game.Main.UI;
 using HotUpdate.UI.Activity.Base;
 using HotUpdate.UI.Back;
 using HotUpdate.UI.Battle.Base;
+using HotUpdate.UI.Begin;
 using HotUpdate.UI.Loading.Battle;
 using HotUpdate.UI.Quests;
+using HotUpdate.UI.Tip;
 using UnityEngine;
+using Task = System.Threading.Tasks.Task;
 
 namespace HotUpdate.UI
 {
@@ -53,6 +54,12 @@ namespace HotUpdate.UI
                     break;
                 case EUIPanelId.BlackBackPanel:
                     controller = await _uiManager.CreateViewAsync<BackView, BackController>(AssetKeys.BackView, layer);
+                    break;
+                case EUIPanelId.BeginPanel:
+                    controller = await _uiManager.CreateViewAsync<BeginView, BeginController>(AssetKeys.BeginView, layer);
+                    break;
+                case EUIPanelId.TipPanel:
+                    controller = await _uiManager.CreateViewAsync<TipView, TipController>(AssetKeys.BeginView, layer);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(panelId), panelId, null);

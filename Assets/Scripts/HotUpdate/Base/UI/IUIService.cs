@@ -10,6 +10,7 @@ namespace HotUpdate.Base.UI
         Task<IuiController> OpenAsync(EUIPanelId panelId, E_UILayer layer, Vector2 pos = default, Quaternion quaternion = default);
         
         Task CloseAsync(int panelId);
+        
         IuiController GetPanel(EUIPanelId panelId);
     }
 }

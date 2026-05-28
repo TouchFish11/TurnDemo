@@ -8,7 +8,6 @@ using Core.UI;
 using Core.Utility;
 using HotUpdate.Base;
 using HotUpdate.Base.Manager;
-using HotUpdate.Common;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 
 using HotUpdate.Game.Battle.Context;

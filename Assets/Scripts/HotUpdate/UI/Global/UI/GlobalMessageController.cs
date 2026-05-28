@@ -6,7 +6,6 @@ using Core.Log;
 using Core.Time;
 using Core.UI.ViewController;
 using HotUpdate.Base.UI;
-using HotUpdate.Common;
 
 
 namespace HotUpdate.UI.Global.UI

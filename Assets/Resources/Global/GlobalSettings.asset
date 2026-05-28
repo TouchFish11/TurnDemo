@@ -27,6 +27,9 @@ MonoBehaviour:
   speedUpdateInterval: 1
   abLoadPath: 1
   userDataPath: 0
+  criticalActiveThreshold: 2
+  bundleSlidingWindowMaxCount: 10
+  maxDurationPerWindow: 30
   udpReceiveBufferSize: 8192
   tcpReceiveTempBufferSize: 1024
   tcpReceiveBufferSize: 1024
