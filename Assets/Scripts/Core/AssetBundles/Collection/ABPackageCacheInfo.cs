@@ -10,7 +10,7 @@ namespace Core.AssetBundles.Collection
     [Serializable]
     public class AbPackageCacheInfo
     {
-        //AB包名
+        //AB包名，不含拓展名
         [SerializeField] private string _abName;
         //AB包Hash
         [SerializeField] private string _hash;
@@ -36,7 +36,7 @@ namespace Core.AssetBundles.Collection
         }
 
         /// <summary>
-        /// AB包名
+        /// AB包名（不含拓展名）
         /// </summary>
         public string AbName => _abName;
 

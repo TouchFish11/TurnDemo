@@ -18,9 +18,9 @@ MonoBehaviour:
   isOpenLayout: 1
   uploadServerIp: 
   resServerIp: http://192.168.0.6:8080/Http_Server/
-  reDownloadCompareFileMaxNum: 5
+  reDownloadCompareFileMaxNum: 2
   reDownloadAbMaxNum: 5
-  maxConcurrencyNum: 8
+  maxConcurrencyNum: 5
   connectTimeout: 0
   maxRetryCount: 5
   maxRetryWaitSeconds: 5

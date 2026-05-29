@@ -53,9 +53,10 @@ namespace Core.AssetBundles.Update.Core
             // 遍历列表，保存未完成AB包的缓存信息
             foreach (var abWebRequester in list)
             {
-                var abLoadPath = PathUtility.GetAbLoadPath(abWebRequester.AbName);
+                var abLoadPath = PathUtility.GetAbLoadPath(abWebRequester.AbName.WithAbSuffix());
                 // 本地文件不存在则跳过（未开始下载）
-                if (!File.Exists(abLoadPath)) continue;
+                if (!File.Exists(abLoadPath)) 
+                    continue;
                 // 获取本地文件信息
                 var fileInfo = new FileInfo(abLoadPath);
                 // 封装缓存信息

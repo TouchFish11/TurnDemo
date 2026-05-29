@@ -9,16 +9,16 @@ namespace Core.AssetBundles.Update.Core
         None = 0,
         
         /// <summary>
-        /// 下载远端清单文件
+        /// 下载远端目录文件
         /// </summary>
         [StateConfig(Order = 0, IsEnabled = true)]
-        DownLoadRemoteListFile,
+        DownLoadRemoteCatalogFile,
 
         /// <summary>
-        /// 读取本地清单文件
+        /// 读取本地目录文件
         /// </summary>
         [StateConfig(Order = 1, IsEnabled = true)]
-        GetLocalCompareFile,
+        LoadLocalCatalogFile,
 
         /// <summary>
         /// 对比差异
@@ -29,7 +29,7 @@ namespace Core.AssetBundles.Update.Core
         /// <summary>
         /// 检查设备存储
         /// </summary>
-        [StateConfig(Order = 3, IsEnabled = false)]
+        [StateConfig(Order = 3, IsEnabled = true)]
         CheckDeviceStorage,
 
         /// <summary>

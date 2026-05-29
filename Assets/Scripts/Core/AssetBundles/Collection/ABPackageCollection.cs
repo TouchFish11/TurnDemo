@@ -11,16 +11,9 @@ namespace Core.AssetBundles.Collection
     /// </summary>
     public class ABPackageCollection : Collection<string, ABPackageInfo>
     {
-        public override bool TryGetValue(string key, out ABPackageInfo value)
-        {
-            var abKey = !key.Contains(FileUtility.AbSuffix) ? $"{key}{FileUtility.AbSuffix}" : key;
-            return base.TryGetValue(abKey, out value);
-        }
-        
         public string[] GetAllDependencies(string abName)
         {
-            var abKey = !abName.Contains(FileUtility.AbSuffix) ? $"{abName}{FileUtility.AbSuffix}" : abName;
-            return base.TryGetValue(abKey, out var abPackageInfo) ? abPackageInfo.Dependencies : Array.Empty<string>();
+            return base.TryGetValue(abName, out var abPackageInfo) ? abPackageInfo.Dependencies : Array.Empty<string>();
         }
 
         public void Add(string abName, ABPackageInfo abPackageInfo)

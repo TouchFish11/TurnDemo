@@ -15,7 +15,7 @@ namespace HotUpdate.UI.Begin
         
         private ConfirmData _confirmData;
         
-        [InjectUI(1)] private RectTransform AuxiliaryTipBox { get; }
+        [InjectUI(1)] private RectTransform AuxiliaryTipBox { get; set; }
         
         public void DrawContent(ConfirmData confirmData)
         {

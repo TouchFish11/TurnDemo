@@ -108,10 +108,10 @@ namespace HotUpdate.UI.Begin
                 case EUpdatePhase.None:
                     view.SetTextPhase("正在检查更新...");
                     break;
-                case EUpdatePhase.DownLoadRemoteListFile:
+                case EUpdatePhase.DownLoadRemoteCatalogFile:
                     view.SetTextPhase("正在下载资源目录...");
                     break;
-                case EUpdatePhase.GetLocalCompareFile:
+                case EUpdatePhase.LoadLocalCatalogFile:
                     view.SetTextPhase("正在读取本地资源目录...");
                     break;
                 case EUpdatePhase.CompareContrast:

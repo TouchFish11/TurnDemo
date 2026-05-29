@@ -10,10 +10,10 @@ using UnityEngine.Networking;
 namespace Core.AssetBundles.Update.State
 {
     /// <summary>
-    /// 获取本地列表文件状态类
-    /// 负责加载本地AssetBundle清单文件（优先读取持久化路径，其次读取StreamingAssets），为后续对比校验做准备
+    /// 获取本地目录文件状态类
+    /// 负责加载本地资源目录文件（优先读取持久化路径，其次读取StreamingAssets），为后续对比校验做准备
     /// </summary>
-    public class GetLocalListFileState : UpdateState
+    public class LoadLocalCatalogFileState : UpdateState
     {
         /// <summary>
         /// 执行获取本地清单文件核心逻辑
@@ -97,6 +97,6 @@ namespace Core.AssetBundles.Update.State
         /// <summary>
         /// 当前更新阶段标识
         /// </summary>
-        public override EUpdatePhase UpdatePhase => EUpdatePhase.GetLocalCompareFile;
+        public override EUpdatePhase UpdatePhase => EUpdatePhase.LoadLocalCatalogFile;
     }
 }

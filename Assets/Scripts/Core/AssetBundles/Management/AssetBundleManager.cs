@@ -55,7 +55,7 @@ namespace Core.AssetBundles.Management
             foreach (var abPackageInfo in Catalog.ABPackageCollection.Values)
             {
                 var abName = abPackageInfo.Name;
-                var loadPath = PathUtility.GetAbLoadPath($"{abPackageInfo.Name}{FileUtility.AbSuffix}");
+                var loadPath = PathUtility.GetAbLoadPath(abPackageInfo.Name.WithAbSuffix());
                 // 初始化包装器
                 var window = DIContainer.Create<LFUSlidingWindow>(parameterValues: new object[] { _bundleSlidingWindowMaxCount, _maxDurationPerWindow });
                 var bundleWrapper = DIContainer.Create<BundleWrapper>(parameterValues: new object[] { abName, loadPath, this, window });

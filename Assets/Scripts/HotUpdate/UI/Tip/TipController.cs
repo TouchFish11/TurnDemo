@@ -3,9 +3,7 @@ using System.Threading.Tasks;
 using Core.DI;
 using Core.Log;
 using Core.UI.ViewController;
-using HotUpdate.Base;
 using HotUpdate.Base.Data;
-using HotUpdate.Base.Enums;
 
 namespace HotUpdate.UI.Tip
 {
@@ -25,6 +23,8 @@ namespace HotUpdate.UI.Tip
 
         protected override Task OnInactivate()
         {
+            _confirmContentFactory.Dispose();
+            _confirmContentFactory = null;
             return Task.CompletedTask;
         }
 

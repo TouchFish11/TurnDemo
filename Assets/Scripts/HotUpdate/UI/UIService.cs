@@ -59,7 +59,7 @@ namespace HotUpdate.UI
                     controller = await _uiManager.CreateViewAsync<BeginView, BeginController>(AssetKeys.BeginView, layer);
                     break;
                 case EUIPanelId.TipPanel:
-                    controller = await _uiManager.CreateViewAsync<TipView, TipController>(AssetKeys.BeginView, layer);
+                    controller = await _uiManager.CreateViewAsync<TipView, TipController>(AssetKeys.TipView, layer);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(panelId), panelId, null);

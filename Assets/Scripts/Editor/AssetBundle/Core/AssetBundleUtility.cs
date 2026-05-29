@@ -14,7 +14,7 @@ namespace Editor.AssetBundle.Core
         /// </summary>
         public static string GetPlatformBundleName(BuildTarget target)
         {
-            return $"{target}{FileUtility.AbSuffix}";
+            return target.ToString().WithAbSuffix();
         }
 
         /// <summary>

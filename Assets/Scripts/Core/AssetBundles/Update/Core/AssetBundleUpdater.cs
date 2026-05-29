@@ -15,7 +15,6 @@ namespace Core.AssetBundles.Update.Core
     {
         // 对象池管理器接口
         private readonly IPoolManager _poolManager;
-        
         public int QuitPriority => 0;
         // 更新上下文
         private ABUpdateContext _updateContext;
@@ -25,7 +24,10 @@ namespace Core.AssetBundles.Update.Core
         private IUpdateState _currentUpdateState;
         // 当前更新状态索引
         private int _stateIndex;
+        
+        /// <summary>
         /// 更新服务
+        /// </summary>
         public UpdateService UpdateService { get; }
 
         /// <summary>
@@ -134,7 +136,8 @@ namespace Core.AssetBundles.Update.Core
         {
             try
             {
-                if (_currentUpdateState == null || UpdatePhase == EUpdatePhase.Finished) return;
+                if (_currentUpdateState == null || UpdatePhase == EUpdatePhase.Finished) 
+                    return;
                 UpdateService.CancelDownload(_updateContext);
                 Logger.Log($"{nameof(AssetBundleUpdater)}: 已取消下载");
             }

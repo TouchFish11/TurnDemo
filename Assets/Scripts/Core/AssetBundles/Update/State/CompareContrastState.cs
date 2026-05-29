@@ -100,30 +100,29 @@ namespace Core.AssetBundles.Update.State
             {
                 // 缓存中无该包信息，跳过（需要新下载）
                 if (!cachePackageCollection.ContainsKey(waitPair.Key))
-                {
                     continue;
-                }
 
+                // 获取缓存文件的单个包信息
+                var cachePackageInfo = cachePackageCollection[waitPair.Key];
+                
                 // 说明这个包没有下载完成，没有开始下载或下载未完成
-                if (waitPair.Value.Hash == string.Empty && waitPair.Value.DownloadedBytes < remoteCollection[waitPair.Key].Size)
+                if (cachePackageInfo.Hash == string.Empty && cachePackageInfo.DownloadedBytes < remoteCollection[waitPair.Key].Size)
                 {
-                    waitPair.Value.DownloadedBytes = cachePackageCollection[waitPair.Key].DownloadedBytes;
+                    waitPair.Value.DownloadedBytes = cachePackageInfo.DownloadedBytes;
                 }
                 // 下载完成了，但是没有进行校验，那就不用下载了
-                else if(waitPair.Value.Hash == string.Empty && waitPair.Value.DownloadedBytes == remoteCollection[waitPair.Key].Size)
+                else if(cachePackageInfo.Hash == string.Empty && cachePackageInfo.DownloadedBytes == remoteCollection[waitPair.Key].Size)
                 {
                     waitRemoveABFileList.Add(waitPair.Key);
                 }
-                else if(waitPair.Value.Hash != string.Empty)
+                else if(cachePackageInfo.Hash != string.Empty)
                 {
                     // 缓存中该包Hash与待下载包不一致，说明需要更新，跳过（保留待下载）
-                    if (cachePackageCollection[waitPair.Key].Hash != waitPair.Value.Hash)
-                    {
+                    if (cachePackageInfo.Hash != waitPair.Value.Hash)
                         continue;
-                    }
                     
                     // 缓存中该包Hash一致，且已下载完成，标记为无需下载（加入移除列表）
-                    if (cachePackageCollection[waitPair.Key].IsSuccess)
+                    if (cachePackageInfo.IsSuccess)
                     {
                         waitRemoveABFileList.Add(waitPair.Key);
                     }

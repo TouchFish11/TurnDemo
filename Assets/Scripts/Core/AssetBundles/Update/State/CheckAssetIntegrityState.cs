@@ -77,7 +77,7 @@ namespace Core.AssetBundles.Update.State
             // 遍历所有缓存包，校验完整性
             foreach (var cachePair in cacheCollection)
             {
-                var hash = await HashUtility.GenerateFileSHA256HashAsync(PathUtility.GetAbLoadPath(cachePair.Value.AbName));
+                var hash = await HashUtility.GenerateFileSHA256HashAsync(PathUtility.GetAbLoadPath(cachePair.Value.AbName.WithAbSuffix()));
                 var hashSame = remoteCollection[cachePair.Key].Hash == hash;
                 // 校验条件：已下载字节数 == 远程包大小 且 Hash一致
                 if (remoteCollection[cachePair.Key].Size != cachePair.Value.DownloadedBytes || !hashSame)

@@ -21,8 +21,8 @@ namespace Core.AssetBundles.Update.Core
         {
             return updatePhase switch
             {
-                EUpdatePhase.DownLoadRemoteListFile => DIContainer.Create<DownloadListFileState>(),
-                EUpdatePhase.GetLocalCompareFile => DIContainer.Create<GetLocalListFileState>(),
+                EUpdatePhase.DownLoadRemoteCatalogFile => DIContainer.Create<DownloadCatalogState>(),
+                EUpdatePhase.LoadLocalCatalogFile => DIContainer.Create<LoadLocalCatalogFileState>(),
                 EUpdatePhase.CompareContrast => DIContainer.Create<CompareContrastState>(),
                 EUpdatePhase.CheckDeviceStorage => DIContainer.Create<CheckDeviceStorageState>(),
                 EUpdatePhase.DownLoadAssets => DIContainer.Create<DownLoadAssetState>(),

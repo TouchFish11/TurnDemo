@@ -12,8 +12,7 @@ namespace Core.AssetBundles.Collection
     public class ABPackageInfo
     {
         /// <summary>
-        /// AB包名称
-        /// 包含拓展名
+        /// AB包名称（不含拓展名）
         /// </summary>
         [JsonProperty]
         private string name;
@@ -52,8 +51,7 @@ namespace Core.AssetBundles.Collection
         }
 
         /// <summary>
-        /// 获取AB包名称
-        /// 包含拓展名
+        /// AB包名称（不含拓展名）
         /// </summary>
         public string Name {get => name; set => name = value; }
 

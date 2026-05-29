@@ -131,7 +131,7 @@ namespace Editor.AssetBundle.Core
             // 拷贝所有 .assetBundle 文件（只拷贝变化的）
             foreach (var (bundleName, newAbInfo) in newCatalog.ABPackageCollection)
             {
-                var fileName = bundleName + FileUtility.AbSuffix;
+                var fileName = bundleName.WithAbSuffix();
                 var srcFilePath = Path.Combine(outputPath, fileName);
                 var dstFilePath = Path.Combine(serverDataPath, fileName);
 
@@ -315,38 +315,47 @@ namespace Editor.AssetBundle.Core
         
         private void GenerateStreamingCatalog(string streamingAssetsPath, string outputPath, List<string> copiedBundles)
         {
-            // 读取 outputPath 中的完整目录
+            if (copiedBundles.Count == 0)
+            {
+                Log("没有拷贝任何 AB 包，首包目录未生成。");
+                return;
+            }
+
             string fullCatalogPath = Path.Combine(outputPath, AssetCatalogName);
             if (!File.Exists(fullCatalogPath))
             {
-                Log($"警告：完整目录不存在 {fullCatalogPath}，首包目录将为空。");
+                Log($"错误：完整目录文件不存在 {fullCatalogPath}，请先执行 Build 生成。");
                 return;
             }
 
             var fullCatalog = jsonManager.FromJson<AssetCatalog>(File.ReadAllText(fullCatalogPath));
-            var streamingCatalog = new AssetCatalog();
+            Log($"完整目录加载成功，包含 {fullCatalog.ABPackageCollection.Count} 个包。");
 
-            // 只保留首包中存在的包信息
+            var streamingCatalog = new AssetCatalog();
             foreach (var bundleName in copiedBundles)
             {
                 if (fullCatalog.ABPackageCollection.TryGetValue(bundleName, out var pkgInfo))
                 {
                     streamingCatalog.ABPackageCollection.Add(bundleName, pkgInfo);
-                }
+                    Log($"添加包信息：{bundleName}");
 
-                // 保留该包的资源映射条目
-                var entries = fullCatalog.Assets.Where(e => e.bundleName == bundleName);
-                foreach (var entry in entries)
+                    // 添加资源映射
+                    var entries = fullCatalog.Assets.Where(e => e.bundleName == bundleName);
+                    foreach (var entry in entries)
+                    {
+                        streamingCatalog.AddOrUpdateEntry(entry.key, entry);
+                    }
+                }
+                else
                 {
-                    streamingCatalog.AddOrUpdateEntry(entry.key, entry);
+                    Log($"警告：完整目录中未找到包 {bundleName}，已跳过。");
                 }
             }
 
-            // 保存到 StreamingAssets
+            // 保存
             string streamingCatalogPath = Path.Combine(streamingAssetsPath, AssetCatalogName);
-            var json = jsonManager.ToJson(streamingCatalog);
-            File.WriteAllText(streamingCatalogPath, json);
-            Log($"首包资源目录已生成：{streamingCatalogPath}，包含 {copiedBundles.Count} 个包。");
+            File.WriteAllText(streamingCatalogPath, jsonManager.ToJson(streamingCatalog));
+            Log($"首包资源目录已生成：{streamingCatalogPath}，包含 {streamingCatalog.ABPackageCollection.Count} 个包。");
         }
 
         /// <summary>
@@ -416,7 +425,7 @@ namespace Editor.AssetBundle.Core
                 foreach (var abInfo in releaseCollection.assetBundleInfos)
                 {
                     var bundleName = abInfo.assetBundleName; // 不带后缀
-                    var fileName = $"{bundleName}{FileUtility.AbSuffix}";
+                    var fileName = bundleName.WithAbSuffix();
                     var filePath = Path.Combine(outputPath, fileName);
 
                     if (!File.Exists(filePath))

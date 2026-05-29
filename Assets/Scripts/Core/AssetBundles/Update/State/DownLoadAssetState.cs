@@ -90,7 +90,7 @@ namespace Core.AssetBundles.Update.State
                 // DownloadedBytes不为0说明是续传，追加
                 var isAppend = waitDownloadCollection[pair.Key].DownloadedBytes != 0;
                 // 创建AB包下载请求器
-                var abWebRequester = poolManager.GetData<ABWebRequester>().Init(serverIp, waitDownloadInfo.AbName, isAppend, waitDownloadInfo.AbName, string.Empty, waitDownloadInfo.DownloadedBytes);
+                var abWebRequester = poolManager.GetData<ABWebRequester>().Init(serverIp, waitDownloadInfo.AbName.WithAbSuffix(), isAppend, waitDownloadInfo.AbName, string.Empty, waitDownloadInfo.DownloadedBytes);
                 // 绑定下载进度回调
                 abWebRequester.OnDownloadProgress += proCallBack;
                 // 将请求器加入待下载队列
@@ -127,7 +127,7 @@ namespace Core.AssetBundles.Update.State
                             // 获取下载后的文件信息
                             var fileInfo = new FileInfo(PathUtility.GetAbLoadPath(requester.FileName));
                             // 更新缓存信息
-                            var cacheInfo = new AbPackageCacheInfo(requester.FileName, requester.Hash, fileInfo.Length);
+                            var cacheInfo = new AbPackageCacheInfo(requester.AbName, requester.Hash, fileInfo.Length);
                             updateService.UpdateCacheFile(context, cacheInfo);
                         }
                         // 下载失败，加入失败队列
@@ -135,7 +135,7 @@ namespace Core.AssetBundles.Update.State
                         {
                             context.AddRequesterToFail(requester);
                         }
-                    });
+                    }, GlobalSettings.Instance.connectTimeout);
                     
                     await Task.Yield(); // 帧间等待，避免阻塞主线程
                 }
@@ -210,7 +210,7 @@ namespace Core.AssetBundles.Update.State
             var sb = new StringBuilder();
             foreach (var info in assetBundleUpdater.GetContext().CachePackageCollection.Values)
             {
-                sb.AppendLine($"AB包：{info.AbName}未下载完整，已下载字节数：{info.DownloadedBytes}");
+                sb.AppendLine($"AB包：{info.AbName.WithAbSuffix()}未下载完整，已下载字节数：{info.DownloadedBytes}");
             }
 
             // 计算已下载数

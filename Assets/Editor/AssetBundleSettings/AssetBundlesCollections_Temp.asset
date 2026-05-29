@@ -421,9 +421,9 @@ MonoBehaviour:
   - assetBundleName: scene
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\Scene\BeginScene.unity
-      size: 13558
+      size: 14436
       name: BeginScene.unity
-      hash: 674338e5084acb293a8010f6f781ead640aa47e4d9f9b0371cdf938182314c74
+      hash: fe33afaab620b6b56c49921281bad0d95ee7c04665eaf3c149650c9025db9284
       assetType: 1
     - assetPath: Assets\Editor\ArtRes\Scene\LevelScene.unity
       size: 89284
@@ -737,14 +737,14 @@ MonoBehaviour:
       hash: bb326c794838be6b0093a1100b1b55d5cf868e1142954e201c38dab86d64c830
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Tip\AssetUpdateConfirmContent.prefab
-      size: 20445
+      size: 20443
       name: AssetUpdateConfirmContent.prefab
-      hash: a24d18c6f6dbc6de54e453126b76e76579a74ddcba25d3fab192a62539d6a958
+      hash: b7d3a1b502c5a03e39206d412b0acb0c4130b7b98f2ac9fb55a1f699bd7972ff
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Tip\TipView.prefab
-      size: 12509
+      size: 12511
       name: TipView.prefab
-      hash: dc0e04522e823ed9cf18dbb864d60c82523679395bae144ab15ce851309453c1
+      hash: a114fd57f8430b412094b7cbdc7e08fd97c2758c0df2958686fa61970de636be
       assetType: 0
   - assetBundleName: vfx
     assetInfos:

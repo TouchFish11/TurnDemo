@@ -72,7 +72,7 @@ namespace Editor.AssetBundle.Core
             // 处理 .assetBundle 文件
             foreach (var (bundleName, localAbInfo) in localCatalog.ABPackageCollection)
             {
-                var fileName = $"{bundleName}{FileUtility.AbSuffix}";
+                var fileName = bundleName.WithAbSuffix();
                 var filePath = Path.Combine(serverDataPath, fileName);
                 if (!File.Exists(filePath)) continue;
 

@@ -9,6 +9,14 @@ namespace Core.Utility
     /// </summary>
     public static class FileUtility
     {
+        /// <summary>
+        /// AB包自定义后缀
+        /// </summary>
+        /// <value>
+        /// assetbundle
+        /// </value>
+        public static string AbSuffix => "assetbundle";
+        
         #region 默认文件
 
         /// <summary>
@@ -66,14 +74,6 @@ namespace Core.Utility
         /// PlayerActionAssets.json
         /// </value>
         public static string InputActionLocalFileName => "MainActionMap.json";
-
-        /// <summary>
-        /// AB包自定义后缀
-        /// </summary>
-        /// <value>
-        /// .assetbundle
-        /// </value>
-        public static string AbSuffix => ".assetbundle";
         
         /// <summary>
         /// 游戏设置文件名
@@ -136,6 +136,26 @@ namespace Core.Utility
                 GetTotalFiles(info, fileInfos, filterSuffixes);
             }
             return fileInfos;
+        }
+
+        /// <summary>
+        /// 为AB名称添加后缀
+        /// </summary>
+        /// <param name="bundleName">不包含拓展名的AB包名称</param>
+        /// <returns></returns>
+        public static string WithAbSuffix(this string bundleName)
+        {
+            return $"{bundleName}.{AbSuffix}";
+        }
+        
+        /// <summary>
+        /// 为AB文件名移除后缀
+        /// </summary>
+        /// <param name="bundleName">包含拓展名的AB包名称</param>
+        /// <returns></returns>
+        public static string WithOutAbSuffix(this string bundleName)
+        {
+            return Path.ChangeExtension(bundleName, null);
         }
     }
 }

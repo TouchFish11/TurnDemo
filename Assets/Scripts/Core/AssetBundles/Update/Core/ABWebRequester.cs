@@ -43,7 +43,7 @@ namespace Core.AssetBundles.Update.Core
         /// <param name="isAppend">是否断点续传：true-追加写入；false-覆盖写入</param>
         /// <param name="abName">对应的AssetBundle包名</param>
         /// <param name="hash">文件Hash校验值</param>
-        /// <param name="downloadedBytes"></param>
+        /// <param name="downloadedBytes">已下载字节数</param>
         public ABWebRequester Init(string url, string fileName, bool isAppend, string abName, string hash, long downloadedBytes)
         {
             _cancellationTokenSource = new CancellationTokenSource();
@@ -63,43 +63,47 @@ namespace Core.AssetBundles.Update.Core
         /// </summary>
         /// <param name="savePath">文件保存的本地完整路径（包含文件名）</param>
         /// <param name="overCallback">下载完成/失败回调（参数为是否下载成功）</param>
-        public async void DownLoadAsync(string savePath, Action<bool> overCallback)
+        /// <param name="timeout">请求超时时间</param>
+        public async void DownLoadAsync(string savePath, Action<bool> overCallback, int timeout)
         {
+            var success = false;
             try
             {
                 // 初始化UnityWebRequest：创建GET请求
                 _request = UnityWebRequest.Get($"{Url}{FileName}");
                 // 设置连接超时时间
-                _request.timeout = GlobalSettings.Instance.connectTimeout;
+                _request.timeout = timeout;
                 // 设置自定义流下载处理器
                 _request.downloadHandler = DIContainer.Create<DownloadHandlerStream>(parameterValues: new object[] { savePath, IsAppend, DownloadedBytes });
                 // 设置请求头：Range指定从已下载字节数的位置开始下载
-                _request?.SetRequestHeader("Range", $"bytes={DownloadedBytes}-");
- 
+                _request.SetRequestHeader("Range", $"bytes={DownloadedBytes}-");
+
                 // 发送请求
-                var asyncOperation = _request?.SendWebRequest();
+                var asyncOperation = _request.SendWebRequest();
                 // 更新进度协程
                 _monoAdapter.StartCoroutine(UpdateDownloadProgress(asyncOperation));
                 // 发送网络请求
                 using var handle = asyncOperation.ToTask(_cancellationTokenSource.Token);
                 await handle.Task;
-                // 下载结束后处理：分三种情况（超时、请求失败、请求成功）
-                if (_request?.result != UnityWebRequest.Result.Success)
+
+                // 下载结束后处理
+                success = _request.result == UnityWebRequest.Result.Success;
+                if (!success)
                 {
                     // 请求失败：打印错误日志（包含错误信息、响应码），触发失败回调
                     Logger.LogError($"[{nameof(ABWebRequester)}]: {FileName} download fail, error={_request?.error}，result={_request?.result}, responseCode={_request?.responseCode}");
-                    overCallback?.Invoke(false);
-                }
-                else
-                {
-                    // 触发成功回调
-                    overCallback?.Invoke(_request?.result == UnityWebRequest.Result.Success);
                 }
             }
             catch (System.Exception e)
             {
                 Logger.LogError($"[{nameof(ABWebRequester)}]: Download error, {e.Message}");
-                overCallback?.Invoke(false);
+                success = false;
+            }
+            finally
+            {
+                ReleaseRequest();
+                // 触发回调
+                overCallback?.Invoke(success);
             }
         }
 
@@ -113,8 +117,6 @@ namespace Core.AssetBundles.Update.Core
             // 下载进度轮询变量：记录上一帧的下载字节数，用于计算当前帧新增下载量
             ulong lastFrameDownloadBytes = 0;
             ulong currentFrameDownloadBytes;
-            // 获取下载上下文
-            var context = _updater.GetContext();
             // 下载循环：请求未完成、未暂停时持续轮询
             while (_request != null && !_isAbout && !ao.isDone)
             {
@@ -133,6 +135,9 @@ namespace Core.AssetBundles.Update.Core
             {
                 yield break;
             }
+
+            if (_request == null)
+                yield break;
             
             currentFrameDownloadBytes = _request.downloadedBytes;
             // 获取上一帧已下载的总字节数
@@ -156,34 +161,56 @@ namespace Core.AssetBundles.Update.Core
                 CurrentRetryCount = 0;
             }
         }
-
+        
         /// <summary>
         /// 终止当前下载请求
         /// 同时清空下载进度回调，避免空引用或重复回调
         /// </summary>
         public void Abort()
         {
-            if (_request.downloadHandler is DownloadHandlerStream handlerStream)
+            CancelRequest();
+        }
+
+        /// <summary>
+        /// 释放请求
+        /// </summary>
+        private void ReleaseRequest()
+        {
+            if (_request == null)
+                return;
+            
+            _request.downloadHandler?.Dispose();
+            _request.Abort();
+            _request.Dispose();
+            _request = null;
+            
+            if (_cancellationTokenSource != null)
+            {
+                _cancellationTokenSource.Dispose();
+                _cancellationTokenSource = null;
+            }
+
+            OnDownloadProgress = null;
+        }
+        
+        /// <summary>
+        /// 取消请求
+        /// </summary>
+        private void CancelRequest()
+        {
+            _cancellationTokenSource?.Cancel();
+
+            if (_request?.downloadHandler is DownloadHandlerStream handlerStream)
             {
                 handlerStream.Pause();
             }
-            
-            _cancellationTokenSource.Cancel();
-            _cancellationTokenSource = null;
-            
-            _request?.Abort();
-            _request?.Dispose();
-            
+
+            ReleaseRequest();
             _isAbout = true;
-            OnDownloadProgress = null;
-            
-            _request = null;
         }
         
         public void ResetData()
         {
-            _cancellationTokenSource = null;
-            OnDownloadProgress = null;
             AbName = string.Empty;
             Hash = string.Empty;
             FileName = string.Empty;
@@ -192,14 +219,6 @@ namespace Core.AssetBundles.Update.Core
             _isAbout = false;
             DownloadedBytes = 0;
             CurrentRetryCount = 0;
-
-            if (_request != null)
-            {
-                _request?.Abort();
-                _request?.downloadHandler.Dispose();
-                _request?.Dispose();
-                _request = null;
-            }
         }
         
         /// <summary>
