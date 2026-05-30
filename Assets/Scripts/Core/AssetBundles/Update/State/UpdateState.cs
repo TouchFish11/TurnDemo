@@ -13,6 +13,8 @@ namespace Core.AssetBundles.Update.State
     /// </summary>
     public abstract class UpdateState : IUpdateState
     {
+        // 更新结果工厂
+        [Inject] protected UpdateResultFactory updateResultFactory;
         // 持有AssetBundle更新器实例
         [Inject] protected readonly IAssetBundleUpdater assetBundleUpdater;
         // 对象池管理器接口

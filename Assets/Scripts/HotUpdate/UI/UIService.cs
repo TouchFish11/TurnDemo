@@ -7,13 +7,15 @@ using HotUpdate.Base.UI;
 using HotUpdate.Game.Dialogue.UI;
 using HotUpdate.Game.Main.Back;
 using HotUpdate.Game.Main.Loading.Battle;
-using HotUpdate.Game.Main.UI;
 using HotUpdate.UI.Activity.Base;
 using HotUpdate.UI.Back;
 using HotUpdate.UI.Battle.Base;
 using HotUpdate.UI.Begin;
+using HotUpdate.UI.Global.UI;
 using HotUpdate.UI.Loading.Battle;
+using HotUpdate.UI.Main;
 using HotUpdate.UI.Quests;
+using HotUpdate.UI.Settings.UI;
 using HotUpdate.UI.Tip;
 using UnityEngine;
 using Task = System.Threading.Tasks.Task;
@@ -60,6 +62,12 @@ namespace HotUpdate.UI
                     break;
                 case EUIPanelId.TipPanel:
                     controller = await _uiManager.CreateViewAsync<TipView, TipController>(AssetKeys.TipView, layer);
+                    break;
+                case EUIPanelId.GlobalPanel:
+                    controller = await _uiManager.CreateViewAsync<GlobalMessageView, GlobalMessageController>(AssetKeys.GlobalMessageView, layer);
+                    break;
+                case EUIPanelId.SettingPanel:
+                    controller = await _uiManager.CreateViewAsync<SettingsView, SettingsController>(AssetKeys.SettingsView, layer);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(panelId), panelId, null);

@@ -1,4 +1,4 @@
-namespace HotUpdate.Game.Main.UI
+namespace HotUpdate.UI.Main
 {
     /// <summary>
     /// 主界面数据

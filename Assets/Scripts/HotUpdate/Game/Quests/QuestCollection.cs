@@ -32,12 +32,7 @@ namespace HotUpdate.Game.Quests
 
         public List<QuestData> GetQuestDatas()
         {
-            List<QuestData> questDatas = new();
-            foreach (var data in Values)
-            {
-                questDatas.Add(data);
-            }
-            return questDatas;
+            return new List<QuestData>(Values);
         }
 
         public void AddQuestData(QuestData data)

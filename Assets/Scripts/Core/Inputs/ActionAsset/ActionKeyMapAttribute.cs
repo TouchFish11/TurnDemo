@@ -2,7 +2,7 @@ using System;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 
-namespace Core.Input.ActionAsset
+namespace Core.Inputs.ActionAsset
 {
     /// <summary>
     /// 标记动作路径映射替换关键字

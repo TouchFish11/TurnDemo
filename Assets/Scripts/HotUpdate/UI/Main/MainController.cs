@@ -6,12 +6,11 @@ using Core.Pool;
 using Core.UI;
 using Core.UI.ViewController;
 using HotUpdate.Base.UI;
-using HotUpdate.Game.Main.UI.Logic;
 using HotUpdate.UI.Main.Logic;
 using HotUpdate.UI.Quests;
 using HotUpdate.UI.Settings.UI;
 
-namespace HotUpdate.Game.Main.UI
+namespace HotUpdate.UI.Main
 {
     using Task = System.Threading.Tasks.Task;
     
@@ -23,7 +22,8 @@ namespace HotUpdate.Game.Main.UI
     public class MainController : UIController<MainView>, IBlockOperation
     {
         [Inject] private IPoolManager _poolManager;
-        
+        [Inject] private IUIService _uiService;
+
         /// <summary>
         /// 主界面逻辑对象字典
         /// 键：逻辑类类型（如InteractLogic/TaskLogic）
@@ -85,7 +85,7 @@ namespace HotUpdate.Game.Main.UI
                 switch (btnName)
                 {
                     case "btnActivity":
-                        //await uiManager.CreateViewAsync<ActivityView, ActivityController>("", E_UILayer.Bot);
+                        await _uiService.OpenAsync(EUIPanelId.ActivityPanel, E_UILayer.Bot);
                         break;
                     case "btnJourney":
                         
@@ -95,7 +95,7 @@ namespace HotUpdate.Game.Main.UI
                         break;
                     // 任务按钮点击：打开任务界面
                     case "btnTask":
-                        await uiManager.CreateViewAsync<TaskView, TaskController>("", E_UILayer.Bot);
+                        await _uiService.OpenAsync(EUIPanelId.QuestPanel, E_UILayer.Bot);
                         break;
                     case "btnTeam":
                         
@@ -104,13 +104,13 @@ namespace HotUpdate.Game.Main.UI
                         
                         break;
                     case "btnSettings":
-                        await uiManager.CreateViewAsync<SettingsView, SettingsController>(AssetKeys.SettingsView, E_UILayer.Mid);
+                        await _uiService.OpenAsync(EUIPanelId.SettingPanel, E_UILayer.Bot);
                         break;
                 }
             }
             catch (Exception e)
             {
-                Logger.LogError($"：{nameof(MainController)}: {e.Message}");
+                Logger.LogError($"{nameof(MainController)}: Navigation other panel error,{e.Message}");
             }
         }
         

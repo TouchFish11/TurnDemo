@@ -6,7 +6,6 @@ using Core.GlobalEvent;
 using Core.Log;
 using HotUpdate.Game.Interact;
 using HotUpdate.Game.Interact.UI;
-using HotUpdate.Game.Main.UI.Logic;
 
 namespace HotUpdate.UI.Main.Logic
 {

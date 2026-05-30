@@ -5,9 +5,6 @@ using Core.Serialize.Json;
 using Core.Utility;
 using HotUpdate.Base.Manager;
 using HotUpdate.Common.Config.Quest.Config;
-
-using HotUpdate.Game.Main.UI;
-using HotUpdate.Game.Main.UI.Logic;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
@@ -47,7 +44,7 @@ namespace HotUpdate.UI.Main.Logic
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(QuestLogic)}.{nameof(OnInit)}: {e.Message}");
+                Logger.LogError($"{nameof(QuestLogic)}: QuestLogic init error,{e.Message}");
             }
         }
 

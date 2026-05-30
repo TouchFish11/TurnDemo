@@ -1,6 +1,10 @@
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading.Tasks;
+using Core.DI;
+using Core.HotUpdate;
 using Core.Mono;
+using HotUpdate.Base.Attributes;
 
 namespace HotUpdate.Base.Manager
 {
@@ -13,9 +17,33 @@ namespace HotUpdate.Base.Manager
 
         public int QuitPriority => 0;
         
-        public GameDataManager(IMonoAdapter monoAdapter)
+        public GameDataManager(IMonoAdapter monoAdapter, IHotUpdateManager hotUpdateManager)
         {
             monoAdapter.AddApplicationExitNotify(this);
+            Init(hotUpdateManager);
+        }
+
+        /// <summary>
+        /// 初始化管理器
+        /// </summary>
+        /// <param name="hotUpdateManager"></param>
+        private void Init(IHotUpdateManager hotUpdateManager)
+        {
+            foreach (var hotAssembly in hotUpdateManager.GetHotAssemblies())
+            {
+                foreach (var type in hotAssembly.GetTypes())
+                {
+                    if (!typeof(IDataManager).IsAssignableFrom(type) && type.IsClass)
+                        continue;
+
+                    var dataManagerIdAttribute = type.GetCustomAttribute<DataManagerIdAttribute>();
+                    if (dataManagerIdAttribute == null)
+                        continue;
+                    
+                    var dataManager = DIContainer.Create(dataManagerIdAttribute.DataManagerIdMapType, type, true) as IDataManager;
+                    _dataManagers.Add(dataManager);
+                }
+            }
         }
         
         /// <summary>

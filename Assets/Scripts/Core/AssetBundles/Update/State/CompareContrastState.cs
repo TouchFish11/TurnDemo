@@ -26,10 +26,10 @@ namespace Core.AssetBundles.Update.State
             }
             catch (System.Exception exception)
             {
-                return UpdateResult.CreateFailure(UpdateResult.EUpdateError.AnalyzeAssetBundle, exception);
+                return updateResultFactory.CreateFailure(UpdateResult.EUpdateError.AnalyzeAssetBundle, exception);
             }
             
-            return UpdateResult.CreateSuccess();
+            return updateResultFactory.CreateSuccess();
         }
 
         /// <summary>

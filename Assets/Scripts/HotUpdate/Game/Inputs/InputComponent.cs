@@ -4,7 +4,7 @@ using Core.Components;
 using Core.DI;
 using Core.GlobalEvent;
 using Core.GlobalEvent.Events;
-using Core.Input.ActionAsset;
+using Core.Inputs.ActionAsset;
 using Core.Mono;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Manager;
@@ -22,12 +22,12 @@ namespace HotUpdate.Game.Inputs
     [RequireComponent(typeof(PlayerInputComponent))]
     public class InputComponent : BaseComponent, IInputComponent
     {
-        // 主界面数据管理器
+        [Inject] private IEventCenter _eventCenter;
+        [Inject] private IInputSystem _inputSystem;
         [Inject] private IMainDataManager _mainDataManager;
         [Inject] private IMouseManager _mouseManager;
+        [Inject] private IMonoAdapter _monoAdapter;
         
-        // 输入系统接口，封装底层输入逻辑
-        private IInputSystem inputSystem;
         // 受限制的输入动作名称列表
         private readonly List<string> actionNmaes = new();
         // 输入限制计数（用于判断是否有输入限制生效）
@@ -69,16 +69,15 @@ namespace HotUpdate.Game.Inputs
         /// <param name="entityObject">所属的实体对象</param>
         public override void Init(IEntityObject entityObject)
         {
-            // 获取输入系统实例
-            inputSystem = DIContainer.GetInstance<IInputSystem>();
             // 初始化玩家输入，并注册输入动作触发回调
             var container = _mainDataManager.MainDataCollection.InputActionContainer;
             var playerInputComponent = EntityObject.GetComponent<PlayerInputComponent>();
             var playerInput = playerInputComponent.PlayerInput;
-            inputSystem.InitPlayerInput(playerInput, container, OnActionTrigger);
+            _inputSystem.InitPlayerInput(playerInput, container, OnActionTrigger);
             EnableInput();
+            
             // 添加帧更新监听，处理每帧的输入逻辑
-            DIContainer.GetInstance<IMonoAdapter>().AddUpdateListener(OnUpdate);
+            _monoAdapter.AddUpdateListener(OnUpdate);
         }
 
         /// <summary>
@@ -109,7 +108,7 @@ namespace HotUpdate.Game.Inputs
         /// </summary>
         public void EnableInput()
         {
-            inputSystem.EnableInput();
+            _inputSystem.EnableInput();
         }
 
         /// <summary>
@@ -117,7 +116,7 @@ namespace HotUpdate.Game.Inputs
         /// </summary>
         public void DisEnableInput()
         {
-            inputSystem.DisableInput();
+            _inputSystem.DisableInput();
         }
 
         /// <summary>
@@ -128,9 +127,7 @@ namespace HotUpdate.Game.Inputs
         {
             // 若处于输入限制状态，且当前触发的动作不在受限列表中，则忽略该输入
             if (IsLimitInput && !ContainInputName(context.action.name))
-            {
                 return;
-            }
 
             // 根据输入动作名称分发处理逻辑
             switch (context.action.name)
@@ -176,11 +173,11 @@ namespace HotUpdate.Game.Inputs
                     {
                         case InputActionPhase.Started:
                             // 开始按压：触发鼠标显示事件
-                            DIContainer.GetInstance<IEventCenter>().TriggerEvent(new MouseVisibleChangedEvent { SourceName = nameof(Keyboard.current.leftAltKey), IsVisible = true});
+                            _eventCenter.TriggerEvent(new MouseVisibleChangedEvent { SourceName = nameof(Keyboard.current.leftAltKey), IsVisible = true});
                             break;
                         case InputActionPhase.Canceled:
                             // 取消按压：触发鼠标隐藏事件
-                            DIContainer.GetInstance<IEventCenter>().TriggerEvent(new MouseVisibleChangedEvent { SourceName = nameof(Keyboard.current.leftAltKey), IsVisible = false });
+                            _eventCenter.TriggerEvent(new MouseVisibleChangedEvent { SourceName = nameof(Keyboard.current.leftAltKey), IsVisible = false });
                             break;
                     }
                     break;

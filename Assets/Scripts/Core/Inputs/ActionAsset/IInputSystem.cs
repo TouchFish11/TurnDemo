@@ -1,9 +1,8 @@
 using System;
-using System.Threading.Tasks;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
-namespace Core.Input.ActionAsset
+namespace Core.Inputs.ActionAsset
 {
     /// <summary>
     /// ����ϵͳ�ӿ�

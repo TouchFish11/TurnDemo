@@ -7,7 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace HotUpdate.Game.Main.UI
+namespace HotUpdate.UI.Main
 {
     /// <summary>
     /// 主界面视图类

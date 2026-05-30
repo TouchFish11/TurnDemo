@@ -266,8 +266,6 @@ namespace HotUpdate.UI.Begin
             {
                 // 销毁界面
                 await uiManager.DestroyView(panelId);
-                // 清空UI管理器
-                await uiManager.Clear();
 
                 if (OnClickEnterGame == null)
                 {

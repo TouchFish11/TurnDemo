@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Core.Components;
-using HotUpdate.Base.Factory;
-using HotUpdate.Base.Utility;
 using Unity.VisualScripting;
 using UnityEngine;
 using Logger = Core.Log.Logger;
@@ -22,20 +20,20 @@ namespace HotUpdate.Base.Component
     {
         // 静态映射字典：组件名称 -> 组件Type类型
         // 键：组件类名（typeof(T).Name）；值：组件的运行时Type对象
-        private static readonly Dictionary<string, Type> _nameToComponentTypeMap = new();
+        private readonly Dictionary<string, Type> _nameToComponentTypeMap = new();
         
         // 组件初始化栈：用于处理RequireComponent依赖时的初始化顺序
         // 栈特性保证：依赖组件先初始化（栈顶先出），当前组件后初始化
-        private static readonly Stack<IComponent> _componentStack = new();
+        private readonly Stack<IComponent> _componentStack = new();
 
         /// <summary>
         /// 执行时机：游戏启动阶段/工厂首次使用前（需确保先于所有AddComponent调用）
         /// 核心逻辑：调用FactoryUtility工具类扫描程序集中所有实现IComponent的组件类型，
         /// 并将类型名称与Type对象映射注册到_nameToComponentTypeMap字典
         /// </summary>
-        static ComponentHelper()
+        public ComponentHelper(ComponentService componentService)
         {
-            FactoryUtility.ScanComponents(_nameToComponentTypeMap);
+            componentService.ScanComponents(_nameToComponentTypeMap);
         }
 
         /// <summary>
@@ -49,7 +47,7 @@ namespace HotUpdate.Base.Component
         /// 1. entityObject为null时抛出
         /// 2. componentIds为null时抛出
         /// </exception>
-        public static IEnumerable<(Type, IComponent)> AddComponents(IEntityObject entityObject, IEnumerable<string> componentIds)
+        public IEnumerable<(Type, IComponent)> AddComponents(IEntityObject entityObject, IEnumerable<string> componentIds)
         {
             if (entityObject == null)
             {
@@ -84,8 +82,8 @@ namespace HotUpdate.Base.Component
         /// <remarks>
         /// 底层调用UnityEngine.GameObject.AddComponent(Type)挂载组件，
         /// 仅处理实现IComponent接口的组件，非IComponent组件会被忽略
-        /// </remarks>
-        public static IEnumerable<(Type, IComponent)> AddComponent(string componentName, IEntityObject entityObject)
+        /// </remarks> 
+        public IEnumerable<(Type, IComponent)> AddComponent(string componentName, IEntityObject entityObject)
         {
             // 从缓存字典查找组件类型，避免重复反射
             if (_nameToComponentTypeMap.TryGetValue(componentName, out var componentType))
@@ -124,7 +122,7 @@ namespace HotUpdate.Base.Component
         /// 场景1：类型注册成功且初始化完成 → 返回有效实例
         /// 场景2：类型未注册/挂载失败 → 返回空集合
         /// </returns>
-        public static IEnumerable<IComponent> AddComponent<T>(IEntityObject entityObject) where T : UnityEngine.Component, IComponent
+        public IEnumerable<IComponent> AddComponent<T>(IEntityObject entityObject) where T : UnityEngine.Component, IComponent
         {
             // 通过泛型类型名称查找注册的组件Type（复用缓存字典）
             var componentTypeName = typeof(T).Name;
@@ -169,7 +167,7 @@ namespace HotUpdate.Base.Component
         /// 3. 每次调用前清空栈，避免跨初始化流程的残留数据导致顺序错误
         /// 4. 组件Init方法由IComponent接口定义，需组件自行实现具体初始化逻辑
         /// </remarks>
-        private static IEnumerable<IComponent> RecursiveInit(IEntityObject entityObject, IComponent currentComponent)
+        private IEnumerable<IComponent> RecursiveInit(IEntityObject entityObject, IComponent currentComponent)
         {
             // 清空栈：避免上一次初始化的残留数据影响当前流程
             _componentStack.Clear();

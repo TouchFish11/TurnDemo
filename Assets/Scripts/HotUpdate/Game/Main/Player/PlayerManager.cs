@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.Components;
 using Core.DI;
@@ -7,6 +8,7 @@ using Core.GlobalEvent.Events;
 using Core.Mono;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Enums;
+using HotUpdate.Base.Manager;
 using HotUpdate.Base.UI;
 
 using HotUpdate.Game.Battle.Object.Role.Warrior;
@@ -18,22 +20,25 @@ using UnityEngine;
 
 namespace HotUpdate.Game.Main.Player
 {
-    using Task = System.Threading.Tasks.Task;
-    
     /// <summary>
     /// 玩家管理器
     /// 负责玩家对象的创建、管理、销毁等核心逻辑
     /// </summary>
     public class PlayerManager : IPlayerManager
     {
+        [Inject] private IFloatingTextManager _floatingTextManager;
         [Inject] private ObjectSpawner _objectSpawner;
+        
         private OrbitCameraController _cameraController;
 
         // 字典：玩家UID映射到对应的实体对象，用于快速查找玩家
         private readonly Dictionary<uint, IEntityObject> uidToEntityMap = new();
 
+        /// <summary>
+        /// 默认玩家名称
+        /// </summary>
         private const string DefaultPlayerName = "Player";
-        // 主玩家对象（固定UID为1001）
+        
         public IEntityObject MainPlayer => uidToEntityMap[1001];
         
         public PlayerManager(IEventCenter eventCenter)
@@ -41,11 +46,7 @@ namespace HotUpdate.Game.Main.Player
             eventCenter.SubscribeEvent<OpenViewEvent>(OnOpenViewEvent, OpenViewEventFilter);
             eventCenter.SubscribeEvent<CloseViewEvent>(OnCloseViewEvent, OpenViewEventFilter);
         }
-
-        /// <summary>
-        /// 创建玩家对象
-        /// </summary>
-        /// <param name="uid">玩家唯一标识</param>
+        
         public async Task CreatePlayer(uint uid)
         {
             // 创建玩家根节点GameObject
@@ -62,7 +63,7 @@ namespace HotUpdate.Game.Main.Player
             // 从资源包加载战士预制体，并挂载到玩家节点下
             var warriorObj = await _objectSpawner.SpawnAsync<GameObject>(AssetKeys.Prefab_Main_Warrior, main.transform);
             // 给战士预制体添加战士逻辑组件，并关联到主玩家
-            var warrior = warriorObj.Obj.AddComponent<Warrior>();
+            warriorObj.Obj.AddComponent<Warrior>();
             // 初始化主玩家基础数据（参数1为示例配置ID）
             main.BaseInit(1);
             // 初始化玩家相机
@@ -73,7 +74,7 @@ namespace HotUpdate.Game.Main.Player
             main.InitCamera(_cameraController);
             // 将玩家对象加入字典管理
             uidToEntityMap.Add(uid, main);
-            DIContainer.GetInstance<IFloatingTextManager>().SetPlayer(main.transform);
+            _floatingTextManager.SetPlayer(main.transform);
         }
 
         /// <summary>
@@ -95,6 +96,9 @@ namespace HotUpdate.Game.Main.Player
             _cameraController = null;
         }
 
+        /// <summary>
+        /// 创建玩家主相机
+        /// </summary>
         private async Task CreateMainCamera()
         {
             var poolObject = await _objectSpawner.SpawnAsync<OrbitCameraController>(AssetKeys.MainCamera);

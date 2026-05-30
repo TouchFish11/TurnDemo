@@ -1,7 +1,7 @@
 namespace Core.GlobalEvent.Events
 {
     /// <summary>
-    /// ���ɼ��Ա仯�¼�
+    /// 光标可见性变化事件
     /// </summary>
     public class MouseVisibleChangedEvent : Event
     {

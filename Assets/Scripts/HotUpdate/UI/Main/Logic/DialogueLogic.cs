@@ -3,7 +3,6 @@ using Core.DI;
 using Core.Log;
 using Core.UI;
 using HotUpdate.Base.Manager;
-using HotUpdate.Game.Main.UI.Logic;
 
 namespace HotUpdate.UI.Main.Logic
 {

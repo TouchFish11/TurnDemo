@@ -1,4 +1,4 @@
-namespace Core.Input.ActionAsset
+namespace Core.Inputs.ActionAsset
 {
     /// <summary>
     /// ���ֵ

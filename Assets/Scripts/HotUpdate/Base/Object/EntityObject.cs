@@ -16,6 +16,8 @@ namespace HotUpdate.Base.Object
     [DisallowMultipleComponent]
     public abstract class EntityObject : MonoBehaviour, IEntityObject
     {
+        [Inject] protected ComponentHelper _componentHelper;
+        
         /// <summary>
         /// 自定义组件缓存映射表
         /// Key：组件类型标识（TypeIdentifier），Value：对应的IComponent组件实例
@@ -120,7 +122,7 @@ namespace HotUpdate.Base.Object
         {
             IComponent returnComponent = null;
             // 通过组件工厂创建并挂载组件（封装Unity原生AddComponent逻辑）
-            foreach (var component in ComponentHelper.AddComponent<TComponent>(this))
+            foreach (var component in _componentHelper.AddComponent<TComponent>(this))
             {
                 if (typeof(TComponent) == component.GetType())
                 {
@@ -143,7 +145,7 @@ namespace HotUpdate.Base.Object
         {
             var count = 0;
             // 遍历添加结果，将组件存入缓存字典
-            foreach (var (type, component) in ComponentHelper.AddComponents(this, componentNames))
+            foreach (var (type, component) in _componentHelper.AddComponents(this, componentNames))
             {
                 if (typeToIComponentMap.TryAdd(type, component))
                 {

@@ -3,11 +3,16 @@ using Core.DI;
 using Core.Log;
 using Core.Serialize.Json;
 using Core.Utility;
+using HotUpdate.Base.Attributes;
 using HotUpdate.Base.Collection;
 using HotUpdate.Base.Manager;
 
 namespace HotUpdate.Game.Quests.Data
 {
+    /// <summary>
+    /// 任务管理器
+    /// </summary>
+    [DataManagerId(typeof(IQuestDataManager))]
     public class QuestDataManager : IQuestDataManager
     {
         [Inject] private IJsonManager _jsonManager;
@@ -18,7 +23,7 @@ namespace HotUpdate.Game.Quests.Data
         {
             // 读取任务数据
             QuestCollection = await _jsonManager.FromJsonAsync<QuestCollection>(PathUtility.GetUserDataLocalSavePath(FileUtility.LocalTaskDataFileName));
-            Logger.Log($"任务数据加载成功，{QuestCollection}");
+            Logger.Log($"[{nameof(QuestDataManager)}]: QuestData loading successful");
         }
 
         public void SaveData()

@@ -14,7 +14,7 @@ namespace Core.DI
     public class DIContainer
     {
         // 绑定标志
-        private const BindingFlags _bindingFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+        private const BindingFlags _bindingFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy;
         // 接口到实例类型映射
         private static readonly ConcurrentDictionary<Type, object> _interfaceMap = new();
         // 实例类型到实例映射

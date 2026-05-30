@@ -1,38 +1,38 @@
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 
-namespace Core.Input.ActionAsset
+namespace Core.Inputs.ActionAsset
 {
 	/// <summary>
 	/// MainActionMapData���붯������
 	/// </summary>
 	public class MainActionMapData
 	{
-		[ActionKeyMapAttribute(Key.W)]
+		[ActionKeyMap(Key.W)]
 		public static string Up => "<Keyboard>/w";
 
-		[ActionKeyMapAttribute(Key.S)]
+		[ActionKeyMap(Key.S)]
 		public static string Down => "<Keyboard>/s";
 
-		[ActionKeyMapAttribute(Key.A)]
+		[ActionKeyMap(Key.A)]
 		public static string Left => "<Keyboard>/a";
 
-		[ActionKeyMapAttribute(Key.D)]
+		[ActionKeyMap(Key.D)]
 		public static string Right => "<Keyboard>/d";
 
-		[ActionKeyMapAttribute(MouseButton.Left)]
+		[ActionKeyMap(MouseButton.Left)]
 		public static string NormalAttack => "<Mouse>/leftButton";
 
-		[ActionKeyMapAttribute(Key.F)]
+		[ActionKeyMap(Key.F)]
 		public static string Interact => "<Keyboard>/f";
 
-		[ActionKeyMapAttribute(E_MouseValue.Delta)]
+		[ActionKeyMap(E_MouseValue.Delta)]
 		public static string MouseMove => "<Mouse>/delta";
 
-		[ActionKeyMapAttribute(E_MouseValue.Scroll)]
+		[ActionKeyMap(E_MouseValue.Scroll)]
 		public static string ScrollZoom => "<Mouse>/scroll";
 
-		[ActionKeyMapAttribute(Key.LeftAlt)]
+		[ActionKeyMap(Key.LeftAlt)]
 		public static string MouseVisible => "<Keyboard>/leftAlt";
 
 	}

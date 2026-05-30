@@ -49,14 +49,14 @@ namespace Core.AssetBundles.Update.State
             }
             catch (AssetBunleBrokenException assetBunleBrokenException)
             {
-                return UpdateResult.CreateFailure(UpdateResult.EUpdateError.AssetBunleBroken, assetBunleBrokenException);
+                return updateResultFactory.CreateFailure(UpdateResult.EUpdateError.AssetBunleBroken, assetBunleBrokenException);
             }
             catch (System.Exception exception)
             {
-                return UpdateResult.CreateFailure(UpdateResult.EUpdateError.Unknown, exception);
+                return updateResultFactory.CreateFailure(UpdateResult.EUpdateError.Unknown, exception);
             }
             
-            return UpdateResult.CreateSuccess();
+            return updateResultFactory.CreateSuccess();
         }
 
         /// <summary>

@@ -60,14 +60,14 @@ namespace Core.AssetBundles.Update.State
             }
             catch (AssetBunleIncompleteException assetBunleIncompleteException)
             {
-                return UpdateResult.CreateFailure(UpdateResult.EUpdateError.AssetBunleIncomplete, assetBunleIncompleteException);
+                return updateResultFactory.CreateFailure(UpdateResult.EUpdateError.AssetBunleIncomplete, assetBunleIncompleteException);
             }
             catch (System.Exception exception)
             {
-                return UpdateResult.CreateFailure(UpdateResult.EUpdateError.Unknown, exception);
+                return updateResultFactory.CreateFailure(UpdateResult.EUpdateError.Unknown, exception);
             }
             
-            return UpdateResult.CreateSuccess();
+            return updateResultFactory.CreateSuccess();
         }
 
         /// <summary>

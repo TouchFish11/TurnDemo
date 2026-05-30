@@ -28,14 +28,14 @@ namespace Core.AssetBundles.Update.State
             }
             catch (LocalListFileHandleException localListFileHandleException)
             {
-                return UpdateResult.CreateFailure(UpdateResult.EUpdateError.LocalListFile, localListFileHandleException);
+                return updateResultFactory.CreateFailure(UpdateResult.EUpdateError.LocalListFile, localListFileHandleException);
             }
             catch (System.Exception exception)
             {
-                return UpdateResult.CreateFailure(UpdateResult.EUpdateError.Unknown, exception);
+                return updateResultFactory.CreateFailure(UpdateResult.EUpdateError.Unknown, exception);
             }
             
-            return UpdateResult.CreateSuccess();
+            return updateResultFactory.CreateSuccess();
         }
 
         /// <summary>

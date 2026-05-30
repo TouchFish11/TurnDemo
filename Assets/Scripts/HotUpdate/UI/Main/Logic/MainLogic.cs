@@ -1,6 +1,6 @@
 using Core.Pool;
 
-namespace HotUpdate.Game.Main.UI.Logic
+namespace HotUpdate.UI.Main.Logic
 {
     /// <summary>
     /// 主界面逻辑

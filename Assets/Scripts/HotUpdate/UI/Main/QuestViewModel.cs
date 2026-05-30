@@ -4,7 +4,7 @@ using Core.UI;
 using HotUpdate.Common.Config.Quest;
 using HotUpdate.Common.Config.Quest.Config;
 
-namespace HotUpdate.Game.Main.UI
+namespace HotUpdate.UI.Main
 {
     /// <summary>
     /// 主界面和任务数据的ViewModel

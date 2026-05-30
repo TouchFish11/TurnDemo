@@ -29,19 +29,19 @@ namespace Core.AssetBundles.Update.State
             try
             {
                 CheckCanDownload();
-                return Task.FromResult(UpdateResult.CreateSuccess());
+                return Task.FromResult(updateResultFactory.CreateSuccess());
             }
             catch (DriveShortageInsufficientException driveShortageInsufficientException)
             {
-                return Task.FromResult(UpdateResult.CreateFailure(UpdateResult.EUpdateError.DriveStorage, driveShortageInsufficientException));
+                return Task.FromResult(updateResultFactory.CreateFailure(UpdateResult.EUpdateError.DriveStorage, driveShortageInsufficientException));
             }
             catch (IOException ioException)
             {
-                return Task.FromResult(UpdateResult.CreateFailure(UpdateResult.EUpdateError.Unknown, ioException));
+                return Task.FromResult(updateResultFactory.CreateFailure(UpdateResult.EUpdateError.Unknown, ioException));
             }
             catch (System.Exception e)
             {
-                return Task.FromResult(UpdateResult.CreateFailure(UpdateResult.EUpdateError.Unknown, e));
+                return Task.FromResult(updateResultFactory.CreateFailure(UpdateResult.EUpdateError.Unknown, e));
             }
         }
 

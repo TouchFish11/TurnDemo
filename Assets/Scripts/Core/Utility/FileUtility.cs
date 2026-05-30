@@ -73,7 +73,7 @@ namespace Core.Utility
         /// <value>
         /// PlayerActionAssets.json
         /// </value>
-        public static string InputActionLocalFileName => "MainActionMap.json";
+        public static string InputActionLocalFileName => "MainActionMap";
         
         /// <summary>
         /// 游戏设置文件名

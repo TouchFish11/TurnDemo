@@ -22,21 +22,19 @@ namespace Core.UI.ViewController
         protected TView view;
 
         public int PanelId => panelId;
+        
+        /// <summary>
+        /// 界面打开时光标是否可见
+        /// </summary>
+        protected virtual bool IsCursorVisible { get; set; }
 
         public async Task Init(int id, IuiView view)
         {
-            try
-            {
-                _controllerState = EControllerState.Initializing;
-                panelId = id;
-                this.view = (TView)view;
-                await OnInit();
-                await Activate();
-            }
-            catch (Exception e)
-            {
-                Logger.LogError($"{nameof(UIController<TView>)}: Controller initialization failed, {e.Message}");
-            }
+            _controllerState = EControllerState.Initializing;
+            panelId = id;
+            this.view = (TView)view;
+            await OnInit();
+            await Activate();
         }
 
         /// <summary>
@@ -48,13 +46,10 @@ namespace Core.UI.ViewController
             // 正在激活
             _controllerState = EControllerState.Activating;
             view.ViewObj.SetActive(true);
+            
             // 监听鼠标显隐事件
-            eventCenter.TriggerEvent(new MouseVisibleChangedEvent
-            {
-                IsVisible = true,
-                SourceName = ToString()
-            });
-
+            if(IsCursorVisible)
+                eventCenter.TriggerEvent(new MouseVisibleChangedEvent { IsVisible = true, SourceName = ToString() });
             // 触发界面打开事件
             eventCenter.TriggerEvent(new OpenViewEvent { UIController = this });
             
@@ -80,12 +75,8 @@ namespace Core.UI.ViewController
             // 先改变界面状态标识，再执行失活逻辑
             _controllerState = EControllerState.InActivating;
             // 注销监听鼠标显隐事件
-            eventCenter.TriggerEvent(new MouseVisibleChangedEvent
-            {
-                IsVisible = false,
-                SourceName = ToString()
-            });
-            
+            if(IsCursorVisible)
+                eventCenter.TriggerEvent(new MouseVisibleChangedEvent { IsVisible = false, SourceName = ToString() });
             // 触发界面关闭事件
             eventCenter.TriggerEvent(new CloseViewEvent { UIController = this });
             

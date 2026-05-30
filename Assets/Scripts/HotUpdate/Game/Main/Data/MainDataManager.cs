@@ -1,11 +1,12 @@
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
-using Core.Input.ActionAsset;
+using Core.Inputs.ActionAsset;
 using Core.Music;
 using Core.Serialize.Binary;
 using Core.Serialize.Json;
 using Core.Utility;
+using HotUpdate.Base.Attributes;
 using HotUpdate.Base.Collection;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Settings;
@@ -18,6 +19,7 @@ using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.Main.Data
 {
+    [DataManagerId(typeof(IMainDataManager))]
     public class MainDataManager : IMainDataManager
     {
         [Inject] private IBinaryDataManager _binaryDataManager;

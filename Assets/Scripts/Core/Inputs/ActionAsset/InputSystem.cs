@@ -1,16 +1,12 @@
 using System;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
-using Core.AssetBundles.Management;
-using Core.Utility;
-using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 using Logger = Core.Log.Logger;
 
-namespace Core.Input.ActionAsset
+namespace Core.Inputs.ActionAsset
 {
     /// <summary>
     /// 输入系统核心管理类
@@ -19,8 +15,6 @@ namespace Core.Input.ActionAsset
     /// </summary>
     public class InputSystem : IInputSystem
     {
-        // AB包管理器接口
-        private readonly IAssetBundleManager _assetBundleManager;
         // 输入配置的JSON原始数据
         private string _jsonInputData;
         // 玩家输入组件引用，关联InputActionAsset
@@ -38,9 +32,9 @@ namespace Core.Input.ActionAsset
         // 数据容器
         private MainActionMapDataContainer _mapDataContainer;
         
-        private InputSystem(IAssetBundleManager assetBundleManager)
+        private InputSystem()
         {
-            _assetBundleManager = assetBundleManager;
+            
         }
 
         /// <summary>
@@ -220,12 +214,12 @@ namespace Core.Input.ActionAsset
             {
                 // 刷新现有PlayerInput的动作配置
                 _playerInput.actions = GetInputActionAsset();
-                Logger.Log($"输入配置更新成功，{_playerInput.actions}");
+                Logger.Log($"[{nameof(InputSystem)}]: Input configuration update successful,{_playerInput.actions}");
             }
             else
             {
                 // 日志：PlayerInput为空，更新失败
-                Logger.LogError($"输入配置获取失败，{playerInput}");
+                Logger.LogError($"[{nameof(InputSystem)}]: Input configuration acquisition failed,{playerInput}");
                 return;
             }
         }

@@ -1,27 +1,27 @@
-namespace Core.Input.ActionAsset
+namespace Core.Inputs.ActionAsset
 {
 	public enum E_MainActionMap
 	{
 		// 预定义类型
 		None,
 		// 生成类型
-		[ActionMapReplaceKeyAttribute("<Up>")]
+		[ActionMapReplaceKey("<Up>")]
 		Up,
-		[ActionMapReplaceKeyAttribute("<Down>")]
+		[ActionMapReplaceKey("<Down>")]
 		Down,
-		[ActionMapReplaceKeyAttribute("<Left>")]
+		[ActionMapReplaceKey("<Left>")]
 		Left,
-		[ActionMapReplaceKeyAttribute("<Right>")]
+		[ActionMapReplaceKey("<Right>")]
 		Right,
-		[ActionMapReplaceKeyAttribute("<NormalAttack>")]
+		[ActionMapReplaceKey("<NormalAttack>")]
 		NormalAttack,
-		[ActionMapReplaceKeyAttribute("<Interact>")]
+		[ActionMapReplaceKey("<Interact>")]
 		Interact,
-		[ActionMapReplaceKeyAttribute("<MouseMove>")]
+		[ActionMapReplaceKey("<MouseMove>")]
 		MouseMove,
-		[ActionMapReplaceKeyAttribute("<ScrollZoom>")]
+		[ActionMapReplaceKey("<ScrollZoom>")]
 		ScrollZoom,
-		[ActionMapReplaceKeyAttribute("<MouseVisible>")]
+		[ActionMapReplaceKey("<MouseVisible>")]
 		MouseVisible,
 	}
 }

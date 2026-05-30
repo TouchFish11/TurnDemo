@@ -84,19 +84,14 @@ namespace HotUpdate.UI.Activity.Base
                 },
                 onBattleOver: async () =>
                 {
-                    await ChangedScene();
+                    // TODO:待处理
+                    await _sceneGenerator.InitMainScene(-1);
                     await _playerManager.CreatePlayer(1001);
                     onLevelComplete?.Invoke();
                     if(_activityDataManager.TryGetData(activityId, out var activityData))
                         activityData.CurrentPro += 1;
                     await uiManager.SetViewActive(panelId, true);
                 });
-        }
-
-        private async Task ChangedScene()
-        {
-            await _sceneManager.LoadSceneAsync(AssetKeys.MainScene, UnityEngine.SceneManagement.LoadSceneMode.Single, null);
-            await _sceneGenerator.InitMainScene();
         }
 
         protected override void OnButtonClick(string btnName)

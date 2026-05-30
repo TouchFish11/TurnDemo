@@ -4,8 +4,9 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Core.DI;
 using Core.HotUpdate;
+using Game.Module;
 
-namespace Game.Module
+namespace HotUpdate.Base.Module
 {
     /// <summary>
     /// 模块服务

@@ -1,4 +1,5 @@
 using Core.Components;
+using Core.DI;
 using UnityEngine;
 
 namespace HotUpdate.Base.Component
@@ -27,6 +28,7 @@ namespace HotUpdate.Base.Component
         /// </remarks>
         private void Awake()
         {
+            DIContainer.InjectIntoInstance(this);
             EntityObject = GetComponent<IEntityObject>();
         }
 

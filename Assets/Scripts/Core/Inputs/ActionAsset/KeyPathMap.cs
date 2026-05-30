@@ -2,7 +2,7 @@ using System;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 
-namespace Core.Input.ActionAsset
+namespace Core.Inputs.ActionAsset
 {
     /// <summary>
     /// 键位路径映射结构

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Core.Input.ActionAsset
+namespace Core.Inputs.ActionAsset
 {
 	/// <summary>
 	/// MainActionMapData���붯������数据容器类

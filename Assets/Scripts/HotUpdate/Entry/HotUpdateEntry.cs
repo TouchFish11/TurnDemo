@@ -6,6 +6,8 @@ using Core.Serialize.Json;
 using Core.UI;
 using Core.Utility;
 using Game.Module;
+using HotUpdate.Base;
+using HotUpdate.Base.Module;
 using HotUpdate.Base.Settings;
 using HotUpdate.Base.UI;
 using HotUpdate.Common.Config.Settings;
@@ -23,12 +25,16 @@ namespace HotUpdate.Entry
     {
         [Inject] private IUIService _uiService;
         [Inject] private IUIManager _uiManager;
-        [Inject] private ModuleService _moduleService;
+        [Inject] private PlayerInitializer _playerInitializer;
         [Inject] private IJsonManager _jsonManager;
 
+        private ModuleService _moduleService;
+        
         private void Awake()
         {
-            DIContainer.BindSingleton<IUIService, UIService>();
+            _moduleService = DIContainer.Create<ModuleService>(true);
+            // 注册模块相关内容
+            _moduleService.RegisterModules();
             DIContainer.InjectIntoInstance(this);
         }
 
@@ -91,13 +97,12 @@ namespace HotUpdate.Entry
         {
             try
             {
-                Logger.Log($"进入游戏Test!!!");
-                // // 注册模块相关内容
-                // _moduleService.RegisterModules();
-                // // 初始化模块
-                // await _moduleService.InitModuleAsync(typeof(IMainModule));
-                // // 打开主界面
-                // await _uiService.OpenAsync(EUIPanelId.MainPanel, E_UILayer.Mid);
+                // 初始化玩家相关内容
+                await _playerInitializer.InitPlayerAsync();
+                // 初始化全局消息界面
+                await _uiService.OpenAsync(EUIPanelId.GlobalPanel, E_UILayer.Mid);
+                // 打开主界面
+                await _uiService.OpenAsync(EUIPanelId.MainPanel, E_UILayer.Mid);
             }
             catch (Exception e)
             {

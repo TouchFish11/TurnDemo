@@ -90,7 +90,7 @@ namespace Core.UI
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(UIManager)}.{nameof(CreateViewAsync)}:创建界面错误，{e.Message}");
+                Logger.LogError($"{nameof(UIManager)}.{nameof(CreateViewAsync)}: Create/Init panel error,{e.Message}");
                 return controller;
             }
         }

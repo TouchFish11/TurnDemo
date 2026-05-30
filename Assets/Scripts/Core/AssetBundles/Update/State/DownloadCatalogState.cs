@@ -37,18 +37,18 @@ namespace Core.AssetBundles.Update.State
             }
             catch (DownloadFailureException downloadFailureException)
             {
-                return UpdateResult.CreateFailure(UpdateResult.EUpdateError.DownloadFailure, downloadFailureException);
+                return updateResultFactory.CreateFailure(UpdateResult.EUpdateError.DownloadFailure, downloadFailureException);
             }
             catch (FileNotFoundException fileNotFoundException)
             {
-                return UpdateResult.CreateFailure(UpdateResult.EUpdateError.LocalListFile, fileNotFoundException);
+                return updateResultFactory.CreateFailure(UpdateResult.EUpdateError.LocalListFile, fileNotFoundException);
             }
             catch (System.Exception exception)
             {
-                return UpdateResult.CreateFailure(UpdateResult.EUpdateError.Unknown, exception);
+                return updateResultFactory.CreateFailure(UpdateResult.EUpdateError.Unknown, exception);
             }
             
-            return UpdateResult.CreateSuccess();
+            return updateResultFactory.CreateSuccess();
         }
 
         /// <summary>

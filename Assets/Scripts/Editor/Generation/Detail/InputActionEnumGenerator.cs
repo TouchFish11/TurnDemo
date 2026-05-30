@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Core.Input.ActionAsset;
+using Core.Inputs.ActionAsset;
 using UnityEditor;
 
 namespace Editor.Generation.Detail

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Core.AssetBundles.Update.State;
+using Core.DI;
 using Core.Log;
 using Core.Mono;
 using Core.Pool;
@@ -13,9 +14,11 @@ namespace Core.AssetBundles.Update.Core
     /// </summary>
     public class AssetBundleUpdater : IAssetBundleUpdater, IApplicationExitNotify
     {
+        public int QuitPriority => 0;
+        
+        [Inject] private UpdateResultFactory _updateResultFactory;
         // 对象池管理器接口
         private readonly IPoolManager _poolManager;
-        public int QuitPriority => 0;
         // 更新上下文
         private ABUpdateContext _updateContext;
         // 更新状态列表
@@ -93,7 +96,7 @@ namespace Core.AssetBundles.Update.Core
             catch (System.Exception e)
             {
                 Logger.LogError($"{nameof(AssetBundleUpdater)}: 下载异常,{e.Message}");
-                _updateContext.UpdateOver(UpdateResult.CreateFailure(UpdateResult.EUpdateError.Unknown, e));
+                _updateContext.UpdateOver(_updateResultFactory.CreateFailure(UpdateResult.EUpdateError.Unknown, e));
             }
         }
 

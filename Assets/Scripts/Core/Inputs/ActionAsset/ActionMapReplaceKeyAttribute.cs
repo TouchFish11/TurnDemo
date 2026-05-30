@@ -1,6 +1,6 @@
 using System;
 
-namespace Core.Input.ActionAsset
+namespace Core.Inputs.ActionAsset
 {
     /// <summary>
     /// ��Ƕ���·��ӳ���滻�ؼ���

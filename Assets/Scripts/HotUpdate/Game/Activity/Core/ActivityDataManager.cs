@@ -3,6 +3,7 @@ using Core.DI;
 using Core.Log;
 using Core.Serialize.Json;
 using Core.Utility;
+using HotUpdate.Base.Attributes;
 using HotUpdate.Base.Collection;
 using HotUpdate.Base.Data;
 using HotUpdate.Base.Manager;
@@ -12,6 +13,7 @@ namespace HotUpdate.Game.Activity.Core
     /// <summary>
     /// 活动数据管理器
     /// </summary>
+    [DataManagerId(typeof(IActivityDataManager))]
     public class ActivityDataManager : IActivityDataManager
     {
         [Inject] private IJsonManager _jsonManager;

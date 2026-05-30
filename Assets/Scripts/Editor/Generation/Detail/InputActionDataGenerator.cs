@@ -4,7 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using Core.Extensions;
-using Core.Input.ActionAsset;
+using Core.Inputs.ActionAsset;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;

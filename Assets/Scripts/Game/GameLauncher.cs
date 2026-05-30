@@ -7,7 +7,6 @@ using Core.DI;
 using Core.HotUpdate;
 using Core.Registration;
 using Core.Serialize.Json;
-using Game.Module;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
@@ -25,7 +24,8 @@ namespace Game
         {
             try
             {
-                await RegisterGame();
+                // 注册框架
+                await RegisterCore.InitCore();
                 // 加载启动配置
                 LoadLaunchConfig();
                 // 加载热更程序集
@@ -38,14 +38,6 @@ namespace Game
             {
                 Logger.LogError($"{nameof(GameLauncher)}: Game startup failed, {e.Message}");
             }
-        }
-
-        private static async Task RegisterGame()
-        {
-            // 注册框架
-            await RegisterCore.InitCore();
-            // 初始化模块服务
-            DIContainer.Create<ModuleService>(true);
         }
         
         /// <summary>
