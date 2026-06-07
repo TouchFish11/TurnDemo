@@ -30,7 +30,7 @@ namespace Core.UI
         // 对象生成器
         private readonly ObjectSpawner _objectSpawner;
         // canvas缓存对象
-        private PoolObject _uiRoot;
+        private GameObject _uiRoot;
         
         private UIManager(ObjectSpawner spawner)
         {
@@ -40,10 +40,10 @@ namespace Core.UI
         public async Task InitUIManagerAsync(string uiRoot)
         {
             // 获取画布实例
-            var poolObject = await _objectSpawner.SpawnAsync<GameObject>(uiRoot);
+            var uiRootObj = await _objectSpawner.SpawnAsync<GameObject>(uiRoot);
             // 获取画布、UI摄像机实例
-            Canvas = poolObject.Obj.GetComponentInChildren<Canvas>();
-            UICamera = poolObject.Obj.GetComponentInChildren<Camera>();
+            Canvas = uiRootObj.GetComponentInChildren<Canvas>();
+            UICamera = uiRootObj.GetComponentInChildren<Camera>();
             
             // 获取对应层级对象位置
             _topLayer = Canvas.transform.Find("Top");
@@ -51,10 +51,10 @@ namespace Core.UI
             _botLayer = Canvas.transform.Find("Bot");   
             _systemLayer = Canvas.transform.Find("System");
             
-            Object.DontDestroyOnLoad(poolObject.Obj);
+            Object.DontDestroyOnLoad(uiRootObj);
             
             // 缓存对象
-            _uiRoot = poolObject;
+            _uiRoot = uiRootObj;
         }
         
         public Transform GetLayer(E_UILayer layer)
@@ -81,9 +81,9 @@ namespace Core.UI
                 var viewObj = await _objectSpawner.SpawnAsync<TView>(panelName,GetLayer(layer), pos, quaternion);
                 // 生成该界面的唯一ID
                 var id = GenerateId();
-                await controller.Init(id, viewObj.Obj);
+                await controller.Init(id, viewObj);
                 // 初始化面板信息
-                var newInfo = new PanelInfo<TView>(id, viewObj, viewObj.Obj, controller);
+                var newInfo = new PanelInfo<TView>(id, viewObj, controller);
                 // 存储面板信息
                 _panels.Add(id, newInfo);
                 return controller;
@@ -100,7 +100,7 @@ namespace Core.UI
             if (_panels.TryGetValue(panelId, out var panelInfo))
             {
                 // 回收界面
-                panelInfo.PoolObject.Collect(true);
+                _objectSpawner.Release(panelInfo.View, true);
                 // 调用控制器的销毁
                 await panelInfo.Controller.Destroy();
                 // 从缓存中移除
@@ -139,7 +139,7 @@ namespace Core.UI
         public Task Clear()
         {
             // 回收画布和摄像机
-            _uiRoot.Collect(true);
+            _objectSpawner.Release(_uiRoot, true);
             Canvas = null;
             UICamera = null;
             

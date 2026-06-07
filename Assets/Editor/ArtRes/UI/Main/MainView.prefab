@@ -1857,7 +1857,7 @@ GameObject:
   - component: {fileID: 8920514773486818180}
   - component: {fileID: 2762981402207996019}
   - component: {fileID: 2426359680583399279}
-  - component: {fileID: 2919922582597289156}
+  - component: {fileID: 773997741311218356}
   m_Layer: 5
   m_Name: MainView
   m_TagString: Untagged
@@ -1938,7 +1938,7 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &2919922582597289156
+--- !u!114 &773997741311218356
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

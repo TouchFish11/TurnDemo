@@ -26,7 +26,7 @@ namespace HotUpdate.UI.Activity.EmbersCanon
         
         [InjectUI] private ScrollRect svLevel;
 
-        private readonly IList<PoolObject<BattleLevelUI>> _battleLevelUis = new List<PoolObject<BattleLevelUI>>();
+        private readonly IList<BattleLevelUI> _battleLevelUis = new List<BattleLevelUI>();
         
         protected override async Task OnShow()
         {
@@ -54,8 +54,8 @@ namespace HotUpdate.UI.Activity.EmbersCanon
                 var levelTipIconRes = levelEntryData.isComplete ? AssetKeys.Icon_Common_Check : AssetKeys.Icon_Common_Battle;
                 var icon = await GameAsset.LoadAssetAsync<Sprite>(levelTipIconRes);
                 // 初始化关卡UI
-                battleLevelUI.Obj.Init(battleConfigEntry.levelName, icon.Asset, levelEntryData.isComplete);
-                battleLevelUI.Obj.OnEnterBattle += async () => 
+                battleLevelUI.Init(battleConfigEntry.levelName, icon.Asset, levelEntryData.isComplete);
+                battleLevelUI.OnEnterBattle += async () => 
                 await _uiManager.GetController<ActivityController>().EnterActivityBattle(battleConfigEntry, embersCanonData.ActivityId, () =>
                 {
                     levelEntryData.isComplete = true;
@@ -69,7 +69,7 @@ namespace HotUpdate.UI.Activity.EmbersCanon
         {
             foreach (var battleLevelUi in _battleLevelUis)
             {
-                battleLevelUi.Collect();
+                _objectSpawner.Release(battleLevelUi);
             }
             _battleLevelUis.Clear();
         }

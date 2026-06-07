@@ -5,7 +5,7 @@ using Core.UI;
 using TMPro;
 using UnityEngine;
 
-namespace HotUpdate.Game.Battle.UI.FloatText
+namespace HotUpdate.UI.Battle.FloatText
 {
     public class HealTextUI : UIBehaviourBase
     {

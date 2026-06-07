@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Core.AssetBundles.Management;
 using UnityEngine;
 
 namespace HotUpdate.Base.Manager
@@ -17,7 +16,7 @@ namespace HotUpdate.Base.Manager
         /// <param name="localRot">本地/世界旋转</param>
         /// <param name="mask">相机渲染的mask</param>
         /// <returns></returns>
-        Task<UnityEngine.Camera> CreateCamera(Transform cameraTrans, Vector3 localPos, Quaternion localRot, int mask);
+        Task<Camera> CreateCamera(Transform cameraTrans, Vector3 localPos, Quaternion localRot, int mask);
         
         /// <summary>
         /// 创建相机
@@ -26,11 +25,11 @@ namespace HotUpdate.Base.Manager
         /// <param name="localPos">本地/世界坐标</param>
         /// <param name="localRot">本地/世界旋转</param>
         /// <returns></returns>
-        Task<UnityEngine.Camera> CreateCamera(Transform cameraTrans, Vector3 localPos, Quaternion localRot);
+        Task<Camera> CreateCamera(Transform cameraTrans, Vector3 localPos, Quaternion localRot);
 
         /// <summary>
         /// 当前激活的相机
         /// </summary>
-        PoolObject<UnityEngine.Camera> CurrentActiveCameraPoolObject { get; }
+        Camera CurrentActiveCamera { get; }
     }
 }

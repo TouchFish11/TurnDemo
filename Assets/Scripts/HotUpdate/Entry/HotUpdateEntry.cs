@@ -38,7 +38,7 @@ namespace HotUpdate.Entry
             DIContainer.InjectIntoInstance(this);
         }
 
-        private async void Start()
+        private async void OnEnable()
         {
             try
             {

@@ -18,7 +18,7 @@ namespace HotUpdate.Game.Battle.Core
     /// <summary>
     /// 场景战斗点代理
     /// </summary>
-    public class BattlePointProxy : IBattlePointProxy, IDestroyable
+    public class BattlePointProxy : IBattlePointProxy, IDisposable
     {
         // 怪物中心点x值
         private readonly float[] monstetCenterXs = { 6f, 4f, 2f, 0f };
@@ -218,12 +218,6 @@ namespace HotUpdate.Game.Battle.Core
         {
             pointInfos.Clear();
             pointInfos = null;
-        }
-
-        public void OnDestroy()
-        {
-            pointInfos.Clear();
-            context = null;
         }
     }
 }

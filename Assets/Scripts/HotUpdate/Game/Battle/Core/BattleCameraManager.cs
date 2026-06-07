@@ -1,8 +1,8 @@
+using System;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Mono;
-using Core.Mono.MonoFunction;
 using HotUpdate.Base;
 using HotUpdate.Base.Manager;
 using HotUpdate.Game.Battle.Event;
@@ -15,7 +15,7 @@ namespace HotUpdate.Game.Battle.Core
     /// <summary>
     /// 战斗相机管理器
     /// </summary>
-    public class BattleCameraManager : IBattleCameraManager, IDestroyable
+    public class BattleCameraManager : IBattleCameraManager, IDisposable
     {
         [Inject] private ObjectSpawner _objectSpawner;
         
@@ -39,7 +39,7 @@ namespace HotUpdate.Game.Battle.Core
         // 相机起始角度
         private Quaternion _originRot;
 
-        public PoolObject<Camera> CurrentActiveCameraPoolObject { get; private set; }
+        public Camera CurrentActiveCamera { get; private set; }
 
         public BattleCameraManager()
         {
@@ -52,37 +52,37 @@ namespace HotUpdate.Game.Battle.Core
 
         public async Task<Camera> CreateCamera(Transform cameraTrans, Vector3 localPos, Quaternion localRot)
         {
-            if(CurrentActiveCameraPoolObject.Obj)
+            if(CurrentActiveCamera)
             {
-                CurrentActiveCameraPoolObject.Collect();
-                CurrentActiveCameraPoolObject = default;
+                _objectSpawner.Release(CurrentActiveCamera);
+                CurrentActiveCamera = null;
             }
             
-            CurrentActiveCameraPoolObject = await _objectSpawner.SpawnAsync<Camera>(AssetKeys.BattleCamera, cameraTrans);
-            CurrentActiveCameraPoolObject.Obj.transform.SetLocalPositionAndRotation(localPos, localRot);
+            CurrentActiveCamera = await _objectSpawner.SpawnAsync<Camera>(AssetKeys.BattleCamera, cameraTrans);
+            CurrentActiveCamera.transform.SetLocalPositionAndRotation(localPos, localRot);
             
             // 初始化当前旋转角度为相机初始角度
             currentXAngle = 0;
-            _originRot = CurrentActiveCameraPoolObject.Obj.transform.localRotation;
-            return CurrentActiveCameraPoolObject.Obj;
+            _originRot = CurrentActiveCamera.transform.localRotation;
+            return CurrentActiveCamera;
         }
 
         public async Task<Camera> CreateCamera(Transform cameraTrans, Vector3 localPos, Quaternion localRot, int mask)
         {
-            if(CurrentActiveCameraPoolObject.Obj)
+            if(CurrentActiveCamera)
             {
-                CurrentActiveCameraPoolObject.Collect();
-                CurrentActiveCameraPoolObject = default;
+                _objectSpawner.Release(CurrentActiveCamera);
+                CurrentActiveCamera = null;
             }
             
-            CurrentActiveCameraPoolObject = await _objectSpawner.SpawnAsync<Camera>(AssetKeys.BattleCamera, cameraTrans);
-            CurrentActiveCameraPoolObject.Obj.transform.SetLocalPositionAndRotation(localPos, localRot);
+            CurrentActiveCamera = await _objectSpawner.SpawnAsync<Camera>(AssetKeys.BattleCamera, cameraTrans);
+            CurrentActiveCamera.transform.SetLocalPositionAndRotation(localPos, localRot);
             // 设置遮罩
-            SetMask(CurrentActiveCameraPoolObject.Obj, mask);
+            SetMask(CurrentActiveCamera, mask);
             // 初始化当前旋转角度为相机初始角度
             currentXAngle = 0;
-            _originRot = CurrentActiveCameraPoolObject.Obj.transform.localRotation;
-            return CurrentActiveCameraPoolObject.Obj;
+            _originRot = CurrentActiveCamera.transform.localRotation;
+            return CurrentActiveCamera;
         }
 
         /// <summary>
@@ -117,13 +117,13 @@ namespace HotUpdate.Game.Battle.Core
                 // 以起始四元数为基准的偏移
                 targetRot *= _originRot;
                 // 应用旋转
-                CurrentActiveCameraPoolObject.Obj.transform.localRotation = Quaternion.Slerp(CurrentActiveCameraPoolObject.Obj.transform.localRotation, targetRot, Time.deltaTime * rotateSpeed);
+                CurrentActiveCamera.transform.localRotation = Quaternion.Slerp(CurrentActiveCamera.transform.localRotation, targetRot, Time.deltaTime * rotateSpeed);
             }
             // 限制最大范围，对于单位四元数的角度可以这样处理
             else
             {
                 // 应用旋转
-                CurrentActiveCameraPoolObject.Obj.transform.localRotation = Quaternion.Slerp(CurrentActiveCameraPoolObject.Obj.transform.localRotation, targetRot, Time.deltaTime * rotateSpeed);
+                CurrentActiveCamera.transform.localRotation = Quaternion.Slerp(CurrentActiveCamera.transform.localRotation, targetRot, Time.deltaTime * rotateSpeed);
             }
         }
         
@@ -134,7 +134,7 @@ namespace HotUpdate.Game.Battle.Core
         private void OnSelectChanged(IBattleEntityObject mainTarget)
         {
             // 每次切换目标后，都已当前相机的面朝向作为旋转基准
-            baseRotation = CurrentActiveCameraPoolObject.Obj.transform.localRotation;
+            baseRotation = CurrentActiveCamera.transform.localRotation;
         }
         
         private void OnUpdate()
@@ -161,10 +161,10 @@ namespace HotUpdate.Game.Battle.Core
         /// </summary>
         private void Rebounding()
         {
-            CurrentActiveCameraPoolObject.Obj.transform.localRotation = Quaternion.Slerp(CurrentActiveCameraPoolObject.Obj.transform.localRotation, baseRotation, Time.deltaTime * reboundSpeed);
-            if (Quaternion.Angle(CurrentActiveCameraPoolObject.Obj.transform.localRotation, baseRotation) < 0.1f)
+            CurrentActiveCamera.transform.localRotation = Quaternion.Slerp(CurrentActiveCamera.transform.localRotation, baseRotation, Time.deltaTime * reboundSpeed);
+            if (Quaternion.Angle(CurrentActiveCamera.transform.localRotation, baseRotation) < 0.1f)
             {
-                CurrentActiveCameraPoolObject.Obj.transform.localRotation = baseRotation;
+                CurrentActiveCamera.transform.localRotation = baseRotation;
                 OnRebound(false);
                 currentXAngle = 0;
             }
@@ -181,11 +181,11 @@ namespace HotUpdate.Game.Battle.Core
             DIContainer.GetInstance<ITargetSelectManager>().OnSelectChanged -= OnSelectChanged;
             DIContainer.GetInstance<IMonoAdapter>().RemoveUpdateListener(OnUpdate);
         }
-        
-        public void OnDestroy()
+
+        public void Dispose()
         {
-            CurrentActiveCameraPoolObject.Collect();
-            CurrentActiveCameraPoolObject = default;
+            _objectSpawner.Release(CurrentActiveCamera);
+            CurrentActiveCamera = null;
             _objectSpawner.Dispose();
             _objectSpawner = null;
         }

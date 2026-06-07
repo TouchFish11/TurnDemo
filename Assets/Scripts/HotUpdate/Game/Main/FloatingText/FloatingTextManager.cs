@@ -4,7 +4,6 @@ using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Mono;
 using HotUpdate.Base.Interact;
-
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
@@ -20,7 +19,7 @@ namespace HotUpdate.Game.Main.FloatingText
         // 存储需要显示浮动文本的NPC列表
         private readonly List<INpcObject> npcObjects = new();
         // 映射NPC与对应的浮动文本对象，便于快速查找和管理
-        private readonly Dictionary<INpcObject, PoolObject<FloatingTextObj>> npcToTextMap = new();
+        private readonly Dictionary<INpcObject, FloatingTextObj> npcToTextMap = new();
         // 玩家对象（用于计算距离）
         private Transform player;
         // 浮动文本最大显示距离：超过该距离则隐藏文本
@@ -77,7 +76,7 @@ namespace HotUpdate.Game.Main.FloatingText
                             // 从对象池/资源加载浮动文本对象
                             var floatingTextObj = await _objectSpawner.SpawnAsync<FloatingTextObj>(AssetKeys.UI_3D_FloatingText);
                             // 初始化浮动文本（绑定NPC位置、玩家视角、显示名称/身份）
-                            floatingTextObj.Obj.Init(npcObject.Transform, player, npcObject.NpcInfo.f_speakerName, npcObject.NpcInfo.f_identity);
+                            floatingTextObj.Init(npcObject.Transform, player, npcObject.NpcInfo.f_speakerName, npcObject.NpcInfo.f_identity);
                             // 将NPC与文本对象映射存储
                             npcToTextMap.TryAdd(npcObject, floatingTextObj);
                         }
@@ -90,7 +89,7 @@ namespace HotUpdate.Game.Main.FloatingText
                         {
                             npcObject.IsShowFloatingText = false;
                             // 将文本对象回收至对象池
-                            npcToTextMap[npcObject].Collect();
+                            _objectSpawner.Release(npcToTextMap[npcObject]);
                             // 移除NPC与文本的映射关系
                             npcToTextMap.Remove(npcObject);
                         }
@@ -113,7 +112,7 @@ namespace HotUpdate.Game.Main.FloatingText
             // 回收所有浮动文本对象至对象池
             foreach (var text in npcToTextMap.Values)
             {
-                text.Collect();
+                _objectSpawner.Release(text);
             }
             _objectSpawner.Dispose();
             // 清空映射字典

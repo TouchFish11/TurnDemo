@@ -22,7 +22,7 @@ namespace HotUpdate.Game.Battle.Inputs
     /// 负责处理战斗中的鼠标拖拽、点击选择目标、技能释放目标选择等核心输入逻辑
     /// 继承自单例自动挂载 MonoBehaviour 基类，保证全局唯一且自动初始化
     /// </summary>
-    public class BattleInputHandler : IBattleInputHandler, IDestroyable
+    public class BattleInputHandler : IBattleInputHandler, IDisposable
     {
         [Inject] private IBattleCameraManager _battleCameraManager;
         [Inject] private IMonoAdapter _monoAdapter;
@@ -243,7 +243,7 @@ namespace HotUpdate.Game.Battle.Inputs
                 }
                 
                 // 从鼠标屏幕位置发射射线，检测对应层级的战斗对象
-                if (Physics.Raycast(_battleCameraManager.CurrentActiveCameraPoolObject.Obj.ScreenPointToRay(Input.mousePosition), out var hitInfo, 500, layerMask))
+                if (Physics.Raycast(_battleCameraManager.CurrentActiveCamera.ScreenPointToRay(Input.mousePosition), out var hitInfo, 500, layerMask))
                 {
                     // 获取射线命中对象挂载的战斗对象组件
                     var currentMainTarget = hitInfo.collider.GetComponent<BattleObject>();
@@ -261,7 +261,7 @@ namespace HotUpdate.Game.Battle.Inputs
             }
         }
 
-        public void OnDestroy()
+        public void Dispose()
         {
             // 移除帧更新监听
             _monoAdapter.RemoveUpdateListener(OnUpdate);

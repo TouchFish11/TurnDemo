@@ -7,16 +7,17 @@ using HotUpdate.Common.Config.Quest.Config;
 namespace HotUpdate.UI.Main
 {
     /// <summary>
+    /// TODO：优化，不应该持有数据
     /// 主界面和任务数据的ViewModel
     /// </summary>
-    public class QuestViewModel
+    public class QuestViewModel : IDisposable
     {
         private readonly Dictionary<int, Dictionary<int, QuestNodeConfig>> _nodeConfigs = new();
         private readonly Dictionary<int, Dictionary<int, QuestNodeData>> _nodeDatas = new();
-        public ReactiveProperty<string> QuestTitleName { get; } =  new();
-        public ReactiveProperty<string> QuestTip { get; } = new();
-        public ReactiveProperty<string> QuestProgress { get; } = new();
-        public ReactiveProperty<bool> IsActiveQuestbar { get; } = new();
+        public ReactiveProperty<string> QuestTitleName { get; private set; } =  new();
+        public ReactiveProperty<string> QuestTip { get; private set; } = new();
+        public ReactiveProperty<string> QuestProgress { get; private set; } = new();
+        public ReactiveProperty<bool> IsActiveQuestbar { get; private set; } = new();
 
         public QuestViewModel(QuestConfig questConfig, List<QuestData> questDatas)
         {
@@ -49,7 +50,7 @@ namespace HotUpdate.UI.Main
         /// </summary>
         /// <param name="questData">正在追踪的任务的数据</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public void RefleshUI(QuestData questData)
+        public void RefreshUI(QuestData questData)
         {
             // 没有存在正在追踪的任务
             if (questData == null)
@@ -57,13 +58,15 @@ namespace HotUpdate.UI.Main
                 QuestTitleName.Value = string.Empty;
                 QuestTip.Value = string.Empty;
                 QuestProgress.Value = string.Empty;
-                IsActiveQuestbar.Value = true;
+                IsActiveQuestbar.Value = false;
                 return;
             }
             
             IsActiveQuestbar.Value = true;
             var nodeConfig = _nodeConfigs[questData.QuestId][questData.CurActiveNodeId];
-            if (nodeConfig == null) throw new NullReferenceException($"{nameof(QuestViewModel)}:{nameof(nodeConfig)} is null");
+            if (nodeConfig == null) 
+                throw new NullReferenceException($"{nameof(QuestViewModel)}:{nameof(nodeConfig)} is null");
+            
             QuestTitleName.Value = nodeConfig.name;
             QuestTip.Value = nodeConfig.questTip;
             QuestProgress.Value = $"{_nodeDatas[questData.QuestId][questData.CurActiveNodeId].Progress}/{nodeConfig.maxProgress}";
@@ -103,6 +106,27 @@ namespace HotUpdate.UI.Main
                     _nodeDatas[questData.QuestId].Add(nodeData.NodeId, nodeData);
                 }
             }
+        }
+
+        public void ResetViewModel()
+        {
+            QuestTitleName.Value = null;
+            QuestTip.Value = null;
+            QuestProgress.Value = null;
+            IsActiveQuestbar.Value = false;
+        }
+
+        public void Dispose()
+        {
+            QuestTitleName.Dispose();
+            QuestTip.Dispose();
+            QuestProgress.Dispose();
+            IsActiveQuestbar.Dispose();
+
+            QuestTitleName = null;
+            QuestTip = null;
+            QuestProgress = null;
+            IsActiveQuestbar = null;
         }
     }
 }

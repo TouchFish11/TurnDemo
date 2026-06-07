@@ -66,7 +66,7 @@ namespace HotUpdate.Game.Battle.StateMeachine
                 // 初始化行动顺序
                 BattleUtility.InitOrder(Context);
                 // 销毁战斗加载界面
-                await uiService.CloseAsync(uiService.GetPanel(EUIPanelId.BattleLoadingkPanel).PanelId);
+                await uiService.CloseAsync(uiService.GetPanel(EUIPanelId.BattleLoadingkPanel).PanelId, true);
             
                 BattleStateMachine.ChangeState(EBattlePhase.EnterAnimation);
             }

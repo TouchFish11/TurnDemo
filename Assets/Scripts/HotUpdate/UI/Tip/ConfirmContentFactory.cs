@@ -13,7 +13,7 @@ namespace HotUpdate.UI.Tip
     {
         [Inject] private ObjectSpawner _objectSpawner;
 
-        private PoolObject _confirmContent;
+        private AssetUpdateConfirmContent _confirmContent;
 
         public async Task<IConfirmContent> CreateContent(EConfirmContent confirmContent, RectTransform root)
         {
@@ -22,10 +22,10 @@ namespace HotUpdate.UI.Tip
                 case EConfirmContent.ItemDelete:
                     return null;
                 case EConfirmContent.AssetUpdate:
-                    var poolObj = await _objectSpawner.SpawnAsync<AssetUpdateConfirmContent>(AssetKeys.AssetUpdateConfirmContent, root);
-                    _confirmContent = poolObj;
-                    DIContainer.InjectIntoInstance(poolObj.Obj);
-                    return poolObj.Obj;
+                    var assetUpdateConfirmContent = await _objectSpawner.SpawnAsync<AssetUpdateConfirmContent>(AssetKeys.AssetUpdateConfirmContent, root);
+                    _confirmContent = assetUpdateConfirmContent;
+                    DIContainer.InjectIntoInstance(assetUpdateConfirmContent);
+                    return assetUpdateConfirmContent;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(confirmContent), confirmContent, null);
             }
@@ -33,7 +33,7 @@ namespace HotUpdate.UI.Tip
 
         public void Dispose()
         {
-            _confirmContent.Collect();
+            _objectSpawner.Release(_confirmContent);
             _objectSpawner.Dispose();
             _objectSpawner = null;
         }

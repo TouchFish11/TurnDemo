@@ -3,6 +3,7 @@ using Core.AssetBundles.Management;
 using Core.DI;
 using Core.UI;
 using Core.UI.ViewController;
+using HotUpdate.Game.Interact.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -33,23 +34,23 @@ namespace HotUpdate.UI.Main
         /// 任务标题文本组件
         /// 显示当前任务的名称
         /// </summary>
-        [Inject] private TextMeshProUGUI txtTaskTitle;
+        [InjectUI] private TextMeshProUGUI txtTaskTitle;
         
         /// <summary>
         /// 任务描述文本组件
         /// 显示当前任务的描述及进度信息
         /// </summary>
-        [Inject] private TextMeshProUGUI txtTaskShortDescription;
+        [InjectUI] private TextMeshProUGUI txtTaskShortDescription;
         
         /// <summary>
         /// 任务描述文本组件
         /// 显示当前任务的描述及进度信息
         /// </summary>
-        [Inject] private TextMeshProUGUI txtTaskProgress;
+        [InjectUI] private TextMeshProUGUI txtTaskProgress;
         #endregion
 
         // 交互UI列表
-        private readonly List<PoolObject> interactUIs = new();
+        private readonly List<InteractUI> interactUIs = new();
         
         #region 公共属性
         /// <summary>
@@ -89,14 +90,15 @@ namespace HotUpdate.UI.Main
         /// 缓存交互UI对象
         /// </summary>
         /// <param name="interact"></param>
-        public void CacheInteracts(List<PoolObject> interact)
+        /// <param name="spawner"></param>
+        public void CacheInteracts(List<InteractUI> interact, ObjectSpawner spawner)
         {
             foreach (var interactUI in interactUIs)
             {
-                interactUI.Collect();
+                spawner.Release(interactUI, false);
             }
             interactUIs.Clear();
-            this.interactUIs.AddRange(interact);
+            interactUIs.AddRange(interact);
         }
         #endregion
     }

@@ -26,9 +26,9 @@ namespace HotUpdate.Game.Battle.Object
         {
             return roleId switch
             {
-                1 => (await _obectSpawner.SpawnAsync<Warrior>(AssetKeys.Prefab_Warrior, parent, worldSpace:stay)).Obj,
-                2 => (await _obectSpawner.SpawnAsync<Wizard>(AssetKeys.Prefab_Wizard, parent, worldSpace:stay)).Obj,
-                3 => (await _obectSpawner.SpawnAsync<Priest>(AssetKeys.Prefab_Priest, parent, worldSpace:stay)).Obj,
+                1 => (await _obectSpawner.SpawnAsync<Warrior>(AssetKeys.Prefab_Warrior, parent, worldSpace:stay)),
+                2 => (await _obectSpawner.SpawnAsync<Wizard>(AssetKeys.Prefab_Wizard, parent, worldSpace:stay)),
+                3 => (await _obectSpawner.SpawnAsync<Priest>(AssetKeys.Prefab_Priest, parent, worldSpace:stay)),
                 _ => null
             };
         }

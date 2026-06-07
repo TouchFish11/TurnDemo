@@ -7,14 +7,13 @@ using Core.Serialize.Binary;
 using Core.UI.ViewController;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Scene;
+using HotUpdate.Base.UI;
 using HotUpdate.Common.Config.Activity;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Common.Config.ExcelInfo.Info;
-
 using HotUpdate.Game.Activity.Core;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Turn;
-using HotUpdate.Game.Main;
 using UnityEngine;
 
 namespace HotUpdate.UI.Activity.Base
@@ -24,7 +23,7 @@ namespace HotUpdate.UI.Activity.Base
     /// <summary>
     /// 活动界面控制器
     /// </summary>
-    public class ActivityController : UIController<ActivityView>
+    public class ActivityController : UIController<ActivityView>, IBlockOperation
     {
         [Inject] private ISceneGenerator _sceneGenerator;
         [Inject] private ObjectSpawner _objectSpawner;
@@ -35,6 +34,10 @@ namespace HotUpdate.UI.Activity.Base
         [Inject] private IActivityDataFactory _activityDataFactory;
         
         private int mainControllerId;
+
+        public bool BlockOperation { get; } = true;
+        
+        protected override bool IsCursorVisible { get; set; } = true;
 
         protected override Task OnInit()
         {
@@ -48,14 +51,13 @@ namespace HotUpdate.UI.Activity.Base
             // 创建UI
             foreach (var activityInfo in infoDic.Values)
             {
-                var poolObject = await _objectSpawner.SpawnAsync<ActivityUI>(AssetKeys.ActivityUI, view.SvActivityContent);
-                var activityUI = poolObject.Obj;
+                var activityUI = await _objectSpawner.SpawnAsync<ActivityUI>(AssetKeys.ActivityUI, view.SvActivityContent);
                 // 加载图标
                 var handle = await GameAsset.LoadAssetAsync<Sprite>(activityInfo.f_bkUi_Res);
                 // 初始化UI
                 activityUI.Init(handle.Asset, activityInfo, view.ActivityGroup, this);
                 // 缓存UI
-                view.CacheActivityUI(poolObject);
+                view.CacheActivityUI(activityUI);
             }
             
             // 默认选中第一个UI
@@ -111,7 +113,7 @@ namespace HotUpdate.UI.Activity.Base
             
             // 活动本地活动数据
             var activityDataCollection = _activityDataManager.ActivityDataCollection as ActivityDataCollection;
-            var poolObject = await _objectSpawner.SpawnAsync<ActivityUIBehaviourBase>(activityInfo.f_detailUI_res, view.ActivityDetailArea);
+            var activityUIBehaviourBase = await _objectSpawner.SpawnAsync<ActivityUIBehaviourBase>(activityInfo.f_detailUI_res, view.ActivityDetailArea);
             // 初始化详细界面
             if (!activityDataCollection.TryGetValue(activityInfo.f_id, out var activityData))
             {
@@ -123,9 +125,9 @@ namespace HotUpdate.UI.Activity.Base
                 activityDataCollection.TryAdd(activityInfo.f_id, activityData);
             }
 
-            poolObject.Obj.Init(activityData.ActivityId, activityInfo);
+            activityUIBehaviourBase.Init(activityData.ActivityId, activityInfo);
             // 缓存界面
-            view.UpdateActivityDetailUI(poolObject);
+            view.UpdateActivityDetailUI(activityUIBehaviourBase, _objectSpawner);
         }
     }
 }

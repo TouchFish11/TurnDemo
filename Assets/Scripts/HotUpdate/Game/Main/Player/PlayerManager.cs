@@ -44,7 +44,7 @@ namespace HotUpdate.Game.Main.Player
         public PlayerManager(IEventCenter eventCenter)
         {
             eventCenter.SubscribeEvent<OpenViewEvent>(OnOpenViewEvent, OpenViewEventFilter);
-            eventCenter.SubscribeEvent<CloseViewEvent>(OnCloseViewEvent, OpenViewEventFilter);
+            eventCenter.SubscribeEvent<CloseViewEvent>(OnCloseViewEvent, CloseViewEventFilter);
         }
         
         public async Task CreatePlayer(uint uid)
@@ -63,7 +63,7 @@ namespace HotUpdate.Game.Main.Player
             // 从资源包加载战士预制体，并挂载到玩家节点下
             var warriorObj = await _objectSpawner.SpawnAsync<GameObject>(AssetKeys.Prefab_Main_Warrior, main.transform);
             // 给战士预制体添加战士逻辑组件，并关联到主玩家
-            warriorObj.Obj.AddComponent<Warrior>();
+            warriorObj.AddComponent<Warrior>();
             // 初始化主玩家基础数据（参数1为示例配置ID）
             main.BaseInit(1);
             // 初始化玩家相机
@@ -102,7 +102,7 @@ namespace HotUpdate.Game.Main.Player
         private async Task CreateMainCamera()
         {
             var poolObject = await _objectSpawner.SpawnAsync<OrbitCameraController>(AssetKeys.MainCamera);
-            _cameraController = poolObject.Obj;
+            _cameraController = poolObject;
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace HotUpdate.Game.Main.Player
             MainPlayer.GetComponent<MoveComponent>().Enable();
         }
 
-        private bool OpenViewEventFilter(CloseViewEvent closeViewEvent)
+        private bool CloseViewEventFilter(CloseViewEvent closeViewEvent)
         {
             return closeViewEvent.UIController is IBlockOperation blockOperation && blockOperation.BlockOperation && uidToEntityMap.ContainsKey(1001);
         }

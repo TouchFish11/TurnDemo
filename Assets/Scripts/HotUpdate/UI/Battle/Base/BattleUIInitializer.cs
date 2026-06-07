@@ -6,7 +6,7 @@ using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Component;
 using HotUpdate.Game.Battle.UI;
-using HotUpdate.Game.Battle.UI.Role;
+using HotUpdate.UI.Battle.Role;
 using UnityEngine;
 
 namespace HotUpdate.UI.Battle.Base
@@ -80,7 +80,7 @@ namespace HotUpdate.UI.Battle.Base
                 var roleProperty = playerPropertyComponent.GetProperty<RoleProperty>();
                 
                 // 初始化角色状态UI（传入属性、图标、必杀技ID、战斗实体）
-                roleStateUI.Obj.Init(roleProperty, iconHandle.Asset, skillId, battleEntity);
+                roleStateUI.Init(roleProperty, iconHandle.Asset, skillId, battleEntity);
                 // 将初始化后的角色状态UI缓存到数据模型中
                 _view.InitRoleStateUI(roleStateUI);
             }

@@ -16,12 +16,12 @@ using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Status;
 using HotUpdate.Game.Battle.UI;
-using HotUpdate.Game.Battle.UI.FloatText;
-using HotUpdate.Game.Battle.UI.Status;
 using HotUpdate.Game.Battle.Utility;
 using HotUpdate.UI.Battle.ActionLine;
+using HotUpdate.UI.Battle.FloatText;
+using HotUpdate.UI.Battle.Status;
 using UnityEngine;
-using BattlePointUI = HotUpdate.Game.Battle.UI.BattlePoint.BattlePointUI;
+using BattlePointUI = HotUpdate.UI.Battle.BattlePoint.BattlePointUI;
 using Logger = Core.Log.Logger;
 using Random = UnityEngine.Random;
 using SkillKeyUI = HotUpdate.UI.Battle.SkillKey.SkillKeyUI;
@@ -147,7 +147,7 @@ namespace HotUpdate.UI.Battle.Base
             // 从资源包异步加载战斗提示UI预制体
             var battleMessageUIWrapper= await _objectSpawner.SpawnAsync<BattleMessageUI>(AssetKeys.BattleMessageUI, _view.BattleMsgArea);
             // 初始化提示文本（红色字体）
-            battleMessageUIWrapper.Obj.InitMessage(Color.red, msg);
+            battleMessageUIWrapper.InitMessage(Color.red, msg);
         }
 
         /// <summary>
@@ -170,14 +170,14 @@ namespace HotUpdate.UI.Battle.Base
 
             // 将世界坐标转换为UI本地坐标并设置文本位置
             if (UIUtility.WorldToLocalPointInRectangle(
-                    _battleCameraManager.CurrentActiveCameraPoolObject.Obj, 
+                    _battleCameraManager.CurrentActiveCamera, 
                     _uiManager.UICamera, 
                     _view.ViewObj.transform, 
-                    damageTextUI.Obj.gameObject, 
+                    damageTextUI.gameObject, 
                     damageResult.Target.GameObject.transform.position + dmgTextOffset))
             {
                 // 初始化伤害文本（元素颜色、伤害类型文本、最终伤害值）
-                damageTextUI.Obj.InitDamageText(((int)damageResult.ElementType).ToElementTypeColor(), GetDamgeTypeText(damageResult), damageResult.FinalDamage);
+                damageTextUI.InitDamageText(((int)damageResult.ElementType).ToElementTypeColor(), GetDamgeTypeText(damageResult), damageResult.FinalDamage);
             }
             
             // 更新累计伤害UI
@@ -208,14 +208,14 @@ namespace HotUpdate.UI.Battle.Base
                 
                 // 将世界坐标转换为UI本地坐标并设置文本位置
                 if (UIUtility.WorldToLocalPointInRectangle(
-                        _battleCameraManager.CurrentActiveCameraPoolObject.Obj, 
+                        _battleCameraManager.CurrentActiveCamera, 
                         _uiManager.UICamera, 
                         _view.ViewObj.transform, 
-                        shieldTextUI.Obj.gameObject, 
+                        shieldTextUI.gameObject, 
                         target.SubGameObject.transform.position + dmgTextOffset))
                 {
                     // 初始化护盾文本
-                    shieldTextUI.Obj.InitshieldText(sheilAmount);
+                    shieldTextUI.InitshieldText(sheilAmount);
                 }
             }
             catch (Exception e)
@@ -246,14 +246,14 @@ namespace HotUpdate.UI.Battle.Base
             
             // 将世界坐标转换为UI本地坐标并设置文本位置
             if (UIUtility.WorldToLocalPointInRectangle(
-                    _battleCameraManager.CurrentActiveCameraPoolObject.Obj, 
+                    _battleCameraManager.CurrentActiveCamera, 
                     _uiManager.UICamera, 
                     _view.ViewObj.transform, 
-                    healTextUI.Obj.gameObject, 
+                    healTextUI.gameObject, 
                     target.GameObject.transform.position + dmgTextOffset))
             {
                 // 初始化治疗文本
-                healTextUI.Obj.InitHealText(healAmount);
+                healTextUI.InitHealText(healAmount);
             }
         }
         
@@ -270,13 +270,13 @@ namespace HotUpdate.UI.Battle.Base
                 var statusEffectTextUI = await _objectSpawner.SpawnAsync<StatusEffectTextUI>(AssetKeys.StatusEffectTextUI);
                 // 计算状态文本显示位置
                 if (UIUtility.WorldToLocalPointInRectangle(
-                        _battleCameraManager.CurrentActiveCameraPoolObject.Obj, 
+                        _battleCameraManager.CurrentActiveCamera, 
                         DIContainer.GetInstance<IUIManager>().UICamera,
-                        _view.BuffTextArea, statusEffectTextUI.Obj.gameObject, 
+                        _view.BuffTextArea, statusEffectTextUI.gameObject, 
                         newStatus.Owner.SubGameObject.transform.position + Vector3.up * 0.5f, Vector2.zero))
                 {
                     // 初始化状态文本（显示状态名称）
-                    statusEffectTextUI.Obj.InitText(null, newStatus.StatusProperty.StatusInfo.f_name);
+                    statusEffectTextUI.InitText(null, newStatus.StatusProperty.StatusInfo.f_name);
                 }
             }
             catch (Exception e)
@@ -310,7 +310,7 @@ namespace HotUpdate.UI.Battle.Base
         {
             try
             {
-                _view.ClearWaitingActUI();
+                _view.ClearWaitingActUI(_objectSpawner);
                 foreach (var battleEntity in battleEntities)
                 {
                     // 异步加载等待行动UI预制体
@@ -320,7 +320,7 @@ namespace HotUpdate.UI.Battle.Base
                     // 加载图标精灵并初始化UI
                     using var icon = await GameAsset.LoadAssetAsync<Sprite>(iconName);
                     // 初始化UI
-                    waitingActUIWrapper.Obj.Init(icon.Asset);
+                    waitingActUIWrapper.Init(icon.Asset);
                     // 更新模型层的等待队列UI数据
                     _view.CacheWaitingCommmand(waitingActUIWrapper);
                 }
@@ -341,7 +341,7 @@ namespace HotUpdate.UI.Battle.Base
             try
             {
                 // 清空缓存
-                _view.ClearActionBar();
+                _view.ClearActionBar(_objectSpawner);
             
                 // 标记是否为第一个实体（需要放大显示）
                 var isFirst = true;
@@ -354,7 +354,7 @@ namespace HotUpdate.UI.Battle.Base
                     // 加载图标精灵
                     using var iconHandle = await GameAsset.LoadAssetAsync<Sprite>(iconName);
                     // 初始化行动格子UI（图标、行动值、实体引用、是否第一个）
-                    actionGridUI.Obj.Init(iconHandle.Asset, battleEntity.ActionValue, battleEntity, isFirst);
+                    actionGridUI.Init(iconHandle.Asset, battleEntity.ActionValue, battleEntity, isFirst);
                     // 更新模型层的行动条UI数据
                     _view.UpdateAcitonbar(actionGridUI);
                     isFirst = false;
@@ -417,7 +417,7 @@ namespace HotUpdate.UI.Battle.Base
         /// </summary>
         public void ClearSelectMarker()
         {
-            _view.ClearSelectMarkers();
+            _view.ClearSelectMarkers(_objectSpawner);
         }
 
         /// <summary>
@@ -427,7 +427,7 @@ namespace HotUpdate.UI.Battle.Base
         public void ClearOperator()
         {
             // 清空操作区UI
-            _view.ClearOperator();
+            _view.ClearOperator(_objectSpawner);
         }
 
         /// <summary>
@@ -457,7 +457,7 @@ namespace HotUpdate.UI.Battle.Base
         /// <param name="dataProvider">技能按键UI数据提供器</param>
         public async void UpdateOperator(IBattleEntityObject currentObject, ISkillKeyUIDataProvider dataProvider)
         {
-            var skillKeyUIs = new List<PoolObject<SkillKeyUI>>();
+            var skillKeyUIs = new List<SkillKeyUI>();
             // 获取当前实体的技能按键数据
             var skillKeyUIData = dataProvider.GetData(currentObject);
             var infos = skillKeyUIData.SkillInfos;
@@ -467,12 +467,12 @@ namespace HotUpdate.UI.Battle.Base
                 // 异步加载技能按键UI预制体
                 var skillKeyUI = await _objectSpawner.SpawnAsync<SkillKeyUI>(AssetKeys.SkillKeyUI, _view.OperatorArea);
                 // 初始化技能按键UI
-                skillKeyUI.Obj.Init(info, _view.SkillKeyGroup, currentObject);
+                skillKeyUI.Init(info, _view.SkillKeyGroup, currentObject);
                 skillKeyUIs.Add(skillKeyUI);
             }
             
             // 设置操作区UI列表
-            _view.SetOperator(skillKeyUIs);
+            _view.SetOperator(skillKeyUIs, _objectSpawner);
         }
 
         /// <summary>
@@ -484,7 +484,7 @@ namespace HotUpdate.UI.Battle.Base
         public async void SetTargetMarkers(List<IBattleEntityObject> selectedTargets, E_SkillTargetType skillTargetType)
         {
             // 清空目标标记缓存
-            _view.ClearSelectMarkers();
+            _view.ClearSelectMarkers(_objectSpawner);
             
             if (selectedTargets == null)
             {
@@ -496,7 +496,7 @@ namespace HotUpdate.UI.Battle.Base
                 // 异步加载目标标记UI预制体
                 var selectMarkerUI = await _objectSpawner.SpawnAsync<SelectMarkerUI>(AssetKeys.SelectMarkerUI);
                 // 初始化目标标记
-                selectMarkerUI.Obj.InitSelectMarker(battleEntity, skillTargetType, _view.SelectMarkerArea);
+                selectMarkerUI.InitSelectMarker(battleEntity, skillTargetType, _view.SelectMarkerArea);
                 // 缓存标记
                 _view.AddSelectMarker(selectMarkerUI);
             }
@@ -513,18 +513,18 @@ namespace HotUpdate.UI.Battle.Base
         /// <returns>异步任务</returns>
         public async System.Threading.Tasks.Task UpdateBattlePointCount(int current, int max)
         {
-            var battlePointUIs = new List<PoolObject<BattlePointUI>>();
+            var battlePointUIs = new List<BattlePointUI>();
             for (var i = 0; i < max; i++)
             {
                 // 异步加载战斗点数UI预制体
                 var battlePointUIWrapper = await _objectSpawner.SpawnAsync<BattlePointUI>( AssetKeys.BattlePointUI, _view.PointContent);
                 // 设置点数激活状态（i < current 表示已解锁）
-                battlePointUIWrapper.Obj.SetActivePoint(i < current);
+                battlePointUIWrapper.SetActivePoint(i < current);
                 battlePointUIs.Add(battlePointUIWrapper);
             }
             
             // 更新模型层的战斗点数数据
-            _view.UpdateBattlePointCount(current, battlePointUIs);
+            _view.UpdateBattlePointCount(current, battlePointUIs, _objectSpawner);
             // 刷新视图层的点数显示
             _view.UpdateBattlePointCount(current);
         }

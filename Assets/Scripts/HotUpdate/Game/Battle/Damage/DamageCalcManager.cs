@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Core.Log;
 using Core.Mono.MonoFunction;
@@ -14,7 +15,7 @@ namespace HotUpdate.Game.Battle.Damage
     /// <summary>
     /// 伤害计算管理器
     /// </summary>
-    public class DamageCalcManager : IDamageCalcManager, IDestroyable
+    public class DamageCalcManager : IDamageCalcManager, IDisposable
     {
         // 伤害计算策略缓存
         private readonly Dictionary<E_DamageType, IDamageStrategy> _strategys = new();
@@ -115,7 +116,7 @@ namespace HotUpdate.Game.Battle.Damage
             }
         }
 
-        public void OnDestroy()
+        public void Dispose()
         {
             _strategys.Clear();
             // 取消监听击破事件

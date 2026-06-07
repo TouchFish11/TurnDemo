@@ -35,7 +35,6 @@ namespace HotUpdate.UI.Quests
         protected override void Awake()
         {
             base.Awake();
-            
             // 初始状态隐藏选中标识
             imgSel.gameObject.SetActive(false);
             // 从绑定器中获取当前游戏物体对应的Toggle组件
@@ -59,7 +58,7 @@ namespace HotUpdate.UI.Quests
         }
 
         /// <summary>
-        /// Toggle选中状态变更时触发的回调（重写父类方法）
+        /// Toggle选中状态变更时触发的回调
         /// </summary>
         /// <param name="togName">触发状态变更的Toggle名称</param>
         /// <param name="isOn">当前Toggle是否被选中（true=选中，false=未选中）</param>

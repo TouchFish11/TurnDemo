@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Serialize.Json;
@@ -20,27 +21,18 @@ namespace HotUpdate.UI.Main.Logic
         [Inject] private IQuestManager _questManager;
         
         private QuestViewModel _questViewModel;
+        private QuestConfig _questConfig;
         
-        protected override async void OnInit()
+        protected override async Task OnInit()
         {
             try
             {
-                using var handle = await GameAsset.LoadAssetAsync<TextAsset>(AssetKeys.QuestConfig);
-                var questConfig = _jsonManager.FromJson<QuestConfig>(handle.Asset.text, settings: NewtonsoftJsonUtility.SerializerSettings);
-                
+                await LoadQuestConfigAsync();
                 // 初始化任务管理器
-                _questManager.InitQuests(questConfig, _questDataManager.QuestCollection);
-                // 获取最新的任务数据列表
-                var questDatas = _questDataManager.QuestCollection.GetQuestDatas();
-                // 当前追踪的任务节点数据初始化VM
-                _questViewModel = DIContainer.Create<QuestViewModel>(parameterValues: new object[] { questConfig, questDatas });
-                _questViewModel.IsActiveQuestbar.Subscribe(isActive => mainView.SetTaskbarActive(isActive));
-                _questViewModel.QuestTitleName.Subscribe(titleName => mainView.SetQuestbarTitle(titleName));
-                _questViewModel.QuestTip.Subscribe(tip => mainView.SetQuestbarTip(tip));
-                _questViewModel.QuestProgress.Subscribe(progress => mainView.SetQuestbarProgress(progress));
-                
+                _questManager.InitQuests(_questConfig, _questDataManager.QuestCollection);
+                InitQuestViewModel();
                 // 主动拉取UI更新
-                _questViewModel.RefleshUI(_questDataManager.QuestCollection.TryGetTrackQuest(out var questData) ? questData : null);
+                _questViewModel.RefreshUI(_questDataManager.QuestCollection.TryGetTrackQuest(out var questData) ? questData : null);
             }
             catch (Exception e)
             {
@@ -48,10 +40,28 @@ namespace HotUpdate.UI.Main.Logic
             }
         }
 
-        public override void ResetData()
+        private async Task LoadQuestConfigAsync()
+        {
+            // 加载任务配置
+            using var handle = await GameAsset.LoadAssetAsync<TextAsset>(AssetKeys.QuestConfig);
+            _questConfig = _jsonManager.FromJson<QuestConfig>(handle.Asset.text, settings: NewtonsoftJsonUtility.SerializerSettings);
+        }
+
+        private void InitQuestViewModel()
+        {
+            // 获取最新的任务数据列表
+            var questDatas = _questDataManager.QuestCollection.GetQuestDatas();
+            // 当前追踪的任务节点数据初始化VM
+            _questViewModel = DIContainer.Create<QuestViewModel>(parameterValues: new object[] { _questConfig, questDatas });
+            _questViewModel.IsActiveQuestbar.Subscribe(isActive => mainView.SetTaskbarActive(isActive));
+            _questViewModel.QuestTitleName.Subscribe(titleName => mainView.SetQuestbarTitle(titleName));
+            _questViewModel.QuestTip.Subscribe(tip => mainView.SetQuestbarTip(tip));
+            _questViewModel.QuestProgress.Subscribe(progress => mainView.SetQuestbarProgress(progress));
+        }
+
+        protected override void OnResetData()
         {
             _questViewModel = null;
-            base.ResetData();
         }
     }
 }

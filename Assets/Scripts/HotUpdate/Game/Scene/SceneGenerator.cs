@@ -35,14 +35,14 @@ namespace HotUpdate.Game.Scene
             
             // 创建村民NPC对象
             var villager = await _objectSpawner.SpawnAsync<NpcObject>(AssetKeys.Prefab_Npc);
-            villager.Obj.Transform.SetPositionAndRotation(new Vector3(0, 1, 8.39f), Quaternion.identity);
+            villager.Transform.SetPositionAndRotation(new Vector3(0, 1, 8.39f), Quaternion.identity);
             // 初始化NPC基础属性（参数为NPC配置ID，对应配置表）
-            villager.Obj.InitNpc(1);
+            villager.InitNpc(1);
 
             // 创建流浪汉NPC对象
             var Vagrant = await _objectSpawner.SpawnAsync<NpcObject>(AssetKeys.Prefab_Npc);
-            Vagrant.Obj.Transform.SetPositionAndRotation(new Vector3(6.94f, 1, 8.39f), Quaternion.identity);
-            Vagrant.Obj.InitNpc(2);
+            Vagrant.Transform.SetPositionAndRotation(new Vector3(6.94f, 1, 8.39f), Quaternion.identity);
+            Vagrant.InitNpc(2);
         }
         
         /// <summary>

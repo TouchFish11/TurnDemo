@@ -9,7 +9,7 @@ using HotUpdate.Game.Battle.Skill;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace HotUpdate.Game.Battle.UI
+namespace HotUpdate.UI.Battle
 {
     /// <summary>
     /// 选择标记UI组件
@@ -128,7 +128,7 @@ namespace HotUpdate.Game.Battle.UI
 
             // 世界坐标转UI坐标，将标记定位到目标位置上方50像素处
             UIUtility.WorldToLocalPointInRectangle(
-                _battleCameraManager.CurrentActiveCameraPoolObject.Obj,  // 战斗主相机
+                _battleCameraManager.CurrentActiveCamera,  // 战斗主相机
                 DIContainer.GetInstance<IUIManager>().UICamera,                    // UI相机
                 selectMarkerArea,                                             // UI父节点
                 gameObject,                                                    // 当前标记UI对象

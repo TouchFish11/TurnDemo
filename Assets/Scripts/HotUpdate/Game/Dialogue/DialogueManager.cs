@@ -4,12 +4,12 @@ using System.Text;
 using Core.DI;
 using Core.GlobalEvent;
 using Core.Mono;
-using Core.Mono.MonoFunction;
 using Core.Serialize.Binary;
 using Core.UI;
 using Core.Utility;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Settings;
+using HotUpdate.Base.UI;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Common.Events;
@@ -24,13 +24,14 @@ namespace HotUpdate.Game.Dialogue
     /// 对话管理器
     /// 负责对话的启动、逐字显示、分支选择、下一步对话、结束对话等核心逻辑
     /// </summary>
-    public class DialogueManager : IDialogueManager, IDestroyable
+    public class DialogueManager : IDialogueManager, IDisposable
     {
-        [Inject] private IUIManager _uiManager;
+        [Inject] private IUIService _uiService;
         [Inject] private IEventCenter _eventCenter;
         [Inject] private IBinaryDataManager _binaryDataManager;
         [Inject] private IMonoAdapter _monoAdapter;
         [Inject] private IMainDataManager _mainDataManger;
+        
         
         // 当前单条对话是否播放完成（打字机/直接显示）
         private bool dialogueOver;
@@ -77,7 +78,7 @@ namespace HotUpdate.Game.Dialogue
                 }
 
                 // 加载并创建对话UI，获取控制器
-                dialogueController = await _uiManager.CreateViewAsync<DialogueView, DialogueController>(AssetKeys.DialogueView, E_UILayer.Mid);
+                dialogueController = await _uiService.OpenAsync(EUIPanelId.DialoguePanel, E_UILayer.Mid) as DialogueController;
                 // 标记对话为进行中
                 IsDialogueActive = true;
                 // 触发对话开始事件
@@ -223,16 +224,16 @@ namespace HotUpdate.Game.Dialogue
             // 标记对话为未进行状态
             IsDialogueActive = false;
             // 销毁对话UI
-            _uiManager.DestroyView(dialogueController.panelId);
+            _uiService.CloseAsync(dialogueController.panelId, true);
             // 触发全局对话事件
             _eventCenter.TriggerEvent(new DialogueEvent(npcInfo.f_id));
             // 触发对话结束事件
             OnDialogueEnd?.Invoke();
         }
 
-        public void OnDestroy()
+        public void Dispose()
         {
-            _uiManager = null;
+            _uiService = null;
             _eventCenter = null;
             _binaryDataManager = null;
             _monoAdapter = null;

@@ -421,9 +421,9 @@ MonoBehaviour:
   - assetBundleName: scene
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\Scene\BeginScene.unity
-      size: 14436
+      size: 12647
       name: BeginScene.unity
-      hash: fe33afaab620b6b56c49921281bad0d95ee7c04665eaf3c149650c9025db9284
+      hash: 8195bb02a4e9a70906fdded454a2e86a891543508778ef3bbf345ced5c9d535b
       assetType: 1
     - assetPath: Assets\Editor\ArtRes\Scene\LevelScene.unity
       size: 89284
@@ -697,9 +697,9 @@ MonoBehaviour:
       hash: 5ee6e2a627a59b3a90b4fbc798b22d67a1d71109b560d7658a9e633d0a5714aa
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Main\MainView.prefab
-      size: 83150
+      size: 83148
       name: MainView.prefab
-      hash: 92f7645f2f5fe601ea9fecf1ed6f09511a387304ada1ae448d41ae6564535906
+      hash: 0e46d255fc99efa1029175449a883e4d1bd54af0d06182db5b8dd9a25db58629
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Setting\SettingDrowdownEntry.prefab
       size: 36827

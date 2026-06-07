@@ -9,11 +9,5 @@ namespace HotUpdate.Base.UI
         /// 是否阻挡玩家操作
         /// </summary>
         bool BlockOperation { get; }
-        
-        /// <summary>
-        /// 设置阻挡标识，修改BlockOperation属性
-        /// </summary>
-        /// <param name="isBlock"></param>
-        void SetBlock(bool isBlock);
     }
 }

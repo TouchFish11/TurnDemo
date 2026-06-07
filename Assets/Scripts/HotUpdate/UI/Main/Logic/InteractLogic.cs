@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
 using Core.GlobalEvent;
@@ -19,10 +20,11 @@ namespace HotUpdate.UI.Main.Logic
         [Inject] private IEventCenter _eventCenter;
         [Inject] private ObjectSpawner _objectSpawner;
         
-        protected override void OnInit()
+        protected override Task OnInit()
         {
             // 订阅交互事件（当触发InteractEvent时，执行OnInteractEvent回调）
             _eventCenter.SubscribeEvent<InteractEvent>(OnInteractEvent);
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -44,18 +46,18 @@ namespace HotUpdate.UI.Main.Logic
         {
             try
             {
-                var list = new List<PoolObject>();
+                var list = new List<InteractUI>();
                 // 遍历可交互对象，为每个对象创建对应的交互UI
                 foreach (var interactable in interactables)
                 {
                     // 从UI资源包中异步加载交互UI预制体并实例化
                     var interactUI = await _objectSpawner.SpawnAsync<InteractUI>(AssetKeys.InteractUI, mainView.InteractContent);
                     // 初始化交互UI的显示数据（设置发言者/交互对象名称）
-                    interactUI.Obj.Init(interactable.NpcInfo.f_speakerName);
+                    interactUI.Init(interactable.NpcInfo.f_speakerName);
                     list.Add(interactUI);
                 }
                 // 将创建好的交互UI列表存入主数据模型，供全局业务逻辑调用
-                mainView.CacheInteracts(list);
+                mainView.CacheInteracts(list, _objectSpawner);
             }
             catch (Exception e)
             {
@@ -63,12 +65,11 @@ namespace HotUpdate.UI.Main.Logic
             }
         }
 
-        public override void ResetData()
+        protected override void OnResetData()
         {
             _objectSpawner.Dispose();
             // 取消交互事件的订阅
             _eventCenter.UnsubscribeEvent<InteractEvent>(OnInteractEvent);
-            base.ResetData();
         }
     }
 }

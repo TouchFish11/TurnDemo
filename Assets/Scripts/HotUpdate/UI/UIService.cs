@@ -46,7 +46,7 @@ namespace HotUpdate.UI
                     controller = await _uiManager.CreateViewAsync<ActivityView, ActivityController>(AssetKeys.ActivityView, layer);
                     break;
                 case EUIPanelId.QuestPanel:
-                    controller = await _uiManager.CreateViewAsync<TaskView, TaskController>(AssetKeys.QuestView, layer);
+                    controller = await _uiManager.CreateViewAsync<TaskView, QuestController>(AssetKeys.QuestView, layer);
                     break;
                 case EUIPanelId.DialoguePanel:
                     controller = await _uiManager.CreateViewAsync<DialogueView, DialogueController>(AssetKeys.DialogueView, layer);
@@ -76,9 +76,14 @@ namespace HotUpdate.UI
             return controller;
         }
 
-        public Task CloseAsync(int panelId)
+        public async Task ShowAsync(int panelId)
         {
-           return _uiManager.DestroyView(panelId);
+            await _uiManager.SetViewActive(panelId, true);
+        }
+        
+        public Task CloseAsync(int panelId, bool isDestroy)
+        {
+            return isDestroy ? _uiManager.DestroyView(panelId) : _uiManager.SetViewActive(panelId, false);
         }
 
         public IuiController GetPanel(EUIPanelId panelId)
@@ -94,7 +99,7 @@ namespace HotUpdate.UI
                 case EUIPanelId.ActivityPanel:
                     return _uiManager.GetController<ActivityController>();
                 case EUIPanelId.QuestPanel:
-                    return _uiManager.GetController<TaskController>();
+                    return _uiManager.GetController<QuestController>();
                 case EUIPanelId.DialoguePanel:
                     return _uiManager.GetController<DialogueController>();
                 case EUIPanelId.BattleLoadingkPanel:

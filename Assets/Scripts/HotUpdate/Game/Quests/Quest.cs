@@ -4,7 +4,6 @@ using Core.Pool;
 using HotUpdate.Base.Quest;
 using HotUpdate.Common.Config.Quest;
 using HotUpdate.Common.Config.Quest.Config;
-using HotUpdate.Common.Quest;
 using HotUpdate.Game.Quests.Condition;
 
 namespace HotUpdate.Game.Quests

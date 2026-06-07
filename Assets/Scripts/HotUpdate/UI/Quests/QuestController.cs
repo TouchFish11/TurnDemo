@@ -7,6 +7,7 @@ using Core.UI.ViewController;
 using Core.Utility;
 using HotUpdate.Base.Collection;
 using HotUpdate.Base.Manager;
+using HotUpdate.Base.UI;
 using HotUpdate.Common.Config.Quest;
 using HotUpdate.Common.Config.Quest.Config;
 
@@ -19,16 +20,17 @@ namespace HotUpdate.UI.Quests
     /// 任务控制器类
     /// 处理任务UI的交互逻辑、数据初始化、视图更新等核心逻辑
     /// </summary>
-    public class TaskController : UIController<TaskView>
+    public class QuestController : UIController<TaskView>, IBlockOperation
     {
+        [Inject] private IJsonManager _jsonManager;
         [Inject] private ObjectSpawner _objectSpawner;
         [Inject] private ItemService _itemService;
         [Inject] private IQuestDataManager _questDataManager;
+        [Inject] private IUIService _uiservice;
+        [Inject] private IQuestManager _questManager;
         
         // 任务数据集合，存储当前所有任务的状态数据
         private IQuestCollection _questCollection;
-        private readonly IQuestManager _questManager = DIContainer.GetInstance<IQuestManager>();
-        private int _mainControllerId;
         
         /// <summary>
         /// 任务配置缓存
@@ -46,6 +48,10 @@ namespace HotUpdate.UI.Quests
         /// </summary>
         public QuestConfig.QuestItem CurrentQuestItemInfo { get; set; }
         
+        public bool BlockOperation { get; } = true;
+
+        protected override bool IsCursorVisible { get; set; } = true;
+
         protected override Task OnInit()
         {
             return Task.CompletedTask;
@@ -74,7 +80,7 @@ namespace HotUpdate.UI.Quests
                     // 标记当前未追踪任务
                     IsFollowingTask = false;
                     // 默认选中第一个任务分类下的第一个任务
-                    view.GetFirstContainer().DefaultSelectFirstTask();
+                    view.GetFirstContainer().SelectFirstQuest();
                 }
             }
 
@@ -85,7 +91,7 @@ namespace HotUpdate.UI.Quests
         protected override Task OnInactivate()
         {
             // 显示主界面
-            return uiManager.SetViewActive(_mainControllerId, true);
+            return _uiservice.ShowAsync(_uiservice.GetPanel(EUIPanelId.MainPanel).PanelId);
         }
 
         /// <summary>
@@ -96,7 +102,10 @@ namespace HotUpdate.UI.Quests
         {
             foreach (var taskTypeContainer in view.GetContainers())
             {
-                taskTypeContainer.SelectTask(id);
+                if (taskTypeContainer.SelectQuest(id))
+                {
+                    break;
+                }
             }
         }
 
@@ -146,12 +155,12 @@ namespace HotUpdate.UI.Quests
             if (_questCollection == null)
                 throw new NullReferenceException($"{nameof(_questCollection)} is null");
             
-            // AB包加载资源
+            // 加载资源
             using var handle = await GameAsset.LoadAssetAsync<TextAsset>(AssetKeys.QuestConfig);
             // 解析Json
-            QuestConfig = DIContainer.GetInstance<IJsonManager>().FromJson<QuestConfig>(handle.Asset.text, settings:NewtonsoftJsonUtility.SerializerSettings);
+            QuestConfig = _jsonManager.FromJson<QuestConfig>(handle.Asset.text, settings:NewtonsoftJsonUtility.SerializerSettings);
             
-            foreach (var quest in DIContainer.GetInstance<IQuestManager>().GetQuests())
+            foreach (var quest in _questManager.GetQuests())
             {
                 // 初始化并显示任务列表UI
                 QuestTypeContainer questTypeContainer;
@@ -168,7 +177,7 @@ namespace HotUpdate.UI.Quests
                 }
                 
                 // 检查当前任务类型容器中是否已包含该任务项
-                if (!questTypeContainer.ContainTask(quest.QuestItem.id))
+                if (!questTypeContainer.ContainQuest(quest.QuestItem.id))
                 {
                     QuestData questData = null;
                     if (_questCollection.TryGetValue(quest.QuestItem.id, out var data)) questData = data;
@@ -186,12 +195,12 @@ namespace HotUpdate.UI.Quests
         private async Task<QuestTypeContainer> CreateQuestTypeContainer(EQuestType questType)
         {
             // 从资源包中异步加载任务类型容器预制体并创建实例
-            var poolObject = await _objectSpawner.SpawnAsync<QuestTypeContainer>(AssetKeys.QuestTypeContainer, view.TaskContent);
+            var questTypeContainer = await _objectSpawner.SpawnAsync<QuestTypeContainer>(AssetKeys.QuestTypeContainer, view.TaskContent);
             // 初始化任务类型容器（设置对应的任务类型）
-            poolObject.Obj.Init(questType);
+            questTypeContainer.Init(questType);
             // 将创建的容器添加到模型中管理
-            view.AddTaskTypeContainers(questType, poolObject);
-            return poolObject.Obj;
+            view.AddTaskTypeContainers(questType, questTypeContainer);
+            return questTypeContainer;
         }
 
         /// <summary>
@@ -204,9 +213,9 @@ namespace HotUpdate.UI.Quests
         private async Task CreateTaskItem(QuestConfig.QuestItem questItem, QuestData questData, QuestTypeContainer container)
         {
             // 从资源包中异步加载任务项预制体，并挂载到对应任务类型容器的Transform下
-            var poolObject = await _objectSpawner.SpawnAsync<TaskItem>(AssetKeys.QuestItem, container.transform);
+            var taskItem = await _objectSpawner.SpawnAsync<TaskItem>(AssetKeys.QuestItem, container.transform);
             // 注册任务项选中事件，选中时更新任务详情展示
-            poolObject.Obj.OnSelectedTask += UpdateQuestDetail;
+            taskItem.OnSelectedTask += UpdateQuestDetail;
             // 初始化任务项UI（传入任务信息和任务分组组件）
             var questNodeName = string.Empty;
             // 用户没有该任务数据，显示该任务的第一个节点名称
@@ -225,9 +234,9 @@ namespace HotUpdate.UI.Quests
                 }
             }
             
-            poolObject.Obj.Init(questItem.id, questNodeName, view.TaskItemGroup);
+            taskItem.Init(questItem.id, questNodeName, view.TaskItemGroup);
             // 将任务项添加到所属的任务类型容器中管理
-            container.AddItem(poolObject);
+            container.AddQuestItem(taskItem);
         }
 
         /// <summary>
@@ -244,7 +253,7 @@ namespace HotUpdate.UI.Quests
 
             // 更新当前任务信息为选中的任务信息
             CurrentQuestItemInfo = selectConfig;
-            view.ClearItemGrid();
+            view.ClearItemGrid(_objectSpawner);
 
             var questCollection = _questDataManager.QuestCollection;
             if (!questCollection.TryGetValue(id, out var questData))

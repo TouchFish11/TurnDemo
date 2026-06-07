@@ -1,3 +1,5 @@
+using System;
+using System.Threading.Tasks;
 using Core.Pool;
 
 namespace HotUpdate.UI.Main.Logic
@@ -15,22 +17,28 @@ namespace HotUpdate.UI.Main.Logic
         /// </summary>
         /// <param name="mainController"></param>
         /// <param name="mainView"></param>
-        public void Init(MainController mainController, MainView mainView)
+        public Task Init(MainController mainController, MainView mainView)
         {
+            if (mainController == null || !mainView)
+                throw new ArgumentNullException($"[{nameof(MainLogic)}]: {nameof(mainController)}={mainController == null},{nameof(mainView)}={!mainView}");
+            
             this.mainController = mainController;
             this.mainView = mainView;
-            OnInit();
+            return OnInit();
         }
 
         /// <summary>
         /// 初始化后执行
         /// </summary>
-        protected abstract void OnInit();
+        protected abstract Task OnInit();
 
-        public virtual void ResetData()
+        void IPoolData.ResetData()
         {
+            OnResetData();
             mainController = null;
             mainView = null;
         }
+
+        protected abstract void OnResetData();
     }
 }

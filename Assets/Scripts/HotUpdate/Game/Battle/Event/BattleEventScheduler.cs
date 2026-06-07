@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using Core.DI;
-using Core.Mono.MonoFunction;
 using Core.Serialize.Binary;
 using Core.Utility;
 using HotUpdate.Base;
@@ -31,7 +30,7 @@ namespace HotUpdate.Game.Battle.Event
     /// 战斗事件逻辑调度器
     /// 监听战斗事件，执行其它模块的统一调用
     /// </summary>
-    public class BattleEventScheduler : IBattleEventScheduler, IDestroyable
+    public class BattleEventScheduler : IBattleEventScheduler, IDisposable
     {
         [Inject] private ISkillKeyUIDataProviderFactory _skillKeyUIDataProviderFactory;
         [Inject] private IUIService _uiService;
@@ -237,7 +236,7 @@ namespace HotUpdate.Game.Battle.Event
             }
         }
 
-        public void OnDestroy()
+        public void Dispose()
         {
             // 监听回合开始事件
             _context.GetEventBus().RemoveListener<TurnStartEvent>(OnTurnStartDispatch);

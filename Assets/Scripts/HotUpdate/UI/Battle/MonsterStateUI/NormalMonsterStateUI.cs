@@ -116,7 +116,7 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
             {
                 // 从资源包加载弱点UI预制体，并挂载到弱点容器下
                 var weaknessIconObj = await _objectSpawner.SpawnAsync<GameObject>(AssetKeys.WeaknessUI, WeaknessBar);
-                var weaknessIcon = weaknessIconObj.Obj.GetComponent<Image>();
+                var weaknessIcon = weaknessIconObj.GetComponent<Image>();
                 // 设置弱点图标颜色（根据元素类型转换为对应颜色）
                 weaknessIcon.color = ((int)elementType).ToElementTypeColor();
                 weakneses.Add(weaknessIcon); // 将图标加入集合，便于后续回收
@@ -198,7 +198,7 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
 
             // 将怪物世界坐标转换为UI本地坐标，并应用Y轴偏移，更新UI位置
             UIUtility.WorldToLocalPointInRectangle(
-                _battleCameraManager.CurrentActiveCameraPoolObject.Obj, // 战斗主相机
+                _battleCameraManager.CurrentActiveCamera, // 战斗主相机
                 _uiManager.UICamera, // UI相机
                 monsterStateArea,    // UI父节点
                 gameObject, // 当前UI对象

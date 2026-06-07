@@ -1,9 +1,7 @@
-using System;
 using System.Threading.Tasks;
 using Core.GlobalEvent;
 using Core.GlobalEvent.Events;
 using UnityEngine;
-using Logger = Core.Log.Logger;
 
 namespace Core.UI.ViewController
 {

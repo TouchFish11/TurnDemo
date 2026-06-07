@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Core.DI;
 using Core.Log;
 using Core.UI;
@@ -14,12 +15,13 @@ namespace HotUpdate.UI.Main.Logic
         [Inject] private IDialogueManager _dialogueManager;
         [Inject] private IUIManager _uiManager;
         
-        protected override void OnInit()
+        protected override Task OnInit()
         {
             // 注册对话系统回调：对话开始时隐藏主界面
             _dialogueManager.OnDialogueStart += InActive;
             // 注册对话系统回调：对话结束时显示主界面
             _dialogueManager.OnDialogueEnd += Active;
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -54,11 +56,10 @@ namespace HotUpdate.UI.Main.Logic
             }
         }
 
-        public override void ResetData()
+        protected override void OnResetData()
         {
             _dialogueManager.OnDialogueStart -= InActive;
             _dialogueManager.OnDialogueEnd -= Active;
-            base.ResetData();
         }
     }
 }

@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using Core.AssetBundles.Management;
-using Core.DI;
 using Core.UI;
 using HotUpdate.Common.Config.Quest;
-using HotUpdate.Common.Quest;
+using HotUpdate.Game.Quests;
 using TMPro;
+using UnityEngine.UI;
 
 namespace HotUpdate.UI.Quests
 {
@@ -13,18 +13,19 @@ namespace HotUpdate.UI.Quests
     /// </summary>
     public class QuestTypeContainer : UIBehaviourBase
     {
-        [Inject] private TextMeshProUGUI txtTaskName;
+        [InjectUI] private TextMeshProUGUI txtTaskName;
+        [InjectUI] private Button btnTaskSummary;
         
-        private readonly List<PoolObject<TaskItem>> taskItems = new();
-        private readonly Dictionary<int, PoolObject<TaskItem>> idToItemMap = new();
+        private readonly List<TaskItem> taskItems = new();
+        private readonly Dictionary<int, TaskItem> idToItemMap = new();
         private EQuestType taskType;
-        private bool isExpand = true;
+        private bool isExpand = true;   // 默认展开
         
         protected override void OnButtonClick(string btnName)
         {
             switch (btnName)
             {
-                case "btnTaskSummary":
+                case nameof(btnTaskSummary):
                     if(isExpand)
                     {
                         Fold();
@@ -44,8 +45,8 @@ namespace HotUpdate.UI.Quests
         /// <param name="questType"></param>
         public void Init(EQuestType questType)
         {
-            this.taskType = questType;
-            txtTaskName.text = QuestUtil.ConvetTo(questType);
+            taskType = questType;
+            txtTaskName.text = QuestUtil.ConvertQuestTypeToStr(questType);
         }
 
         /// <summary>
@@ -53,43 +54,43 @@ namespace HotUpdate.UI.Quests
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public bool ContainTask(int id)
+        public bool ContainQuest(int id)
         {
             return idToItemMap.ContainsKey(id);
         }
 
         /// <summary>
-        /// 添加任务
+        /// 添加任务对象
         /// </summary>
-        /// <param name="poolObject"></param>
-        public void AddItem(PoolObject<TaskItem> poolObject)
+        /// <param name="taskItem"></param>
+        public void AddQuestItem(TaskItem taskItem)
         {
-            taskItems.Add(poolObject);
-            idToItemMap.Add(poolObject.Obj.TaskId, poolObject);
+            taskItems.Add(taskItem);
+            idToItemMap.Add(taskItem.TaskId, taskItem);
         }
 
         /// <summary>
-        /// 默认选择第一个任务项
+        /// 选择第一个任务项
         /// </summary>
-        public void DefaultSelectFirstTask()
+        public void SelectFirstQuest()
         {
             if (taskItems.Count > 0)
             {
-                taskItems[0].Obj.Select();
+                taskItems[0].Select();
             }
         }
 
         /// <summary>
-        /// 选择任务
-        /// 使该任务项被选中
+        /// 选中该ID的任务对象
         /// </summary>
         /// <param name="id"></param>
-        public void SelectTask(int id)
+        public bool SelectQuest(int id)
         {
-            if (idToItemMap.TryGetValue(id, out var taskItem))
-            {
-                taskItem.Obj.Select();
-            }
+            if (!idToItemMap.TryGetValue(id, out var taskItem)) 
+                return false;
+            
+            taskItem.Select();
+            return true;
         }
 
         /// <summary>
@@ -99,7 +100,7 @@ namespace HotUpdate.UI.Quests
         {
             foreach (var taskItem in taskItems)
             {
-                taskItem.Obj.gameObject.SetActive(false);
+                taskItem.gameObject.SetActive(false);
             }
         }
 
@@ -110,20 +111,22 @@ namespace HotUpdate.UI.Quests
         {
             foreach (var poolObject in taskItems)
             {
-                poolObject.Collect();
+                poolObject.gameObject.SetActive(true);
             }
         }
 
         /// <summary>
         /// 清理任务项
         /// </summary>
-        public void ClearItem()
+        /// <param name="spawner"></param>
+        public void ClearItem(ObjectSpawner spawner)
         {
-            foreach (var poolObject in taskItems)
+            foreach (var taskItem in taskItems)
             {
-                poolObject.Collect();
+                spawner.Release(taskItem, false);
             }
             taskItems.Clear();
+            idToItemMap.Clear();
         }
     }
 }

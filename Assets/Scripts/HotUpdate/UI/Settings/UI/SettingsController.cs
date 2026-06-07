@@ -53,7 +53,7 @@ namespace HotUpdate.UI.Settings.UI
                     // 获取ViewModel
                     var settingSliderViewModel = SettingsViewModelFactory.CreateSliderViewModel(settingItem.SettingType, settings);
                     // 初始化UI
-                    sliderEntry.Obj.Init(SettingsUtil.SettingTypeTOStr(settingItem.SettingType, settingsConfig), settingSliderViewModel);
+                    sliderEntry.Init(SettingsUtil.SettingTypeTOStr(settingItem.SettingType, settingsConfig), settingSliderViewModel);
                 }
                 else
                 {
@@ -63,7 +63,7 @@ namespace HotUpdate.UI.Settings.UI
                     // 获取ViewModel
                     var settingDropdownViewModel = SettingsViewModelFactory.CreateDropdownViewModel(settingItem.SettingType, settings, settingsConfig);
                     // 初始化UI
-                    dropdownEntry.Obj.Init(SettingsUtil.SettingTypeTOStr(settingItem.SettingType, settingsConfig), settingDropdownViewModel);
+                    dropdownEntry.Init(SettingsUtil.SettingTypeTOStr(settingItem.SettingType, settingsConfig), settingDropdownViewModel);
                 }
             }
         }

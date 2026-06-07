@@ -2,7 +2,7 @@ using Core.DI;
 using Core.UI;
 using UnityEngine.UI;
 
-namespace HotUpdate.Game.Battle.UI.BattlePoint
+namespace HotUpdate.UI.Battle.BattlePoint
 {
     /// <summary>
     /// ս����UI

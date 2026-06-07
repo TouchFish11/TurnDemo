@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace HotUpdate.Game.Battle.UI
+namespace HotUpdate.UI.Battle
 {
     /// <summary>
     /// 行动提示UI组件

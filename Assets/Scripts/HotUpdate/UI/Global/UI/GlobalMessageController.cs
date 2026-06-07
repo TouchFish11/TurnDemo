@@ -65,13 +65,13 @@ namespace HotUpdate.UI.Global.UI
         {
             try
             {
-                var poolObject = await _objectSpawner.SpawnAsync<MessageUI>(AssetKeys.MessageUI, view.MessageContainer);
-                poolObject.Obj.InitMessage(msg);
-                _timerManager.CreateTimer(false, (int)(Duration * 1000), () => poolObject.Collect());
+                var messageUI = await _objectSpawner.SpawnAsync<MessageUI>(AssetKeys.MessageUI, view.MessageContainer);
+                messageUI.InitMessage(msg);
+                _timerManager.CreateTimer(false, (int)(Duration * 1000), () => _objectSpawner.Release(messageUI));
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(GlobalMessageController)}.{nameof(ShowMessage)}：{e.Message}");
+                Logger.LogError($"{nameof(GlobalMessageController)}: Create message error,{e.Message}");
             }
         }
     }

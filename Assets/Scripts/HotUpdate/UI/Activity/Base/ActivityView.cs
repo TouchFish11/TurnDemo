@@ -16,10 +16,10 @@ namespace HotUpdate.UI.Activity.Base
         
         [InjectUI(1)] public RectTransform ActivityDetailArea { get; private set; }
         
-        private readonly List<PoolObject> _actvityUis = new();
-        private PoolObject _activityPoolObject;
+        private readonly List<ActivityUI> _actvityUis = new();
+        private ActivityUIBehaviourBase _activity;
         
-        public IActivity CurrentActivity => _activityPoolObject.Convert<ActivityUIBehaviourBase>().Obj;
+        public IActivity CurrentActivity => _activity;
         
         /// <summary>
         /// 活动选项容器
@@ -31,25 +31,20 @@ namespace HotUpdate.UI.Activity.Base
         /// </summary>
         public ToggleGroup ActivityGroup => ActivityContent;
         
-        public void CacheActivityUI(PoolObject actvityUi)
+        public void CacheActivityUI(ActivityUI actvityUi)
         {
             _actvityUis.Add(actvityUi);
         }
 
         public ActivityUI GetFirstActivityUI()
         {
-            return _actvityUis.Count > 0 ? _actvityUis[0].Convert<ActivityUI>().Obj : null;
+            return _actvityUis.Count > 0 ? _actvityUis[0] : null;
         }
 
-        public void UpdateActivityDetailUI(PoolObject actvity)
+        public void UpdateActivityDetailUI(ActivityUIBehaviourBase actvity, ObjectSpawner spawner)
         {
-            _activityPoolObject.Collect();
-            _activityPoolObject = actvity;
-        }
-        
-        public override void Destroy()
-        {
-            _activityPoolObject.Collect();
+            spawner.Release(_activity);
+            _activity = actvity;
         }
     }
 }

@@ -7,8 +7,6 @@ using Core.UI;
 using Core.UI.ViewController;
 using HotUpdate.Base.UI;
 using HotUpdate.UI.Main.Logic;
-using HotUpdate.UI.Quests;
-using HotUpdate.UI.Settings.UI;
 
 namespace HotUpdate.UI.Main
 {
@@ -30,21 +28,16 @@ namespace HotUpdate.UI.Main
         /// 值：对应逻辑类实例，用于解耦不同模块的业务逻辑
         /// </summary>
         private readonly Dictionary<Type, MainLogic> mainLogics = new();
-        
-        public bool BlockOperation { get; private set; }
-        
-        public void SetBlock(bool isBlock)
-        {
-            BlockOperation = isBlock;
-        }
-        
+
+        public bool BlockOperation { get; } = false;
+
         /// <summary>
         /// 控制器初始化方法
         /// 执行时机：控制器创建后自动调用
         /// 职责：订阅事件、注册回调、初始化状态
         /// </summary>
         /// <returns>异步任务</returns>
-        protected override Task OnInit()
+        protected override async Task OnInit()
         {
             // 初始化交互逻辑实例并加入字典
             mainLogics.Add(typeof(InteractLogic), _poolManager.GetData<InteractLogic>());
@@ -53,8 +46,7 @@ namespace HotUpdate.UI.Main
             // 初始化任务逻辑实例并加入字典
             mainLogics.Add(typeof(QuestLogic), _poolManager.GetData<QuestLogic>());
             // 初始化所有子逻辑模块的状态
-            InitState();
-            return Task.FromResult(Task.CompletedTask);
+            await InitState();
         }
 
         protected override Task OnActive()
@@ -118,11 +110,11 @@ namespace HotUpdate.UI.Main
         /// 初始化所有子逻辑模块的状态
         /// 遍历mainLogics字典，执行每个逻辑模块的Init方法
         /// </summary>
-        private void InitState()
+        private async Task InitState()
         {
             foreach (var item in mainLogics.Values)
             {
-                item.Init(this, view);
+                await item.Init(this, view);
             }
         }
     }

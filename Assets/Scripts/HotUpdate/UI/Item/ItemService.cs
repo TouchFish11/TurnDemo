@@ -20,7 +20,7 @@ namespace HotUpdate.UI.Item
         [Inject] private ObjectSpawner _objectSpawner;
         
         // 当前选中任务的奖励物品格子列表
-        private readonly List<PoolObject> _items = new();
+        private readonly List<ItemGrid> _items = new();
         
         /// <summary>
         /// 获取物品格子UI
@@ -39,9 +39,8 @@ namespace HotUpdate.UI.Item
 
                 foreach (var pair in itemInfos)
                 {
-                    var poolObject = await _objectSpawner.SpawnAsync<ItemGrid>(AssetKeys.ItemGrid, parent);
                     // 获取UI
-                    var itemGrid = poolObject.Obj;
+                    var itemGrid = await _objectSpawner.SpawnAsync<ItemGrid>(AssetKeys.ItemGrid, parent);
                     // 读取配置
                     var itemInfo = _binaryDataManager.GetConfig<ItemInfoContainer>(EConfigLoadType.Excel).dataDic[pair.Key];
                     // 加载图标
@@ -49,7 +48,7 @@ namespace HotUpdate.UI.Item
                     // 初始化
                     itemGrid.Init(handle.Asset, pair.Value, itemInfo.f_quality);
                     // 缓存池化对象
-                    _items.Add(poolObject);
+                    _items.Add(itemGrid);
                     callback?.Invoke(itemGrid);
                 }
             }
@@ -75,9 +74,8 @@ namespace HotUpdate.UI.Item
             
                 foreach (var pair in itemInfos)
                 {
-                    var poolObject = await _objectSpawner.SpawnAsync<ItemGrid>(AssetKeys.ItemGrid);
                     // 获取UI
-                    var itemGrid = poolObject.Obj;
+                    var itemGrid = await _objectSpawner.SpawnAsync<ItemGrid>(AssetKeys.ItemGrid);
                     // 读取配置
                     var itemInfo = _binaryDataManager.GetConfig<ItemInfoContainer>(EConfigLoadType.Excel).dataDic[pair.Key];
                     // 加载图标
@@ -99,9 +97,9 @@ namespace HotUpdate.UI.Item
 
         public void Dispose()
         {
-            foreach (var poolObject in _items)
+            foreach (var itemGrid in _items)
             {
-                poolObject.Collect();
+                _objectSpawner.Release(itemGrid);
             }
             _objectSpawner.Dispose();
             _objectSpawner = null;

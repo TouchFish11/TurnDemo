@@ -53,13 +53,10 @@ namespace HotUpdate.Game.Dialogue.UI
         /// 对话弹窗是否处于激活状态
         /// </summary>
         public bool IsActiveBox { get; set; }
+
+        public bool BlockOperation { get; } = true;
         
-        public bool BlockOperation { get; private set; }
-        
-        public void SetBlock(bool isBlock)
-        {
-            BlockOperation = isBlock;
-        }
+        protected override bool IsCursorVisible { get; set; } = true;
         
         /// <summary>
         /// 控制器初始化方法（异步）
@@ -200,7 +197,7 @@ namespace HotUpdate.Game.Dialogue.UI
         public void ShowDialogueText(string speakerName ,string dialogueText)
         {
             // 清空上一次的分支选项
-            view.ClearBranchOpt();
+            view.ClearBranchOpt(_objectSpawner);
             // 更新视图显示说话人名称和对话文本
             view.UpdateNameAndText(speakerName, dialogueText);
         }
@@ -215,25 +212,25 @@ namespace HotUpdate.Game.Dialogue.UI
             try
             {
                 // 清空已有分支选项
-                view.ClearBranchOpt();
+                view.ClearBranchOpt(_objectSpawner);
                 // 遍历分支信息，逐个创建选项UI
                 foreach (var branchInfo in branchInfos)
                 {
                     // 从资源包异步加载分支选项UI预制体，并挂载到对话框节点下
-                    var optUIPoolObject = await _objectSpawner.SpawnAsync<DialogueOptUI>(AssetKeys.DialogueOptUI, view.DialogueOptBox);
+                    var optUI = await _objectSpawner.SpawnAsync<DialogueOptUI>(AssetKeys.DialogueOptUI, view.DialogueOptBox);
                     
                     // 初始化分支选项UI
-                    optUIPoolObject.Obj.Init(branchInfo);
+                    optUI.Init(branchInfo);
                     // 绑定选项选择事件到对话管理器的处理方法
-                    optUIPoolObject.Obj.OnSelectOpt += _dialogueManager.OnSelectOpt;
+                    optUI.OnSelectOpt += _dialogueManager.OnSelectOpt;
                     // 将选项UI缓存到模型中（便于后续管理）
-                    view.CacheBranchOpt(optUIPoolObject);
+                    view.CacheBranchOpt(optUI);
                 }
             }
             catch (Exception e)
             {
                 // 记录分支选项创建异常日志
-                Logger.LogError($"{nameof(DialogueController)}.{nameof(SetBranchOpt)}: {e.Message}，{e.StackTrace}");
+                Logger.LogError($"{nameof(DialogueController)}: Dialog branch option created error,{e.Message}");
             }
         }
     }

@@ -1,7 +1,7 @@
 using System;
 using HotUpdate.Common.Config.Quest;
 
-namespace HotUpdate.Common.Quest
+namespace HotUpdate.Game.Quests
 {
     /// <summary>
     /// 任务工具类
@@ -18,7 +18,13 @@ namespace HotUpdate.Common.Quest
         /// </summary>
         public const int QUEST_INACTIVE_NODE_ID = -1;
 
-        public static string ConvetTo(EQuestType questType)
+        /// <summary>
+        /// 转换任务类型为文本
+        /// </summary>
+        /// <param name="questType"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public static string ConvertQuestTypeToStr(EQuestType questType)
         {
             return questType switch
             {

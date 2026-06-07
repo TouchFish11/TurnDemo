@@ -36,7 +36,7 @@ namespace HotUpdate.Game.Dialogue.UI
         /// 对话回顾UI对象的缓存集合
         /// 用于管理已实例化的对话UI，方便后续回收
         /// </summary>
-        private readonly List<PoolObject<DialogueReviewUI>> dialogueReviewUIs = new();
+        private readonly List<DialogueReviewUI> dialogueReviewUIs = new();
 
         /// <summary>
         /// 子视图关闭时的事件回调
@@ -89,7 +89,7 @@ namespace HotUpdate.Game.Dialogue.UI
             foreach (var dialogueInfo in historicalDialogueInfos)
             {
                 // 从资源包异步加载对话回顾UI预制体，并挂载到滚动容器的内容节点下
-                var poolObject = await _objectSpawner.SpawnAsync<DialogueReviewUI>(AssetKeys.DialogueReviewUI, svReview.content);
+                var dialogueReviewUI = await _objectSpawner.SpawnAsync<DialogueReviewUI>(AssetKeys.DialogueReviewUI, svReview.content);
                 
                 // 从二进制数据管理器中获取NPC配置容器，根据说话者ID查询NPC信息
                 var npcInfo = DIContainer.GetInstance<IBinaryDataManager>()
@@ -97,10 +97,10 @@ namespace HotUpdate.Game.Dialogue.UI
                     .dataDic[dialogueInfo.f_speakerId];
                 
                 // 初始化对话UI的显示内容（说话者名称 + 对话文本）
-                poolObject.Obj.Init(npcInfo.f_speakerName, dialogueInfo.f_dialgueText);
+                dialogueReviewUI.Init(npcInfo.f_speakerName, dialogueInfo.f_dialgueText);
                 
                 // 将实例化的UI对象加入缓存集合，便于后续回收
-                dialogueReviewUIs.Add(poolObject);
+                dialogueReviewUIs.Add(dialogueReviewUI);
             }
         }
 
@@ -123,7 +123,7 @@ namespace HotUpdate.Game.Dialogue.UI
             // 遍历所有已实例化的对话UI，归还到对象池
             foreach (var dialogueReviewUI in dialogueReviewUIs)
             {
-                dialogueReviewUI.Collect();
+                _objectSpawner.Release(dialogueReviewUI);
             }
             // 清空UI缓存集合，避免内存泄漏
             dialogueReviewUIs.Clear();

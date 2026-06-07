@@ -71,9 +71,9 @@ namespace HotUpdate.UI.Quests
         #endregion
 
         // 任务类型与对应任务容器的映射字典，Key：任务类型ID  Value：该类型下的任务容器
-        private readonly Dictionary<EQuestType, PoolObject<QuestTypeContainer>> taskTypeToContainerMap = new();
+        private readonly Dictionary<EQuestType, QuestTypeContainer> taskTypeToContainerMap = new();
         // 当前选中任务的奖励物品格子列表
-        private readonly List<PoolObject<ItemGrid>> rewardItems = new();
+        private readonly List<ItemGrid> rewardItems = new();
         
         #region 公共属性
         /// <summary>
@@ -132,7 +132,7 @@ namespace HotUpdate.UI.Quests
         {
             foreach (var taskTypeContainer in taskTypeToContainerMap.Values)
             {
-                yield return taskTypeContainer.Obj;
+                yield return taskTypeContainer;
             }
         }
 
@@ -160,7 +160,7 @@ namespace HotUpdate.UI.Quests
         /// </summary>
         /// <param name="taskType">任务类型ID</param>
         /// <param name="questTypeContainer">该类型对应的任务容器实例</param>
-        public void AddTaskTypeContainers(EQuestType taskType, PoolObject<QuestTypeContainer> questTypeContainer)
+        public void AddTaskTypeContainers(EQuestType taskType, QuestTypeContainer questTypeContainer)
         {
             taskTypeToContainerMap.Add(taskType, questTypeContainer);
         }
@@ -173,7 +173,7 @@ namespace HotUpdate.UI.Quests
         /// <exception cref="KeyNotFoundException">当指定任务类型不存在时抛出</exception>
         public QuestTypeContainer GetContainer(EQuestType taskType)
         {
-            return taskTypeToContainerMap[taskType].Obj;
+            return taskTypeToContainerMap[taskType];
         }
 
         /// <summary>
@@ -185,26 +185,21 @@ namespace HotUpdate.UI.Quests
         {
             foreach (var container in taskTypeToContainerMap.Values)
             {
-                return container.Obj;
+                return container;
             }
 
             return null;
         }
 
-        public void ClearItemGrid()
+        public void ClearItemGrid(ObjectSpawner spawner)
         {
-            foreach (var poolObject in rewardItems)
+            foreach (var itemGrid in rewardItems)
             {
-                poolObject.Collect();
+                spawner.Release(itemGrid, false);
             }
             rewardItems.Clear();
         }
 
         #endregion
-
-        public override void Destroy()
-        {
-            ClearItemGrid();
-        }
     }
 }

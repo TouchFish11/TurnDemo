@@ -7,7 +7,6 @@ using Core.Serialize.Binary;
 using Core.UI;
 using HotUpdate.Base;
 using HotUpdate.Common.Config.ExcelInfo.Container;
-
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.General;
@@ -17,13 +16,13 @@ using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.Skill.Component;
 using HotUpdate.Game.Battle.Status;
 using HotUpdate.Game.Battle.Status.Enum;
-using HotUpdate.Game.Battle.UI.Status;
 using HotUpdate.Game.Battle.Utility;
+using HotUpdate.UI.Battle.Status;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace HotUpdate.Game.Battle.UI.Role
+namespace HotUpdate.UI.Battle.Role
 {
     /// <summary>
     /// 角色状态UI组件
@@ -59,7 +58,7 @@ namespace HotUpdate.Game.Battle.UI.Role
         private IBattleEntityObject battleEntity;  // 战斗实体对象
 
         // 状态UI列表
-        private readonly List<PoolObject<StatusGridUI>> statusGridUIs = new();
+        private readonly List<StatusGridUI> statusGridUIs = new();
 
         /// <summary>
         /// 当前UI绑定的角色ID
@@ -233,12 +232,12 @@ namespace HotUpdate.Game.Battle.UI.Role
         private async void OnConflict_Add(IStatus status)
         {
             // 判断是否已存在相同ID的状态
-            var hasStatus = statusGridUIs.Any(s => s.Obj.GetStatusId() == status.StatusProperty.StatusInfo.f_id);
+            var hasStatus = statusGridUIs.Any(s => s.GetStatusId() == status.StatusProperty.StatusInfo.f_id);
             if (!hasStatus)
             {
                 // 创建新的状态图标
                 var statusGridUI = await _objectSpawner.SpawnAsync<StatusGridUI>(AssetKeys.StatusGridUI, svBuffBox.content);
-                statusGridUI.Obj.Init(status);
+                statusGridUI.Init(status);
                 statusGridUIs.Add(statusGridUI);
             }
         }
@@ -251,7 +250,7 @@ namespace HotUpdate.Game.Battle.UI.Role
         {
             // 直接创建新的状态图标（独占类型总是创建新的）
             var statusGridUI = await _objectSpawner.SpawnAsync<StatusGridUI>(AssetKeys.StatusGridUI, svBuffBox.content);
-            statusGridUI.Obj.Init(newStatus);
+            statusGridUI.Init(newStatus);
             statusGridUIs.Add(statusGridUI);
         }
 
@@ -262,18 +261,18 @@ namespace HotUpdate.Game.Battle.UI.Role
         private async void OnConflict_Cover(IStatus newStatus)
         {
             // 查找已存在的相同ID状态
-            var index = statusGridUIs.FindIndex(s => s.Obj.GetStatusId() == newStatus.StatusProperty.StatusInfo.f_id);
+            var index = statusGridUIs.FindIndex(s => s.GetStatusId() == newStatus.StatusProperty.StatusInfo.f_id);
             if (index != -1)
             {
                 var statusGrid = statusGridUIs[index];
                 // 将旧状态图标回收到对象池
-                statusGrid.Collect();
+                _objectSpawner.Release(statusGrid);
                 statusGridUIs.RemoveAt(index);
             }
             
             // 创建新的状态图标
             var statusGridUI = await _objectSpawner.SpawnAsync<StatusGridUI>(AssetKeys.StatusGridUI, svBuffBox.content);
-            statusGridUI.Obj.Init(newStatus);
+            statusGridUI.Init(newStatus);
             statusGridUIs.Add(statusGridUI);
         }
 
@@ -286,10 +285,10 @@ namespace HotUpdate.Game.Battle.UI.Role
             // 从后向前遍历，避免删除时索引问题
             for (var i = statusGridUIs.Count - 1; i >= 0; i--)
             {
-                if (statusGridUIs[i].Obj.IsValid) 
+                if (statusGridUIs[i].IsValid) 
                     continue;
                 // 移除已失效的状态图标
-                statusGridUIs[i].Collect();
+                _objectSpawner.Release(statusGridUIs[i]);
                 statusGridUIs.RemoveAt(i);
             }
         }

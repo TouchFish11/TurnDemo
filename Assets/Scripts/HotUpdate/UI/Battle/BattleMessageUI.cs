@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace HotUpdate.Game.Battle.UI
+namespace HotUpdate.UI.Battle
 {
     /// <summary>
     /// ս����ϢUI

@@ -22,7 +22,7 @@ namespace HotUpdate.Game.Battle.TargetSelect
     /// 响应技能选择、拖拽切换目标、点击选中目标等交互事件，同步更新目标选择UI
     /// 单例模式实现，全局唯一管理战斗目标选择流程
     /// </summary>
-    public class TargetSelectManager : ITargetSelectManager, IDestroyable
+    public class TargetSelectManager : ITargetSelectManager, IDisposable
     {
         // 缓存筛选出的所有目标
         private List<IBattleEntityObject> _filterEntitys;
@@ -293,7 +293,7 @@ namespace HotUpdate.Game.Battle.TargetSelect
             UpdateTargets();
         }
 
-        public void OnDestroy()
+        public void Dispose()
         {
             // 注册技能选择事件监听：当玩家选择技能时触发目标选择逻辑
             battleContext.GetEventBus().RemoveListener<SelectSkillEvent>(OnSelectSkillEvent);

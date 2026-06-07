@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace HotUpdate.Game.Battle.UI.Status
+namespace HotUpdate.UI.Battle.Status
 {
     /// <summary>
     /// 状态效果文本UI组件

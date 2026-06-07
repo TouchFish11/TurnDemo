@@ -18,7 +18,7 @@ namespace HotUpdate.Game.VFX
     {
         [Inject] private ObjectSpawner _objectSpawner;
         // 存储当前活跃的VFX信息
-        private readonly Dictionary<VFXInfo, PoolObject> _activeVfxInfos = new();
+        private readonly Dictionary<VFXInfo, GameObject> _activeVfxInfos = new();
         // 待移除的vfx信息缓存
         private readonly List<VFXInfo> _removedVfxInfos = new();
         
@@ -33,7 +33,7 @@ namespace HotUpdate.Game.VFX
         /// </summary>
         private void OnUpdate()
         {
-            foreach (var (vfxInfo, poolObject) in _activeVfxInfos)
+            foreach (var (vfxInfo, vfxObj) in _activeVfxInfos)
             {
                 // 已停止或粒子系统非存活状态，回收至对象池
                 if (vfxInfo.IsStop || !vfxInfo.ParticleSystem.IsAlive())
@@ -41,7 +41,7 @@ namespace HotUpdate.Game.VFX
                     vfxInfo.IsAlive = false;
                     vfxInfo.ParticleSystem.Stop();
                     // 将VFX对象归还至对象池
-                    poolObject.Collect();
+                    _objectSpawner.Release(vfxObj);
                     // 放入待删除列表
                     _removedVfxInfos.Add(vfxInfo);
                 }
@@ -70,21 +70,21 @@ namespace HotUpdate.Game.VFX
                 // 根据父物体是否存在，设置VFX的位置和旋转
                 if (projectileTrans.Parent)
                 {
-                    vfxObj.Obj.transform.SetLocalPositionAndRotation(projectileTrans.LocalPos, projectileTrans.Rotation);
+                    vfxObj.transform.SetLocalPositionAndRotation(projectileTrans.LocalPos, projectileTrans.Rotation);
                 }
                 else
                 {
-                    vfxObj.Obj.transform.SetPositionAndRotation(projectileTrans.WorldPos, projectileTrans.Rotation);
+                    vfxObj.transform.SetPositionAndRotation(projectileTrans.WorldPos, projectileTrans.Rotation);
                 }
 
                 // 如果VFX挂载了投射物组件，初始化投射物数据
-                if (vfxObj.Obj.TryGetComponent<IProjectile>(out var projectile))
+                if (vfxObj.TryGetComponent<IProjectile>(out var projectile))
                 {
                     projectile.Init(data, vFXInfo);
                 }
 
                 // 如果包含粒子系统，记录到活跃列表
-                if (vfxObj.Obj.TryGetComponent<ParticleSystem>(out var ps))
+                if (vfxObj.TryGetComponent<ParticleSystem>(out var ps))
                 {
                     vFXInfo.ParticleSystem = ps;
                     _activeVfxInfos.Add(vFXInfo, vfxObj);
@@ -111,7 +111,7 @@ namespace HotUpdate.Game.VFX
                 // 异步获取VFX资源
                 var vfxObj = await _objectSpawner.SpawnAsync<GameObject>(vfxName, parent,  pos, rot);
                 // 如果包含粒子系统，记录到活跃列表
-                if (vfxObj.Obj.TryGetComponent<ParticleSystem>(out var ps))
+                if (vfxObj.TryGetComponent<ParticleSystem>(out var ps))
                 {
                     vFXInfo.ParticleSystem = ps;
                     _activeVfxInfos.Add(vFXInfo, vfxObj);
@@ -130,10 +130,10 @@ namespace HotUpdate.Game.VFX
         public void RemoveVFX(VFXInfo vFXInfo)
         {
             // 检查是否在活跃列表中，存在则回收至对象池并移除
-            if (!_activeVfxInfos.TryGetValue(vFXInfo, out var activeVfxInfo)) 
+            if (!_activeVfxInfos.TryGetValue(vFXInfo, out var activeVfx)) 
                 return;
-            
-            activeVfxInfo.Collect();
+
+            _objectSpawner.Release(activeVfx);
             _activeVfxInfos.Remove(vFXInfo);
         }
 
@@ -143,9 +143,9 @@ namespace HotUpdate.Game.VFX
         public void ClearVFXCache()
         {
             // 遍历所有活跃VFX，逐一回收至对象池
-            foreach (var poolObject in _activeVfxInfos.Values)
+            foreach (var vfxObj in _activeVfxInfos.Values)
             {
-                poolObject.Collect();
+                _objectSpawner.Release(vfxObj);
             }
             // 清空活跃列表
             _activeVfxInfos.Clear();

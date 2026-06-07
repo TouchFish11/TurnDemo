@@ -4,9 +4,9 @@ using Core.AssetBundles.Management;
 using Core.UI;
 using Core.UI.ViewController;
 using HotUpdate.Game.Battle.UI;
-using HotUpdate.Game.Battle.UI.BattlePoint;
-using HotUpdate.Game.Battle.UI.Role;
 using HotUpdate.UI.Battle.ActionLine;
+using HotUpdate.UI.Battle.BattlePoint;
+using HotUpdate.UI.Battle.Role;
 using HotUpdate.UI.Battle.SkillKey;
 using TMPro;
 using UnityEngine;
@@ -106,17 +106,17 @@ namespace HotUpdate.UI.Battle.Base
         
         
         // �ж�������UI�б�
-        private readonly List<PoolObject<ActionGridUI>> actions = new();
+        private readonly List<ActionGridUI> actions = new();
         // ���ܰ���UI�б�
-        private readonly List<PoolObject<SkillKeyUI>> skillKeyUIs = new();
+        private readonly List<SkillKeyUI> skillKeyUIs = new();
         // ��ɫ״̬UI�б�
-        private readonly List<PoolObject<RoleStateUI>> roleStateUIs = new();
+        private readonly List<RoleStateUI> roleStateUIs = new();
         // ս����UI�б�
-        private readonly List<PoolObject<BattlePointUI>> battlePointUIs = new();
+        private readonly List<BattlePointUI> battlePointUIs = new();
         // ѡ����UI�б�
-        private readonly List<PoolObject> selectMarkerUIs = new();
+        private readonly List<SelectMarkerUI> selectMarkerUIs = new();
         // �ȴ��ж������б�
-        private readonly List<PoolObject<WaitingActUI>> waitingActUIs = new();
+        private readonly List<WaitingActUI> waitingActUIs = new();
         // ��ǰ�ۼ��˺�
         private long currentCalcDamage;
         
@@ -192,23 +192,23 @@ namespace HotUpdate.UI.Battle.Base
         /// <returns>δ�ҵ�����null</returns>
         public RoleStateUI GetRoleStateUIById(int roleId)
         {
-            return roleStateUIs.FirstOrDefault(r => r.Obj.RoleId == roleId).Obj;
+            return roleStateUIs.FirstOrDefault(r => r.RoleId == roleId);
         }
         
         /// <summary>
         /// 
         /// </summary>
         /// <param name="waitingActUI"></param>
-        public void CacheWaitingCommmand(PoolObject<WaitingActUI> waitingActUI)
+        public void CacheWaitingCommmand(WaitingActUI waitingActUI)
         {
             waitingActUIs.Add(waitingActUI);
         }
 
-        public void ClearWaitingActUI()
+        public void ClearWaitingActUI(ObjectSpawner spawner)
         {
             foreach (var waitingActUI in waitingActUIs)
             {
-                waitingActUI.Collect();
+                spawner.Release(waitingActUI);
             }
             waitingActUIs.Clear();
         }
@@ -216,11 +216,12 @@ namespace HotUpdate.UI.Battle.Base
         /// <summary>
         /// 
         /// </summary>
-        public void ClearActionBar()
+        /// <param name="spawner"></param>
+        public void ClearActionBar(ObjectSpawner spawner)
         {
             foreach (var actionGridUI in actions)
             {
-                actionGridUI.Collect();
+                spawner.Release(actionGridUI);
             }
             actions.Clear();
         }
@@ -229,7 +230,7 @@ namespace HotUpdate.UI.Battle.Base
         /// 
         /// </summary>
         /// <param name="actionGridUI"></param>
-        public void UpdateAcitonbar(PoolObject<ActionGridUI> actionGridUI)
+        public void UpdateAcitonbar(ActionGridUI actionGridUI)
         {
             actions.Add(actionGridUI);
         }
@@ -240,18 +241,19 @@ namespace HotUpdate.UI.Battle.Base
         /// <returns></returns>
         public List<ActionGridUI> GetActionGridUIs()
         {
-            return actions.ConvertAll(p => p.Obj);
+            return actions.ConvertAll(p => p);
         }
 
         /// <summary>
         /// ���ò���UI
         /// </summary>
         /// <param name="skillKeyUIs"></param>
-        public void SetOperator(List<PoolObject<SkillKeyUI>> skillKeyUIs)
+        /// <param name="spawner"></param>
+        public void SetOperator(List<SkillKeyUI> skillKeyUIs, ObjectSpawner spawner)
         {
             foreach (var skillKeyUI in this.skillKeyUIs)
             {
-                skillKeyUI.Collect();
+                spawner.Release(skillKeyUI);
             }
             this.skillKeyUIs.Clear();
             this.skillKeyUIs.AddRange(skillKeyUIs);
@@ -260,11 +262,12 @@ namespace HotUpdate.UI.Battle.Base
         /// <summary>
         /// �������UI
         /// </summary>
-        public void ClearOperator()
+        /// <param name="spawner"></param>
+        public void ClearOperator(ObjectSpawner spawner)
         {
             foreach (var skillKeyUI in skillKeyUIs)
             {
-                skillKeyUI.Collect();
+                spawner.Release(skillKeyUI);
             }
             skillKeyUIs.Clear();
         }
@@ -274,11 +277,12 @@ namespace HotUpdate.UI.Battle.Base
         /// </summary>
         /// <param name="current"></param>
         /// <param name="battlePointUIs"></param>
-        public void UpdateBattlePointCount(int current, IEnumerable<PoolObject<BattlePointUI>> battlePointUIs)
+        /// <param name="spawner"></param>
+        public void UpdateBattlePointCount(int current, IEnumerable<BattlePointUI> battlePointUIs, ObjectSpawner spawner)
         {
             foreach (var battlePointUI in this.battlePointUIs)
             {
-                battlePointUI.Collect();
+                spawner.Release(battlePointUI);
             }
             this.battlePointUIs.Clear();
             this.battlePointUIs.AddRange(battlePointUIs);
@@ -288,19 +292,20 @@ namespace HotUpdate.UI.Battle.Base
         ///  缓存目标标记
         /// </summary>
         /// <param name="selectMarkerUI"></param>
-        public void AddSelectMarker(PoolObject selectMarkerUI)
+        public void AddSelectMarker(SelectMarkerUI selectMarkerUI)
         {
             selectMarkerUIs.Add(selectMarkerUI);
         }
-        
+
         /// <summary>
         /// 清理所有标记
         /// </summary>
-        public void ClearSelectMarkers()
+        /// <param name="spawner"></param>
+        public void ClearSelectMarkers(ObjectSpawner spawner)
         {
             foreach (var selectMarkerUI in selectMarkerUIs)
             {
-                selectMarkerUI.Collect();
+                spawner.Release(selectMarkerUI);
             }
             selectMarkerUIs.Clear();
         }
@@ -309,7 +314,7 @@ namespace HotUpdate.UI.Battle.Base
         /// ��ʼ����ɫ״̬UI
         /// </summary>
         /// <param name="roleStateUI"></param>
-        public void InitRoleStateUI(PoolObject<RoleStateUI> roleStateUI)
+        public void InitRoleStateUI(RoleStateUI roleStateUI)
         {
             roleStateUIs.Add(roleStateUI);
         }

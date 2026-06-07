@@ -7,7 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace HotUpdate.Game.Battle.UI.Status
+namespace HotUpdate.UI.Battle.Status
 {
     /// <summary>
     /// ״̬����UI

@@ -54,11 +54,11 @@ namespace Core.AssetBundles.Management.Test
             var task1 = await _objectSpawner.SpawnAsync<GameObject>("Sphere");
             var task2 = await _objectSpawner.SpawnAsync<GameObject>("Sphere");
             
-            Debug.Log(task1.Obj);
-            Debug.Log(task2.Obj);
+            //Debug.Log(task1.Obj);
+            //Debug.Log(task2.Obj);
             
-            task1.Collect();
-            task2.Collect();
+            //task1.Collect();
+            //task2.Collect();
             
             // var poolObjects = await Task.WhenAll(task1, task2);
             //
