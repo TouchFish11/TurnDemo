@@ -9,34 +9,45 @@ namespace HotUpdate.UI.Settings.ViewModel
     /// <summary>
     /// 下拉列表设置ViewModel
     /// </summary>
-    public abstract class SettingDropdownViewModel : IDisposable
+    public class SettingDropdownViewModel : IDisposable
     {
-        protected GameSettings _settings;
-        protected GameSettingsConfig _settingsConfig;
-        
-        public ReactiveProperty<int> OptionIndex { get; private set; } = new();
-        public List<string> Options { get; protected set; } = new();
-        
-        protected SettingDropdownViewModel(GameSettings settings, GameSettingsConfig settingsConfig)
-        {
-            _settings = settings;
-            _settingsConfig = settingsConfig;
-        }
-        
-        protected abstract void OnSettingsChanged(GameSettings settings);
-
         /// <summary>
-        /// 刷新UI显示，UI初始化时需主动调用该方法，拉取数据来显示
+        /// 选中索引
         /// </summary>
-        public abstract void RefleshUI();
+        public ReactiveProperty<int> OptionIndex { get; protected set; }
+        
+        /// <summary>
+        /// 选项列表
+        /// </summary>
+        public List<string> Options { get; protected set; }
+        
+        protected SettingDropdownViewModel(GameSettings settings, GameSettingsConfig settingsConfig, ESettingType settingType)
+        {
+            switch (settingType)
+            {
+                case ESettingType.VolumeOpen:
+                    Options = settingsConfig.volumeOpts.ConvertAll(i => i.ToString());
+                    break;
+                case ESettingType.SFXOpen:
+                    Options = settingsConfig.sfxOpts.ConvertAll(i => i.ToString());
+                    break;
+                case ESettingType.TypeWriter:
+                    Options = settingsConfig.typeWriterOpts.ConvertAll(i => i.ToString());
+                    break;
+                case ESettingType.TargetFrameRateIndex:
+                    Options = settingsConfig.framerates.ConvertAll(i => i.ToString());
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(settingType), settingType, null);
+            }
+
+            OptionIndex = new ReactiveProperty<int>((int)settings[settingType]);
+        }
 
         public void Dispose()
         {
-            _settings.OnDataChanged -= OnSettingsChanged;
             OptionIndex = null;
             Options = null;
-            _settings = null;
-            _settingsConfig = null;
         }
     }
 }

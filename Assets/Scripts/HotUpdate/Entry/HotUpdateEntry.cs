@@ -42,6 +42,7 @@ namespace HotUpdate.Entry
         {
             try
             {
+                // 在OnEnable执行run逻辑，而不是在Start，因为Start执行晚于该对象的释放
                 await Run();
             }
             catch (Exception e)

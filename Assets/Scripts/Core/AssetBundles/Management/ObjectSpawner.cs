@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Core.DI;
 using Core.Mono;
@@ -27,7 +26,7 @@ namespace Core.AssetBundles.Management
         private readonly HashSet<string> _assetKeys = new();
         // 缓存使用的实例
         private readonly HashSet<Object> _activeObjects = new();
-        // 
+        // 释放时的快照
         private readonly List<Object> _releaseSnapshot = new();
         
         /// <summary>
@@ -294,7 +293,7 @@ namespace Core.AssetBundles.Management
             _activeObjects.Remove(obj);
             if (destroy)
             {
-                EngineUtility.Destroy(obj);
+                EngineUtility.Destroy(obj as GameObject ?? ((Component)obj).gameObject);
             }
             else
             {

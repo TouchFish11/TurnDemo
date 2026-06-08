@@ -8,10 +8,10 @@ namespace HotUpdate.Base.Settings
     /// </summary>
     [Serializable]
     [JsonObject(MemberSerialization.OptIn)]
-    public class SettingItem<T> : ISettingItem
+    public class SettingItem : ISettingItem
     {
         [JsonProperty] private ESettingType _settingType;
-        [JsonProperty] private T _value;
+        [JsonProperty] private float _value;
         [JsonProperty] private bool _isRange;
         
         public SettingItem(ESettingType settingType, bool isRange)
@@ -20,10 +20,10 @@ namespace HotUpdate.Base.Settings
             _isRange = isRange;
         }
         
-        public object Value
+        public float Value
         {
             get => _value;
-            set => _value = (T)value;
+            set => _value = value;
         }
 
         public ESettingType SettingType

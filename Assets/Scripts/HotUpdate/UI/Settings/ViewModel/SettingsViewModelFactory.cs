@@ -1,4 +1,5 @@
 using System;
+using Core.DI;
 using HotUpdate.Base.Settings;
 using HotUpdate.Common.Config.Settings;
 
@@ -18,12 +19,7 @@ namespace HotUpdate.UI.Settings.ViewModel
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public static SettingSliderViewModel CreateSliderViewModel(ESettingType type, GameSettings settings)
         {
-            return type switch
-            {
-                ESettingType.VolumeValue => new VolumeSliderViewModel(settings),
-                ESettingType.SFXValue => new SFXSliderViewModel(settings),
-                _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
-            };
+            return DIContainer.Create<SettingSliderViewModel>(parameterValues: new object[] { settings, type });
         }
         
         /// <summary>
@@ -36,14 +32,7 @@ namespace HotUpdate.UI.Settings.ViewModel
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public static SettingDropdownViewModel CreateDropdownViewModel(ESettingType type, GameSettings settings, GameSettingsConfig settingsConfig)
         {
-            return type switch
-            {
-                ESettingType.VolumeOpen => new VolumeOpenDropdownViewModel(settings, settingsConfig),
-                ESettingType.SFXOpen => new SFXOpenDropdownViewModel(settings, settingsConfig),
-                ESettingType.TypeWriter => new TypeWriterDropdownViewModel(settings, settingsConfig),
-                ESettingType.TargetFrameRateIndex => new FrameRateDropdownViewModel(settings, settingsConfig),
-                _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
-            };
+            return DIContainer.Create<SettingDropdownViewModel>(parameterValues: new object[] { settings, settingsConfig, type });
         }
     }
 }

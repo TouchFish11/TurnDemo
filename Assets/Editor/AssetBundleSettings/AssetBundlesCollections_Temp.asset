@@ -495,9 +495,9 @@ MonoBehaviour:
   - assetBundleName: tmp_asset
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\TMP_Asset\MSYH_SDF.asset
-      size: 8431126
+      size: 8490565
       name: MSYH_SDF.asset
-      hash: 6dd4f3dcd54baa2e641a345d0d60deb47efdb2d05508fee11433b857c01cd885
+      hash: 25badde69e892cd1a49536a0d6a51ae0f21f8015a8cb6aae0dbd67ca24ea8b6c
       assetType: 0
   - assetBundleName: ui
     assetInfos:
@@ -662,9 +662,14 @@ MonoBehaviour:
       hash: 3453203f2d6a2bd2d2f5110b0703e259808395fd5ee5b920c8402004947cd585
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Dialogue\DialogueView.prefab
-      size: 99719
+      size: 71266
       name: DialogueView.prefab
-      hash: 8bf0c9eab36317bcf3c61c09505001181da315883dfd95b710461d16e5ca4de1
+      hash: 5f368d09a5ce240e84e8b58b3fcd9ccd37b8c71458c32685edad1b2686536d26
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\UI\Dialogue\StoryReviewSubView.prefab
+      size: 29487
+      name: StoryReviewSubView.prefab
+      hash: e2bf23b14ce1ea3a91ecc4fa8473bd49b5aeb4318933af38049c3c7be892a8b5
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Global\GlobalMessageView.prefab
       size: 9870

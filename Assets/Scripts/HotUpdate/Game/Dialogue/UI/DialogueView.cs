@@ -31,8 +31,8 @@ namespace HotUpdate.Game.Dialogue.UI
         [InjectUI(1)] public RectTransform DialogueBox { get; private set; }
         // 对话选项框容器（承载对话选择项的根节点）
         [InjectUI(1)] public RectTransform DialogueOptBox { get; private set; }
-        // 剧情回顾子界面容器（剧情回顾功能的根节点）
-        [InjectUI(1)] public RectTransform StoryReviewSubView { get; private set; }
+        // 剧情回顾子界面容器（剧情回顾界面的根节点）
+        [InjectUI(1)] public RectTransform ReviewRoot { get; private set; }
         #endregion
 
         // 对话选项UI的缓存列表，用于管理当前显示的所有对话分支选项
@@ -45,20 +45,16 @@ namespace HotUpdate.Game.Dialogue.UI
         public StoryReviewView StoryReviewView { get; private set; }
         #endregion
 
-        #region 生命周期方法
-        /// <summary>
-        /// 初始化方法（在Awake阶段执行）
-        /// 完成子视图的初始化，获取剧情回顾子视图实例
-        /// </summary>
-        protected override void Awake()
-        {
-            base.Awake();
-            // 从子物体中获取剧情回顾视图接口实例，关联剧情回顾功能
-            StoryReviewView = GetComponentInChildren<StoryReviewView>();
-        }
-        #endregion
-
         #region 公开方法
+        /// <summary>
+        /// 设置对话回顾界面对象缓存
+        /// </summary>
+        /// <param name="storyReviewView"></param>
+        public void SetStoryReviewView(StoryReviewView storyReviewView)
+        {
+            StoryReviewView = storyReviewView;
+        }
+        
         /// <summary>
         /// 设置对话主体容器的激活状态
         /// </summary>
@@ -94,7 +90,7 @@ namespace HotUpdate.Game.Dialogue.UI
         /// <param name="isActive">是否激活：true显示，false隐藏</param>
         public void SetActiveReview(bool isActive)
         {
-            StoryReviewSubView.gameObject.SetActive(isActive);
+            ReviewRoot.gameObject.SetActive(isActive);
         }
 
         /// <summary>
@@ -121,6 +117,12 @@ namespace HotUpdate.Game.Dialogue.UI
         public void CacheBranchOpt(DialogueOptUI dialogueOpt)
         {
             dialogueOptUIs.Add(dialogueOpt);
+        }
+
+        public void DestroyReviewView(ObjectSpawner spawner)
+        {
+            spawner.Release(StoryReviewView);
+            StoryReviewView = null;
         }
         #endregion
     }

@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
-using Core.Log;
 using Core.Serialize.Binary;
 using Core.UI;
 using HotUpdate.Common.Config.ExcelInfo.Container;
@@ -20,17 +20,12 @@ namespace HotUpdate.Game.Dialogue.UI
     public class StoryReviewView : UIBehaviourBase
     {
         [Inject] private ObjectSpawner _objectSpawner;
+        [Inject] private IBinaryDataManager _binaryDataManager;
         
         /// <summary>
         /// 对话回顾列表的滚动容器（通过依赖注入赋值）
         /// </summary>
         [InjectUI] private ScrollRect svReview;
-        
-        /// <summary>
-        /// 存储历史对话信息的集合
-        /// 用于缓存需要展示的所有对话数据
-        /// </summary>
-        private readonly List<DialogueInfo> historicalDialogueInfos = new();
         
         /// <summary>
         /// 对话回顾UI对象的缓存集合
@@ -43,25 +38,7 @@ namespace HotUpdate.Game.Dialogue.UI
         /// 外部可订阅该事件以处理视图关闭后的逻辑
         /// </summary>
         public event Action OnSubViewClosed;
-
-        /// <summary>
-        /// 视图启用时的生命周期方法
-        /// 重写父类方法，异步加载并展示历史对话
-        /// </summary>
-        protected override async void OnEnable()
-        {
-            try
-            {
-                // 异步执行对话展示逻辑
-                await Show();
-            }
-            catch (Exception e)
-            {
-                // 记录启用过程中的异常日志，便于问题定位
-                Logger.LogError($"{GetType().Name}.{nameof(OnEnable)}： {e.Message}");
-            }
-        }
-
+        
         /// <summary>
         /// 按钮点击事件处理方法
         /// 重写父类方法，处理当前视图内的按钮交互
@@ -79,39 +56,24 @@ namespace HotUpdate.Game.Dialogue.UI
         }
 
         /// <summary>
-        /// 展示历史对话内容的核心方法
-        /// 遍历缓存的对话信息，实例化对话UI并初始化显示内容
-        /// </summary>
-        /// <returns>异步任务对象</returns>
-        private async System.Threading.Tasks.Task Show()
-        {
-            // 遍历所有缓存的历史对话信息
-            foreach (var dialogueInfo in historicalDialogueInfos)
-            {
-                // 从资源包异步加载对话回顾UI预制体，并挂载到滚动容器的内容节点下
-                var dialogueReviewUI = await _objectSpawner.SpawnAsync<DialogueReviewUI>(AssetKeys.DialogueReviewUI, svReview.content);
-                
-                // 从二进制数据管理器中获取NPC配置容器，根据说话者ID查询NPC信息
-                var npcInfo = DIContainer.GetInstance<IBinaryDataManager>()
-                    .GetConfig<NpcInfoContainer>(EConfigLoadType.Excel)
-                    .dataDic[dialogueInfo.f_speakerId];
-                
-                // 初始化对话UI的显示内容（说话者名称 + 对话文本）
-                dialogueReviewUI.Init(npcInfo.f_speakerName, dialogueInfo.f_dialgueText);
-                
-                // 将实例化的UI对象加入缓存集合，便于后续回收
-                dialogueReviewUIs.Add(dialogueReviewUI);
-            }
-        }
-
-        /// <summary>
         /// 缓存对话信息到历史集合
         /// 供外部调用，将新的对话数据加入待展示列表
         /// </summary>
-        /// <param name="dialogueInfo">待缓存的对话信息对象</param>
-        public void CacheDialogueInfo(DialogueInfo dialogueInfo)
+        /// <param name="historicalInfos"></param>
+        public async Task ShowDialogues(List<DialogueInfo> historicalInfos)
         {
-            historicalDialogueInfos.Add(dialogueInfo);
+            // 遍历所有历史对话信息
+            foreach (var dialogueInfo in historicalInfos)
+            {
+                // 从资源包异步加载对话回顾UI预制体，并挂载到滚动容器的内容节点下
+                var dialogueReviewUI = await _objectSpawner.SpawnAsync<DialogueReviewUI>(AssetKeys.DialogueReviewUI, svReview.content);
+                // 从二进制数据管理器中获取NPC配置容器，根据说话者ID查询NPC信息
+                var npcInfo = _binaryDataManager.GetConfig<NpcInfoContainer>(EConfigLoadType.Excel).dataDic[dialogueInfo.f_speakerId];
+                // 初始化对话UI的显示内容（说话者名称 + 对话文本）
+                dialogueReviewUI.Init(npcInfo.f_speakerName, dialogueInfo.f_dialgueText);
+                // 将实例化的UI对象加入缓存集合，便于后续回收
+                dialogueReviewUIs.Add(dialogueReviewUI);
+            }
         }
 
         /// <summary>
@@ -127,8 +89,6 @@ namespace HotUpdate.Game.Dialogue.UI
             }
             // 清空UI缓存集合，避免内存泄漏
             dialogueReviewUIs.Clear();
-            _objectSpawner.Dispose();
-            _objectSpawner = null;
         }
 
         /// <summary>
@@ -139,6 +99,12 @@ namespace HotUpdate.Game.Dialogue.UI
         {
             // 视图隐藏时清理所有对话UI
             ClearReviewUI();
+        }
+
+        protected override void OnDestroy()
+        {
+            _objectSpawner.Dispose();
+            _objectSpawner = null;
         }
     }
 }

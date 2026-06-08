@@ -65,7 +65,7 @@ namespace Core.UI.ViewController
         }
         
         /// <summary>
-        /// 失活
+        /// 失活，若界面被Destroy，则在Destroy前执行
         /// </summary>
         /// <returns></returns>
         public async Task InActivate()
@@ -226,6 +226,10 @@ namespace Core.UI.ViewController
             await OnDestroy();
         }
         
+        /// <summary>
+        /// 在UiView.Destroy之后执行
+        /// </summary>
+        /// <returns></returns>
         protected virtual Task OnDestroy()
         {
             return Task.CompletedTask;

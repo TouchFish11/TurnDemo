@@ -42,7 +42,6 @@ public static class AssetKeys
     public const string VFX_SupportSkill_02 = "VFX_SupportSkill_02";
     public const string VFX_SupportSkill_01 = "VFX_SupportSkill_01";
     public const string VFX_Environment_Rain = "VFX_Environment_Rain";
-    public const string TipView = "TipView";
     public const string AssetUpdateConfirmContent = "AssetUpdateConfirmContent";
     public const string QuestView = "QuestView";
     public const string QuestTypeContainer = "QuestTypeContainer";
@@ -58,6 +57,7 @@ public static class AssetKeys
     public const string InteractUI = "InteractUI";
     public const string MessageUI = "MessageUI";
     public const string GlobalMessageView = "GlobalMessageView";
+    public const string StoryReviewSubView = "StoryReviewSubView";
     public const string DialogueView = "DialogueView";
     public const string DialogueReviewUI = "DialogueReviewUI";
     public const string DialogueOptUI = "DialogueOptUI";
@@ -241,4 +241,5 @@ public static class AssetKeys
     public const string FireFly_Attack_Anim = "FireFly_Attack_Anim";
     public const string TurtleShell_Attack_Anim = "TurtleShell_Attack_Anim";
     public const string Slime_Attack_Anim = "Slime_Attack_Anim";
+    public const string TipView = "TipView";
 }

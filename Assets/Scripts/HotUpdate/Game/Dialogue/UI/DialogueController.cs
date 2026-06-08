@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Mono;
@@ -13,8 +15,6 @@ using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.Dialogue.UI
 {
-    using Task = System.Threading.Tasks.Task;
-
     /// <summary>
     /// 对话控制器核心类
     /// 处理对话界面的交互逻辑、对话内容展示、分支选项设置等核心功能
@@ -23,8 +23,14 @@ namespace HotUpdate.Game.Dialogue.UI
     {
         private static readonly WaitForSeconds s_waitForSeconds0_25 = new(0.25f);
 
+        [Inject] private IMonoAdapter _monoAdapter;
         [Inject] private IDialogueManager _dialogueManager;
         [Inject] private ObjectSpawner _objectSpawner;
+        
+        // 对话提示动画的协程引用，用于停止协程
+        private Coroutine dialogueTipCor;
+        // 缓存历史对话记录
+        private readonly List<DialogueInfo> historicalDialogueInfos = new();
         
         /// <summary>
         /// 对话加载提示文本（渐变显示的省略号）
@@ -35,9 +41,6 @@ namespace HotUpdate.Game.Dialogue.UI
         /// 对话默认提示文本（继续按钮提示）
         /// </summary>
         private const string DefaultTip = "V";
-
-        // 对话提示动画的协程引用，用于停止协程
-        private Coroutine dialogueTipCor;
         
         /// <summary>
         /// 对话是否正在播放中
@@ -73,36 +76,24 @@ namespace HotUpdate.Game.Dialogue.UI
             // 获取对话管理器实例，注册单条对话开始/结束事件
             _dialogueManager.OnSingleDialogueStart += OnSingleDialogueStart;
             _dialogueManager.OnSingleDialogueEnd += OnSingleDialogueEnd;
-            // 注册故事回顾子视图关闭事件
-            view.StoryReviewView.OnSubViewClosed += OnSubViewClosed;
-            // 初始状态隐藏故事回顾界面
-            view.SetActiveReview(false);
             return Task.CompletedTask;
         }
 
         protected override Task OnInactivate()
         {
+            historicalDialogueInfos.Clear();
             _dialogueManager.OnSingleDialogueStart -= OnSingleDialogueStart;
             _dialogueManager.OnSingleDialogueEnd -= OnSingleDialogueEnd;
             view.StoryReviewView.OnSubViewClosed -= OnSubViewClosed;
             dialogueTipCor = null;
             return Task.CompletedTask;
         }
-
-        /// <summary>
-        /// 故事回顾子视图关闭时的回调
-        /// </summary>
-        private void OnSubViewClosed()
-        {
-            // 隐藏故事回顾界面
-            view.SetActiveReview(false);
-        }
-
+        
         /// <summary>
         /// 按钮点击事件处理
         /// </summary>
         /// <param name="btnName">按钮名称（与UI配置的按钮名对应）</param>
-        protected override void OnButtonClick(string btnName)
+        protected override async void OnButtonClick(string btnName)
         {
             switch (btnName)
             {
@@ -125,10 +116,38 @@ namespace HotUpdate.Game.Dialogue.UI
                     view.SetDialogueBoxActive(IsActiveBox);
                     break;
                 case "btnReview": // 回顾按钮
-                    // 显示故事回顾界面
-                    view.SetActiveReview(true);
+                    await CreateOrShowReviewView();
                     break;
             }
+        }
+        
+        /// <summary>
+        /// 创建或显示回顾界面
+        /// </summary>
+        private async Task CreateOrShowReviewView()
+        {
+            if (view.StoryReviewView)
+            {
+                // 显示故事回顾界面
+                view.SetActiveReview(true);
+                await view.StoryReviewView.ShowDialogues(historicalDialogueInfos);
+                return;
+            }
+            
+            var storyReviewView = await _objectSpawner.SpawnAsync<StoryReviewView>(AssetKeys.StoryReviewSubView, view.ReviewRoot);
+            // 注册故事回顾子视图关闭事件
+            storyReviewView.OnSubViewClosed += OnSubViewClosed;
+            view.SetStoryReviewView(storyReviewView);
+            await storyReviewView.ShowDialogues(historicalDialogueInfos);
+        }
+        
+        /// <summary>
+        /// 故事回顾子视图关闭时的回调
+        /// </summary>
+        private void OnSubViewClosed()
+        {
+            // 隐藏故事回顾界面
+            view.SetActiveReview(false);
         }
 
         /// <summary>
@@ -152,10 +171,9 @@ namespace HotUpdate.Game.Dialogue.UI
         /// <param name="dialogueInfo">当前对话信息实体</param>
         private void OnSingleDialogueStart(DialogueInfo dialogueInfo)
         {
-            // 将当前对话信息缓存到故事回顾视图
-            view.StoryReviewView.CacheDialogueInfo(dialogueInfo);
+            historicalDialogueInfos.Add(dialogueInfo);
             // 启动对话提示动画协程
-            dialogueTipCor = DIContainer.GetInstance<IMonoAdapter>().StartCoroutine(DialogueTip_Cor());
+            dialogueTipCor = _monoAdapter.StartCoroutine(DialogueTip_Cor());
         }
         
         /// <summary>
@@ -164,7 +182,7 @@ namespace HotUpdate.Game.Dialogue.UI
         private void OnSingleDialogueEnd()
         {
             // 停止对话提示动画协程
-            DIContainer.GetInstance<IMonoAdapter>().StopCoroutine(dialogueTipCor);
+            _monoAdapter.StopCoroutine(dialogueTipCor);
             // 恢复默认提示文本
             view.SetTip(DefaultTip);
         }
@@ -232,6 +250,14 @@ namespace HotUpdate.Game.Dialogue.UI
                 // 记录分支选项创建异常日志
                 Logger.LogError($"{nameof(DialogueController)}: Dialog branch option created error,{e.Message}");
             }
+        }
+
+        protected override Task OnDestroy()
+        {
+            view.DestroyReviewView(_objectSpawner);
+            _objectSpawner.Dispose();
+            _objectSpawner = null;
+            return Task.CompletedTask;
         }
     }
 }

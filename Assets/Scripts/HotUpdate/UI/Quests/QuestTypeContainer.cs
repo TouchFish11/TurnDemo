@@ -123,7 +123,7 @@ namespace HotUpdate.UI.Quests
         {
             foreach (var taskItem in taskItems)
             {
-                spawner.Release(taskItem, false);
+                spawner.Release(taskItem);
             }
             taskItems.Clear();
             idToItemMap.Clear();

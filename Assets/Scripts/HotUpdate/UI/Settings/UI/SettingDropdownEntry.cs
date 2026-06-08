@@ -1,5 +1,6 @@
 using Core.DI;
 using Core.UI;
+using HotUpdate.Base.Settings;
 using HotUpdate.UI.Settings.ViewModel;
 using TMPro;
 
@@ -11,7 +12,7 @@ namespace HotUpdate.UI.Settings.UI
     public class SettingDropdownEntry : UIBehaviourBase, ISettingsEntry
     {
         [InjectUI] public TextMeshProUGUI txtName;
-        [Inject] public TMP_Dropdown dpSettings;
+        [InjectUI] public TMP_Dropdown dpSettings;
         
         private SettingDropdownViewModel _settingDropdownViewModel;
 
@@ -21,10 +22,8 @@ namespace HotUpdate.UI.Settings.UI
             dpSettings.AddOptions(settingDropdownViewModel.Options);
             
             // 数据导致UI更新
-            settingDropdownViewModel.OptionIndex.Subscribe(optionIndex => dpSettings.value = optionIndex);
+            settingDropdownViewModel.OptionIndex.Subscribe(optionIndex => dpSettings.SetValueWithoutNotify(optionIndex));
             _settingDropdownViewModel = settingDropdownViewModel;
-            // 主动更新，触发事件
-            settingDropdownViewModel.RefleshUI();
         }
         
         protected override void OnDropdownValueChanged(string dropdownName, int value)

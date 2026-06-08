@@ -1,9 +1,13 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
 using Core.UI.ViewController;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Settings;
+using HotUpdate.Base.UI;
+using HotUpdate.UI.Settings.Handlers;
 using HotUpdate.UI.Settings.ViewModel;
 
 namespace HotUpdate.UI.Settings.UI
@@ -11,13 +15,27 @@ namespace HotUpdate.UI.Settings.UI
     /// <summary>
     /// 设置界面控制器
     /// </summary>
-    public class SettingsController : UIController<SettingsView>
+    public class SettingsController : UIController<SettingsView>, IBlockOperation
     {
         [Inject] private IMainDataManager _mainDataManager;
         [Inject] private ObjectSpawner _objectSpawner;
+        [Inject] private IUIService _uiService;
         private GameSettings _gameSettings;
-        private int _mainControllerId;
+
+        private readonly Dictionary<ESettingType, ISettingHandler> _settingHandlers = new()
+        {
+            { ESettingType.VolumeValue , DIContainer.Create<SliderSettingHandler>()},
+            { ESettingType.SFXValue , DIContainer.Create<SliderSettingHandler>()},
+            { ESettingType.TargetFrameRateIndex , DIContainer.Create<FrameRateSettingHandler>()},
+            { ESettingType.TypeWriter , DIContainer.Create<DropdownSettingHandler>()},
+            { ESettingType.VolumeOpen , DIContainer.Create<DropdownSettingHandler>()},
+            { ESettingType.SFXOpen , DIContainer.Create<DropdownSettingHandler>()},
+        };
         
+        public bool BlockOperation { get; } = true;
+
+        protected override bool IsCursorVisible { get; set; } = true;
+
         protected override Task OnInit()
         {
             return ShowSettings();
@@ -31,7 +49,7 @@ namespace HotUpdate.UI.Settings.UI
         protected override Task OnInactivate()
         {
             // 显示主界面
-            return uiManager.SetViewActive(_mainControllerId, true);
+            return _uiService.ShowAsync(_uiService.GetPanel(EUIPanelId.MainPanel).PanelId);
         }
 
         private async Task ShowSettings()
@@ -44,6 +62,7 @@ namespace HotUpdate.UI.Settings.UI
             var settingOpt = await _objectSpawner.SpawnAsync<SettingOpt>(AssetKeys.SettingOpt, view.Opts);
             
             // 创建设置项
+            // TODO：可以优化
             foreach (var settingItem in settings.Values)
             {
                 if (settingItem.IsRange)
@@ -53,7 +72,8 @@ namespace HotUpdate.UI.Settings.UI
                     // 获取ViewModel
                     var settingSliderViewModel = SettingsViewModelFactory.CreateSliderViewModel(settingItem.SettingType, settings);
                     // 初始化UI
-                    sliderEntry.Init(SettingsUtil.SettingTypeTOStr(settingItem.SettingType, settingsConfig), settingSliderViewModel);
+                    sliderEntry.Init(SettingsUtil.SettingTypeToStr(settingItem.SettingType, settingsConfig), settingSliderViewModel);
+                    OnSettingDataChanged(settingSliderViewModel, settingItem.SettingType);
                 }
                 else
                 {
@@ -63,8 +83,34 @@ namespace HotUpdate.UI.Settings.UI
                     // 获取ViewModel
                     var settingDropdownViewModel = SettingsViewModelFactory.CreateDropdownViewModel(settingItem.SettingType, settings, settingsConfig);
                     // 初始化UI
-                    dropdownEntry.Init(SettingsUtil.SettingTypeTOStr(settingItem.SettingType, settingsConfig), settingDropdownViewModel);
+                    dropdownEntry.Init(SettingsUtil.SettingTypeToStr(settingItem.SettingType, settingsConfig), settingDropdownViewModel);
+                    OnSettingDataChanged(settingDropdownViewModel, settingItem.SettingType);
                 }
+            }
+        }
+
+        private void OnSettingDataChanged(IDisposable viewModel, ESettingType settingType)
+        {
+            if(viewModel == null)
+                return;
+            
+            switch (viewModel)
+            {
+                case SettingSliderViewModel settingSliderViewModel:
+                    settingSliderViewModel.Progress.Subscribe(value =>
+                    {
+                        var progress = value / SettingsUtil.SLIDER_MULTIPLIER;
+                        _mainDataManager.GameSettings[settingType] = progress;
+                        ((ISliderSettingHandler)_settingHandlers[settingType]).Excute(progress);
+                    });
+                    break;
+                case SettingDropdownViewModel settingDropdownViewModel:
+                    settingDropdownViewModel.OptionIndex.Subscribe(optionIndex =>
+                    {
+                        _mainDataManager.GameSettings[settingType] = optionIndex; 
+                        ((IDropdownSettingHandler)_settingHandlers[settingType]).Execute(optionIndex);
+                    });
+                    break;
             }
         }
 
@@ -72,7 +118,7 @@ namespace HotUpdate.UI.Settings.UI
         {
             if (btnName == nameof(view.btnClose))
             {
-                uiManager.DestroyView(panelId);
+                _uiService.CloseAsync(panelId, true);
             }
         }
     }

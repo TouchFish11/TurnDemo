@@ -9,6 +9,8 @@ namespace HotUpdate.UI.Settings
     /// </summary>
     public static class SettingsUtil
     {
+        public const int SLIDER_MULTIPLIER = 10;
+        
         /// <summary>
         /// 设置项UI类型转文本名称
         /// </summary>
@@ -16,7 +18,7 @@ namespace HotUpdate.UI.Settings
         /// <param name="settingsConfig"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static string SettingTypeTOStr(ESettingType type, GameSettingsConfig settingsConfig)
+        public static string SettingTypeToStr(ESettingType type, GameSettingsConfig settingsConfig)
         {
             return type switch
             {

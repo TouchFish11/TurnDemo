@@ -1,5 +1,4 @@
 using System;
-using Core.DI;
 using Core.UI;
 using Core.Utility;
 using HotUpdate.Common.Config.ExcelInfo.Info;
@@ -10,17 +9,18 @@ using UnityEngine.UI;
 namespace HotUpdate.Game.Dialogue.UI
 {
     /// <summary>
-    /// �Ի���֧ѡ��UI
+    /// 对话选项分支UI
     /// </summary>
     public class DialogueOptUI : UIBehaviourBase
     {
-        [Inject] private Image imgHightlight;
-        [Inject] private TextMeshProUGUI txtOptText;
+        [InjectUI] private Image imgHightlight;
+        [InjectUI] private TextMeshProUGUI txtOptText;
 
-        private BranchInfo branchInfo;
+        // 当前分支选择后的对话ID
+        private int _dialogueId;
         
         /// <summary>
-        /// ѡ��ѡ���¼�
+        /// 选项选择事件
         /// </summary>
         public event Action<int> OnSelectOpt;
 
@@ -32,20 +32,20 @@ namespace HotUpdate.Game.Dialogue.UI
         }
 
         /// <summary>
-        /// ��ʼ��
+        /// 初始化
         /// </summary>
         /// <param name="branchInfo"></param>
         public void Init(BranchInfo branchInfo)
         {
-            this.branchInfo = branchInfo;
+            this._dialogueId = branchInfo.f_dialogueId;
             txtOptText.text = branchInfo.f_optText;
             imgHightlight.gameObject.SetActive(false);
         }
 
         protected override void OnButtonClick(string btnName)
         {
-            // ѡ��÷�֧ѡ��
-            OnSelectOpt?.Invoke(branchInfo.f_dialogueId);
+            // 选择该分支选项
+            OnSelectOpt?.Invoke(_dialogueId);
         }
         
 

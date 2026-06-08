@@ -8,7 +8,7 @@ namespace HotUpdate.Base.Settings
         /// <summary>
         /// 设置的值
         /// </summary>
-        object Value { get; set; }
+        float Value { get; set; }
         
         /// <summary>
         /// 设置项类型

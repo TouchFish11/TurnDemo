@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using Core.DI;
 using Newtonsoft.Json;
 
 namespace HotUpdate.Base.Settings
@@ -15,7 +17,7 @@ namespace HotUpdate.Base.Settings
         
         public event Action<GameSettings> OnDataChanged;
 
-        public object this[ESettingType type]
+        public float this[ESettingType type]
         {
             get => settings[type].Value;
             set
@@ -30,12 +32,23 @@ namespace HotUpdate.Base.Settings
 
         public GameSettings()
         {
-            settings.Add(ESettingType.VolumeValue, new SettingItem<float>(ESettingType.VolumeValue, true));
-            settings.Add(ESettingType.SFXValue, new SettingItem<float>(ESettingType.SFXValue, true));
-            settings.Add(ESettingType.VolumeOpen, new SettingItem<int>(ESettingType.VolumeOpen, false));
-            settings.Add(ESettingType.SFXOpen, new SettingItem<int>(ESettingType.SFXOpen, false));
-            settings.Add(ESettingType.TypeWriter, new SettingItem<int>(ESettingType.TypeWriter, false));
-            settings.Add(ESettingType.TargetFrameRateIndex, new SettingItem<int>(ESettingType.TargetFrameRateIndex, false));
+            foreach (var obj in Enum.GetValues(typeof(ESettingType)))
+            {
+                var type = (ESettingType)obj;
+                var attribute = type.GetType().GetField(type.ToString()).GetCustomAttribute<SettingObjectAttribute>();
+                if(attribute == null)
+                    continue;
+
+                var settingItem = DIContainer.Create<SettingItem>(parameterValues: new object[] { type, attribute.IsRange });
+                settings.Add(type, settingItem);
+            }
+            
+            // settings.Add(ESettingType.VolumeValue, new SettingItem(ESettingType.VolumeValue, true));
+            // settings.Add(ESettingType.SFXValue, new SettingItem<float>(ESettingType.SFXValue, true));
+            // settings.Add(ESettingType.VolumeOpen, new SettingItem<int>(ESettingType.VolumeOpen, false));
+            // settings.Add(ESettingType.SFXOpen, new SettingItem<int>(ESettingType.SFXOpen, false));
+            // settings.Add(ESettingType.TypeWriter, new SettingItem<int>(ESettingType.TypeWriter, false));
+            // settings.Add(ESettingType.TargetFrameRateIndex, new SettingItem<int>(ESettingType.TargetFrameRateIndex, false));
         }
     }
 }

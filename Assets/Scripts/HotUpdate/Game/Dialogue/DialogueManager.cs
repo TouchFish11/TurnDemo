@@ -32,7 +32,6 @@ namespace HotUpdate.Game.Dialogue
         [Inject] private IMonoAdapter _monoAdapter;
         [Inject] private IMainDataManager _mainDataManger;
         
-        
         // 当前单条对话是否播放完成（打字机/直接显示）
         private bool dialogueOver;
         // 打字机效果的协程引用
