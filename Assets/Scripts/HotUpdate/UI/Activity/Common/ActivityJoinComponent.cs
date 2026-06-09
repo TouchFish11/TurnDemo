@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace HotUpdate.Activity.UI.Common
+namespace HotUpdate.UI.Activity.Common
 {
     /// <summary>
     /// 参与按钮UI组件

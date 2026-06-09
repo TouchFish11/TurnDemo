@@ -1,17 +1,22 @@
-using Core.DI;
+using Core.UI;
 using HotUpdate.UI.Activity.Base;
 using HotUpdate.UI.Item;
 using UnityEngine.UI;
 
-namespace HotUpdate.Activity.UI.Common
+namespace HotUpdate.UI.Activity.Common
 {
     /// <summary>
     /// 活动奖励预览组件
     /// </summary>
     public class AwardPreviewComponent : ActivityUIComponent 
     {
-        [Inject] private ScrollRect svAward;
+        [InjectUI] private ScrollRect svAward;
 
+        protected override void OnInit()
+        {
+
+        }
+        
         /// <summary>
         /// 设置奖励显示
         /// </summary>
@@ -33,9 +38,10 @@ namespace HotUpdate.Activity.UI.Common
             award.gameObject.transform.SetParent(svAward.content, false);
         }
 
-        protected override void OnInit()
+        protected override void OnDestroy()
         {
-
+            svAward = null;
+            base.OnDestroy();
         }
     }
 }

@@ -14,12 +14,13 @@ namespace HotUpdate.UI.Activity.Base
     /// </summary>
     public class ActivityUI : UIBehaviourBase
     {
-        [Inject] private Image imgIcon;
-        [Inject] private TextMeshProUGUI txtName;
-        [Inject] private Toggle togActivity;
+        [InjectUI] private Image imgIcon;
+        [InjectUI] private TextMeshProUGUI txtName;
+        [InjectUI] private Toggle togActivity;
         
-        private ActivityInfo _activityInfo;
-        private ActivityController _activityController;
+        private int _activityId;
+        
+        public event Action<int> OnSelect;
 
         /// <summary>
         /// 初始化
@@ -27,11 +28,9 @@ namespace HotUpdate.UI.Activity.Base
         /// <param name="icon"></param>
         /// <param name="activityInfo"></param>
         /// <param name="toggleGroup"></param>
-        /// <param name="activityController"></param>
-        public void Init(Sprite icon, ActivityInfo activityInfo, ToggleGroup toggleGroup, ActivityController activityController)
+        public void Init(Sprite icon, ActivityInfo activityInfo, ToggleGroup toggleGroup)
         {
-            _activityInfo = activityInfo;
-            _activityController = activityController;
+            _activityId = activityInfo.f_id;
             togActivity.group =  toggleGroup;
             imgIcon.sprite = icon;
             txtName.text = activityInfo.f_name;
@@ -45,13 +44,13 @@ namespace HotUpdate.UI.Activity.Base
             togActivity.isOn = true;
         }
 
-        protected override async void OnToggleValueChanged(string togName, bool isOn)
+        protected override void OnToggleValueChanged(string togName, bool isOn)
         {
             try
             {
                 if (isOn)
                 {
-                    await _activityController.UpdateDetailActivity(_activityInfo);
+                    OnSelect?.Invoke(_activityId);
                 }
             }
             catch (Exception exception)

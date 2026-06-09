@@ -13,6 +13,7 @@ using HotUpdate.Common.Config.Quest.Config;
 
 using HotUpdate.UI.Item;
 using UnityEngine;
+using Logger = Core.Log.Logger;
 
 namespace HotUpdate.UI.Quests
 {
@@ -244,41 +245,48 @@ namespace HotUpdate.UI.Quests
         /// 当任务项被选中时，触发该方法更新详情面板的任务信息
         /// </summary>
         /// <param name="id">选中的任务ID</param>
-        private void UpdateQuestDetail(int id)
+        private async void UpdateQuestDetail(int id)
         {
-            // 从配置中获取任务配置信息
-            var selectConfig = QuestConfig.questItems.Find(item => item.id == id);
-            // 相等不用处理
-            if (CurrentQuestItemInfo != null && selectConfig == CurrentQuestItemInfo) return;
-
-            // 更新当前任务信息为选中的任务信息
-            CurrentQuestItemInfo = selectConfig;
-            view.ClearItemGrid(_objectSpawner);
-
-            var questCollection = _questDataManager.QuestCollection;
-            if (!questCollection.TryGetValue(id, out var questData))
-                throw new NullReferenceException($"{nameof(questData)} is null");
-
-            QuestNodeConfig nodeConfig = null;
-            foreach (var questNodeData in questData.GetNodeDatas())
+            try
             {
-                if(questNodeData.Phase == EQuestPhase.Complete) continue;
-                nodeConfig = selectConfig.nodeConfigs.Find(config => config.nodeId == questNodeData.NodeId);
-                break;
+                // 从配置中获取任务配置信息
+                var selectConfig = QuestConfig.questItems.Find(item => item.id == id);
+                // 相等不用处理
+                if (CurrentQuestItemInfo != null && selectConfig == CurrentQuestItemInfo) return;
+
+                // 更新当前任务信息为选中的任务信息
+                CurrentQuestItemInfo = selectConfig;
+                view.ClearItemGrid(_objectSpawner);
+
+                var questCollection = _questDataManager.QuestCollection;
+                if (!questCollection.TryGetValue(id, out var questData))
+                    throw new NullReferenceException($"{nameof(questData)} is null");
+
+                QuestNodeConfig nodeConfig = null;
+                foreach (var questNodeData in questData.GetNodeDatas())
+                {
+                    if(questNodeData.Phase == EQuestPhase.Complete) continue;
+                    nodeConfig = selectConfig.nodeConfigs.Find(config => config.nodeId == questNodeData.NodeId);
+                    break;
+                }
+            
+                if(nodeConfig == null)
+                    throw new NullReferenceException($"{nameof(nodeConfig)} is null");
+            
+                // 解析奖励ID数组，获取物品格子
+                await _itemService.CreateItemGrid(nodeConfig.rewardItemIds, view.RewardBox, null);
+            
+                // 同步任务追踪状态：从任务数据集合中获取当前任务的追踪标记
+                IsFollowingTask = questCollection.TryGetValue(id, out var data) && data.IsTracking;
+                // 更新按钮显示
+                view.UpdateFollowTask(IsFollowingTask);
+                // 更新文本显示
+                view.UpdateTaskDetail(nodeConfig);
             }
-            
-            if(nodeConfig == null)
-                throw new NullReferenceException($"{nameof(nodeConfig)} is null");
-            
-            // 解析奖励ID数组，获取物品格子
-            _itemService.GetItemGrid(nodeConfig.rewardItemIds, view.RewardBox, null);
-            
-            // 同步任务追踪状态：从任务数据集合中获取当前任务的追踪标记
-            IsFollowingTask = questCollection.TryGetValue(id, out var data) && data.IsTracking;
-            // 更新按钮显示
-            view.UpdateFollowTask(IsFollowingTask);
-            // 更新文本显示
-            view.UpdateTaskDetail(nodeConfig);
+            catch (Exception e)
+            {
+                Logger.LogError($"[{nameof(QuestController)}]: Update quest detail error,{e.Message}");
+            }
         }
 
         protected override Task OnDestroy()

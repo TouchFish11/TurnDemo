@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace HotUpdate.Activity.UI.Common
+namespace HotUpdate.UI.Activity.Common
 {
     /// <summary>
     /// 限时奖励UI组件

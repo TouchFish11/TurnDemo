@@ -27,6 +27,7 @@ namespace HotUpdate.Game.Battle.Core
             DIContainer.BindSingleton<IBattleEventScheduler, BattleEventScheduler>();
             DIContainer.BindSingleton<IBattleCameraManager, BattleCameraManager>();
             DIContainer.BindSingleton<IBattlePointProxy, BattlePointProxy>();
+            DIContainer.BindSingleton<IBattleManager, BattleManager>();
         }
 
         public Task InitModuleAsync()

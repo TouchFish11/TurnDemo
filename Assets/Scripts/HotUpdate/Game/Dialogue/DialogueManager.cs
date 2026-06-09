@@ -87,7 +87,7 @@ namespace HotUpdate.Game.Dialogue
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(DialogueManager)}.{nameof(StartDialogue)}：{e.Message}，{e.StackTrace}");
+                Logger.LogError($"{nameof(DialogueManager)}: Start dialogue error,{e.Message}");
             }
         }
 

@@ -495,9 +495,9 @@ MonoBehaviour:
   - assetBundleName: tmp_asset
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\TMP_Asset\MSYH_SDF.asset
-      size: 8490565
+      size: 8502071
       name: MSYH_SDF.asset
-      hash: 25badde69e892cd1a49536a0d6a51ae0f21f8015a8cb6aae0dbd67ca24ea8b6c
+      hash: 132ad5ad8b409ebf97331a557389c98c8b7ace18304b4886ec444bc7b2e509f6
       assetType: 0
   - assetBundleName: ui
     assetInfos:
@@ -552,9 +552,9 @@ MonoBehaviour:
       hash: cf36436876df9cd07eb28726b692b9d49de420e884335ec463ce0332caedd947
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Activity\Details\EmbersCanonActivity\EmbersCanonActivityUI.prefab
-      size: 65866
+      size: 65868
       name: EmbersCanonActivityUI.prefab
-      hash: eaca678d6613ab9f138d73cef69d2e38d2d507030ac412fcc26daeebfab4d2b9
+      hash: 7e76adc39d98247bc16d96649b0c15890131bc5d11672d1f92e54b8c141595e5
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Activity\Details\EmbersCanonActivity\EmbersCanonSubActivityUI_01\BattleLevelUI.prefab
       size: 11319
@@ -562,14 +562,14 @@ MonoBehaviour:
       hash: de9cdfb1729dcdcf3fcb664f6e6705ef35e84ac58dde1dc1192b8203559e9699
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Activity\Details\EmbersCanonActivity\EmbersCanonSubActivityUI_01\EmbersCanonSubActivityUI_01.prefab
-      size: 28311
+      size: 27889
       name: EmbersCanonSubActivityUI_01.prefab
-      hash: 4815ec97350ba82ae389be6b8856e438f93366d51a5a054f59ea2a8da7648f09
+      hash: c3e585d5111c6ea2ba94ef1f1e46489a941fc52b162f0a41e84342fad280177a
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Activity\Details\OrbitalDepartureActivity\OrbitalDepartureActivityUI.prefab
       size: 54174
       name: OrbitalDepartureActivityUI.prefab
-      hash: 1e5af30942af657cb9baccf403aadc70e73435884be56b52c7663e47e2fc7404
+      hash: 69064b80a5e528cbe448d88fe4f15742d314cf60ff3c7f53738cbb1dce8047f4
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Back\BackView.prefab
       size: 3001

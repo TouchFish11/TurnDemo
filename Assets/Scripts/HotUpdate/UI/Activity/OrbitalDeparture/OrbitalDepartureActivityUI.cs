@@ -1,15 +1,14 @@
-using Core.AssetBundles.Management;
 using Core.DI;
 using Core.UI;
-using HotUpdate.Activity.UI.Common;
 using HotUpdate.Base.Manager;
+using HotUpdate.Base.Service;
 using HotUpdate.UI.Activity.Base;
+using HotUpdate.UI.Activity.Common;
 using HotUpdate.UI.Item;
 using TMPro;
-using UnityEngine;
 using UnityEngine.UI;
 
-namespace HotUpdate.Activity.UI.OrbitalDeparture
+namespace HotUpdate.UI.Activity.OrbitalDeparture
 {
     using Task = System.Threading.Tasks.Task;
     
@@ -19,6 +18,7 @@ namespace HotUpdate.Activity.UI.OrbitalDeparture
     public class OrbitalDepartureActivityUI : ActivityUIBehaviourBase
     {
         [Inject] private ItemService _itemService;
+        [Inject] private IIconService _iconService;
         [Inject] private IActivityDataManager _activityDataManager;
 
         [InjectUI] private Image imgActivityBackground;
@@ -38,16 +38,12 @@ namespace HotUpdate.Activity.UI.OrbitalDeparture
 
         protected override async Task OnInit()
         {
-            await base.OnInit();
-            
             // 初始化组件
             _activityJoinComponent.Init(this, activityInfo);
             _awardPreviewComponent.Init(this, activityInfo);
             
-            // 初始化界面背景
-            using var handle = await GameAsset.LoadAssetAsync<Sprite>(activityInfo.f_bkUi_Res);
             // 设置界面背景
-            imgActivityBackground.sprite = handle.Asset;
+            imgActivityBackground.sprite = await _iconService.LoadIconAsync(activityInfo.f_bkUi_Res);
             
             UpdateBtnJoin();
             // 监听按钮
@@ -56,7 +52,8 @@ namespace HotUpdate.Activity.UI.OrbitalDeparture
             txtActivityName.text = $"{activityInfo.f_name}";
             txtTime.text = $"{ToDurationStr(activityInfo.f_duration)}";
             // 解析奖励ID数组，获取物品格子
-            _itemService.GetItemGrid(activityInfo.f_awardIds, null);
+            var itemGrids = await _itemService.CreateItemGrid(activityInfo.f_awardIds);
+            _awardPreviewComponent.SetAwards(itemGrids);
         }
 
         protected override Task OnShow()
@@ -93,6 +90,7 @@ namespace HotUpdate.Activity.UI.OrbitalDeparture
         {
             _itemService.Dispose();
             _objectSpawner.Dispose();
+            _iconService.ReleaseAll();
             _activityJoinComponent.OnClickJoin -= OnTriggerJoin;
         }
     }

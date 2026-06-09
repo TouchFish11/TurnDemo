@@ -8,5 +8,7 @@ namespace HotUpdate.Game.Activity.Core
     public class ActivityIdAttribute : Attribute
     {
         public int ActivityId { get; set; }
+        
+        public Type ActivityContentHandler { get; set; }
     }
 }

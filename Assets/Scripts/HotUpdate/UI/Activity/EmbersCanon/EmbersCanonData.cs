@@ -9,7 +9,7 @@ namespace HotUpdate.UI.Activity.EmbersCanon
     /// <summary>
     /// 余烬圣典活动数据
     /// </summary>
-    [ActivityId(ActivityId = 1002)]
+    [ActivityId(ActivityId = 1002, ActivityContentHandler = typeof(EmbersCanonHandler))]
     [Serializable]
     public class EmbersCanonData : ActivityData
     {

@@ -28,19 +28,12 @@ namespace HotUpdate.UI.Activity.EmbersCanon
         
         private bool _isComplete;
         
-        // 只暴露事件，不处理业务逻辑
         public event Action OnEnterBattle;
         
         private BattleConfigEntry _configEntry;
         private EmbersCanonLevelEntryData levelDataEntryData;
         private int _activeControllerId;
-
-        protected override void Awake()
-        {
-            DIContainer.InjectIntoInstance(this);
-            base.Awake();
-        }
-
+        
         /// <summary>
         /// 初始化UI
         /// </summary>
@@ -57,9 +50,13 @@ namespace HotUpdate.UI.Activity.EmbersCanon
         protected override void OnButtonClick(string btnName)
         {
             if (!_isComplete)
+            {
                 OnEnterBattle?.Invoke();
+            }
             else
+            {
                 _eventCenter.TriggerEvent(new GlobalMessageEvent { Message = "该关卡已完成" });
+            }
         }
     }
 }

@@ -307,11 +307,11 @@ namespace Core.AssetBundles.Management
         /// <summary>
         /// 批量释放对象
         /// </summary>
-        /// <param name="destroy">是否销毁不放入对象池</param>
         /// <param name="objs">释放的对象集合</param>
+        /// <param name="destroy">是否销毁不放入对象池</param>
         /// <returns>已释放的对象数量</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public int Release(bool destroy, IEnumerable<Object> objs)
+        public int Release(IEnumerable<Object> objs, bool destroy = false)
         {
             if(objs == null)
                 throw new ArgumentNullException(nameof(objs));
@@ -344,7 +344,7 @@ namespace Core.AssetBundles.Management
 
         void IPoolData.ResetData()
         {
-            Release(false, _activeObjects);
+            Release(_activeObjects);
             _activeObjects.Clear();
             
             // 为了避免引用泄露，需要在不使用该生成器时统一释放剩余的句柄

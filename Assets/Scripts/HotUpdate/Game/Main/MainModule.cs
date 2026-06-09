@@ -4,6 +4,7 @@ using Game.Module;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Module;
 using HotUpdate.Base.Scene;
+using HotUpdate.Base.Service;
 using HotUpdate.Game.Core;
 using HotUpdate.Game.Dialogue;
 using HotUpdate.Game.Inputs;
@@ -43,6 +44,8 @@ namespace HotUpdate.Game.Main
             DIContainer.BindSingleton<IDialogueManager, DialogueManager>();
             // 注册鼠标管理器
             DIContainer.BindSingleton<IQuestManager, QuestManager>();
+            // 注册图标服务
+            DIContainer.BindType<IIconService, IconService>();
         }
 
         public Task InitModuleAsync()

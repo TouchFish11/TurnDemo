@@ -1,32 +1,33 @@
 using System;
+using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
 using Core.UI;
 using Core.Utility;
 using HotUpdate.Common.Config.ExcelInfo.Info;
-using HotUpdate.Game.Activity.Core;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
 namespace HotUpdate.UI.Activity.Base
 {
-    using Task = System.Threading.Tasks.Task;
-    
     /// <summary>
     /// 活动基类
     /// </summary>
     public abstract class ActivityUIBehaviourBase : UIBehaviourBase, IActivity
     {
         [Inject] protected ObjectSpawner _objectSpawner;
-        
-        public GameObject GameObject { get; private set; }
-        public int ActivityId { get; private set; }
 
         // 活动信息
         protected ActivityInfo activityInfo;
         // 活动界面父对象
         protected Transform activityView;
-
+        // 活动内容处理器
+        protected IActivityContentHandler activityContentHandler;
+        
+        public GameObject GameObject { get; private set; }
+        
+        public int ActivityId { get; private set; }
+        
         protected override void Awake()
         {
             base.Awake();
@@ -35,23 +36,26 @@ namespace HotUpdate.UI.Activity.Base
 
         protected sealed override async void OnEnable()
         {
-            await OnShow();
-        }
-
-        public async void Init(int activityId, ActivityInfo activityInfo)
-        {
             try
             {
-                ActivityId = activityId;
-                this.activityInfo = activityInfo;
-                activityView = transform.GetComponentInParent<ActivityView>().transform;
-                // 初始化活动界面
-                await OnInit();
+                await OnShow();
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(ActivityUIBehaviourBase)}.{nameof(Init)}：{e.Message}");
+                Logger.LogError($"[{nameof(ActivityUIBehaviourBase)}]: Activity show error,{e.Message}");
             }
+        }
+
+        public async Task Init(int activityId, ActivityInfo activityInfo, IActivityContentHandler contentHandler)
+        {
+            ActivityId = activityId;
+            this.activityInfo = activityInfo;
+            contentHandler.Init(this);
+            activityContentHandler = contentHandler;
+            activityView = transform.GetComponentInParent<ActivityView>().transform;
+            // 初始化活动界面
+            await OnInit();
+            await OnShow();
         }
 
         /// <summary>
@@ -59,10 +63,7 @@ namespace HotUpdate.UI.Activity.Base
         /// 会执行OnShow
         /// </summary>
         /// <returns></returns>
-        protected virtual Task OnInit()
-        {
-            return OnShow();
-        }
+        protected abstract Task OnInit();
 
         /// <summary>
         /// 在活动界面显示时执行

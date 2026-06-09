@@ -2,12 +2,14 @@ using System.Collections.Generic;
 using Core.AssetBundles.Management;
 using Core.UI;
 using Core.UI.ViewController;
-using HotUpdate.Game.Activity.Core;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace HotUpdate.UI.Activity.Base
 {
+    /// <summary>
+    /// 活动界面
+    /// </summary>
     public class ActivityView : UIView
     {
         [InjectUI] private ScrollRect svActivity;
@@ -16,9 +18,13 @@ namespace HotUpdate.UI.Activity.Base
         
         [InjectUI(1)] public RectTransform ActivityDetailArea { get; private set; }
         
+        // 活动UI选项缓存
         private readonly List<ActivityUI> _actvityUis = new();
         private ActivityUIBehaviourBase _activity;
         
+        /// <summary>
+        /// 当前显示的活动内容
+        /// </summary>
         public IActivity CurrentActivity => _activity;
         
         /// <summary>

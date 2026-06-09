@@ -878,7 +878,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5528756553893449097}
   - component: {fileID: 1663420643421798706}
-  - component: {fileID: 7244680438462819700}
+  - component: {fileID: 7370907483545776325}
   m_Layer: 5
   m_Name: OrbitalDepartureActivityUI
   m_TagString: Untagged
@@ -919,7 +919,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4396881592851251148}
   m_CullTransparentMesh: 1
---- !u!114 &7244680438462819700
+--- !u!114 &7370907483545776325
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

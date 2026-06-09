@@ -33,7 +33,7 @@ namespace HotUpdate.UI.Activity.Base
         /// </summary>
         protected abstract void OnInit();
 
-        public void Destroy()
+        protected override void OnDestroy()
         {
             ActivityUIBehaviourBase = null;
             ActivityInfo = null;

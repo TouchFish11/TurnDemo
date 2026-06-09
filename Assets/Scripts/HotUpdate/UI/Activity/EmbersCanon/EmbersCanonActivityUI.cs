@@ -1,66 +1,59 @@
 using System;
-using Core.AssetBundles.Management;
+using System.Threading.Tasks;
 using Core.DI;
-using HotUpdate.Activity.UI.Common;
+using Core.UI;
+using HotUpdate.Base.Service;
 using HotUpdate.UI.Activity.Base;
+using HotUpdate.UI.Activity.Common;
 using HotUpdate.UI.Item;
-using UnityEngine;
+using TMPro;
 using Logger = Core.Log.Logger;
 
 namespace HotUpdate.UI.Activity.EmbersCanon
 {
-    using Task = System.Threading.Tasks.Task;
-    
     /// <summary>
     /// 余烬圣典活动UI
     /// </summary>
     public class EmbersCanonActivityUI : ActivityUIBehaviourBase
     {
         [Inject] private ItemService _itemService;
+        [Inject] private IIconService _iconService;
+
+        [InjectUI] private TextMeshProUGUI txtActivityDescrition;
+        [InjectUI] private TextMeshProUGUI txtActivityName;
+        [InjectUI] private TextMeshProUGUI txtTime;
         
-        //private ActivityBkComponent _activityBkComponent;
         private ActivityJoinComponent _activityJoinComponent;
-        
-        //private ActivityDescritionComponent _activityDescritionComponent;
-        //private ActivityNameComponent _activityNameComponent;
-        //private ActivityTimeComponent _activityTimeComponent;
-        
         private AwardPreviewComponent _awardPreviewComponent;
         private LimitTimeAwardComponent _limitTimeAwardComponent;
+        
+        private EmbersCanonSubActivityUI_01 _embersCanonSubActivityUI_01;
+        
+        public EmbersCanonHandler EmbersCanonHandler => activityContentHandler as EmbersCanonHandler;
         
         protected override void Awake()
         {
             base.Awake();
-            //_activityBkComponent = GetComponentInChildren<ActivityBkComponent>();
             _activityJoinComponent = GetComponentInChildren<ActivityJoinComponent>();
-            //_activityDescritionComponent = GetComponentInChildren<ActivityDescritionComponent>();
-            //_activityNameComponent = GetComponentInChildren<ActivityNameComponent>();
-            //_activityTimeComponent = GetComponentInChildren<ActivityTimeComponent>();
             _awardPreviewComponent = GetComponentInChildren<AwardPreviewComponent>();
             _limitTimeAwardComponent = GetComponentInChildren<LimitTimeAwardComponent>();
         }
         
         protected override async Task OnInit()
         {
-            await base.OnInit();
             // 初始化界面背景
-            using var backGround = await GameAsset.LoadAssetAsync<Sprite>(activityInfo.f_bkUi_Res);
-            //_activityBkComponent.SetBackGround(backGround.Asset);
+            await _iconService.LoadIconAsync(activityInfo.f_bkUi_Res);
 
             _activityJoinComponent.OnClickJoin += OnTriggerJoin;
             _limitTimeAwardComponent.OnClickAward += OnTriggerLimitTimeAward;
-            
-            //_activityDescritionComponent.SetActivityDescrition(out var activityDescrition);
-            //activityDescrition.text = $"{activityInfo.f_description}";
-            
-            //_activityNameComponent.SetTitle(out var txtActivityName);
-            //txtActivityName.text = $"{activityInfo.f_name}";
-            
-            //_activityTimeComponent.SetDurationTime(out var txtTime);
-            //txtTime.text = $"{ToDurationStr(activityInfo.f_duration)}";
+
+            txtActivityDescrition.text = activityInfo.f_description;
+            txtActivityName.text = activityInfo.f_name;
+            txtTime.text = ToDurationStr(activityInfo.f_duration);
             
             // 解析奖励ID数组，获取物品格子
-            _itemService.GetItemGrid(activityInfo.f_awardIds, null);
+            var itemGrids = await _itemService.CreateItemGrid(activityInfo.f_awardIds);
+            _awardPreviewComponent.SetAwards(itemGrids);
         }
 
         protected override Task OnShow()
@@ -73,14 +66,14 @@ namespace HotUpdate.UI.Activity.EmbersCanon
             try
             {
                 // 创建关卡界面到活动界面下
-                var subActivityUi = await _objectSpawner.SpawnAsync<EmbersCanonSubActivityUI_01>(AssetKeys.EmbersCanonSubActivityUI_01,
-                    activityView);
+                _embersCanonSubActivityUI_01 = await _objectSpawner.SpawnAsync<EmbersCanonSubActivityUI_01>(AssetKeys.EmbersCanonSubActivityUI_01, activityView);
                 // 初始化关卡子界面
-                //subActivityUi.Obj.Init(activityId, activityInfo);
+                await _embersCanonSubActivityUI_01.Init(activityInfo, EmbersCanonHandler);
+                _embersCanonSubActivityUI_01.OnClose += OnSubViewClose;
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(EmbersCanonActivityUI)}.{nameof(OnTriggerJoin)}：{e.Message}，{e.StackTrace}");
+                Logger.LogError($"{nameof(EmbersCanonActivityUI)}: Join activity error,{e.Message}");
             }
         }
 
@@ -88,12 +81,18 @@ namespace HotUpdate.UI.Activity.EmbersCanon
         {
             Logger.Log($"限时奖励按钮点击");
         }
+
+        private void OnSubViewClose()
+        {
+            _objectSpawner.Release(_embersCanonSubActivityUI_01);
+        }
         
         
         protected override void OnHide()
         {
             _itemService.Dispose();
             _objectSpawner.Dispose();
+            _iconService.ReleaseAll();
             _activityJoinComponent.OnClickJoin -= OnTriggerJoin;
             _limitTimeAwardComponent.OnClickAward -= OnTriggerLimitTimeAward;
         }

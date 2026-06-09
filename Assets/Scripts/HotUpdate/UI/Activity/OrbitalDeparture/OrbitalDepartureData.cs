@@ -7,7 +7,7 @@ namespace HotUpdate.UI.Activity.OrbitalDeparture
     /// <summary>
     /// 星轨启程活动数据
     /// </summary>
-    [ActivityId(ActivityId = 1001)]
+    [ActivityId(ActivityId = 1001, ActivityContentHandler = typeof(OrbitalDepartureHandler))]
     [Serializable]
     public class OrbitalDepartureData : ActivityData
     {

@@ -42,6 +42,7 @@ public static class AssetKeys
     public const string VFX_SupportSkill_02 = "VFX_SupportSkill_02";
     public const string VFX_SupportSkill_01 = "VFX_SupportSkill_01";
     public const string VFX_Environment_Rain = "VFX_Environment_Rain";
+    public const string TipView = "TipView";
     public const string AssetUpdateConfirmContent = "AssetUpdateConfirmContent";
     public const string QuestView = "QuestView";
     public const string QuestTypeContainer = "QuestTypeContainer";
@@ -91,7 +92,6 @@ public static class AssetKeys
     public const string ActivityBkComponent = "ActivityBkComponent";
     public const string ActivityView = "ActivityView";
     public const string ActivityUI = "ActivityUI";
-    public const string MSYH_SDF = "MSYH_SDF";
     public const string Item_StarCoin = "Item_StarCoin";
     public const string Item_OriginalEngraving = "Item_OriginalEngraving";
     public const string Item_EmbersOfGenesis = "Item_EmbersOfGenesis";
@@ -241,5 +241,5 @@ public static class AssetKeys
     public const string FireFly_Attack_Anim = "FireFly_Attack_Anim";
     public const string TurtleShell_Attack_Anim = "TurtleShell_Attack_Anim";
     public const string Slime_Attack_Anim = "Slime_Attack_Anim";
-    public const string TipView = "TipView";
+    public const string MSYH_SDF = "MSYH_SDF";
 }

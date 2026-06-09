@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Serialize.Binary;
 using Core.Utility;
+using HotUpdate.Base.Service;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 
 using UnityEngine;
@@ -12,12 +14,13 @@ using Logger = Core.Log.Logger;
 namespace HotUpdate.UI.Item
 {
     /// <summary>
-    /// 物品工具类
+    /// 物品图标服务
     /// </summary>
     public class ItemService : IDisposable
     {
         [Inject] private IBinaryDataManager _binaryDataManager;
         [Inject] private ObjectSpawner _objectSpawner;
+        [Inject] private IIconService _iconService;
         
         // 当前选中任务的奖励物品格子列表
         private readonly List<ItemGrid> _items = new();
@@ -29,7 +32,7 @@ namespace HotUpdate.UI.Item
         /// <param name="awardIds"></param>
         /// <param name="parent"></param>
         /// <param name="callback"></param>
-        public async void GetItemGrid(string awardIds, Transform parent, Action<ItemGrid> callback)
+        public async Task CreateItemGrid(string awardIds, Transform parent, Action<ItemGrid> callback)
         {
             try
             {
@@ -44,9 +47,9 @@ namespace HotUpdate.UI.Item
                     // 读取配置
                     var itemInfo = _binaryDataManager.GetConfig<ItemInfoContainer>(EConfigLoadType.Excel).dataDic[pair.Key];
                     // 加载图标
-                    var handle = await GameAsset.LoadAssetAsync<Sprite>(itemInfo.f_icon);
+                    var sprite = await _iconService.LoadIconAsync(itemInfo.f_icon);
                     // 初始化
-                    itemGrid.Init(handle.Asset, pair.Value, itemInfo.f_quality);
+                    itemGrid.Init(sprite, pair.Value, itemInfo.f_quality);
                     // 缓存池化对象
                     _items.Add(itemGrid);
                     callback?.Invoke(itemGrid);
@@ -54,24 +57,24 @@ namespace HotUpdate.UI.Item
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(ItemService)}.{nameof(GetItemGrid)}：{e.Message}");
+                Logger.LogError($"{nameof(ItemService)}: ItemGrid create error,{e.Message}");
             }
         }
-        
+
         /// <summary>
         /// 获取物品格子UI
         /// 内部已初始化UI，异常时回调返回null
         /// </summary>
         /// <param name="awardIds"></param>
-        /// <param name="callback"></param>
-        public async void GetItemGrid(string awardIds, Action<ItemGrid> callback)
+        public async Task<ItemGrid[]> CreateItemGrid(string awardIds)
         {
             try
             {
                 var itemInfos = new Dictionary<int, int>();
                 // 解析奖励ID数组
                 TextUtility.SplitMultiple(awardIds, 1, 2, itemInfos.Add);
-            
+                
+                var list = new List<ItemGrid>(itemInfos.Count);
                 foreach (var pair in itemInfos)
                 {
                     // 获取UI
@@ -79,19 +82,18 @@ namespace HotUpdate.UI.Item
                     // 读取配置
                     var itemInfo = _binaryDataManager.GetConfig<ItemInfoContainer>(EConfigLoadType.Excel).dataDic[pair.Key];
                     // 加载图标
-                    var handle = await GameAsset.LoadAssetAsync<Sprite>(itemInfo.f_icon);
+                    var sprite = await _iconService.LoadIconAsync(itemInfo.f_icon);
                     // 初始化
-                    itemGrid.Init(handle.Asset, pair.Value, itemInfo.f_quality);
-                    callback?.Invoke(itemGrid);
+                    itemGrid.Init(sprite, pair.Value, itemInfo.f_quality);
+                    list.Add(itemGrid);
                 }
+                
+                return list.ToArray();
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(ItemService)}.{nameof(GetItemGrid)}：{e.Message}");
-            }
-            finally
-            {
-                callback?.Invoke(null);
+                Logger.LogError($"{nameof(ItemService)}: ItemGrid create error,{e.Message}");
+                return Array.Empty<ItemGrid>();
             }
         }
 
@@ -103,6 +105,8 @@ namespace HotUpdate.UI.Item
             }
             _objectSpawner.Dispose();
             _objectSpawner = null;
+            _iconService.ReleaseAll();
+            _iconService = null;
         }
     }
 }
