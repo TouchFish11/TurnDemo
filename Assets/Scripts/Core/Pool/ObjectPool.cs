@@ -50,9 +50,9 @@ namespace Core.Pool
         /// </summary>
         /// <param name="rootObj">对象池根节点（所有池对象的顶级父物体）</param>
         /// <param name="poolObjName">当前对象池的名称（用于命名父物体）</param>
-        /// <param name="type"></param>
-        /// <param name="isOpenLayout"></param>
-        /// <param name="objectType"></param>
+        /// <param name="type">池子对象中存储的对象的实际类型</param>
+        /// <param name="isOpenLayout">是否采用对象池布局</param>
+        /// <param name="objectType">当前池子的缓存的对象类别</param>
         public ObjectPool(GameObject rootObj, string poolObjName, Type type, bool isOpenLayout, EObjectType objectType)
         {
             // 若父物体未创建且开启布局管理，创建池的父物体并设置层级
@@ -76,9 +76,9 @@ namespace Core.Pool
         /// <returns>可用的游戏对象（无可用对象时返回null）</returns>
         public T Get<T>() where T : Object
         {
-            if (typeof(T) != _objectType)
+            if (typeof(T) != _objectType && !typeof(T).IsAssignableFrom(_objectType))
             {
-                Logger.LogError($"Type mismatch: requested {typeof(T)}, pool stores {_objectType}");
+                Logger.LogError($"[{nameof(ObjectPool)}]: Type mismatch: requested {typeof(T)}, pool stores {_objectType}");
                 return null;
             }
             

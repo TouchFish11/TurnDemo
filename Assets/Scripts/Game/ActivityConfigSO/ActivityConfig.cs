@@ -1,4 +1,5 @@
 using System;
+using Core.SO;
 using UnityEngine;
 
 namespace Game.ActivityConfigSO
@@ -7,7 +8,7 @@ namespace Game.ActivityConfigSO
     /// 活动配置基类
     /// </summary>
     [Serializable]
-    public abstract class ActivityConfig : ScriptableObject
+    public abstract class ActivityConfig : SOBase
     {
 
     }

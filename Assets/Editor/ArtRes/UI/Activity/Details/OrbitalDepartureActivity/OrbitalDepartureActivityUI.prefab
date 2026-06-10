@@ -632,6 +632,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9188879402601311987}
+  - component: {fileID: 4897132870113088957}
   m_Layer: 5
   m_Name: ActivityJoinComponent
   m_TagString: Untagged
@@ -659,6 +660,18 @@ RectTransform:
   m_AnchoredPosition: {x: -437.9, y: 134}
   m_SizeDelta: {x: 377.20605, y: 66.03601}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &4897132870113088957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2887019268645833522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfbf2782bedf9c243b2ae5a197b7d868, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3824105593380025590
 GameObject:
   m_ObjectHideFlags: 0
@@ -1833,7 +1846,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.09019608}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

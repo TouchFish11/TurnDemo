@@ -1,12 +1,10 @@
 using System;
 using System.Threading.Tasks;
-using Core.DI;
 using Core.UI;
-using HotUpdate.Base.Service;
 using HotUpdate.UI.Activity.Base;
 using HotUpdate.UI.Activity.Common;
-using HotUpdate.UI.Item;
 using TMPro;
+using UnityEngine.UI;
 using Logger = Core.Log.Logger;
 
 namespace HotUpdate.UI.Activity.EmbersCanon
@@ -16,9 +14,7 @@ namespace HotUpdate.UI.Activity.EmbersCanon
     /// </summary>
     public class EmbersCanonActivityUI : ActivityUIBehaviourBase
     {
-        [Inject] private ItemService _itemService;
-        [Inject] private IIconService _iconService;
-
+        [InjectUI] private Image imgActivityBackground;
         [InjectUI] private TextMeshProUGUI txtActivityDescrition;
         [InjectUI] private TextMeshProUGUI txtActivityName;
         [InjectUI] private TextMeshProUGUI txtTime;
@@ -41,24 +37,20 @@ namespace HotUpdate.UI.Activity.EmbersCanon
         
         protected override async Task OnInit()
         {
-            // 初始化界面背景
-            await _iconService.LoadIconAsync(activityInfo.f_bkUi_Res);
-
-            _activityJoinComponent.OnClickJoin += OnTriggerJoin;
-            _limitTimeAwardComponent.OnClickAward += OnTriggerLimitTimeAward;
-
+            // 初始化界面
+            imgActivityBackground.sprite = await iconService.LoadIconAsync(activityInfo.f_bkUi_Res);
             txtActivityDescrition.text = activityInfo.f_description;
             txtActivityName.text = activityInfo.f_name;
             txtTime.text = ToDurationStr(activityInfo.f_duration);
-            
-            // 解析奖励ID数组，获取物品格子
-            var itemGrids = await _itemService.CreateItemGrid(activityInfo.f_awardIds);
-            _awardPreviewComponent.SetAwards(itemGrids);
         }
 
-        protected override Task OnShow()
+        protected override async Task OnShow()
         {
-            return Task.CompletedTask;
+            _activityJoinComponent.OnClickJoin += OnTriggerJoin;
+            _limitTimeAwardComponent.OnClickAward += OnTriggerLimitTimeAward;
+            // 解析奖励ID数组，获取物品格子
+            var itemGrids = await itemService.CreateItemGrid(activityInfo.f_awardIds);
+            _awardPreviewComponent.SetAwards(itemGrids);
         }
 
         private async void OnTriggerJoin()
@@ -66,7 +58,7 @@ namespace HotUpdate.UI.Activity.EmbersCanon
             try
             {
                 // 创建关卡界面到活动界面下
-                _embersCanonSubActivityUI_01 = await _objectSpawner.SpawnAsync<EmbersCanonSubActivityUI_01>(AssetKeys.EmbersCanonSubActivityUI_01, activityView);
+                _embersCanonSubActivityUI_01 = await objectSpawner.SpawnAsync<EmbersCanonSubActivityUI_01>(AssetKeys.EmbersCanonSubActivityUI_01, activityView);
                 // 初始化关卡子界面
                 await _embersCanonSubActivityUI_01.Init(activityInfo, EmbersCanonHandler);
                 _embersCanonSubActivityUI_01.OnClose += OnSubViewClose;
@@ -84,17 +76,18 @@ namespace HotUpdate.UI.Activity.EmbersCanon
 
         private void OnSubViewClose()
         {
-            _objectSpawner.Release(_embersCanonSubActivityUI_01);
+            objectSpawner.Release(_embersCanonSubActivityUI_01);
         }
         
         
         protected override void OnHide()
         {
-            _itemService.Dispose();
-            _objectSpawner.Dispose();
-            _iconService.ReleaseAll();
             _activityJoinComponent.OnClickJoin -= OnTriggerJoin;
             _limitTimeAwardComponent.OnClickAward -= OnTriggerLimitTimeAward;
+            
+            itemService.Clear();
+            objectSpawner.Clear();
+            iconService.ReleaseAll();
         }
     }
 }

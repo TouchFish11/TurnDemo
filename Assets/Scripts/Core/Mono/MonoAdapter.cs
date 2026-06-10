@@ -166,6 +166,9 @@ namespace Core.Mono
         {
             try
             {
+                if(_applicationExits == null)
+                    return;
+                
                 // 按优先级排序
                 _applicationExits.Sort((i1, i2) =>
                 {
@@ -177,12 +180,12 @@ namespace Core.Mono
                 // 依次执行退出逻辑
                 foreach (var applicationExitNotify in _applicationExits)
                 {
-                    applicationExitNotify.OnAppQuit();
+                    applicationExitNotify?.OnAppQuit();
                 }
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(MonoAdapter)}.{nameof(OnApplicationQuit)}:应用程序退出时逻辑执行错误，{e.Message}");
+                Logger.LogError($"{nameof(MonoAdapter)}: Application exit logic execution error,{e.Message}");
             }
         }
 
@@ -192,12 +195,12 @@ namespace Core.Mono
             {
                 foreach (var applicationPauseNotify in _applicationPauses)
                 {
-                    applicationPauseNotify.OnAppPause(pauseStatus);
+                    applicationPauseNotify?.OnAppPause(pauseStatus);
                 }
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(MonoAdapter)}.{nameof(OnApplicationPause)}:应用程序暂停/恢复时逻辑执行错误，{e.Message}");
+                Logger.LogError($"{nameof(MonoAdapter)}: Application logic when a suspend/resume mistake,{e.Message}");
             }
         }
 
@@ -212,28 +215,21 @@ namespace Core.Mono
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(MonoAdapter)}.{nameof(OnApplicationFocus)}:应用程序聚焦/失焦时逻辑执行错误，{e.Message}");
+                Logger.LogError($"{nameof(MonoAdapter)}: Application focus/out-of-focus logic error,{e.Message}");
             }
         }
 
         protected void OnDestroy()
         {
             awakables.Clear();
-            awakables = null;
 
             _fixedUpdates.Clear();
             _updates.Clear();
             _lateUpdates.Clear();
-            _fixedUpdates = null;
-            _updates = null;
-            _lateUpdates = null;
             
             _applicationExits.Clear();
             _applicationPauses.Clear();
             _applicationFocus.Clear();
-            _applicationExits = null;
-            _applicationPauses = null;
-            _applicationFocus = null;
         }
     }
 }

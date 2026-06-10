@@ -49,7 +49,11 @@ namespace HotUpdate.UI.Activity.Base
 
         public void UpdateActivityDetailUI(ActivityUIBehaviourBase actvity, ObjectSpawner spawner)
         {
-            spawner.Release(_activity);
+            if (_activity)
+            {
+                spawner.Release(_activity);
+            }
+            
             _activity = actvity;
         }
     }

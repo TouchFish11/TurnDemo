@@ -4,9 +4,10 @@ using Core.AssetBundles.Management;
 using Core.DI;
 using Core.UI;
 using Core.Utility;
+using HotUpdate.Base.Service;
 using HotUpdate.Common.Config.ExcelInfo.Info;
+using HotUpdate.UI.Item;
 using UnityEngine;
-using Logger = Core.Log.Logger;
 
 namespace HotUpdate.UI.Activity.Base
 {
@@ -15,8 +16,10 @@ namespace HotUpdate.UI.Activity.Base
     /// </summary>
     public abstract class ActivityUIBehaviourBase : UIBehaviourBase, IActivity
     {
-        [Inject] protected ObjectSpawner _objectSpawner;
-
+        [Inject] protected ObjectSpawner objectSpawner;
+        [Inject] protected ItemService itemService;
+        [Inject] protected IIconService iconService;
+        
         // 活动信息
         protected ActivityInfo activityInfo;
         // 活动界面父对象
@@ -32,18 +35,6 @@ namespace HotUpdate.UI.Activity.Base
         {
             base.Awake();
             GameObject = gameObject;
-        }
-
-        protected sealed override async void OnEnable()
-        {
-            try
-            {
-                await OnShow();
-            }
-            catch (Exception e)
-            {
-                Logger.LogError($"[{nameof(ActivityUIBehaviourBase)}]: Activity show error,{e.Message}");
-            }
         }
 
         public async Task Init(int activityId, ActivityInfo activityInfo, IActivityContentHandler contentHandler)
@@ -96,6 +87,14 @@ namespace HotUpdate.UI.Activity.Base
 
             long seconds = duration * 24 * 60 * 60;
             return $"{TextUtility.SecondToHMS(seconds, "天", "小时", string.Empty, string.Empty)}";
+        }
+
+        protected override void OnDestroy()
+        {
+            itemService.Dispose();
+            itemService = null;
+            ((IDisposable)iconService).Dispose();
+            iconService = null;
         }
     }
 }

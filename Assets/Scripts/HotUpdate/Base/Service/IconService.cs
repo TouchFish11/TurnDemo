@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace HotUpdate.Base.Service
 {
-    public class IconService : IIconService
+    public class IconService : IIconService, IDisposable
     {
         // 正在加载图片的任务缓存
         private readonly Dictionary<string, Task<AssetHandle<Sprite>>> _keyToSpriteHandleTaskMap = new();
@@ -83,10 +83,19 @@ namespace HotUpdate.Base.Service
         
         public void ReleaseAll()
         {
-            foreach (var iconKey in _keyToSpriteHandleMap.Keys)
+            // 避免迭代中修改集合
+            var kes = new List<string>(_keyToSpriteHandleMap.Keys);
+            foreach (var iconKey in kes)
             {
                 Release(iconKey);
             }
+        }
+
+        public void Dispose()
+        {
+            ReleaseAll();
+            _keyToSpriteHandleTaskMap.Clear();
+            _keyToSpriteHandleMap.Clear();
         }
     }
 }

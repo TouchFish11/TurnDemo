@@ -14,6 +14,11 @@ namespace HotUpdate.Common.Config.Activity
     {
         // 战斗活动关卡数据
         public BattleConfigEntryColletion BattleConfigEntryColletion;
+        
+        protected override void OnAwake()
+        {
+            target = BattleConfigEntryColletion;
+        }
     }
     
     [Serializable]

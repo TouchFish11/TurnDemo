@@ -1,10 +1,9 @@
+using System;
 using Core.DI;
 using Core.UI;
 using HotUpdate.Base.Manager;
-using HotUpdate.Base.Service;
 using HotUpdate.UI.Activity.Base;
 using HotUpdate.UI.Activity.Common;
-using HotUpdate.UI.Item;
 using TMPro;
 using UnityEngine.UI;
 
@@ -17,8 +16,6 @@ namespace HotUpdate.UI.Activity.OrbitalDeparture
     /// </summary>
     public class OrbitalDepartureActivityUI : ActivityUIBehaviourBase
     {
-        [Inject] private ItemService _itemService;
-        [Inject] private IIconService _iconService;
         [Inject] private IActivityDataManager _activityDataManager;
 
         [InjectUI] private Image imgActivityBackground;
@@ -26,72 +23,52 @@ namespace HotUpdate.UI.Activity.OrbitalDeparture
         [InjectUI] private TextMeshProUGUI txtActivityName;
         [InjectUI] private TextMeshProUGUI txtTime;
         
-        private ActivityJoinComponent _activityJoinComponent;
+        [NonSerialized] public ActivityJoinComponent activityJoinComponent;
         private AwardPreviewComponent _awardPreviewComponent;
 
+        public OrbitalDepartureHandler OrbitalDepartureHandler => activityContentHandler as OrbitalDepartureHandler;
+        
         protected override void Awake()
         {
             base.Awake();
-            _activityJoinComponent = GetComponentInChildren<ActivityJoinComponent>();
+            activityJoinComponent = GetComponentInChildren<ActivityJoinComponent>();
             _awardPreviewComponent = GetComponentInChildren<AwardPreviewComponent>();
         }
 
         protected override async Task OnInit()
         {
             // 初始化组件
-            _activityJoinComponent.Init(this, activityInfo);
+            activityJoinComponent.Init(this, activityInfo);
             _awardPreviewComponent.Init(this, activityInfo);
             
-            // 设置界面背景
-            imgActivityBackground.sprite = await _iconService.LoadIconAsync(activityInfo.f_bkUi_Res);
-            
-            UpdateBtnJoin();
-            // 监听按钮
-            _activityJoinComponent.OnClickJoin += OnTriggerJoin;
+            // 初始化界面
+            imgActivityBackground.sprite = await iconService.LoadIconAsync(activityInfo.f_bkUi_Res);
             txtActivityDescrition.text = $"{activityInfo.f_description}";
             txtActivityName.text = $"{activityInfo.f_name}";
             txtTime.text = $"{ToDurationStr(activityInfo.f_duration)}";
-            // 解析奖励ID数组，获取物品格子
-            var itemGrids = await _itemService.CreateItemGrid(activityInfo.f_awardIds);
-            _awardPreviewComponent.SetAwards(itemGrids);
         }
 
-        protected override Task OnShow()
+        protected override async Task OnShow()
         {
-            return Task.CompletedTask;
+            OrbitalDepartureHandler.UpdateShow();
+            activityJoinComponent.OnClickJoin += OnTriggerJoin;
+            // 解析奖励ID数组，获取物品格子
+            var itemGrids = await itemService.CreateItemGrid(activityInfo.f_awardIds);
+            _awardPreviewComponent.SetAwards(itemGrids);
         }
 
         private void OnTriggerJoin()
         {
-            if (!_activityDataManager.TryGetData(ActivityId, out var activityData))
-                return;
-            
-            if (!activityData.IsComplete)
-            {
-                activityData.CurrentPro += 1;
-                _activityJoinComponent.SetTitle(out var txtJoin);
-                txtJoin.text = $"已领取";
-            }
-        }
-        
-        /// <summary>
-        /// 更新按钮显示
-        /// </summary>
-        private void UpdateBtnJoin()
-        {
-            if (!_activityDataManager.TryGetData(ActivityId, out var activityData))
-                return;
-            
-            _activityJoinComponent.SetTitle(out var txtJoin);
-            txtJoin.text = !activityData.IsComplete ? "立即领取" : "已领取";
+            OrbitalDepartureHandler.ReceiveReward();
         }
         
         protected override void OnHide()
         {
-            _itemService.Dispose();
-            _objectSpawner.Dispose();
-            _iconService.ReleaseAll();
-            _activityJoinComponent.OnClickJoin -= OnTriggerJoin;
+            activityJoinComponent.OnClickJoin -= OnTriggerJoin;
+            
+            itemService.Clear();
+            objectSpawner.Clear();
+            iconService.ReleaseAll();
         }
     }
 }

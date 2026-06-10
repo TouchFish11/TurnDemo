@@ -189,7 +189,9 @@ namespace Core.DI
             // 注入字段/属性
             InjectIntoInstance(newInstance);
             // 不是单例直接返回
-            if (!isSingleton) return newInstance;
+            if (!isSingleton) 
+                return newInstance;
+            
             return _instanceMap.TryAdd(instanceType, newInstance) && (interfaceType == null || _interfaceMap.TryAdd(interfaceType, newInstance)) 
                 ? newInstance : throw new ArgumentException($"{interfaceType}-{instanceType} already exists.");
         }

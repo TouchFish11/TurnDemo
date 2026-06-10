@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
@@ -7,14 +6,10 @@ using Core.Scene;
 using Core.Serialize.Binary;
 using Core.UI.ViewController;
 using HotUpdate.Base.Manager;
-using HotUpdate.Base.Scene;
 using HotUpdate.Base.Service;
 using HotUpdate.Base.UI;
-using HotUpdate.Common.Config.Activity;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Game.Activity.Core;
-using HotUpdate.Game.Battle.Core;
-using HotUpdate.Game.Battle.Turn;
 
 namespace HotUpdate.UI.Activity.Base
 {
@@ -64,6 +59,7 @@ namespace HotUpdate.UI.Activity.Base
 
         protected override Task OnInactivate()
         {
+            _objectSpawner.Dispose();
             // 显示主界面
             return _uiService.ShowAsync(_uiService.GetPanel(EUIPanelId.MainPanel).PanelId);
         }
@@ -92,7 +88,10 @@ namespace HotUpdate.UI.Activity.Base
             if (!activityDataCollection.TryGetValue(activityInfo.f_id, out var activityData))
             {
                 // 新增活动数据
-                activityData = _activityDataFactory.GetData(activityInfo.f_id);
+                activityData = _activityDataFactory.tryGetData(activityInfo.f_id, out var data) ? data : null;
+                if (activityData == null)
+                    throw new NullReferenceException($"activityData {activityInfo.f_id} not found");
+                
                 // 初始化ID
                 activityData.ActivityId = activityInfo.f_id;
                 // 缓存新增数据
@@ -104,6 +103,12 @@ namespace HotUpdate.UI.Activity.Base
             await activityUIBehaviourBase.Init(activityData.ActivityId, activityInfo, handler);
             // 更新界面
             view.UpdateActivityDetailUI(activityUIBehaviourBase, _objectSpawner);
+        }
+
+        protected override Task OnDestroy()
+        {
+            _objectSpawner = null;
+            return Task.CompletedTask;
         }
     }
 }

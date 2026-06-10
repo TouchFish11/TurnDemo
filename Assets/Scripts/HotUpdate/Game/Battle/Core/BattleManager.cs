@@ -20,7 +20,6 @@ namespace HotUpdate.Game.Battle.Core
     /// </summary>
     public class BattleManager : IBattleManager
     {
-        [Inject] private IUIManager _uiManager;
         [Inject] private ISceneManager _sceneManager;
         [Inject] private IMouseManager _mouseManager;
         [Inject] private IPoolManager _poolManager;
@@ -30,18 +29,11 @@ namespace HotUpdate.Game.Battle.Core
         private IBattleContext _context;
         // 回合创建器
         private TurnCreator _creator;
-        // 主界面ID
-        private readonly int _mainControllerId;
         
         /// <summary>
         /// 战斗结束事件
         /// </summary>
         private Func<Task> OnBattleOver;
-
-        public BattleManager(int mainControllerId)
-        {
-            _mainControllerId = mainControllerId;
-        }
         
         /// <summary>
         /// 进入战斗
@@ -65,7 +57,7 @@ namespace HotUpdate.Game.Battle.Core
             // 加载战斗场景
             await _sceneManager.LoadSceneAsync(AssetKeys.LevelScene, UnityEngine.SceneManagement.LoadSceneMode.Single, battleLoadingController.UpdateProgress);
             // 隐藏主界面
-            await _uiManager.SetViewActive(_mainControllerId, false);
+            await _uiService.CloseAsync(_uiService.GetPanel(EUIPanelId.MainPanel).PanelId, false);
             // 预加载资源
             await PreLoad();
             // 创建战斗上下文，依赖战斗点代理
@@ -137,14 +129,14 @@ namespace HotUpdate.Game.Battle.Core
                 // 强制不可见，暂时这样处理，正常流程Bug：battleLoadingController销毁时未正确释放
                 _mouseManager.ForceInVisible();
                 // 销毁战斗界面
-                await _uiManager.DestroyView(quitBattleEvent.BattleUIController.PanelId);
+                await _uiService.CloseAsync(quitBattleEvent.BattleUIController.PanelId, true);
                 // 执行战斗结束回调，在背景界面销毁前执行
                 if (OnBattleOver != null)
                 {
                     await OnBattleOver();
                     OnBattleOver = null;
                     // 销毁黑背景界面
-                    await _uiManager.DestroyView(controller.PanelId);
+                    await _uiService.CloseAsync(controller.PanelId, true);
                 }
             }
             catch (Exception e)

@@ -7,7 +7,6 @@ using Core.Serialize.Binary;
 using Core.Utility;
 using HotUpdate.Base.Service;
 using HotUpdate.Common.Config.ExcelInfo.Container;
-
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
@@ -88,6 +87,7 @@ namespace HotUpdate.UI.Item
                     list.Add(itemGrid);
                 }
                 
+                _items.AddRange(list);
                 return list.ToArray();
             }
             catch (Exception e)
@@ -97,16 +97,23 @@ namespace HotUpdate.UI.Item
             }
         }
 
-        public void Dispose()
+        public void Clear()
         {
             foreach (var itemGrid in _items)
             {
                 _objectSpawner.Release(itemGrid);
             }
+            _items.Clear();
+            _iconService.ReleaseAll();
+        }
+
+        public void Dispose()
+        {
+            Clear();
             _objectSpawner.Dispose();
             _objectSpawner = null;
-            _iconService.ReleaseAll();
             _iconService = null;
+            _binaryDataManager = null;
         }
     }
 }

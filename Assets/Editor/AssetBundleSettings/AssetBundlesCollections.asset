@@ -286,9 +286,9 @@ MonoBehaviour:
       hash: 5cf42d09cd3f3bdb13bbc590463f500a33f23eda70c4cfd7e15c1c681cfb0440
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\BattleActivityConfig.json
-      size: 2944
+      size: 2643
       name: BattleActivityConfig.json
-      hash: dbe188d750beb3f111ca386640fe08bf9eeaa807b45525a4cdbb3eea0bd383b2
+      hash: d8006aa8e8fc0bb0ac3447be74d1e2fde293c4101fd373ca04f13805f2ad4b55
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\GameSettingsConfig.json
       size: 999
@@ -507,9 +507,9 @@ MonoBehaviour:
       hash: a697e797d2a0d6a1750b344b6884fe98370d3ad4cac9fd5ef4b1f29ab6116203
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Activity\ActivityView.prefab
-      size: 27731
+      size: 27729
       name: ActivityView.prefab
-      hash: b9712c5d286aa1ae3977f7c8c37bfe22b000872c7ede9ed0089d397dc0b68a67
+      hash: 392d253e44f1605adf58678ed7715d12859b79a46fe25c0ecefe637161fe7db6
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Activity\Common\ActivityBkComponent.prefab
       size: 3644
@@ -554,7 +554,7 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\UI\Activity\Details\EmbersCanonActivity\EmbersCanonActivityUI.prefab
       size: 65868
       name: EmbersCanonActivityUI.prefab
-      hash: 7e76adc39d98247bc16d96649b0c15890131bc5d11672d1f92e54b8c141595e5
+      hash: bbe339963b1214af5164d7a326a505a3df320e0504879b98b482321dfb9e805a
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Activity\Details\EmbersCanonActivity\EmbersCanonSubActivityUI_01\BattleLevelUI.prefab
       size: 11319
@@ -567,9 +567,9 @@ MonoBehaviour:
       hash: c3e585d5111c6ea2ba94ef1f1e46489a941fc52b162f0a41e84342fad280177a
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Activity\Details\OrbitalDepartureActivity\OrbitalDepartureActivityUI.prefab
-      size: 54174
+      size: 54587
       name: OrbitalDepartureActivityUI.prefab
-      hash: 69064b80a5e528cbe448d88fe4f15742d314cf60ff3c7f53738cbb1dce8047f4
+      hash: f1f2947c3b70cecdc2540a2b81f082249f37494ae6e2f29c948da492d6a4efdf
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Back\BackView.prefab
       size: 3001

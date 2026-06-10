@@ -492,7 +492,7 @@ GameObject:
   - component: {fileID: 3996297775815798019}
   - component: {fileID: 6417303375519913785}
   - component: {fileID: 7761384608098915693}
-  - component: {fileID: -4967839466831764217}
+  - component: {fileID: 5280001194302045902}
   m_Layer: 5
   m_Name: ActivityView
   m_TagString: Untagged
@@ -574,7 +574,7 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &-4967839466831764217
+--- !u!114 &5280001194302045902
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

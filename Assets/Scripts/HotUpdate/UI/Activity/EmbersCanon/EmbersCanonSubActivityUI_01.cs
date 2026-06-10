@@ -28,8 +28,8 @@ namespace HotUpdate.UI.Activity.EmbersCanon
         public async Task Init(ActivityInfo activityInfo, EmbersCanonHandler embersCanonHandler)
         {
             // 初始化关卡
-            var (battleActivityConfig, embersCanonData) = await embersCanonHandler.InitLevels(activityInfo.f_id);
-            foreach (var battleConfigEntry in battleActivityConfig.BattleConfigEntryColletion.battleConfigs)
+            var (battleConfigEntryColletion, embersCanonData) = await embersCanonHandler.InitLevels(activityInfo.f_id);
+            foreach (var battleConfigEntry in battleConfigEntryColletion.battleConfigs)
             {
                 var battleLevelUI = await _objectSpawner.SpawnAsync<BattleLevelUI>(AssetKeys.BattleLevelUI, svLevel.content);
                 // 获取用户数据中的战斗关卡条目

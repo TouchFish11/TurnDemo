@@ -1,5 +1,4 @@
 using System;
-using Core.DI;
 using Core.UI;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using TMPro;

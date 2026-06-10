@@ -7,7 +7,7 @@ namespace HotUpdate.Common.Config.Quest.Config
     /// <summary>
     /// 任务配置SO
     /// </summary>
-    [CreateAssetMenu(fileName = "QuestConfig", menuName = "Task/QuestConfigSO")]
+    [CreateAssetMenu(fileName = "QuestConfig", menuName = "Quest/QuestConfigSO")]
     public class QuestConfigSO : SOBase
     {
         public QuestConfig questConfig;

@@ -31,7 +31,7 @@ namespace HotUpdate.UI.Activity.EmbersCanon
         /// </summary>
         /// <param name="activityId"></param>
         /// <returns></returns>
-        public async Task<(BattleActivityConfig battleActivityConfig, EmbersCanonData embersCanonData)> InitLevels(int activityId)
+        public async Task<(BattleConfigEntryColletion battleConfigEntryColletion, EmbersCanonData embersCanonData)> InitLevels(int activityId)
         {
             // 根据读取用户活动数据
             var activityDataCollection = _activityDataManager.ActivityDataCollection as ActivityDataCollection;
@@ -39,9 +39,9 @@ namespace HotUpdate.UI.Activity.EmbersCanon
             var embersCanonData = activityDataCollection[activityId] as EmbersCanonData;
             // 解析该活动的关卡配置
             using var handle = await GameAsset.LoadAssetAsync<TextAsset>(AssetKeys.BattleActivityConfig);
-            var battleActivityConfig = _jsonManager.FromJson<BattleActivityConfig>(handle.Asset.text, settings: NewtonsoftJsonUtility.SerializerSettings);
+            var battleConfigEntryColletion = _jsonManager.FromJson<BattleConfigEntryColletion>(handle.Asset.text, settings: NewtonsoftJsonUtility.SerializerSettings);
 
-            foreach (var battleConfigEntry in battleActivityConfig.BattleConfigEntryColletion.battleConfigs)
+            foreach (var battleConfigEntry in battleConfigEntryColletion.battleConfigs)
             {
                 // 获取用户数据中的战斗关卡条目
                 var levelEntryData = embersCanonData.GetLevelData(battleConfigEntry.levelId);
@@ -53,7 +53,7 @@ namespace HotUpdate.UI.Activity.EmbersCanon
                 }
             }
 
-            return (battleActivityConfig, embersCanonData);
+            return (battleConfigEntryColletion, embersCanonData);
         }
         
         /// <summary>

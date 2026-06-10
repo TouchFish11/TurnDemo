@@ -3,8 +3,8 @@ using HotUpdate.Base.Factory;
 
 namespace HotUpdate.Game.Activity.Core
 {
-    public interface IActivityDataFactory : IFactory
+    public interface IActivityDataFactory
     {
-        ActivityData GetData(int activityId);
+        bool tryGetData(int activityId,  out ActivityData data);
     }
 }

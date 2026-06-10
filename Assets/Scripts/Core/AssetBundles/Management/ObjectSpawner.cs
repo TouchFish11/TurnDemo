@@ -331,18 +331,11 @@ namespace Core.AssetBundles.Management
             
             return releseCount;
         }
-        
-        /// <summary>
-        /// 销毁生成器，当不在使用该生成器时调用此方法，释放缓存的剩余句柄
-        /// 要先确保生成器创建出的对象都执行回收后才能调用此方法安全销毁
-        /// 否则使用的对象会被意外释放（默认放入对象池）
-        /// </summary>
-        public void Dispose()
-        {
-            _poolManager.PushData(this);
-        }
 
-        void IPoolData.ResetData()
+        /// <summary>
+        /// 清理所有缓存，调用后可以继续使用该生成器
+        /// </summary>
+        public void Clear()
         {
             Release(_activeObjects);
             _activeObjects.Clear();
@@ -360,6 +353,21 @@ namespace Core.AssetBundles.Management
                 _poolManager.ClearCache(assetKey);
             }
             _assetKeys.Clear();
+        }
+        
+        /// <summary>
+        /// 销毁生成器，当不在使用该生成器时调用此方法，释放缓存的剩余句柄
+        /// 要先确保生成器创建出的对象都执行回收后才能调用此方法安全销毁
+        /// 否则使用的对象会被意外释放（默认放入对象池）
+        /// </summary>
+        public void Dispose()
+        {
+            _poolManager.PushData(this);
+        }
+
+        void IPoolData.ResetData()
+        {
+            Clear();
         }
     }
 }

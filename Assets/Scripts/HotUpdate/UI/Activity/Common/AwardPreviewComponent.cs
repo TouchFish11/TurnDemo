@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Core.UI;
 using HotUpdate.UI.Activity.Base;
 using HotUpdate.UI.Item;

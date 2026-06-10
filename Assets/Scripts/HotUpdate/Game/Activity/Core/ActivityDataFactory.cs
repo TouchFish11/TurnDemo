@@ -1,11 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Core.DI;
 using Core.HotUpdate;
 using Core.Log;
 using HotUpdate.Base.Data;
-using HotUpdate.Base.Utility;
 
 namespace HotUpdate.Game.Activity.Core
 {
@@ -14,35 +12,38 @@ namespace HotUpdate.Game.Activity.Core
     /// </summary>
     public class ActivityDataFactory : IActivityDataFactory
     {
-        private readonly IHotUpdateManager _hotUpdateManager = DIContainer.GetInstance<IHotUpdateManager>();
-        private readonly Dictionary<int, ActivityData> _data = new();
-        
-        public void InitFactory()
+        private readonly Dictionary<int, ActivityData> _datas = new();
+
+        private ActivityDataFactory(IHotUpdateManager hotUpdateManager)
         {
-            FactoryUtility.ScanAllType<ActivityData, int, ActivityData>(_data, KeyFunc, ValueFunc,
-                assemblies: _hotUpdateManager.GetHotAssemblies());
+            ScanActivityData(hotUpdateManager);
         }
 
-        private static ActivityData ValueFunc(Type type)
+        private void ScanActivityData(IHotUpdateManager hotUpdateManager)
         {
-            return (ActivityData)Activator.CreateInstance(type);
-        }
-
-        private static int KeyFunc(Type type)
-        {
-            var activityIdAttribute = type.GetCustomAttribute<ActivityIdAttribute>();
-            if (activityIdAttribute != null)
+            foreach (var assembly in hotUpdateManager.GetHotAssemblies())
             {
-                return activityIdAttribute.ActivityId;
+                foreach (var type in assembly.GetTypes())
+                {
+                    if (!typeof(ActivityData).IsAssignableFrom(type) || type.IsAbstract) 
+                        continue;
+                    
+                    var activityIdAttribute = type.GetCustomAttribute<ActivityIdAttribute>();
+                    if (activityIdAttribute == null)
+                    {
+                        Logger.LogError($"{nameof(ActivityDataFactory)}: {type} does not have a marking {nameof(ActivityIdAttribute)}.");
+                        continue;
+                    }
+                    
+                    var data = DIContainer.Create(null, type) as ActivityData;
+                    _datas.Add(activityIdAttribute.ActivityId, data);
+                }
             }
-
-            Logger.LogError($"{nameof(ActivityDataFactory)}.{nameof(KeyFunc)}：{type.FullName}不存在特性：{nameof(ActivityIdAttribute)}");
-            return -1;
         }
 
-        public ActivityData GetData(int activityId)
+        public bool tryGetData(int activityId,  out ActivityData data)
         {
-            return _data.GetValueOrDefault(activityId);
+            return _datas.TryGetValue(activityId, out data);
         }
     }
 }

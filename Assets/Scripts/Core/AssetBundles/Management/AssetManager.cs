@@ -110,13 +110,22 @@ namespace Core.AssetBundles.Management
             
             // 创建新的加载任务
             var task = LoadAssetAsyncInternal<T>(key);
+            // 注意：这里的task可能在添加前就已经完成
             if (!_loadingTasks.TryAdd(key, task))
             {
                 // 没加进去，说明已经有并发请求正在加载，直接 await 那个任务，此时，单线程下这里一定存在， _loadingTasks 中肯定已存在对应 Key 的任务
                 task = _loadingTasks[key];
             }
 
-            return await task;
+            try
+            {
+                return await task;
+            }
+            finally
+            {
+                // 无论是否完成都要移除
+                _loadingTasks.Remove(key);
+            }
         }
         
         /// 异步加载单个资源（内部）
@@ -131,88 +140,11 @@ namespace Core.AssetBundles.Management
             // 若条目是图片资源
             if (entry is SpriteAssetEntry spriteAssetEntry)
             {
-                // // 图集路径处理
-                // // 注意：这里应使用 atlasKey 作为物理缓存 Key，但 Retain 只针对当前 Sprite 请求
-                // // 需确保图集 AB 包引用计数增加正确
-                // var atlasKey = spriteAssetEntry.atlasKey;
-                //
-                // // 如果图集已缓存，直接创建 AssetWrapper（不重复加载图集）
-                // if (_assetWrappers.TryGetValue(atlasKey, out var atlasWrapper))
-                // {
-                //     // 因为新 Sprite 需要使用图集，引用+1
-                //     atlasWrapper.Retain();
-                //     // 注意：返回的 AssetKey 应是 atlasKey
-                //     return atlasWrapper;
-                // }
-                //
-                // try
-                // {
-                //     // 创建新的加载任务，异步加载指定资源AB包，内部已经捕获了异常
-                //     var bundleWrapper = await _assetBundleManager.LoadBundleAsync(spriteAssetEntry.bundleName);
-                //     if (bundleWrapper.IsNull)
-                //         throw new NullReferenceException();
-                //
-                //     // 加载图集资源，内部已经捕获了异常
-                //     var assetWrapper = await bundleWrapper.LoadAssetAsync<SpriteAtlas>(atlasKey, spriteAssetEntry.spriteAssetName);
-                //     if (assetWrapper.IsNull)
-                //         throw new NullReferenceException();
-                //     
-                //     // 相同图集的不同图片，不允许重复添加图集
-                //     _assetWrappers.TryAdd(atlasKey, assetWrapper);
-                //     // 初始引用
-                //     assetWrapper.Retain();
-                //     return assetWrapper;
-                // }
-                // catch (Exception e)
-                // {
-                //     Logger.LogError($"[{nameof(AssetManager)}]: '{atlasKey}/{key}' asset load fail, {e.Message}");
-                //     return DIContainer.Create<AssetWrapper>(parameterValues: new object[] { null, atlasKey, this });
-                // }
-                // finally
-                // {
-                //     // 是否加载成功都要移除
-                //     _loadingTasks.Remove(key);
-                // }
-
                 return LoadSpriteAssetAsync<T>(spriteAssetEntry);
             }
+            
             // 非图集资源
-            else
-            {
-                // // 存在该资源缓存，直接返回
-                // if (_assetWrappers.TryGetValue(key, out var assetWrapper))
-                // {
-                //     assetWrapper.Retain();
-                //     return assetWrapper;
-                // }
-                //
-                // try
-                // {
-                //     // 异步加载指定资源AB包
-                //     var bundleWrapper = await _assetBundleManager.LoadBundleAsync(entry.bundleName);
-                //     if (bundleWrapper.IsNull)
-                //         throw new NullReferenceException($"{nameof(GameAsset)}: '{entry.bundleName}' assetBundle load failed");
-                //
-                //     // 加载资源
-                //     assetWrapper = await bundleWrapper.LoadAssetAsync<T>(key, entry.assetName);
-                //     // 存入缓存
-                //     _assetWrappers.Add(key, assetWrapper);
-                //     assetWrapper.Retain();
-                //     return assetWrapper;
-                // }
-                // catch (Exception e)
-                // {
-                //     Logger.LogError($"[{nameof(AssetManager)}]: '{key}' asset load fail, {e.Message}");
-                //     return null;
-                // }
-                // finally
-                // {
-                //     // 是否加载成功都要移除
-                //     _loadingTasks.Remove(key);
-                // }
-
-                return LoadNonSpriteAssetAsync<T>(entry);
-            }
+            return LoadNonSpriteAssetAsync<T>(entry);
         }
 
         /// <summary>
@@ -236,24 +168,16 @@ namespace Core.AssetBundles.Management
                 // 注意：返回的 AssetKey 应是 atlasKey
                 return atlasWrapper;
             }
-
-            try
-            {
-                // 创建新的加载任务，异步加载指定资源AB包
-                var bundleWrapper = await _assetBundleManager.LoadBundleAsync(spriteAssetEntry.bundleName);
-                // 加载图集资源
-                var assetWrapper = await bundleWrapper.LoadAssetAsync<SpriteAtlas>(atlasKey, spriteAssetEntry.spriteAssetName);
-                // 相同图集的不同图片，不允许重复添加图集
-                _assetWrappers.TryAdd(atlasKey, assetWrapper);
-                // 初始引用
-                assetWrapper.Retain();
-                return assetWrapper;
-            }
-            finally
-            {
-                // 是否加载成功都要移除
-                _loadingTasks.Remove(spriteAssetEntry.key);
-            }
+                
+            // 创建新的加载任务，异步加载指定资源AB包
+            var bundleWrapper = await _assetBundleManager.LoadBundleAsync(spriteAssetEntry.bundleName);
+            // 加载图集资源
+            var assetWrapper = await bundleWrapper.LoadAssetAsync<SpriteAtlas>(atlasKey, spriteAssetEntry.spriteAssetName);
+            // 相同图集的不同图片，不允许重复添加图集
+            _assetWrappers.TryAdd(atlasKey, assetWrapper);
+            // 初始引用
+            assetWrapper.Retain();
+            return assetWrapper;
         }
 
         /// <summary>
@@ -268,22 +192,14 @@ namespace Core.AssetBundles.Management
             var bundleName = assetEntry.bundleName;
             var assetName = assetEntry.assetName;
             
-            try
-            {
-                // 异步加载指定资源AB包
-                var bundleWrapper = await _assetBundleManager.LoadBundleAsync(bundleName);
-                // 加载资源
-                var assetWrapper = await bundleWrapper.LoadAssetAsync<T>(assetKey, assetName);
-                // 存入缓存
-                _assetWrappers.Add(assetKey, assetWrapper);
-                assetWrapper.Retain();
-                return assetWrapper;
-            }
-            finally
-            {
-                // 是否加载成功都要移除
-                _loadingTasks.Remove(assetKey);
-            }
+            // 异步加载指定资源AB包
+            var bundleWrapper = await _assetBundleManager.LoadBundleAsync(bundleName);
+            // 加载资源
+            var assetWrapper = await bundleWrapper.LoadAssetAsync<T>(assetKey, assetName);
+            // 存入缓存
+            _assetWrappers.Add(assetKey, assetWrapper);
+            assetWrapper.Retain();
+            return assetWrapper;
         }
         
         /// <summary>

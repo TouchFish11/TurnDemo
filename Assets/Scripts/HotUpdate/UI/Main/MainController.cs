@@ -73,7 +73,7 @@ namespace HotUpdate.UI.Main
             try
             {
                 // 失活主界面
-                await uiManager.SetViewActive(panelId, false);
+                await _uiService.CloseAsync(panelId, false);
                 switch (btnName)
                 {
                     case "btnActivity":
