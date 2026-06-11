@@ -38,6 +38,7 @@ namespace HotUpdate.UI.Battle.Base
         [Inject] private ObjectSpawner _objectSpawner;
         [Inject] private IBattleCameraManager _battleCameraManager;
         [Inject] private IUIManager _uiManager;
+        [Inject] private IMonoAdapter _monoAdapter;
         
         #region 私有字段
         // 战斗界面视图层引用
@@ -117,7 +118,7 @@ namespace HotUpdate.UI.Battle.Base
         /// </summary>
         public void ShowBattleStart()
         {
-            DIContainer.GetInstance<IMonoAdapter>().StartCoroutine(ShowBattleStart_Cor());
+            _monoAdapter.StartCoroutine(ShowBattleStart_Cor());
             return;
 
             // 战斗开始界面显示协程

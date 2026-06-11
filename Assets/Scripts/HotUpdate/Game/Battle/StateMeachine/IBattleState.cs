@@ -1,4 +1,3 @@
-using HotUpdate.Base;
 using HotUpdate.Game.Battle.Context;
 
 namespace HotUpdate.Game.Battle.StateMeachine
@@ -13,8 +12,6 @@ namespace HotUpdate.Game.Battle.StateMeachine
         public IBattleContext Context { get; }
         
         void Enter();
-        
-        void Execute();
         
         void Exit();
 

@@ -260,7 +260,7 @@ namespace Core.AssetBundles.Management
         {
             // 无效的句柄访问，抛出异常
             if (!IsValidate(handleId, version))
-                throw ExceptionFactory.ThrowInvalidHandleAccessException(handleId, version, null);
+                throw ExceptionHelper.ThrowInvalidHandleAccessException(handleId, version, null);
             
             // 找不到定位对象，抛出异常，实际上不会找不到，因为都是复用的
             var location = _assetIdToLocationsMap.GetValueOrDefault(handleId);

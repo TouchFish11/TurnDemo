@@ -23,7 +23,15 @@ namespace HotUpdate.Game.Scene
         [Inject] private IPoolManager _poolManager;
         [Inject] private ObjectSpawner _objectSpawner;
         [Inject] private ISceneManager _sceneManager;
-
+        
+        public async Task InitSceneAsync(string sceneId, LoadSceneMode mode, Action<float> onLoadProgress, object sceneConfig = null)
+        {
+            await _sceneManager.LoadSceneAsync(sceneId, mode, onLoadProgress);
+            
+            // TODO：可根据场景配置sceneConfig动态创建场景环境
+            // ...
+        }
+        
         /// <summary>
         /// 初始化主游戏场景核心内容
         /// 异步创建NPC、玩家对象，初始化UI界面、飘字管理器等游戏元素

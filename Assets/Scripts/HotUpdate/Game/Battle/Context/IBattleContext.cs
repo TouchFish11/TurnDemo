@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using HotUpdate.Base;
+using HotUpdate.Game.Battle.StateMeachine;
 using HotUpdate.Game.Point;
 
 namespace HotUpdate.Game.Battle.Context
@@ -17,7 +18,7 @@ namespace HotUpdate.Game.Battle.Context
         int CurentBattlePointCount { get; }
 
         /// <summary>
-        /// 获取战斗点数的最大上限值
+        /// 获取战技点数的最大上限值
         /// </summary>
         int MaxBattlePointCount { get; }
         

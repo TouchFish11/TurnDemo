@@ -14,7 +14,7 @@ namespace HotUpdate.Game.Battle.Turn
     {
         // 战斗状态缓存
         private Dictionary<EBattlePhase, IBattleState> _battleStates = new();
-        // 当前状态
+        // 当前战斗状态
         private IBattleState _currentState;
         
         public BattleStateMachine(IBattleContext context)

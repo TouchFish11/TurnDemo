@@ -3,9 +3,9 @@ using System;
 namespace Core.Exceptions
 {
     /// <summary>
-    /// 异常工厂
+    /// 异常辅助器
     /// </summary>
-    public static class ExceptionFactory
+    public static class ExceptionHelper
     {
         /// <summary>
         /// 前缀

@@ -17,6 +17,7 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
     public class MonsterStateUIManager : IMonsterStateUIManager
     {
         [Inject] private ObjectSpawner _objectSpawner;
+        [Inject] private IPoolManager _poolManager;
         
         // 怪物实体到怪物血量UI的映射
         private readonly Dictionary<IBattleEntityObject, NormalMonsterStateUI> normalMonsterStateUIs = new();
@@ -46,7 +47,7 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
                 return;
             }
             
-            DIContainer.GetInstance<IPoolManager>().PushObj(normalMonsterStateUI.gameObject);
+            _poolManager.PushObj(normalMonsterStateUI.gameObject);
             normalMonsterStateUIs.Remove(deadMonster);
         }
 
@@ -127,6 +128,7 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
                 _objectSpawner.Release(normalMonsterStateUI);
             }
             normalMonsterStateUIs.Clear();
+            _objectSpawner.Clear();
         }
     }
 }

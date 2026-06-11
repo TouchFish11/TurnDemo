@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.DI;
-using Core.Pool;
 using HotUpdate.Base;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Layer;
@@ -12,56 +11,56 @@ using UnityEngine;
 namespace HotUpdate.Game.Battle.Turn
 {
     /// <summary>
-    /// 回合创建器
+    /// 波次创建器
     /// </summary>
-    public class TurnCreator : IPoolData, ITurnCreator
+    public class WaveCreator : IWaveCreator
     {
+        [Inject] private RoleFactory _roleFactory;
+        [Inject] private MonsterFactory _monsterFactory;
+        [Inject] private IBattlePointProxy _battlePointProxy;
+        [Inject] private WaveHandler _waveHandler;
+        
         // 战斗上下文
         private IBattleContext _context;
-        // 一回合共有多少波次，每波次创建的怪物ID
-        private List<List<int>> _waves;
-        // 当前波次
+        // 波次数据列表，长度代表总波次，每波次可独立配置
+        private List<WaveData> _waveDatas;
+        // 当前波次在列表的位置索引
         private int _waveIndex;
-        // 总回合数
-        private int _totalTurnNum;
-        // 当前回合
-        private int _turnIndex;
 
         /// <summary>
         /// 初始化
         /// </summary>
         /// <param name="context"></param>
-        /// <param name="totalTurnNum"></param>
-        /// <param name="waves"></param>
-        public void Init(IBattleContext context, int totalTurnNum, List<List<int>> waves)
+        /// <param name="waveDatas"></param>
+        public void Init(IBattleContext context, List<WaveData> waveDatas)
         {
             _context = context;
-            _waves = waves;
-            _totalTurnNum = totalTurnNum;
+            _waveDatas = waveDatas;
+            _waveIndex = 0;
         }
 
         /// <summary>
-        /// 检查战斗是否结束
-        /// true为结束
+        /// 检查当前波次是否结束
         /// </summary>
-        /// <returns></returns>
-        public bool CheckBattleOver()
+        /// <returns>true为结束；false为未结束</returns>
+        public bool CheckOver()
         {
-            // 存在剩余回合
-            while (_turnIndex < _totalTurnNum)
+            return _waveHandler.CheckOver();
+        }
+        
+        /// <summary>
+        /// 推进到下一波次
+        /// </summary>
+        /// <returns>若为true，则存在下一波次并推进；否则返回false，代表所有波次结束</returns>
+        public bool MoveWave()
+        {
+            if (_waveIndex < _waveDatas.Count)
             {
-                if (_waveIndex < _waves.Count)
-                {
-                    return false;
-                }
-
-                // 当前回合的所有波次已经处理完毕，进入下一回合
-                ++_turnIndex;
-                // 重置波次索引
-                _waveIndex = 0;
+                ++_waveIndex;
+                _waveHandler.UpdateCondition(_waveDatas[_waveIndex].WaveVictoryConditionType);
+                return true;
             }
-            
-            return true;
+            return false;
         }
 
         /// <summary>
@@ -70,7 +69,7 @@ namespace HotUpdate.Game.Battle.Turn
         public async Task<List<IBattleEntityObject>> CreateWave()
         {
             // 创建当前波次的怪物
-            return await CreateMonsters(_waves[_waveIndex++].ToArray());
+            return await CreateMonsters(_waveDatas[_waveIndex].MonsterIds.ToArray());
         }
 
         /// <summary>
@@ -81,14 +80,13 @@ namespace HotUpdate.Game.Battle.Turn
         public async Task<List<IBattleEntityObject>> CreateRoles(params int[] roleIds)
         {
             var roles = new List<IBattleEntityObject>(roleIds.Length);
-            var playerTrans = new List<Transform>(DIContainer.GetInstance<IBattlePointProxy>().BattlePoint.GetRoleTransforms());
+            var playerTrans = new List<Transform>(_battlePointProxy.BattlePoint.GetRoleTransforms());
             for (var i = 0; i < roleIds.Length; i++)
             {
                 var roleId = roleIds[i];
                 var transform = playerTrans[i];
                 // 创建角色对象
-
-                var playerObject = await DIContainer.GetInstance<RoleFactory>().CreateRole(roleId, transform);
+                var playerObject = await _roleFactory.CreateRole(roleId, transform);
                 // 注入上下文，供角色内部组件使用
                 playerObject.BattleInit(roleId, _context);
                 // 记录角色所在的位置索引
@@ -108,7 +106,7 @@ namespace HotUpdate.Game.Battle.Turn
         private async Task<List<IBattleEntityObject>> CreateMonsters(int[] monsterIds)
         {
             var monsters = new List<IBattleEntityObject>(monsterIds.Length);
-            var monsterTrans = new List<Transform>(DIContainer.GetInstance<IBattlePointProxy>().BattlePoint.GetMonsterTransforms());
+            var monsterTrans = new List<Transform>(_battlePointProxy.BattlePoint.GetMonsterTransforms());
             // 批量创建怪物
             if (monsterIds.Length == monsterTrans.Count)
             {
@@ -117,7 +115,7 @@ namespace HotUpdate.Game.Battle.Turn
                     var monsterId = monsterIds[i];
                     var transform = monsterTrans[i];
                     // 创建怪物对象
-                    var monsterObject = await DIContainer.GetInstance<MonsterFactory>().CreateMonster(monsterId, transform);
+                    var monsterObject = await _monsterFactory.CreateMonster(monsterId, transform);
                     // 设置名称
                     monsterObject.GameObject.name = $"{monsterObject.GameObject.name}_{i}";
                     // 注入上下文，供角色内部组件使用
@@ -135,7 +133,7 @@ namespace HotUpdate.Game.Battle.Turn
                 var monsterId = monsterIds[0];
                 var transform = monsterTrans[2];
                 // 创建怪物对象
-                var monsterObject = await DIContainer.GetInstance<MonsterFactory>().CreateMonster(monsterId, transform);
+                var monsterObject = await _monsterFactory.CreateMonster(monsterId, transform);
                 // 设置名称
                 monsterObject.GameObject.name = $"{monsterObject.GameObject.name}_{2}";
                 // 注入上下文，供角色内部组件使用
@@ -154,7 +152,7 @@ namespace HotUpdate.Game.Battle.Turn
                     var monsterId = monsterIds[i];
                     var transform = monsterTrans[i + 1];
                     // 创建怪物对象
-                    var monsterObject = await DIContainer.GetInstance<MonsterFactory>().CreateMonster(monsterId, transform);
+                    var monsterObject = await _monsterFactory.CreateMonster(monsterId, transform);
                     // 设置名称
                     monsterObject.GameObject.name = $"{monsterObject.GameObject.name}_{i + 1}";
                     // 注入上下文，供角色内部组件使用
@@ -169,17 +167,6 @@ namespace HotUpdate.Game.Battle.Turn
             }
             
             return monsters;
-        }
-
-        public void ResetData()
-        {
-            _context = null;
-            _waves.Clear();
-            _waves = null;
-
-            _totalTurnNum = 0;
-            _waveIndex = 0;
-            _turnIndex = 0;
         }
     }
 }

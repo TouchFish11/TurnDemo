@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using Core.DI;
+using Core.Mono;
 using Core.Pool;
 using HotUpdate.Base;
 using HotUpdate.Game.Battle.Event;
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.StateMeachine;
 using HotUpdate.Game.Battle.Turn;
 using HotUpdate.Game.Point;
 using UnityEngine;
@@ -20,6 +22,8 @@ namespace HotUpdate.Game.Battle.Context
     {
         // 战斗点代理
         [Inject] private IBattlePointProxy _battlePointProxy;
+        [Inject] private IPoolManager _poolManager;
+        
         // 战斗事件总线实例
         private BattleEventBus _eventBus;
         // 战斗状态机
@@ -41,9 +45,9 @@ namespace HotUpdate.Game.Battle.Context
         /// 最大战技点数
         public int MaxBattlePointCount { get; private set; } = 5;
 
-        public BattleContext()
+        public BattleContext(BattleEventBus eventBus)
         {
-            _eventBus = DIContainer.Create<BattleEventBus>();
+            _eventBus = eventBus;
             _battleMachine = DIContainer.Create<BattleStateMachine>(parameterValues: this);
             // 更新起始战技点
             CurentBattlePointCount = 3;
@@ -98,7 +102,7 @@ namespace HotUpdate.Game.Battle.Context
             foreach (var entity in _allBattleEntity)
             {
                 entity.Destroy();
-                UnityEngine.Object.Destroy(entity.GameObject);
+                EngineUtility.Destroy(entity.GameObject);
             }
             
             // 清理所有实体
@@ -118,7 +122,7 @@ namespace HotUpdate.Game.Battle.Context
             _eventBus = null;
             
             // 清空缓存池
-            DIContainer.GetInstance<IPoolManager>().ClearAll();
+            _poolManager.ClearAll();
 
             _currentEntity = null;
             _battleMachine = null;

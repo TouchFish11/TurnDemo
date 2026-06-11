@@ -2,7 +2,6 @@ using System.Collections;
 using Core.DI;
 using Core.Mono;
 using Core.Utility;
-using HotUpdate.Base;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.UI;
 using HotUpdate.Game.Battle.Context;
@@ -18,6 +17,9 @@ namespace HotUpdate.Game.Battle.StateMeachine
     /// </summary>
     public class EnterAnimationState : BattleState
     {
+        [Inject] private IMonoAdapter _monoAdapter;
+        [Inject] private IBattleCameraManager _battleCameraManager;
+        
         public EnterAnimationState(IBattleStateMachine battleStateMachine, IBattleContext context) : base(battleStateMachine, context)
         {
             
@@ -25,36 +27,34 @@ namespace HotUpdate.Game.Battle.StateMeachine
 
         public override void Enter()
         {
-            Execute();
-        }
-
-        public override void Execute()
-        {
-            DIContainer.GetInstance<IMonoAdapter>().StartCoroutine(PlayEnterAnimation());
+            _monoAdapter.StartCoroutine(PlayEnterAnimation());
         }
         
         private IEnumerator PlayEnterAnimation()
         {
-            var controller = uiService.GetPanel(EUIPanelId.BattlePanel) as IBattleController;
+            var controller = (IBattleController)uiService.GetPanel(EUIPanelId.BattlePanel);
             // 显示战斗开始协程
             controller.BattleUiManager.ShowBattleStart();
             
-            // 创建入场特效
+            // TODO：创建入场特效
             // ...
             
             // 设置相机mask
             var mask = LayerGeter.GetPreBitLayer() | LayerGeter.GetMonsterBitLayer();
-            // 相机视角
-            yield return TaskUtility.WaitForTask(DIContainer.GetInstance<IBattleCameraManager>()
-                .CreateCamera(null, new Vector3(0, 1, -3.5f), Quaternion.identity, mask));
-            
+            // 调整相机视角，Task转协程
+            yield return TaskUtility.WaitForTask(_battleCameraManager.CreateCamera(null, new Vector3(0, 1, -3.5f), Quaternion.identity, mask));
+            // 延迟2秒
             yield return new WaitForSeconds(2f);
-            
-            // 处理完毕
             BattleStateMachine.ChangeState(EBattlePhase.TurnLoop);
         }
 
         public override void Exit()
+        {
+            _monoAdapter = null;
+            _battleCameraManager = null;
+        }
+
+        protected override void OnDispose()
         {
             
         }

@@ -1,6 +1,6 @@
 using HotUpdate.Game.Battle.Turn;
 
-namespace HotUpdate.Base
+namespace HotUpdate.Game.Battle.StateMeachine
 {
     /// <summary>
     /// 战斗状态机接口

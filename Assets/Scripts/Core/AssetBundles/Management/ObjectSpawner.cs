@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Core.DI;
 using Core.Mono;
 using Core.Pool;
+using Core.PreLoad;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -18,10 +19,11 @@ namespace Core.AssetBundles.Management
     public class ObjectSpawner : IDisposable, IPoolData
     {
         [Inject] private IPoolManager _poolManager;
+        
         // 资源Key到资源句柄的映射
         private readonly Dictionary<string, AssetHandle> _keyToHandleMap = new();
         // 资源Key到资源加载任务的映射
-        private readonly Dictionary<string, Task<AssetHandle<GameObject>>> _keyToHandleTaskMap = new();
+        private readonly Dictionary<string, Task<AssetHandle<GameObject>>> _keyToHandleLoadingTaskMap = new();
         // 缓存加载过的资源Key
         private readonly HashSet<string> _assetKeys = new();
         // 缓存使用的实例
@@ -59,7 +61,7 @@ namespace Core.AssetBundles.Management
             }
             
             // 返回正在加载的任务
-            if (_keyToHandleTaskMap.TryGetValue(key, out var cacheTask))
+            if (_keyToHandleLoadingTaskMap.TryGetValue(key, out var cacheTask))
             {
                 var handle = await cacheTask;
                 var newObj = Instantiate<T>(handle, key, parent, pos, rot, worldSpace);
@@ -69,9 +71,9 @@ namespace Core.AssetBundles.Management
             
             // 异步加载资源
             var handleTask = GameAsset.LoadAssetAsync<GameObject>(key);
-            if (!_keyToHandleTaskMap.TryAdd(key, handleTask))
+            if (!_keyToHandleLoadingTaskMap.TryAdd(key, handleTask))
             {
-                handleTask = _keyToHandleTaskMap[key];
+                handleTask = _keyToHandleLoadingTaskMap[key];
             }
             
             try
@@ -97,7 +99,7 @@ namespace Core.AssetBundles.Management
             }
             finally
             {
-                _keyToHandleTaskMap.Remove(key);
+                _keyToHandleLoadingTaskMap.Remove(key);
             }
         }
         
@@ -137,6 +139,126 @@ namespace Core.AssetBundles.Management
             var newObj = Instantiate<T>(handle, key, parent, pos, rot, worldSpace);
             _activeObjects.Add(newObj);
             return newObj;
+        }
+        
+        /// <summary>
+        /// 异步生成多个对象，只能获取同一类型的多个资源，不支持混合类型
+        /// </summary>
+        /// <param name="keys">同一类型的不同资源key</param>
+        /// <typeparam name="T">类型</typeparam>
+        /// <returns></returns>
+        public async Task<IReadOnlyList<T>> SpawnsAsync<T>(params string[] keys) where T : Object
+        {
+            // 保存所有生成任务
+            var loadTasks = new List<Task<T>>();
+            foreach (var key in keys)
+            {
+                loadTasks.Add(SpawnAsync<T>(key));
+            }
+            
+            // 等待所有加载任务结束
+            var poolObjects = await Task.WhenAll(loadTasks);
+            var objs = new List<T>();
+            // 存储结果
+            objs.AddRange(poolObjects);
+            return objs;
+        }
+        
+        /// <summary>
+        /// 异步生成多个对象，只能获取同一类型的多个资源，不支持混合类型
+        /// </summary>
+        /// <param name="list">缓存列表</param>
+        /// <param name="keys">同一类型的不同资源key</param>
+        /// <typeparam name="T">资源类型</typeparam>
+        /// <returns>获取数量</returns>
+        /// <exception cref="ArgumentNullException">当list为null时抛出</exception>
+        public async Task<int> SpawnsAsync<T>(IList<T> list, params string[] keys) where T : Object
+        {
+            if(list == null)
+                throw new ArgumentNullException(nameof(list));
+            
+            // 保存所有生成任务
+            var loadTasks = new List<Task<T>>();
+            foreach (var key in keys)
+            {
+                loadTasks.Add(SpawnAsync<T>(key));
+            }
+            
+            // 等待所有加载任务结束
+            var poolObjects = await Task.WhenAll(loadTasks);
+            // 存储结果
+            list.AddRange(poolObjects);
+            return list.Count;
+        }
+
+        /// <summary>
+        /// 资源异步预加载，只能预加载GameObject类型的资源
+        /// </summary>
+        /// <param name="preLoadDatas">预加载资源数据</param>
+        /// <exception cref="ArgumentNullException">preLoadDatas为null时抛出</exception>
+        public async Task PreLoadAsync(params PreLoadData[] preLoadDatas)
+        {
+            if(preLoadDatas == null)
+                throw new ArgumentNullException(nameof(preLoadDatas));
+            
+            if(preLoadDatas.Length == 0)
+                return;
+            
+            var loadings = new List<Task<AssetHandle<GameObject>>>();
+            foreach (var preLoadData in preLoadDatas)
+            {
+                var key = preLoadData.AssetName;
+                Task<AssetHandle<GameObject>> loadingTask;
+                if (_keyToHandleLoadingTaskMap.TryGetValue(key, out var task))
+                {
+                    loadingTask = task;
+                }
+                else
+                {
+                    // 异步加载资源
+                    loadingTask = GameAsset.LoadAssetAsync<GameObject>(key);
+                    _keyToHandleLoadingTaskMap.Add(key, loadingTask);
+                }
+                loadings.Add(loadingTask);
+            }
+            
+            try
+            {
+                // 等待资源加载
+                var assetHandles = await Task.WhenAll(loadings);
+                for (var i = 0; i < preLoadDatas.Length; i++)
+                {
+                    var key = preLoadDatas[i].AssetName;
+                    // 缓存Key和句柄
+                    _assetKeys.Add(key);
+                    _keyToHandleMap.Add(key, assetHandles[i]);
+                }
+            }
+            catch (Exception e)
+            {
+                for (var i = 0; i < loadings.Count; i++)
+                {
+                    var key = preLoadDatas[i].AssetName;
+                    if (loadings[i].IsCompletedSuccessfully)
+                    {
+                        if (_keyToHandleMap.TryGetValue(key, out var value))
+                        {
+                            GameAsset.Release(value);
+                        }
+                    }
+                    else
+                    {
+                        Logger.LogError($"[{nameof(ObjectSpawner)}]: Create obj({key}) error,{e.Message}");
+                    }
+                }
+            }
+            finally
+            {
+                foreach (var preLoadData in preLoadDatas)
+                {
+                    _keyToHandleLoadingTaskMap.Remove(preLoadData.AssetName);
+                }
+            }
         }
         
         /// 从对象池复用对象为池化对象
@@ -223,55 +345,6 @@ namespace Core.AssetBundles.Management
         }
         
         /// <summary>
-        /// 异步生成多个对象，只能获取同一类型的多个资源，不支持混合类型
-        /// </summary>
-        /// <param name="keys">同一类型的不同资源key</param>
-        /// <typeparam name="T">类型</typeparam>
-        /// <returns></returns>
-        public async Task<IReadOnlyList<T>> SpawnsAsync<T>(params string[] keys) where T : Object
-        {
-            // 保存所有生成任务
-            var loadTasks = new List<Task<T>>();
-            foreach (var key in keys)
-            {
-                loadTasks.Add(SpawnAsync<T>(key));
-            }
-            
-            // 等待所有加载任务结束
-            var poolObjects = await Task.WhenAll(loadTasks);
-            var objs = new List<T>();
-            // 存储结果
-            objs.AddRange(poolObjects);
-            return objs;
-        }
-
-        /// <summary>
-        /// 异步生成多个对象，只能获取同一类型的多个资源，不支持混合类型
-        /// </summary>
-        /// <param name="list">缓存列表</param>
-        /// <param name="keys">同一类型的不同资源key</param>
-        /// <typeparam name="T">类型</typeparam>
-        /// <returns>获取数量</returns>
-        public async Task<int> SpawnsAsync<T>(IList<T> list, params string[] keys) where T : Object
-        {
-            if(list == null)
-                throw new ArgumentNullException(nameof(list));
-            
-            // 保存所有生成任务
-            var loadTasks = new List<Task<T>>();
-            foreach (var key in keys)
-            {
-                loadTasks.Add(SpawnAsync<T>(key));
-            }
-            
-            // 等待所有加载任务结束
-            var poolObjects = await Task.WhenAll(loadTasks);
-            // 存储结果
-            list.AddRange(poolObjects);
-            return list.Count;
-        }
-
-        /// <summary>
         /// 统一的回收入口
         /// </summary>
         /// <param name="obj">释放的对象</param>
@@ -300,7 +373,9 @@ namespace Core.AssetBundles.Management
                 _poolManager.PushObj(obj);
             }
 
-            Logger.Log($"[{nameof(ObjectSpawner)}]: The object ‘{obj.name}’ released.");
+#if UNITY_EDITOR
+            Logger.Log($"[{nameof(ObjectSpawner)}]: The object ‘{obj.name}’ released.");      
+#endif
             return true;
         }
 

@@ -1,13 +1,17 @@
 using Core.DI;
 using Core.Time;
-using HotUpdate.Base;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Event;
 
 namespace HotUpdate.Game.Battle.StateMeachine
 {
+    /// <summary>
+    /// 战斗结束状态
+    /// </summary>
     public class BattleOverState : BattleState
     {
+        [Inject] private ITimerManager _timerManager;
+        
         public BattleOverState(IBattleStateMachine battleStateMachine, IBattleContext context) : base(battleStateMachine, context)
         {
             
@@ -17,11 +21,6 @@ namespace HotUpdate.Game.Battle.StateMeachine
         {
             BattleOver();
         }
-
-        public override void Execute()
-        {
-
-        }
         
         /// <summary>
         /// 战斗结束
@@ -29,7 +28,7 @@ namespace HotUpdate.Game.Battle.StateMeachine
         private void BattleOver()
         {
             // 切换为正常倍速
-            DIContainer.GetInstance<ITimerManager>().SetTimeRate(E_TimeRate.Normal);
+            _timerManager.SetTimeRate(E_TimeRate.Normal);
             // 触发战斗结束事件
             Context.GetEventBus().TriggerEvent(new BattleOverEvent(Context));
         }
@@ -37,6 +36,11 @@ namespace HotUpdate.Game.Battle.StateMeachine
         public override void Exit()
         {
 
+        }
+
+        protected override void OnDispose()
+        {
+            
         }
     }
 }

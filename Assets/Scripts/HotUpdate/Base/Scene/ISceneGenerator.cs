@@ -1,4 +1,6 @@
+using System;
 using System.Threading.Tasks;
+using UnityEngine.SceneManagement;
 
 namespace HotUpdate.Base.Scene
 {
@@ -15,5 +17,14 @@ namespace HotUpdate.Base.Scene
         /// 清理主游戏场景
         /// </summary>
         void ClearMainScene();
+
+        /// <summary>
+        /// 初始化场景，对底层场景加载的封装
+        /// </summary>
+        /// <param name="sceneId">场景名称</param>
+        /// <param name="mode">加载模式</param>
+        /// <param name="onLoadProgress">加载进度回调，可为null</param>
+        /// <param name="sceneConfig">场景配置（当前仅占位，忽略）</param>
+        Task InitSceneAsync(string sceneId, LoadSceneMode mode, Action<float> onLoadProgress, object sceneConfig = null);
     }
 }

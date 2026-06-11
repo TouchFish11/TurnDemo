@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Core.DI;
 using Core.Exceptions;
+using Core.Tasks;
 using Core.Tasks.Extensions;
 using Core.Utility;
 using UnityEngine;
@@ -183,7 +184,7 @@ namespace Core.AssetBundles.Management
             }
             catch (Exception e) when(e is not OperationCanceledException)
             {
-                throw ExceptionFactory.ThrowAssetBundleLoadException(BundleName, e);
+                throw ExceptionHelper.ThrowAssetBundleLoadException(BundleName, e);
             }
             finally
             {
@@ -200,22 +201,29 @@ namespace Core.AssetBundles.Management
         /// <param name="token"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public Task<AssetWrapper> LoadAssetAsync<T>(string assetKey, string assetName, CancellationToken token = default) where T : class
+        public async Task<AssetWrapper> LoadAssetAsync<T>(string assetKey, string assetName, CancellationToken token = default) where T : class
         {
             // 正在加载资源，存在缓存任务，返回同一个任务
             if (_assetLoadingTasks.TryGetValue(assetKey, out var cacheTask))
-                return cacheTask;
+                return await cacheTask;
 
             // 异步加载资源
             var loadingTask = LoadAssetAsyncInternal<T>(assetKey, assetName, token);
             // 缓存正在加载的任务
-            if (!_assetLoadingTasks.TryAdd(assetKey, loadingTask))
+            if (!loadingTask.IsCompleted && !_assetLoadingTasks.TryAdd(assetKey, loadingTask))
             {
                 // 理论上不会进到这里
                 loadingTask = _assetLoadingTasks[assetKey];
             }
 
-            return loadingTask;
+            try
+            {
+                return await loadingTask;
+            }
+            finally
+            {
+                _assetLoadingTasks.Remove(assetKey);
+            }
         }
 
         /// <summary>
@@ -229,9 +237,10 @@ namespace Core.AssetBundles.Management
         /// <exception cref="AssetLoadException"></exception>
         private async Task<AssetWrapper> LoadAssetAsyncInternal<T>(string assetKey, string assetName, CancellationToken token = default) where T : class
         {
-            var taskHandle = AssetBundle.LoadAssetAsync<T>(assetName).ToTask<T>(token);
+            TaskHandle<T> taskHandle = default;
             try
             {
+                taskHandle = AssetBundle.LoadAssetAsync<T>(assetName).ToTask<T>(token);
                 var asset = await taskHandle.Task;
                 Retain();
                 return DIContainer.Create<AssetWrapper>(parameterValues: new object[] { asset, assetKey, this });
@@ -239,12 +248,11 @@ namespace Core.AssetBundles.Management
             catch (Exception e) when(e is not OperationCanceledException)
             {
                 // 转换异常类型
-                throw ExceptionFactory.ThrowAssetLoadException(assetName, e);
+                throw ExceptionHelper.ThrowAssetLoadException(assetName, e);
             }
             finally
             {
                 taskHandle.Dispose();
-                _assetLoadingTasks.Remove(assetKey);
             }
         }
         
@@ -296,7 +304,7 @@ namespace Core.AssetBundles.Management
             }
             catch (Exception e) when(e is not OperationCanceledException)
             {
-                throw ExceptionFactory.ThrowAssetsLoadException(BundleName, typeof(T), e);
+                throw ExceptionHelper.ThrowAssetsLoadException(BundleName, typeof(T), e);
             }
             finally
             {
@@ -371,7 +379,7 @@ namespace Core.AssetBundles.Management
             }
             catch (Exception e)
             {
-                throw ExceptionFactory.ThrowAssetBundleUnloadException(BundleName, RefCount, e);
+                throw ExceptionHelper.ThrowAssetBundleUnloadException(BundleName, RefCount, e);
             }
             finally
             {

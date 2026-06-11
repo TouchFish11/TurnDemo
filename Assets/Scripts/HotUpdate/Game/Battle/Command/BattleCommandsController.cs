@@ -9,6 +9,7 @@ using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.StateMeachine;
+using HotUpdate.Game.Battle.Turn;
 using HotUpdate.Game.Battle.UI;
 using HotUpdate.Game.Battle.Utility;
 using UnityEngine;
@@ -23,7 +24,10 @@ namespace HotUpdate.Game.Battle.Command
     public class BattleCommandsController
     {
         [Inject] private IUIService _uiService;
-        // 战斗指令列表：存储待执行的战斗指令
+        [Inject] private IBattleCameraManager _battleCameraManager;
+        [Inject] private IBattleManager _battleManager;
+        
+        // 战斗指令列表，存储待执行的战斗指令
         private readonly List<ICommand> _battleCommands = new();
         // 回合循环状态
         private readonly TurnLoopState _turnLoopState;
@@ -39,16 +43,16 @@ namespace HotUpdate.Game.Battle.Command
 
         /// <summary>
         /// 执行战斗指令的核心协程
-        /// 循环执行指令队列中的指令，直到队列为空或战斗结束
+        /// 循环执行指令列表中的指令，直到列表为空或战斗结束
         /// </summary>
         /// <returns>协程迭代器</returns>
         public IEnumerator ExcuteCommand()
         {
-            // 循环条件：有正在执行的指令 或 待执行队列有指令 且 未退出战斗
+            // 循环条件：有正在执行的指令 或 待执行列表有指令 且 未退出战斗
             while ((_currentCommand != null || _battleCommands.Count > 0) && !_isQuit)
             {
-                // 获取队列首个指令作为当前执行命令
-                GetFirst();
+                // 获取列表首个指令作为当前执行命令
+                TakeFirst();
                 // 执行当前指令
                 yield return _currentCommand?.Execute(_turnLoopState.Context);
                 // 执行完指令后的处理逻辑
@@ -66,28 +70,29 @@ namespace HotUpdate.Game.Battle.Command
 
         /// <summary>
         /// 指令执行后的后置处理逻辑
-        /// 包含：清理死亡怪物、检查战斗结束状态、过滤无效指令
+        /// 清理死亡怪物、检查战斗结束状态、过滤无效指令
         /// </summary>
-        /// <returns>协程迭代器</returns>
+        /// <returns></returns>
         private IEnumerator OnPostCommandExcute()
         {
             // 移除战斗中死亡的怪物
             yield return _turnLoopState.RemoveDeadMonster();
-            // 检查战斗是否结束，并更新退出标记
-            _isQuit = _turnLoopState.CheckBattleOver();
-            // 过滤队列中无效的指令（如执行者已死亡的指令）
-            FilterInvalidCommand();
+            // 检查当前波次是否结束，并更新退出标记
+            _isQuit = _turnLoopState.CheckWaveOver();
+            if (_isQuit)
+            {
+                // 过滤列表中无效的指令
+                FilterInvalidCommand();
+                // 切换到下一波
+                _turnLoopState.MoveWave();
+            }
+            
             if (!_isQuit)
             {
-                // 当前波次是否结束，即判断当前怪物是否全部死亡
-                if (_turnLoopState.Context.GetAliveMonsterEntityCount() != 0)
-                {
-                    yield break;
-                }
+                _turnLoopState.BattleStateMachine.ChangeState(EBattlePhase.EnterAnimation);
                 
                 // 相机视角
-                yield return TaskUtility.WaitForTask(DIContainer.GetInstance<IBattleCameraManager>()
-                    .CreateCamera(null, new Vector3(0, 1, -3.5f), Quaternion.identity));
+                yield return TaskUtility.WaitForTask(_battleCameraManager.CreateCamera(null, new Vector3(0, 1, -3.5f), Quaternion.identity));
             
                 // 显示战斗开始协程
                 // TODO：可拓展ShowBattleStart方法，显示当前是第几回合的文本
@@ -99,7 +104,7 @@ namespace HotUpdate.Game.Battle.Command
             
                 // 创建怪物并缓存
                 List<IBattleEntityObject> monsters = null;
-                yield return TaskUtility.WaitForTask(DIContainer.GetInstance<IBattleManager>().GetTurnCreator().CreateWave(), list => monsters = list);
+                yield return TaskUtility.WaitForTask(_battleManager.GetWaveCreator().CreateWave(), list => monsters = list);
                 foreach (var battleEntityObject in monsters)
                 {
                     _turnLoopState.Context.AddBattleEntity(battleEntityObject);
@@ -115,8 +120,8 @@ namespace HotUpdate.Game.Battle.Command
         }
 
         /// <summary>
-        /// 过滤指令队列中的无效指令
-        /// 反向遍历队列，移除IsValid为false的指令
+        /// 过滤指令列表中的无效指令
+        /// 反向遍历列表，移除IsValid为false的指令
         /// </summary>
         private void FilterInvalidCommand()
         {
@@ -125,7 +130,6 @@ namespace HotUpdate.Game.Battle.Command
             {
                 if (!_battleCommands[i].IsValid)
                 {
-                    Logger.Log($"已过滤无效指令：{_battleCommands[i]}");
                     _battleCommands.RemoveAt(i);
                 }
             }
@@ -134,10 +138,10 @@ namespace HotUpdate.Game.Battle.Command
         }
 
         /// <summary>
-        /// 获取指令队列的首个指令
-        /// 若队列有指令，将首个指令赋值给当前执行指令，并从队列移除
+        /// 获取指令列表的首个指令
+        /// 若列表有指令，将首个指令赋值给当前执行指令，并从列表移除
         /// </summary>
-        public void GetFirst()
+        public void TakeFirst()
         {
             if (_battleCommands.Count > 0)
             {
@@ -147,9 +151,9 @@ namespace HotUpdate.Game.Battle.Command
         }
 
         /// <summary>
-        /// 插入新的战斗指令到执行队列
+        /// 插入新的战斗指令到执行列表
         /// 1. 若当前无执行指令，直接赋值为当前指令
-        /// 2. 若当前有执行指令，加入队列并按优先级排序
+        /// 2. 若当前有执行指令，加入列表并按优先级排序
         /// </summary>
         /// <param name="command">待插入的战斗指令</param>
         public void InsertCommand(ICommand command)
@@ -161,16 +165,16 @@ namespace HotUpdate.Game.Battle.Command
                 return;
             }
 
-            // 当前有执行指令，加入待执行队列
+            // 当前有执行指令，加入待执行列表
             _battleCommands.Add(command);
-            // 按指令优先级重新排序队列
+            // 按指令优先级重新排序列表
             SortCommand();
             // 更新UI：刷新等待指令的显示列表
             _turnLoopState.Context.GetEventBus().TriggerEvent(new UpdateWaitCmdEvent(_turnLoopState.Context, GetCommandSenders()));
         }
 
         /// <summary>
-        /// 移除指令队列的首个指令
+        /// 移除指令列表的首个指令
         /// 执行后更新UI等待指令显示
         /// </summary>
         public void RemoveFirst()
@@ -181,8 +185,8 @@ namespace HotUpdate.Game.Battle.Command
         }
 
         /// <summary>
-        /// 对指令队列按优先级排序
-        /// 优先级高（数值大）的指令排在队列前位
+        /// 对指令列表按优先级排序
+        /// 优先级高（数值大）的指令排在列表前位
         /// </summary>
         private void SortCommand()
         {
@@ -206,7 +210,7 @@ namespace HotUpdate.Game.Battle.Command
         }
 
         /// <summary>
-        /// 获取待执行指令队列中所有指令的发送者
+        /// 获取待执行指令列表中所有指令的发送者
         /// 用于UI层显示等待执行指令的实体列表
         /// </summary>
         /// <returns>指令发送者（战斗实体）列表</returns>

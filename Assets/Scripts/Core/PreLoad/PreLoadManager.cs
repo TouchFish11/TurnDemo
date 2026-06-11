@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Core.PreLoad
 {
     /// <summary>
-    /// 预加载管理器
+    /// 资源预加载管理器
     /// </summary>
     public class PreLoadManager : IPreLoadManager
     {

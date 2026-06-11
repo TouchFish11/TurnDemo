@@ -1,3 +1,4 @@
+using Core.DI;
 using Core.UI.ViewController;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.UI;
@@ -18,8 +19,13 @@ namespace HotUpdate.UI.Battle.Base
         
         public IBattleUIManager BattleUiManager { get; private set; }
         
-        public IMonsterStateUIManager MonsterStateUIManager { get; private set; }
-        
+        public IMonsterStateUIManager MonsterStateUIManager { get; }
+
+        public BattleController(IMonsterStateUIManager monsterStateUIManager)
+        {
+            MonsterStateUIManager = monsterStateUIManager;
+        }
+
         protected override Task OnInit()
         {
             return Task.CompletedTask;
@@ -27,10 +33,9 @@ namespace HotUpdate.UI.Battle.Base
 
         protected override Task OnActive()
         {
-            UiInitializer = new BattleUIInitializer(view, this);
-            BattleUiManager = new BattleUIManager(view, this);
-            EventProcessor = new BattleEventProcessor(this, BattleUiManager, UiInitializer);
-            MonsterStateUIManager = new MonsterStateUIManager();
+            UiInitializer = DIContainer.Create<BattleUIInitializer>(parameterValues: new object[] { view, this });
+            BattleUiManager = DIContainer.Create<BattleUIManager>(parameterValues: new object[] { view, this });
+            EventProcessor = DIContainer.Create<BattleEventProcessor>(parameterValues: new object[] { this, BattleUiManager, UiInitializer });
             return Task.CompletedTask;
         }
 

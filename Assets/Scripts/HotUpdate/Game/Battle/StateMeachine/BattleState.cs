@@ -1,10 +1,12 @@
 using Core.DI;
-using HotUpdate.Base;
 using HotUpdate.Base.UI;
 using HotUpdate.Game.Battle.Context;
 
 namespace HotUpdate.Game.Battle.StateMeachine
 {
+    /// <summary>
+    /// 战斗状态基类
+    /// </summary>
     public abstract class BattleState : IBattleState
     {
         [Inject] protected IUIService uiService;
@@ -21,14 +23,15 @@ namespace HotUpdate.Game.Battle.StateMeachine
         
         public abstract void Enter();
         
-        public abstract void Execute();
-        
         public abstract void Exit();
         
-        public virtual void Dispose()
+        public void Dispose()
         {
+            OnDispose();
             BattleStateMachine = null;
             Context = null;
         }
+        
+        protected abstract void OnDispose();
     }
 }

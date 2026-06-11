@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
+using Core.PreLoad;
 using Core.Serialize.Json;
 using Core.Utility;
 using HotUpdate.Base.Manager;
@@ -25,7 +26,8 @@ namespace HotUpdate.UI.Activity.EmbersCanon
         [Inject] private IPlayerManager _playerManager;
         [Inject] private IJsonManager _jsonManager;
         [Inject] private IActivityDataManager _activityDataManager;
-
+        [Inject] private ObjectSpawner _objectSpawner;
+        
         /// <summary>
         /// 初始化关卡
         /// </summary>
@@ -64,17 +66,18 @@ namespace HotUpdate.UI.Activity.EmbersCanon
         /// <param name="onLevelComplete"></param>
         public async Task EnterActivityBattle(BattleConfigEntry configEntry, int activityId, Action onLevelComplete)
         {
-            var turnData = new TurnData
+            var waveDatas = new List<WaveData>
             {
-                TotalTurnNumber = configEntry.battleWave,
-                Waves = new List<List<int>> { configEntry.monsterIds }
+                // 测试数据
+                new WaveData(waveId: 1, victoryConditionType: EWaveVictoryConditionType.EliminateAllEnemies, monsterIds: configEntry.monsterIds),
             };
 
-            await _battleManager.EnterBattle(turnData,
+            await _battleManager.EnterBattle(waveDatas,
                 OnPreEnter: async () =>
                 {
                     _sceneGenerator.ClearMainScene();
                     await _uiService.CloseAsync(_uiService.GetPanel(EUIPanelId.ActivityPanel).PanelId, false);
+                    await PreLoad();
                 },
                 onBattleOver: async () =>
                 {
@@ -87,5 +90,38 @@ namespace HotUpdate.UI.Activity.EmbersCanon
                     await _uiService.ShowAsync(_uiService.GetPanel(EUIPanelId.ActivityPanel).PanelId);
                 });
         }
+        
+        /// <summary>
+        /// 战斗资源预加载
+        /// </summary>
+        private async Task PreLoad()
+        {
+            // TODO：暂时写死，可优化为配置
+            var preLoadDatas = new PreLoadData[]
+            {
+                // GameObject
+                new(AssetKeys.Prefab_Warrior),
+                new(AssetKeys.Prefab_Wizard),
+                new(AssetKeys.Prefab_Slime),
+                new(AssetKeys.Prefab_TurtleShell),
+                new(AssetKeys.Prefab_TurtleShell),
+                
+                // UI
+                new(AssetKeys.SelectMarkerUI),
+                new(AssetKeys.MonsterStateUI),
+                new(AssetKeys.RoleStateUI),
+                new(AssetKeys.ActionGridUI),
+                new(AssetKeys.WaitingActUI),
+                new(AssetKeys.SkillKeyUI),
+                
+                // SpriteAtlas
+                new(AssetKeys.Atlas_Icon_BattleEntity),
+                new(AssetKeys.Atlas_Icon_Common),
+                new(AssetKeys.Atlas_Default),
+            };
+            
+            await _objectSpawner.PreLoadAsync(preLoadDatas);
+        }
+
     }
 }

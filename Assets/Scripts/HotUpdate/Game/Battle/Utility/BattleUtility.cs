@@ -9,6 +9,9 @@ using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.Battle.Utility
 {
+    /// <summary>
+    /// 战斗工具类
+    /// </summary>
     public static class BattleUtility
     {
         /// <summary>

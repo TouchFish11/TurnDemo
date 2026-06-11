@@ -5,23 +5,15 @@ using HotUpdate.Game.Battle.Context;
 
 namespace HotUpdate.Game.Battle.Turn
 {
-    public interface ITurnCreator
+    public interface IWaveCreator
     {
         /// <summary>
         /// 初始化
         /// </summary>
         /// <param name="context"></param>
-        /// <param name="totalTurnNum"></param>
-        /// <param name="waves"></param>
-        void Init(IBattleContext context, int totalTurnNum, List<List<int>> waves);
-
-        /// <summary>
-        /// 检查战斗是否结束
-        /// true为结束
-        /// </summary>
-        /// <returns></returns>
-        bool CheckBattleOver();
-
+        /// <param name="waveDatas"></param>
+        void Init(IBattleContext context, List<WaveData> waveDatas);
+        
         /// <summary>
         /// 创建当前波次
         /// </summary>
@@ -33,5 +25,17 @@ namespace HotUpdate.Game.Battle.Turn
         /// <param name="roleIds"></param>
         /// <returns></returns>
         Task<List<IBattleEntityObject>> CreateRoles(params int[] roleIds);
+
+        /// <summary>
+        /// 当前回合的所有波次已经处理完毕，进入下一回合
+        /// </summary>
+        /// <returns>若为true，则存在下一波次；否则返回false，代表战斗结束</returns>
+        bool MoveWave();
+
+        /// <summary>
+        /// 检查当前波次是否结束
+        /// </summary>
+        /// <returns>true为结束；false为未结束</returns>
+        bool CheckOver();
     }
 }

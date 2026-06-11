@@ -6,6 +6,7 @@ using HotUpdate.Base;
 using HotUpdate.Game.Battle.Command;
 using HotUpdate.Game.Battle.Condition;
 using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Object;
@@ -21,6 +22,7 @@ namespace HotUpdate.Game.Battle.StateMeachine
     public class TurnLoopState : BattleState
     {
         [Inject] private IMonoAdapter _monoAdapter;
+        [Inject] private IBattleManager _battleManager;
         
         // 战斗指令控制器
         private BattleCommandsController _commandsController;
@@ -28,29 +30,26 @@ namespace HotUpdate.Game.Battle.StateMeachine
         private bool _isBattleOver;
         // 当前行动实体
         private IBattleEntityObject _currentActEntity;
+        
         // 当前战斗结束条件
-        private List<IBattleOverCondition> battleOverConditions = new();
+        private List<IWaveOverCondition> battleOverConditions = new();
         
         public TurnLoopState(IBattleStateMachine battleStateMachine, IBattleContext context) : base(battleStateMachine, context)
         {
-
+            // 创建战斗指令控制器实例
+            _commandsController = DIContainer.Create<BattleCommandsController>(parameterValues: this);
         }
 
         public override void Enter()
         {
-            // 创建战斗指令控制器实例
-            _commandsController = new BattleCommandsController(this);
-            // 监听插入指令
+            // 监听插入指令事件
             Context.GetEventBus().AddListener<InsertCommandEvent>(OnInsertCommand);
-            // TODO：写死，后续根据配置优化
-            battleOverConditions.Add(new AllTurnOverCondition());
+            
+            // TODO：后续根据配置优化
+            battleOverConditions.Add(new AllMonsterDeadCondition());
             battleOverConditions.Add(new AllPlayerDeadCondition());
             
-            Execute();
-        }
-
-        public override void Execute()
-        {
+            // 开启战斗回合协程
             _monoAdapter.StartCoroutine(TurnLoop_Cor());
         }
         
@@ -61,9 +60,10 @@ namespace HotUpdate.Game.Battle.StateMeachine
         {
             while (true)
             {
-                // 执行命令
+                // 执行指令
                 yield return _commandsController.ExcuteCommand();
-                // 检查战斗是否结束
+                
+                // 执行完一次指令都要检查战斗是否结束
                 if (_isBattleOver)
                 {
                     break;
@@ -224,20 +224,27 @@ namespace HotUpdate.Game.Battle.StateMeachine
         }
         
         /// <summary>
-        /// 检查战斗是否结束
+        /// 检查当前波次是否结束
         /// </summary>
         /// <returns></returns>
-        public bool CheckBattleOver()
+        public bool CheckWaveOver()
         {
-            foreach (var battleOverCondition in battleOverConditions)
+            // 每次执行完命令后，检查战斗是否结束
+            _isBattleOver = _battleManager.GetWaveCreator().CheckOver();
+            if (_isBattleOver)
             {
-                // 每次执行完命令后，检查战斗是否结束
-                _isBattleOver = battleOverCondition.CheckOver(Context);
-                if (_isBattleOver)
-                {
-                    return true;
-                }
+                return true;
             }
+            return false;
+        }
+
+        public bool MoveWave()
+        {
+            if (_battleManager.GetWaveCreator().MoveWave())
+            {
+                //BattleStateMachine.ChangeState();
+            }
+            
             return false;
         }
 
@@ -247,14 +254,12 @@ namespace HotUpdate.Game.Battle.StateMeachine
             
         }
 
-        public override void Dispose()
+        protected override void OnDispose()
         {
             Context.GetEventBus().RemoveListener<InsertCommandEvent>(OnInsertCommand);
             battleOverConditions.Clear();
             battleOverConditions = null;
             _commandsController = null;
-            
-            base.Dispose();
         }
     }
 }
