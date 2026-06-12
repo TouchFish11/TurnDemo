@@ -28,26 +28,25 @@ namespace HotUpdate.Game.Battle.Core
         // 战斗上下文
         private IBattleContext _context;
         // 回合创建器
-        private readonly WaveCreator _creator;
+        private WaveCreator _creator;
+        // 战斗服务对象
+        private BattleService _battleService;
         
         /// <summary>
         /// 战斗结束事件
         /// </summary>
-        private Func<Task> OnBattleOver;
-
-        public BattleManager(WaveCreator creator)
-        {
-            _creator = creator;
-        }
-
+        private Func<BattleResult, Task> OnBattleOver;
+        
         /// <summary>
         /// 进入战斗唯一入口
         /// </summary>
         /// <param name="waveDatas">波次数据列表</param>
         /// <param name="OnpreEnter">在进入前执行回调，一般用于清理当前场景，UI和资源预加载</param>
         /// <param name="onBattleOver">在结束后执行回调，一般用于恢复场景、UI逻辑</param>
-        public async Task EnterBattle(List<WaveData> waveDatas, Func<Task> OnpreEnter, Func<Task> onBattleOver)
+        public async Task EnterBattle(List<WaveData> waveDatas, Func<Task> OnpreEnter, Func<BattleResult, Task> onBattleOver)
         {
+            _creator ??= DIContainer.Create<WaveCreator>(parameterValues: this);
+            
             // 缓存战斗结束回调
             OnBattleOver = onBattleOver;
             // 创建战斗加载界面
@@ -66,6 +65,7 @@ namespace HotUpdate.Game.Battle.Core
             _context = DIContainer.Create<BattleContext>();
             // 监听战斗退出事件
             _context.GetEventBus().AddListener<QuitBattleEvent>(OnQuitBattleEvent);
+            _battleService ??= DIContainer.Create<BattleService>(parameterValues: new object[] { this, _context });
             // 重新初始化
             _creator.Init(_context, waveDatas);
             // 开始战斗
@@ -80,6 +80,11 @@ namespace HotUpdate.Game.Battle.Core
         public IWaveCreator GetWaveCreator()
         {
             return _creator;
+        }
+
+        public BattleService GetBattleService()
+        {
+            return  _battleService;
         }
         
         /// <summary>
@@ -102,7 +107,7 @@ namespace HotUpdate.Game.Battle.Core
                 // 执行战斗结束回调，在背景界面销毁前执行
                 if (OnBattleOver != null)
                 {
-                    await OnBattleOver();
+                    await OnBattleOver(new BattleResult { IsWin = false });
                     OnBattleOver = null;
                     // 销毁黑背景界面
                     await _uiService.CloseAsync(controller.PanelId, true);

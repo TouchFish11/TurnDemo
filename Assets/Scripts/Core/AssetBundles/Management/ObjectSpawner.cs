@@ -16,20 +16,20 @@ namespace Core.AssetBundles.Management
     /// <summary>
     /// 对象生成器
     /// </summary>
-    public class ObjectSpawner : IDisposable, IPoolData
+    public class ObjectSpawner : IDisposable
     {
         [Inject] private IPoolManager _poolManager;
         
         // 资源Key到资源句柄的映射
-        private readonly Dictionary<string, AssetHandle> _keyToHandleMap = new();
+        private Dictionary<string, AssetHandle> _keyToHandleMap = new();
         // 资源Key到资源加载任务的映射
-        private readonly Dictionary<string, Task<AssetHandle<GameObject>>> _keyToHandleLoadingTaskMap = new();
+        private Dictionary<string, Task<AssetHandle<GameObject>>> _keyToHandleLoadingTaskMap = new();
         // 缓存加载过的资源Key
-        private readonly HashSet<string> _assetKeys = new();
+        private HashSet<string> _assetKeys = new();
         // 缓存使用的实例
-        private readonly HashSet<Object> _activeObjects = new();
+        private HashSet<Object> _activeObjects = new();
         // 释放时的快照
-        private readonly List<Object> _releaseSnapshot = new();
+        private List<Object> _releaseSnapshot = new();
         
         /// <summary>
         /// 异步生成对象
@@ -428,6 +428,9 @@ namespace Core.AssetBundles.Management
                 _poolManager.ClearCache(assetKey);
             }
             _assetKeys.Clear();
+            
+            _keyToHandleLoadingTaskMap.Clear();
+            _releaseSnapshot.Clear();
         }
         
         /// <summary>
@@ -437,12 +440,13 @@ namespace Core.AssetBundles.Management
         /// </summary>
         public void Dispose()
         {
-            _poolManager.PushData(this);
-        }
-
-        void IPoolData.ResetData()
-        {
             Clear();
+            _poolManager = null;
+            _keyToHandleMap = null;
+            _keyToHandleLoadingTaskMap = null;
+            _assetKeys = null;
+            _activeObjects = null;
+            _releaseSnapshot = null;
         }
     }
 }

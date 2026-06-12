@@ -28,6 +28,7 @@ namespace HotUpdate.Game.Battle.StateMeachine
         public void Dispose()
         {
             OnDispose();
+            uiService = null;
             BattleStateMachine = null;
             Context = null;
         }

@@ -7,6 +7,7 @@ using HotUpdate.Base;
 using HotUpdate.Base.Manager;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Object;
@@ -24,9 +25,10 @@ namespace HotUpdate.Game.Battle.Inputs
     /// </summary>
     public class BattleInputHandler : IBattleInputHandler, IDisposable
     {
-        [Inject] private IBattleCameraManager _battleCameraManager;
         [Inject] private IMonoAdapter _monoAdapter;
-        
+        [Inject] private IBinaryDataManager _binaryDataManager;
+
+        private BattleCoordinator _battleCoordinator;
         // 拖拽起始位置（屏幕坐标）
         private Vector3 _dragStartPosition;
         // 是否处于拖拽状态（用于区分点击和拖拽行为）
@@ -35,8 +37,7 @@ namespace HotUpdate.Game.Battle.Inputs
         private const float dragThreshold = 50f;
         // 激活拖拽的最小偏移
         private const float activateThreshold = 4f;
-        // 当前选中的技能ID（用于释放技能时匹配技能配置）
-        private int skillId;
+
         // 上一帧鼠标X
         private float lastMouseX;          
         // 累计偏移量
@@ -46,25 +47,6 @@ namespace HotUpdate.Game.Battle.Inputs
         
         private Action _OnLeftDrag;
         private Action _OnRightDrag;
-        private Action<IBattleEntityObject> _OnSelectedObject;
-
-        /// <summary>
-        /// 选中战斗实体对象的事件（如选中玩家/怪物作为技能目标）
-        /// 事件参数：选中的战斗实体对象接口
-        /// </summary>
-        public event Action<IBattleEntityObject> OnSelectedObject
-        {
-            add
-            {
-                if (_OnSelectedObject != null)
-                {
-                    Logger.LogError($"{nameof(OnSelectedObject)}重复添加");
-                    return;
-                }
-                _OnSelectedObject += value;
-            }
-            remove => _OnSelectedObject -= value;
-        }
         
         /// <summary>
         /// 向左拖拽的事件（用于切换目标等逻辑）
@@ -111,12 +93,16 @@ namespace HotUpdate.Game.Battle.Inputs
         /// </summary>
         public event Action<bool> OnRebound;
 
-        public BattleInputHandler(IBattleContext context)
+        /// <summary>
+        /// 点击事件
+        /// </summary>
+        public event Action OnClick;
+
+        public BattleInputHandler(BattleCoordinator battleCoordinator)
         {
+            _battleCoordinator = battleCoordinator;
             // 注册帧更新监听，每帧执行输入处理逻辑
             _monoAdapter.AddUpdateListener(OnUpdate);
-            // 从战斗管理器事件总线订阅技能选择事件，接收选中的技能ID
-            context.GetEventBus().AddListener<SelectSkillEvent>(OnSelectSkillEvent);
         }
 
         /// <summary>
@@ -127,17 +113,7 @@ namespace HotUpdate.Game.Battle.Inputs
         {
             _canInput = activeInput;
         }
-
-        /// <summary>
-        /// 技能选择事件回调
-        /// 接收并缓存选中的技能ID
-        /// </summary>
-        /// <param name="selectSkillEvent">技能选择事件数据</param>
-        private void OnSelectSkillEvent(SelectSkillEvent selectSkillEvent)
-        {
-            skillId = selectSkillEvent.SkillId;
-        }
-
+        
         /// <summary>
         /// 帧更新回调方法
         /// 统一调度输入处理逻辑
@@ -219,45 +195,8 @@ namespace HotUpdate.Game.Battle.Inputs
                     return;
                 }
                 
-                // 根据选中的技能ID获取技能配置信息
-                var skillInfo = DIContainer.GetInstance<IBinaryDataManager>().GetConfig<SkillInfoContainer>(EConfigLoadType.Excel).dataDic[skillId];
-                // 将技能范围类型转换为技能目标类型（友方/敌方）
-                var targetType = (E_SkillTargetType)skillInfo.f_SkillTargetType;
-
-                // 根据技能目标类型设置射线检测的层级掩码（只检测对应层级的对象）
-                int layerMask;
-                switch (targetType)
-                {
-                    case E_SkillTargetType.Friend:
-                        // 检测玩家对象层级
-                        layerMask = LayerGeter.GetRoleBitLayer();
-                        break;
-                    case E_SkillTargetType.Enemy:
-                        // 检测怪物对象层级
-                        layerMask = LayerGeter.GetMonsterBitLayer();
-                        break;
-                    case E_SkillTargetType.None:
-                    default:
-                        Logger.LogWarning($"未处理的技能目标类型：{targetType}");
-                        return;
-                }
-                
-                // 从鼠标屏幕位置发射射线，检测对应层级的战斗对象
-                if (Physics.Raycast(_battleCameraManager.CurrentActiveCamera.ScreenPointToRay(Input.mousePosition), out var hitInfo, 500, layerMask))
-                {
-                    // 获取射线命中对象挂载的战斗对象组件
-                    var currentMainTarget = hitInfo.collider.GetComponent<BattleObject>();
-                    if (currentMainTarget)
-                    {
-                        // 触发选中对象事件，传递选中的战斗对象
-                        _OnSelectedObject?.Invoke(currentMainTarget);
-                        Logger.Log($"选中技能目标：{currentMainTarget.name}");
-                    }
-                    else
-                    {
-                        Logger.LogWarning("射线命中对象未挂载BattleObject组件");
-                    }
-                }
+                // 触发点击事件
+                OnClick?.Invoke();
             }
         }
 
@@ -266,7 +205,6 @@ namespace HotUpdate.Game.Battle.Inputs
             // 移除帧更新监听
             _monoAdapter.RemoveUpdateListener(OnUpdate);
             // 清空事件委托，避免空引用和内存泄漏
-            _OnSelectedObject = null;
             _OnLeftDrag = null;
             _OnRightDrag = null;
         }

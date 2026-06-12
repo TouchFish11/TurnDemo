@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
 using HotUpdate.Base;
@@ -41,7 +42,7 @@ namespace HotUpdate.UI.Battle.Base
         /// </summary>
         /// <param name="battleEntities">玩家战斗实体集合</param>
         /// <returns>异步任务</returns>
-        public async System.Threading.Tasks.Task InitPlayerUIs(IEnumerable<IBattleEntityObject> battleEntities)
+        public async Task InitPlayerUIs(IEnumerable<IBattleEntityObject> battleEntities)
         {
             // 遍历所有玩家战斗实体，逐个创建角色状态UI
             foreach (var battleEntity in battleEntities)
@@ -91,7 +92,7 @@ namespace HotUpdate.UI.Battle.Base
         /// 为每个怪物实体创建并初始化普通怪物状态UI（如血条等），支持空参数传入
         /// </summary>
         /// <param name="battleEntities">怪物战斗实体集合</param>
-        public async System.Threading.Tasks.Task InitMonsterUIs(IEnumerable<IBattleEntityObject> battleEntities)
+        public async Task InitMonsterUIs(IEnumerable<IBattleEntityObject> battleEntities)
         {
             foreach (var battleEntity in battleEntities)
             {

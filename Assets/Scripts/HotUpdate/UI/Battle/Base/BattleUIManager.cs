@@ -62,13 +62,13 @@ namespace HotUpdate.UI.Battle.Base
         /// 通用等待协程对象（0.5秒）
         /// 复用避免重复创建，提升性能
         /// </summary>
-        private static readonly WaitForSeconds _waitForSeconds0_5 = new(0.5f);
+        private static readonly WaitForSeconds s_waitForSeconds0_5 = new(0.5f);
 
         /// <summary>
         /// 通用等待协程对象（2.5秒）
         /// 复用避免重复创建，提升性能
         /// </summary>
-        private static readonly WaitForSeconds _waitForSeconds2_5 = new(2.5f);
+        private static readonly WaitForSeconds s_waitForSeconds2_5 = new(2.5f);
         #endregion
 
         /// <summary>
@@ -101,12 +101,12 @@ namespace HotUpdate.UI.Battle.Base
                 // 设置文本
                 _view.SetBattleStateTipAreaText(true);
                 
-                yield return _waitForSeconds2_5;
+                yield return s_waitForSeconds2_5;
 
                 // 隐藏战斗结束UI区域
                 _view.BattleStateTipArea.gameObject.SetActive(false);
 
-                yield return _waitForSeconds0_5;
+                yield return s_waitForSeconds0_5;
 
                 // 触发退出战斗事件
                 context.GetEventBus().TriggerEvent(new QuitBattleEvent(context, _controller));

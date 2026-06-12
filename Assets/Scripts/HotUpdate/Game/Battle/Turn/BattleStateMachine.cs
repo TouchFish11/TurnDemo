@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Core.DI;
-using HotUpdate.Base;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.StateMeachine;
 

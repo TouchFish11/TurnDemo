@@ -10,22 +10,15 @@ namespace HotUpdate.Game.Battle.Turn
         /// <summary>
         /// 初始化
         /// </summary>
-        /// <param name="context"></param>
+        /// <param name="_battleContext"></param>
         /// <param name="waveDatas"></param>
-        void Init(IBattleContext context, List<WaveData> waveDatas);
+        void Init(IBattleContext _battleContext, List<WaveData> waveDatas);
         
         /// <summary>
         /// 创建当前波次
         /// </summary>
         Task<List<IBattleEntityObject>> CreateWave();
-
-        /// <summary>
-        /// 创建角色
-        /// </summary>
-        /// <param name="roleIds"></param>
-        /// <returns></returns>
-        Task<List<IBattleEntityObject>> CreateRoles(params int[] roleIds);
-
+        
         /// <summary>
         /// 当前回合的所有波次已经处理完毕，进入下一回合
         /// </summary>

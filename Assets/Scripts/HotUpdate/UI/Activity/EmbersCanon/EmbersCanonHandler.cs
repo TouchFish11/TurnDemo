@@ -79,14 +79,19 @@ namespace HotUpdate.UI.Activity.EmbersCanon
                     await _uiService.CloseAsync(_uiService.GetPanel(EUIPanelId.ActivityPanel).PanelId, false);
                     await PreLoad();
                 },
-                onBattleOver: async () =>
+                onBattleOver: async result =>
                 {
                     // TODO:待处理
                     await _sceneGenerator.InitMainScene(-1);
                     await _playerManager.CreatePlayer(1001);
-                    onLevelComplete?.Invoke();
-                    if(_activityDataManager.TryGetData(activityId, out var activityData))
-                        activityData.CurrentPro += 1;
+
+                    if (result.IsWin)
+                    {
+                        onLevelComplete?.Invoke();
+                        if(_activityDataManager.TryGetData(activityId, out var activityData))
+                            activityData.CurrentPro += 1;
+                    }
+                    
                     await _uiService.ShowAsync(_uiService.GetPanel(EUIPanelId.ActivityPanel).PanelId);
                 });
         }

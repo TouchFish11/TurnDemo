@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using Core.DI;
 using HotUpdate.Game.Battle.Condition;
 using HotUpdate.Game.Battle.Context;
 
@@ -11,7 +9,7 @@ namespace HotUpdate.Game.Battle.Turn
     /// </summary>
     public class WaveHandler
     {
-        [Inject] private IBattleContext _battleContext;
+        private readonly IBattleContext _battleContext;
 
         // 条件缓存
         private readonly Dictionary<EWaveVictoryConditionType, IWaveOverCondition> _waveOverConditions = new();
@@ -19,8 +17,9 @@ namespace HotUpdate.Game.Battle.Turn
         // 当前条件
         private IWaveOverCondition _waveOverCondition;
 
-        public WaveHandler()
+        public WaveHandler(IBattleContext battleContext)
         {
+            _battleContext = battleContext;
             _waveOverConditions.Add(EWaveVictoryConditionType.EliminateAllEnemies, new AllMonsterDeadCondition());
             // ...
         }

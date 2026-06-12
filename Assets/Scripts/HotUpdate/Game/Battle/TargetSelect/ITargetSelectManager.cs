@@ -47,5 +47,12 @@ namespace HotUpdate.Game.Battle.TargetSelect
         /// 主目标选择变化
         /// </summary>
         event Action<IBattleEntityObject> OnSelectChanged;
+
+        /// <summary>
+        /// 点击选中主目标
+        /// 点击战斗实体时触发，直接将该实体设为主目标
+        /// </summary>
+        /// <param name="mainTarget">点击选中的战斗实体</param>
+        void SelectClickMainTarget(IBattleEntityObject mainTarget);
     }
 }

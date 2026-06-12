@@ -36,6 +36,7 @@ namespace HotUpdate.Game.Battle.Context
         private readonly List<IBattleEntityObject> _roleObjects = new();
         // 场景召唤物列表
         // ...
+        
         // 当前行动实体
         private IBattleEntityObject _currentEntity;
 

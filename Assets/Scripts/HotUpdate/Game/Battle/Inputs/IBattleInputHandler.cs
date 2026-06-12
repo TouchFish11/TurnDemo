@@ -1,16 +1,9 @@
 using System;
-using HotUpdate.Base;
 
 namespace HotUpdate.Game.Battle.Inputs
 {
     public interface IBattleInputHandler
     {
-        /// <summary>
-        /// 选中战斗实体对象的事件（如选中玩家/怪物作为技能目标）
-        /// 事件参数：选中的战斗实体对象接口
-        /// </summary>
-        event Action<IBattleEntityObject> OnSelectedObject;
-
         /// <summary>
         /// 向左拖拽的事件（用于切换目标等逻辑）
         /// </summary>
@@ -38,5 +31,7 @@ namespace HotUpdate.Game.Battle.Inputs
         /// </summary>
         /// <param name="activeInput"></param>
         void SetInputState(bool activeInput);
+
+        event Action OnClick;
     }
 }

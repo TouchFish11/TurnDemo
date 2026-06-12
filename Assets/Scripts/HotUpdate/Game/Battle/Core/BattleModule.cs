@@ -3,6 +3,7 @@ using Core.DI;
 using Game.Module;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Module;
+using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Event;
 using HotUpdate.Game.Battle.Inputs;
@@ -28,6 +29,10 @@ namespace HotUpdate.Game.Battle.Core
             DIContainer.BindSingleton<IBattleCameraManager, BattleCameraManager>();
             DIContainer.BindSingleton<IBattlePointProxy, BattlePointProxy>();
             DIContainer.BindSingleton<IBattleManager, BattleManager>();
+            DIContainer.BindType<IBattleContext, BattleContext>();
+            
+            // TODO：暂时写在这个方法中
+            DIContainer.Create<BattleCoordinator>(true);
         }
 
         public Task InitModuleAsync()

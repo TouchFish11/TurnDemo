@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using Core.DI;
 using Core.Log;
-using Core.Mono.MonoFunction;
 using Core.Serialize.Binary;
 using HotUpdate.Base;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Inputs;
 using HotUpdate.Game.Battle.Object;
@@ -24,6 +24,8 @@ namespace HotUpdate.Game.Battle.TargetSelect
     /// </summary>
     public class TargetSelectManager : ITargetSelectManager, IDisposable
     {
+        private BattleCoordinator _battleCoordinator;
+        private readonly IBattleInputHandler _battleInputHandler;
         // 缓存筛选出的所有目标
         private List<IBattleEntityObject> _filterEntitys;
         // 已选中的范围目标列表（包含主目标及范围内的其他目标）
@@ -44,8 +46,10 @@ namespace HotUpdate.Game.Battle.TargetSelect
         /// </summary>
         public event Action<IBattleEntityObject> OnSelectChanged;
 
-        public TargetSelectManager(IBattleContext battleContext)
+        public TargetSelectManager(BattleCoordinator battleCoordinator, IBattleInputHandler battleInputHandler, IBattleContext battleContext)
         {
+            _battleCoordinator = battleCoordinator;
+            _battleInputHandler = battleInputHandler;
             this.battleContext = battleContext;
             // 注册技能选择事件监听：当玩家选择技能时触发目标选择逻辑
             battleContext.GetEventBus().AddListener<SelectSkillEvent>(OnSelectSkillEvent);
@@ -72,9 +76,9 @@ namespace HotUpdate.Game.Battle.TargetSelect
         {
             InActiveSelectTarget();
             
-            DIContainer.GetInstance<IBattleInputHandler>().OnLeftDrag += SelectPreviousMainTarget;   // 左拖拽：切换上一个主目标
-            DIContainer.GetInstance<IBattleInputHandler>().OnRightDrag += SelectNextMainTarget;     // 右拖拽：切换下一个主目标
-            DIContainer.GetInstance<IBattleInputHandler>().OnSelectedObject += SelectClickMainTarget;// 点击：选中指定主目标
+            _battleInputHandler.OnLeftDrag += SelectPreviousMainTarget;   // 左拖拽：切换上一个主目标
+            _battleInputHandler.OnRightDrag += SelectNextMainTarget;     // 右拖拽：切换下一个主目标
+            _battleInputHandler.OnSelectedObject += SelectClickMainTarget;// 点击：选中指定主目标
             
             Logger.Log($"激活目标选择");
         }
@@ -85,9 +89,9 @@ namespace HotUpdate.Game.Battle.TargetSelect
         /// </summary>
         public void InActiveSelectTarget()
         {
-            DIContainer.GetInstance<IBattleInputHandler>().OnLeftDrag -= SelectPreviousMainTarget;
-            DIContainer.GetInstance<IBattleInputHandler>().OnRightDrag -= SelectNextMainTarget;
-            DIContainer.GetInstance<IBattleInputHandler>().OnSelectedObject -= SelectClickMainTarget;
+            _battleInputHandler.OnLeftDrag -= SelectPreviousMainTarget;
+            _battleInputHandler.OnRightDrag -= SelectNextMainTarget;
+            _battleInputHandler.OnSelectedObject -= SelectClickMainTarget;
             
             Logger.Log($"禁用目标选择");
         }
@@ -286,7 +290,7 @@ namespace HotUpdate.Game.Battle.TargetSelect
         /// 点击战斗实体时触发，直接将该实体设为主目标
         /// </summary>
         /// <param name="mainTarget">点击选中的战斗实体</param>
-        private void SelectClickMainTarget(IBattleEntityObject mainTarget)
+        public void SelectClickMainTarget(IBattleEntityObject mainTarget)
         {
             _mainTarget = mainTarget;
             // 选中后更新范围目标列表并同步UI

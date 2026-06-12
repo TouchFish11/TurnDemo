@@ -20,8 +20,9 @@ namespace HotUpdate.Game.Battle.Core
         /// <param name="waveData">战斗回合数据</param>
         /// <param name="OnPreEnter">战斗进入回调</param>
         /// <param name="onBattleOver">战斗结束回调</param>
-        Task EnterBattle(List<WaveData> waveData, Func<Task> OnPreEnter, Func<Task> onBattleOver);
+        Task EnterBattle(List<WaveData> waveData, Func<Task> OnPreEnter, Func<BattleResult, Task> onBattleOver);
 
         IWaveCreator GetWaveCreator();
+        BattleService GetBattleService();
     }
 }

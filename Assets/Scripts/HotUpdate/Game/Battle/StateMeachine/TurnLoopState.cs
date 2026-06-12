@@ -4,7 +4,6 @@ using Core.DI;
 using Core.Mono;
 using HotUpdate.Base;
 using HotUpdate.Game.Battle.Command;
-using HotUpdate.Game.Battle.Condition;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.Turn;
@@ -31,9 +30,6 @@ namespace HotUpdate.Game.Battle.StateMeachine
         // 当前行动实体
         private IBattleEntityObject _currentActEntity;
         
-        // 当前战斗结束条件
-        private List<IWaveOverCondition> battleOverConditions = new();
-        
         public TurnLoopState(IBattleStateMachine battleStateMachine, IBattleContext context) : base(battleStateMachine, context)
         {
             // 创建战斗指令控制器实例
@@ -44,11 +40,6 @@ namespace HotUpdate.Game.Battle.StateMeachine
         {
             // 监听插入指令事件
             Context.GetEventBus().AddListener<InsertCommandEvent>(OnInsertCommand);
-            
-            // TODO：后续根据配置优化
-            battleOverConditions.Add(new AllMonsterDeadCondition());
-            battleOverConditions.Add(new AllPlayerDeadCondition());
-            
             // 开启战斗回合协程
             _monoAdapter.StartCoroutine(TurnLoop_Cor());
         }
@@ -238,14 +229,12 @@ namespace HotUpdate.Game.Battle.StateMeachine
             return false;
         }
 
-        public bool MoveWave()
+        public void MoveWave()
         {
             if (_battleManager.GetWaveCreator().MoveWave())
             {
-                //BattleStateMachine.ChangeState();
+                _monoAdapter.StartCoroutine(_battleManager.GetBattleService().UpdateWave());
             }
-            
-            return false;
         }
 
         public override void Exit()
@@ -257,8 +246,6 @@ namespace HotUpdate.Game.Battle.StateMeachine
         protected override void OnDispose()
         {
             Context.GetEventBus().RemoveListener<InsertCommandEvent>(OnInsertCommand);
-            battleOverConditions.Clear();
-            battleOverConditions = null;
             _commandsController = null;
         }
     }

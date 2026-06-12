@@ -1,19 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using Core.DI;
-using Core.Utility;
 using HotUpdate.Base;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.UI;
-using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.StateMeachine;
-using HotUpdate.Game.Battle.Turn;
-using HotUpdate.Game.Battle.UI;
-using HotUpdate.Game.Battle.Utility;
-using UnityEngine;
-using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.Battle.Command
 {
@@ -79,43 +72,12 @@ namespace HotUpdate.Game.Battle.Command
             yield return _turnLoopState.RemoveDeadMonster();
             // 检查当前波次是否结束，并更新退出标记
             _isQuit = _turnLoopState.CheckWaveOver();
-            if (_isQuit)
+            if (!_isQuit)
             {
                 // 过滤列表中无效的指令
                 FilterInvalidCommand();
                 // 切换到下一波
                 _turnLoopState.MoveWave();
-            }
-            
-            if (!_isQuit)
-            {
-                _turnLoopState.BattleStateMachine.ChangeState(EBattlePhase.EnterAnimation);
-                
-                // 相机视角
-                yield return TaskUtility.WaitForTask(_battleCameraManager.CreateCamera(null, new Vector3(0, 1, -3.5f), Quaternion.identity));
-            
-                // 显示战斗开始协程
-                // TODO：可拓展ShowBattleStart方法，显示当前是第几回合的文本
-                var controller = _uiService.GetPanel(EUIPanelId.BattlePanel) as IBattleController;
-                controller.BattleUiManager.ShowBattleStart();
-            
-                // 创建入场特效
-                // ...
-            
-                // 创建怪物并缓存
-                List<IBattleEntityObject> monsters = null;
-                yield return TaskUtility.WaitForTask(_battleManager.GetWaveCreator().CreateWave(), list => monsters = list);
-                foreach (var battleEntityObject in monsters)
-                {
-                    _turnLoopState.Context.AddBattleEntity(battleEntityObject);
-                    _turnLoopState.Context.AddSceneMonster(battleEntityObject);
-                }
-            
-                // 初始化行动顺序
-                BattleUtility.InitOrder(_turnLoopState.Context);
-                yield return new WaitForSeconds(1f);
-                // 初始化怪物UI
-                yield return TaskUtility.WaitForTask(controller.UiInitializer.InitMonsterUIs(_turnLoopState.Context.GetAliveMonsterEntitys()));
             }
         }
 
