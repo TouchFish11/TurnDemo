@@ -2,6 +2,7 @@ using Core.DI;
 using HotUpdate.Base;
 using HotUpdate.Base.UI;
 using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.TargetSelect;
 using HotUpdate.Game.Battle.UI;
 
@@ -33,13 +34,14 @@ namespace HotUpdate.Game.Battle.Skill.Base
         protected sealed override void OnPreCast(IBattleContext context)
         {
             // 根据技能配置和选择策略，筛选出技能作用的目标
-            DIContainer.GetInstance<ITargetSelectManager>().SelectTarget(context, Caster, SkillInfo, TargetSelectStrategy);
+            //battleCoordinator.
+            DIContainer.GetInstance<ITargetSelectManager>().SelectMainTarget(context, Caster, SkillInfo, TargetSelectStrategy);
             
             // 初始化技能目标数据，将选中的目标绑定到当前技能实例
             skillService.InitSkillTarget(this);
             
             // 关闭目标选择状态，避免技能释放过程中重复选目标
-            DIContainer.GetInstance<ITargetSelectManager>().InActiveSelectTarget();
+            battleCoordinator.IsActiveTargetSelect = false;
             
             // 获取战斗UI控制器，重置怪物相关UI（清空之前的选中/操作状态）
             var controller = _uiService.GetPanel(EUIPanelId.BattlePanel) as IBattleController;

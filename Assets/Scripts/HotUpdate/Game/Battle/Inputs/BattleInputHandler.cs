@@ -1,20 +1,9 @@
 using System;
 using Core.DI;
 using Core.Mono;
-using Core.Mono.MonoFunction;
 using Core.Serialize.Binary;
-using HotUpdate.Base;
-using HotUpdate.Base.Manager;
-using HotUpdate.Common.Config.ExcelInfo.Container;
-using HotUpdate.Game.Battle.Context;
-using HotUpdate.Game.Battle.Core;
-using HotUpdate.Game.Battle.Event.UI;
-using HotUpdate.Game.Battle.Layer;
-using HotUpdate.Game.Battle.Object;
-using HotUpdate.Game.Battle.Skill;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.Battle.Inputs
 {
@@ -27,60 +16,31 @@ namespace HotUpdate.Game.Battle.Inputs
     {
         [Inject] private IMonoAdapter _monoAdapter;
         [Inject] private IBinaryDataManager _binaryDataManager;
-
-        private BattleCoordinator _battleCoordinator;
+        
         // 拖拽起始位置（屏幕坐标）
         private Vector3 _dragStartPosition;
         // 是否处于拖拽状态（用于区分点击和拖拽行为）
         private bool _isDragging;
-        // 拖拽阈值（超过该距离判定为拖拽，否则为点击）
-        private const float dragThreshold = 50f;
-        // 激活拖拽的最小偏移
-        private const float activateThreshold = 4f;
-
         // 上一帧鼠标X
         private float lastMouseX;          
         // 累计偏移量
         private float nowDeltaX;
         // 能否输入
         private bool _canInput;
-        
-        private Action _OnLeftDrag;
-        private Action _OnRightDrag;
-        
+        // 拖拽阈值（超过该距离判定为拖拽，否则为点击）
+        private const float dragThreshold = 50f;
+        // 激活拖拽的最小偏移
+        private const float activateThreshold = 4f;
+
         /// <summary>
         /// 向左拖拽的事件（用于切换目标等逻辑）
         /// </summary>
-        public event Action OnLeftDrag
-        {
-            add
-            {
-                if (_OnLeftDrag != null)
-                {
-                    Logger.LogError($"{nameof(OnLeftDrag)}重复添加");
-                    return;
-                }
-                _OnLeftDrag += value;
-            }
-            remove => _OnLeftDrag -= value;
-        }
+        public event Action OnLeftDrag;
 
         /// <summary>
         /// 向右拖拽的事件（用于切换目标等逻辑）
         /// </summary>
-        public event Action OnRightDrag
-        {
-            add
-            {
-                if (_OnRightDrag != null)
-                {
-                    Logger.LogError($"{nameof(OnRightDrag)}重复添加");
-                    return;
-                }
-                _OnRightDrag += value;
-            }
-            remove => _OnRightDrag -= value;
-        }
+        public event Action OnRightDrag;
 
         /// <summary>
         /// 拖拽过程中的事件（传递拖拽X轴偏移量）
@@ -98,9 +58,8 @@ namespace HotUpdate.Game.Battle.Inputs
         /// </summary>
         public event Action OnClick;
 
-        public BattleInputHandler(BattleCoordinator battleCoordinator)
+        public BattleInputHandler()
         {
-            _battleCoordinator = battleCoordinator;
             // 注册帧更新监听，每帧执行输入处理逻辑
             _monoAdapter.AddUpdateListener(OnUpdate);
         }
@@ -171,12 +130,12 @@ namespace HotUpdate.Game.Battle.Inputs
                         // 向右拖拽：触发右拖拽事件
                         if (nowDeltaX > 0)
                         {
-                            _OnRightDrag?.Invoke();
+                            OnRightDrag?.Invoke();
                         }
                         // 向左拖拽：触发左拖拽事件
                         else if (nowDeltaX < 0)
                         {
-                            _OnLeftDrag?.Invoke();
+                            OnLeftDrag?.Invoke();
                         }
 
                         nowDeltaX = 0;
@@ -204,9 +163,6 @@ namespace HotUpdate.Game.Battle.Inputs
         {
             // 移除帧更新监听
             _monoAdapter.RemoveUpdateListener(OnUpdate);
-            // 清空事件委托，避免空引用和内存泄漏
-            _OnLeftDrag = null;
-            _OnRightDrag = null;
         }
     }
 }

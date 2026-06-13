@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
 using HotUpdate.Base;
+using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Component;

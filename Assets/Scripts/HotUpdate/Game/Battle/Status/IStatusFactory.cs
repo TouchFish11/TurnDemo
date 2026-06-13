@@ -1,5 +1,6 @@
 using HotUpdate.Base;
 using HotUpdate.Base.Factory;
+using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.Status
 {

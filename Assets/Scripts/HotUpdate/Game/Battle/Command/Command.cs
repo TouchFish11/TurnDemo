@@ -1,6 +1,7 @@
 using System.Collections;
 using HotUpdate.Base;
 using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.Command
 {

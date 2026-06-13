@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using Core.DI;
 using Core.Mono;
 using Core.Pool;
-using HotUpdate.Base;
 using HotUpdate.Game.Battle.Event;
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.StateMeachine;
 using HotUpdate.Game.Battle.Turn;
-using HotUpdate.Game.Point;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.Context
@@ -20,8 +18,6 @@ namespace HotUpdate.Game.Battle.Context
     /// </summary>
     public class BattleContext : IBattleContext
     {
-        // 战斗点代理
-        [Inject] private IBattlePointProxy _battlePointProxy;
         [Inject] private IPoolManager _poolManager;
         
         // 战斗事件总线实例
@@ -113,10 +109,6 @@ namespace HotUpdate.Game.Battle.Context
             // 销毁状态机
             _battleMachine.Dispose();
             _battleMachine = null;
-            
-            // 销毁代理
-            _battlePointProxy.Dispose();
-            _battlePointProxy = null;
 
             // 清空事件总线
             _eventBus.Clear();
@@ -260,9 +252,9 @@ namespace HotUpdate.Game.Battle.Context
             return _eventBus;
         }
         
-        public IBattlePointProxy GetProxy()
-        {
-            return _battlePointProxy;
-        }
+        // public IBattlePointProxy GetProxy()
+        // {
+        //     return _battlePointProxy;
+        // }
     }
 }

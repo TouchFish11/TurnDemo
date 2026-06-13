@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using HotUpdate.Base;
+using HotUpdate.Game.Battle.Event;
+using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.StateMeachine;
 using HotUpdate.Game.Point;
 
@@ -62,7 +64,7 @@ namespace HotUpdate.Game.Battle.Context
         /// 获取战斗点代理
         /// </summary>
         /// <returns></returns>
-        IBattlePointProxy GetProxy();
+        //IBattlePointProxy GetProxy();
 
         /// <summary>
         /// 消耗战斗点数（技能点/行动点）

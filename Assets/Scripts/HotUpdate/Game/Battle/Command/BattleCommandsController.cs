@@ -6,6 +6,7 @@ using HotUpdate.Base.Manager;
 using HotUpdate.Base.UI;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.General;
+using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.StateMeachine;
 
 namespace HotUpdate.Game.Battle.Command

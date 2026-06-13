@@ -6,6 +6,7 @@ using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.UI;
+using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Component;
 using HotUpdate.Game.Battle.TargetSelect;

@@ -1,15 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Core.DI;
 using Core.Log;
-using Core.Serialize.Binary;
-using HotUpdate.Base;
-using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Context;
-using HotUpdate.Game.Battle.Core;
-using HotUpdate.Game.Battle.Event.UI;
-using HotUpdate.Game.Battle.Inputs;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Utility;
@@ -24,78 +17,15 @@ namespace HotUpdate.Game.Battle.TargetSelect
     /// </summary>
     public class TargetSelectManager : ITargetSelectManager, IDisposable
     {
-        private BattleCoordinator _battleCoordinator;
-        private readonly IBattleInputHandler _battleInputHandler;
         // 缓存筛选出的所有目标
         private List<IBattleEntityObject> _filterEntitys;
         // 已选中的范围目标列表（包含主目标及范围内的其他目标）
         private readonly List<IBattleEntityObject> _selectedTargets = new();
         // 当前选中的主目标（技能优先作用的核心目标）
         private IBattleEntityObject _mainTarget;
-        // 当前选中技能的配置信息
-        private SkillInfo skillInfo;
-        // 战斗上下文
-        private IBattleContext battleContext;
-        // 技能释放者（释放当前技能的战斗实体）
-        private IBattleEntityObject caster;
         // 当前生效的目标选择策略（不同技能有不同的目标选择规则）
-        private ITargetSelectStrategy currentSelectStrategy;
-
-        /// <summary>
-        /// 主目标选择变化
-        /// </summary>
-        public event Action<IBattleEntityObject> OnSelectChanged;
-
-        public TargetSelectManager(BattleCoordinator battleCoordinator, IBattleInputHandler battleInputHandler, IBattleContext battleContext)
-        {
-            _battleCoordinator = battleCoordinator;
-            _battleInputHandler = battleInputHandler;
-            this.battleContext = battleContext;
-            // 注册技能选择事件监听：当玩家选择技能时触发目标选择逻辑
-            battleContext.GetEventBus().AddListener<SelectSkillEvent>(OnSelectSkillEvent);
-        }
+        private ITargetSelectStrategy _currentSelectStrategy;
         
-        /// <summary>
-        /// 技能选择事件回调
-        /// 当玩家在UI中选中某个技能时触发，初始化目标选择的核心数据
-        /// </summary>
-        /// <param name="selectSkillEvent">技能选择事件（携带技能ID、释放者、战斗上下文等）</param>
-        private void OnSelectSkillEvent(SelectSkillEvent selectSkillEvent)
-        {
-            // 从配置表加载选中技能的详细配置
-            var skillInfo = DIContainer.GetInstance<IBinaryDataManager>().GetConfig<SkillInfoContainer>(EConfigLoadType.Excel).dataDic[selectSkillEvent.SkillId];
-            // 触发目标选择逻辑
-            SelectTarget(selectSkillEvent.Context, selectSkillEvent.Caster, skillInfo, selectSkillEvent.TargetSelectStrategy);
-        }
-
-        /// <summary>
-        /// 激活目标选择交互
-        /// 开启拖拽/点击切换目标的交互能力
-        /// </summary>
-        public void ActiveSelectTarget()
-        {
-            InActiveSelectTarget();
-            
-            _battleInputHandler.OnLeftDrag += SelectPreviousMainTarget;   // 左拖拽：切换上一个主目标
-            _battleInputHandler.OnRightDrag += SelectNextMainTarget;     // 右拖拽：切换下一个主目标
-            _battleInputHandler.OnSelectedObject += SelectClickMainTarget;// 点击：选中指定主目标
-            
-            Logger.Log($"激活目标选择");
-        }
-
-        /// <summary>
-        /// 禁用目标选择交互
-        /// 关闭拖拽/点击切换目标的交互能力，避免无效输入响应
-        /// </summary>
-        public void InActiveSelectTarget()
-        {
-            _battleInputHandler.OnLeftDrag -= SelectPreviousMainTarget;
-            _battleInputHandler.OnRightDrag -= SelectNextMainTarget;
-            _battleInputHandler.OnSelectedObject -= SelectClickMainTarget;
-            
-            Logger.Log($"禁用目标选择");
-        }
-
         /// <summary>
         /// 核心目标选择入口
         /// 根据技能、释放者、选择策略重新计算并更新主目标和范围目标
@@ -104,31 +34,20 @@ namespace HotUpdate.Game.Battle.TargetSelect
         /// <param name="caster">技能释放者</param>
         /// <param name="skillInfo">当前选中的技能配置</param>
         /// <param name="targetSelectStrategy">目标选择策略（决定如何选主目标）</param>
-        public void SelectTarget(IBattleContext context, IBattleEntityObject caster, SkillInfo skillInfo, ITargetSelectStrategy targetSelectStrategy)
+        public void SelectMainTarget(IBattleContext context, IBattleEntityObject caster, SkillInfo skillInfo, ITargetSelectStrategy targetSelectStrategy)
         {
-            // 缓存当前内容 
-            this.skillInfo = skillInfo;
-            this.caster = caster;
-            currentSelectStrategy = targetSelectStrategy;
-            
-            if (currentSelectStrategy == null)
-            {
-                Logger.LogError($"{nameof(TargetSelectManager)}.{nameof(SelectTarget)}：当前目标选择策略为null");
-                return;
-            }
-            
-            // 技能切换时，先重新选择主目标
-            _mainTarget = SelectMainTarget(context, caster, skillInfo);
+            _currentSelectStrategy = targetSelectStrategy ?? throw new ArgumentNullException(nameof(targetSelectStrategy));
+            // 筛选出符合技能条件的所有目标
+            FilterTargets(context, skillInfo, caster);
+            // 委托给当前策略计算主目标
+            SelectMainTarget(_currentSelectStrategy.SelectMainTarget(_filterEntitys, caster, skillInfo));
             if (_mainTarget == null)
             {
-                Logger.LogError($"{nameof(TargetSelectManager)}.{nameof(SelectMainTarget)}：当前选择的主目标为null");
+                Logger.LogError($"{nameof(TargetSelectManager)}：当前选择的主目标为null");
                 return;
             }
             
-            OnSelectChanged?.Invoke(_mainTarget);
             Logger.Log($"当前主目标：{_mainTarget}");
-            // 基于主目标更新范围目标列表
-            UpdateTargets();
         }
 
         /// <summary>
@@ -150,25 +69,12 @@ namespace HotUpdate.Game.Battle.TargetSelect
         }
 
         /// <summary>
-        /// 选择主目标
-        /// 基于当前选择策略，计算并设置技能的核心作用目标
-        /// </summary>
-        /// <param name="context">战斗上下文</param>
-        /// <param name="caster">技能释放者</param>
-        /// <param name="skillInfo">技能配置（影响目标选择规则）</param>
-        private IBattleEntityObject SelectMainTarget(IBattleContext context, IBattleEntityObject caster, SkillInfo skillInfo)
-        {
-            // 筛选出所有目标
-            FilterTargets(context);
-            // 委托给当前策略计算主目标
-            return currentSelectStrategy.SelectMainTarget(_filterEntitys, caster, skillInfo);
-        }
-
-        /// <summary>
         /// 筛选目标
         /// </summary>
         /// <param name="context"></param>
-        private void FilterTargets(IBattleContext context)
+        /// <param name="skillInfo"></param>
+        /// <param name="caster"></param>
+        private void FilterTargets(IBattleContext context, SkillInfo skillInfo, IBattleEntityObject caster)
         {
             // 从技能配置中解析目标类型（敌人/友方）
             var targetType = (E_SkillTargetType)skillInfo.f_SkillTargetType;
@@ -207,21 +113,19 @@ namespace HotUpdate.Game.Battle.TargetSelect
         /// 更新范围目标列表
         /// 基于主目标和技能范围规则，重新计算所有受影响的目标，并触发UI更新事件
         /// </summary>
-        private void UpdateTargets()
+        public void UpdateTargets(int skillRangeType)
         {
             // 清空旧的范围目标列表
             _selectedTargets.Clear();
             // 计算主目标范围内的所有有效目标（玩家角色类型，按技能范围规则筛选）
-            BattleUtility.GetRangeTargets(_mainTarget, skillInfo.f_skillRangeType, _filterEntitys, _selectedTargets);
-            // 触发目标选择变更事件，通知UI更新选中状态
-            battleContext.GetEventBus().TriggerEvent(new SelectTargetEvent(battleContext, caster, _mainTarget, _selectedTargets));
+            BattleUtility.GetRangeTargets(_mainTarget, skillRangeType, _filterEntitys, _selectedTargets);
         }
 
         /// <summary>
         /// 切换到下一个主目标
         /// 右拖拽交互触发，在同类型目标列表中向后切换主目标
         /// </summary>
-        private void SelectNextMainTarget()
+        public void SelectNextMainTarget()
         {
             // 仅1个目标时无需切换
             if (_filterEntitys.Count <= 1)
@@ -244,10 +148,7 @@ namespace HotUpdate.Game.Battle.TargetSelect
             if (mainIndex + 1 < _filterEntitys.Count)
             {
                 _mainTarget = _filterEntitys[++mainIndex];
-                OnSelectChanged?.Invoke(_mainTarget);
                 Logger.Log($"当前主目标：{_mainTarget}");
-                // 切换后更新范围目标列表并同步UI
-                UpdateTargets();
             }
         }
 
@@ -255,7 +156,7 @@ namespace HotUpdate.Game.Battle.TargetSelect
         /// 切换到上一个主目标
         /// 左拖拽交互触发，在同类型目标列表中向前切换主目标
         /// </summary>
-        private void SelectPreviousMainTarget()
+        public void SelectPreviousMainTarget()
         {
             // 仅1个目标时无需切换
             if (_filterEntitys.Count <= 1)
@@ -278,10 +179,7 @@ namespace HotUpdate.Game.Battle.TargetSelect
             if (mainIndex - 1 >= 0)
             {
                 _mainTarget = _filterEntitys[--mainIndex];
-                OnSelectChanged?.Invoke(_mainTarget);
                 Logger.Log($"当前主目标：{_mainTarget}");
-                // 切换后更新范围目标列表并同步UI
-                UpdateTargets();
             }
         }
 
@@ -290,18 +188,17 @@ namespace HotUpdate.Game.Battle.TargetSelect
         /// 点击战斗实体时触发，直接将该实体设为主目标
         /// </summary>
         /// <param name="mainTarget">点击选中的战斗实体</param>
-        public void SelectClickMainTarget(IBattleEntityObject mainTarget)
+        public void SelectMainTarget(IBattleEntityObject mainTarget)
         {
             _mainTarget = mainTarget;
-            // 选中后更新范围目标列表并同步UI
-            UpdateTargets();
         }
 
         public void Dispose()
         {
-            // 注册技能选择事件监听：当玩家选择技能时触发目标选择逻辑
-            battleContext.GetEventBus().RemoveListener<SelectSkillEvent>(OnSelectSkillEvent);
-            battleContext = null;
+            _filterEntitys.Clear();
+            _selectedTargets.Clear();
+            _mainTarget = null;
+            _currentSelectStrategy = null;
         }
     }
 }

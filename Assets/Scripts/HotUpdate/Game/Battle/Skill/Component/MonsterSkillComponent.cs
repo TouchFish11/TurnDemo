@@ -1,5 +1,6 @@
 using Core.Components;
 using HotUpdate.Base;
+using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Skill.Conditions;
 using HotUpdate.Game.Battle.TargetSelect.Strategys;
 

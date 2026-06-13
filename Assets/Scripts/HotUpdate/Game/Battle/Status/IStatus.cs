@@ -1,5 +1,6 @@
 using HotUpdate.Base;
 using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Status.Data;
 
 namespace HotUpdate.Game.Battle.Status

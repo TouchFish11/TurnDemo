@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using HotUpdate.Base;
 using HotUpdate.Base.Object;
 using HotUpdate.Game.Animation.Component;
+using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Cameras;
 using HotUpdate.Game.Dialogue;
 using HotUpdate.Game.Inputs;

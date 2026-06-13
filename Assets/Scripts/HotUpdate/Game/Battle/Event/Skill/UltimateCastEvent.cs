@@ -1,4 +1,3 @@
-using HotUpdate.Base;
 using HotUpdate.Game.Battle.Context;
 
 namespace HotUpdate.Game.Battle.Event.Skill

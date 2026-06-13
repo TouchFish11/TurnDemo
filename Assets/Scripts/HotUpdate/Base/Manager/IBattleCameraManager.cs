@@ -31,5 +31,8 @@ namespace HotUpdate.Base.Manager
         /// 当前激活的相机
         /// </summary>
         Camera CurrentActiveCamera { get; }
+
+        UnityEngine.Object RayCast(int layerMask);
+        void UpdateBaseRotation();
     }
 }

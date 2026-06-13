@@ -1,9 +1,10 @@
 using System.Collections;
 using Core.Components;
+using HotUpdate.Base;
 using HotUpdate.Game.Battle.Context;
 using UnityEngine;
 
-namespace HotUpdate.Base
+namespace HotUpdate.Game.Battle.Object
 {
     /// <summary>
     /// 战斗实体对象接口

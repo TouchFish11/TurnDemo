@@ -1,13 +1,12 @@
 using Core.DI;
-using HotUpdate.Base;
+using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event;
 using HotUpdate.Game.Battle.Event.General;
+using HotUpdate.Game.Battle.Event.Skill;
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Event.UI;
-using HotUpdate.Game.Battle.Inputs;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Skill;
-using HotUpdate.Game.Battle.TargetSelect;
 using HotUpdate.Game.Battle.UI;
 
 namespace HotUpdate.UI.Battle.Base
@@ -18,6 +17,8 @@ namespace HotUpdate.UI.Battle.Base
     /// </summary>
     public class BattleEventProcessor : IBattleEventProcessor
     {
+        [Inject] private BattleCoordinator _battleCoordinator;
+        
         // 战斗控制器，用于获取战斗核心逻辑相关数据和操作
         private readonly BattleController _battleController;
         // 战斗UI管理器，用于统一管理战斗界面的各类UI操作
@@ -47,7 +48,8 @@ namespace HotUpdate.UI.Battle.Base
         {
             eventBus.AddListener<TurnEndEvent>(OnTurnEnd);                   // 回合结束事件
             eventBus.AddListener<OnBattlePointCountChangedEvent>(OnBattlePointCountChanged); // 战斗点数变化事件
-            eventBus.AddListener<SelectTargetEvent>(OnTargetSelectionChanged); // 目标选择事件
+            eventBus.AddListener<SelectTargetEvent>(OnTargetSelectionChanged);      // 目标选择事件
+            eventBus.AddListener<PostCastEvent>(OnPostCastDispatch);    // 监听技能释放后通用逻辑事件
             
             eventBus.AddListener<ApplyDamageEvent>(ApplyTakeDamage);            // 应用伤害事件
             eventBus.AddListener<ApplyShieldEvent>(ApplyShieldChanged);            // 提供护盾事件
@@ -173,9 +175,9 @@ namespace HotUpdate.UI.Battle.Base
         private void OnPlayerReleaseSkillEvent(PlayerReleaseSkillEvent playerReleaseSkillEvent)
         {
             // 关闭目标选择功能
-            DIContainer.GetInstance<ITargetSelectManager>().InActiveSelectTarget();
+            _battleCoordinator.IsActiveTargetSelect = false;
             // 禁用输入
-            DIContainer.GetInstance<IBattleInputHandler>().SetInputState(false);
+            _battleCoordinator.IsActiveInput = false;
             // 清除选中目标的标记UI
             _uiManager.ClearSelectMarker();
             // 清空操作面板
@@ -212,6 +214,16 @@ namespace HotUpdate.UI.Battle.Base
             
             // 更新行动网格中选中目标的高亮状态
             _uiManager.SetActionGridHighlights(selectTargetEvent.SelectedTargets);
+        }
+        
+        /// <summary>
+        /// 技能释放后处理逻辑
+        /// </summary>
+        /// <param name="postCastEvent"></param>
+        private void OnPostCastDispatch(PostCastEvent postCastEvent)
+        {
+            // 更新累计伤害UI
+            _uiManager.UpdateCumulativeDamage(false, 0);
         }
 
         /// <summary>

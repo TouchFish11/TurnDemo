@@ -7,6 +7,7 @@ using HotUpdate.Base.Manager;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Event;
 using HotUpdate.Game.Battle.Event.Skill;
+using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.Skill.Component;
 using HotUpdate.Game.VFX;
@@ -64,7 +65,7 @@ namespace HotUpdate.Game.Battle.Skill.Base
             // 终结技动画Pose
             Caster.GetComponent<IBattleAnimationComponent>().SetUltimatePose();
             InitProjectileAndPoseVfx();
-            yield return _battleEventScheduler.PreUltimateCastDispatch(Caster, SkillInfo);
+            yield return battleCoordinator.PreUltimateCastDispatch(Caster, SkillInfo);
         }
 
         /// <summary>

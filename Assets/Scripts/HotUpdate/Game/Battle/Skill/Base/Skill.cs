@@ -7,6 +7,8 @@ using HotUpdate.Base;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Core;
+using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.TargetSelect;
 using HotUpdate.Game.VFX;
@@ -21,7 +23,9 @@ namespace HotUpdate.Game.Battle.Skill.Base
     /// </summary>
     public abstract class Skill : ISkill
     {
+        [Inject] protected BattleCoordinator battleCoordinator;
         [Inject] protected SkillService skillService;
+        
         // 投射物数据
         protected ProjectileData projectileData;
         // 投射物变换组件（控制投射物的位置/旋转等）

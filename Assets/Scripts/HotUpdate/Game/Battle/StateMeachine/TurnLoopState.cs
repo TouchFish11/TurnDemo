@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Core.DI;
 using Core.Mono;
-using HotUpdate.Base;
 using HotUpdate.Game.Battle.Command;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;

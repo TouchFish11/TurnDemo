@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.DI;
-using Core.Mono.MonoFunction;
-using HotUpdate.Base;
 using HotUpdate.Base.Manager;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Layer;
@@ -18,7 +16,7 @@ namespace HotUpdate.Game.Battle.Core
     /// <summary>
     /// 场景战斗点代理
     /// </summary>
-    public class BattlePointProxy : IBattlePointProxy, IDisposable
+    public class BattlePointProxy : IDisposable
     {
         // 怪物中心点x值
         private readonly float[] monstetCenterXs = { 6f, 4f, 2f, 0f };
@@ -57,7 +55,7 @@ namespace HotUpdate.Game.Battle.Core
         }
 
         /// <summary>
-        /// 更新怪物位置
+        /// 更新怪物在场景上的位置和之间的相对位置
         /// </summary>
         /// <param name="battleEntity"></param>
         public void UpdateMonsterPos(IBattleEntityObject battleEntity)
@@ -68,33 +66,9 @@ namespace HotUpdate.Game.Battle.Core
             SortMonsterTrans();
         }
 
-        /// <summary>
-        /// 更新相机
-        /// 传入行动的玩家或被攻击的玩家
-        /// </summary>
-        /// <param name="battleEntity">当前操作的玩家对象</param>
-        public async Task UpdateCamera(IBattleEntityObject battleEntity)
+        public Transform GetRoleCameraRoot(PlayerObject playerObject)
         {
-            try
-            {
-                if (battleEntity is PlayerObject)
-                {
-                    // 更新怪物位置
-                    UpdateMonsterPos(battleEntity);
-                    // 创建相机到指定位置点
-                    var camera = await CreateCameraAtPos(battleEntity.EntityPosIndex);
-                    // 更新相机Mask
-                    UpdateCameraMask(camera, battleEntity.EntityPosIndex);
-                }
-                else
-                {
-                    Logger.LogError($"相机更新失败，当前实体为：{battleEntity}");
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.LogError($"{nameof(BattlePointProxy)}.{nameof(UpdateCamera)}：{e.Message}");
-            }
+            return BattlePoint.GetRoleCameraTransByIndex(playerObject.EntityPosIndex);
         }
         
         /// <summary>
@@ -173,46 +147,7 @@ namespace HotUpdate.Game.Battle.Core
             }
             currentMonsterCount = newLiveCount;
         }
-
-        /// <summary>
-        /// 创建相机到指定位置
-        /// </summary>
-        /// <param name="entityPosIndex"></param>
-        private Task<Camera> CreateCameraAtPos(int entityPosIndex)
-        {
-            // 创建相机到指定位置点
-            var cameraTrans = BattlePoint.GetRoleCameraTransByIndex(entityPosIndex);
-            return DIContainer.GetInstance<IBattleCameraManager>().CreateCamera(cameraTrans, Vector3.zero, Quaternion.identity);
-        }
-
-        /// <summary>
-        /// 更新相机Mask
-        /// </summary>
-        /// <param name="CurrentActiveCamera"></param>
-        /// <param name="currentPosIndex"></param>
-        private static void UpdateCameraMask(Camera CurrentActiveCamera, int currentPosIndex)
-        {
-            var mask = ResetCameraMask();
-            // 根据当前玩家位置索引，只渲染符合的角色
-            var roleLayers = LayerGeter.GetRoleLayers();
-            for (var i = currentPosIndex; i < roleLayers.Length; i++)
-            {
-                mask |= 1 << roleLayers[i];
-            }
-            CurrentActiveCamera.cullingMask = mask;
-        }
-
-        /// <summary>
-        /// 重置相机Mask层级
-        /// </summary>
-        private static int ResetCameraMask()
-        {
-            var mask= LayerGeter.GetPreBitLayer();
-            // TODO：暂时写所有怪物，后续优化
-            mask |= LayerGeter.GetMonsterBitLayer();
-            
-            return mask;
-        }
+        
 
         public void Dispose()
         {

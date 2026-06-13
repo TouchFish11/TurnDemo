@@ -8,6 +8,7 @@ using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage.Data;
 using HotUpdate.Game.Battle.Damage.Strategys;
 using HotUpdate.Game.Battle.Event.General;
+using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Utility;
 
 namespace HotUpdate.Game.Battle.Damage

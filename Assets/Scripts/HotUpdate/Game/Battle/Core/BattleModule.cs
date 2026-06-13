@@ -8,7 +8,6 @@ using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Event;
 using HotUpdate.Game.Battle.Inputs;
 using HotUpdate.Game.Battle.TargetSelect;
-using HotUpdate.Game.Point;
 
 namespace HotUpdate.Game.Battle.Core
 {
@@ -27,12 +26,12 @@ namespace HotUpdate.Game.Battle.Core
             DIContainer.BindSingleton<IBattleInputHandler, BattleInputHandler>();
             DIContainer.BindSingleton<IBattleEventScheduler, BattleEventScheduler>();
             DIContainer.BindSingleton<IBattleCameraManager, BattleCameraManager>();
-            DIContainer.BindSingleton<IBattlePointProxy, BattlePointProxy>();
             DIContainer.BindSingleton<IBattleManager, BattleManager>();
             DIContainer.BindType<IBattleContext, BattleContext>();
             
             // TODO：暂时写在这个方法中
             DIContainer.Create<BattleCoordinator>(true);
+            DIContainer.Create<BattlePointProxy>(true);
         }
 
         public Task InitModuleAsync()

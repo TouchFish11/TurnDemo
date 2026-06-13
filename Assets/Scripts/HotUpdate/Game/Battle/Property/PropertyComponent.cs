@@ -4,6 +4,7 @@ using HotUpdate.Base;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.General;
+using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.Property
 {

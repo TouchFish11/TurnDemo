@@ -1,6 +1,6 @@
 using HotUpdate.Game.Battle.Context;
 
-namespace HotUpdate.Base
+namespace HotUpdate.Game.Battle.Event
 {
     /// <summary>
     /// 战斗事件

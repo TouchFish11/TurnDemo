@@ -1,3 +1,5 @@
+using HotUpdate.Game.Battle.Object;
+
 namespace HotUpdate.Base
 {
     /// <summary>

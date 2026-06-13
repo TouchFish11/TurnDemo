@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using HotUpdate.Base;
+using HotUpdate.Game.Battle.Object;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.UI

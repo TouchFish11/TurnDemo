@@ -4,16 +4,10 @@ using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Mono;
 using Core.Serialize.Binary;
-using HotUpdate.Base;
 using HotUpdate.Base.Manager;
-using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Game.Battle.Event;
-using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Inputs;
-using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Object;
-using HotUpdate.Game.Battle.Skill;
-using HotUpdate.Game.Battle.TargetSelect;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.Core
@@ -28,7 +22,7 @@ namespace HotUpdate.Game.Battle.Core
         [Inject] private IMonoAdapter _monoAdapter;
         [Inject] private IBattleManager _battleManager;
         
-        private BattleCoordinator _battleCoordinator;
+        private readonly BattleCoordinator _battleCoordinator;
         private readonly IBattleInputHandler _battleInputHandler;
         // X轴旋转角度限制
         private const float minXAngle = -3f;
@@ -49,8 +43,6 @@ namespace HotUpdate.Game.Battle.Core
         private float lastDeltaX;
         // 相机起始角度
         private Quaternion _originRot;
-        // 当前选中的技能ID（用于释放技能时匹配技能配置）
-        private int skillId;
         
         public Camera CurrentActiveCamera { get; private set; }
         
@@ -60,13 +52,9 @@ namespace HotUpdate.Game.Battle.Core
             _battleInputHandler = battleInputHandler;
             battleInputHandler.OnDrag += OnDrag;
             battleInputHandler.OnRebound += OnRebound;
-            battleInputHandler.OnClick += OnClick;
             
-            _targetSelectManager.OnSelectChanged += OnSelectChanged;
             _monoAdapter.AddUpdateListener(OnUpdate);
             _battleManager.GetContext().GetEventBus().AddListener<BattleOverEvent>(OnBattleOverEvent);
-            // 从战斗管理器事件总线订阅技能选择事件，接收选中的技能ID
-            _battleManager.GetContext().GetEventBus().AddListener<SelectSkillEvent>(OnSelectSkillEvent);
         }
 
         public async Task<Camera> CreateCamera(Transform cameraTrans, Vector3 localPos, Quaternion localRot)
@@ -145,12 +133,11 @@ namespace HotUpdate.Game.Battle.Core
                 CurrentActiveCamera.transform.localRotation = Quaternion.Slerp(CurrentActiveCamera.transform.localRotation, targetRot, Time.deltaTime * rotateSpeed);
             }
         }
-        
+
         /// <summary>
-        /// 目标选择切换事件回调
+        /// 更新当前相机旋转基准
         /// </summary>
-        /// <param name="mainTarget"></param>
-        private void OnSelectChanged(IBattleEntityObject mainTarget)
+        public void UpdateBaseRotation()
         {
             // 每次切换目标后，都已当前相机的面朝向作为旋转基准
             baseRotation = CurrentActiveCamera.transform.localRotation;
@@ -189,31 +176,8 @@ namespace HotUpdate.Game.Battle.Core
             }
         }
 
-        private void OnClick()
+        public UnityEngine.Object RayCast(int layerMask)
         {
-            // 根据选中的技能ID获取技能配置信息
-            var skillInfo = _binaryDataManager.GetConfig<SkillInfoContainer>(EConfigLoadType.Excel).dataDic[skillId];
-            // 将技能范围类型转换为技能目标类型（友方/敌方）
-            var targetType = (E_SkillTargetType)skillInfo.f_SkillTargetType;
-
-            // 根据技能目标类型设置射线检测的层级掩码（只检测对应层级的对象）
-            int layerMask;
-            switch (targetType)
-            {
-                case E_SkillTargetType.Friend:
-                    // 检测玩家对象层级
-                    layerMask = LayerGeter.GetRoleBitLayer();
-                    break;
-                case E_SkillTargetType.Enemy:
-                    // 检测怪物对象层级
-                    layerMask = LayerGeter.GetMonsterBitLayer();
-                    break;
-                case E_SkillTargetType.None:
-                default:
-                    global::Core.Log.Logger.LogWarning($"未处理的技能目标类型：{targetType}");
-                    return;
-            }
-                
             // 从鼠标屏幕位置发射射线，检测对应层级的战斗对象
             if (Physics.Raycast(CurrentActiveCamera.ScreenPointToRay(Input.mousePosition), out var hitInfo, 500, layerMask))
             {
@@ -221,14 +185,13 @@ namespace HotUpdate.Game.Battle.Core
                 var currentMainTarget = hitInfo.collider.GetComponent<BattleObject>();
                 if (currentMainTarget)
                 {
-                    _battleCoordinator.SelectedEntity(currentMainTarget);
                     global::Core.Log.Logger.Log($"选中技能目标：{currentMainTarget.name}");
+                    return currentMainTarget;
                 }
-                else
-                {
-                    global::Core.Log.Logger.LogWarning("射线命中对象未挂载BattleObject组件");
-                }
+                global::Core.Log.Logger.LogWarning("射线命中对象未挂载BattleObject组件");
             }
+            
+            return null;
         }
 
         /// <summary>
@@ -239,18 +202,7 @@ namespace HotUpdate.Game.Battle.Core
         {
             _battleInputHandler.OnDrag -= OnDrag;
             _battleInputHandler.OnRebound -= OnRebound;
-            DIContainer.GetInstance<ITargetSelectManager>().OnSelectChanged -= OnSelectChanged;
             _monoAdapter.RemoveUpdateListener(OnUpdate);
-        }
-        
-        /// <summary>
-        /// 技能选择事件回调
-        /// 接收并缓存选中的技能ID
-        /// </summary>
-        /// <param name="selectSkillEvent">技能选择事件数据</param>
-        private void OnSelectSkillEvent(SelectSkillEvent selectSkillEvent)
-        {
-            skillId = selectSkillEvent.SkillId;
         }
 
         public void Dispose()

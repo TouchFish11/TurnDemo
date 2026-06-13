@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.DI;
 using Core.Utility;
-using HotUpdate.Base;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.UI;
 using HotUpdate.Game.Battle.Context;
@@ -11,7 +10,6 @@ using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.UI;
 using HotUpdate.Game.Battle.Utility;
-using HotUpdate.Game.Point;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.Core
@@ -23,7 +21,7 @@ namespace HotUpdate.Game.Battle.Core
     {
         [Inject] private RoleFactory _roleFactory;
         [Inject] private MonsterFactory _monsterFactory;
-        [Inject] private IBattlePointProxy _battlePointProxy;
+        [Inject] private BattlePointProxy _battlePointProxy;
         [Inject] private IBattleCameraManager _battleCameraManager;
         [Inject] private IUIService _uiService;
         

@@ -69,7 +69,7 @@ namespace HotUpdate.Game.Battle.Skill.Handler
             // 激活相机输入
             DIContainer.GetInstance<IBattleInputHandler>().SetInputState(true);
             // 执行目标选择逻辑
-            DIContainer.GetInstance<ITargetSelectManager>().SelectTarget(context, currentEntity, currentEntitySkillInfo, strategy);
+            DIContainer.GetInstance<ITargetSelectManager>().SelectMainTarget(context, currentEntity, currentEntitySkillInfo, strategy);
             // 重新激活怪物UI的血量显示
             (_uiService.GetPanel(EUIPanelId.BattlePanel) as IBattleController).MonsterStateUIManager.ActiveMonsterUIs();
         }

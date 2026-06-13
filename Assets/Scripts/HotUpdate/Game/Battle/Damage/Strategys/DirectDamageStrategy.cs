@@ -1,5 +1,6 @@
 using HotUpdate.Base;
 using HotUpdate.Common.Config.ExcelInfo.Info;
+using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.Utility;
 using UnityEngine;

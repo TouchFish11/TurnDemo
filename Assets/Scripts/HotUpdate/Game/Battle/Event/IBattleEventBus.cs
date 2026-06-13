@@ -1,6 +1,6 @@
 using System;
 
-namespace HotUpdate.Base
+namespace HotUpdate.Game.Battle.Event
 {
     /// <summary>
     /// 战斗事件总线
