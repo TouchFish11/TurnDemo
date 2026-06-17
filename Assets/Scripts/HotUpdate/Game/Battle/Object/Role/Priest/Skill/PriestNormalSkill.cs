@@ -1,6 +1,7 @@
 using System.Collections;
 using Core.DI;
 using Core.Pool;
+using Core.Serialize.Binary;
 using Core.Utility;
 using HotUpdate.Base;
 using HotUpdate.Base.Component;
@@ -21,13 +22,8 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
     {
         // 普攻动画状态名称常量
         private const string attackState = "NormalAttack";
-
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="caster">施法者战斗实体</param>
-        /// <param name="skillId">技能ID</param>
-        public PriestNormalSkill(IBattleEntityObject caster, int skillId) : base(caster, skillId)
+        
+        public PriestNormalSkill(IBattleEntityObject caster, int skillId, BinaryDataManager binaryDataManager) : base(caster, skillId, binaryDataManager)
         {
         }
         

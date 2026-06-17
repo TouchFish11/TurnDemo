@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Mono;
+using HotUpdate.Game.Battle.Projectile;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
@@ -61,43 +63,38 @@ namespace HotUpdate.Game.VFX
         /// <param name="projectileTrans">投射物变换信息</param>
         /// <param name="data">投射物数据</param>
         /// <param name="vFXInfo">VFX信息载体</param>
-        public async Task CreateVFX(string vfxName, ProjectileTrans projectileTrans, ProjectileData data, VFXInfo vFXInfo)
+        public async Task<IProjectile> CreateVFX(string vfxName, ProjectileTrans projectileTrans, ProjectileData data, VFXInfo vFXInfo)
         {
-            try
+            // 异步获取VFX资源
+            var vfxObj = await _objectSpawner.SpawnAsync<GameObject>(vfxName, projectileTrans.Parent, worldSpace:projectileTrans.WorldPositionStays);
+            // 根据父物体是否存在，设置VFX的位置和旋转
+            if (projectileTrans.Parent)
             {
-                // 异步获取VFX资源
-                var vfxObj = await _objectSpawner.SpawnAsync<GameObject>(vfxName, projectileTrans.Parent, worldSpace:projectileTrans.WorldPositionStays);
-                // 根据父物体是否存在，设置VFX的位置和旋转
-                if (projectileTrans.Parent)
-                {
-                    vfxObj.transform.SetLocalPositionAndRotation(projectileTrans.LocalPos, projectileTrans.Rotation);
-                }
-                else
-                {
-                    vfxObj.transform.SetPositionAndRotation(projectileTrans.WorldPos, projectileTrans.Rotation);
-                }
-
-                // 如果VFX挂载了投射物组件，初始化投射物数据
-                if (vfxObj.TryGetComponent<IProjectile>(out var projectile))
-                {
-                    projectile.Init(data, vFXInfo);
-                }
-
-                // 如果包含粒子系统，记录到活跃列表
-                if (vfxObj.TryGetComponent<ParticleSystem>(out var ps))
-                {
-                    vFXInfo.ParticleSystem = ps;
-                    _activeVfxInfos.Add(vFXInfo, vfxObj);
-                }
+                vfxObj.transform.SetLocalPositionAndRotation(projectileTrans.LocalPos, projectileTrans.Rotation);
             }
-            catch (Exception e)
+            else
             {
-                Logger.LogError($"{nameof(VFXManager)}.{nameof(CreateVFX)}：{e.Message}，{e.StackTrace}");
+                vfxObj.transform.SetPositionAndRotation(projectileTrans.WorldPos, projectileTrans.Rotation);
             }
+
+            // 如果VFX挂载了投射物组件，初始化投射物数据
+            if (vfxObj.TryGetComponent<IProjectile>(out var projectile))
+            {
+                projectile.Init(data, vFXInfo);
+            }
+
+            // 如果包含粒子系统，记录到活跃列表
+            if (vfxObj.TryGetComponent<ParticleSystem>(out var ps))
+            {
+                vFXInfo.ParticleSystem = ps;
+                _activeVfxInfos.Add(vFXInfo, vfxObj);
+            }
+
+            return projectile;
         }
 
         /// <summary>
-        /// 创建指定父物体/位置的VFX（异步）
+        /// 创建指定父物体/位置的VFX（异步），适用于没有IProjectile的特效
         /// </summary>
         /// <param name="vfxName">VFX资源名称</param>
         /// <param name="parent">父物体Transform</param>
@@ -106,20 +103,13 @@ namespace HotUpdate.Game.VFX
         /// <param name="vFXInfo">VFX信息载体</param>
         public async Task CreateVFX(string vfxName, Transform parent, Vector3 pos, Quaternion rot, VFXInfo vFXInfo)
         {
-            try
+            // 异步获取VFX资源
+            var vfxObj = await _objectSpawner.SpawnAsync<GameObject>(vfxName, parent,  pos, rot);
+            // 如果包含粒子系统，记录到活跃列表
+            if (vfxObj.TryGetComponent<ParticleSystem>(out var ps))
             {
-                // 异步获取VFX资源
-                var vfxObj = await _objectSpawner.SpawnAsync<GameObject>(vfxName, parent,  pos, rot);
-                // 如果包含粒子系统，记录到活跃列表
-                if (vfxObj.TryGetComponent<ParticleSystem>(out var ps))
-                {
-                    vFXInfo.ParticleSystem = ps;
-                    _activeVfxInfos.Add(vFXInfo, vfxObj);
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.LogError($"{nameof(VFXManager)}.{nameof(CreateVFX)}：{e.Message}，{e.StackTrace}");
+                vFXInfo.ParticleSystem = ps;
+                _activeVfxInfos.Add(vFXInfo, vfxObj);
             }
         }
         

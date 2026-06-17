@@ -11,7 +11,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard.Skill
     /// </summary>
     public class WizardSkillFactory : SkillFactory
     {
-        public override ISkillData CreateSkill(IBattleEntityObject caster, int skillId)
+        public override SKillBuildData CreateSKillBuildData(int skillId)
         {
             switch (skillId)
             {

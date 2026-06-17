@@ -1,7 +1,7 @@
 using System.Collections;
 using Core.DI;
+using Core.Serialize.Binary;
 using Core.Utility;
-using HotUpdate.Base;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Utility;
 
@@ -18,17 +18,12 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill
     /// </summary>
     public class WarriorUltimateSkill : UltimateSkill
     {
-        // 复用0.25秒等待对象
-        private static readonly WaitForSeconds _waitForSeconds0_25 = new(0.25f);
+        // 复用等待对象
+        private static readonly WaitForSeconds s_waitForSeconds0_1 = new(0.1f);
         // 终结技攻击动画状态名称
         private const string ultimateAttackState = "UltimateAttack";
-
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="caster">施法者实体</param>
-        /// <param name="skillId">技能ID</param>
-        public WarriorUltimateSkill(IBattleEntityObject caster, int skillId) : base(caster, skillId)
+        
+        public WarriorUltimateSkill(IBattleEntityObject caster, int skillId, BinaryDataManager binaryDataManager) : base(caster, skillId, binaryDataManager)
         {
         }
 
@@ -54,11 +49,10 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill
         protected override IEnumerator OnUltimateCast(IBattleContext context)
         {
             // 瞬移到目标身前（目标位置向前偏移，避免重叠）
-            var targetPos = MainTarget.GameObject.transform.position;
-            Caster.GameObject.transform.position = targetPos - Vector3.forward;
+            Caster.GameObject.transform.position = MainTarget.GameObject.transform.position - Vector3.forward;
 
-            // 等待0.25秒（瞬移后缓冲）
-            yield return _waitForSeconds0_25;
+            // 等待0.1秒（瞬移后缓冲）
+            yield return s_waitForSeconds0_1;
 
             // 切换终结技动画
             var animationComponent = Caster.GetComponent<IBattleAnimationComponent>(); 
@@ -80,11 +74,10 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill
             yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).normalizedTime >= 0.9f);
 
             // 重置角色位置到战斗初始点位
-            targetPos = context.GetProxy().BattlePoint.GetRoleTransByIndex(Caster.EntityPosIndex).position;
-            Caster.GameObject.transform.position = targetPos;
+            Caster.GameObject.transform.position = battleCoordinator.GetRoleTransByIndex(Caster.EntityPosIndex);
 
-            // 等待0.25秒（位移后缓冲）
-            yield return _waitForSeconds0_25;
+            // 等待0.1秒（位移后缓冲）
+            yield return s_waitForSeconds0_1;
         }
     }
 }

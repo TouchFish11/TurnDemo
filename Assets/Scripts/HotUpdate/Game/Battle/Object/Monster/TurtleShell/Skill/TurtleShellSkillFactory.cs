@@ -11,7 +11,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.TurtleShell.Skill
     /// </summary>
     public class TurtleShellSkillFactory : SkillFactory
     {
-        public override ISkillData CreateSkill(IBattleEntityObject caster, int skillId)
+        public override SKillBuildData CreateSKillBuildData(int skillId)
         {
             switch (skillId)
             {

@@ -2,6 +2,7 @@ using Core.DI;
 using Core.Time;
 
 using HotUpdate.Game.Battle.Projectile;
+using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Status;
 using HotUpdate.Game.VFX;
 using UnityEngine;
@@ -34,7 +35,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Projectile
                     out var result);
                 target.TakeDamage(result);
                 // 恢复能量
-                projectileData.skill.RecoverEnergy();
+                ((PlayerSkill)projectileData.skill).RecoverEnergy();
             }
         }
 

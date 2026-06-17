@@ -1,7 +1,7 @@
 using Core.DI;
 using Core.GlobalEvent;
 using Core.GlobalEvent.Events;
-using HotUpdate.Base;
+using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Property;
 
@@ -12,16 +12,16 @@ namespace HotUpdate.Game.Battle.Skill.Conditions
     /// </summary>
     public class PlayerDefaultCastSkillCondition : ICastSkillCondition
     {
-        public bool CanCast(IBattleEntityObject caster, ISkill skill)
+        public bool CanCast(IBattleEntityObject caster, SkillInfo skillInfo)
         {
-            switch ((E_SkillType)skill.SkillInfo.f_SkillType)
+            switch ((E_SkillType)skillInfo.f_SkillType)
             {
                 case E_SkillType.NormalAttack:
                     return true;
                 case E_SkillType.CombatSkill:
                     var tempBP = caster.Context.CurentBattlePointCount;
                     // 战技点数大于消耗点数
-                    if (tempBP - skill.SkillInfo.f_costBP >= 0)
+                    if (tempBP - skillInfo.f_costBP >= 0)
                     {
                         return true;
                     }

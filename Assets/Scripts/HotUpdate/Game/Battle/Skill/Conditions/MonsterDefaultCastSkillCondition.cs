@@ -1,4 +1,4 @@
-using HotUpdate.Base;
+using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Utility;
 
@@ -9,15 +9,13 @@ namespace HotUpdate.Game.Battle.Skill.Conditions
     /// </summary>
     public class MonsterDefaultCastSkillCondition : ICastSkillCondition
     {
-        public bool CanCast(IBattleEntityObject caster, ISkill skill)
+        public bool CanCast(IBattleEntityObject caster, SkillInfo skillInfo)
         {
-            switch (skill.SkillInfo.f_SkillType.ToSkillType())
+            return skillInfo.f_SkillType.ToSkillType() switch
             {
-                case E_SkillType.Monster:
-                    return true;
-                default:
-                    return false;
-            }
+                E_SkillType.Monster => true,
+                _ => false
+            };
         }
     }
 }

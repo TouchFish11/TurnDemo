@@ -1,5 +1,6 @@
 using System.Collections;
 using Core.DI;
+using Core.Serialize.Binary;
 using Core.Utility;
 using HotUpdate.Base;
 using HotUpdate.Base.Component;
@@ -25,7 +26,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
         private const string Priest_Ultimate_01 = nameof(Priest_Ultimate_01);
         private const string Priest_Ultimate_02 = nameof(Priest_Ultimate_02);
         
-        public PriestUltimateSkill(IBattleEntityObject caster, int skillId) : base(caster, skillId)
+        public PriestUltimateSkill(IBattleEntityObject caster, int skillId, BinaryDataManager binaryDataManager) : base(caster, skillId, binaryDataManager)
         {
         }
 
@@ -72,7 +73,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
             var pos = Caster.GameObject.transform.position + Vector3.forward * 2.5f;
             pos = new Vector3(pos.x, 1, pos.z);
             var rot = Quaternion.Euler(0, 180, 0);
-            yield return TaskUtility.WaitForTask(battleCameraManager.CreateCamera(null, pos, rot, mask));
+            yield return TaskUtility.WaitForTask(battleCoordinator.SetCameraTrans(null, pos, rot, mask));
         }
         
         private IEnumerator UpdateCamera_02()
@@ -88,7 +89,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
             }
             
             var pos = new Vector3(MainTarget.GameObject.transform.position.x, 1, -2.5f);
-            yield return TaskUtility.WaitForTask(battleCameraManager.CreateCamera(null, pos, Quaternion.identity, mask));
+            yield return TaskUtility.WaitForTask(battleCoordinator.SetCameraTrans(null, pos, Quaternion.identity, mask));
         }
 
         private async void CreateVFX()

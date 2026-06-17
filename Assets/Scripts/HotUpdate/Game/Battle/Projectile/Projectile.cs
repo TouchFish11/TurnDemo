@@ -3,6 +3,7 @@ using System.Collections;
 using Core.DI;
 using Core.Utility;
 using HotUpdate.Game.Battle.Damage;
+using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Status;
 using HotUpdate.Game.VFX;
 using UnityEngine;
@@ -16,16 +17,6 @@ namespace HotUpdate.Game.Battle.Projectile
     [RequireComponent(typeof(ParticleSystem))] // 强制挂载粒子系统组件，用于抛射物视觉表现
     public abstract class Projectile : MonoBehaviour, IProjectile
     {
-        /// <summary>
-        /// 状态工厂
-        /// </summary>
-        [Inject] protected IStatusFactory statusFactory;
-        
-        /// <summary>
-        /// 伤害计算管理器（用于计算抛射物命中后的伤害数值）
-        /// </summary>
-        [Inject] protected IDamageCalcManager damageCalcManager;
-        
         /// <summary>
         /// 视觉特效信息（存储抛射物对应的特效配置）
         /// </summary>
@@ -52,6 +43,9 @@ namespace HotUpdate.Game.Battle.Projectile
         /// </summary>
         protected int[] statusIds;
 
+        public event Action<HitResult> OnTrigger;
+        
+        
         /// <summary>
         /// 组件唤醒时初始化（Unity生命周期）
         /// 主要完成核心组件和服务的初始化
@@ -88,33 +82,38 @@ namespace HotUpdate.Game.Battle.Projectile
                 : Array.Empty<float>();
             
             // 播放VFX
-            StartCoroutine(PlayingVFX());
+            StartCoroutine(ExecuteVFX());
+        }
+
+        protected void InvokeOnTrigger(HitResult hitResult)
+        {
+            OnTrigger?.Invoke(hitResult);
         }
 
         /// <summary>
         /// 播放特效
         /// </summary>
         /// <returns></returns>
-        protected abstract IEnumerator PlayingVFX();
+        protected abstract IEnumerator ExecuteVFX();
         
-        /// <summary>
-        /// 在触发时添加Buff
-        /// </summary>
-        protected abstract void AddStatusOnTrigger();
-        
-        /// <summary>
-        /// 在触发时应用效果，伤害、回能
-        /// </summary>
-        protected abstract void ApplyEffectOnTrigger();
-        
-        /// <summary>
-        /// 在触发时创建特效
-        /// </summary>
-        protected abstract void CreateVFXOnTrigger();
-
-        /// <summary>
-        /// 处理计时逻辑
-        /// </summary>
-        protected abstract void HandleTiming();
+        // /// <summary>
+        // /// 在触发时添加Buff
+        // /// </summary>
+        // protected abstract void AddStatusOnTrigger();
+        //
+        // /// <summary>
+        // /// 在触发时应用效果，伤害、回能
+        // /// </summary>
+        // protected abstract void ApplyEffectOnTrigger();
+        //
+        // /// <summary>
+        // /// 在触发时创建特效
+        // /// </summary>
+        // protected abstract void CreateVFXOnTrigger();
+        //
+        // /// <summary>
+        // /// 处理计时逻辑
+        // /// </summary>
+        // protected abstract void HandleTiming();
     }
 }

@@ -1,13 +1,12 @@
 using System.Collections;
 using Core.DI;
 using Core.Pool;
+using Core.Serialize.Binary;
 using Core.Utility;
-using HotUpdate.Base;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Utility;
-
+using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Context;
-using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.VFX;
 using UnityEngine;
 
@@ -17,18 +16,11 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
     /// 牧师战技技能逻辑类
     /// 继承自玩家技能基类，实现牧师普通攻击（战技）的核心逻辑，包括动画播放、特效创建、流程等待等
     /// </summary>
-    public class PriestBattleSkill : PlayerSkill
+    public class PriestBattleSkill : Battle.Skill.Base.Skill
     {
-        // 动画状态名称常量：普攻攻击状态（与Animator中状态名对应）
-        private const string battleAttackState = "BattleAttack";
-
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="caster">施法者实体（当前释放技能的牧师）</param>
-        /// <param name="skillId">技能ID（用于读取技能配置）</param>
-        public PriestBattleSkill(IBattleEntityObject caster, int skillId) : base(caster, skillId)
+        public PriestBattleSkill(IBattleEntityObject caster, int skillId, BinaryDataManager binaryDataManager) : base(caster, skillId, binaryDataManager)
         {
+            
         }
         
         /// <summary>

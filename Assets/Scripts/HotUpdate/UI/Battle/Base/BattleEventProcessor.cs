@@ -50,6 +50,7 @@ namespace HotUpdate.UI.Battle.Base
             eventBus.AddListener<OnBattlePointCountChangedEvent>(OnBattlePointCountChanged); // 战斗点数变化事件
             eventBus.AddListener<SelectTargetEvent>(OnTargetSelectionChanged);      // 目标选择事件
             eventBus.AddListener<PostCastEvent>(OnPostCastDispatch);    // 监听技能释放后通用逻辑事件
+            eventBus.AddListener<UpdateWaitCmdEvent>(OnUpdateWaitCmdDispatch);  // 监听更新等待队列事件
             
             eventBus.AddListener<ApplyDamageEvent>(ApplyTakeDamage);            // 应用伤害事件
             eventBus.AddListener<ApplyShieldEvent>(ApplyShieldChanged);            // 提供护盾事件
@@ -224,6 +225,15 @@ namespace HotUpdate.UI.Battle.Base
         {
             // 更新累计伤害UI
             _uiManager.UpdateCumulativeDamage(false, 0);
+        }
+        
+        /// <summary>
+        /// 更新等待队列事件回调
+        /// </summary>
+        /// <param name="updateWaitCmdEvent"></param>
+        private void OnUpdateWaitCmdDispatch(UpdateWaitCmdEvent updateWaitCmdEvent)
+        {
+            _uiManager.UpdateWaitingCommmand(updateWaitCmdEvent.BattleEntities);
         }
 
         /// <summary>

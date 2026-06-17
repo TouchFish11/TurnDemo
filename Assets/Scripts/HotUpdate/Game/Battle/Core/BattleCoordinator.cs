@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.DI;
 using Core.Serialize.Binary;
@@ -105,7 +106,20 @@ namespace HotUpdate.Game.Battle.Core
         {
             BattleCameraManager = DIContainer.Create<IBattleCameraManager>(parameterValues: new object[] { this, BattleInputHandler });
             TargetSelectManager = DIContainer.Create<ITargetSelectManager>();
+            // 初始化角色战斗点，依赖玩家战斗实体对象创建完成
+            _battlePointProxy.InitProxy(battleContext, new List<IBattleEntityObject>(Context.GetAlivePlayerEntitys()));
             Context = battleContext;
+        }
+        
+        /// <summary>
+        /// 初始化技能目标
+        /// </summary>
+        /// <param name="skill"></param>
+        public void InitSkillTarget(ISkill skill)
+        {
+            var mainTaget = TargetSelectManager.GetMainTarget();
+            var selectedTargets = TargetSelectManager.GetTargets();
+            skill.Init(mainTaget, selectedTargets);
         }
 
         /// <summary>
@@ -118,7 +132,7 @@ namespace HotUpdate.Game.Battle.Core
         }
 
         /// <summary>
-        /// 根据技能信息自动重新计算主目标和范围内的目标，触发目标选择事件更新UI显示
+        /// 根据技能信息自动重新计算主目标和范围内的目标，触发目标选择事件更新UI显示,在选择目标前要先设置SetSelectSkillInfo
         /// </summary>
         /// <param name="caster"></param>
         /// <param name="targetSelectStrategy"></param>
@@ -133,7 +147,20 @@ namespace HotUpdate.Game.Battle.Core
         }
 
         /// <summary>
-        /// 更新相机看向
+        /// 设置相机的位置变换,若相机不存在则异步创建
+        /// </summary>
+        /// <param name="cameraTrans"></param>
+        /// <param name="localPos"></param>
+        /// <param name="localRot"></param>
+        /// <param name="mask"></param>
+        /// <returns></returns>
+        public Task SetCameraTrans(Transform cameraTrans, Vector3 localPos, Quaternion localRot, int mask)
+        {
+            return BattleCameraManager.CreateCamera(cameraTrans, localPos, localRot, mask);
+        }
+        
+        /// <summary>
+        /// 更新相机看向,看向怪物或玩家角色
         /// </summary>
         /// <param name="skillTargetType"></param>
         /// <param name="playerObject"></param>
@@ -173,11 +200,11 @@ namespace HotUpdate.Game.Battle.Core
         }
 
         /// <summary>
-        /// 终结技释放前调度逻辑
+        /// 执行玩家角色终结技释放前逻辑
         /// </summary>
         /// <param name="caster"></param>
         /// <param name="skillInfo"></param>
-        public IEnumerator PreUltimateCastDispatch(IBattleEntityObject caster, SkillInfo skillInfo)
+        public IEnumerator ExecutePreUltimateCast(IBattleEntityObject caster, SkillInfo skillInfo)
         {
             UpdateMonsterPos(caster);
             yield return TaskUtility.WaitForTask(UpdateCamera((PlayerObject)caster));
@@ -199,10 +226,37 @@ namespace HotUpdate.Game.Battle.Core
             controller.BattleUiManager.UpdateOperator(caster, provider);
         }
         
+        /// <summary>
+        /// 根据释放技能的玩家角色，更新怪物在场景上的位置到预定的位置
+        /// </summary>
+        /// <param name="caster">释放技能的玩家角色对象</param>
         public void UpdateMonsterPos(IBattleEntityObject caster)
         {
             // 先执行战斗点位置变化
             _battlePointProxy.UpdateMonsterPos(caster);
+        }
+        
+        /// <summary>
+        /// 获取当前怪物中心点的位置
+        /// </summary>
+        /// <returns></returns>
+        public Vector3 GetMonsterCenterPos()
+        {
+            return _battlePointProxy.BattlePoint.MonsterCenter.position;
+        }
+
+        /// <summary>
+        /// 设置怪物中心点的位置为自定义的指定位置
+        /// </summary>
+        /// <param name="pos">自定义的指定位置</param>
+        public void SetMonsterCenterPos(Vector3 pos)
+        {
+            _battlePointProxy.BattlePoint.MonsterCenter.position = pos;
+        }
+
+        public Vector3 GetRoleTransByIndex(int entityPosIndex)
+        {
+            return _battlePointProxy.GetRoleTransByIndex(entityPosIndex).position;
         }
 
         /// <summary>

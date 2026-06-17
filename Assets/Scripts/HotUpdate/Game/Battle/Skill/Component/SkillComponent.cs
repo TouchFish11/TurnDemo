@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using Core.DI;
-using Core.Log;
+using Core.Serialize.Binary;
 using Core.Utility;
+using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Skill.Conditions;
 using HotUpdate.Game.Battle.TargetSelect;
@@ -17,9 +18,11 @@ namespace HotUpdate.Game.Battle.Skill.Component
     {
         [Inject] protected ICastSkillConditionFactory castSkillConditionFactory;
         [Inject] protected ITargetSelectStrategyFactory targetSelectStrategyFactory;
+        [Inject] protected BinaryDataManager binaryDataManager;
         
+        protected ISkillFactory skillFactory;
         // 技能数据字典：Key为技能ID，Value为对应的技能数据对象，用于快速索引技能
-        protected readonly Dictionary<int, ISkillData> skillDatas = new();
+        protected readonly HashSet<int> skillIds = new();
         // 施法条件集合：存储当前技能组件生效的所有施法条件，施法前需校验所有条件
         protected readonly List<ICastSkillCondition> castSkillConditions = new();
         // 目标选择策略集合：存储当前技能组件的所有目标选择策略，按优先级排序后生效
@@ -35,12 +38,11 @@ namespace HotUpdate.Game.Battle.Skill.Component
         {
             // 将技能ID字符串解析为int数组（第二个参数2为分隔符标识，需参考TextUtility.SplitToIntArr实现）
             var skillIds = TextUtility.SplitToIntArr(f_skillIds, 2);
-            
-            // 遍历工厂创建的技能数据，将技能ID和数据映射存入字典
-            foreach (var skillData in skillFactory.CreateSkills(BattleEntity, skillIds))
+            foreach (var skillId in skillIds)
             {
-                skillDatas.Add(skillData.Skill.SkillInfo.f_id, skillData);
+                this.skillIds.Add(skillId);
             }
+            this.skillFactory = skillFactory;
         }
 
         /// <summary>
@@ -51,12 +53,13 @@ namespace HotUpdate.Game.Battle.Skill.Component
         public bool CanCast(int skillId)
         {
             // 先校验技能是否存在
-            if (skillDatas.TryGetValue(skillId, out var data))
+            if (skillIds.Contains(skillId))
             {
+                var skillInfo = binaryDataManager.GetConfig<SkillInfoContainer>(EConfigLoadType.Excel).dataDic[skillId];
                 // 遍历所有施法条件，只要有一个条件不满足则返回false
                 foreach (var condition in castSkillConditions)
                 {
-                    if (!condition.CanCast(BattleEntity, data.Skill))
+                    if (!condition.CanCast(BattleEntity, skillInfo))
                     {
                         return false;
                     }
@@ -77,13 +80,9 @@ namespace HotUpdate.Game.Battle.Skill.Component
         /// 注：仅当技能ID未存在时才会添加，避免重复
         /// </summary>
         /// <param name="skillId">要添加的技能ID</param>
-        /// <param name="skillData">对应的技能数据对象</param>
-        public void AddSkill(int skillId, ISkillData skillData)
+        public void AddSkill(int skillId)
         {
-            if (!skillDatas.TryGetValue(skillId, out ISkillData _))
-            {
-                skillDatas.Add(skillId, skillData);
-            }
+            skillIds.Add(skillId);
         }
 
         /// <summary>
@@ -155,20 +154,7 @@ namespace HotUpdate.Game.Battle.Skill.Component
         /// <returns>技能ID的新列表（避免外部修改原字典）</returns>
         public List<int> GetSkillIds()
         {
-            return new List<int>(skillDatas.Keys);
-        }
-
-        /// <summary>
-        /// 获取当前组件管理的所有技能实例
-        /// 采用迭代器方式返回，减少内存拷贝
-        /// </summary>
-        /// <returns>技能实例的可枚举集合</returns>
-        public IEnumerable<ISkill> GetSkills()
-        {
-            foreach (var skillData in skillDatas.Values)
-            {
-                yield return skillData.Skill;
-            }
+            return new List<int>(skillIds);
         }
 
         /// <summary>
@@ -179,15 +165,8 @@ namespace HotUpdate.Game.Battle.Skill.Component
         /// <returns>对应的技能数据对象</returns>
         public ISkillData GetSkillData(int skillId)
         {
-            if (skillDatas.TryGetValue(skillId, out var data))
-            {
-                // 为技能设置最高优先级的目标选择策略（排序后第一个即为最高优先级）
-                data.Skill.SetTargetSelectStrategy(targetSelectStrategies[0]);
-                return data;
-            }
-            
-            Logger.LogError($"{nameof(SkillComponent)}.{nameof(GetSkillData)}：该技能ID不存在,{skillId}");
-            return null;
+            // 为技能设置最高优先级的目标选择策略（排序后第一个即为最高优先级）
+            return skillFactory.CreateSkill(BattleEntity, skillId, targetSelectStrategies[0]);
         }
     }
 }

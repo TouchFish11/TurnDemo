@@ -13,7 +13,7 @@ namespace HotUpdate.Game.Battle.Projectile
         /// 子类可覆盖
         /// </summary>
         /// <returns></returns>
-        protected override IEnumerator PlayingVFX()
+        protected override IEnumerator ExecuteVFX()
         {
             AddStatusOnTrigger();
             HandleTiming();

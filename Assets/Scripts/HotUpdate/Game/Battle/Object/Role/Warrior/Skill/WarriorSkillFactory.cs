@@ -1,8 +1,11 @@
+using System;
 using Core.DI;
 using HotUpdate.Base;
+using HotUpdate.Game.Battle.Object.Monster.Slime.Effects;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Handler;
+using HotUpdate.Game.Battle.Skill.Nodes;
 
 namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill
 {
@@ -11,14 +14,27 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill
     /// </summary>
     public class WarriorSkillFactory : SkillFactory
     {
-        public override ISkillData CreateSkill(IBattleEntityObject caster, int skillId)
+        protected override SKillBuildData CreateSKillBuildData(int skillId)
         {
+            SKillBuildData sKillBuildData = default;
             switch (skillId)
             {
                 case 10:
                     var handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
-                    var warriorNormalSkill = DIContainer.Create<WarriorNormalSkill>(parameterValues: new object[] { caster, skillId });
-                    return new SkillData(warriorNormalSkill, handler);
+                    var effects = SkillNodeBuildPipeline.
+                        AddNode<MonsterPreNode>().
+                        AddNode<TargetSelectNode>().
+                        AddNode<SlimeProjectileInitNode>().
+                        AddNode<UpdateCameraNode>(stragty).
+                        AddNode<DelayNode>(0.1f).
+                        AddNode<PlayAnimationNode>(stateName, targetEndProgress).
+                        AddNode<CreateProjectileNode>().
+                        AddNode<ProcessProjectileEventNode>().
+                        AddNode<DelayNode>(0.1f).
+                        Build();
+                    
+                    sKillBuildData = new SKillBuildData(handler, effects);
+                    break;
                 case 11:
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
                     var warriorBattleSkill = DIContainer.Create<WarriorBattleSkill>(parameterValues: new object[] { caster, skillId });
@@ -27,9 +43,9 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseUltimateSkillCastPostHandler>();
                     var warriorUltimateSkill = DIContainer.Create<WarriorUltimateSkill>(parameterValues: new object[] { caster, skillId });
                     return new SkillData(warriorUltimateSkill, handler);
-                default:
-                    return null;
             }
+
+            return sKillBuildData;
         }
     }
 }

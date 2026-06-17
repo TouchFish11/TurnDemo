@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Core.DI;
 using Core.Log;
 using Core.Mono;
@@ -8,7 +7,6 @@ using Core.Utility;
 using HotUpdate.Base.UI;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;
-using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Turn;
 using HotUpdate.Game.Battle.UI;
 
@@ -39,8 +37,8 @@ namespace HotUpdate.Game.Battle.StateMeachine
                 // TODO：暂时写死，可根据配置优化
                 // 创建并缓存战斗角色
                 await _battleManager.GetBattleService().CreatePlayerRoles(1,2,3);
-                // 初始化角色战斗点，依赖玩家战斗实体对象创建完成
-                _battleCoordinator.InitProxy(Context, new List<IBattleEntityObject>(Context.GetAlivePlayerEntitys()));
+                // 初始化战斗协调器
+                _battleCoordinator.Init(Context);
                 // 初始化角色UI
                 await battleController.UiInitializer.InitPlayerUIs(Context.GetAlivePlayerEntitys());
                 // 更新战技点UI

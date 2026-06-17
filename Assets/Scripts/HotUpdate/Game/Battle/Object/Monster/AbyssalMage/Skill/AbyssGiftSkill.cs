@@ -1,8 +1,8 @@
 using System.Collections;
 using Core.DI;
 using Core.Pool;
+using Core.Serialize.Binary;
 using Core.Utility;
-using HotUpdate.Base;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Utility;
@@ -25,8 +25,9 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill
         /// </summary>
         public static string Attack01 => "Attack01";
         
-        public AbyssGiftSkill(IBattleEntityObject caster, int skillId) : base(caster, skillId)
+        protected AbyssGiftSkill(IBattleEntityObject caster, int skillId, BinaryDataManager binaryDataManager) : base(caster, skillId, binaryDataManager)
         {
+            
         }
 
         protected override void InitProjectile()

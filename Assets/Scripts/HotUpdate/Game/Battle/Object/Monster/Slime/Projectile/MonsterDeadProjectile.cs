@@ -12,7 +12,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.Slime.Projectile
     {
         private const float destroyTime = 1.01f;
 
-        protected override IEnumerator PlayingVFX()
+        protected override IEnumerator ExecuteVFX()
         {
             float nowTime = 0;
             while (particleSystem.IsAlive())

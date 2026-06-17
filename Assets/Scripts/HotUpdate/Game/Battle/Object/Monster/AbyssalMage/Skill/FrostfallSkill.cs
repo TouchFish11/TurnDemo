@@ -1,14 +1,11 @@
 using System.Collections;
 using Core.DI;
 using Core.Pool;
+using Core.Serialize.Binary;
 using Core.Utility;
-using HotUpdate.Base;
 using HotUpdate.Base.Component;
-using HotUpdate.Base.Manager;
 using HotUpdate.Base.Utility;
-
 using HotUpdate.Game.Battle.Context;
-using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.VFX;
@@ -21,14 +18,16 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill
     /// </summary>
     public class FrostfallSkill : MonsterSkill
     {
+        public FrostfallSkill(SkillContext skillContext) : base(skillContext)
+        {
+            
+        }
+
         /// <summary>
         /// 普攻动画02
         /// </summary>
         public static string Attack02 => "Attack02";
         
-        public FrostfallSkill(IBattleEntityObject caster, int skillId) : base(caster, skillId)
-        {
-        }
         
         protected override void InitProjectile()
         {
@@ -67,15 +66,14 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill
             var mask = LayerGeter.GetPreBitLayer() | LayerGeter.GetRoleBitLayer() | LayerGeter.GetMonsterBitLayer();
             
             // 更新怪物中心点位置
-            var centerPos = DIContainer.GetInstance<IBattleManager>().GetContext().GetProxy().BattlePoint.MonsterCenter.transform
-                .position;
+            var centerPos = battleCoordinator.GetMonsterCenterPos();
             centerPos = new Vector3(3, centerPos.y, centerPos.z);
-            DIContainer.GetInstance<IBattleManager>().GetContext().GetProxy().BattlePoint.MonsterCenter.transform.position = centerPos;
+            battleCoordinator.SetMonsterCenterPos(centerPos);
             
             // 切换相机视角
             var pos = new Vector3(0, 5, -11.5f);
             var rot = Quaternion.Euler(25, 0, 0);
-            yield return TaskUtility.WaitForTask(DIContainer.GetInstance<IBattleCameraManager>().CreateCamera(null, pos, rot, mask));
+            yield return TaskUtility.WaitForTask(battleCoordinator.SetCameraTrans(null, pos, rot, mask));
         }
         
         private async void CreateVFX_02()

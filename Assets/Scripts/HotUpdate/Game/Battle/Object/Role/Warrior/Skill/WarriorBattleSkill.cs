@@ -1,5 +1,6 @@
 using System.Collections;
 using Core.DI;
+using Core.Serialize.Binary;
 using Core.Utility;
 using HotUpdate.Base;
 using HotUpdate.Base.Component;
@@ -20,13 +21,8 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill
     {
         // 战斗攻击动画状态名称
         private const string battleAttackState = "BattleAttack";
-
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="caster">施法者实体</param>
-        /// <param name="skillId">技能ID</param>
-        public WarriorBattleSkill(IBattleEntityObject caster, int skillId) : base(caster, skillId)
+        
+        public WarriorBattleSkill(IBattleEntityObject caster, int skillId, BinaryDataManager binaryDataManager) : base(caster, skillId, binaryDataManager)
         {
         }
 

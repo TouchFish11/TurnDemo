@@ -1,10 +1,10 @@
 using System.Collections;
 using Core.DI;
 using Core.Pool;
-using HotUpdate.Base;
+using Core.Serialize.Binary;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Utility;
-
+using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.VFX;
@@ -15,14 +15,14 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill
     /// <summary>
     /// 烬陨
     /// </summary>
-    public class AshfallSkill : MonsterSkill
+    public class AshfallSkill : Battle.Skill.Base.Skill
     {
         /// <summary>
         /// 普攻动画02
         /// </summary>
         public static string Attack02 => "Attack02";
 
-        public AshfallSkill(IBattleEntityObject caster, int skillId) : base(caster, skillId)
+        public AshfallSkill(IBattleEntityObject caster, int skillId, BinaryDataManager binaryDataManager) : base(caster, skillId, binaryDataManager)
         {
         }
 

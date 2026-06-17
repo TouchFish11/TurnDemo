@@ -1,15 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Core.DI;
-using HotUpdate.Base.Manager;
 using HotUpdate.Game.Battle.Context;
-using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Point;
 using UnityEngine;
-using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.Battle.Core
 {
@@ -57,11 +52,11 @@ namespace HotUpdate.Game.Battle.Core
         /// <summary>
         /// 更新怪物在场景上的位置和之间的相对位置
         /// </summary>
-        /// <param name="battleEntity"></param>
-        public void UpdateMonsterPos(IBattleEntityObject battleEntity)
+        /// <param name="playerRole">释放技能的玩家角色对象</param>
+        public void UpdateMonsterPos(IBattleEntityObject playerRole)
         {
             // 更新怪物中心位置
-            UpdateMonsterCenter(battleEntity);
+            UpdateMonsterCenter(playerRole);
             // 更新怪物之间的相对位置
             SortMonsterTrans();
         }
@@ -70,14 +65,19 @@ namespace HotUpdate.Game.Battle.Core
         {
             return BattlePoint.GetRoleCameraTransByIndex(playerObject.EntityPosIndex);
         }
-        
+
+        public Transform GetRoleTransByIndex(int index)
+        {
+            return BattlePoint.GetRoleTransByIndex(index);
+        }
+
         /// <summary>
         /// 更新怪物中心位置
         /// </summary>
-        /// <param name="battleEntity"></param>
-        private void UpdateMonsterCenter(IBattleEntityObject battleEntity)
+        /// <param name="playerRole">释放技能的玩家角色对象</param>
+        private void UpdateMonsterCenter(IBattleEntityObject playerRole)
         {
-            var pointInfo = pointInfos.Find(info => info.BattleEntity == battleEntity);
+            var pointInfo = pointInfos.Find(info => info.BattleEntity == playerRole);
             var nowPos = BattlePoint.MonsterCenter.position;
             nowPos.x = pointInfo.MonsterCenterX;
             BattlePoint.MonsterCenter.transform.position = nowPos;
@@ -148,7 +148,6 @@ namespace HotUpdate.Game.Battle.Core
             currentMonsterCount = newLiveCount;
         }
         
-
         public void Dispose()
         {
             pointInfos.Clear();

@@ -1,4 +1,5 @@
 using HotUpdate.Base;
+using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.Skill.Conditions
@@ -12,8 +13,8 @@ namespace HotUpdate.Game.Battle.Skill.Conditions
         /// 能否释放    
         /// </summary>
         /// <param name="caster"></param>
-        /// <param name="skill"></param>
+        /// <param name="skillInfo"></param>
         /// <returns></returns>
-        bool CanCast(IBattleEntityObject caster, ISkill skill);
+        bool CanCast(IBattleEntityObject caster, SkillInfo skillInfo);
     }
 }

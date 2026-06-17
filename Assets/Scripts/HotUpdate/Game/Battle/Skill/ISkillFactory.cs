@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using HotUpdate.Base;
 using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.Skill.Base;
+using HotUpdate.Game.Battle.TargetSelect;
 
 namespace HotUpdate.Game.Battle.Skill
 {
@@ -12,17 +14,10 @@ namespace HotUpdate.Game.Battle.Skill
         /// <summary>
         /// 创建技能实例
         /// </summary>
-        /// <param name="caster">施法者</param>
+        /// <param name="caster"></param>
         /// <param name="skillId">技能ID</param>
+        /// <param name="targetSelectStrategy"></param>
         /// <returns>技能数据</returns>
-        ISkillData CreateSkill(IBattleEntityObject caster, int skillId);
-        
-        /// <summary>
-        /// 批量创建技能实例
-        /// </summary>
-        /// <param name="caster">施法者</param>
-        /// <param name="skillIds">技能ID数组</param>
-        /// <returns>技能数据集合</returns>
-        IEnumerable<ISkillData> CreateSkills(IBattleEntityObject caster, params int[] skillIds);
+        ISkillData CreateSkill(IBattleEntityObject caster, int skillId, ITargetSelectStrategy targetSelectStrategy);
     }
 }

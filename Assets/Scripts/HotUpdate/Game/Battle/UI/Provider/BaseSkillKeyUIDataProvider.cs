@@ -1,5 +1,7 @@
 using System.Collections.Generic;
-using HotUpdate.Base;
+using Core.DI;
+using Core.Serialize.Binary;
+using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Skill;
@@ -13,6 +15,7 @@ namespace HotUpdate.Game.Battle.UI.Provider
     /// </summary>
     public class BaseSkillKeyUIDataProvider : ISkillKeyUIDataProvider
     {
+        [Inject] private IBinaryDataManager _binaryDataManager;
         /// <summary>
         /// 获取技能按键UI展示所需的数据
         /// </summary>
@@ -22,14 +25,11 @@ namespace HotUpdate.Game.Battle.UI.Provider
         {
             // 初始化技能按键UI数据，传入空的技能信息列表和数据提供方实体
             var skillKeyUIData = new SkillKeyUIData(new List<SkillInfo>(), provider);
-            // 从战斗实体中获取技能组件，并提取所有技能列表
-            var skills = new List<ISkill>(provider.GetComponent<SkillComponent>().GetSkills());
-
-            // 遍历所有技能，筛选非终极技能的技能信息加入UI数据
-            foreach (var skill in skills)
+            // 遍历所有技能ID，筛选非终极技能的技能信息加入UI数据
+            foreach (var skillId in provider.GetComponent<SkillComponent>().GetSkillIds())
             {
                 // 获取当前技能的基础信息
-                var skillInfo = skill.SkillInfo;
+                var skillInfo = _binaryDataManager.GetConfig<SkillInfoContainer>(EConfigLoadType.Excel).dataDic[skillId];
                 // 过滤掉终极技能（终极技能不展示在基础技能按键UI中）
                 if ((E_SkillType)skillInfo.f_SkillType == E_SkillType.UltimateSkill)
                 {

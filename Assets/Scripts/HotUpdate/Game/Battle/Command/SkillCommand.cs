@@ -20,7 +20,7 @@ namespace HotUpdate.Game.Battle.Command
         /// <param name="skillData"></param>
         public void Init(ISkillData skillData)
         {
-            Sender = skillData.Skill.Caster;
+            Sender = skillData.Skill.SkillContext.Caster;
             SkillData = skillData;
         }
         
@@ -37,7 +37,7 @@ namespace HotUpdate.Game.Battle.Command
 
         public override IEnumerator ExcutePostProcess(IBattleContext context)
         {
-            yield return SkillData.SkillCastPostHandler.Handle(SkillData.Skill);
+            yield return SkillData.Skill.SkillContext.SkillCastPostHandler.Handle(SkillData.Skill);
         }
     }
 }

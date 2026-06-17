@@ -1,9 +1,9 @@
+using System.Threading.Tasks;
+using HotUpdate.Game.Battle.Projectile;
 using UnityEngine;
 
 namespace HotUpdate.Game.VFX
 {
-    using Task = System.Threading.Tasks.Task;
-
     /// <summary>
     /// 特效管理器接口
     /// </summary>
@@ -16,7 +16,7 @@ namespace HotUpdate.Game.VFX
         /// <param name="projectileTrans"></param>
         /// <param name="data"></param>
         /// <param name="vFXFlag"></param>
-        Task CreateVFX(string vfxName, ProjectileTrans projectileTrans, ProjectileData data, VFXInfo vFXFlag);
+        Task<IProjectile> CreateVFX(string vfxName, ProjectileTrans projectileTrans, ProjectileData data, VFXInfo vFXFlag);
 
         /// <summary>
         /// 创建特效

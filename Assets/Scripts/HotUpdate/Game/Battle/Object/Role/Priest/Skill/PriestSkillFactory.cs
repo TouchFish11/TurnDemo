@@ -1,8 +1,8 @@
-using Core.DI;
-using HotUpdate.Base;
+using HotUpdate.Game.Battle.Object.Monster.Slime.Effects;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Handler;
+using HotUpdate.Game.Battle.Skill.Nodes;
 
 namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
 {
@@ -11,25 +11,38 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
     /// </summary>
     public class PriestSkillFactory : SkillFactory
     {
-        public override ISkillData CreateSkill(IBattleEntityObject caster, int skillId)
+        // 动画状态名称常量：攻击状态（与Animator中状态名对应）
+        private const string BattleAttackState = "BattleAttack";
+        
+        protected override SKillBuildData CreateSKillBuildData(int skillId)
         {
+            SKillBuildData sKillBuildData = default;
+            ISkillCastPostHandler handler;
             switch (skillId)
             {
                 case 30:
-                    var handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
-                    var priestNormalSkill = DIContainer.Create<PriestNormalSkill>(parameterValues: new object[] { caster, skillId });
-                    return new SkillData(priestNormalSkill, handler);
+                    handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
+                    var effects = SkillNodeBuildPipeline.
+                        AddNode<TargetSelectNode>().
+                        AddNode<SkillPointCastNode>().
+                        AddNode<ProjectileInitNode>().
+                        AddNode<PlayAnimationNode>(BattleAttackState, 0.2f).
+                        AddNode<CreateProjectileNode>().
+                        AddNode<ProcessProjectileEventNode>().
+                        AddNode<DelayNode>(0.1f).
+                        Build();
+                    
+                    sKillBuildData = new SKillBuildData(handler, effects);
+                    break;
                 case 31:
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
-                    var priestBattleSkill = DIContainer.Create<PriestBattleSkill>(parameterValues: new object[] { caster, skillId });
-                    return new SkillData(priestBattleSkill, handler);
+                    break;
                 case 32:
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseUltimateSkillCastPostHandler>();
-                    var priestUltimateSkill = DIContainer.Create<PriestUltimateSkill>(parameterValues: new object[] { caster, skillId });
-                    return new SkillData(priestUltimateSkill, handler);
-                default:
-                    return null;
+                    break;
             }
+
+            return sKillBuildData;
         }
     }
 }

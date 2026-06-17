@@ -2,6 +2,7 @@ using System.Collections;
 using Core.DI;
 
 using HotUpdate.Game.Battle.Projectile;
+using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Status;
 using HotUpdate.Game.VFX;
 using UnityEngine;
@@ -16,7 +17,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.Slime.Projectile
         private const float moveSpeed = 50f;
         private const float dmgDis = 1f;
 
-        protected sealed override IEnumerator PlayingVFX()
+        protected sealed override IEnumerator ExecuteVFX()
         {
             while (Vector3.Distance(transform.position, projectileData.mainTarget.GameObject.transform.position) > dmgDis)
             {
@@ -24,49 +25,8 @@ namespace HotUpdate.Game.Battle.Object.Monster.Slime.Projectile
                 yield return null;
             }
 
-            AddStatusOnTrigger();
-            ApplyEffectOnTrigger();
-            CreateVFXOnTrigger();
-            HandleTiming();
-            vFXInfo.IsStop = true;
-        }
-
-        protected override void AddStatusOnTrigger()
-        {
-            foreach (var target in projectileData.targets)
-            {
-                foreach (var statusId in statusIds)
-                {
-                    // 获取状态实例
-                    var status = statusFactory.GetStatus(projectileData.caster, target, statusId);
-                    // 添加状态
-                    target.GetComponent<StatusComponent>().AddStatus(status);
-                }
-            }
-        }
-
-        protected override void ApplyEffectOnTrigger()
-        {
-            foreach (var target in projectileData.targets)
-            {
-                damageCalcManager.CalcSkillDamage(projectileData.caster, target, projectileData.skill.SkillInfo, out var result);
-                target.TakeDamage(result);
-            }
-        }
-
-        protected override async void CreateVFXOnTrigger()
-        {
-            foreach (var target in projectileData.targets)
-            {
-                var projectileTrans = new ProjectileTrans(target.GameObject.transform.position + Vector3.up * 0.5f, Quaternion.identity);
-                var vfxInfo = new VFXInfo();
-                await DIContainer.GetInstance<IVFXManager>().CreateVFX(AssetKeys.VFX_MonsterHit, projectileTrans, default, vfxInfo);
-            }
-        }
-
-        protected override void HandleTiming()
-        {
-            
+            var result = new HitResult(true, 0);
+            InvokeOnTrigger(result);
         }
     }
 }

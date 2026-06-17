@@ -1,10 +1,11 @@
 using System;
 using Core.DI;
 using Core.Serialize.Binary;
+using HotUpdate.Base.Component;
+using HotUpdate.Base.Enums;
 using HotUpdate.Base.UI;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Game.Battle.Core;
-using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Event.Skill;
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Event.UI;
@@ -18,7 +19,7 @@ namespace HotUpdate.Game.Battle.Event
 {
     /// <summary>
     /// 战斗事件逻辑调度器
-    /// 监听战斗事件，执行其它模块的统一调用
+    /// 监听复杂战斗事件，执行其它模块的统一调用
     /// </summary>
     public class BattleEventScheduler : IBattleEventScheduler, IDisposable
     {
@@ -39,10 +40,8 @@ namespace HotUpdate.Game.Battle.Event
             _battleCoordinator.Context.GetEventBus().AddListener<TurnStartEvent>(OnTurnStartDispatch);
             // 监听角色技能选择事件
             _battleCoordinator.Context.GetEventBus().AddListener<SelectSkillEvent>(SelectSkillEventScheduler);
-            // 监听技能释放后通用逻辑事件
+            // 监听玩家角色终结技释放后通用逻辑事件
             _battleCoordinator.Context.GetEventBus().AddListener<UltimateCastEvent>(OnUltimateCastDispatch);
-            // 监听更新等待队列事件
-            _battleCoordinator.Context.GetEventBus().AddListener<UpdateWaitCmdEvent>(OnUpdateWaitCmdDispatch);
         }
         
         /// <summary>
@@ -59,16 +58,6 @@ namespace HotUpdate.Game.Battle.Event
             controller.BattleUiManager.ClearSelectMarker();
             controller.BattleUiManager.ClearOperator();
             controller.BattleUiManager.SetActTipActive(E_ActTipType.Hide);
-        }
-
-        /// <summary>
-        /// 更新等待队列事件回调
-        /// </summary>
-        /// <param name="updateWaitCmdEvent"></param>
-        private void OnUpdateWaitCmdDispatch(UpdateWaitCmdEvent updateWaitCmdEvent)
-        {
-            var controller = (IBattleController)_uiService.GetPanel(EUIPanelId.BattlePanel);
-            controller.BattleUiManager.UpdateWaitingCommmand(updateWaitCmdEvent.BattleEntities);
         }
         
         /// <summary>
@@ -149,13 +138,31 @@ namespace HotUpdate.Game.Battle.Event
                 _battleCoordinator.SelectTargets(selectSkillEvent.Caster, selectSkillEvent.TargetSelectStrategy);
                 // 更新相机视角
                 await _battleCoordinator.UpdateCamera((E_SkillTargetType)skillInfo.f_SkillTargetType, playerObject);
+
+                // 根据技能类型切换前置动画
+                var battleAnimationComponent = playerObject.GetComponent<IBattleAnimationComponent>();
+                switch ((E_SkillType)skillInfo.f_SkillType)
+                {
+                    case E_SkillType.Monster: // 怪物技能 → 播放通用攻击动画
+                        battleAnimationComponent.SetAnimationState((int)E_AnimationType.Attack);
+                        break;
+                    case E_SkillType.NormalAttack: // 普通攻击 → 播放预普通攻击动画
+                        battleAnimationComponent.SetAnimationState((int)E_AnimationType.PreNormalAttack);
+                        break;
+                    case E_SkillType.CombatSkill: // 战斗技能 → 播放预战斗技能攻击动画
+                        battleAnimationComponent.SetAnimationState((int)E_AnimationType.PreBattleAttack);
+                        break;
+                    case E_SkillType.EnhancedNormalAttack: // 强化普通攻击 → 暂未处理
+                    case E_SkillType.EnhancedCombatSkill: // 强化战斗技能 → 暂未处理
+                        break;
+                }
             }
             catch (Exception e)
             {
                 Logger.LogError($"{nameof(BattleEventScheduler)}: Character skill selection event scheduling logic execution error,{e.Message}");
             }
         }
-
+        
         public void Dispose()
         {
             // 监听回合开始事件
@@ -164,8 +171,6 @@ namespace HotUpdate.Game.Battle.Event
             _battleCoordinator.Context.GetEventBus().RemoveListener<SelectSkillEvent>(SelectSkillEventScheduler);
             // 监听技能释放后通用逻辑事件
             _battleCoordinator.Context.GetEventBus().RemoveListener<UltimateCastEvent>(OnUltimateCastDispatch);
-            // 监听更新等待队列事件
-            _battleCoordinator.Context.GetEventBus().RemoveListener<UpdateWaitCmdEvent>(OnUpdateWaitCmdDispatch);
             _battleCoordinator = null;
         }
     }

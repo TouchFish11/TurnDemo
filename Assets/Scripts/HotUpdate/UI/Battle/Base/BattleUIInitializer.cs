@@ -2,7 +2,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
-using HotUpdate.Base;
+using Core.Serialize.Binary;
+using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.Skill;
@@ -20,6 +21,7 @@ namespace HotUpdate.UI.Battle.Base
     public class BattleUIInitializer : IBattleUIInitializer
     {
         [Inject] private ObjectSpawner _objectSpawner;
+        [Inject] private IBinaryDataManager _binaryDataManager;
         
         // 战斗视图接口，用于获取UI挂载节点等视图相关信息
         private readonly BattleView _view;
@@ -53,21 +55,22 @@ namespace HotUpdate.UI.Battle.Base
 
                 // 获取当前实体的技能组件，用于查找必杀技
                 var skillComponent = battleEntity.GetComponent<SkillComponent>();
-                var skillId = -1;
+                var targetSkillId = -1;
                 // 遍历技能列表，筛选出必杀技（终极技能）并记录其ID
-                foreach (var skill in skillComponent.GetSkills())
+                foreach (var skillId in skillComponent.GetSkillIds())
                 {
-                    if (skill.SkillInfo.f_SkillType != (byte)E_SkillType.UltimateSkill)
+                    var skillInfo = _binaryDataManager.GetConfig<SkillInfoContainer>(EConfigLoadType.Excel).dataDic[skillId];
+                    if (skillInfo.f_SkillType != (byte)E_SkillType.UltimateSkill)
                     {
                         continue;
                     }
                     
-                    skillId = skill.SkillInfo.f_id;
+                    targetSkillId = skillInfo.f_id;
                     break;
                 }
 
                 // 若未找到必杀技，则跳过当前实体的UI初始化
-                if (skillId == -1)
+                if (targetSkillId == -1)
                 {
                     continue;
                 }
@@ -82,7 +85,7 @@ namespace HotUpdate.UI.Battle.Base
                 var roleProperty = playerPropertyComponent.GetProperty<RoleProperty>();
                 
                 // 初始化角色状态UI（传入属性、图标、必杀技ID、战斗实体）
-                roleStateUI.Init(roleProperty, iconHandle.Asset, skillId, battleEntity);
+                roleStateUI.Init(roleProperty, iconHandle.Asset, targetSkillId, battleEntity);
                 // 将初始化后的角色状态UI缓存到数据模型中
                 _view.InitRoleStateUI(roleStateUI);
             }

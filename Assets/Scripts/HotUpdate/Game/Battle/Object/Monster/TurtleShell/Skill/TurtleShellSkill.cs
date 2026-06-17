@@ -2,6 +2,8 @@ using System.Collections;
 using System.Text;
 using Core.DI;
 using Core.Pool;
+using Core.Serialize.Binary;
+using Core.Utility;
 using HotUpdate.Base;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Utility;
@@ -26,7 +28,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.TurtleShell.Skill
         /// </summary>
         public static string Attack => "Attack";
 
-        public TurtleShellSkill(IBattleEntityObject caster, int skillId) : base(caster, skillId)
+        public TurtleShellSkill(IBattleEntityObject caster, int skillId, BinaryDataManager binaryDataManager) : base(caster, skillId, binaryDataManager)
         {
             Caster.GetComponentInChildren<AnimationTrigger>().OnAttack += OnAttack;
         }
@@ -47,9 +49,6 @@ namespace HotUpdate.Game.Battle.Object.Monster.TurtleShell.Skill
         /// </summary>
         protected override void InitProjectile()
         {
-            // 更新战斗相机视角
-            Caster.Context.GetProxy().UpdateCamera(MainTarget);
-            
             // 获取主目标位置（仅保留XZ平面，忽略Y轴高度）
             var mainTarget = MainTarget.GameObject.transform.position;
             mainTarget = new Vector3(mainTarget.x, 0, mainTarget.z);
@@ -81,6 +80,9 @@ namespace HotUpdate.Game.Battle.Object.Monster.TurtleShell.Skill
         /// <returns>协程迭代器</returns>
         protected override IEnumerator OnCast(IBattleContext context)
         {
+            // 更新战斗相机视角
+            yield return TaskUtility.WaitForTask(battleCoordinator.UpdateCamera((PlayerObject)MainTarget));
+            
             // 技能释放前短暂延迟
             yield return new WaitForSeconds(0.1f);
             

@@ -8,7 +8,7 @@ namespace HotUpdate.Game.Battle.Projectile
     /// </summary>
     public abstract class TrajectProjectile : Projectile
     {
-        protected override IEnumerator PlayingVFX()
+        protected override IEnumerator ExecuteVFX()
         {
             float nowTime = 0;
             var index = 0;
