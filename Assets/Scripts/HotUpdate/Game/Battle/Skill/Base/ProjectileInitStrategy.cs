@@ -6,7 +6,5 @@ namespace HotUpdate.Game.Battle.Skill.Base
     public abstract class ProjectileInitStrategy : IProjectileInitStrategy
     {
         [Inject] protected IPoolManager poolManager;
-        
-        public abstract void Init(SkillContext skillContext);
     }
 }

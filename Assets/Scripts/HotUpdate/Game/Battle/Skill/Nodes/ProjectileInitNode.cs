@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Core.DI;
 using Core.Pool;
@@ -14,6 +15,8 @@ namespace HotUpdate.Game.Battle.Skill.Nodes
      
         private IProjectileInitStrategy _projectileInitStrategy;
         
+        private Action<SkillContext> onInit;
+        
         protected ProjectileInitNode(ISkill skill) : base(skill)
         {
             
@@ -26,13 +29,13 @@ namespace HotUpdate.Game.Battle.Skill.Nodes
 
         public override IEnumerator Execute()
         {
-            _projectileInitStrategy.Init(SkillContext);
+            onInit?.Invoke(SkillContext);
             yield break;
         }
 
-        public void SetProjectileInitStrategy(IProjectileInitStrategy projectileInitStrategy)
+        public void SetProjectileInitStrategy(Action<SkillContext> init)
         {
-            _projectileInitStrategy = projectileInitStrategy;
+            onInit = init;
         }
     }
 }

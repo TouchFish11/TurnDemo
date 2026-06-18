@@ -1,8 +1,9 @@
-using HotUpdate.Game.Battle.Object.Monster.Slime.Effects;
+using System.Collections.Generic;
+using HotUpdate.Base.Utility;
+using HotUpdate.Game.Battle.Object.Role.Priest.Strategys;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Handler;
-using HotUpdate.Game.Battle.Skill.Nodes;
 
 namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
 {
@@ -12,36 +13,55 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
     public class PriestSkillFactory : SkillFactory
     {
         // 动画状态名称常量：攻击状态（与Animator中状态名对应）
+        private const string AttackState = "NormalAttack";
         private const string BattleAttackState = "BattleAttack";
         
         protected override SKillBuildData CreateSKillBuildData(int skillId)
         {
-            SKillBuildData sKillBuildData = default;
-            ISkillCastPostHandler handler;
+            var projectileInitStrategy = new PriestProjectileInitStrategy();
+            var projectileEventProcessStrategy = new PriestProjectileEventProcessStrategy();
+            ISkillCastPostHandler handler = null;
+            List<ISkillNode> effects = null;
             switch (skillId)
             {
-                case 30:
+                case 30:    // 普攻
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
-                    var effects = SkillNodeBuildPipeline.
-                        AddNode<TargetSelectNode>().
-                        AddNode<SkillPointCastNode>().
-                        AddNode<ProjectileInitNode>().
-                        AddNode<PlayAnimationNode>(BattleAttackState, 0.2f).
-                        AddNode<CreateProjectileNode>().
-                        AddNode<ProcessProjectileEventNode>().
-                        AddNode<DelayNode>(0.1f).
+                    effects = SkillNodeBuildPipeline.
+                        AddTargetSelectNode().
+                        AddSkillPointCastNode().
+                        AddProjectileInitNode(projectileInitStrategy.NormalSkillInit).
+                        AddPlayAnimationNode(AnimationUtility.Skill_Layer_Name, AttackState, 0.2f).
+                        AddCreateProjectileNode(AssetKeys.VFX_Priest_NormalSkill).
+                        AddProcessProjectileEventNode(projectileEventProcessStrategy.PriestNormalSkillEvent).
+                        AddDelayNode(0.1f).
                         Build();
-                    
-                    sKillBuildData = new SKillBuildData(handler, effects);
                     break;
-                case 31:
+                case 31:    // 战技
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
+                    effects = SkillNodeBuildPipeline.
+                        AddTargetSelectNode().
+                        AddSkillPointCastNode().
+                        AddProjectileInitNode(projectileInitStrategy.BattleSkillInit).
+                        AddPlayAnimationNode(AnimationUtility.Skill_Layer_Name, BattleAttackState, 0.5f).
+                        AddCreateProjectileNode(AssetKeys.VFX_Priest_BattleSkill).
+                        AddProcessProjectileEventNode(projectileEventProcessStrategy.PriestBattleSkillEvent).
+                        Build();
                     break;
-                case 32:
+                case 32:    // 终结技
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseUltimateSkillCastPostHandler>();
+                    effects = SkillNodeBuildPipeline.
+                        AddUltimateDisplayIllustrationNode().
+                        AddUltimatePoseNode(AssetKeys.VFX_Priest_UltimatePose).
+                        AddUltimateWaitTriggerNode().
+                        AddTargetSelectNode().
+                        AddUltimateFlowNode(new PriestUltimateFlowStrategy()).
+                        AddProcessProjectileEventNode(projectileEventProcessStrategy.PriestUltimateSkillEvent).
+                        AddDelayNode(0.1f).
+                        Build();
                     break;
             }
-
+            
+            var sKillBuildData = new SKillBuildData(handler, effects);
             return sKillBuildData;
         }
     }

@@ -2,12 +2,10 @@ using System.Collections;
 using Core.DI;
 using Core.Serialize.Binary;
 using Core.Utility;
-using HotUpdate.Base;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Utility;
 
 using HotUpdate.Game.Battle.Context;
-using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.VFX;
 using UnityEngine;
 
@@ -17,12 +15,9 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill
     /// 战士普攻技能核心逻辑
     /// 处理普攻的两段特效、动画匹配目标、位置重置等流程
     /// </summary>
-    public class WarriorNormalSkill : PlayerSkill
+    public class WarriorNormalSkill
     {
-        // 翻滚动画状态名称
-        private const string rollState = "Roll";
-        // 攻击动画状态名称
-        private const string attackState = "Attack";
+
         private Transform vfxTrans;
         
         public WarriorNormalSkill(IBattleEntityObject caster, int skillId, BinaryDataManager binaryDataManager) : base(caster, skillId, binaryDataManager)

@@ -8,7 +8,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.Slime.Strategys
 {
     public class SlimeProjectileInitStrategy : ProjectileInitStrategy
     {
-        public override void Init(SkillContext skillContext)
+        public void InitAttack(SkillContext skillContext)
         {
             // 获取主目标位置（仅保留XZ平面，忽略Y轴高度）
             var mainTarget = skillContext.MainTarget.GameObject.transform.position;

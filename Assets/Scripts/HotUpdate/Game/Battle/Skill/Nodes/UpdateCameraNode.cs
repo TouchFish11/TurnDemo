@@ -1,6 +1,4 @@
 using System.Collections;
-using Core.Utility;
-using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Skill.Base;
 
 namespace HotUpdate.Game.Battle.Skill.Nodes

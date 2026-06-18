@@ -49,7 +49,7 @@ namespace HotUpdate.Game.Battle.Skill.Base
             }
             else // 终结技
             {
-                _effects.Add(new UltimateTriggerNode(this));  // 显示立绘
+                _effects.Add(new UltimateDisplayIllustrationNode(this));  // 显示立绘
                 // 再“展示Pose 或 播放动画”
                 if (展示pose)
                 {

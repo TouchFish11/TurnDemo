@@ -2,7 +2,6 @@ using HotUpdate.Base.Utility;
 using HotUpdate.Game.Battle.Object.Monster.Slime.Strategys;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Handler;
-using HotUpdate.Game.Battle.Skill.Nodes;
 
 namespace HotUpdate.Game.Battle.Object.Monster.Slime.Skill
 {
@@ -17,10 +16,10 @@ namespace HotUpdate.Game.Battle.Object.Monster.Slime.Skill
         /// </summary>
         public static string Attack => "Attack";
         
-        
-        
         protected override SKillBuildData CreateSKillBuildData(int skillId)
         {
+            var strategy = new SlimeProjectileEventProcessStrategy();
+            var projectileInitStrategy = new SlimeProjectileInitStrategy();
             SKillBuildData sKillBuildData = default;
             switch (skillId)
             {
@@ -29,12 +28,12 @@ namespace HotUpdate.Game.Battle.Object.Monster.Slime.Skill
                     var effects = SkillNodeBuildPipeline.
                         AddMonsterPreNode().
                         AddTargetSelectNode().
-                        AddProjectileInitNode(new SlimeProjectileInitStrategy()).
+                        AddProjectileInitNode(projectileInitStrategy.InitAttack).
                         AddUpdateCameraNode(new SlimeUpdateCameraStrategy()).
                         AddDelayNode(0.1f).
                         AddPlayAnimationNode(AnimationUtility.Skill_Layer_Name, Attack, 0.9f).
                         AddCreateProjectileNode(AssetKeys.VFX_MonsterAttackSkill).
-                        AddNode<ProcessProjectileEventNode>().
+                        AddProcessProjectileEventNode(strategy.PriestNormalSkillEvent).
                         AddDelayNode(0.1f).
                         Build();
                     

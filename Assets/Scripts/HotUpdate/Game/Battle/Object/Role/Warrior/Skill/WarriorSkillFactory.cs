@@ -1,11 +1,9 @@
-using System;
-using Core.DI;
-using HotUpdate.Base;
-using HotUpdate.Game.Battle.Object.Monster.Slime.Effects;
+using System.Collections.Generic;
+using HotUpdate.Base.Utility;
+using HotUpdate.Game.Battle.Object.Role.Warrior.Strategys;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Handler;
-using HotUpdate.Game.Battle.Skill.Nodes;
 
 namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill
 {
@@ -14,37 +12,59 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill
     /// </summary>
     public class WarriorSkillFactory : SkillFactory
     {
+        // 翻滚动画状态名称
+        private const string RollState = "Roll";
+        // 攻击动画状态名称
+        private const string AttackState = "Attack";
+        
         protected override SKillBuildData CreateSKillBuildData(int skillId)
         {
-            SKillBuildData sKillBuildData = default;
+            var projectileInitStrategy = new WarriorProjectileInitStrategy();
+            var projectileEventProcessStrategy = new WarriorProjectileEventProcessStrategy();
+            ISkillCastPostHandler handler = null;
+            List<ISkillNode> effects = null;
             switch (skillId)
             {
-                case 10:
-                    var handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
-                    var effects = SkillNodeBuildPipeline.
-                        AddNode<MonsterPreNode>().
-                        AddNode<TargetSelectNode>().
-                        AddNode<SlimeProjectileInitNode>().
-                        AddNode<UpdateCameraNode>(stragty).
-                        AddNode<DelayNode>(0.1f).
-                        AddNode<PlayAnimationNode>(stateName, targetEndProgress).
-                        AddNode<CreateProjectileNode>().
-                        AddNode<ProcessProjectileEventNode>().
-                        AddNode<DelayNode>(0.1f).
-                        Build();
-                    
-                    sKillBuildData = new SKillBuildData(handler, effects);
-                    break;
-                case 11:
+                case 10:    // 普攻
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
-                    var warriorBattleSkill = DIContainer.Create<WarriorBattleSkill>(parameterValues: new object[] { caster, skillId });
-                    return new SkillData(warriorBattleSkill, handler);
-                case 12:
+                    effects = SkillNodeBuildPipeline.
+                        AddTargetSelectNode().
+                        AddSkillPointCastNode().
+                        AddProjectileInitNode(null).
+                        AddPlayAnimationNode(AnimationUtility.Skill_Layer_Name, RollState, 0.9f).
+                        AddPlayAnimationNode(AnimationUtility.Skill_Layer_Name, AttackState, 0.1f).
+                        AddCreateProjectileNode(AssetKeys.VFX_WarriorNormalSkill).
+                        AddProcessProjectileEventNode(projectileEventProcessStrategy.NormalSkillEvent).
+                        AddDelayNode(0.1f).
+                        Build();
+                    break;
+                case 11:    // 战技
+                    handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
+                    effects = SkillNodeBuildPipeline.
+                        AddTargetSelectNode().
+                        AddSkillPointCastNode().
+                        AddProjectileInitNode(projectileInitStrategy.BattleSkillInit).
+                        AddPlayAnimationNode(AnimationUtility.Skill_Layer_Name, AttackState, 0.2f).
+                        AddCreateProjectileNode(AssetKeys.VFX_Priest_NormalSkill).
+                        AddProcessProjectileEventNode(projectileEventProcessStrategy.BattleSkillEvent).
+                        AddDelayNode(0.1f).
+                        Build();
+                    break;
+                case 12:    // 终结技
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseUltimateSkillCastPostHandler>();
-                    var warriorUltimateSkill = DIContainer.Create<WarriorUltimateSkill>(parameterValues: new object[] { caster, skillId });
-                    return new SkillData(warriorUltimateSkill, handler);
+                    effects = SkillNodeBuildPipeline.
+                        AddUltimateDisplayIllustrationNode().
+                        AddUltimatePoseNode(AssetKeys.VFX_WarriorUltimatePose).
+                        AddUltimateWaitTriggerNode().
+                        AddTargetSelectNode().
+                        AddUltimateFlowNode(new WarriorUltimateFlowStrategy()).
+                        AddProcessProjectileEventNode(projectileEventProcessStrategy.UltimateSkillEvent).
+                        AddDelayNode(0.1f).
+                        Build();
+                    break;
             }
 
+            var sKillBuildData = new SKillBuildData(handler, effects);
             return sKillBuildData;
         }
     }

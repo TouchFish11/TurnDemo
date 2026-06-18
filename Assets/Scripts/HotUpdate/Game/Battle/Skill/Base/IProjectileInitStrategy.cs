@@ -5,6 +5,6 @@ namespace HotUpdate.Game.Battle.Skill.Base
     /// </summary>
     public interface IProjectileInitStrategy
     {
-        void Init(SkillContext skillContext);
+        
     }
 }
