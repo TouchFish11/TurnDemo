@@ -1,15 +1,17 @@
+using System.Threading.Tasks;
 using HotUpdate.Game.Battle.Skill.Base;
+using HotUpdate.Game.Battle.Skill.Base.Flow;
 using HotUpdate.Game.Battle.Status;
 using HotUpdate.Game.VFX;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.Object.Monster.Slime.Strategys
 {
-    public class SlimeProjectileEventProcessStrategy : ProjectileEventProcessStrategy
+    public class SlimeSkillEventProcessPhaseStrategy : SkillEventProcessPhaseStrategy
     {
-        public override async void PriestNormalSkillEvent(SkillContext skillContext, HitResult hitResult)
+        protected override async Task OnTrigger(HitResult hitResult)
         {
-            var projectileData = skillContext.ProjectileData;
+            var projectileData = SkillContext.ProjectileData;
             
             // 先添加且只添加一次buff
             if (hitResult.IsFirstHit)
@@ -17,7 +19,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.Slime.Strategys
                 // 添加buff
                 foreach (var target in projectileData.targets)
                 {
-                    foreach (var statusId in skillContext.StatusIds)
+                    foreach (var statusId in SkillContext.StatusIds)
                     {
                         // 获取状态实例
                         var status = statusFactory.GetStatus(projectileData.caster, target, statusId);
@@ -27,13 +29,10 @@ namespace HotUpdate.Game.Battle.Object.Monster.Slime.Strategys
                 }
             }
             
-            // 这里可以直接移除特效
-            skillContext.VFXInfo.IsStop = true;
-
             // 每段的伤害计算
             foreach (var target in projectileData.targets)
             {
-                damageCalcManager.CalcSkillDamage(projectileData.caster, target, skillContext.SkillInfo, out var result);
+                damageCalcManager.CalcSkillDamage(projectileData.caster, target, SkillContext.SkillInfo, out var result);
                 target.TakeDamage(result);
             }
             
@@ -44,6 +43,9 @@ namespace HotUpdate.Game.Battle.Object.Monster.Slime.Strategys
                 var vfxInfo = new VFXInfo();
                 await vfxManager.CreateVFX(AssetKeys.VFX_MonsterHit, projectileTrans, default, vfxInfo);
             }
+            
+            // 这里可以直接移除特效
+            SkillContext.VFXInfo.IsStop = true;
         }
     }
 }

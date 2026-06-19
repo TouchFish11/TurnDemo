@@ -1,9 +1,9 @@
-using System.Collections.Generic;
 using Core.DI;
 using Core.Serialize.Binary;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Property;
+using HotUpdate.Game.Battle.Skill.Base.Flow;
 using HotUpdate.Game.Battle.TargetSelect;
 
 namespace HotUpdate.Game.Battle.Skill.Base
@@ -13,7 +13,7 @@ namespace HotUpdate.Game.Battle.Skill.Base
     /// </summary>
     public abstract class SkillFactory : ISkillFactory
     {
-        [Inject] protected SkillNodeBuildPipeline SkillNodeBuildPipeline;
+        [Inject] protected SkillPhaseBuilder SkillPhaseBuilder;
          
         /// <summary>
         /// 技能构建数据
@@ -22,12 +22,12 @@ namespace HotUpdate.Game.Battle.Skill.Base
         {
             public ISkillCastPostHandler SkillCastPostHandler { get; }
             
-            public List<ISkillNode> Effects { get; }
+            public ISkillFlow  SkillFlow { get; }
 
-            public SKillBuildData(ISkillCastPostHandler skillCastPostHandler, List<ISkillNode> effects)
+            public SKillBuildData(ISkillCastPostHandler skillCastPostHandler, SkillFlow skillFlow)
             {
                 SkillCastPostHandler = skillCastPostHandler;
-                Effects = effects;
+                SkillFlow = skillFlow;
             }
         }
         
@@ -41,11 +41,11 @@ namespace HotUpdate.Game.Battle.Skill.Base
             
             // 创建技能对象
             ISkill skill = DIContainer.Create<Skill>(parameterValues: skillContext);
-            SkillNodeBuildPipeline.SetSkill(skill);
+            SkillPhaseBuilder.SetSkill(skill);
             
             var buildData = CreateSKillBuildData(skillId);
             skillContext.SkillCastPostHandler = buildData.SkillCastPostHandler;
-            skill.SetEffects(buildData.Effects);
+            skill.SetFlow(buildData.SkillFlow);
             
             return new SkillData(skill);
         }

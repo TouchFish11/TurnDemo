@@ -27,7 +27,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill
             {
                 case 10:    // 普攻
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
-                    effects = SkillNodeBuildPipeline.
+                    effects = SkillPhaseBuilder.
                         AddTargetSelectNode().
                         AddSkillPointCastNode().
                         AddProjectileInitNode(null).
@@ -40,7 +40,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill
                     break;
                 case 11:    // 战技
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
-                    effects = SkillNodeBuildPipeline.
+                    effects = SkillPhaseBuilder.
                         AddTargetSelectNode().
                         AddSkillPointCastNode().
                         AddProjectileInitNode(projectileInitStrategy.BattleSkillInit).
@@ -52,7 +52,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill
                     break;
                 case 12:    // 终结技
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseUltimateSkillCastPostHandler>();
-                    effects = SkillNodeBuildPipeline.
+                    effects = SkillPhaseBuilder.
                         AddUltimateDisplayIllustrationNode().
                         AddUltimatePoseNode(AssetKeys.VFX_WarriorUltimatePose).
                         AddUltimateWaitTriggerNode().
@@ -64,7 +64,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill
                     break;
             }
 
-            var sKillBuildData = new SKillBuildData(handler, effects);
+            var sKillBuildData = new SKillBuildData(handler, TODO);
             return sKillBuildData;
         }
     }

@@ -1,4 +1,3 @@
-using System;
 using Core.DI;
 using Core.Time;
 using HotUpdate.Game.Battle.Damage;
@@ -15,8 +14,7 @@ namespace HotUpdate.Game.Battle.Skill.Base
         [Inject] protected IDamageCalcManager damageCalcManager;
         // 特效管理器
         [Inject] protected IVFXManager vfxManager;
-        //
+        // 计时器管理器
         [Inject] protected ITimerManager timerManager;
-        
     }
 }

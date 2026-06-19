@@ -16,7 +16,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill
     /// <summary>
     /// 渊禁
     /// </summary>
-    public class AbyssLockSkill : MonsterSkill
+    public class AbyssLockSkill
     {
         /// <summary>
         /// 普攻动画01

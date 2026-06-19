@@ -18,7 +18,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill
     /// <summary>
     /// 深渊之赐
     /// </summary>
-    public class AbyssGiftSkill : MonsterSkill
+    public class AbyssGiftSkill
     {
         /// <summary>
         /// 动画01

@@ -14,11 +14,6 @@ namespace HotUpdate.Game.Battle.Skill.Base
     public class SkillContext
     {
         /// <summary>
-        /// 技能释放后等待时间（用于战斗UI/逻辑缓冲，单位：秒）
-        /// </summary>
-        public const float WaitTime = 0.85f;
-        
-        /// <summary>
         /// 技能释放者（释放该技能的战斗实体，如角色、怪物）
         /// </summary>
         public IBattleEntityObject Caster { get; private set; }

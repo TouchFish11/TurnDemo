@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Skill.Base;
+using HotUpdate.Game.Battle.Skill.Base.Flow;
 using HotUpdate.Game.Battle.TargetSelect;
 
 namespace HotUpdate.Game.Battle.Skill
@@ -31,6 +32,6 @@ namespace HotUpdate.Game.Battle.Skill
         /// <param name="allTargets">所有目标列表</param>
         void Init(IBattleEntityObject mainTarget, List<IBattleEntityObject> allTargets);
 
-        void SetEffects(List<ISkillNode> effects);
+        void SetFlow(ISkillFlow skillFlow);
     }
 }

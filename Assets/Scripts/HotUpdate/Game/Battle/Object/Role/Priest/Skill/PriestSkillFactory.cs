@@ -1,8 +1,11 @@
 using System.Collections.Generic;
 using HotUpdate.Base.Utility;
 using HotUpdate.Game.Battle.Object.Role.Priest.Strategys;
+using HotUpdate.Game.Battle.Object.Role.Warrior.Strategys;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Base;
+using HotUpdate.Game.Battle.Skill.Base.Flow;
+using HotUpdate.Game.Battle.Skill.Base.Phase;
 using HotUpdate.Game.Battle.Skill.Handler;
 
 namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
@@ -18,15 +21,20 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
         
         protected override SKillBuildData CreateSKillBuildData(int skillId)
         {
-            var projectileInitStrategy = new PriestProjectileInitStrategy();
-            var projectileEventProcessStrategy = new PriestProjectileEventProcessStrategy();
             ISkillCastPostHandler handler = null;
-            List<ISkillNode> effects = null;
+            List<ISkillFlowPhase> phases = null;
+            var flow = new SkillFlow();
             switch (skillId)
             {
                 case 30:    // 普攻
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
-                    effects = SkillNodeBuildPipeline.
+                    phases = SkillPhaseBuilder.
+                        AddSkillPreCastPhase(new PriestSkillPreCastPhaseStrategy()).
+                        AddSkillCastPhase(new PriestSkillCastPhaseStrategy()).
+                        AddSkillEventProcessPhase(new PriestSkillEventProcessPhaseStrategy()).
+                        AddSkillCastEndPhase(new PriestSkillCastEndPhaseStrategy()).
+                        Build();
+                    
                         AddTargetSelectNode().
                         AddSkillPointCastNode().
                         AddProjectileInitNode(projectileInitStrategy.NormalSkillInit).
@@ -38,7 +46,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
                     break;
                 case 31:    // 战技
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
-                    effects = SkillNodeBuildPipeline.
+                    phases = SkillPhaseBuilder.
                         AddTargetSelectNode().
                         AddSkillPointCastNode().
                         AddProjectileInitNode(projectileInitStrategy.BattleSkillInit).
@@ -49,7 +57,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
                     break;
                 case 32:    // 终结技
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseUltimateSkillCastPostHandler>();
-                    effects = SkillNodeBuildPipeline.
+                    phases = SkillPhaseBuilder.
                         AddUltimateDisplayIllustrationNode().
                         AddUltimatePoseNode(AssetKeys.VFX_Priest_UltimatePose).
                         AddUltimateWaitTriggerNode().
@@ -61,7 +69,8 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
                     break;
             }
             
-            var sKillBuildData = new SKillBuildData(handler, effects);
+            flow.RegisterPhases(phases);
+            var sKillBuildData = new SKillBuildData(handler, flow);
             return sKillBuildData;
         }
     }
