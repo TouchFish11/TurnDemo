@@ -1,4 +1,5 @@
 using System.Collections;
+using HotUpdate.Game.Battle.Skill.Base;
 
 namespace HotUpdate.Game.Battle.Skill
 {
@@ -11,6 +12,6 @@ namespace HotUpdate.Game.Battle.Skill
         /// 处理逻辑
         /// </summary>
         /// <returns></returns>
-        IEnumerator Handle(ISkill skill);
+        IEnumerator Handle(SkillContext skillContext);
     }
 }

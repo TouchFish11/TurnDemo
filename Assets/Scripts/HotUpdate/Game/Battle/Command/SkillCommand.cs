@@ -37,7 +37,7 @@ namespace HotUpdate.Game.Battle.Command
 
         public override IEnumerator ExcutePostProcess(IBattleContext context)
         {
-            yield return SkillData.Skill.SkillContext.SkillCastPostHandler.Handle(SkillData.Skill);
+            yield return SkillData.Skill.SkillContext.SkillCastPostHandler.Handle(TODO);
         }
     }
 }

@@ -1,3 +1,5 @@
+using HotUpdate.Base.Component;
+
 namespace HotUpdate.Game.Battle.Skill.Base.Flow
 {
     /// <summary>
@@ -5,6 +7,6 @@ namespace HotUpdate.Game.Battle.Skill.Base.Flow
     /// </summary>
     public abstract class SkillCastEndPhaseStrategy : SkillPhaseStrategy
     {
-
+        protected IBattleAnimationComponent BattleAnimationComponent => SkillContext.Caster.GetComponent<IBattleAnimationComponent>();
     }
 }

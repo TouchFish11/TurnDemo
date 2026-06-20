@@ -1,4 +1,5 @@
 using System.Collections;
+using HotUpdate.Game.Battle.Skill.Base;
 
 namespace HotUpdate.Game.Battle.Skill.Handler
 {
@@ -7,9 +8,9 @@ namespace HotUpdate.Game.Battle.Skill.Handler
     /// </summary>
     public class BaseSkillCastPostHandler : ISkillCastPostHandler
     {
-        public IEnumerator Handle(ISkill skill)
+        public IEnumerator Handle(SkillContext skillContext)
         {
-            skill.Caster.CanAct = false;
+            skillContext.Caster.CanAct = false;
             yield break;
         }
     }

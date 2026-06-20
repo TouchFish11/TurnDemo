@@ -1,8 +1,11 @@
 using System.Collections.Generic;
-using HotUpdate.Base.Utility;
-using HotUpdate.Game.Battle.Object.Role.Warrior.Strategys;
+using HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Battle;
+using HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Normal;
+using HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Ultimate;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Base;
+using HotUpdate.Game.Battle.Skill.Base.Flow;
+using HotUpdate.Game.Battle.Skill.Base.Phase;
 using HotUpdate.Game.Battle.Skill.Handler;
 
 namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill
@@ -12,59 +15,44 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill
     /// </summary>
     public class WarriorSkillFactory : SkillFactory
     {
-        // 翻滚动画状态名称
-        private const string RollState = "Roll";
-        // 攻击动画状态名称
-        private const string AttackState = "Attack";
-        
         protected override SKillBuildData CreateSKillBuildData(int skillId)
         {
-            var projectileInitStrategy = new WarriorProjectileInitStrategy();
-            var projectileEventProcessStrategy = new WarriorProjectileEventProcessStrategy();
             ISkillCastPostHandler handler = null;
-            List<ISkillNode> effects = null;
+            List<ISkillFlowPhase> phases = null;
+            var flow = new SkillFlow();
             switch (skillId)
             {
                 case 10:    // 普攻
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
-                    effects = SkillPhaseBuilder.
-                        AddTargetSelectNode().
-                        AddSkillPointCastNode().
-                        AddProjectileInitNode(null).
-                        AddPlayAnimationNode(AnimationUtility.Skill_Layer_Name, RollState, 0.9f).
-                        AddPlayAnimationNode(AnimationUtility.Skill_Layer_Name, AttackState, 0.1f).
-                        AddCreateProjectileNode(AssetKeys.VFX_WarriorNormalSkill).
-                        AddProcessProjectileEventNode(projectileEventProcessStrategy.NormalSkillEvent).
-                        AddDelayNode(0.1f).
+                    phases = SkillPhaseBuilder.
+                        AddSkillPreCastPhase(new WarriorNormalSkillPreCastPhaseStrategy()).
+                        AddSkillCastPhase(new WarriorNormalSkillCastPhaseStrategy()).
+                        AddSkillEventProcessPhase(new WarriorNormalSkillEventProcessPhaseStrategy()).
+                        AddSkillCastEndPhase(new WarriorNormalSkillCastEndPhaseStrategy()).
                         Build();
                     break;
                 case 11:    // 战技
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
-                    effects = SkillPhaseBuilder.
-                        AddTargetSelectNode().
-                        AddSkillPointCastNode().
-                        AddProjectileInitNode(projectileInitStrategy.BattleSkillInit).
-                        AddPlayAnimationNode(AnimationUtility.Skill_Layer_Name, AttackState, 0.2f).
-                        AddCreateProjectileNode(AssetKeys.VFX_Priest_NormalSkill).
-                        AddProcessProjectileEventNode(projectileEventProcessStrategy.BattleSkillEvent).
-                        AddDelayNode(0.1f).
+                    phases = SkillPhaseBuilder.
+                        AddSkillPreCastPhase(new WarriorBattleSkillPreCastPhaseStrategy()).
+                        AddSkillCastPhase(new WarriorBattleSkillCastPhaseStrategy()).
+                        AddSkillEventProcessPhase(new WarriorBattleSkillEventProcessPhaseStrategy()).
+                        AddSkillCastEndPhase(new WarriorBattleSkillCastEndPhaseStrategy()).
                         Build();
                     break;
                 case 12:    // 终结技
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseUltimateSkillCastPostHandler>();
-                    effects = SkillPhaseBuilder.
-                        AddUltimateDisplayIllustrationNode().
-                        AddUltimatePoseNode(AssetKeys.VFX_WarriorUltimatePose).
-                        AddUltimateWaitTriggerNode().
-                        AddTargetSelectNode().
-                        AddUltimateFlowNode(new WarriorUltimateFlowStrategy()).
-                        AddProcessProjectileEventNode(projectileEventProcessStrategy.UltimateSkillEvent).
-                        AddDelayNode(0.1f).
+                    phases = SkillPhaseBuilder.
+                        AddSkillPreCastPhase(new WarriorUltimateSkillPreCastPhaseStrategy()).
+                        AddSkillCastPhase(new WarriorUltimateSkillCastPhaseStrategy()).
+                        AddSkillEventProcessPhase(new WarriorUltimateSkillEventProcessPhaseStrategy()).
+                        AddSkillCastEndPhase(new WarriorUltimateSkillCastEndPhaseStrategy()).
                         Build();
                     break;
             }
 
-            var sKillBuildData = new SKillBuildData(handler, TODO);
+            flow.RegisterPhases(phases);
+            var sKillBuildData = new SKillBuildData(handler, flow);
             return sKillBuildData;
         }
     }

@@ -40,7 +40,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.Slime.Strategys
             foreach (var target in projectileData.targets)
             {
                 var projectileTrans = new ProjectileTrans(target.GameObject.transform.position + Vector3.up * 0.5f, Quaternion.identity);
-                var vfxInfo = new VFXInfo();
+                var vfxInfo = poolManager.GetData<VFXInfo>();
                 await vfxManager.CreateVFX(AssetKeys.VFX_MonsterHit, projectileTrans, default, vfxInfo);
             }
             

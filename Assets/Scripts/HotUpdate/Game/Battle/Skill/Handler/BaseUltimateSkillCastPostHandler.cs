@@ -8,6 +8,7 @@ using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Component;
 using HotUpdate.Game.Battle.TargetSelect;
 using HotUpdate.Game.Battle.TargetSelect.Strategys;
@@ -27,16 +28,16 @@ namespace HotUpdate.Game.Battle.Skill.Handler
         [Inject] private ISkillKeyUIDataProviderFactory _skillKeyUIDataProviderFactory;
         [Inject] private ITargetSelectStrategyFactory _targetSelectStrategyFactory;
         [Inject] private BattleCoordinator _battleCoordinator;
-        
+
         /// <summary>
         /// 处理终极技能释放后的后续逻辑
         /// </summary>
-        /// <param name="skill">当前释放的技能实例</param>
+        /// <param name="skillContext"></param>
         /// <returns>协程迭代器</returns>
-        public IEnumerator Handle(ISkill skill)
+        public IEnumerator Handle(SkillContext skillContext)
         {
             // 获取技能释放者的战斗上下文
-            var context = skill.SkillContext.Caster.Context;
+            var context = skillContext.Caster.Context;
             // 获取当前执行技能的实体（释放者）
             var currentEntity = context.GetCurrentEntity();
 
@@ -46,7 +47,7 @@ namespace HotUpdate.Game.Battle.Skill.Handler
                 yield break;
             }
             
-            Logger.Log($"角色：{skill.SkillContext.Caster}，终结技释放完毕，且可以执行后处理逻辑，当前行动角色：{currentEntity}");
+            Logger.Log($"角色：{skillContext.Caster}，终结技释放完毕，且可以执行后处理逻辑，当前行动角色：{currentEntity}");
             
             // 获取当前玩家的普通攻击技能信息（终极技能释放后，切回普攻的目标选择逻辑）
             var currentEntitySkillInfo = GetNormalSkillInfo(currentEntity);

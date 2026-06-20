@@ -1,5 +1,6 @@
 using Core.DI;
 using Core.Pool;
+using HotUpdate.Game.VFX;
 
 namespace HotUpdate.Game.Battle.Skill.Base.Flow
 {
@@ -9,5 +10,6 @@ namespace HotUpdate.Game.Battle.Skill.Base.Flow
     public abstract class SkillPreCastPhaseStrategy : SkillPhaseStrategy
     {
         [Inject] protected IPoolManager poolManager;
+        [Inject] protected IVFXManager vfxManager;
     }
 }

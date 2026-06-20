@@ -1,10 +1,9 @@
 using System.Collections;
-using System.Text;
 using Core.Utility;
+using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
 using HotUpdate.Game.VFX;
 using UnityEngine;
-using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.Battle.Object.Monster.Slime.Strategys
 {
@@ -13,10 +12,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.Slime.Strategys
         public override IEnumerator Execute()
         {
             // 根据技能配置和选择策略，筛选出技能作用的目标
-            battleCoordinator.SetSelectSkillInfo(SkillContext.SkillInfo);
-            battleCoordinator.SelectTargets(SkillContext.Caster, SkillContext.TargetSelectStrategy);
-            // TODO；暂时这样写
-            battleCoordinator.InitSkillTarget(skill);
+            SkillHelper.InitSkillTarget(skill, battleCoordinator);
             
             // 获取主目标位置（仅保留XZ平面，忽略Y轴高度）
             var mainTarget = SkillContext.MainTarget.GameObject.transform.position;
@@ -33,15 +29,9 @@ namespace HotUpdate.Game.Battle.Object.Monster.Slime.Strategys
             SkillContext.VFXInfo = poolManager.GetData<VFXInfo>();
             
             // 拼接并打印所有目标信息（调试用）
-            var sb = new StringBuilder();
-            foreach (var battleEntityObject in SkillContext.AllTargets)
-            {
-                sb.AppendLine($"怪物选择目标：{battleEntityObject}");
-            }
-            Logger.Log($"{sb}");
+            SkillHelper.PrintSelectTargets(SkillContext.AllTargets);
             
             yield return TaskUtility.WaitForTask(battleCoordinator.UpdateCamera((PlayerObject)SkillContext.MainTarget));
-
             yield return new WaitForSeconds(0.1f);
         }
     }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Threading.Tasks;
 using Core.DI;
+using Core.Pool;
 using Core.Time;
 using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Status;
@@ -18,6 +19,8 @@ namespace HotUpdate.Game.Battle.Skill.Base.Flow
         [Inject] protected IVFXManager vfxManager;
         // 计时器管理器
         [Inject] protected ITimerManager timerManager;
+        //
+        [Inject] protected IPoolManager poolManager;
 
         /// <summary>
         /// 是否正在处理技能事件

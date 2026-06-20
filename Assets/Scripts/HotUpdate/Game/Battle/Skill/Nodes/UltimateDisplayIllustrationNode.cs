@@ -20,8 +20,7 @@ namespace HotUpdate.Game.Battle.Skill.Nodes
 
         public override IEnumerator Execute()
         {
-            // 都显示立绘
-            yield return battleCoordinator.ExecutePreUltimateCast(skill.SkillContext.Caster, skill.SkillContext.SkillInfo);
+            
         }
     }
 }

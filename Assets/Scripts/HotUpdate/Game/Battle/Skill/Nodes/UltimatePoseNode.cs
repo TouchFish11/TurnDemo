@@ -34,7 +34,6 @@ namespace HotUpdate.Game.Battle.Skill.Nodes
             var projectileData = new ProjectileData(SkillContext.Caster, SkillContext.MainTarget, SkillContext.AllTargets, this);
             var projectileTrans = new ProjectileTrans(SkillContext.Caster.GameObject.transform.position, Quaternion.identity);
             var vFXInfo = poolManager.GetData<VFXInfo>();
-            
             // 终结技动画Pose
             skill.SkillContext.Caster.GetComponent<IBattleAnimationComponent>().SetUltimatePose();
             // 终结技Pose特效
