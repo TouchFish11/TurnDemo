@@ -4,6 +4,8 @@ using Core.Log;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.Object.Monster;
+using HotUpdate.Game.Battle.Object.Role;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Utility;
 

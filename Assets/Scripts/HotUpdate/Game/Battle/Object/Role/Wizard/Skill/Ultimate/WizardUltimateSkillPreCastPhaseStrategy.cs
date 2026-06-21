@@ -16,7 +16,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard.Skill.Ultimate
             yield return battleCoordinator.ExecutePreUltimateCast(skill.SkillContext.Caster, skill.SkillContext.SkillInfo);
             
             // 终结技动画Pose
-            var projectileData = new ProjectileData(SkillContext.Caster, SkillContext.MainTarget, SkillContext.AllTargets, this);
+            var projectileData = new ProjectileData(SkillContext.Caster, SkillContext.MainTarget, SkillContext.AllTargets, SkillContext);
             var projectileTrans = new ProjectileTrans(SkillContext.Caster.GameObject.transform.position, Quaternion.identity);
             var vFXInfo = poolManager.GetData<VFXInfo>();
             skill.SkillContext.Caster.GetComponent<IBattleAnimationComponent>().SetUltimatePose();
@@ -26,6 +26,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard.Skill.Ultimate
             
             // 等待玩家确认
             yield return SkillHelper.WaitForUltimateConfirm(SkillContext);
+            
             // 移除Pose特效
             vfxManager.RemoveVFX(skill.SkillContext.VFXInfo);
 

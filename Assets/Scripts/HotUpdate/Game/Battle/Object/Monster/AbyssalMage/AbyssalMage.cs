@@ -1,4 +1,3 @@
-using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill;
 using HotUpdate.Game.Battle.Skill.Component;
 
@@ -18,17 +17,15 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage
             new []{106, 104},
         };
         
-        public override void BattleInit(int monsterId, IBattleContext context)
+        protected override void OnBattleInit()
         {
-            base.BattleInit(monsterId, context);
             
             GetComponent<SkillComponent>().InitSkills(MonsterInfo.f_skillIds, new AbyssalMageSkillFactory());
         }
-        
+
         public override int SelectSkill()
         {
             var ids = skillIdGroups[rowIndex];
-            
             var skillId = ids[colIndex];
             ++colIndex;
             if (colIndex == ids.Length)

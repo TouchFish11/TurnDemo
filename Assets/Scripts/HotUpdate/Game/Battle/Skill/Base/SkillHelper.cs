@@ -58,7 +58,7 @@ namespace HotUpdate.Game.Battle.Skill.Base
             }
             else
             {
-                var newSeconds = new WaitForSeconds(delayMs);
+                var newSeconds = new WaitForSeconds(delayMs / 1000f);
                 _waitForSecondsMap.Add(delayMs, newSeconds);
                 yield return newSeconds;
             }

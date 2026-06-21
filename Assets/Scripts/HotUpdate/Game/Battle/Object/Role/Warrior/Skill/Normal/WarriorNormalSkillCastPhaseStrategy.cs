@@ -45,7 +45,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Normal
 
             // 初始化第二段普攻特效（核心攻击特效）
             SkillContext.ProjectileTrans = new ProjectileTrans(caster.SubGameObject.transform.position + Vector3.up, Quaternion.Euler(180, 180, 0));
-            SkillContext.ProjectileData = new ProjectileData(caster, mainTarget, SkillContext.AllTargets, this);
+            SkillContext.ProjectileData = new ProjectileData(caster, mainTarget, SkillContext.AllTargets, SkillContext);
             vFXInfo = new VFXInfo();
             yield return TaskUtility.WaitForTask(vfxManager.CreateVFX(AssetKeys.VFX_WarriorNormalSkill, projectileTrans, SkillContext.ProjectileData, vFXInfo));
         }

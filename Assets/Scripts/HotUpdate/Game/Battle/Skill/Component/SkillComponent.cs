@@ -27,6 +27,8 @@ namespace HotUpdate.Game.Battle.Skill.Component
         protected readonly List<ICastSkillCondition> castSkillConditions = new();
         // 目标选择策略集合：存储当前技能组件的所有目标选择策略，按优先级排序后生效
         protected readonly List<ITargetSelectStrategy> targetSelectStrategies = new();
+        
+        public int SkillCount => skillIds.Count;
 
         /// <summary>
         /// 初始化技能列表
@@ -152,9 +154,12 @@ namespace HotUpdate.Game.Battle.Skill.Component
         /// 获取当前组件管理的所有技能ID列表
         /// </summary>
         /// <returns>技能ID的新列表（避免外部修改原字典）</returns>
-        public List<int> GetSkillIds()
+        public IEnumerable<int> GetSkillIds()
         {
-            return new List<int>(skillIds);
+            foreach (var skillId in skillIds)
+            {
+                yield return skillId;
+            }
         }
 
         /// <summary>
@@ -163,7 +168,7 @@ namespace HotUpdate.Game.Battle.Skill.Component
         /// </summary>
         /// <param name="skillId">要获取的技能ID</param>
         /// <returns>对应的技能数据对象</returns>
-        public ISkillData GetSkillData(int skillId)
+        public ISkill GetSkill(int skillId)
         {
             // 为技能设置最高优先级的目标选择策略（排序后第一个即为最高优先级）
             return skillFactory.CreateSkill(BattleEntity, skillId, targetSelectStrategies[0]);

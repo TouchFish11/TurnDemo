@@ -12,6 +12,7 @@ using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.Object.Role;
 using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.Skill.Component;
 using HotUpdate.Game.Battle.Status;

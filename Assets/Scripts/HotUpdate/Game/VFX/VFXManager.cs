@@ -1,12 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Mono;
-using HotUpdate.Game.Battle.Projectile;
 using UnityEngine;
-using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.VFX
 {

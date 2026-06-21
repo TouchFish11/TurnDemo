@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.Object.Role;
 using HotUpdate.Game.Point;
 using UnityEngine;
 

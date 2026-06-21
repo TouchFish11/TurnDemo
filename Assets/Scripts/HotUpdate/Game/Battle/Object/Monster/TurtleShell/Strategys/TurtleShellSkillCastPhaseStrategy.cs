@@ -2,7 +2,6 @@ using System.Collections;
 using Core.Utility;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Utility;
-using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
 using UnityEngine;
 

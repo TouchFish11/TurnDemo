@@ -1,11 +1,8 @@
 using System.Collections;
-using Core.DI;
 using Core.Utility;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Utility;
-using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
-using HotUpdate.Game.VFX;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.Object.Role.Wizard.Skill.Normal

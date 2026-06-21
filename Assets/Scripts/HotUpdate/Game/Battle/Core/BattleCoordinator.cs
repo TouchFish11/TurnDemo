@@ -13,6 +13,7 @@ using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Inputs;
 using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.Object.Role;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.TargetSelect;
 using HotUpdate.Game.Battle.UI;

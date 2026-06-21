@@ -22,7 +22,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard.Skill.Ultimate
             // 等待动画切换到终结技攻击状态
             yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).IsName(UltimateAttackState));
             // 重新初始化投射物数据（目标为主要攻击目标）
-            SkillContext.ProjectileData = new ProjectileData(SkillContext.Caster, SkillContext.MainTarget, SkillContext.AllTargets, this);
+            SkillContext.ProjectileData = new ProjectileData(SkillContext.Caster, SkillContext.MainTarget, SkillContext.AllTargets, SkillContext);
             // 更新投射物变换信息（基于主目标位置，无旋转）
             SkillContext.ProjectileTrans = new ProjectileTrans(SkillContext.MainTarget.GameObject.transform.position, Quaternion.identity);
             // 创建终结技核心特效（命中目标处）

@@ -1,5 +1,4 @@
 using System.Collections;
-using Core.DI;
 using HotUpdate.Base;
 using HotUpdate.Base.Object;
 using HotUpdate.Game.Battle.Command;
@@ -18,7 +17,9 @@ namespace HotUpdate.Game.Battle.Object
     /// </summary>
     public abstract class BattleObject : EntityObject, IBattleEntityObject, IDamagable
     {
-        [Inject] protected CommandFactory commandFactory;
+        protected Commandfactory commandfactory;
+        // 死亡处理器
+        protected IDeathHandler deathHandler;
         
         /// <summary>
         /// 战斗上下文，提供战斗环境、事件总线、规则等核心战斗数据访问
@@ -73,7 +74,9 @@ namespace HotUpdate.Game.Battle.Object
         /// </summary>
         /// <param name="battleEntityId">战斗实体唯一ID</param>
         /// <param name="context">战斗上下文实例</param>
-        public virtual void BattleInit(int battleEntityId, IBattleContext context)
+        /// <param name="factory"></param>
+        /// <param name="handler"></param>
+        public void BattleInit(int battleEntityId, IBattleContext context, Commandfactory factory, IDeathHandler handler)
         {
             // 执行基础初始化
             BaseInit(battleEntityId);
@@ -81,6 +84,11 @@ namespace HotUpdate.Game.Battle.Object
             Context = context;
             // 赋值战斗实体ID
             BattleEntityId = battleEntityId;
+            // 初始化命令工厂
+            commandfactory = factory;
+            // 初始化死亡处理器
+            handler.InitEntity(this);
+            deathHandler = handler;
         }
 
         public virtual void ExecuteAction()
@@ -117,8 +125,11 @@ namespace HotUpdate.Game.Battle.Object
         {
             damageChain.HandleRequest(damageResult);
         }
-        
-        public abstract IEnumerator Die();
+
+        public IEnumerator Die()
+        {
+            yield return deathHandler.HandleDeath();
+        }
         
         public void SetActionValue(float actionValue)
         {

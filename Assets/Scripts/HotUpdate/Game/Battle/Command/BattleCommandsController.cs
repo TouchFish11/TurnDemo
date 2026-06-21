@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Core.DI;
-using HotUpdate.Base;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.UI;
 using HotUpdate.Game.Battle.Core;

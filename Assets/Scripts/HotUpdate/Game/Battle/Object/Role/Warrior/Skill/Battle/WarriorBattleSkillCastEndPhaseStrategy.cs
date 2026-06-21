@@ -1,6 +1,7 @@
 using System.Collections;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Utility;
+using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
 using UnityEngine;
 
@@ -13,7 +14,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Battle
             var animationComponent = SkillContext.Caster.GetComponent<IBattleAnimationComponent>();
             // 等待动画播放到90%且特效已结束
             yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).normalizedTime >= 0.9f && !SkillContext.VFXInfo.IsAlive);
-            yield return new WaitForSeconds(0.1f);
+            yield return SkillHelper.Delay(100);
         }
     }
 }

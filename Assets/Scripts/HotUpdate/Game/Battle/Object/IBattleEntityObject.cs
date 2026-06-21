@@ -1,6 +1,7 @@
 using System.Collections;
 using Core.Components;
 using HotUpdate.Base;
+using HotUpdate.Game.Battle.Command;
 using HotUpdate.Game.Battle.Context;
 using UnityEngine;
 
@@ -68,7 +69,9 @@ namespace HotUpdate.Game.Battle.Object
         /// </summary>
         /// <param name="id">战斗实体ID</param>
         /// <param name="context">当前战斗上下文</param>
-        void BattleInit(int id, IBattleContext context);
+        /// <param name="factory"></param>
+        /// <param name="handler"></param>
+        void BattleInit(int id, IBattleContext context, Commandfactory factory, IDeathHandler handler);
 
         /// <summary>
         /// 执行行动

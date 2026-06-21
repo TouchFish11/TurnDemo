@@ -18,6 +18,6 @@ namespace HotUpdate.Game.Battle.Skill
         /// <param name="skillId">技能ID</param>
         /// <param name="targetSelectStrategy"></param>
         /// <returns>技能数据</returns>
-        ISkillData CreateSkill(IBattleEntityObject caster, int skillId, ITargetSelectStrategy targetSelectStrategy);
+        ISkill CreateSkill(IBattleEntityObject caster, int skillId, ITargetSelectStrategy targetSelectStrategy);
     }
 }

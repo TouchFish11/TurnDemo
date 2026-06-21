@@ -1,4 +1,5 @@
 using System.Collections;
+using HotUpdate.Game.Battle.Skill.Base;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.Projectile
@@ -17,14 +18,11 @@ namespace HotUpdate.Game.Battle.Projectile
                 nowTime += Time.deltaTime;
                 if (nowTime >= triggerTimes[index])
                 {
-                    ApplyEffectOnTrigger();
-                    CreateVFXOnTrigger();
+                    InvokeOnTrigger(new HitResult(index == 0, index));
                     index++;
                 }
                 yield return null;
             }
-            AddStatusOnTrigger();
-            HandleTiming();
         }
     }
 }

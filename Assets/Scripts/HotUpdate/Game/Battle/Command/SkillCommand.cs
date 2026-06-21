@@ -12,16 +12,16 @@ namespace HotUpdate.Game.Battle.Command
     {
         public override int Priority { get; protected set; }
         
-        public ISkillData SkillData { get; protected set; }
+        public ISkill Skill { get; private set; }
 
         /// <summary>
         /// 初始化指令
         /// </summary>
-        /// <param name="skillData"></param>
-        public void Init(ISkillData skillData)
+        /// <param name="skill"></param>
+        public void Init(ISkill skill)
         {
-            Sender = skillData.Skill.SkillContext.Caster;
-            SkillData = skillData;
+            Sender = skill.SkillContext.Caster;
+            Skill = skill;
         }
         
         /// <summary>
@@ -31,13 +31,14 @@ namespace HotUpdate.Game.Battle.Command
         /// <returns></returns>
         public override IEnumerator Execute(IBattleContext context)
         {
-            yield return SkillData.Skill.Cast(context);
+            yield return Skill.Cast(context);
             Sender.Context.GetEventBus().TriggerEvent(new PostCastEvent(Sender.Context));
         }
 
         public override IEnumerator ExcutePostProcess(IBattleContext context)
         {
-            yield return SkillData.Skill.SkillContext.SkillCastPostHandler.Handle(TODO);
+            var skillContext = Skill.SkillContext;
+            yield return skillContext.SkillCastPostHandler.Handle(skillContext);
         }
     }
 }

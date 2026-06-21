@@ -6,6 +6,7 @@ using HotUpdate.Base;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.Object.Monster;
 using HotUpdate.Game.Battle.Toughness.CalcStrategy;
 using HotUpdate.Game.Battle.Toughness.ReduceStrategy;
 using HotUpdate.Game.Battle.Utility;

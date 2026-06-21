@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using HotUpdate.Base.Utility;
 using HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill.AbyssGift;
 using HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill.AbyssLock;
 using HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill.Ashfall;
@@ -44,18 +43,6 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill
                         AddSkillEventProcessPhase(new AbyssalMageAshfallSkillEventProcessPhaseStrategy()).
                         AddSkillCastEndPhase(new AbyssalMageAshfallSkillCastEndPhaseStrategy()).
                         Build();
-                    
-                    effects = SkillPhaseBuilder.
-                        AddMonsterPreNode().
-                        AddTargetSelectNode().
-                        AddProjectileInitNode(projectileInitStrategy.InitAttack).
-                        AddUpdateCameraNode().
-                        AddDelayNode(0.1f).
-                        AddPlayAnimationNode(AnimationUtility.Skill_Layer_Name, Attack, 0.9f).
-                        AddCreateProjectileNode(AssetKeys.VFX_MonsterAttackSkill).
-                        AddProcessProjectileEventNode(strategy.PriestNormalSkillEvent).
-                        AddDelayNode(0.1f).
-                        Build();
                     break;
                 case 105:   // 深渊之赐
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<AbyssalMageSkillCastPostHandler>();
@@ -64,6 +51,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill
                         AddSkillPreCastPhase(new AbyssalMageAbyssGiftSkillPreCastPhaseStrategy()).
                         AddSkillCastPhase(new AbyssalMageAbyssGiftSkillCastPhaseStrategy()).
                         AddSkillEventProcessPhase(new AbyssalMageAbyssGiftSkillEventProcessPhaseStrategy()).
+                        AddSkillCastEndPhase(new AbyssalMageAbyssGiftSkillCastEndPhaseStrategy()).
                         Build();
                     break;
                 case 106:   // 渊禁
@@ -73,18 +61,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill
                         AddSkillPreCastPhase(new AbyssalMageAbyssLockSkillPreCastPhaseStrategy()).
                         AddSkillCastPhase(new AbyssalMageAbyssLockSkillCastPhaseStrategy()).
                         AddSkillEventProcessPhase(new AbyssalMageAbyssLockSkillEventProcessPhaseStrategy()).
-                        Build();
-                    
-                    effects = SkillPhaseBuilder.
-                        AddMonsterPreNode().
-                        AddTargetSelectNode().
-                        AddProjectileInitNode(projectileInitStrategy.InitAttack).
-                        AddUpdateCameraNode().
-                        AddDelayNode(0.1f).
-                        AddPlayAnimationNode(AnimationUtility.Skill_Layer_Name, Attack, 0.9f).
-                        AddCreateProjectileNode(AssetKeys.VFX_MonsterAttackSkill).
-                        AddProcessProjectileEventNode(strategy.PriestNormalSkillEvent).
-                        AddDelayNode(0.1f).
+                        AddSkillCastEndPhase(new AbyssalMageAbyssLockSkillCastEndPhaseStrategy()).
                         Build();
                     break;
             }

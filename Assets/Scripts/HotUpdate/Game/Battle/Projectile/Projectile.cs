@@ -2,9 +2,7 @@ using System;
 using System.Collections;
 using Core.DI;
 using Core.Utility;
-using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Skill.Base;
-using HotUpdate.Game.Battle.Status;
 using HotUpdate.Game.VFX;
 using UnityEngine;
 
@@ -38,13 +36,7 @@ namespace HotUpdate.Game.Battle.Projectile
         /// </summary>
         protected float[] triggerTimes;
 
-        /// <summary>
-        /// 抛射物命中后要附加的Buff/状态ID数组
-        /// </summary>
-        protected int[] statusIds;
-
         public event Action<HitResult> OnTrigger;
-        
         
         /// <summary>
         /// 组件唤醒时初始化（Unity生命周期）
@@ -68,19 +60,7 @@ namespace HotUpdate.Game.Battle.Projectile
             this.vFXInfo = vFXInfo;
             // 赋值抛射物核心数据
             this.projectileData = projectileData;
-
-            // 解析技能关联的状态ID：
-            // 判断抛射物是否关联技能
-            // 若关联则拆分技能配置的状态ID字符串为int数组
-            // 若无关联则初始化为空数组
-            statusIds = projectileData.skill != null ? 
-                TextUtility.SplitToIntArr(projectileData.skill.SkillInfo.f_statusId, 2) 
-                : Array.Empty<int>();
-
-            triggerTimes = projectileData.skill != null
-                ? TextUtility.SplitTofloatArr(projectileData.skill.SkillInfo.f_dmgTimes, 2)
-                : Array.Empty<float>();
-            
+            triggerTimes = TextUtility.SplitTofloatArr(projectileData.SkillContext.SkillInfo.f_dmgTimes, 2);
             // 播放VFX
             StartCoroutine(ExecuteVFX());
         }

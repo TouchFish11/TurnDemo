@@ -126,7 +126,7 @@ namespace HotUpdate.Game.Battle.Command
 
         public override IEnumerator ExcutePostProcess(IBattleContext context)
         {
-            yield return _skillCommand.SkillData.SkillCastPostHandler.Handle(_skillCommand.SkillData.Skill);
+            yield return _skillCommand.Skill.SkillContext.SkillCastPostHandler.Handle(_skillCommand.Skill.SkillContext);
         }
 
         public override void ResetData()

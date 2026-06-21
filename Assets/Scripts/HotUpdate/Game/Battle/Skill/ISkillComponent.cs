@@ -45,7 +45,7 @@ namespace HotUpdate.Game.Battle.Skill
         /// 获取当前组件管理的所有技能ID列表
         /// </summary>
         /// <returns>技能ID的新列表（避免外部修改原字典）</returns>
-        List<int> GetSkillIds();
+        IEnumerable<int> GetSkillIds();
 
         /// <summary>
         /// 获取指定ID的技能数据
@@ -53,7 +53,7 @@ namespace HotUpdate.Game.Battle.Skill
         /// </summary>
         /// <param name="skillId">要获取的技能ID</param>
         /// <returns>对应的技能数据对象</returns>
-        ISkillData GetSkillData(int skillId);
+        ISkill GetSkill(int skillId);
 
         /// <summary>
         /// 从当前组件移除指定施法条件

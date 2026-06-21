@@ -12,11 +12,6 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Battle
         // 战斗攻击动画状态名称
         private const string BattleAttackState = "BattleAttack";
         
-        private string _layerName = AnimationUtility.Skill_Layer_Name;
-        private string _stateName = BattleAttackState;
-        private float _targetEndProgress = 0.2f;
-        private string _vfxName = AssetKeys.VFX_WarriorBattleSkill;
-        
         public override IEnumerator Execute()
         {
             // 获取施法者的动画组件
@@ -26,7 +21,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Battle
             // 等待动画切换到战斗攻击状态
             yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).IsName(BattleAttackState));
             // 创建战技特效
-            var task = vfxManager.CreateVFX(_vfxName, SkillContext.ProjectileTrans, SkillContext.ProjectileData, SkillContext.VFXInfo);
+            var task = vfxManager.CreateVFX(AssetKeys.VFX_WarriorBattleSkill, SkillContext.ProjectileTrans, SkillContext.ProjectileData, SkillContext.VFXInfo);
             yield return TaskUtility.WaitForTask(task, projectile => SkillContext.Projectile = projectile);
         }
     }

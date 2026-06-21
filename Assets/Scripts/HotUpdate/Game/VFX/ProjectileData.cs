@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using HotUpdate.Base;
 using HotUpdate.Game.Battle.Object;
-using HotUpdate.Game.Battle.Skill;
+using HotUpdate.Game.Battle.Skill.Base;
 
 namespace HotUpdate.Game.VFX
 {
@@ -13,14 +12,14 @@ namespace HotUpdate.Game.VFX
         public readonly IBattleEntityObject caster;
         public readonly IBattleEntityObject mainTarget;
         public readonly List<IBattleEntityObject> targets;
-        public readonly ISkill skill;
+        public readonly SkillContext SkillContext;
 
-        public ProjectileData(IBattleEntityObject caster, IBattleEntityObject mainTarget, List<IBattleEntityObject> targets, ISkill skill)
+        public ProjectileData(IBattleEntityObject caster, IBattleEntityObject mainTarget, List<IBattleEntityObject> targets, SkillContext skillContext)
         {
             this.caster = caster;
             this.mainTarget = mainTarget;
             this.targets = targets;
-            this.skill = skill;
+            SkillContext = skillContext;
         }
     }
 }

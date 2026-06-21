@@ -13,7 +13,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard.Skill.Battle
             SkillHelper.InitSkillTarget(skill, battleCoordinator);
             
             // 初始化投射物核心数据（释放者、主目标、所有目标、当前技能实例）
-            SkillContext.ProjectileData = new ProjectileData(SkillContext.Caster, SkillContext.MainTarget, SkillContext.AllTargets, this);
+            SkillContext.ProjectileData = new ProjectileData(SkillContext.Caster, SkillContext.MainTarget, SkillContext.AllTargets, SkillContext);
             // 初始化投射物变换信息（位置为目标位置，旋转默认）
             SkillContext.ProjectileTrans = new ProjectileTrans(SkillContext.MainTarget.GameObject.transform.position, Quaternion.identity);
             // 初始化特效信息容器

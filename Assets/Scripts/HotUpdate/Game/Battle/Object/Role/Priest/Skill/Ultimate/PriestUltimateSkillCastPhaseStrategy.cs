@@ -72,7 +72,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill.Ultimate
         private async void CreateVFX()
         {
             // 重新初始化投射物数据（目标为主要攻击目标）
-            var projectileData = new ProjectileData(SkillContext.Caster, SkillContext.MainTarget, SkillContext.AllTargets, this);
+            var projectileData = new ProjectileData(SkillContext.Caster, SkillContext.MainTarget, SkillContext.AllTargets, SkillContext);
             SkillContext.ProjectileData = projectileData;
             
             // 更新投射物变换信息（基于主目标位置，无旋转）

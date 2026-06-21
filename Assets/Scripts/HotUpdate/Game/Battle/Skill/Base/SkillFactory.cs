@@ -18,7 +18,7 @@ namespace HotUpdate.Game.Battle.Skill.Base
         /// <summary>
         /// 技能构建数据
         /// </summary>
-        public readonly struct SKillBuildData
+        protected readonly struct SKillBuildData
         {
             public ISkillCastPostHandler SkillCastPostHandler { get; }
             
@@ -34,7 +34,7 @@ namespace HotUpdate.Game.Battle.Skill.Base
         [Inject] protected IBinaryDataManager binaryDataManager;
         [Inject] protected ISkillCastPostHandlerFactory skillCastPostHandlerFactory;
         
-        public ISkillData CreateSkill(IBattleEntityObject caster, int skillId, ITargetSelectStrategy targetSelectStrategy)
+        public ISkill CreateSkill(IBattleEntityObject caster, int skillId, ITargetSelectStrategy targetSelectStrategy)
         {
             var skillContext = CreateContext(caster, skillId);
             skillContext.TargetSelectStrategy = targetSelectStrategy;
@@ -47,7 +47,7 @@ namespace HotUpdate.Game.Battle.Skill.Base
             skillContext.SkillCastPostHandler = buildData.SkillCastPostHandler;
             skill.SetFlow(buildData.SkillFlow);
             
-            return new SkillData(skill);
+            return skill;
         }
         
         private SkillContext CreateContext(IBattleEntityObject caster, int skillId)

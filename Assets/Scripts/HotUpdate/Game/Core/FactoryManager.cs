@@ -2,6 +2,8 @@ using Core.DI;
 using HotUpdate.Base.Manager;
 using HotUpdate.Game.Activity.Core;
 using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.Object.Monster;
+using HotUpdate.Game.Battle.Object.Role;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Conditions;
 using HotUpdate.Game.Battle.Skill.Factory;

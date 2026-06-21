@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
-using HotUpdate.Base;
+using Core.DI;
+using Core.Serialize.Binary;
+using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Skill;
@@ -7,19 +10,29 @@ using HotUpdate.Game.Battle.Skill.Component;
 
 namespace HotUpdate.Game.Battle.UI.Provider
 {
-    /// <summary>
-    /// �սἼ���ܰ���UI�����ṩ��
-    /// </summary>
     public class UltimateSkillKeyUIDataProvider : ISkillKeyUIDataProvider
     {
+        [Inject] private IBinaryDataManager _binaryDataManager;
+        
         public SkillKeyUIData GetData(IBattleEntityObject provider)
         {
-            SkillKeyUIData skillKeyUIData = new SkillKeyUIData(new List<SkillInfo>(), provider);
-            List<ISkill> skills = new List<ISkill>(provider.GetComponent<SkillComponent>().GetSkills());
+            var skillKeyUIData = new SkillKeyUIData(new List<SkillInfo>(), provider);
 
-            // �ҵ��սἼ����
-            ISkill skill = skills.Find((skill) => (E_SkillType)skill.SkillInfo.f_SkillType == E_SkillType.UltimateSkill);
-            skillKeyUIData.SkillInfos.Add(skill.SkillInfo);
+            ISkill skill = null;
+            var skillComponent = provider.GetComponent<SkillComponent>();
+            foreach (var skillId in skillComponent.GetSkillIds())
+            {
+                var skillInfo = _binaryDataManager.GetConfig<SkillInfoContainer>(EConfigLoadType.Excel).dataDic[skillId];
+                if (skillInfo.f_SkillType == (int)E_SkillType.UltimateSkill)
+                {
+                    skill = skillComponent.GetSkill(skillId);
+                }
+            }
+            
+            if(skill == null)
+                throw new NullReferenceException(nameof(skill));
+            
+            skillKeyUIData.SkillInfos.Add(skill.SkillContext.SkillInfo);
             return skillKeyUIData;
         }
     }

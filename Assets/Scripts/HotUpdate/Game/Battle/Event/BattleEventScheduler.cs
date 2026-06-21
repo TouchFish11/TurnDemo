@@ -10,6 +10,8 @@ using HotUpdate.Game.Battle.Event.Skill;
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.Object.Monster;
+using HotUpdate.Game.Battle.Object.Role;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.UI;
 using HotUpdate.Game.Battle.UI.Provider;

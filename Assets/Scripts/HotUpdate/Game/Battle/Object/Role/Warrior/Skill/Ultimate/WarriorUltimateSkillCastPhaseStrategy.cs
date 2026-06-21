@@ -33,7 +33,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Ultimate
             yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).IsName(UltimateAttackState));
             
             // 初始化终结技核心特效数据（位置上移0.9米，避免穿模）
-            SkillContext.ProjectileData = new ProjectileData(caster, mainTarget, SkillContext.AllTargets, this);
+            SkillContext.ProjectileData = new ProjectileData(caster, mainTarget, SkillContext.AllTargets, SkillContext);
             SkillContext.ProjectileTrans = new ProjectileTrans(caster.GameObject.transform.position + Vector3.up * 0.9f, Quaternion.identity);
             SkillContext.VFXInfo = poolManager.GetData<VFXInfo>();
             

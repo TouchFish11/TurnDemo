@@ -1,6 +1,7 @@
 using HotUpdate.Base;
 using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.Object.Monster;
 using UnityEngine;
 
 namespace HotUpdate.Game.Animation.StateMachineBehaviours

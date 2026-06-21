@@ -1,5 +1,6 @@
 using System.Collections;
 using Core.Utility;
+using HotUpdate.Game.Battle.Object.Role;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
 using HotUpdate.Game.VFX;
@@ -22,7 +23,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.Slime.Strategys
             caster = new Vector3(caster.x, 0, caster.z);
             
             // 初始化投射物数据（施法者、主目标、所有目标、当前技能）
-            SkillContext.ProjectileData = new ProjectileData(SkillContext.Caster, SkillContext.MainTarget, SkillContext.AllTargets, skill);
+            SkillContext.ProjectileData = new ProjectileData(SkillContext.Caster, SkillContext.MainTarget, SkillContext.AllTargets, SkillContext);
             // 初始化技能弹道的位置（施法者前方）和朝向（面向主目标）
             SkillContext.ProjectileTrans = new ProjectileTrans(SkillContext.Caster.GameObject.transform.position + Vector3.forward, Quaternion.LookRotation(mainTarget - caster));
             // 初始化特效信息对象

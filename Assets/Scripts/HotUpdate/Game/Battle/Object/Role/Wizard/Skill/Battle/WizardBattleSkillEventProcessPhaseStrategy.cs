@@ -1,6 +1,4 @@
 using System.Threading.Tasks;
-using Core.DI;
-using Core.Pool;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
 using HotUpdate.Game.Battle.Status;

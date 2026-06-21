@@ -3,6 +3,7 @@ using HotUpdate.Base.Component;
 using HotUpdate.Base.Enums;
 using HotUpdate.Base.Utility;
 using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.Object.Role;
 
 namespace HotUpdate.Game.Animation.Component
 {

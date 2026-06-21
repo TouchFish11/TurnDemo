@@ -8,6 +8,7 @@ using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.Object.Role;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Component;
 using HotUpdate.Game.Battle.TargetSelect;

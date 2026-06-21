@@ -1,13 +1,8 @@
-using System.Collections;
 using System.ComponentModel;
-using HotUpdate.Base;
 using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.Summon.Summons
 {
-    /// <summary>
-    /// �����ٻ���
-    /// </summary>
     public class MimiSummon : BattleObject, ISummon
     {
         public IBattleEntityObject Owner { get; private set; }
@@ -29,11 +24,6 @@ namespace HotUpdate.Game.Battle.Summon.Summons
         public override void CastSkill(int skillId)
         {
             
-        }
-
-        public override IEnumerator Die()
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

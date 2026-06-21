@@ -2,12 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.DI;
+using Core.Serialize.Binary;
 using Core.Utility;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.UI;
+using HotUpdate.Common.Config.ExcelInfo.Container;
+using HotUpdate.Game.Battle.Command;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.Object.Monster;
+using HotUpdate.Game.Battle.Object.Role;
 using HotUpdate.Game.Battle.UI;
 using HotUpdate.Game.Battle.Utility;
 using UnityEngine;
@@ -19,6 +24,7 @@ namespace HotUpdate.Game.Battle.Core
     /// </summary>
     public class BattleService
     {
+        [Inject] private IBinaryDataManager _binaryDataManager;
         [Inject] private RoleFactory _roleFactory;
         [Inject] private MonsterFactory _monsterFactory;
         [Inject] private BattlePointProxy _battlePointProxy;
@@ -27,11 +33,13 @@ namespace HotUpdate.Game.Battle.Core
         
         private readonly IBattleManager _battleManager;
         private readonly IBattleContext _context;
+        private readonly Commandfactory _commandFactory;
 
         public BattleService(IBattleManager battleManager, IBattleContext context)
         {
             _battleManager = battleManager;
             _context = context;
+            _commandFactory = DIContainer.Create<Commandfactory>();
         }
         
         /// <summary>
@@ -45,12 +53,14 @@ namespace HotUpdate.Game.Battle.Core
             var playerTrans = new List<Transform>(_battlePointProxy.BattlePoint.GetRoleTransforms());
             for (var i = 0; i < roleIds.Length; i++)
             {
+                var handler = DIContainer.Create<RoleDeathHandler>();
                 var roleId = roleIds[i];
+                var roleInfo = _binaryDataManager.GetConfig<RoleInfoContainer>(EConfigLoadType.Excel).dataDic[roleId];
                 var transform = playerTrans[i];
                 // 创建角色对象
                 var playerObject = await _roleFactory.CreateRole(roleId, transform);
                 // 注入上下文，供角色内部组件使用
-                playerObject.BattleInit(roleId, _context);
+                playerObject.RoleBattleInit(roleInfo, _context, _commandFactory, handler);
                 // 记录角色所在的位置索引
                 playerObject.EntityPosIndex = i;
                 // 设置角色层级
@@ -81,14 +91,16 @@ namespace HotUpdate.Game.Battle.Core
             {
                 for (var i = 0; i < monsterIds.Length; i++)
                 {
+                    var handle = DIContainer.Create<MonsterDeathHandler>();
                     var monsterId = monsterIds[i];
+                    var monsterInfo = _binaryDataManager.GetConfig<MonsterInfoContainer>(EConfigLoadType.Excel).dataDic[monsterId];
                     var transform = monsterTrans[i];
                     // 创建怪物对象
                     var monsterObject = await _monsterFactory.CreateMonster(monsterId, transform);
                     // 设置名称
                     monsterObject.GameObject.name = $"{monsterObject.GameObject.name}_{i}";
                     // 注入上下文，供角色内部组件使用
-                    monsterObject.BattleInit(monsterId, _context);
+                    monsterObject.MonsterBattleInit(monsterInfo, _context, _commandFactory, handle);
                     // 记录怪物所在的位置索引
                     monsterObject.EntityPosIndex = i;
                     // 设置怪物层级
@@ -99,14 +111,16 @@ namespace HotUpdate.Game.Battle.Core
             }
             else if (monsterIds.Length == 1)
             {
+                var handle = DIContainer.Create<MonsterDeathHandler>();
                 var monsterId = monsterIds[0];
+                var monsterInfo = _binaryDataManager.GetConfig<MonsterInfoContainer>(EConfigLoadType.Excel).dataDic[monsterId];
                 var transform = monsterTrans[2];
                 // 创建怪物对象
                 var monsterObject = await _monsterFactory.CreateMonster(monsterId, transform);
                 // 设置名称
                 monsterObject.GameObject.name = $"{monsterObject.GameObject.name}_{2}";
                 // 注入上下文，供角色内部组件使用
-                monsterObject.BattleInit(monsterId, _context);
+                monsterObject.MonsterBattleInit(monsterInfo, _context, _commandFactory, handle);
                 // 记录怪物所在的位置索引
                 monsterObject.EntityPosIndex = 2;
                 // 设置怪物层级
@@ -118,14 +132,16 @@ namespace HotUpdate.Game.Battle.Core
             {
                 for (var i = 0; i < monsterIds.Length; i++)
                 {
+                    var handle = DIContainer.Create<MonsterDeathHandler>();
                     var monsterId = monsterIds[i];
                     var transform = monsterTrans[i + 1];
                     // 创建怪物对象
                     var monsterObject = await _monsterFactory.CreateMonster(monsterId, transform);
                     // 设置名称
                     monsterObject.GameObject.name = $"{monsterObject.GameObject.name}_{i + 1}";
+                    var monsterInfo = _binaryDataManager.GetConfig<MonsterInfoContainer>(EConfigLoadType.Excel).dataDic[monsterId];
                     // 注入上下文，供角色内部组件使用
-                    monsterObject.BattleInit(monsterId, _context);
+                    monsterObject.MonsterBattleInit(monsterInfo, _context, _commandFactory, handle);
                     // 记录怪物所在的位置索引
                     monsterObject.EntityPosIndex = i + 1;
                     // 设置怪物层级

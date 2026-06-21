@@ -11,6 +11,7 @@ using HotUpdate.Base.Manager;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.Object.Monster;
 using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.Toughness;
 using HotUpdate.Game.Battle.Utility;
