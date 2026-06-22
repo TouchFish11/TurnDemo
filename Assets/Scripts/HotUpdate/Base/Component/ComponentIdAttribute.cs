@@ -1,6 +1,6 @@
 using System;
 
-namespace Core.Components
+namespace HotUpdate.Base.Component
 {
     /// <summary>
     /// 组件ID特性（ComponentIdAttribute）

@@ -2,7 +2,6 @@ using Core.DI;
 using Core.UI.ViewController;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.UI;
-using HotUpdate.UI.Battle.MonsterStateUI;
 
 namespace HotUpdate.UI.Battle.Base
 {

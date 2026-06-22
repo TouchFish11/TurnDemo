@@ -1,5 +1,5 @@
-using Core.Components;
 using HotUpdate.Base.Component;
+using HotUpdate.Base.Object;
 using HotUpdate.Game.Cameras;
 using HotUpdate.Game.Inputs;
 using UnityEngine;
@@ -175,11 +175,10 @@ namespace HotUpdate.Game.Main.Move
             characterController.Move(speed * Time.deltaTime * moveDir);
         }
 
-        public override void Destroy()
+        protected override void OnDestroyBase()
         {
             mainCamera = null;
             characterController = null;
-            base.Destroy();
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using HotUpdate.Base;
 
@@ -6,7 +7,7 @@ namespace HotUpdate.Game.Battle.Toughness
     /// <summary>
     /// 韧性状态
     /// </summary>
-    public class ToughnessState
+    public class ToughnessState : IDisposable
     {
         /// <summary>
         /// 弱点属性列表
@@ -48,6 +49,14 @@ namespace HotUpdate.Game.Battle.Toughness
         {
             CurrentToughnessValue = current;
             MaxToughnessVaue = max;
+        }
+
+        public void Dispose()
+        {
+            WeakPropertys.Clear();
+            WeakPropertys = null;
+            CurrentToughnessValue = 0;
+            MaxToughnessVaue = 0;
         }
     }
 }

@@ -1,5 +1,9 @@
+using Core.DI;
 using HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill;
-using HotUpdate.Game.Battle.Skill.Component;
+using HotUpdate.Game.Battle.Skill;
+using HotUpdate.Game.Battle.Skill.Conditions;
+using HotUpdate.Game.Battle.TargetSelect;
+using HotUpdate.Game.Battle.TargetSelect.Strategys;
 
 namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage
 {
@@ -16,11 +20,20 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage
             new []{105, 103},
             new []{106, 104},
         };
-        
-        protected override void OnBattleInit()
+
+        protected override ISkillFactory GetSkillFactory()
         {
-            
-            GetComponent<SkillComponent>().InitSkills(MonsterInfo.f_skillIds, new AbyssalMageSkillFactory());
+            return DIContainer.Create<AbyssalMageSkillFactory>();
+        }
+
+        protected override ICastSkillCondition GetSkillCondition()
+        {
+            return castSkillConditionFactory.GetCastSkillCondition<MonsterDefaultCastSkillCondition>();
+        }
+
+        protected override ITargetSelectStrategy GetTargetSelectStrategy()
+        {
+            return targetSelectStrategyFactory.GetTargetSelectStrategy<MonsterBaseTargetSelectStrategy>();
         }
 
         public override int SelectSkill()

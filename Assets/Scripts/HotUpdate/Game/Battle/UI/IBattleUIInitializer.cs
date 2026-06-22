@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using HotUpdate.Base;
 using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.UI

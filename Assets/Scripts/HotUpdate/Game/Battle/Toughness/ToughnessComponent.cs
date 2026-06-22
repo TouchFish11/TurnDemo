@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using Core.Components;
 using Core.DI;
 using Core.Utility;
 using HotUpdate.Base;
+using HotUpdate.Base.Component;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Object;
@@ -27,9 +27,9 @@ namespace HotUpdate.Game.Battle.Toughness
         // 当前韧性状态（封装了韧性值、最大值、弱点属性、破韧状态等核心数据）
         private ToughnessState _toughness;
         // 韧性扣除策略集合（不同规则的扣除判断逻辑，按优先级排序执行）
-        private readonly List<IToughnessReduceStrategy> _toughnessReduceStrategies = new List<IToughnessReduceStrategy>();
+        private List<IToughnessReduceStrategy> _toughnessReduceStrategies = new();
         // 韧性计算策略集合（不同规则的韧性值计算逻辑，按优先级排序执行）
-        private readonly List<IToughnessCalcStrategy> _toughnessCalcStrategies = new List<IToughnessCalcStrategy>();
+        private List<IToughnessCalcStrategy> _toughnessCalcStrategies = new();
 
         /// <summary>
         /// 初始化韧性组件（接口实现）
@@ -37,8 +37,10 @@ namespace HotUpdate.Game.Battle.Toughness
         /// <param name="owner">所属战斗实体（如怪物、角色）</param>
         /// <param name="elementTypes">弱点属性类型数组（整型枚举值）</param>
         /// <param name="initialToughness">初始韧性最大值</param>
-        void IToughnessComponent.Init(IBattleEntityObject owner, int[] elementTypes, int initialToughness)
+        void IToughnessComponent.InitToughness(IBattleEntityObject owner, int[] elementTypes, int initialToughness)
         {
+            BattleInit(owner);
+            
             // 转换整型弱点属性为枚举类型
             var weakPropertys = new List<E_ElementType>(elementTypes.Length);
             foreach (var type in elementTypes)
@@ -47,21 +49,11 @@ namespace HotUpdate.Game.Battle.Toughness
             }
             // 初始化韧性状态对象
             _toughness = new ToughnessState(weakPropertys, initialToughness);
-        }
-
-        /// <summary>
-        /// 战斗初始化（重写基类方法）
-        /// 时机：战斗实体初始化时调用，完成韧性组件的基础数据加载和默认策略注册
-        /// </summary>
-        /// <param name="battleEntity">所属战斗实体对象</param>
-        public override void BattleInit(IBattleEntityObject battleEntity)
-        {
-            base.BattleInit(battleEntity);
-
+            
             // 获取怪物信息组件（当前仅适配怪物，若适配角色需扩展）
-            var monsterInfo = ((MonsterObject)battleEntity).MonsterInfo;
+            var monsterInfo = ((MonsterObject)BattleEntity).MonsterInfo;
             // 解析怪物配置的弱点属性（字符串分割为整型数组）和基础韧性值，初始化韧性
-            (this as IToughnessComponent).Init(battleEntity, TextUtility.SplitToIntArr(monsterInfo.f_weaknesses, 2), monsterInfo.f_baseToughness);
+            (this as IToughnessComponent).InitToughness(BattleEntity, TextUtility.SplitToIntArr(monsterInfo.f_weaknesses, 2), monsterInfo.f_baseToughness);
 
             // 注册默认韧性扣除策略（从策略工厂获取）
             var reduceStrategy = toughnessStrategyFactory.GetReduceStrategy<DefaultToughnessReduceStrategy>();
@@ -71,7 +63,7 @@ namespace HotUpdate.Game.Battle.Toughness
             var calcStrategy = toughnessStrategyFactory.GetCalcStrategy<DefaultToughnessCalcStrategy>();
             _toughnessCalcStrategies.Add(calcStrategy);
         }
-
+        
         /// <summary>
         /// 添加韧性扣除策略
         /// 说明：添加后自动按优先级重新排序，保证高优先级策略先执行
@@ -290,6 +282,16 @@ namespace HotUpdate.Game.Battle.Toughness
             return totalValue;
         }
 
+        protected override void OnBattleDestroy()
+        {
+            _toughness.Dispose();
+            _toughness = null;
+            _toughnessCalcStrategies.Clear();
+            _toughnessCalcStrategies = null;
+            _toughnessReduceStrategies.Clear();
+            _toughnessReduceStrategies = null;
+        }
+        
         /// <summary>
         /// 判断是否处于破韧状态
         /// 说明：破韧判定由ToughnessState内部维护（通常为当前韧性值≤0）

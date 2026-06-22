@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
-using Core.Components;
 using Core.DI;
 using Core.GlobalEvent;
 using Core.GlobalEvent.Events;
@@ -9,8 +8,9 @@ using Core.Mono;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Enums;
 using HotUpdate.Base.Manager;
+using HotUpdate.Base.Object;
 using HotUpdate.Base.UI;
-
+using HotUpdate.Base.Utility;
 using HotUpdate.Game.Battle.Object.Role.Warrior;
 using HotUpdate.Game.Cameras;
 using HotUpdate.Game.Inputs;
@@ -29,6 +29,7 @@ namespace HotUpdate.Game.Main.Player
         [Inject] private IFloatingTextManager _floatingTextManager;
         [Inject] private ObjectSpawner _objectSpawner;
         
+        // 环绕式第三人称相机控制器
         private OrbitCameraController _cameraController;
 
         // 字典：玩家UID映射到对应的实体对象，用于快速查找玩家
@@ -64,8 +65,8 @@ namespace HotUpdate.Game.Main.Player
             var warriorObj = await _objectSpawner.SpawnAsync<GameObject>(AssetKeys.Prefab_Main_Warrior, main.transform);
             // 给战士预制体添加战士逻辑组件，并关联到主玩家
             warriorObj.AddComponent<Warrior>();
-            // 初始化主玩家基础数据（参数1为示例配置ID）
-            main.BaseInit(1);
+            // 初始化主玩家基础数据
+            main = EntityHelper.InitEntity(main);
             // 初始化玩家相机
             await CreateMainCamera();
             // 设置跟随对象
@@ -86,7 +87,7 @@ namespace HotUpdate.Game.Main.Player
             foreach (var entity in uidToEntityMap.Values)
             {
                 entity.Destroy(); // 执行实体内部销毁逻辑
-                Object.Destroy(entity.GameObject); // 销毁GameObject对象
+                EngineUtility.Destroy(entity.GameObject); // 销毁GameObject对象
             }
 
             // 清空字典，释放引用

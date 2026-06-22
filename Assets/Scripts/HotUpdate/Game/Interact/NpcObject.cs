@@ -1,7 +1,6 @@
-using Core.Components;
 using Core.DI;
 using Core.Serialize.Binary;
-using HotUpdate.Base.Interact;
+using HotUpdate.Base.Component;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Object;
 using HotUpdate.Common.Config.ExcelInfo.Container;
@@ -28,14 +27,13 @@ namespace HotUpdate.Game.Interact
 
         public NpcInfo NpcInfo { get; private set; }
         
-        public void InitNpc(int id)
+        public void InitNpc(int npcConfigId)
         {
-            BaseInit(id);
+            NpcInfo = _binaryDataManager.GetConfig<NpcInfoContainer>(EConfigLoadType.Excel).dataDic[npcConfigId];
         }
 
-        public override void BaseInit(int id)
+        public override void InitBase(long entityid, ComponentService service)
         {
-            NpcInfo = _binaryDataManager.GetConfig<NpcInfoContainer>(EConfigLoadType.Excel).dataDic[id];
             _interactTrigger = AddComponent<InteractTrigger>();
             _interactTrigger.Init(this);
             _floatingTextManager.AddNpc(this);

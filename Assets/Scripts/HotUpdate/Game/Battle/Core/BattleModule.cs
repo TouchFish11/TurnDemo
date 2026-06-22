@@ -8,6 +8,7 @@ using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Event;
 using HotUpdate.Game.Battle.Inputs;
 using HotUpdate.Game.Battle.TargetSelect;
+using HotUpdate.Game.Battle.UI;
 
 namespace HotUpdate.Game.Battle.Core
 {
@@ -27,6 +28,7 @@ namespace HotUpdate.Game.Battle.Core
             DIContainer.BindSingleton<IBattleEventScheduler, BattleEventScheduler>();
             DIContainer.BindSingleton<IBattleCameraManager, BattleCameraManager>();
             DIContainer.BindSingleton<IBattleManager, BattleManager>();
+            DIContainer.BindSingleton<ISkillKeyUIDataProviderFactory, SkillKeyUIDataProviderFactory>();
             DIContainer.BindType<IBattleContext, BattleContext>();
             
             // TODO：暂时写在这个方法中

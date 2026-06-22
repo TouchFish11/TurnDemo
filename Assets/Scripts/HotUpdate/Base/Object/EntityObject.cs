@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Core.Components;
-using Core.DI;
 using HotUpdate.Base.Component;
 using UnityEngine;
 using Logger = Core.Log.Logger;
@@ -16,36 +14,18 @@ namespace HotUpdate.Base.Object
     [DisallowMultipleComponent]
     public abstract class EntityObject : MonoBehaviour, IEntityObject
     {
-        [Inject] protected ComponentHelper _componentHelper;
-        
-        /// <summary>
-        /// 自定义组件缓存映射表
-        /// Key：组件类型标识（TypeIdentifier），Value：对应的IComponent组件实例
-        /// </summary>
+        // 组件服务对象
+        protected ComponentService componentService;
+        // 自定义组件缓存映射表，Key：组件类型标识（TypeIdentifier），Value：对应的IComponent组件实例
         private readonly Dictionary<Type, IComponent> typeToIComponentMap = new();
 
-        /// <summary>
-        /// 当前实体绑定的GameObject
-        /// 简化外部访问当前挂载的GameObject实例（等价于this.gameObject）
-        /// </summary>
+        public long EntityId { get; private set; }
+
         public GameObject GameObject => gameObject;
-
-        /// <summary>
-        /// 实体属性
-        /// 存储实体属性，由子类负责初始化赋值
-        /// </summary>
-        public EntityProperty EntityProperty { get; protected set; }
         
-        /// <summary>
-        /// 实体基础初始化方法
-        /// 所有子类必须实现此方法，完成实体的核心初始化逻辑（如属性赋值、组件初始化等）
-        /// </summary>
-        /// <param name="id">实体唯一标识ID（全局唯一，用于区分不同实体）</param>
-        public abstract void BaseInit(int id);
-
         private void Awake()
         {
-            DIContainer.InjectIntoInstance(this);
+
         }
 
         private void OnEnable()
@@ -59,6 +39,12 @@ namespace HotUpdate.Base.Object
         protected virtual void OnActive()
         {
             
+        }
+
+        public virtual void InitBase(long entityId, ComponentService service)
+        {
+            EntityId = entityId;
+            componentService = service;
         }
         
         /// <summary>
@@ -122,7 +108,7 @@ namespace HotUpdate.Base.Object
         {
             IComponent returnComponent = null;
             // 通过组件工厂创建并挂载组件（封装Unity原生AddComponent逻辑）
-            foreach (var component in _componentHelper.AddComponent<TComponent>(this))
+            foreach (var component in componentService.AddComponent<TComponent>(this))
             {
                 if (typeof(TComponent) == component.GetType())
                 {
@@ -145,7 +131,7 @@ namespace HotUpdate.Base.Object
         {
             var count = 0;
             // 遍历添加结果，将组件存入缓存字典
-            foreach (var (type, component) in _componentHelper.AddComponents(this, componentNames))
+            foreach (var (type, component) in componentService.AddComponents(this, componentNames))
             {
                 if (typeToIComponentMap.TryAdd(type, component))
                 {
@@ -179,8 +165,6 @@ namespace HotUpdate.Base.Object
             
             // 清空组件缓存，释放内存
             typeToIComponentMap.Clear();
-            // 释放实体属性引用，避免内存泄漏
-            EntityProperty = null;
         }
         
         /// <summary>

@@ -25,7 +25,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
             {
                 case 30:    // 普攻
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
-                    phases = SkillPhaseBuilder.
+                    phases = skillPhaseBuilder.
                         AddSkillPreCastPhase(new PriestNormalSkillPreCastPhaseStrategy()).
                         AddSkillCastPhase(new PriestNormalSkillCastPhaseStrategy()).
                         AddSkillEventProcessPhase(new PriestNormalSkillEventProcessPhaseStrategy()).
@@ -34,7 +34,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
                     break;
                 case 31:    // 战技
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
-                    phases = SkillPhaseBuilder.
+                    phases = skillPhaseBuilder.
                         AddSkillPreCastPhase(new PriestBattleSkillPreCastPhaseStrategy()).
                         AddSkillCastPhase(new PriestBattleSkillCastPhaseStrategy()).
                         AddSkillEventProcessPhase(new PriestBattleSkillEventProcessPhaseStrategy()).
@@ -43,7 +43,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
                     break;
                 case 32:    // 终结技
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseUltimateSkillCastPostHandler>();
-                    phases = SkillPhaseBuilder.
+                    phases = skillPhaseBuilder.
                         AddSkillPreCastPhase(new PriestUltimateSkillPreCastPhaseStrategy()).
                         AddSkillCastPhase(new PriestUltimateSkillCastPhaseStrategy()).
                         AddSkillEventProcessPhase(new PriestUltimateSkillEventProcessPhaseStrategy()).

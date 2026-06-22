@@ -5,7 +5,6 @@ using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Skill;
-using HotUpdate.Game.Battle.Skill.Component;
 
 namespace HotUpdate.Game.Battle.UI.Provider
 {
@@ -16,6 +15,7 @@ namespace HotUpdate.Game.Battle.UI.Provider
     public class BaseSkillKeyUIDataProvider : ISkillKeyUIDataProvider
     {
         [Inject] private IBinaryDataManager _binaryDataManager;
+        
         /// <summary>
         /// 获取技能按键UI展示所需的数据
         /// </summary>
@@ -26,7 +26,7 @@ namespace HotUpdate.Game.Battle.UI.Provider
             // 初始化技能按键UI数据，传入空的技能信息列表和数据提供方实体
             var skillKeyUIData = new SkillKeyUIData(new List<SkillInfo>(), provider);
             // 遍历所有技能ID，筛选非终极技能的技能信息加入UI数据
-            foreach (var skillId in provider.GetComponent<SkillComponent>().GetSkillIds())
+            foreach (var skillId in provider.GetComponent<ISkillComponent>().GetSkillIds())
             {
                 // 获取当前技能的基础信息
                 var skillInfo = _binaryDataManager.GetConfig<SkillInfoContainer>(EConfigLoadType.Excel).dataDic[skillId];

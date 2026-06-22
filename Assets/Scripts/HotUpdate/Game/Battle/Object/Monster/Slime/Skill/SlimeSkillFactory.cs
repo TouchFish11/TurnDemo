@@ -22,7 +22,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.Slime.Skill
             {
                 case 101:
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
-                    phases = SkillPhaseBuilder.
+                    phases = skillPhaseBuilder.
                         AddMonsterCommonPhase().
                         AddSkillPreCastPhase(new SlimeSkillPreCastPhaseStrategy()).
                         AddSkillCastPhase(new SlimeSkillCastPhaseStrategy()).

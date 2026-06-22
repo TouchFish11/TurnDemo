@@ -1,5 +1,6 @@
 using System.Collections;
 using HotUpdate.Base;
+using HotUpdate.Base.Component;
 using HotUpdate.Base.Object;
 using HotUpdate.Game.Battle.Command;
 using HotUpdate.Game.Battle.Context;
@@ -7,6 +8,8 @@ using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.ResponsibilityChain;
+using HotUpdate.Game.Battle.Skill.Conditions;
+using HotUpdate.Game.Battle.TargetSelect;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.Object
@@ -17,9 +20,16 @@ namespace HotUpdate.Game.Battle.Object
     /// </summary>
     public abstract class BattleObject : EntityObject, IBattleEntityObject, IDamagable
     {
+        // 技能释放条件工厂
+        protected ICastSkillConditionFactory castSkillConditionFactory;
+        // 目标选择策略工厂
+        protected ITargetSelectStrategyFactory targetSelectStrategyFactory;
+        // 命令工厂
         protected Commandfactory commandfactory;
         // 死亡处理器
         protected IDeathHandler deathHandler;
+        // 伤害处理链
+        protected Handler<DamageResult> damageChain;
         
         /// <summary>
         /// 战斗上下文，提供战斗环境、事件总线、规则等核心战斗数据访问
@@ -56,14 +66,12 @@ namespace HotUpdate.Game.Battle.Object
         /// </summary>
         public bool IsDead => GetComponent<PropertyComponent>().GetPropertyValue(E_DynamicPropertyType.CurrentHp) <= 0;
 
-        // 伤害处理链
-        protected Handler<DamageResult> damageChain;
-
         /// <summary>
         /// 基础初始化方法
         /// </summary>
-        /// <param name="id">战斗实体ID</param>
-        public override void BaseInit(int id)
+        /// <param name="entityId"></param>
+        /// <param name="service"></param>
+        public sealed override void InitBase(long entityId, ComponentService service)
         {
             // 获取第二个子物体作为子游戏物体（默认第一个是自身，第二个为可视化表现层），用于绑定Animator等战斗相关组件
             SubGameObject = GetComponentsInChildren<Transform>()[1].gameObject;
@@ -72,23 +80,20 @@ namespace HotUpdate.Game.Battle.Object
         /// <summary>
         /// 战斗初始化方法
         /// </summary>
-        /// <param name="battleEntityId">战斗实体唯一ID</param>
-        /// <param name="context">战斗上下文实例</param>
-        /// <param name="factory"></param>
-        /// <param name="handler"></param>
-        public void BattleInit(int battleEntityId, IBattleContext context, Commandfactory factory, IDeathHandler handler)
+        /// <param name="initData"></param>
+        protected void BattleInit(BattleObjectInitData initData)
         {
-            // 执行基础初始化
-            BaseInit(battleEntityId);
             // 绑定战斗上下文
-            Context = context;
+            Context = initData.BattleContext;
             // 赋值战斗实体ID
-            BattleEntityId = battleEntityId;
-            // 初始化命令工厂
-            commandfactory = factory;
+            BattleEntityId = initData.BattleEntityId;
+            // 初始化工厂
+            commandfactory = initData.Commandfactory;
+            castSkillConditionFactory = initData.CastSkillConditionFactory;
+            targetSelectStrategyFactory = initData.TargetSelectStrategyFactory;
             // 初始化死亡处理器
-            handler.InitEntity(this);
-            deathHandler = handler;
+            initData.DeathHandler.InitEntity(this);
+            deathHandler = initData.DeathHandler;
         }
 
         public virtual void ExecuteAction()

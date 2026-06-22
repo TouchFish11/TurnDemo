@@ -1,7 +1,7 @@
-using Core.DI;
+using System;
+using System.Collections.Generic;
 using Core.HotUpdate;
 using Core.Log;
-using HotUpdate.Base.Factory;
 using HotUpdate.Base.Utility;
 
 namespace HotUpdate.Game.Battle.UI
@@ -9,14 +9,16 @@ namespace HotUpdate.Game.Battle.UI
     /// <summary>
     /// 技能按键UI数据提供器工厂
     /// </summary>
-    public class SkillKeyUIDataProviderFactory : Factory<ISkillKeyUIDataProvider>, ISkillKeyUIDataProviderFactory
+    public class SkillKeyUIDataProviderFactory : ISkillKeyUIDataProviderFactory
     {
-        void IFactory.InitFactory()
+        private readonly Dictionary<Type, ISkillKeyUIDataProvider> typeToInterfaceMap = new();
+        
+        private SkillKeyUIDataProviderFactory(IHotUpdateManager hotUpdateManager)
         {
-            FactoryUtility.ScanAllType(typeToInterfaceMap, DIContainer.GetInstance<IHotUpdateManager>().GetAssemblies());
+            FactoryUtility.ScanAllType(typeToInterfaceMap, hotUpdateManager.GetHotAssemblies());
         }
         
-        public ISkillKeyUIDataProvider GetCastSkillCondition<TProvider>()where TProvider : class, ISkillKeyUIDataProvider
+        public ISkillKeyUIDataProvider GetProvider<TProvider>()where TProvider : class, ISkillKeyUIDataProvider
         {
             if (typeToInterfaceMap.TryGetValue(typeof(TProvider), out var targetSelectStrategy))
             {

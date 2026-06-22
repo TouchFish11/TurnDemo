@@ -1,5 +1,4 @@
-using Core.Serialize.Binary;
-using HotUpdate.Common.Config.ExcelInfo.Container;
+using HotUpdate.Common.Config.ExcelInfo.Info;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.Property
@@ -15,11 +14,10 @@ namespace HotUpdate.Game.Battle.Property
         // 当前能量
         protected int currentEnergy;
         
-        public override void InitProperty(int id)
+        public void InitProperty(RoleInfo roleInfo)
         {
-            base.InitProperty(id);
-            var roleInfo = binaryDataManager.GetConfig<RoleInfoContainer>(EConfigLoadType.Excel).dataDic[id];
-
+            battleId = roleInfo.f_id;
+            
             baseHp = roleInfo.f_baseHp;
             baseAtk = roleInfo.f_baseAtk;
             baseDef = roleInfo.f_baseDef;

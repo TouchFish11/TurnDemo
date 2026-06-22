@@ -1,5 +1,4 @@
 using Core.Log;
-using HotUpdate.Base;
 using HotUpdate.Game.Battle.Event;
 using HotUpdate.Game.Battle.Object;
 

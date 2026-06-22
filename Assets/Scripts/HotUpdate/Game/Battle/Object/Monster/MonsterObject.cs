@@ -1,11 +1,14 @@
+using Core.DI;
 using Core.Utility;
 using HotUpdate.Common.Config.ExcelInfo.Info;
-using HotUpdate.Game.Battle.Command;
-using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.ResponsibilityChain.DamageChain;
-using HotUpdate.Game.Battle.Skill.Component;
+using HotUpdate.Game.Battle.Skill;
+using HotUpdate.Game.Battle.Skill.Base;
+using HotUpdate.Game.Battle.Skill.Conditions;
+using HotUpdate.Game.Battle.TargetSelect;
+using HotUpdate.Game.Battle.TargetSelect.Strategys;
 using HotUpdate.Game.Battle.Toughness;
 
 namespace HotUpdate.Game.Battle.Object.Monster
@@ -26,27 +29,35 @@ namespace HotUpdate.Game.Battle.Object.Monster
         /// 战斗初始化方法
         /// 初始化怪物的技能列表和战斗组件，为进入战斗做最终准备
         /// </summary>
-        /// <param name="info"></param>
-        /// <param name="context">战斗上下文（包含战斗管理器、回合管理器等核心战斗环境）</param>
-        /// <param name="factory"></param>
-        /// <param name="handler"></param>
-        public void MonsterBattleInit(MonsterInfo info, IBattleContext context, Commandfactory factory, IDeathHandler handler)
+        public void MonsterBattleInit(MonsterBattleInitData initData)
         {
-            BattleInit(info.f_id, context, factory, handler);
+            BattleInit(initData);
             
-            MonsterInfo = info;
+            MonsterInfo = initData.MonsterInfo;
             // 初始化伤害链
             damageChain = DamageChainBuilder.GetMonsterDamageChain();
             // 根据配置的组件名称列表，为怪物添加对应的战斗组件（如韧性组件、动画组件等）
             AddComponents(TextUtility.Split(MonsterInfo.f_comNames, 2));
             
-            OnBattleInit();
+            var skillComponent = GetComponent<ISkillComponent>();
+            var core = DIContainer.Create<SkillComponentCore>();
+            core.Init(skillComponent, MonsterInfo.f_skillIds, GetSkillFactory());
+            core.AddCastCondition(GetSkillCondition());
+            core.AddTargetSelectStrategy(GetTargetSelectStrategy());
+            skillComponent.InitSkill(this, core);
         }
+
+        protected abstract ISkillFactory GetSkillFactory();
         
-        /// <summary>
-        /// 子类初始化
-        /// </summary>
-        protected abstract void OnBattleInit();
+        protected virtual ICastSkillCondition GetSkillCondition()
+        {
+            return castSkillConditionFactory.GetCastSkillCondition<MonsterDefaultCastSkillCondition>();
+        }
+
+        protected virtual ITargetSelectStrategy GetTargetSelectStrategy()
+        {
+            return targetSelectStrategyFactory.GetTargetSelectStrategy<MonsterBaseTargetSelectStrategy>();
+        }
 
         public override void ExecuteAction()
         {
@@ -65,7 +76,7 @@ namespace HotUpdate.Game.Battle.Object.Monster
 
         public override void CastSkill(int skillId)
         {
-            var skillComponent = GetComponent<SkillComponent>();
+            var skillComponent = GetComponent<ISkillComponent>();
             // 能否释放
             if (!skillComponent.CanCast(skillId))
             {

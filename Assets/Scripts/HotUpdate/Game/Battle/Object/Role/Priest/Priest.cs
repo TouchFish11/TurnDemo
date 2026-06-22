@@ -1,5 +1,7 @@
+using Core.DI;
 using HotUpdate.Game.Battle.Object.Role.Priest.Skill;
-using HotUpdate.Game.Battle.Skill.Component;
+using HotUpdate.Game.Battle.Skill;
+using HotUpdate.Game.Battle.Skill.Base;
 
 namespace HotUpdate.Game.Battle.Object.Role.Priest
 {
@@ -10,7 +12,10 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest
     {
         protected override void OnBattleInit()
         {
-            GetComponent<SkillComponent>().InitSkills(RoleInfo.f_skillIds, new PriestSkillFactory());
+            var skillComponent = GetComponent<ISkillComponent>();
+            var core = DIContainer.Create<SkillComponentCore>();
+            core.Init(skillComponent, RoleInfo.f_skillIds, DIContainer.Create<PriestSkillFactory>());
+            skillComponent.InitSkill(this, core);
         }
     }
 }

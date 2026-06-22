@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Core.Components;
 using Core.DI;
 using Core.GlobalEvent;
 using Core.GlobalEvent.Events;
@@ -8,6 +7,7 @@ using Core.Inputs.ActionAsset;
 using Core.Mono;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Manager;
+using HotUpdate.Base.Object;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -79,7 +79,7 @@ namespace HotUpdate.Game.Inputs
             // 添加帧更新监听，处理每帧的输入逻辑
             _monoAdapter.AddUpdateListener(OnUpdate);
         }
-
+        
         /// <summary>
         /// 添加输入限制（指定输入动作将被限制，仅允许受限列表内的输入生效）
         /// </summary>
@@ -216,11 +216,8 @@ namespace HotUpdate.Game.Inputs
                 }
             }
         }
-
-        /// <summary>
-        /// 组件销毁时的清理方法
-        /// </summary>
-        private void OnDestroy()
+        
+        protected override void OnDestroyBase()
         {
             // 清空所有事件回调，避免内存泄漏
             OnKeyInputChanged = null;

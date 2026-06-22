@@ -1,6 +1,7 @@
+using HotUpdate.Base.Component;
 using UnityEngine;
 
-namespace Core.Components
+namespace HotUpdate.Base.Object
 {
     /// <summary>
     /// 游戏实体对象核心接口
@@ -9,23 +10,21 @@ namespace Core.Components
     public interface IEntityObject
     {
         /// <summary>
-        /// 实体对应的Unity游戏对象
-        /// 用于挂载组件、控制显示/位置等Unity原生操作
+        /// 实体对象唯一ID
+        /// </summary>
+        long EntityId { get; }
+        
+        /// <summary>
+        /// 当前实体绑定的GameObject
         /// </summary>
         GameObject GameObject { get; }
 
         /// <summary>
-        /// 实体属性组件
-        /// 存储实体的核心属性，由子类初始化并维护
+        /// 实体基础初始化方法，用于初始化实体的基础信息、绑定核心组件等，只能通过EntityHelper初始化调用
         /// </summary>
-        EntityProperty EntityProperty { get; }
-
-        /// <summary>
-        /// 实体基础初始化方法
-        /// 用于初始化实体的基础信息、绑定核心组件等
-        /// </summary>
-        /// <param name="id">实体唯一标识ID，用于区分不同实体实例</param>
-        void BaseInit(int id);
+        /// <param name="entityId"></param>
+        /// <param name="service"></param>
+        void InitBase(long entityId, ComponentService service);
 
         /// <summary>
         /// 获取实体身上指定类型的组件
@@ -49,7 +48,7 @@ namespace Core.Components
         /// </summary>
         /// <typeparam name="TComponent">要添加的组件类型，需继承UnityEngine.Component并实现IComponent</typeparam>
         /// <returns>新增的组件实例</returns>
-        TComponent AddComponent<TComponent>() where TComponent : Component, IComponent;
+        TComponent AddComponent<TComponent>() where TComponent : UnityEngine.Component, IComponent;
 
         /// <summary>
         /// 批量添加组件（按组件名称）

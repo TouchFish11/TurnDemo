@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Core.Components;
 using Core.DI;
-using Core.HotUpdate;
 
 namespace HotUpdate.Base.Utility
 {

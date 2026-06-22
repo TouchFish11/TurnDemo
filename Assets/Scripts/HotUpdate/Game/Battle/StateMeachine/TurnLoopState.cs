@@ -105,7 +105,7 @@ namespace HotUpdate.Game.Battle.StateMeachine
                 if (battleEntity is MonsterObject)
                 {
                     battleEntity.Destroy();
-                    UnityEngine.Object.Destroy(battleEntity.GameObject);
+                    EngineUtility.Destroy(battleEntity.GameObject);
                 }
             }
             

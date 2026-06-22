@@ -1,7 +1,7 @@
 using System.Collections;
-using HotUpdate.Base.Component;
 using HotUpdate.Base.Enums;
 using HotUpdate.Base.Utility;
+using HotUpdate.Game.Battle.Animation;
 using HotUpdate.Game.Battle.Utility;
 
 namespace HotUpdate.Game.Battle.Object.Role

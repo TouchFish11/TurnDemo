@@ -1,12 +1,10 @@
 using HotUpdate.Common.Config.ExcelInfo.Info;
-using HotUpdate.Game.Battle.Command;
-using HotUpdate.Game.Battle.Context;
 
 namespace HotUpdate.Game.Battle.Object.Role
 {
     public interface IPlayerObject : IBattleEntityObject
     {
-        void RoleBattleInit(RoleInfo info, IBattleContext context, Commandfactory factory, IDeathHandler handler);
+        void RoleBattleInit(RoleBattleInitData initData);
 
         /// <summary>
         /// 角色信息

@@ -1,4 +1,4 @@
-using Core.Components;
+using HotUpdate.Base.Object;
 
 namespace Test.Equip
 {

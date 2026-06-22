@@ -13,6 +13,8 @@ using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Monster;
 using HotUpdate.Game.Battle.Object.Role;
+using HotUpdate.Game.Battle.Skill.Conditions;
+using HotUpdate.Game.Battle.TargetSelect;
 using HotUpdate.Game.Battle.UI;
 using HotUpdate.Game.Battle.Utility;
 using UnityEngine;
@@ -28,6 +30,8 @@ namespace HotUpdate.Game.Battle.Core
         [Inject] private RoleFactory _roleFactory;
         [Inject] private MonsterFactory _monsterFactory;
         [Inject] private BattlePointProxy _battlePointProxy;
+        [Inject] private ICastSkillConditionFactory _castSkillConditionFactory;
+        [Inject] private ITargetSelectStrategyFactory _targetSelectStrategyFactory;
         [Inject] private IBattleCameraManager _battleCameraManager;
         [Inject] private IUIService _uiService;
         
@@ -60,7 +64,16 @@ namespace HotUpdate.Game.Battle.Core
                 // 创建角色对象
                 var playerObject = await _roleFactory.CreateRole(roleId, transform);
                 // 注入上下文，供角色内部组件使用
-                playerObject.RoleBattleInit(roleInfo, _context, _commandFactory, handler);
+                playerObject.RoleBattleInit(new RoleBattleInitData
+                {
+                    RoleInfo = roleInfo,
+                    BattleEntityId = roleId,
+                    BattleContext = _context,
+                    Commandfactory = _commandFactory,
+                    CastSkillConditionFactory = _castSkillConditionFactory,
+                    TargetSelectStrategyFactory = _targetSelectStrategyFactory,
+                    DeathHandler = handler
+                });
                 // 记录角色所在的位置索引
                 playerObject.EntityPosIndex = i;
                 // 设置角色层级
@@ -100,7 +113,16 @@ namespace HotUpdate.Game.Battle.Core
                     // 设置名称
                     monsterObject.GameObject.name = $"{monsterObject.GameObject.name}_{i}";
                     // 注入上下文，供角色内部组件使用
-                    monsterObject.MonsterBattleInit(monsterInfo, _context, _commandFactory, handle);
+                    monsterObject.MonsterBattleInit(new MonsterBattleInitData
+                    {
+                        MonsterInfo = monsterInfo,
+                        BattleEntityId = monsterId,
+                        BattleContext = _context,
+                        Commandfactory = _commandFactory,
+                        CastSkillConditionFactory = _castSkillConditionFactory,
+                        TargetSelectStrategyFactory = _targetSelectStrategyFactory,
+                        DeathHandler = handle
+                    });
                     // 记录怪物所在的位置索引
                     monsterObject.EntityPosIndex = i;
                     // 设置怪物层级
@@ -120,7 +142,16 @@ namespace HotUpdate.Game.Battle.Core
                 // 设置名称
                 monsterObject.GameObject.name = $"{monsterObject.GameObject.name}_{2}";
                 // 注入上下文，供角色内部组件使用
-                monsterObject.MonsterBattleInit(monsterInfo, _context, _commandFactory, handle);
+                monsterObject.MonsterBattleInit(new MonsterBattleInitData
+                {
+                    MonsterInfo = monsterInfo,
+                    BattleEntityId = monsterId,
+                    BattleContext = _context,
+                    Commandfactory = _commandFactory,
+                    CastSkillConditionFactory = _castSkillConditionFactory,
+                    TargetSelectStrategyFactory = _targetSelectStrategyFactory,
+                    DeathHandler = handle
+                });
                 // 记录怪物所在的位置索引
                 monsterObject.EntityPosIndex = 2;
                 // 设置怪物层级
@@ -141,7 +172,16 @@ namespace HotUpdate.Game.Battle.Core
                     monsterObject.GameObject.name = $"{monsterObject.GameObject.name}_{i + 1}";
                     var monsterInfo = _binaryDataManager.GetConfig<MonsterInfoContainer>(EConfigLoadType.Excel).dataDic[monsterId];
                     // 注入上下文，供角色内部组件使用
-                    monsterObject.MonsterBattleInit(monsterInfo, _context, _commandFactory, handle);
+                    monsterObject.MonsterBattleInit(new MonsterBattleInitData
+                    {
+                        MonsterInfo = monsterInfo,
+                        BattleEntityId = monsterId,
+                        BattleContext = _context,
+                        Commandfactory = _commandFactory,
+                        CastSkillConditionFactory = _castSkillConditionFactory,
+                        TargetSelectStrategyFactory = _targetSelectStrategyFactory,
+                        DeathHandler = handle
+                    });
                     // 记录怪物所在的位置索引
                     monsterObject.EntityPosIndex = i + 1;
                     // 设置怪物层级

@@ -21,16 +21,5 @@ namespace HotUpdate.Base.Factory
         {
             FactoryUtility.ScanAllType(typeToInterfaceMap, _hotUpdateManager.GetAssemblies());
         }
-
-        public virtual TInterface GetTypeInstance<TInterface, TInstance>() where TInterface : class where TInstance : TInterface
-        {
-            if (typeToInterfaceMap.TryGetValue(typeof(TInstance), out var instance))
-            {
-                return instance as TInterface;
-            }
-            
-            Logger.LogError($"未找到类型实例：{typeof(TInstance)}");
-            return null;
-        }
     }
 }

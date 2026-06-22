@@ -1,7 +1,7 @@
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using UnityEngine;
 
-namespace HotUpdate.Base.Interact
+namespace HotUpdate.Game.Interact
 {
     public interface INpcObject
     {
@@ -11,6 +11,10 @@ namespace HotUpdate.Base.Interact
         
         NpcInfo NpcInfo { get; }
 
-        void InitNpc(int id);
+        /// <summary>
+        /// 初始化NPC
+        /// </summary>
+        /// <param name="npcConfigId"></param>
+        void InitNpc(int npcConfigId);
     }
 }

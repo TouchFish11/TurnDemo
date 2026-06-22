@@ -1,4 +1,4 @@
-using Core.Components;
+using HotUpdate.Base.Object;
 using Net.FrameSync.Command;
 using UnityEngine;
 using static Net.FrameSync.Handler.FSFrameHandler;

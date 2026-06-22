@@ -1,4 +1,4 @@
-using Core.Components;
+using HotUpdate.Base.Component;
 using HotUpdate.Game.Cameras;
 
 namespace HotUpdate.Game.Main.Move

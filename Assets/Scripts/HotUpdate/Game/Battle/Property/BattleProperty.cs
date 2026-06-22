@@ -1,6 +1,3 @@
-using Core.Components;
-using Core.DI;
-using Core.Serialize.Binary;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.Property
@@ -8,9 +5,10 @@ namespace HotUpdate.Game.Battle.Property
     /// <summary>
     /// 战斗属性
     /// </summary>
-    public abstract class BattleProperty : EntityProperty
+    public abstract class BattleProperty
     {
-        [Inject] protected IBinaryDataManager binaryDataManager;
+        // 战斗实体ID
+        protected int battleId;
         
         // 基础属性
         protected int baseHp;   // 生命值
@@ -33,12 +31,8 @@ namespace HotUpdate.Game.Battle.Property
         protected int totalCritDmg;     // 总暴击伤害
         protected int currentShield;    // 当前护盾量
 
-        public override void InitProperty(int id)
-        {
-            this.id = id;
-        }
-
         // 静态属性
+        public int BattleId => battleId;
         public int BaseHp => baseHp;
         public int BaseAtk => baseAtk;
         public int BaseDef => baseDef;

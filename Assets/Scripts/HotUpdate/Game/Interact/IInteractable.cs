@@ -1,4 +1,4 @@
-using Core.Components;
+using HotUpdate.Base.Object;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 
 namespace HotUpdate.Game.Interact

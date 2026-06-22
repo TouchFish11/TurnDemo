@@ -1,9 +1,8 @@
 using System.Collections;
-using Core.DI;
 using Core.Utility;
-using HotUpdate.Base.Component;
 using HotUpdate.Base.Enums;
 using HotUpdate.Base.Utility;
+using HotUpdate.Game.Battle.Animation;
 using HotUpdate.Game.Battle.Utility;
 using HotUpdate.Game.VFX;
 using UnityEngine;

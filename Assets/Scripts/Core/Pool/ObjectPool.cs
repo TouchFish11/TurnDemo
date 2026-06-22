@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Core.Mono;
 using Core.Utility;
 using UnityEngine;
 using Logger = Core.Log.Logger;
@@ -151,10 +152,10 @@ namespace Core.Pool
                 switch (obj)
                 {
                     case GameObject gameObject:
-                        Object.Destroy(gameObject);
+                        EngineUtility.Destroy(gameObject);
                         break;
                     case Component component:
-                        Object.Destroy(component.gameObject);
+                        EngineUtility.Destroy(component.gameObject);
                         break;
                 }
             }
@@ -163,7 +164,7 @@ namespace Core.Pool
             _unUsedObjStack.Clear();
             // 销毁池的父物体（连带销毁所有子物体）
             if(_parentObj)
-                Object.Destroy(_parentObj);
+                EngineUtility.Destroy(_parentObj);
             // 置空父物体引用，防止空引用异常
             _parentObj = null;
         }

@@ -6,7 +6,6 @@ using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Skill;
-using HotUpdate.Game.Battle.Skill.Component;
 
 namespace HotUpdate.Game.Battle.UI.Provider
 {
@@ -19,7 +18,7 @@ namespace HotUpdate.Game.Battle.UI.Provider
             var skillKeyUIData = new SkillKeyUIData(new List<SkillInfo>(), provider);
 
             ISkill skill = null;
-            var skillComponent = provider.GetComponent<SkillComponent>();
+            var skillComponent = provider.GetComponent<ISkillComponent>();
             foreach (var skillId in skillComponent.GetSkillIds())
             {
                 var skillInfo = _binaryDataManager.GetConfig<SkillInfoContainer>(EConfigLoadType.Excel).dataDic[skillId];

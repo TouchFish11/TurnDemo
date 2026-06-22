@@ -5,6 +5,7 @@ using HotUpdate.Base.Component;
 using HotUpdate.Base.Enums;
 using HotUpdate.Base.UI;
 using HotUpdate.Common.Config.ExcelInfo.Container;
+using HotUpdate.Game.Battle.Animation;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.Skill;
 using HotUpdate.Game.Battle.Event.Turn;
@@ -98,7 +99,7 @@ namespace HotUpdate.Game.Battle.Event
                         // 隐藏行动提示
                         controller.BattleUiManager.SetActTipActive(E_ActTipType.Hide);
                         // 获取技能按键UI数据提供器
-                        var provider = _skillKeyUIDataProviderFactory.GetCastSkillCondition<BaseSkillKeyUIDataProvider>();
+                        var provider = _skillKeyUIDataProviderFactory.GetProvider<BaseSkillKeyUIDataProvider>();
                         // 根据数据更新玩家操作按键，按键触发技能选择事件
                         controller.BattleUiManager.UpdateOperator(turnStartEvent.CurrentBattleEntity, provider);
                         break;

@@ -2,6 +2,7 @@ using Core.Log;
 using HotUpdate.Base;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Enums;
+using HotUpdate.Game.Battle.Animation;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Property;
 

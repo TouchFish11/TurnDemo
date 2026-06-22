@@ -1,7 +1,5 @@
-using Core.Components;
-using Core.DI;
-using HotUpdate.Base;
-using HotUpdate.Game.Battle.Object;
+using HotUpdate.Base.Component;
+using HotUpdate.Game.Battle.Object.Monster;
 
 namespace HotUpdate.Game.Battle.Property
 {
@@ -11,12 +9,15 @@ namespace HotUpdate.Game.Battle.Property
     [ComponentId(typeof(MonsterPropertyComponent))]
     public class MonsterPropertyComponent : PropertyComponent
     {
-        public override void BattleInit(IBattleEntityObject battleEntity)
+        protected override void OnInitProperty()
         {
-            base.BattleInit(battleEntity);
-
-            battleProperty = DIContainer.Create<MonsterProperty>();
-            battleProperty.InitProperty(battleEntity.BattleEntityId);
+            battleProperty = new MonsterProperty();
+            ((MonsterProperty)battleProperty).InitProperty(((IMonsterObject)BattleEntity).MonsterInfo);
+        }
+        
+        protected override void OnBattleDestroy()
+        {
+            
         }
     }
 }

@@ -1,10 +1,10 @@
-using Core.Components;
 using Core.DI;
 using Core.Inputs.ActionAsset;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Dialogue;
 using HotUpdate.Base.Enums;
 using HotUpdate.Base.Manager;
+using HotUpdate.Base.Object;
 using HotUpdate.Game.Inputs;
 using HotUpdate.Game.Main.Move;
 
@@ -44,13 +44,12 @@ namespace HotUpdate.Game.Dialogue
             EntityObject.GetComponent<IMoveComponent>().Enable();
         }
 
-        public override void Destroy()
+        protected override void OnDestroyBase()
         {
             // 取消监听
             _dialogueManager.OnDialogueStart -= (this as IDialable).OnDialogueStart;
             _dialogueManager.OnDialogueEnd -= (this as IDialable).OnDialogueEnd;
             _dialogueManager = null;
-            base.Destroy();
         }
     }
 }

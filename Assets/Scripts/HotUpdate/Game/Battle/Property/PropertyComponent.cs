@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Core.Log;
-using HotUpdate.Base;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.General;
@@ -26,18 +25,20 @@ namespace HotUpdate.Game.Battle.Property
         /// 战斗实体是否死亡标识
         /// </summary>
         public bool IsDeath { get; protected set; }
-
-        /// <summary>
-        /// 战斗组件初始化方法
-        /// </summary>
-        /// <param name="battleEntity">当前绑定的战斗实体对象</param>
-        public override void BattleInit(IBattleEntityObject battleEntity)
+        
+        public void InitProperty(IBattleEntityObject battleEntity)
         {
-            base.BattleInit(battleEntity);
+            BattleInit(battleEntity);
             // 从战斗实体中获取战斗上下文
-            battleContext = battleEntity.Context;
+            battleContext = BattleEntity.Context;
+            OnInitProperty();
         }
 
+        /// <summary>
+        /// 初始化属性
+        /// </summary>
+        protected abstract void OnInitProperty();
+        
         /// <summary>
         /// 设置动态属性值（会触发对应属性变更事件）
         /// </summary>

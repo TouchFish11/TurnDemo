@@ -1,4 +1,4 @@
-using Core.Components;
+using HotUpdate.Base.Object;
 using UnityEngine;
 
 namespace HotUpdate.Base.Component

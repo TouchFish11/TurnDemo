@@ -1,6 +1,6 @@
 using System.Collections;
 using Core.Utility;
-using HotUpdate.Base.Component;
+using HotUpdate.Game.Battle.Animation;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
 using HotUpdate.Game.VFX;

@@ -1,4 +1,3 @@
-using Core.Components;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Enums;
 using HotUpdate.Base.Utility;
@@ -18,14 +17,9 @@ namespace HotUpdate.Game.Animation.Component
         /// 当前播放的动画类型
         /// </summary>
         protected override E_AnimationType CurrentAnimationType { get; set; } = E_AnimationType.None;
-
-        /// <summary>
-        /// 组件初始化方法
-        /// </summary>
-        /// <param name="entityObject">挂载该组件的实体对象</param>
-        public override void Init(IEntityObject entityObject)
+        
+        protected override void OnAnimationInit()
         {
-            base.Init(entityObject);
             // 注册输入组件的事件监听：移动输入变化、鼠标左键点击（普通攻击）
             EntityObject.GetComponent<IInputComponent>().OnKeyInputChanged += OnMove;
             EntityObject.GetComponent<IInputComponent>().OnMouseLeftClick += OnAttack;
@@ -90,6 +84,12 @@ namespace HotUpdate.Game.Animation.Component
         private void OnAttack()
         {
             SetAnimationState((int)E_AnimationType.NormalAttack);
+        }
+        
+        
+        protected override void OnDestroyBase()
+        {
+            
         }
     }
 }

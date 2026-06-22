@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using Core.Components;
 using Core.DI;
 using Core.GlobalEvent;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Manager;
+using HotUpdate.Base.Object;
 using HotUpdate.Game.Inputs;
 
 namespace HotUpdate.Game.Interact
@@ -17,8 +17,9 @@ namespace HotUpdate.Game.Interact
     {
         [Inject] private IDialogueManager _dialogueManager;
         [Inject] private IEventCenter _eventCenter;
+        
         // 存储当前可交互的所有交互对象
-        private readonly List<IInteractable> interactables = new();
+        private List<IInteractable> interactables = new();
         // 当前正在进行交互的目标对象
         private IInteractable currentInteractable;
 
@@ -34,7 +35,7 @@ namespace HotUpdate.Game.Interact
             // 获取输入组件，注册交互输入触发的回调
             EntityObject.GetComponent<InputComponent>().OnIniteract += OnIniteract;
         }
-
+        
         /// <summary>
         /// 交互输入事件的回调方法
         /// 当玩家触发交互输入时，执行对应的交互逻辑
@@ -83,6 +84,13 @@ namespace HotUpdate.Game.Interact
         /// </summary>
         private void QuitInteract()
         {
+            currentInteractable = null;
+        }
+        
+        protected override void OnDestroyBase()
+        {
+            interactables.Clear();
+            interactables = null;
             currentInteractable = null;
         }
     }

@@ -1,4 +1,4 @@
-using Core.Components;
+using HotUpdate.Base.Object;
 using Test.Config;
 using Test.Equip.Effect;
 

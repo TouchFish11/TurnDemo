@@ -1,5 +1,4 @@
-using Core.Serialize.Binary;
-using HotUpdate.Common.Config.ExcelInfo.Container;
+using HotUpdate.Common.Config.ExcelInfo.Info;
 
 namespace HotUpdate.Game.Battle.Property
 {
@@ -8,11 +7,10 @@ namespace HotUpdate.Game.Battle.Property
     /// </summary>
     public class MonsterProperty : BattleProperty
     {
-        public override void InitProperty(int id)
+        public void InitProperty(MonsterInfo monsterInfo)
         {
-            base.InitProperty(id);
-            var monsterInfo = binaryDataManager.GetConfig<MonsterInfoContainer>(EConfigLoadType.Excel).dataDic[id];
-
+            battleId = monsterInfo.f_id;
+            
             baseHp = monsterInfo.f_baseHp;
             baseAtk = monsterInfo.f_baseAtk;
             baseDef = monsterInfo.f_baseDef;

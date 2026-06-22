@@ -24,7 +24,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill
             {
                 case 10:    // 普攻
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
-                    phases = SkillPhaseBuilder.
+                    phases = skillPhaseBuilder.
                         AddSkillPreCastPhase(new WarriorNormalSkillPreCastPhaseStrategy()).
                         AddSkillCastPhase(new WarriorNormalSkillCastPhaseStrategy()).
                         AddSkillEventProcessPhase(new WarriorNormalSkillEventProcessPhaseStrategy()).
@@ -33,7 +33,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill
                     break;
                 case 11:    // 战技
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
-                    phases = SkillPhaseBuilder.
+                    phases = skillPhaseBuilder.
                         AddSkillPreCastPhase(new WarriorBattleSkillPreCastPhaseStrategy()).
                         AddSkillCastPhase(new WarriorBattleSkillCastPhaseStrategy()).
                         AddSkillEventProcessPhase(new WarriorBattleSkillEventProcessPhaseStrategy()).
@@ -42,7 +42,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill
                     break;
                 case 12:    // 终结技
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseUltimateSkillCastPostHandler>();
-                    phases = SkillPhaseBuilder.
+                    phases = skillPhaseBuilder.
                         AddSkillPreCastPhase(new WarriorUltimateSkillPreCastPhaseStrategy()).
                         AddSkillCastPhase(new WarriorUltimateSkillCastPhaseStrategy()).
                         AddSkillEventProcessPhase(new WarriorUltimateSkillEventProcessPhaseStrategy()).

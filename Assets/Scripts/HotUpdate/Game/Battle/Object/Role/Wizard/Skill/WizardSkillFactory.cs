@@ -25,7 +25,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard.Skill
             {
                 case 20:    // 普攻
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
-                    phases = SkillPhaseBuilder.
+                    phases = skillPhaseBuilder.
                         AddSkillPreCastPhase(new WizardNormalSkillPreCastPhaseStrategy()).
                         AddSkillCastPhase(new WizardNormalSkillCastPhaseStrategy()).
                         AddSkillEventProcessPhase(new WizardNormalSkillEventProcessPhaseStrategy()).
@@ -34,7 +34,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard.Skill
                     break;
                 case 21:    // 战技
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
-                    phases = SkillPhaseBuilder.
+                    phases = skillPhaseBuilder.
                         AddSkillPreCastPhase(new WizardBattleSkillPreCastPhaseStrategy()).
                         AddSkillCastPhase(new WizardBattleSkillCastPhaseStrategy()).
                         AddSkillEventProcessPhase(new WizardBattleSkillEventProcessPhaseStrategy()).
@@ -43,7 +43,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard.Skill
                     break;
                 case 22:    // 终结技
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseUltimateSkillCastPostHandler>();
-                    phases = SkillPhaseBuilder.
+                    phases = skillPhaseBuilder.
                         AddSkillPreCastPhase(new WizardUltimateSkillPreCastPhaseStrategy()).
                         AddSkillCastPhase(new WizardUltimateSkillCastPhaseStrategy()).
                         AddSkillEventProcessPhase(new WizardUltimateSkillEventProcessPhaseStrategy()).

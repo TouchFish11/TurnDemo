@@ -17,7 +17,7 @@ namespace HotUpdate.Game.Battle.Toughness
         /// <param name="owner">所属战斗实体对象</param>
         /// <param name="elementTypes">弱点元素类型数组</param>
         /// <param name="initialToughness">初始韧性值（同时作为最大韧性值）</param>
-        void Init(IBattleEntityObject owner, int[] elementTypes, int initialToughness);
+        void InitToughness(IBattleEntityObject owner, int[] elementTypes, int initialToughness);
 
         /// <summary>
         /// 添加韧性减免策略

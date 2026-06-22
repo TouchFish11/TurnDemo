@@ -1,6 +1,6 @@
-using Core.Components;
 using Core.DI;
 using Core.Mono;
+using HotUpdate.Base.Object;
 using HotUpdate.Game.Inputs;
 using UnityEngine;
 
@@ -191,17 +191,5 @@ namespace HotUpdate.Game.Cameras
         {
             _monoAdapter.RemoveUpdateListener(OnUpdate);
         }
-        
-        #region 无用接口实现（IEntityObject）
-        // // 以下为接口强制实现的无用代码，无实际业务逻辑
-        // GameObject IEntityObject.GameObject => _gameObject;
-        // EntityProperty IEntityObject.EntityProperty => _entityProperty;
-        // void IEntityObject.BaseInit(int id) { }
-        // T IEntityObject.GetComponent<T>() => default;
-        // TComponent IEntityObject.GetComponentInChildren<TComponent>() => default;
-        // TComponent IEntityObject.AddComponent<TComponent>() => null;
-        // bool IEntityObject.AddComponents(params string[] componentNames) => false;
-        // void IEntityObject.Destroy() { }
-        #endregion
     }
 }

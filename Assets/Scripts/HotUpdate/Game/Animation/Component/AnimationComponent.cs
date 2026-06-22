@@ -1,7 +1,7 @@
-using Core.Components;
 using HotUpdate.Base.Animation;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Enums;
+using HotUpdate.Base.Object;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
@@ -24,10 +24,16 @@ namespace HotUpdate.Game.Animation.Component
         /// </summary>
         public AnimationParameter AnimationParameter => animationArg;
 
-        public override void Init(IEntityObject entityObject)
+        public sealed override void Init(IEntityObject entityObject)
         {
             animationArg = new AnimationParameter();
             animatorComponent = entityObject.GetComponentInChildren<AnimatorComponent>();
+            OnAnimationInit();
+        }
+
+        protected virtual void OnAnimationInit()
+        {
+            
         }
 
         /// <summary>
@@ -54,7 +60,7 @@ namespace HotUpdate.Game.Animation.Component
         /// <returns></returns>
         public AnimatorStateInfo GetCurrentAnimatorStateInfo(string layerName)
         {
-            if (animatorComponent != null)
+            if (animatorComponent)
             {
                 return animatorComponent.Animator.GetCurrentAnimatorStateInfo(animatorComponent.Animator.GetLayerIndex(layerName));
             }

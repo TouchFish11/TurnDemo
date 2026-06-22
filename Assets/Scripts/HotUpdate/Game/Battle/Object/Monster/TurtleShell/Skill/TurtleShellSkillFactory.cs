@@ -23,7 +23,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.TurtleShell.Skill
             {
                 case 102:
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
-                    phases = SkillPhaseBuilder.
+                    phases = skillPhaseBuilder.
                         AddMonsterCommonPhase().
                         AddSkillPreCastPhase(new TurtleShellSkillPreCastPhaseStrategy()).
                         AddSkillCastPhase(new TurtleShellSkillCastPhaseStrategy()).

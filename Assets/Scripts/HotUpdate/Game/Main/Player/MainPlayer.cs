@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using HotUpdate.Base;
+using HotUpdate.Base.Component;
 using HotUpdate.Base.Object;
 using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Battle.Object;
@@ -21,14 +21,15 @@ namespace HotUpdate.Game.Main.Player
         // 战斗实体对象的索引映射字典
         // Key：实体的索引序号（自增），Value：对应的战斗实体对象接口实例
         // 用于快速管理和访问挂载到玩家的多个战斗实体
-        private readonly Dictionary<int, IBattleEntityObject> indexToEntityMap = new(); 
+        private readonly Dictionary<int, IBattleEntityObject> indexToEntityMap = new();
 
         /// <summary>
         /// 玩家实体基础初始化方法
         /// 重写自 EntityObject 基类，在实体创建时调用
         /// </summary>
-        /// <param name="id">玩家实体的唯一标识ID</param>
-        public override void BaseInit(int id)
+        /// <param name="entityid"></param>
+        /// <param name="service"></param>
+        public override void InitBase(long entityid, ComponentService service)
         {
             // 挂载输入组件：处理玩家的输入事件
             AddComponent<InputComponent>();

@@ -1,4 +1,3 @@
-using HotUpdate.Base;
 using HotUpdate.Game.Battle.Event;
 
 namespace HotUpdate.Game.Battle.UI

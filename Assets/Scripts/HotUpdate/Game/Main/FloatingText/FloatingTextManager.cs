@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Mono;
-using HotUpdate.Base.Interact;
+using HotUpdate.Game.Interact;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 

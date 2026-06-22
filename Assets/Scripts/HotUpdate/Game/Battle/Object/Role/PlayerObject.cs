@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using Core.Utility;
 using HotUpdate.Common.Config.ExcelInfo.Info;
-using HotUpdate.Game.Battle.Command;
-using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Object.StateMeachine;
 using HotUpdate.Game.Battle.ResponsibilityChain.DamageChain;
@@ -26,11 +24,11 @@ namespace HotUpdate.Game.Battle.Object.Role
         /// </summary>
         public RoleInfo RoleInfo { get; private set; }
         
-        public void RoleBattleInit(RoleInfo info, IBattleContext context, Commandfactory factory, IDeathHandler handler)
+        public void RoleBattleInit(RoleBattleInitData initData)
         {
-            BattleInit(info.f_id, context, factory, handler);
+            BattleInit(initData);
             
-            RoleInfo = info;
+            RoleInfo = initData.RoleInfo;
             AddState(EActPhase.SettlementBuff);
             AddState(EActPhase.TurnStart);
             AddState(EActPhase.Operator);

@@ -222,7 +222,7 @@ namespace HotUpdate.Game.Battle.Core
             // 显示终结技立绘
             yield return controller.BattleUiManager.ShowPaiting(((PlayerObject)caster).RoleInfo, skillInfo);
             // 获取终结技技能按键UI数据提供器
-            var provider = _skillKeyUIDataProviderFactory.GetCastSkillCondition<UltimateSkillKeyUIDataProvider>();
+            var provider = _skillKeyUIDataProviderFactory.GetProvider<UltimateSkillKeyUIDataProvider>();
             // 根据数据更新玩家操作按键，按键触发技能选择事件
             controller.BattleUiManager.UpdateOperator(caster, provider);
         }

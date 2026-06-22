@@ -7,7 +7,6 @@ using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.Skill;
-using HotUpdate.Game.Battle.Skill.Component;
 using HotUpdate.Game.Battle.UI;
 using HotUpdate.UI.Battle.Role;
 using UnityEngine;
@@ -54,7 +53,7 @@ namespace HotUpdate.UI.Battle.Base
                 var roleStateUI = await _objectSpawner.SpawnAsync<RoleStateUI>(AssetKeys.RoleStateUI, _view.PlayerArea);
 
                 // 获取当前实体的技能组件，用于查找必杀技
-                var skillComponent = battleEntity.GetComponent<SkillComponent>();
+                var skillComponent = battleEntity.GetComponent<ISkillComponent>();
                 var targetSkillId = -1;
                 // 遍历技能列表，筛选出必杀技（终极技能）并记录其ID
                 foreach (var skillId in skillComponent.GetSkillIds())

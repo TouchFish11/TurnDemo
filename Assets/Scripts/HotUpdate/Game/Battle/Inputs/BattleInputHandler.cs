@@ -14,9 +14,9 @@ namespace HotUpdate.Game.Battle.Inputs
     /// </summary>
     public class BattleInputHandler : IBattleInputHandler, IDisposable
     {
-        [Inject] private IMonoAdapter _monoAdapter;
         [Inject] private IBinaryDataManager _binaryDataManager;
         
+        private readonly IMonoAdapter _monoAdapter;
         // 拖拽起始位置（屏幕坐标）
         private Vector3 _dragStartPosition;
         // 是否处于拖拽状态（用于区分点击和拖拽行为）
@@ -58,10 +58,11 @@ namespace HotUpdate.Game.Battle.Inputs
         /// </summary>
         public event Action OnClick;
 
-        public BattleInputHandler()
+        public BattleInputHandler(IMonoAdapter monoAdapter)
         {
             // 注册帧更新监听，每帧执行输入处理逻辑
-            _monoAdapter.AddUpdateListener(OnUpdate);
+            monoAdapter.AddUpdateListener(OnUpdate);
+            _monoAdapter = monoAdapter;
         }
 
         /// <summary>

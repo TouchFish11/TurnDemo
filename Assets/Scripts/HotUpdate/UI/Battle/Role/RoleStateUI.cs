@@ -5,7 +5,6 @@ using Core.DI;
 using Core.Mono;
 using Core.Serialize.Binary;
 using Core.UI;
-using HotUpdate.Base;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;
@@ -97,10 +96,10 @@ namespace HotUpdate.UI.Battle.Role
             // 记录终极技能ID
             this.ultimateSkillId = ultimateSkillId;
             // 记录角色ID
-            RoleId = playerProperty.Id;
+            RoleId = playerProperty.BattleId;
 
             // 获取角色配置信息
-            var roleInfo = DIContainer.GetInstance<IBinaryDataManager>().GetConfig<RoleInfoContainer>(EConfigLoadType.Excel).dataDic[playerProperty.Id];
+            var roleInfo = DIContainer.GetInstance<IBinaryDataManager>().GetConfig<RoleInfoContainer>(EConfigLoadType.Excel).dataDic[playerProperty.BattleId];
             
             // 设置角色图标
             imgIcon.sprite = icon;

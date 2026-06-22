@@ -1,7 +1,7 @@
 using System.Collections;
 using Core.Utility;
-using HotUpdate.Base.Component;
 using HotUpdate.Base.Utility;
+using HotUpdate.Game.Battle.Animation;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
 using HotUpdate.Game.VFX;
 using UnityEngine;

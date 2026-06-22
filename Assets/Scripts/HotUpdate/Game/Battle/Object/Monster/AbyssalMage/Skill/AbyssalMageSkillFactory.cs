@@ -26,7 +26,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill
             {
                 case 103:   // 霜陨
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
-                    phases = SkillPhaseBuilder.
+                    phases = skillPhaseBuilder.
                         AddMonsterCommonPhase().
                         AddSkillPreCastPhase(new AbyssalMageFrostfallSkillPreCastPhaseStrategy()).
                         AddSkillCastPhase(new AbyssalMageFrostfallSkillCastPhaseStrategy()).
@@ -36,7 +36,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill
                     break;
                 case 104:   // 烬陨
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
-                    phases = SkillPhaseBuilder.
+                    phases = skillPhaseBuilder.
                         AddMonsterCommonPhase().
                         AddSkillPreCastPhase(new AbyssalMageAshfallSkillPreCastPhaseStrategy()).
                         AddSkillCastPhase(new AbyssalMageAshfallSkillCastPhaseStrategy()).
@@ -46,7 +46,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill
                     break;
                 case 105:   // 深渊之赐
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<AbyssalMageSkillCastPostHandler>();
-                    phases = SkillPhaseBuilder.
+                    phases = skillPhaseBuilder.
                         AddMonsterCommonPhase().
                         AddSkillPreCastPhase(new AbyssalMageAbyssGiftSkillPreCastPhaseStrategy()).
                         AddSkillCastPhase(new AbyssalMageAbyssGiftSkillCastPhaseStrategy()).
@@ -56,7 +56,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill
                     break;
                 case 106:   // 渊禁
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<AbyssalMageSkillCastPostHandler>();
-                    phases = SkillPhaseBuilder.
+                    phases = skillPhaseBuilder.
                         AddMonsterCommonPhase().
                         AddSkillPreCastPhase(new AbyssalMageAbyssLockSkillPreCastPhaseStrategy()).
                         AddSkillCastPhase(new AbyssalMageAbyssLockSkillCastPhaseStrategy()).

@@ -3,7 +3,6 @@ using System.Linq;
 using Core.AssetBundles.Management;
 using Core.UI;
 using Core.UI.ViewController;
-using HotUpdate.Game.Battle.UI;
 using HotUpdate.UI.Battle.ActionLine;
 using HotUpdate.UI.Battle.BattlePoint;
 using HotUpdate.UI.Battle.Role;

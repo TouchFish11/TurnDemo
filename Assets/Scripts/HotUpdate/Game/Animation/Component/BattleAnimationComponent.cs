@@ -1,7 +1,7 @@
-using Core.Components;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Enums;
 using HotUpdate.Base.Utility;
+using HotUpdate.Game.Battle.Animation;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Role;
 
@@ -24,18 +24,11 @@ namespace HotUpdate.Game.Animation.Component
         /// 当前播放的动画类型
         /// </summary>
         protected override E_AnimationType CurrentAnimationType { get; set; }
-
-        /// <summary>
-        /// 组件初始化方法
-        /// </summary>
-        /// <param name="entityObject">实体对象（需实现IBattleEntityObject接口）</param>
-        public override void Init(IEntityObject entityObject)
+        
+        public void InitBattleAnimation(IBattleEntityObject battleEntity)
         {
-            base.Init(entityObject);
-            // 获取子物体上的动画控制器组件
-            animatorComponent = EntityObject.GetComponentInChildren<AnimatorComponent>();
             // 初始化战斗相关数据
-            BattleInit(entityObject as IBattleEntityObject);
+            BattleInit(battleEntity);
         }
 
         /// <summary>
@@ -51,7 +44,7 @@ namespace HotUpdate.Game.Animation.Component
             // 初始化默认动画类型：玩家默认预普通攻击动画，其他实体（怪物）默认无动画
             CurrentAnimationType = battleEntity is IPlayerObject ? E_AnimationType.PreNormalAttack : E_AnimationType.None;
         }
-
+        
         /// <summary>
         /// 设置动画播放状态
         /// 根据指定的动画类型触发对应的Animator Trigger参数
@@ -159,15 +152,10 @@ namespace HotUpdate.Game.Animation.Component
         //             break;
         //     }
         // }
-
-        /// <summary>
-        /// 组件销毁方法
-        /// 清理战斗实体引用，避免内存泄漏
-        /// </summary>
-        public override void Destroy()
+        
+        public void DestroyBattle(IBattleEntityObject battleEntity)
         {
             BattleEntity = null;
-            base.Destroy();
         }
     }
 }

@@ -1,7 +1,6 @@
 using System.Collections;
-using Core.Components;
 using HotUpdate.Base;
-using HotUpdate.Game.Battle.Command;
+using HotUpdate.Base.Object;
 using HotUpdate.Game.Battle.Context;
 using UnityEngine;
 
@@ -62,17 +61,7 @@ namespace HotUpdate.Game.Battle.Object
         /// </summary>
         /// <param name="actionValue">目标行动值</param>
         void SetActionValue(float actionValue);
-
-        /// <summary>
-        /// 战斗初始化
-        /// 战斗开始时初始化实体的核心战斗数据
-        /// </summary>
-        /// <param name="id">战斗实体ID</param>
-        /// <param name="context">当前战斗上下文</param>
-        /// <param name="factory"></param>
-        /// <param name="handler"></param>
-        void BattleInit(int id, IBattleContext context, Commandfactory factory, IDeathHandler handler);
-
+        
         /// <summary>
         /// 执行行动
         /// 触发实体的核心行动逻辑（如普攻、释放技能、移动）

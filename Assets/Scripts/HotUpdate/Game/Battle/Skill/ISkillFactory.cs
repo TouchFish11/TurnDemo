@@ -1,7 +1,4 @@
-using System.Collections.Generic;
-using HotUpdate.Base;
 using HotUpdate.Game.Battle.Object;
-using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.TargetSelect;
 
 namespace HotUpdate.Game.Battle.Skill

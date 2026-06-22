@@ -10,7 +10,6 @@ using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Role;
 using HotUpdate.Game.Battle.Skill.Base;
-using HotUpdate.Game.Battle.Skill.Component;
 using HotUpdate.Game.Battle.TargetSelect;
 using HotUpdate.Game.Battle.TargetSelect.Strategys;
 using HotUpdate.Game.Battle.UI;
@@ -57,7 +56,7 @@ namespace HotUpdate.Game.Battle.Skill.Handler
             ((IBattleController)_uiService.GetPanel(EUIPanelId.BattlePanel)).BattleUiManager.SetActTipActive(E_ActTipType.Hide);
             
             // 获取技能按键UI数据提供者（用于更新玩家操作区的技能按键状态）
-            var provider = _skillKeyUIDataProviderFactory.GetCastSkillCondition<BaseSkillKeyUIDataProvider>();
+            var provider = _skillKeyUIDataProviderFactory.GetProvider<BaseSkillKeyUIDataProvider>();
             // 更新玩家操作界面（技能按键、可操作状态等）
             ((IBattleController)_uiService.GetPanel(EUIPanelId.BattlePanel)).BattleUiManager.UpdateOperator(currentEntity, provider);
             
@@ -82,7 +81,7 @@ namespace HotUpdate.Game.Battle.Skill.Handler
 
         private SkillInfo GetNormalSkillInfo(IBattleEntityObject currentEntity)
         {
-            var skillComponent = currentEntity.GetComponent<SkillComponent>();
+            var skillComponent = currentEntity.GetComponent<ISkillComponent>();
             foreach (var skillId in skillComponent.GetSkillIds())
             {
                 var skillInfo = _binaryDataManager.GetConfig<SkillInfoContainer>(EConfigLoadType.Excel).dataDic[skillId];

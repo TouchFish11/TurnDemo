@@ -1,5 +1,7 @@
+using Core.DI;
 using HotUpdate.Game.Battle.Object.Role.Wizard.Skill;
-using HotUpdate.Game.Battle.Skill.Component;
+using HotUpdate.Game.Battle.Skill;
+using HotUpdate.Game.Battle.Skill.Base;
 
 namespace HotUpdate.Game.Battle.Object.Role.Wizard
 {
@@ -10,7 +12,10 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard
     {
         protected override void OnBattleInit()
         {
-            GetComponent<SkillComponent>().InitSkills(RoleInfo.f_skillIds, new WizardSkillFactory());
+            var skillComponent = GetComponent<ISkillComponent>();
+            var core = DIContainer.Create<SkillComponentCore>();
+            core.Init(skillComponent, RoleInfo.f_skillIds, DIContainer.Create<WizardSkillFactory>());
+            skillComponent.InitSkill(this, core);
         }
     }
 }

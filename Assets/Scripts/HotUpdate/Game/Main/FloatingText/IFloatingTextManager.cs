@@ -1,4 +1,4 @@
-using HotUpdate.Base.Interact;
+using HotUpdate.Game.Interact;
 using UnityEngine;
 
 namespace HotUpdate.Game.Main.FloatingText

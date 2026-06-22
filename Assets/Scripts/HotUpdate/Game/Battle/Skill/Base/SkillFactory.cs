@@ -13,8 +13,6 @@ namespace HotUpdate.Game.Battle.Skill.Base
     /// </summary>
     public abstract class SkillFactory : ISkillFactory
     {
-        [Inject] protected SkillPhaseBuilder SkillPhaseBuilder;
-         
         /// <summary>
         /// 技能构建数据
         /// </summary>
@@ -31,6 +29,7 @@ namespace HotUpdate.Game.Battle.Skill.Base
             }
         }
         
+        [Inject] protected SkillPhaseBuilder skillPhaseBuilder;
         [Inject] protected IBinaryDataManager binaryDataManager;
         [Inject] protected ISkillCastPostHandlerFactory skillCastPostHandlerFactory;
         
@@ -41,7 +40,7 @@ namespace HotUpdate.Game.Battle.Skill.Base
             
             // 创建技能对象
             ISkill skill = DIContainer.Create<Skill>(parameterValues: skillContext);
-            SkillPhaseBuilder.SetSkill(skill);
+            skillPhaseBuilder.SetSkill(skill);
             
             var buildData = CreateSKillBuildData(skillId);
             skillContext.SkillCastPostHandler = buildData.SkillCastPostHandler;

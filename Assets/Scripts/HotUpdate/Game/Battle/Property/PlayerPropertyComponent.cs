@@ -1,8 +1,6 @@
-using Core.Components;
-using Core.DI;
-using HotUpdate.Base;
+using HotUpdate.Base.Component;
 using HotUpdate.Game.Battle.Event.General;
-using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.Object.Role;
 
 namespace HotUpdate.Game.Battle.Property
 {
@@ -13,13 +11,11 @@ namespace HotUpdate.Game.Battle.Property
     public class PlayerPropertyComponent : PropertyComponent
     {
         protected RoleProperty RoleProperty => battleProperty as RoleProperty;
-
-        public override void BattleInit(IBattleEntityObject battleEntity)
+        
+        protected override void OnInitProperty()
         {
-            base.BattleInit(battleEntity);
-
-            battleProperty = DIContainer.Create<RoleProperty>();
-            battleProperty.InitProperty(battleEntity.BattleEntityId);
+            battleProperty = new RoleProperty();
+            ((RoleProperty)battleProperty).InitProperty(((IPlayerObject)BattleEntity).RoleInfo);
         }
 
         public override void SetPropertyValue(E_DynamicPropertyType dynamicPropertyType, int newValue)
@@ -46,6 +42,11 @@ namespace HotUpdate.Game.Battle.Property
                     return RoleProperty.CurrentEnergy;
             }
             return base.GetPropertyValue(dynamicPropertyType);
+        }
+        
+        protected override void OnBattleDestroy()
+        {
+            
         }
     }
 }

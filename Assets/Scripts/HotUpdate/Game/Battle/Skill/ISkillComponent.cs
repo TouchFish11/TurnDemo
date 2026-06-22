@@ -1,18 +1,26 @@
 using System.Collections.Generic;
+using HotUpdate.Game.Battle.Core;
+using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Conditions;
 using HotUpdate.Game.Battle.TargetSelect;
 
 namespace HotUpdate.Game.Battle.Skill
 {
-    public interface ISkillComponent
+    public interface ISkillComponent : IBattleComponent
     {
         /// <summary>
-        /// 添加目标选择策略到当前组件
-        /// 添加后会自动重新排序策略（按优先级降序）
+        /// 拥有的技能数量
         /// </summary>
-        /// <param name="targetSelectStrategy">要添加的目标选择策略实例</param>
-        void AddTargetSelectStrategy(ITargetSelectStrategy targetSelectStrategy);
-
+        int SkillCount { get; }
+        
+        /// <summary>
+        /// 初始化技能组件
+        /// </summary>
+        /// <param name="battleEntity"></param>
+        /// <param name="core"></param>
+        void InitSkill(IBattleEntityObject battleEntity, SkillComponentCore core);
+        
         /// <summary>
         /// 校验指定技能是否可以释放
         /// </summary>
@@ -33,7 +41,20 @@ namespace HotUpdate.Game.Battle.Skill
         /// </summary>
         /// <param name="castSkillCondition">要添加的施法条件实例</param>
         void AddCastCondition(ICastSkillCondition castSkillCondition);
+        
+        /// <summary>
+        /// 从当前组件移除指定施法条件
+        /// </summary>
+        /// <param name="castSkillCondition">要移除的施法条件实例</param>
+        void RemoveCastCondition(ICastSkillCondition castSkillCondition);
 
+        /// <summary>
+        /// 添加目标选择策略到当前组件
+        /// 添加后会自动重新排序策略（按优先级降序）
+        /// </summary>
+        /// <param name="targetSelectStrategy">要添加的目标选择策略实例</param>
+        void AddTargetSelectStrategy(ITargetSelectStrategy targetSelectStrategy);
+        
         /// <summary>
         /// 从当前组件移除指定目标选择策略
         /// 移除后会自动重新排序策略（按优先级降序）
@@ -54,11 +75,5 @@ namespace HotUpdate.Game.Battle.Skill
         /// <param name="skillId">要获取的技能ID</param>
         /// <returns>对应的技能数据对象</returns>
         ISkill GetSkill(int skillId);
-
-        /// <summary>
-        /// 从当前组件移除指定施法条件
-        /// </summary>
-        /// <param name="castSkillCondition">要移除的施法条件实例</param>
-        void RemoveCastCondition(ICastSkillCondition castSkillCondition);
     }
 }

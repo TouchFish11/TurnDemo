@@ -1,6 +1,5 @@
 using System.Collections.Generic;
-using Core.Components;
-using HotUpdate.Base;
+using HotUpdate.Base.Component;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Object;
@@ -17,17 +16,13 @@ namespace HotUpdate.Game.Battle.Status
     public class StatusComponent : BattleComponent, IStatusComponent
     {
         // 当前生效的状态列表
-        private readonly List<IStatus> _statuses = new();
+        private List<IStatus> _statuses = new();
         // 状态总加成数据（攻击/防御/生命等）
         private StatusTotalBonusData statusTotalBonus;
 
-        /// <summary>
-        /// 战斗初始化
-        /// </summary>
-        public override void BattleInit(IBattleEntityObject battleEntity)
+        public void InitStatus(IBattleEntityObject battleEntity)
         {
-            base.BattleInit(battleEntity);
-
+            BattleInit(battleEntity);
             statusTotalBonus = new StatusTotalBonusData();
         }
 
@@ -140,6 +135,13 @@ namespace HotUpdate.Game.Battle.Status
                 newStatus.IsValid = true;
                 _statuses.Add(newStatus);
             }
+        }
+        
+        protected override void OnBattleDestroy()
+        {
+            _statuses.Clear();
+            _statuses = null;
+            statusTotalBonus = default;
         }
     }
 }
