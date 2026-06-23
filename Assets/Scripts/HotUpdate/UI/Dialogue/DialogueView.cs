@@ -7,7 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace HotUpdate.Game.Dialogue.UI
+namespace HotUpdate.UI.Dialogue
 {
     /// <summary>
     /// 对话界面视图类

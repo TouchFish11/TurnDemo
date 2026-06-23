@@ -24,7 +24,7 @@ namespace HotUpdate.Game.Interact
             _collider.size = new Vector3(4, 4, 4);
         }
         
-        void IComponent.Init(IEntityObject entityObject)
+        void IComponent.Init(IEntityObject entityObject, IComponentCore<IComponent> componentCore)
         {
             EntityObject = entityObject;
         }

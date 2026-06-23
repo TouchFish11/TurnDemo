@@ -9,11 +9,10 @@ using Core.UI.ViewController;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.UI;
 using HotUpdate.Common.Config.ExcelInfo.Info;
-
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
-namespace HotUpdate.Game.Dialogue.UI
+namespace HotUpdate.UI.Dialogue
 {
     /// <summary>
     /// 对话控制器核心类

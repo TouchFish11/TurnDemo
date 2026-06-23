@@ -14,8 +14,8 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard
         {
             var skillComponent = GetComponent<ISkillComponent>();
             var core = DIContainer.Create<SkillComponentCore>();
-            core.Init(skillComponent, RoleInfo.f_skillIds, DIContainer.Create<WizardSkillFactory>());
-            skillComponent.InitSkill(this, core);
+            core.InitSkill(RoleInfo.f_skillIds, DIContainer.Create<WizardSkillFactory>());
+            skillComponent.InitSkill(this, TODO, TODO);
         }
     }
 }

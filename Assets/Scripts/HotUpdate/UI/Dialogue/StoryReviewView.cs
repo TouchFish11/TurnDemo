@@ -7,10 +7,9 @@ using Core.Serialize.Binary;
 using Core.UI;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Common.Config.ExcelInfo.Info;
-
 using UnityEngine.UI;
 
-namespace HotUpdate.Game.Dialogue.UI
+namespace HotUpdate.UI.Dialogue
 {
     /// <summary>
     /// 剧情回顾视图类

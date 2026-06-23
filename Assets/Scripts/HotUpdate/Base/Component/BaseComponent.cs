@@ -1,4 +1,3 @@
-using Core.DI;
 using HotUpdate.Base.Object;
 using UnityEngine;
 
@@ -18,25 +17,33 @@ namespace HotUpdate.Base.Component
         /// </summary>
         public IEntityObject EntityObject { get; private set; }
 
+        protected IComponentCore<IComponent> ComponentCore { get; private set; }
+
         /// <summary>
         /// 自动获取挂载同一 GameObject 下的 <see cref="IEntityObject"/> 组件，完成实体关联
         /// </summary>
         private void Awake()
         {
             EntityObject = GetComponent<IEntityObject>();
-            DIContainer.InjectIntoInstance(this);
+        }
+        
+        void IComponent.Init(IEntityObject entityObject, IComponentCore<IComponent> componentCore)
+        {
+            EntityObject = entityObject;
+            ComponentCore = componentCore;
+            OnInit();
         }
 
-        /// <summary>
-        /// 组件初始化方法（抽象）
-        /// 需由子类实现具体的初始化逻辑，用于接收外部实体对象并完成组件初始化
-        /// </summary>
-        /// <param name="entityObject">当前组件所属的实体对象</param>
-        public abstract void Init(IEntityObject entityObject);
+        protected virtual void OnInit()
+        {
+            
+        }
 
         public void Destroy()
         {
             OnDestroyBase();
+            ComponentCore.Dispose();
+            ComponentCore = null;
             EntityObject = null;
         }
 

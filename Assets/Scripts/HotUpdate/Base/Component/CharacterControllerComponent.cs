@@ -15,7 +15,7 @@ namespace HotUpdate.Base.Component
         
         public CharacterController CharacterController => _controller;
         
-        void IComponent.Init(IEntityObject entityObject)
+        void IComponent.Init(IEntityObject entityObject, IComponentCore<IComponent> componentCore)
         {
             _controller = entityObject.GameObject.GetComponent<CharacterController>();
         }

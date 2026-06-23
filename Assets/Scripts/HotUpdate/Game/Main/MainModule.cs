@@ -6,7 +6,6 @@ using HotUpdate.Base.Module;
 using HotUpdate.Base.Scene;
 using HotUpdate.Base.Service;
 using HotUpdate.Game.Core;
-using HotUpdate.Game.Dialogue;
 using HotUpdate.Game.Inputs;
 using HotUpdate.Game.Main.FloatingText;
 using HotUpdate.Game.Main.Player;
@@ -40,8 +39,6 @@ namespace HotUpdate.Game.Main
             DIContainer.BindSingleton<IFactoryManager, FactoryManager>();
             // 注册鼠标管理器
             DIContainer.BindSingleton<IMouseManager, MouseManager>();
-            // 注册鼠标管理器
-            DIContainer.BindSingleton<IDialogueManager, DialogueManager>();
             // 注册鼠标管理器
             DIContainer.BindSingleton<IQuestManager, QuestManager>();
             // 注册图标服务

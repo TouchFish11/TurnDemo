@@ -13,13 +13,14 @@ namespace HotUpdate.Game.Battle.Skill
         /// 拥有的技能数量
         /// </summary>
         int SkillCount { get; }
-        
+
         /// <summary>
         /// 初始化技能组件
         /// </summary>
         /// <param name="battleEntity"></param>
-        /// <param name="core"></param>
-        void InitSkill(IBattleEntityObject battleEntity, SkillComponentCore core);
+        /// <param name="f_skillIds"></param>
+        /// <param name="skillFactory"></param>
+        void InitSkill(IBattleEntityObject battleEntity, string f_skillIds, ISkillFactory skillFactory);
         
         /// <summary>
         /// 校验指定技能是否可以释放

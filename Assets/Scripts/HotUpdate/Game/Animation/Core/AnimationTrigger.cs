@@ -27,7 +27,7 @@ namespace HotUpdate.Game.Animation.Core
 
         public IEntityObject EntityObject { get; }
         
-        public void Init(IEntityObject entityObject)
+        public void Init(IEntityObject entityObject, IComponentCore<IComponent> componentCore)
         {
 
         }

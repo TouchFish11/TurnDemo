@@ -80,7 +80,7 @@ namespace HotUpdate.Game.Cameras
         {
             playerTransform = entityObject.GameObject.transform;
             // 注册鼠标拖动输入监听
-            entityObject.GetComponent<IInputComponent>().OnMouseSlideChanged += OnUpdateMouse;
+            entityObject.GetComponent<InputComponent>().AddMouseSlideChangedListener(OnUpdateMouse);
         }
 
         /// <summary>

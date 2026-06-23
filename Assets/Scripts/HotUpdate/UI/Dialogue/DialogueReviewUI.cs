@@ -1,9 +1,8 @@
-using Core.DI;
 using Core.UI;
 using TMPro;
 using UnityEngine;
 
-namespace HotUpdate.Game.Dialogue.UI
+namespace HotUpdate.UI.Dialogue
 {
     /// <summary>
     /// 对话回顾UI

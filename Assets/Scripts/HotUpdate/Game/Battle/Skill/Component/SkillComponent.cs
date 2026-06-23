@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using HotUpdate.Base.Component;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Skill.Base;
@@ -12,16 +13,22 @@ namespace HotUpdate.Game.Battle.Skill.Component
     /// 负责管理战斗实体的技能数据、施法条件、目标选择策略，提供技能相关的核心操作能力
     /// 所有具体的技能组件（如角色技能组件、怪物技能组件）需继承此类实现具体逻辑
     /// </summary>
+    [ComponentCore(typeof(SkillComponentCore))]
     public abstract class SkillComponent : BattleComponent, ISkillComponent
     {
         protected SkillComponentCore skillComponentCore;
         
         public int SkillCount => skillComponentCore.SkillCount;
         
-        public void InitSkill(IBattleEntityObject battleEntity, SkillComponentCore core)
+        public void InitSkill(IBattleEntityObject battleEntity, string f_skillIds, ISkillFactory skillFactory)
         {
-            skillComponentCore = core;
             BattleInit(battleEntity);
+            skillComponentCore.InitSkill(f_skillIds, skillFactory);
+        }
+
+        protected override void OnInit()
+        {
+            skillComponentCore = (SkillComponentCore)ComponentCore;
         }
 
         /// <summary>
@@ -105,7 +112,6 @@ namespace HotUpdate.Game.Battle.Skill.Component
 
         protected override void OnBattleDestroy()
         {
-            skillComponentCore.Dispose();
             skillComponentCore = null;
         }
     }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Core.DI;
 using Core.HotUpdate;
 using HotUpdate.Base.Object;
 using Unity.VisualScripting;
@@ -194,14 +195,8 @@ namespace HotUpdate.Base.Component
                             ic = dependentComponent;
                             continue;
                         }
-                        else if (component)
-                        {
-                            Logger.Log($"{ic.GetType()}的依赖类型：{requireAttr.m_Type0}，组件：{component.GetType().Name}不为IComponent");
-                        }
-                        else
-                        {
-                            Logger.Log($"{ic.GetType()}的依赖类型：{requireAttr.m_Type0}组件为null");
-                        }
+
+                        Logger.Log(component ? $"{ic.GetType()}的依赖类型：{requireAttr.m_Type0}，组件：{component.GetType().Name}不为IComponent" : $"{ic.GetType()}的依赖类型：{requireAttr.m_Type0}组件为null");
                     }
                     else
                     {
@@ -218,7 +213,15 @@ namespace HotUpdate.Base.Component
                 {
                     var componentToInit = _componentStack.Pop();
                     // 执行组件自身的初始化逻辑（IComponent接口定义的Init方法）
-                    componentToInit.Init(entityObject);
+                    var type = componentToInit.GetType();
+                    IComponentCore<IComponent> core = null;
+                    var coreAttribute = type.GetCustomAttribute<ComponentCoreAttribute>();
+                    if (coreAttribute?.ComponentCore != null)
+                    {
+                        core = (IComponentCore<IComponent>)DIContainer.Create(null, coreAttribute.ComponentCore);
+                        core.Init(componentToInit);
+                    }
+                    componentToInit.Init(entityObject, core);
                     yield return componentToInit;
                 }
                 

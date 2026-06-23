@@ -15,7 +15,7 @@ namespace HotUpdate.Base.Component
 
         public IEntityObject EntityObject { get; private set; }
         
-        void IComponent.Init(IEntityObject entityObject)
+        void IComponent.Init(IEntityObject entityObject, IComponentCore<IComponent> componentCore)
         {
             PlayerInput = entityObject.GameObject.GetComponent<PlayerInput>();
         }

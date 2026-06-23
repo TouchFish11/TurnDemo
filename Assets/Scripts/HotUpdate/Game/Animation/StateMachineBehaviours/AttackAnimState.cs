@@ -11,24 +11,22 @@ namespace HotUpdate.Game.Animation.StateMachineBehaviours
     {
         public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            if (!animator.GetComponentInParent<MainPlayer>() || animator.GetComponentInParent<MainPlayer>().GetComponent<IMoveComponent>() == null)
+            if (!animator.GetComponentInParent<MainPlayer>() || animator.GetComponentInParent<MainPlayer>().GetComponent<MoveComponent>() == null)
             {
                 return;
             }
-
-            // �����ƶ�
-            animator.GetComponentInParent<MainPlayer>().GetComponent<IMoveComponent>().SetMoveFlag(false);
+            
+            animator.GetComponentInParent<MainPlayer>().GetComponent<MoveComponent>().SetMoveFlag(false);
         }
 
         public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            if (!animator.GetComponentInParent<MainPlayer>() || animator.GetComponentInParent<MainPlayer>().GetComponent<IMoveComponent>() == null)
+            if (!animator.GetComponentInParent<MainPlayer>() || animator.GetComponentInParent<MainPlayer>().GetComponent<MoveComponent>() == null)
             {
                 return;
             }
-
-            // ����ƶ�
-            animator.GetComponentInParent<MainPlayer>().GetComponent<IMoveComponent>().SetMoveFlag(true);
+            
+            animator.GetComponentInParent<MainPlayer>().GetComponent<MoveComponent>().SetMoveFlag(true);
         }
     }
 }

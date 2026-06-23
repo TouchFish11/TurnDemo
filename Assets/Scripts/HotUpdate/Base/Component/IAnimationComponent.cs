@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace HotUpdate.Base.Component
 {
-    public interface IAnimationComponent : IComponent
+    public interface IAnimationComponent
     {
         /// <summary>
         /// 设置动画类型

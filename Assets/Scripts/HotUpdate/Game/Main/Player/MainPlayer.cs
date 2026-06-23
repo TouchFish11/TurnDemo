@@ -69,7 +69,7 @@ namespace HotUpdate.Game.Main.Player
 
         public void InitCamera(OrbitCameraController orbitCameraController)
         {
-            GetComponent<IMoveComponent>().SetCamera(orbitCameraController);
+            GetComponent<MoveComponent>().SetCamera(orbitCameraController);
         }
     }
 }

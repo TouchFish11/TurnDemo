@@ -23,7 +23,7 @@ namespace HotUpdate.Game.Battle.Command
         // 韧性恢复速度
         private const float recoverySpeed = 55f;
         // 韧性组件
-        public IToughnessComponent ToughnessComponent { get; private set; }
+        public ToughnessComponent ToughnessComponent { get; private set; }
         // 技能指令
         private SkillCommand _skillCommand;
         

@@ -13,8 +13,7 @@ using HotUpdate.Base.UI;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Common.Events;
-
-using HotUpdate.Game.Dialogue.UI;
+using HotUpdate.UI.Dialogue;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 

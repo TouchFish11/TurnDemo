@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using Core.DI;
 using Core.Serialize.Binary;
 using Core.Utility;
+using HotUpdate.Base.Component;
 using HotUpdate.Common.Config.ExcelInfo.Container;
+using HotUpdate.Game.Battle.Skill.Component;
 using HotUpdate.Game.Battle.Skill.Conditions;
 using HotUpdate.Game.Battle.TargetSelect;
 
@@ -12,12 +14,10 @@ namespace HotUpdate.Game.Battle.Skill.Base
     /// <summary>
     /// 技能组件核心逻辑
     /// </summary>
-    public class SkillComponentCore : IDisposable
+    public class SkillComponentCore : ComponentCore<SkillComponent>
     {
         [Inject] protected BinaryDataManager binaryDataManager;
         
-        // 实体技能组件
-        private ISkillComponent _skillComponent;
         // 技能工厂
         protected ISkillFactory skillFactory;
         // 技能数据字典：Key为技能ID，Value为对应的技能数据对象，用于快速索引技能
@@ -28,14 +28,13 @@ namespace HotUpdate.Game.Battle.Skill.Base
         protected List<ITargetSelectStrategy> targetSelectStrategies = new();
         
         public int SkillCount => skillIds.Count;
-        
+
         /// <summary>
         /// 初始化
         /// </summary>
-        /// <param name="skillComponent"></param>
         /// <param name="f_skillIds"></param>
         /// <param name="skillFactory"></param>
-        public void Init(ISkillComponent skillComponent, string f_skillIds, ISkillFactory skillFactory)
+        public void InitSkill(string f_skillIds, ISkillFactory skillFactory)
         {
             // 将技能ID字符串解析为int数组（第二个参数2为分隔符标识，需参考TextUtility.SplitToIntArr实现）
             var skillIds = TextUtility.SplitToIntArr(f_skillIds, 2);
@@ -44,7 +43,6 @@ namespace HotUpdate.Game.Battle.Skill.Base
                 this.skillIds.Add(skillId);
             }
             this.skillFactory = skillFactory;
-            _skillComponent = skillComponent;
         }
         
         /// <summary>
@@ -138,7 +136,7 @@ namespace HotUpdate.Game.Battle.Skill.Base
                 // 遍历所有施法条件，只要有一个条件不满足则返回false
                 foreach (var condition in castSkillConditions)
                 {
-                    if (!condition.CanCast(_skillComponent.BattleEntity, skillInfo))
+                    if (!condition.CanCast(Component.BattleEntity, skillInfo))
                     {
                         return false;
                     }
@@ -175,13 +173,12 @@ namespace HotUpdate.Game.Battle.Skill.Base
         public ISkill GetSkill(int skillId)
         {
             // 为技能设置最高优先级的目标选择策略（排序后第一个即为最高优先级）
-            return skillFactory.CreateSkill(_skillComponent.BattleEntity, skillId, targetSelectStrategies[0]);
+            return skillFactory.CreateSkill(Component.BattleEntity, skillId, targetSelectStrategies[0]);
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             binaryDataManager = null;
-            _skillComponent = null;
             skillFactory = null;
             skillIds.Clear();
             skillIds = null;

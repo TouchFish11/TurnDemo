@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace HotUpdate.Game.Dialogue.UI
+namespace HotUpdate.UI.Dialogue
 {
     /// <summary>
     /// 对话选项分支UI

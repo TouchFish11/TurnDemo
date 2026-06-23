@@ -24,13 +24,13 @@ namespace HotUpdate.Game.Animation.Component
         /// </summary>
         public AnimationParameter AnimationParameter => animationArg;
 
-        public sealed override void Init(IEntityObject entityObject)
+        protected override void OnInit()
         {
             animationArg = new AnimationParameter();
-            animatorComponent = entityObject.GetComponentInChildren<AnimatorComponent>();
+            animatorComponent = EntityObject.GetComponentInChildren<AnimatorComponent>();
             OnAnimationInit();
         }
-
+        
         protected virtual void OnAnimationInit()
         {
             

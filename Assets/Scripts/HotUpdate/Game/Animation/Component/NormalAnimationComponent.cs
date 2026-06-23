@@ -1,3 +1,4 @@
+using System;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Enums;
 using HotUpdate.Base.Utility;
@@ -21,8 +22,8 @@ namespace HotUpdate.Game.Animation.Component
         protected override void OnAnimationInit()
         {
             // 注册输入组件的事件监听：移动输入变化、鼠标左键点击（普通攻击）
-            EntityObject.GetComponent<IInputComponent>().OnKeyInputChanged += OnMove;
-            EntityObject.GetComponent<IInputComponent>().OnMouseLeftClick += OnAttack;
+            EntityObject.GetComponent<InputComponent>().AddKeyInputChangedListener((Action<Vector3>)OnMove);
+            EntityObject.GetComponent<InputComponent>().AddMouseLeftClickListener(OnAttack);
             
             // 初始化时将战斗层、技能层动画权重设为0，优先使用基础动画层
             animatorComponent.Animator.SetLayerWeight(animatorComponent.Animator.GetLayerIndex(AnimationUtility.Battle_Layer_Name), 0);

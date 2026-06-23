@@ -1,11 +1,9 @@
-using Core.DI;
 using Core.Utility;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.ResponsibilityChain.DamageChain;
 using HotUpdate.Game.Battle.Skill;
-using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Conditions;
 using HotUpdate.Game.Battle.TargetSelect;
 using HotUpdate.Game.Battle.TargetSelect.Strategys;
@@ -39,12 +37,15 @@ namespace HotUpdate.Game.Battle.Object.Monster
             // 根据配置的组件名称列表，为怪物添加对应的战斗组件（如韧性组件、动画组件等）
             AddComponents(TextUtility.Split(MonsterInfo.f_comNames, 2));
             
+            // 初始化技能组件
             var skillComponent = GetComponent<ISkillComponent>();
-            var core = DIContainer.Create<SkillComponentCore>();
-            core.Init(skillComponent, MonsterInfo.f_skillIds, GetSkillFactory());
-            core.AddCastCondition(GetSkillCondition());
-            core.AddTargetSelectStrategy(GetTargetSelectStrategy());
-            skillComponent.InitSkill(this, core);
+            skillComponent.InitSkill(this, MonsterInfo.f_skillIds, GetSkillFactory());
+            skillComponent.AddCastCondition(GetSkillCondition());
+            skillComponent.AddTargetSelectStrategy(GetTargetSelectStrategy());
+            
+            // 初始化韧性组件
+            var toughnessComponent = GetComponent<ToughnessComponent>();
+            toughnessComponent.InitToughness(this);
         }
 
         protected abstract ISkillFactory GetSkillFactory();

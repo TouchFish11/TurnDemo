@@ -51,7 +51,7 @@ namespace HotUpdate.Game.Inputs
         /// <summary>
         /// 禁用输入系统（停止所有输入响应）
         /// </summary>
-        void DisEnableInput();
+        void DisableInput();
 
         /// <summary>
         /// 检查指定输入动作名称是否在受限列表中

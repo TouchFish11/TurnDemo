@@ -20,7 +20,7 @@ namespace HotUpdate.Base.Component
             _animator = GetComponent<Animator>();
         }
 
-        void IComponent.Init(IEntityObject entityObject)
+        void IComponent.Init(IEntityObject entityObject, IComponentCore<IComponent> componentCore)
         {
 
         }

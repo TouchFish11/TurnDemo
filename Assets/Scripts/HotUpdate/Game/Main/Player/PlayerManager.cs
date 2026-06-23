@@ -5,12 +5,12 @@ using Core.DI;
 using Core.GlobalEvent;
 using Core.GlobalEvent.Events;
 using Core.Mono;
-using HotUpdate.Base.Component;
 using HotUpdate.Base.Enums;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Object;
 using HotUpdate.Base.UI;
 using HotUpdate.Base.Utility;
+using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Battle.Object.Role.Warrior;
 using HotUpdate.Game.Cameras;
 using HotUpdate.Game.Inputs;
@@ -112,8 +112,8 @@ namespace HotUpdate.Game.Main.Player
         /// <param name="openViewEvent"></param>
         private void OnOpenViewEvent(OpenViewEvent openViewEvent)
         {
-            MainPlayer.GetComponent<IInputComponent>().DisEnableInput();
-            MainPlayer.GetComponent<INormalAnimationComponent>().SetAnimationState((int)E_AnimationType.Idle);
+            MainPlayer.GetComponent<InputComponent>().DisableInput();
+            MainPlayer.GetComponent<NormalAnimationComponent>().SetAnimationState((int)E_AnimationType.Idle);
             MainPlayer.GetComponent<MoveComponent>().Disable();
         }
 
@@ -128,7 +128,7 @@ namespace HotUpdate.Game.Main.Player
         /// <param name="closeViewEvent"></param>
         private void OnCloseViewEvent(CloseViewEvent closeViewEvent)
         {
-            MainPlayer.GetComponent<IInputComponent>().EnableInput();
+            MainPlayer.GetComponent<InputComponent>().EnableInput();
             MainPlayer.GetComponent<MoveComponent>().Enable();
         }
 

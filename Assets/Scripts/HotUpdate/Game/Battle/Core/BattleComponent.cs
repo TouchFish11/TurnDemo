@@ -1,5 +1,4 @@
 using HotUpdate.Base.Component;
-using HotUpdate.Base.Object;
 using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.Core
@@ -13,13 +12,7 @@ namespace HotUpdate.Game.Battle.Core
 
         public void BattleInit(IBattleEntityObject battleEntity)
         {
-            Init(battleEntity);
             BattleEntity = battleEntity;
-        }
-
-        public sealed override void Init(IEntityObject entityObject)
-        {
-            
         }
 
         public void DestroyBattle(IBattleEntityObject battleEntity)
