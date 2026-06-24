@@ -1,17 +1,15 @@
 using System.Collections.Generic;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event;
-using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.Talent
 {
     public class TalentComponent : BattleComponent, ITalentComponent
     {
         private List<ITalent> _talents = new();
-        
-        public void InitTalent(IBattleEntityObject battleEntity)
+
+        protected override void OnBattleInit()
         {
-            BattleInit(battleEntity);
             //BattleEntity.Context.GetEventBus().AddListener<TurnStartEvent>(OnBattleEventHandler);
             //BattleEntity.Context.GetEventBus().AddListener<TurnEndEvent>(OnBattleEventHandler);
         }

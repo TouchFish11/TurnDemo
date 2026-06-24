@@ -1,7 +1,7 @@
 using System.Collections;
 using Core.Utility;
 using HotUpdate.Base.Utility;
-using HotUpdate.Game.Battle.Animation;
+using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
 using UnityEngine;
@@ -18,7 +18,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill.AbyssGift
         public override IEnumerator Execute()
         {
             // 获取施法者的动画组件
-            var animationComponent = SkillContext.Caster.GetComponent<IBattleAnimationComponent>();
+            var animationComponent = SkillContext.Caster.GetComponent<BattleAnimationComponent>();
             // 根据配置表设置技能对应的动画状态
             animationComponent.SetAnimationState(SkillContext.SkillInfo.f_animationType);
             // 动画切换到第一段

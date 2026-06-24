@@ -22,14 +22,8 @@ namespace HotUpdate.Game.Main.Player
         // Key：实体的索引序号（自增），Value：对应的战斗实体对象接口实例
         // 用于快速管理和访问挂载到玩家的多个战斗实体
         private readonly Dictionary<int, IBattleEntityObject> indexToEntityMap = new();
-
-        /// <summary>
-        /// 玩家实体基础初始化方法
-        /// 重写自 EntityObject 基类，在实体创建时调用
-        /// </summary>
-        /// <param name="entityid"></param>
-        /// <param name="service"></param>
-        public override void InitBase(long entityid, ComponentService service)
+        
+        protected override void OnInit()
         {
             // 挂载输入组件：处理玩家的输入事件
             AddComponent<InputComponent>();

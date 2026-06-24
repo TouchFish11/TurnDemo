@@ -41,10 +41,16 @@ namespace HotUpdate.Base.Object
             
         }
 
-        public virtual void InitBase(long entityId, ComponentService service)
+        public void InitBase(long entityId, ComponentService service)
         {
             EntityId = entityId;
             componentService = service;
+            OnInit();
+        }
+
+        protected virtual void OnInit()
+        {
+            
         }
         
         /// <summary>

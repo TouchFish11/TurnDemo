@@ -1,6 +1,5 @@
 using System.Collections;
 using HotUpdate.Base;
-using HotUpdate.Base.Component;
 using HotUpdate.Base.Object;
 using HotUpdate.Game.Battle.Command;
 using HotUpdate.Game.Battle.Context;
@@ -8,6 +7,7 @@ using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.ResponsibilityChain;
+using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Conditions;
 using HotUpdate.Game.Battle.TargetSelect;
 using UnityEngine;
@@ -61,17 +61,18 @@ namespace HotUpdate.Game.Battle.Object
         /// </summary>
         public int EntityPosIndex { get; set; }
 
+        public abstract ISkillFactory SkillFactory { get; protected set; }
+        
+        public abstract ICastSkillCondition DefaultCastCondition { get; protected set;}
+        
+        public abstract ITargetSelectStrategy DefaultTargetSelectStrategy { get; protected set;}
+
         /// <summary>
         /// 是否死亡（当前血量≤0判定为死亡）
         /// </summary>
         public bool IsDead => GetComponent<PropertyComponent>().GetPropertyValue(E_DynamicPropertyType.CurrentHp) <= 0;
-
-        /// <summary>
-        /// 基础初始化方法
-        /// </summary>
-        /// <param name="entityId"></param>
-        /// <param name="service"></param>
-        public sealed override void InitBase(long entityId, ComponentService service)
+        
+        protected override void OnInit()
         {
             // 获取第二个子物体作为子游戏物体（默认第一个是自身，第二个为可视化表现层），用于绑定Animator等战斗相关组件
             SubGameObject = GetComponentsInChildren<Transform>()[1].gameObject;

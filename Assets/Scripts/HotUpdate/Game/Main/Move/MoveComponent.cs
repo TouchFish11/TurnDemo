@@ -51,7 +51,7 @@ namespace HotUpdate.Game.Main.Move
             _moveComponentCore.SetMoveFlag(canMove);
         }
 
-        protected override void OnDestroyBase()
+        protected override void OnBaseDestroy()
         {
             _moveComponentCore = null;
         }

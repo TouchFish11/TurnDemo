@@ -11,8 +11,8 @@ namespace HotUpdate.Game.Battle.Property
     public class PlayerPropertyComponent : PropertyComponent
     {
         protected RoleProperty RoleProperty => battleProperty as RoleProperty;
-        
-        protected override void OnInitProperty()
+
+        protected override void OnBattleInit()
         {
             battleProperty = new RoleProperty();
             ((RoleProperty)battleProperty).InitProperty(((IPlayerObject)BattleEntity).RoleInfo);
@@ -27,7 +27,7 @@ namespace HotUpdate.Game.Battle.Property
                 case E_DynamicPropertyType.CurrentEnergy:
                     var currentEnergyDelta = RoleProperty.CurrentEnergy - newValue;
                     RoleProperty.CurrentEnergy = newValue;
-                    battleContext.GetEventBus().TriggerEvent(new EnergyChangedEvent(battleContext, BattleEntity, RoleProperty.CurrentEnergy, RoleProperty.BaseEnergy, currentEnergyDelta));
+                    Context.GetEventBus().TriggerEvent(new EnergyChangedEvent(Context, BattleEntity, RoleProperty.CurrentEnergy, RoleProperty.BaseEnergy, currentEnergyDelta));
                     break;
             }
         }

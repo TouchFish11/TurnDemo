@@ -2,7 +2,7 @@ using System.Collections;
 using Core.Utility;
 using HotUpdate.Base.Enums;
 using HotUpdate.Base.Utility;
-using HotUpdate.Game.Battle.Animation;
+using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Battle.Utility;
 using HotUpdate.Game.VFX;
 using UnityEngine;
@@ -27,7 +27,7 @@ namespace HotUpdate.Game.Battle.Object.Monster
                 new ProjectileData(battleEntityObject, null, null, null),
                 vFXInfo));
 
-            var animationComponent =  battleEntityObject.GetComponent<IBattleAnimationComponent>();
+            var animationComponent =  battleEntityObject.GetComponent<BattleAnimationComponent>();
             // 播放怪物死亡动画，并等待动画播放完成
             monoAdapter.StartCoroutine(AnimationPlayUtility.WaitForAnimOver(animationComponent, AnimationUtility.Battle_Layer_Name, (int)E_AnimationType.Death));
             // 等待死亡特效播放完毕（协程阻塞，直到特效销毁）

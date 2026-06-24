@@ -23,7 +23,7 @@ namespace HotUpdate.Game.Battle.Toughness
         private List<IToughnessReduceStrategy> _toughnessReduceStrategies = new();
         // 韧性计算策略集合（不同规则的韧性值计算逻辑，按优先级排序执行）
         private List<IToughnessCalcStrategy> _toughnessCalcStrategies = new();
-
+        
         protected override void OnInit()
         {
             // 获取怪物信息组件（当前仅适配怪物，若适配角色需扩展）
@@ -266,7 +266,7 @@ namespace HotUpdate.Game.Battle.Toughness
             return totalValue;
         }
 
-        public override void Dispose()
+        protected override void OnDispose()
         {
             _toughness.Dispose();
             _toughness = null;

@@ -1,16 +1,14 @@
 using System;
 using Core.DI;
 using Core.Serialize.Binary;
-using HotUpdate.Base.Component;
 using HotUpdate.Base.Enums;
 using HotUpdate.Base.UI;
 using HotUpdate.Common.Config.ExcelInfo.Container;
-using HotUpdate.Game.Battle.Animation;
+using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.Skill;
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Event.UI;
-using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Monster;
 using HotUpdate.Game.Battle.Object.Role;
 using HotUpdate.Game.Battle.Skill;
@@ -143,7 +141,7 @@ namespace HotUpdate.Game.Battle.Event
                 await _battleCoordinator.UpdateCamera((E_SkillTargetType)skillInfo.f_SkillTargetType, playerObject);
 
                 // 根据技能类型切换前置动画
-                var battleAnimationComponent = playerObject.GetComponent<IBattleAnimationComponent>();
+                var battleAnimationComponent = playerObject.GetComponent<BattleAnimationComponent>();
                 switch ((E_SkillType)skillInfo.f_SkillType)
                 {
                     case E_SkillType.Monster: // 怪物技能 → 播放通用攻击动画

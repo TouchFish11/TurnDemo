@@ -176,7 +176,7 @@ namespace HotUpdate.Game.Battle.Skill.Base
             return skillFactory.CreateSkill(Component.BattleEntity, skillId, targetSelectStrategies[0]);
         }
 
-        public override void Dispose()
+        protected override void OnDispose()
         {
             binaryDataManager = null;
             skillFactory = null;

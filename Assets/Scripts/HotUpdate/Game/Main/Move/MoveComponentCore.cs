@@ -172,7 +172,7 @@ namespace HotUpdate.Game.Main.Move
             characterController.Move(speed * Time.deltaTime * moveDir);
         }
 
-        public override void Dispose()
+        protected override void OnDispose()
         {
             mainCamera = null;
             characterController = null;

@@ -1,5 +1,4 @@
 using System.Collections;
-using HotUpdate.Base;
 using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Object.Role;
 

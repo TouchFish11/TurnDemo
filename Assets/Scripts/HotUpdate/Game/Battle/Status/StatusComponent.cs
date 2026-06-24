@@ -20,9 +20,8 @@ namespace HotUpdate.Game.Battle.Status
         // 状态总加成数据（攻击/防御/生命等）
         private StatusTotalBonusData statusTotalBonus;
 
-        public void InitStatus(IBattleEntityObject battleEntity)
+        protected override void OnBattleInit()
         {
-            BattleInit(battleEntity);
             statusTotalBonus = new StatusTotalBonusData();
         }
 

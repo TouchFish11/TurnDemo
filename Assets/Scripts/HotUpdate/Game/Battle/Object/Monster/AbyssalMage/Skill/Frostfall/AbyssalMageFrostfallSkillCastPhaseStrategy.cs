@@ -1,7 +1,7 @@
 using System.Collections;
 using Core.Utility;
 using HotUpdate.Base.Utility;
-using HotUpdate.Game.Battle.Animation;
+using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
 using UnityEngine;
@@ -18,7 +18,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill.Frostfall
         public override IEnumerator Execute()
         {
             // 获取施法者的动画组件
-            var animationComponent = SkillContext.Caster.GetComponent<IBattleAnimationComponent>();
+            var animationComponent = SkillContext.Caster.GetComponent<BattleAnimationComponent>();
             // 动画切换到
             animationComponent.SetAnimationState(SkillContext.SkillInfo.f_animationType);
             yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).IsName(Attack02));

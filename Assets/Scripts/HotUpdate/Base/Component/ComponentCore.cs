@@ -4,6 +4,8 @@ namespace HotUpdate.Base.Component
     {
         public T Component { get; private set; }
         
+        private bool _isDisposed = false;
+        
         public void Init(IComponent component)
         {
             Component = (T)component;
@@ -15,7 +17,16 @@ namespace HotUpdate.Base.Component
             
         }
 
-        public virtual void Dispose()
+        public void Dispose()
+        {
+            if (_isDisposed) 
+                return;
+            
+            OnDispose();
+            _isDisposed = true;
+        }
+
+        protected virtual void OnDispose()
         {
             
         }

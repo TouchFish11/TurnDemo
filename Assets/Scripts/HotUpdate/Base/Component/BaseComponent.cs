@@ -41,7 +41,9 @@ namespace HotUpdate.Base.Component
 
         public void Destroy()
         {
-            OnDestroyBase();
+            // 先走钩子函数销毁
+            OnBaseDestroy();
+            // 再释放 Core
             ComponentCore.Dispose();
             ComponentCore = null;
             EntityObject = null;
@@ -50,7 +52,7 @@ namespace HotUpdate.Base.Component
         /// <summary>
         /// 组件基础销毁
         /// </summary>
-        protected virtual void OnDestroyBase()
+        protected virtual void OnBaseDestroy()
         {
             
         }

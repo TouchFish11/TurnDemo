@@ -2,6 +2,9 @@ using System.Collections;
 using HotUpdate.Base;
 using HotUpdate.Base.Object;
 using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Skill;
+using HotUpdate.Game.Battle.Skill.Conditions;
+using HotUpdate.Game.Battle.TargetSelect;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.Object
@@ -30,6 +33,12 @@ namespace HotUpdate.Game.Battle.Object
         /// 标识实体在战斗阵型的位置编号
         /// </summary>
         int EntityPosIndex { get; set; }
+        
+        ISkillFactory SkillFactory { get; }
+        
+        ICastSkillCondition DefaultCastCondition { get; }
+        
+        ITargetSelectStrategy DefaultTargetSelectStrategy { get; }
 
         /// <summary>
         /// 是否死亡状态

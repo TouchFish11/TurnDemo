@@ -37,7 +37,7 @@ namespace HotUpdate.Game.Interact
             _interactComponentCore.RemoveInteract(interactable);
         }
         
-        protected override void OnDestroyBase()
+        protected override void OnBaseDestroy()
         {
             _interactComponentCore = null;
         }

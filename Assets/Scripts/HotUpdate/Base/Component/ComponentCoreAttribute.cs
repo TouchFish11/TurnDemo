@@ -12,7 +12,7 @@ namespace HotUpdate.Base.Component
         
         public ComponentCoreAttribute(Type componentCore)
         {
-            if(typeof(IComponentCore<IComponent>).IsAssignableFrom(componentCore))
+            if(!typeof(IComponentCore<IComponent>).IsAssignableFrom(componentCore))
                 throw new ArgumentException($"ComponentCore {componentCore.Name} does not implement IComponentCore");
             ComponentCore = componentCore;
         }

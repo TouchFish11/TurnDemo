@@ -16,19 +16,10 @@ namespace HotUpdate.Game.Battle.Toughness
     public class ToughnessComponent : BattleComponent
     {
         private ToughnessComponentCore _toughnessComponentCore;
-        
-        protected override void OnInit()
+
+        protected override void OnBattleInit()
         {
             _toughnessComponentCore = (ToughnessComponentCore)ComponentCore;
-        }
-
-        /// <summary>
-        /// 初始化韧性组件（接口实现）
-        /// </summary>
-        /// <param name="owner">所属战斗实体（如怪物、角色）</param>
-        public void InitToughness(IBattleEntityObject owner)
-        {
-            BattleInit(owner);
         }
         
         /// <summary>

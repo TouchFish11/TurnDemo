@@ -84,7 +84,7 @@ namespace HotUpdate.Game.Inputs
             _inputComponentCore.OnIniteract += action;
         }
         
-        protected override void OnDestroyBase()
+        protected override void OnBaseDestroy()
         {
             _inputComponentCore.Dispose();
             _inputComponentCore = null;

@@ -9,12 +9,6 @@ namespace HotUpdate.Game.Battle.Status
     public interface IStatusComponent
     {
         /// <summary>
-        /// 初始化状态组件
-        /// </summary>
-        /// <param name="battleEntity"></param>
-        void InitStatus(IBattleEntityObject battleEntity);
-        
-        /// <summary>
         /// 更新状态
         /// </summary>
         void UpdateStatus();

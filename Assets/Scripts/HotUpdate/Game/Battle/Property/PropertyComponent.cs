@@ -1,9 +1,7 @@
 using System.Collections.Generic;
 using Core.Log;
-using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.General;
-using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.Property
 {
@@ -18,26 +16,11 @@ namespace HotUpdate.Game.Battle.Property
         private readonly Dictionary<E_PropertyBonusType, int> _bonusToValueMap = new();
         // 当前战斗实体的核心属性容器
         protected BattleProperty battleProperty;
-        // 战斗上下文（用于获取事件总线、战斗环境信息等）
-        protected IBattleContext battleContext;
 
         /// <summary>
         /// 战斗实体是否死亡标识
         /// </summary>
         public bool IsDeath { get; protected set; }
-        
-        public void InitProperty(IBattleEntityObject battleEntity)
-        {
-            BattleInit(battleEntity);
-            // 从战斗实体中获取战斗上下文
-            battleContext = BattleEntity.Context;
-            OnInitProperty();
-        }
-
-        /// <summary>
-        /// 初始化属性
-        /// </summary>
-        protected abstract void OnInitProperty();
         
         /// <summary>
         /// 设置动态属性值（会触发对应属性变更事件）
@@ -52,13 +35,13 @@ namespace HotUpdate.Game.Battle.Property
                     // 更新当前血量
                     battleProperty.CurrentHp = newValue;
                     // 触发血量变更事件（通知事件总线）
-                    battleContext.GetEventBus().TriggerEvent(new HpChangedEvent(battleContext, battleProperty.CurrentHp, battleProperty.MaxHp, BattleEntity));
+                    Context.GetEventBus().TriggerEvent(new HpChangedEvent(Context, battleProperty.CurrentHp, battleProperty.MaxHp, BattleEntity));
                     break;
                 case E_DynamicPropertyType.MaxHp:
                     // 更新最大血量
                     battleProperty.MaxHp = newValue;
                     // 触发血量变更事件（当前血量、新最大血量）
-                    battleContext.GetEventBus().TriggerEvent(new HpChangedEvent(battleContext, battleProperty.CurrentHp, newValue, BattleEntity));
+                    Context.GetEventBus().TriggerEvent(new HpChangedEvent(Context, battleProperty.CurrentHp, newValue, BattleEntity));
                     break;
                 case E_DynamicPropertyType.TotalAtk:
                     // 更新总攻击力
@@ -86,7 +69,7 @@ namespace HotUpdate.Game.Battle.Property
                     // 更新当前护盾值
                     battleProperty.CurrentShield = newValue;
                     // 触发护盾变更事件
-                    battleContext.GetEventBus().TriggerEvent(new ShieldChangedEvent(battleContext, battleProperty.CurrentShield, BattleEntity, currentShieldDelta));
+                    Context.GetEventBus().TriggerEvent(new ShieldChangedEvent(Context, battleProperty.CurrentShield, BattleEntity, currentShieldDelta));
                     break;
             }
         }

@@ -2,7 +2,7 @@ using System.Collections;
 using Core.Utility;
 using HotUpdate.Base.UI;
 using HotUpdate.Base.Utility;
-using HotUpdate.Game.Battle.Animation;
+using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
 using HotUpdate.Game.Battle.UI;
@@ -19,7 +19,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill.Ultimate
         public override IEnumerator Execute()
         {
             // 获取施法者的动画组件
-            var animationComponent = SkillContext.Caster.GetComponent<IBattleAnimationComponent>();
+            var animationComponent = SkillContext.Caster.GetComponent<BattleAnimationComponent>();
             // 设置技能对应的动画状态
             animationComponent.SetAnimationState(SkillContext.SkillInfo.f_animationType);
             

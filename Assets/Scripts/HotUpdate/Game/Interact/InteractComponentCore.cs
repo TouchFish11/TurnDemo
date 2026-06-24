@@ -76,7 +76,7 @@ namespace HotUpdate.Game.Interact
             currentInteractable = null;
         }
 
-        public override void Dispose()
+        protected override void OnDispose()
         {
             interactables.Clear();
             interactables = null;

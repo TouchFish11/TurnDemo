@@ -7,6 +7,9 @@ using HotUpdate.Game.Battle.Object.StateMeachine;
 using HotUpdate.Game.Battle.ResponsibilityChain.DamageChain;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Component;
+using HotUpdate.Game.Battle.Skill.Conditions;
+using HotUpdate.Game.Battle.TargetSelect;
+using HotUpdate.Game.Battle.TargetSelect.Strategys;
 
 namespace HotUpdate.Game.Battle.Object.Role
 {
@@ -19,11 +22,14 @@ namespace HotUpdate.Game.Battle.Object.Role
         // 当前状态
         private ITurnState _currentState;
         
-        /// <summary>
-        /// 角色信息
-        /// </summary>
         public RoleInfo RoleInfo { get; private set; }
+
+        public override ISkillFactory SkillFactory { get; protected set; }
         
+        public override ICastSkillCondition DefaultCastCondition { get; protected set; }
+        
+        public override ITargetSelectStrategy DefaultTargetSelectStrategy { get; protected set; }
+
         public void RoleBattleInit(RoleBattleInitData initData)
         {
             BattleInit(initData);
@@ -38,13 +44,22 @@ namespace HotUpdate.Game.Battle.Object.Role
             // 初始化伤害链
             damageChain = DamageChainBuilder.GetRoleDamageChain();
             
-            OnBattleInit();
+            SkillFactory = GetSkillFactory();
+            DefaultCastCondition = GetSkillCondition();
+            DefaultTargetSelectStrategy = GetTargetSelectStrategy();
+        }
+        
+        protected abstract ISkillFactory GetSkillFactory();
+        
+        protected virtual ICastSkillCondition GetSkillCondition()
+        {
+            return castSkillConditionFactory.GetCastSkillCondition<PlayerDefaultCastSkillCondition>();
         }
 
-        /// <summary>
-        /// 子类战斗初始化
-        /// </summary>
-        protected abstract void OnBattleInit();
+        protected virtual ITargetSelectStrategy GetTargetSelectStrategy()
+        {
+            return targetSelectStrategyFactory.GetTargetSelectStrategy<PlayerBaseTargetSelectStrategy>();
+        }
         
         /// <summary>
         /// 切换状态

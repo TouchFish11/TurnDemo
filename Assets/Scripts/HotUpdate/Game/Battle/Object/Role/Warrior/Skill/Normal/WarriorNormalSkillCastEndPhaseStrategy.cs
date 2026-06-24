@@ -1,6 +1,6 @@
 using System.Collections;
 using HotUpdate.Base.Utility;
-using HotUpdate.Game.Battle.Animation;
+using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
 using UnityEngine;
 
@@ -10,7 +10,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Normal
     {
         public override IEnumerator Execute()
         {
-            var animationComponent = SkillContext.Caster.GetComponent<IBattleAnimationComponent>();
+            var animationComponent = SkillContext.Caster.GetComponent<BattleAnimationComponent>();
             var animator = animationComponent.GetAnimator();
             // 等待动画播放到90%且特效结束
             yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).normalizedTime >= 0.9f && !SkillContext.VFXInfo.IsAlive);

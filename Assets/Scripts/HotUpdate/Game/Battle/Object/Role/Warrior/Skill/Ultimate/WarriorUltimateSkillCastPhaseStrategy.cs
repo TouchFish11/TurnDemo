@@ -1,7 +1,7 @@
 using System.Collections;
 using Core.Utility;
 using HotUpdate.Base.Utility;
-using HotUpdate.Game.Battle.Animation;
+using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
 using HotUpdate.Game.VFX;
@@ -26,7 +26,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Ultimate
             yield return SkillHelper.Delay(100);
             
             // 切换终结技动画
-            var animationComponent = caster.GetComponent<IBattleAnimationComponent>(); 
+            var animationComponent = caster.GetComponent<BattleAnimationComponent>(); 
             animationComponent.SetAnimationState(SkillContext.SkillInfo.f_animationType);
             
             // 等待动画切换到终结技攻击状态

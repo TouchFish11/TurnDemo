@@ -1,7 +1,7 @@
 using System.Collections;
 using Core.Utility;
 using HotUpdate.Base.Utility;
-using HotUpdate.Game.Battle.Animation;
+using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
 using UnityEngine;
 
@@ -15,7 +15,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard.Skill.Battle
         public override IEnumerator Execute()
         {
             // 获取释放者的动画组件，用于播放技能动画
-            var animationComponent = SkillContext.Caster.GetComponent<IBattleAnimationComponent>();
+            var animationComponent = SkillContext.Caster.GetComponent<BattleAnimationComponent>();
             // 设置动画状态（从技能配置中读取动画类型）
             animationComponent.SetAnimationState(SkillContext.SkillInfo.f_animationType);
             

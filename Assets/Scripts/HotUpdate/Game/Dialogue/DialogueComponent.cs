@@ -44,7 +44,7 @@ namespace HotUpdate.Game.Dialogue
             EntityObject.GetComponent<MoveComponent>().Enable();
         }
 
-        protected override void OnDestroyBase()
+        protected override void OnBaseDestroy()
         {
             _dialogueComponentCore = null;
         }

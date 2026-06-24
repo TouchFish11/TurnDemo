@@ -16,7 +16,7 @@ namespace HotUpdate.Game.Inputs
     /// <summary>
     /// 输入组件逻辑对象
     /// </summary>
-    public class InputComponentCore : ComponentCore<InputComponent> , IDisposable
+    public class InputComponentCore : ComponentCore<InputComponent>
     {
         [Inject] private IEventCenter _eventCenter;
         [Inject] private IInputSystem _inputSystem;
@@ -207,7 +207,7 @@ namespace HotUpdate.Game.Inputs
             }
         }
 
-        public void Dispose()
+        protected override void OnDispose()
         {
             _monoAdapter.RemoveUpdateListener(OnUpdate);
             

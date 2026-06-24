@@ -1,5 +1,3 @@
-using HotUpdate.Game.Battle.Object;
-
 namespace HotUpdate.Game.Battle.Property
 {
     /// <summary>
@@ -8,12 +6,6 @@ namespace HotUpdate.Game.Battle.Property
     public interface IPropertyComponent
     {
         bool IsDeath { get; }
-
-        /// <summary>
-        /// 初始化属性组件
-        /// </summary>
-        /// <param name="battleEntity"></param>
-        void InitProperty(IBattleEntityObject battleEntity);
         
         void SetPropertyValue(E_DynamicPropertyType dynamicPropertyType, int newValue);
 

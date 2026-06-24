@@ -1,7 +1,7 @@
 using System.Collections;
 using Core.Utility;
 using HotUpdate.Base.Utility;
-using HotUpdate.Game.Battle.Animation;
+using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
 using HotUpdate.Game.VFX;
 using UnityEngine;
@@ -22,7 +22,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Normal
             var skillInfo = SkillContext.SkillInfo;
             
             // 获取动画组件并切换到普攻动画
-            var animationComponent = caster.GetComponent<IBattleAnimationComponent>();
+            var animationComponent = caster.GetComponent<BattleAnimationComponent>();
             animationComponent.SetAnimationState(skillInfo.f_animationType);
             var animator = animationComponent.GetAnimator();
 

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using HotUpdate.Base.Component;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.Object.Role;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Conditions;
 using HotUpdate.Game.Battle.TargetSelect;
@@ -19,14 +20,8 @@ namespace HotUpdate.Game.Battle.Skill.Component
         protected SkillComponentCore skillComponentCore;
         
         public int SkillCount => skillComponentCore.SkillCount;
-        
-        public void InitSkill(IBattleEntityObject battleEntity, string f_skillIds, ISkillFactory skillFactory)
-        {
-            BattleInit(battleEntity);
-            skillComponentCore.InitSkill(f_skillIds, skillFactory);
-        }
 
-        protected override void OnInit()
+        protected override void OnBattleInit()
         {
             skillComponentCore = (SkillComponentCore)ComponentCore;
         }

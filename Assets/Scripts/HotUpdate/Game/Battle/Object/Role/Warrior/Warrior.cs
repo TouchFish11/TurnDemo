@@ -1,7 +1,6 @@
 using Core.DI;
 using HotUpdate.Game.Battle.Object.Role.Warrior.Skill;
 using HotUpdate.Game.Battle.Skill;
-using HotUpdate.Game.Battle.Skill.Base;
 
 namespace HotUpdate.Game.Battle.Object.Role.Warrior
 {
@@ -10,12 +9,9 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior
     /// </summary>
     public class Warrior : PlayerObject
     {
-        protected override void OnBattleInit()
+        protected override ISkillFactory GetSkillFactory()
         {
-            var skillComponent = GetComponent<ISkillComponent>();
-            var core = DIContainer.Create<SkillComponentCore>();
-            core.InitSkill(RoleInfo.f_skillIds, DIContainer.Create<WarriorSkillFactory>());
-            skillComponent.InitSkill(this, TODO, TODO);
+            return DIContainer.Create<WarriorSkillFactory>();
         }
     }
 }

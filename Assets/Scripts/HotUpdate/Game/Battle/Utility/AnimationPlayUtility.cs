@@ -1,9 +1,8 @@
 using System;
 using System.Collections;
-using HotUpdate.Base.Component;
 using HotUpdate.Base.Enums;
 using HotUpdate.Base.Utility;
-using HotUpdate.Game.Battle.Animation;
+using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Battle.Object;
 using UnityEngine;
 
@@ -26,7 +25,7 @@ namespace HotUpdate.Game.Battle.Utility
         /// <returns></returns>
         public static IEnumerator PlayAnimation(IBattleEntityObject battleEntity, int type, string layerName, string animName, Action overCallBack = null, float maxNormalizedTime = 0.9F)
         {
-            var animationComponent = battleEntity.GetComponent<IBattleAnimationComponent>();
+            var animationComponent = battleEntity.GetComponent<BattleAnimationComponent>();
             animationComponent.SetAnimationState(type);
             yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(layerName).IsName(animName));
             yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).normalizedTime >= maxNormalizedTime);
@@ -41,7 +40,7 @@ namespace HotUpdate.Game.Battle.Utility
         /// <param name="type"></param>
         /// <param name="playOver"></param>
         /// <returns></returns>
-        public static IEnumerator WaitForAnimOver(IBattleAnimationComponent battleAnimationComponent, string layerName, int type, Action playOver = null)
+        public static IEnumerator WaitForAnimOver(BattleAnimationComponent battleAnimationComponent, string layerName, int type, Action playOver = null)
         {
             battleAnimationComponent.SetAnimationState(type);
             yield return new WaitUntil(() => battleAnimationComponent.GetCurrentAnimatorStateInfo(layerName).IsName(((E_AnimationType)type).ToString()));

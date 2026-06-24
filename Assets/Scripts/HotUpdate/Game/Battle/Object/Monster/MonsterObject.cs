@@ -23,6 +23,12 @@ namespace HotUpdate.Game.Battle.Object.Monster
         /// </summary>
         public MonsterInfo MonsterInfo { get; private set; }
 
+        public override ISkillFactory SkillFactory { get; protected set; }
+        
+        public override ICastSkillCondition DefaultCastCondition { get; protected set; }
+        
+        public override ITargetSelectStrategy DefaultTargetSelectStrategy { get; protected set; }
+        
         /// <summary>
         /// 战斗初始化方法
         /// 初始化怪物的技能列表和战斗组件，为进入战斗做最终准备
@@ -34,18 +40,11 @@ namespace HotUpdate.Game.Battle.Object.Monster
             MonsterInfo = initData.MonsterInfo;
             // 初始化伤害链
             damageChain = DamageChainBuilder.GetMonsterDamageChain();
+            SkillFactory = GetSkillFactory();
+            DefaultTargetSelectStrategy = GetTargetSelectStrategy();
+            DefaultTargetSelectStrategy = GetTargetSelectStrategy();
             // 根据配置的组件名称列表，为怪物添加对应的战斗组件（如韧性组件、动画组件等）
             AddComponents(TextUtility.Split(MonsterInfo.f_comNames, 2));
-            
-            // 初始化技能组件
-            var skillComponent = GetComponent<ISkillComponent>();
-            skillComponent.InitSkill(this, MonsterInfo.f_skillIds, GetSkillFactory());
-            skillComponent.AddCastCondition(GetSkillCondition());
-            skillComponent.AddTargetSelectStrategy(GetTargetSelectStrategy());
-            
-            // 初始化韧性组件
-            var toughnessComponent = GetComponent<ToughnessComponent>();
-            toughnessComponent.InitToughness(this);
         }
 
         protected abstract ISkillFactory GetSkillFactory();

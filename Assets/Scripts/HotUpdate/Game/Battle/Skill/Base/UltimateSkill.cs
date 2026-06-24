@@ -58,7 +58,7 @@
 //         {
 //             //yield return battleCoordinator.ExecutePreUltimateCast(Caster, SkillInfo);
 //             // 终结技动画Pose
-//             //Caster.GetComponent<IBattleAnimationComponent>().SetUltimatePose();
+//             //Caster.GetComponent<BattleAnimationComponent>().SetUltimatePose();
 //             //InitProjectileAndPoseVfx();
 //         }
 //

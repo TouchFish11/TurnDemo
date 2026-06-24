@@ -1,6 +1,6 @@
 using System.Collections;
 using HotUpdate.Base.Utility;
-using HotUpdate.Game.Battle.Animation;
+using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
 using UnityEngine;
@@ -12,7 +12,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Ultimate
         public override IEnumerator Execute()
         {
             var caster = SkillContext.Caster;
-            var animationComponent = caster.GetComponent<IBattleAnimationComponent>();
+            var animationComponent = caster.GetComponent<BattleAnimationComponent>();
             
             // 等待动画播放到90%（确保特效播放完成）
             yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).normalizedTime >= 0.9f);

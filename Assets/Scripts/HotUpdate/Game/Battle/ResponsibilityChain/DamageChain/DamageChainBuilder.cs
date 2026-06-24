@@ -1,3 +1,4 @@
+using Core.DI;
 using HotUpdate.Base;
 
 namespace HotUpdate.Game.Battle.ResponsibilityChain.DamageChain
@@ -13,10 +14,10 @@ namespace HotUpdate.Game.Battle.ResponsibilityChain.DamageChain
         /// <returns></returns>
         public static Handler<DamageResult> GetRoleDamageChain()
         {
-            var damageJudgeHandler = new DamageJudgeHandler();
-            var shieldDefenseHandler = new ShieldDefenseHandler();
-            var damageHandler = new DamageHandler();
-            var nullDamageHandler = new NullDamageHandler();
+            var damageJudgeHandler = DIContainer.Create<DamageJudgeHandler>();
+            var shieldDefenseHandler = DIContainer.Create<ShieldDefenseHandler>();
+            var damageHandler = DIContainer.Create<DamageHandler>();
+            var nullDamageHandler = DIContainer.Create<NullDamageHandler>();
             
             damageJudgeHandler.SetSuccessor(shieldDefenseHandler);
             shieldDefenseHandler.SetSuccessor(damageHandler);
@@ -31,11 +32,11 @@ namespace HotUpdate.Game.Battle.ResponsibilityChain.DamageChain
         /// <returns></returns>
         public static Handler<DamageResult> GetMonsterDamageChain()
         {
-            var damageJudgeHandler = new DamageJudgeHandler();
-            var shieldDefenseHandler = new ShieldDefenseHandler();
-            var toughnessHandler = new ToughnessHandler();
-            var damageHandler = new DamageHandler();
-            var nullDamageHandler = new NullDamageHandler();
+            var damageJudgeHandler = DIContainer.Create<DamageJudgeHandler>();
+            var shieldDefenseHandler = DIContainer.Create<ShieldDefenseHandler>();
+            var toughnessHandler = DIContainer.Create<ToughnessHandler>();
+            var damageHandler =  DIContainer.Create<DamageHandler>();
+            var nullDamageHandler =  DIContainer.Create<NullDamageHandler>();
             
             damageJudgeHandler.SetSuccessor(shieldDefenseHandler);
             shieldDefenseHandler.SetSuccessor(toughnessHandler);

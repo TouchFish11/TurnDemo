@@ -32,7 +32,7 @@ namespace HotUpdate.Game.Interact
             NpcInfo = _binaryDataManager.GetConfig<NpcInfoContainer>(EConfigLoadType.Excel).dataDic[npcConfigId];
         }
 
-        public override void InitBase(long entityid, ComponentService service)
+        protected override void OnInit()
         {
             _interactTrigger = AddComponent<InteractTrigger>();
             _interactTrigger.Init(this);

@@ -1,4 +1,5 @@
 using HotUpdate.Base.Component;
+using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.Core
@@ -10,15 +11,22 @@ namespace HotUpdate.Game.Battle.Core
     {
         public IBattleEntityObject BattleEntity { get; private set; }
 
-        public void BattleInit(IBattleEntityObject battleEntity)
+        protected IBattleContext Context { get; private set; }
+        
+        protected sealed override void OnInit()
         {
-            BattleEntity = battleEntity;
+            BattleEntity = (IBattleEntityObject)EntityObject;
+            // 从战斗实体中获取战斗上下文
+            Context = BattleEntity.Context;
+            OnBattleInit();
         }
 
-        public void DestroyBattle(IBattleEntityObject battleEntity)
+        /// <summary>
+        /// 战斗初始化逻辑，子类按需实现初始化自身
+        /// </summary>
+        protected virtual void OnBattleInit()
         {
-            OnBattleDestroy();
-            BattleEntity = null;
+            
         }
         
         /// <summary>
@@ -26,9 +34,13 @@ namespace HotUpdate.Game.Battle.Core
         /// </summary>
         protected abstract void OnBattleDestroy();
 
-        protected sealed override void OnDestroyBase()
+        protected sealed override void OnBaseDestroy()
         {
-            
+            // 战斗特有清理
+            OnBattleDestroy();
+            BattleEntity = null;
+            // 通用清理
+            base.OnBaseDestroy();
         }
     }
 }

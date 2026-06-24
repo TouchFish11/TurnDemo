@@ -1,9 +1,9 @@
+using HotUpdate.Base.Animation;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Enums;
-using HotUpdate.Base.Utility;
-using HotUpdate.Game.Battle.Animation;
-using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Object.Role;
+using UnityEngine;
 
 namespace HotUpdate.Game.Animation.Component
 {
@@ -13,36 +13,17 @@ namespace HotUpdate.Game.Animation.Component
     /// 监听技能选择、技能释放等战斗事件，并根据事件触发对应动画
     /// </summary>
     [ComponentId(typeof(BattleAnimationComponent))]
-    public class BattleAnimationComponent : AnimationComponent, IBattleAnimationComponent
+    [ComponentCore(typeof(BattleAnimationComponentCore))]
+    public class BattleAnimationComponent : BattleComponent, IAnimationComponent
     {
-        /// <summary>
-        /// 当前绑定的战斗实体对象（玩家/怪物）
-        /// </summary>
-        public IBattleEntityObject BattleEntity { get; private set; }
-
-        /// <summary>
-        /// 当前播放的动画类型
-        /// </summary>
-        protected override E_AnimationType CurrentAnimationType { get; set; }
+        private BattleAnimationComponentCore _battleAnimationComponentCore;
         
-        public void InitBattleAnimation(IBattleEntityObject battleEntity)
+        protected override void OnBattleInit()
         {
-            // 初始化战斗相关数据
-            BattleInit(battleEntity);
-        }
-
-        /// <summary>
-        /// 战斗相关初始化
-        /// 绑定战斗实体、注册战斗事件监听
-        /// </summary>
-        /// <param name="battleEntity">战斗实体对象</param>
-        public void BattleInit(IBattleEntityObject battleEntity)
-        {
-            BattleEntity = battleEntity;
             // 注册技能选择事件监听
             //battleEntity.Context.GetEventBus().AddListener<SelectSkillEvent>(OnSelectSkillEvent);
             // 初始化默认动画类型：玩家默认预普通攻击动画，其他实体（怪物）默认无动画
-            CurrentAnimationType = battleEntity is IPlayerObject ? E_AnimationType.PreNormalAttack : E_AnimationType.None;
+            _battleAnimationComponentCore.CurrentAnimationType = BattleEntity is IPlayerObject ? E_AnimationType.PreNormalAttack : E_AnimationType.None;
         }
         
         /// <summary>
@@ -50,54 +31,24 @@ namespace HotUpdate.Game.Animation.Component
         /// 根据指定的动画类型触发对应的Animator Trigger参数
         /// </summary>
         /// <param name="type">要切换的动画类型</param>
-        public override void SetAnimationState(int type)
+        public void SetAnimationState(int type)
         {
-            E_AnimationType animationType = (E_AnimationType)type;
-            // 临时逻辑：若当前已在播放预普通攻击动画，且目标动画也是预普通攻击，则不重复触发
-            if (animatorComponent.Animator.GetCurrentAnimatorStateInfo(animatorComponent.Animator.GetLayerIndex(AnimationUtility.Battle_Layer_Name)).IsName("PreNormalAttack") 
-                && animationType == E_AnimationType.PreNormalAttack)
-            {
-                return;
-            }
+            _battleAnimationComponentCore.SetAnimationState(type);
+        }
 
-            // 根据动画类型触发对应的Animator Trigger
-            switch (animationType)
-            {
-                case E_AnimationType.None: // 无动画
-                    break;
-                case E_AnimationType.PreNormalAttack: // 预普通攻击
-                    animatorComponent.Animator.SetTrigger(animationArg.PreNormalAttackTriggerHash);
-                    break;
-                case E_AnimationType.NormalAttack: // 普通攻击
-                    animatorComponent.Animator.SetTrigger(animationArg.NormalAtkTirggerHash);
-                    break;
-                case E_AnimationType.PreBattleAttack: // 预战斗技能攻击
-                    animatorComponent.Animator.SetTrigger(animationArg.PreBattleAttackTriggerHash);
-                    break;
-                case E_AnimationType.BattleAttack: // 战斗技能攻击
-                    animatorComponent.Animator.SetTrigger(animationArg.BattleAtkTriggerHash);
-                    break;
-                case E_AnimationType.PreUltimateAttack: // 预必杀技攻击
-                    animatorComponent.Animator.SetTrigger(animationArg.PreUltimateAttackTriggerHash);
-                    break;
-                case E_AnimationType.UltimateAttack: // 必杀技攻击
-                    animatorComponent.Animator.SetTrigger(animationArg.UltimateAtkTriggerHash);
-                    break;
-                case E_AnimationType.Hit: // 受击
-                    animatorComponent.Animator.SetTrigger(animationArg.HitTriggerHash);
-                    break;
-                case E_AnimationType.Death: // 死亡
-                    animatorComponent.Animator.SetTrigger(animationArg.DeathTriggerHash);
-                    break;
-                case E_AnimationType.Rebirth: // 复活
-                    animatorComponent.Animator.SetTrigger(animationArg.RebirthTriggerHash);
-                    break;
-                case E_AnimationType.Attack: // 通用攻击（怪物默认）
-                    animatorComponent.Animator.SetTrigger(animationArg.AttackTirggerHash);
-                    break;
-            }
-            // 更新当前动画类型
-            CurrentAnimationType = animationType;
+        public Animator GetAnimator()
+        {
+            return _battleAnimationComponentCore.GetAnimator();
+        }
+
+        public AnimationParameter GetParameter()
+        {
+            return _battleAnimationComponentCore.GetParameter();
+        }
+
+        public AnimatorStateInfo GetCurrentAnimatorStateInfo(string layerName)
+        {
+            return _battleAnimationComponentCore.GetCurrentAnimatorStateInfo(layerName);
         }
 
         /// <summary>
@@ -115,7 +66,7 @@ namespace HotUpdate.Game.Animation.Component
         /// </summary>
         public void ResetAnimationType()
         {
-            CurrentAnimationType = BattleEntity is IPlayerObject ? E_AnimationType.PreNormalAttack : E_AnimationType.None;
+            _battleAnimationComponentCore.CurrentAnimationType = BattleEntity is IPlayerObject ? E_AnimationType.PreNormalAttack : E_AnimationType.None;
         }
 
         // /// <summary>
@@ -153,9 +104,9 @@ namespace HotUpdate.Game.Animation.Component
         //     }
         // }
         
-        public void DestroyBattle(IBattleEntityObject battleEntity)
+        protected override void OnBattleDestroy()
         {
-            BattleEntity = null;
+            _battleAnimationComponentCore = null;
         }
     }
 }
