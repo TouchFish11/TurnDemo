@@ -22,7 +22,7 @@ namespace HotUpdate.Base.Object
         public long EntityId { get; private set; }
 
         public GameObject GameObject => gameObject;
-        
+
         private void Awake()
         {
 

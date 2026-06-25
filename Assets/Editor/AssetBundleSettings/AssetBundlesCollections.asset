@@ -662,9 +662,9 @@ MonoBehaviour:
       hash: 3453203f2d6a2bd2d2f5110b0703e259808395fd5ee5b920c8402004947cd585
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Dialogue\DialogueView.prefab
-      size: 71266
+      size: 71264
       name: DialogueView.prefab
-      hash: 5f368d09a5ce240e84e8b58b3fcd9ccd37b8c71458c32685edad1b2686536d26
+      hash: 3ef9adb11fdaa36645db24354615acb363f3eef1570316562d7c96d67c31514a
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Dialogue\StoryReviewSubView.prefab
       size: 29487

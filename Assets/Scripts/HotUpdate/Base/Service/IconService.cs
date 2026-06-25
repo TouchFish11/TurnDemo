@@ -3,15 +3,91 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using UnityEngine;
+using UnityEngine.U2D;
+using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Base.Service
 {
+    /// <summary>
+    /// 图片服务
+    /// </summary>
     public class IconService : IIconService, IDisposable
     {
         // 正在加载图片的任务缓存
         private readonly Dictionary<string, Task<AssetHandle<Sprite>>> _keyToSpriteHandleTaskMap = new();
         // 精灵图片资源句柄缓存，唯一资源key映射句柄列表
         private readonly Dictionary<string, AssetHandle<Sprite>> _keyToSpriteHandleMap = new();
+        // 正在加载图集的任务缓存
+        private readonly Dictionary<string, AssetHandle<SpriteAtlas>> _keyToAtlasHandleMap = new();
+        // 图集资源句柄缓存，唯一资源key映射句柄列表
+        private readonly Dictionary<string, Task<AssetHandle<SpriteAtlas>>> _keyToAtlasHandleTaskMap = new();
+
+        public async Task PreLoadAtlasAsync(params string[] atlasNames)
+        {
+            var tasks = new List<Task<SpriteAtlas>>();
+            foreach (var atlasName in atlasNames)
+            {
+                tasks.Add(LoadAtlasAsync(atlasName));
+            }
+            
+            await Task.WhenAll(tasks);
+        }
+        
+        public async Task<SpriteAtlas> LoadAtlasAsync(string atlasKey)
+        {
+            // 存在缓存，直接返回
+            if (_keyToAtlasHandleMap.TryGetValue(atlasKey, out var cacheHandle))
+            {
+                return cacheHandle.Asset;
+            }
+            
+            // 正在加载，返回同一个加载任务
+            if (_keyToAtlasHandleTaskMap.TryGetValue(atlasKey, out var cacheTask))
+            {
+                var handle = await cacheTask;
+                return handle.Asset;
+            }
+            
+            // 首次加载资源
+            var newTask = GameAsset.LoadAssetAsync<SpriteAtlas>(atlasKey);
+            // 缓存正在加载的资源任务
+            if (!_keyToAtlasHandleTaskMap.TryAdd(atlasKey, newTask))
+            {
+                newTask = _keyToAtlasHandleTaskMap[atlasKey];
+            }
+
+            try
+            {
+                var newHandle = await newTask;
+                // 缓存句柄
+                _keyToAtlasHandleMap.Add(atlasKey, newHandle);
+                return newHandle.Asset;
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"[{nameof(IconService)}]: '{atlasKey}' asset load fail, {e.Message}");
+                return null;
+            }
+            finally
+            {
+                // 移除正在加载的任务
+                _keyToSpriteHandleTaskMap.Remove(atlasKey);
+            }
+        }
+        
+        public async Task PreLoadSpriteAsync(params string[] spriteNames)
+        {
+            if(spriteNames == null)
+                throw new ArgumentNullException(nameof(spriteNames));
+            
+            var tasks = new List<Task<Sprite>>();
+            foreach (var spriteName in spriteNames)
+            {
+                tasks.Add(LoadIconAsync(spriteName));
+            }
+            
+            await Task.WhenAll(tasks);
+        }
         
         public async Task<Sprite> LoadIconAsync(string iconKey)
         {
@@ -45,7 +121,7 @@ namespace HotUpdate.Base.Service
             }
             catch (Exception e)
             {
-                Core.Log.Logger.LogError($"[{nameof(IconService)}]: '{iconKey}' asset load fail, {e.Message}");
+                Logger.LogError($"[{nameof(IconService)}]: '{iconKey}' asset load fail, {e.Message}");
                 return null;
             }
             finally

@@ -23,6 +23,7 @@ namespace HotUpdate.Game.Scene
         [Inject] private IPoolManager _poolManager;
         [Inject] private ObjectSpawner _objectSpawner;
         [Inject] private ISceneManager _sceneManager;
+        [Inject] private NpcFactory _npcFactory;
         
         public async Task InitSceneAsync(string sceneId, LoadSceneMode mode, Action<float> onLoadProgress, object sceneConfig = null)
         {
@@ -40,17 +41,10 @@ namespace HotUpdate.Game.Scene
         public async Task InitMainScene(int sceneId)
         {
             await _sceneManager.LoadSceneAsync(AssetKeys.MainScene, LoadSceneMode.Single, null);
-            
             // 创建村民NPC对象
-            var villager = await _objectSpawner.SpawnAsync<NpcObject>(AssetKeys.Prefab_Npc);
-            villager.Transform.SetPositionAndRotation(new Vector3(0, 1, 8.39f), Quaternion.identity);
-            // 初始化NPC基础属性（参数为NPC配置ID，对应配置表）
-            villager.InitNpc(1);
-
+            await _npcFactory.CreateNpc(1, new Vector3(0, 1, 8.39f), Quaternion.identity);
             // 创建流浪汉NPC对象
-            var Vagrant = await _objectSpawner.SpawnAsync<NpcObject>(AssetKeys.Prefab_Npc);
-            Vagrant.Transform.SetPositionAndRotation(new Vector3(6.94f, 1, 8.39f), Quaternion.identity);
-            Vagrant.InitNpc(2);
+            await _npcFactory.CreateNpc(2, new Vector3(6.94f, 1, 8.39f), Quaternion.identity);
         }
         
         /// <summary>

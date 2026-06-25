@@ -16,16 +16,13 @@ namespace HotUpdate.Game.Dialogue
     public class DialogueComponent : BaseComponent, IDialable
     {
         private DialogueComponentCore _dialogueComponentCore;
-        
-        /// <summary>
-        /// 对话组件初始化
-        /// </summary>
-        /// <param name="dialogueComponentCore"></param>
-        public void InitDialogue(DialogueComponentCore dialogueComponentCore)
-        {
-            _dialogueComponentCore = dialogueComponentCore;
-        }
 
+        protected override void OnInit()
+        {
+            base.OnInit();
+            _dialogueComponentCore = (DialogueComponentCore)ComponentCore;
+        }
+        
         void IDialable.OnDialogueStart()
         {
             // 只允许交互输入

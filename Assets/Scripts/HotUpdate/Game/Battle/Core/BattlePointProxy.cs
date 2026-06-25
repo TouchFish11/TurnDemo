@@ -14,6 +14,8 @@ namespace HotUpdate.Game.Battle.Core
     /// </summary>
     public class BattlePointProxy : IDisposable
     {
+        // 场景战斗点对象
+        private BattlePoint _battlePoint;
         // 怪物中心点x值
         private readonly float[] monstetCenterXs = { 6f, 4f, 2f, 0f };
         // 点信息列表
@@ -22,11 +24,17 @@ namespace HotUpdate.Game.Battle.Core
         private IBattleContext context;
         // 当前怪物数量
         private int currentMonsterCount;
-        
+
         /// <summary>
         /// 场景上的战斗点
         /// </summary>
-        public BattlePoint BattlePoint { get; } = UnityEngine.Object.FindFirstObjectByType<BattlePoint>();
+        public BattlePoint BattlePoint
+        {
+            get
+            {
+                return _battlePoint ??= UnityEngine.Object.FindFirstObjectByType<BattlePoint>();
+            }
+        }
 
         /// <summary>
         /// 初始化战斗点对象

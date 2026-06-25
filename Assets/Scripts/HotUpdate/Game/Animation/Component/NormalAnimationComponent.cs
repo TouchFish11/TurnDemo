@@ -20,11 +20,13 @@ namespace HotUpdate.Game.Animation.Component
         
         protected override void OnInit()
         {
+            _normalAnimationComponentCore = (NormalAnimationComponentCore)ComponentCore;
+            var animatorComponent = _normalAnimationComponentCore.AnimatorComponent;
+            
             // 注册输入组件的事件监听：移动输入变化、鼠标左键点击（普通攻击）
             EntityObject.GetComponent<InputComponent>().AddKeyInputChangedListener(OnMove);
             EntityObject.GetComponent<InputComponent>().AddMouseLeftClickListener(OnAttack);
             
-            var animatorComponent = _normalAnimationComponentCore.AnimatorComponent;
             // 初始化时将战斗层、技能层动画权重设为0，优先使用基础动画层
             animatorComponent.Animator.SetLayerWeight(animatorComponent.Animator.GetLayerIndex(AnimationUtility.Battle_Layer_Name), 0);
             animatorComponent.Animator.SetLayerWeight(animatorComponent.Animator.GetLayerIndex(AnimationUtility.Skill_Layer_Name), 0);

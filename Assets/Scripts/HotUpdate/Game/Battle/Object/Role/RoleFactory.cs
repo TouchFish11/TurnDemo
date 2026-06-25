@@ -13,11 +13,6 @@ namespace HotUpdate.Game.Battle.Object.Role
     {
         [Inject] private ObjectSpawner _obectSpawner;
         
-        public void InitFactory()
-        {
-
-        }
-        
         public async Task<IPlayerObject> CreateRole(int roleId, Transform parent, bool stay = false)
         {
             IPlayerObject playerObject = roleId switch
@@ -28,7 +23,8 @@ namespace HotUpdate.Game.Battle.Object.Role
                 _ => null
             };
 
-            return EntityHelper.InitEntity(playerObject);
+            EntityHelper.InitEntity(playerObject);
+            return playerObject;
         }
     }
 }

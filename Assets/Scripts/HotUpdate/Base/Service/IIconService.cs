@@ -1,10 +1,32 @@
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.U2D;
 
 namespace HotUpdate.Base.Service
 {
     public interface IIconService
     {
+        /// <summary>
+        /// 图集预加载
+        /// </summary>
+        /// <param name="atlasNames"></param>
+        /// <returns></returns>
+        Task PreLoadAtlasAsync(params string[] atlasNames);
+        
+        /// <summary>
+        /// 异步加载图集
+        /// </summary>
+        /// <param name="atlasName"></param>
+        /// <returns></returns>
+        Task<SpriteAtlas> LoadAtlasAsync(string atlasName);
+        
+        /// <summary>
+        /// 图片预加载
+        /// </summary>
+        /// <param name="spriteNames"></param>
+        /// <returns></returns>
+        Task PreLoadSpriteAsync(params string[] spriteNames);
+        
         /// <summary>
         /// 异步加载图片
         /// </summary>

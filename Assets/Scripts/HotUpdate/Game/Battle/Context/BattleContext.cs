@@ -47,9 +47,13 @@ namespace HotUpdate.Game.Battle.Context
         public BattleContext(BattleEventBus eventBus)
         {
             _eventBus = eventBus;
-            _battleMachine = DIContainer.Create<BattleStateMachine>(parameterValues: this);
             // 更新起始战技点
             CurentBattlePointCount = 3;
+        }
+
+        public void InitStateMachine()
+        {
+            _battleMachine = DIContainer.Create<BattleStateMachine>(parameterValues: this);
         }
         
         public void AddSceneMonster(IBattleEntityObject battleEntity)

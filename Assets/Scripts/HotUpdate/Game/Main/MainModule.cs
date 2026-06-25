@@ -5,8 +5,18 @@ using HotUpdate.Base.Manager;
 using HotUpdate.Base.Module;
 using HotUpdate.Base.Scene;
 using HotUpdate.Base.Service;
-using HotUpdate.Game.Core;
+using HotUpdate.Game.Activity.Core;
+using HotUpdate.Game.Battle.Object.Monster;
+using HotUpdate.Game.Battle.Object.Role;
+using HotUpdate.Game.Battle.Skill;
+using HotUpdate.Game.Battle.Skill.Conditions;
+using HotUpdate.Game.Battle.Skill.Factory;
+using HotUpdate.Game.Battle.Status;
+using HotUpdate.Game.Battle.TargetSelect;
+using HotUpdate.Game.Battle.Toughness;
+using HotUpdate.Game.Battle.UI;
 using HotUpdate.Game.Inputs;
+using HotUpdate.Game.Interact;
 using HotUpdate.Game.Main.FloatingText;
 using HotUpdate.Game.Main.Player;
 using HotUpdate.Game.Quests;
@@ -35,8 +45,6 @@ namespace HotUpdate.Game.Main
             DIContainer.BindSingleton<IGameDataManager, GameDataManager>();
             // 注册场景生成器
             DIContainer.BindSingleton<ISceneGenerator, SceneGenerator>();
-            // 注册工厂管理器
-            DIContainer.BindSingleton<IFactoryManager, FactoryManager>();
             // 注册鼠标管理器
             DIContainer.BindSingleton<IMouseManager, MouseManager>();
             // 注册鼠标管理器
@@ -47,7 +55,22 @@ namespace HotUpdate.Game.Main
 
         public Task InitModuleAsync()
         {
+            BindFactorys();
             return Task.CompletedTask;
+        }
+
+        private static void BindFactorys()
+        {
+            DIContainer.BindSingleton<IActivityDataFactory, ActivityDataFactory>();
+            DIContainer.BindSingleton<ICastSkillConditionFactory, CastSkillConditionFactory>();
+            DIContainer.BindSingleton<ISkillCastPostHandlerFactory, SkillCastPostHandlerFactory>();
+            DIContainer.BindSingleton<ISkillKeyUIDataProviderFactory, SkillKeyUIDataProviderFactory>();
+            DIContainer.BindSingleton<IStatusFactory, StatusFactory>();
+            DIContainer.BindSingleton<ITargetSelectStrategyFactory, TargetSelectStrategyFactory>();
+            DIContainer.BindSingleton<IToughnessStrategyFactory, ToughnessStrategyFactory>();
+            DIContainer.BindSingleton<IRoleFactory, RoleFactory>();
+            DIContainer.BindSingleton<IMonsterFactory, MonsterFactory>();
+            DIContainer.BindSingleton<INpcFactory, NpcFactory>();
         }
     }
 }

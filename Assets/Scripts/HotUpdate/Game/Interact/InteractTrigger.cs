@@ -9,33 +9,23 @@ namespace HotUpdate.Game.Interact
     /// </summary>
     [ComponentId(typeof(InteractTrigger))]
     [RequireComponent(typeof(Collider))]
-    public class InteractTrigger : MonoBehaviour, IComponent
+    public class InteractTrigger : BaseComponent
     {
-        private IInteractable interactable;
+        private IInteractable _interactable;
         private BoxCollider _collider;
         
-        public IEntityObject EntityObject { get; private set; }
-        
-        private void Awake()
-        {
-            _collider = GetComponent<BoxCollider>();
-            _collider.isTrigger = true;
-            _collider.center = new Vector3(0, -0.5f, 0);
-            _collider.size = new Vector3(4, 4, 4);
-        }
-        
-        void IComponent.Init(IEntityObject entityObject, IComponentCore<IComponent> componentCore)
-        {
-            EntityObject = entityObject;
-        }
-
         /// <summary>
         /// 初始化
         /// </summary>
         /// <param name="interactable"></param>
         public void Init(IInteractable interactable)
         {
-            this.interactable = interactable;
+            _collider = GetComponent<BoxCollider>();
+            _collider.isTrigger = true;
+            _collider.center = new Vector3(0, -0.5f, 0);
+            _collider.size = new Vector3(4, 4, 4);
+            
+            _interactable = interactable;
         }
         
         private void OnTriggerEnter(Collider other)
@@ -43,7 +33,7 @@ namespace HotUpdate.Game.Interact
             var interactComponent = other.GetComponent<IEntityObject>().GetComponent<InteractComponent>();
             if (interactComponent)
             {
-                interactComponent.AddInteract(interactable);
+                interactComponent.AddInteract(_interactable);
             }
         }
 
@@ -52,15 +42,15 @@ namespace HotUpdate.Game.Interact
             var interactComponent = other.GetComponent<IEntityObject>().GetComponent<InteractComponent>();
             if (interactComponent)
             {
-                interactComponent.RemoveInteract(interactable);
+                interactComponent.RemoveInteract(_interactable);
             }
         }
-        
-        public void Destroy()
+
+        protected override void OnBaseDestroy()
         {
-            interactable = null;
-            EntityObject = null;
+            _interactable = null;
             _collider =  null;
+            base.OnBaseDestroy();
         }
     }
 }

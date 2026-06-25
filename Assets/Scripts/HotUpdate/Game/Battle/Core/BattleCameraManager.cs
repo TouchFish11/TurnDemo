@@ -19,10 +19,8 @@ namespace HotUpdate.Game.Battle.Core
     {
         [Inject] private IBinaryDataManager _binaryDataManager;
         [Inject] private ObjectSpawner _objectSpawner;
-        [Inject] private IMonoAdapter _monoAdapter;
-        [Inject] private IBattleManager _battleManager;
         
-        private readonly BattleCoordinator _battleCoordinator;
+        private readonly IMonoAdapter _monoAdapter;
         private readonly IBattleInputHandler _battleInputHandler;
         // X轴旋转角度限制
         private const float minXAngle = -3f;
@@ -46,15 +44,17 @@ namespace HotUpdate.Game.Battle.Core
         
         public Camera CurrentActiveCamera { get; private set; }
         
-        public BattleCameraManager(BattleCoordinator battleCoordinator, IBattleInputHandler battleInputHandler)
+        public BattleCameraManager(IBattleInputHandler battleInputHandler, 
+            IMonoAdapter monoAdapter, IBattleManager battleManager)
         {
-            _battleCoordinator = battleCoordinator;
-            _battleInputHandler = battleInputHandler;
             battleInputHandler.OnDrag += OnDrag;
             battleInputHandler.OnRebound += OnRebound;
             
-            _monoAdapter.AddUpdateListener(OnUpdate);
-            _battleManager.GetContext().GetEventBus().AddListener<BattleOverEvent>(OnBattleOverEvent);
+            monoAdapter.AddUpdateListener(OnUpdate);
+            battleManager.GetContext().GetEventBus().AddListener<BattleOverEvent>(OnBattleOverEvent);
+            
+            _battleInputHandler = battleInputHandler;
+            _monoAdapter = monoAdapter;
         }
 
         public async Task<Camera> CreateCamera(Transform cameraTrans, Vector3 localPos, Quaternion localRot)

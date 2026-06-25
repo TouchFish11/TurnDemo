@@ -1,8 +1,6 @@
-using Core.DI;
 using Core.HotUpdate;
 using Core.Log;
 using HotUpdate.Base.Factory;
-using HotUpdate.Base.Utility;
 using HotUpdate.Game.Battle.Skill.Conditions;
 
 namespace HotUpdate.Game.Battle.Skill.Factory
@@ -12,9 +10,9 @@ namespace HotUpdate.Game.Battle.Skill.Factory
     /// </summary>
     public class CastSkillConditionFactory : Factory<ICastSkillCondition>, ICastSkillConditionFactory
     {
-        void IFactory.InitFactory()
+        private CastSkillConditionFactory(IHotUpdateManager hotUpdateManager) : base(hotUpdateManager)
         {
-            FactoryUtility.ScanAllType(typeToInterfaceMap, DIContainer.GetInstance<IHotUpdateManager>().GetAssemblies());
+           
         }
         
         public ICastSkillCondition GetCastSkillCondition<TCondition>()where TCondition : class, ICastSkillCondition

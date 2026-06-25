@@ -5,7 +5,6 @@ using Core.Mono;
 using Core.Pool;
 using Core.UI;
 using Core.Utility;
-using HotUpdate.Base;
 using HotUpdate.Base.Manager;
 
 using HotUpdate.Game.Battle.Core;

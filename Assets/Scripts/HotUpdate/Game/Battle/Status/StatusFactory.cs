@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using Core.DI;
 using Core.HotUpdate;
-using HotUpdate.Base;
-using HotUpdate.Base.Factory;
 using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.Status
@@ -21,16 +19,12 @@ namespace HotUpdate.Game.Battle.Status
         /// Value：对应状态ID的具体状态类Type
         /// </summary>
         private readonly Dictionary<int, Type> idToTypeMap = new();
-        
-        /// <summary>
-        /// 工厂初始化方法（实现IFactory接口）
-        /// 初始化时扫描所有热更新程序集中的状态类，构建状态ID与状态类的映射关系
-        /// </summary>
-        void IFactory.InitFactory()
+
+        private StatusFactory()
         {
             ScanAllStatu(idToTypeMap);
         }
-
+        
         /// <summary>
         /// 根据状态ID创建对应的状态实例
         /// 内部会初始化

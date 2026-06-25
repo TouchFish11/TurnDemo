@@ -5,13 +5,11 @@ using Core.DI;
 using Core.Serialize.Json;
 using Core.UI;
 using Core.Utility;
-using Game.Module;
 using HotUpdate.Base;
 using HotUpdate.Base.Module;
 using HotUpdate.Base.Settings;
 using HotUpdate.Base.UI;
 using HotUpdate.Common.Config.Settings;
-using HotUpdate.UI;
 using HotUpdate.UI.Begin;
 using UnityEngine;
 using Logger = Core.Log.Logger;
@@ -58,6 +56,7 @@ namespace HotUpdate.Entry
         {
             try
             {
+                await _moduleService.InitModulesAsync();
                 // 初始化游戏设置
                 await InitSettings();
                 // 初始化UI管理器，创建画布和UI相机

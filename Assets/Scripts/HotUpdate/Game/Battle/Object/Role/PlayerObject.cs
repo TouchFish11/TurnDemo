@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Core.DI;
 using Core.Utility;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Event.Turn;
@@ -82,16 +83,16 @@ namespace HotUpdate.Game.Battle.Object.Role
             switch (phase)
             {
                 case EActPhase.SettlementBuff:
-                    _turnStates.TryAdd(EActPhase.SettlementBuff, new SettlementBuffState(this));
+                    _turnStates.TryAdd(EActPhase.SettlementBuff, DIContainer.Create<SettlementBuffState>(parameterValues: this));
                     break;
                 case EActPhase.TurnStart:
-                    _turnStates.TryAdd(EActPhase.TurnStart, new TurnStartState(this));
+                    _turnStates.TryAdd(EActPhase.TurnStart, DIContainer.Create<TurnStartState>(parameterValues: this));
                     break;
                 case EActPhase.Operator:
-                    _turnStates.TryAdd(EActPhase.Operator, new OperatorState(this));
+                    _turnStates.TryAdd(EActPhase.Operator, DIContainer.Create<OperatorState>(parameterValues: this));
                     break;
                 case EActPhase.TurnEnd:
-                    _turnStates.TryAdd(EActPhase.TurnEnd, new TurnEndState(this));
+                    _turnStates.TryAdd(EActPhase.TurnEnd, DIContainer.Create<TurnEndState>(parameterValues: this));
                     break;
                 case EActPhase.None:
                 default:

@@ -1,8 +1,6 @@
-using Core.DI;
 using Core.HotUpdate;
 using Core.Log;
 using HotUpdate.Base.Factory;
-using HotUpdate.Base.Utility;
 
 namespace HotUpdate.Game.Battle.TargetSelect
 {
@@ -11,9 +9,9 @@ namespace HotUpdate.Game.Battle.TargetSelect
     /// </summary>
     public class TargetSelectStrategyFactory : Factory<ITargetSelectStrategy>, ITargetSelectStrategyFactory
     {
-        void IFactory.InitFactory()
+        public TargetSelectStrategyFactory(IHotUpdateManager hotUpdateManager) : base(hotUpdateManager)
         {
-            FactoryUtility.ScanAllType(typeToInterfaceMap, DIContainer.GetInstance<IHotUpdateManager>().GetAssemblies());
+            
         }
         
         public ITargetSelectStrategy GetTargetSelectStrategy<TStrategy>()where TStrategy : class, ITargetSelectStrategy

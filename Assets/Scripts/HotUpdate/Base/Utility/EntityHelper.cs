@@ -20,10 +20,9 @@ namespace HotUpdate.Base.Utility
         /// <param name="entityObject"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static T InitEntity<T>(T entityObject) where T : IEntityObject
+        public static void InitEntity<T>(T entityObject) where T : IEntityObject
         {
             entityObject.InitBase(s_idCounter++, s_service);
-            return entityObject;
         }
     }
 }

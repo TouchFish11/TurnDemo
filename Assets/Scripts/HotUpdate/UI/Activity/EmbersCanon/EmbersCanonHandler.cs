@@ -8,6 +8,7 @@ using Core.Serialize.Json;
 using Core.Utility;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Scene;
+using HotUpdate.Base.Service;
 using HotUpdate.Base.UI;
 using HotUpdate.Common.Config.Activity;
 using HotUpdate.Game.Activity.Core;
@@ -27,6 +28,7 @@ namespace HotUpdate.UI.Activity.EmbersCanon
         [Inject] private IJsonManager _jsonManager;
         [Inject] private IActivityDataManager _activityDataManager;
         [Inject] private ObjectSpawner _objectSpawner;
+        [Inject] private IIconService _iconService;
         
         /// <summary>
         /// 初始化关卡
@@ -118,15 +120,15 @@ namespace HotUpdate.UI.Activity.EmbersCanon
                 new(AssetKeys.ActionGridUI),
                 new(AssetKeys.WaitingActUI),
                 new(AssetKeys.SkillKeyUI),
-                
-                // SpriteAtlas
-                new(AssetKeys.Atlas_Icon_BattleEntity),
-                new(AssetKeys.Atlas_Icon_Common),
-                new(AssetKeys.Atlas_Default),
             };
             
             await _objectSpawner.PreLoadAsync(preLoadDatas);
+            
+            // 图集预加载
+            await _iconService.PreLoadAtlasAsync(
+                AssetKeys.Atlas_Icon_BattleEntity,
+                AssetKeys.Atlas_Icon_Common,
+                AssetKeys.Atlas_Default);
         }
-
     }
 }

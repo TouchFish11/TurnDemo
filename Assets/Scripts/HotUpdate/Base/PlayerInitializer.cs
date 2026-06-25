@@ -18,10 +18,12 @@ namespace HotUpdate.Base
     {
         [Inject] private IInputSystem _inputSystem;
         [Inject] private IGameDataManager _gameDataManager;
-        [Inject] private IFactoryManager _factoryManager;
         [Inject] private ISceneGenerator _sceneGenerator;
         [Inject] private IPlayerManager _playerManager;
 
+        /// <summary>
+        /// 初始化玩家相关状态和数据
+        /// </summary>
         public async Task InitPlayerAsync()
         {
             // 初始化输入系统
@@ -29,9 +31,6 @@ namespace HotUpdate.Base
             {
                 _inputSystem.InitInputSystem(handle.Asset.text);
             }
-            
-            // 绑定所有游戏工厂单例
-            _factoryManager.BindFactory();
             
             // 初始化游戏数据
             // TODO：先加载配置

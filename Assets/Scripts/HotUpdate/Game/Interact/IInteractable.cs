@@ -1,5 +1,4 @@
 using HotUpdate.Base.Object;
-using HotUpdate.Common.Config.ExcelInfo.Info;
 
 namespace HotUpdate.Game.Interact
 {
@@ -9,18 +8,15 @@ namespace HotUpdate.Game.Interact
     public interface IInteractable
     {
         /// <summary>
-        /// Npc信息
+        /// 设置交互策略逻辑
         /// </summary>
-        public NpcInfo NpcInfo { get; }
-
+        /// <param name="strategy"></param>
+        public void SetInteractStrategy(IInteractStrategy strategy);
+        
         /// <summary>
-        /// 是否显示浮动文本
+        /// 执行交互逻辑
         /// </summary>
-        public bool IsShowFloatingText { get; }
-
-        /// <summary>
-        /// 交互
-        /// </summary>
+        /// <param name="entityObject"></param>
         void Interact(IEntityObject entityObject);
     }
 }

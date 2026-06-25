@@ -20,6 +20,7 @@ namespace HotUpdate.Game.Animation.Component
         
         protected override void OnBattleInit()
         {
+            _battleAnimationComponentCore = (BattleAnimationComponentCore)ComponentCore;
             // 注册技能选择事件监听
             //battleEntity.Context.GetEventBus().AddListener<SelectSkillEvent>(OnSelectSkillEvent);
             // 初始化默认动画类型：玩家默认预普通攻击动画，其他实体（怪物）默认无动画

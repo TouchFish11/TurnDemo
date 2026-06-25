@@ -27,8 +27,9 @@ namespace HotUpdate.Game.Battle.Object.Monster
                 4 => (await _objectSpawner.SpawnAsync<AbyssalMage.AbyssalMage>(AssetKeys.Prefab_AbyssalMage, parent, worldSpace:stay)),
                 _ => null
             };
-
-            return EntityHelper.InitEntity(monsterObject);
+            
+            EntityHelper.InitEntity(monsterObject);
+            return monsterObject;
         }
     }
 }

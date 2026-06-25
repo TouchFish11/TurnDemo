@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using HotUpdate.Base;
 using HotUpdate.Game.Battle.Event;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.StateMeachine;
-using HotUpdate.Game.Point;
 
 namespace HotUpdate.Game.Battle.Context
 {
@@ -59,13 +57,7 @@ namespace HotUpdate.Game.Battle.Context
         /// </summary>
         /// <returns>战斗事件总线实例</returns>
         IBattleEventBus GetEventBus();
-
-        /// <summary>
-        /// 获取战斗点代理
-        /// </summary>
-        /// <returns></returns>
-        //IBattlePointProxy GetProxy();
-
+        
         /// <summary>
         /// 消耗战斗点数（技能点/行动点）
         /// </summary>
@@ -202,5 +194,10 @@ namespace HotUpdate.Game.Battle.Context
         /// </summary>
         /// <param name="battleEntity"></param>
         void RemoveSceneRole(IBattleEntityObject battleEntity);
+
+        /// <summary>
+        /// 初始化战斗状态机
+        /// </summary>
+        void InitStateMachine();
     }
 }

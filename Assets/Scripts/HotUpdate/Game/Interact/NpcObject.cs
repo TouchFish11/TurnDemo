@@ -1,56 +1,49 @@
-using Core.DI;
-using Core.Serialize.Binary;
-using HotUpdate.Base.Component;
-using HotUpdate.Base.Manager;
 using HotUpdate.Base.Object;
-using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Common.Config.ExcelInfo.Info;
-using HotUpdate.Game.Main.FloatingText;
-using UnityEngine;
 
 namespace HotUpdate.Game.Interact
 {
     /// <summary>
     /// NPC对象
     /// </summary>
-    public class NpcObject : EntityObject, IInteractable, INpcObject
+    public class NpcObject : EntityObject, IInteractable
     {
-        [Inject] private IDialogueManager _dialogueManager;
-        [Inject] private IBinaryDataManager _binaryDataManager;
-        [Inject] private IFloatingTextManager _floatingTextManager;
+        // 对象交互策略
+        private IInteractStrategy _interactStrategy;
         
-        private InteractTrigger _interactTrigger;
-        
-        public Transform Transform => gameObject.transform;
-
+        /// <summary>
+        /// 是否显示对象头顶浮动文本
+        /// </summary>
         public bool IsShowFloatingText { get; set; }
 
+        /// <summary>
+        /// NPC对象信息
+        /// </summary>
         public NpcInfo NpcInfo { get; private set; }
-        
-        public void InitNpc(int npcConfigId)
-        {
-            NpcInfo = _binaryDataManager.GetConfig<NpcInfoContainer>(EConfigLoadType.Excel).dataDic[npcConfigId];
-        }
 
+        /// <summary>
+        /// NPC专用初始化
+        /// </summary>
+        /// <param name="npcInfo"></param>
+        public void InitNpc(NpcInfo npcInfo)
+        {
+            NpcInfo = npcInfo;
+        }
+        
         protected override void OnInit()
         {
-            _interactTrigger = AddComponent<InteractTrigger>();
-            _interactTrigger.Init(this);
-            _floatingTextManager.AddNpc(this);
+            var interactTrigger = AddComponent<InteractTrigger>();
+            interactTrigger.Init(this);
+        }
+
+        public void SetInteractStrategy(IInteractStrategy strategy)
+        {
+            _interactStrategy = strategy;
         }
 
         public void Interact(IEntityObject entityObject)
         {
-            // ��ʾ�Ի�����
-            if (!_dialogueManager.IsDialogueActive)
-            {
-                _dialogueManager.StartDialogue(NpcInfo.f_dialogueId);
-            }
-            else
-            {
-                // ���жԻ�ʱ�ƽ��ı�
-                _dialogueManager.NextDialogue();
-            }
+            _interactStrategy?.Interact(this);
         }
     }
 }

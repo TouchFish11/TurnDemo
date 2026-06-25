@@ -7,10 +7,10 @@ namespace HotUpdate.Game.Main.FloatingText
     {
         void ClearCache();
 
-        void AddNpc(INpcObject npcObject);
+        void AddNpc(NpcObject npcObject);
         
         void SetPlayer(Transform player);
         
-        void RemoveNpc(INpcObject npcObject);
+        void RemoveNpc(NpcObject npcObject);
     }
 }

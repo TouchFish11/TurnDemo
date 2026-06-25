@@ -63,6 +63,7 @@ namespace HotUpdate.Game.Battle.Core
             await _uiService.CloseAsync(_uiService.GetPanel(EUIPanelId.MainPanel).PanelId, false);
             // 创建战斗上下文，依赖战斗点代理
             _context = DIContainer.Create<BattleContext>();
+            _context.InitStateMachine();
             // 监听战斗退出事件
             _context.GetEventBus().AddListener<QuitBattleEvent>(OnQuitBattleEvent);
             _battleService ??= DIContainer.Create<BattleService>(parameterValues: new object[] { this, _context });

@@ -5,9 +5,6 @@ namespace HotUpdate.Base.Factory
     /// </summary>
     public interface IFactory
     {
-        /// <summary>
-        /// 初始化工厂
-        /// </summary>
-        void InitFactory();
+
     }
 }

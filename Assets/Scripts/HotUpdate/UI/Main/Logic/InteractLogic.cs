@@ -53,7 +53,7 @@ namespace HotUpdate.UI.Main.Logic
                     // 从UI资源包中异步加载交互UI预制体并实例化
                     var interactUI = await _objectSpawner.SpawnAsync<InteractUI>(AssetKeys.InteractUI, mainView.InteractContent);
                     // 初始化交互UI的显示数据（设置发言者/交互对象名称）
-                    interactUI.Init(interactable.NpcInfo.f_speakerName);
+                    interactUI.Init(((NpcObject)interactable).NpcInfo.f_speakerName);
                     list.Add(interactUI);
                 }
                 // 将创建好的交互UI列表存入主数据模型，供全局业务逻辑调用

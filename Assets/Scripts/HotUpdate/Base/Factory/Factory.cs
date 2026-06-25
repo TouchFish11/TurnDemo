@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Core.DI;
 using Core.HotUpdate;
-using Core.Log;
 using HotUpdate.Base.Utility;
 
 namespace HotUpdate.Base.Factory
@@ -13,13 +11,12 @@ namespace HotUpdate.Base.Factory
     /// <typeparam name="TIValue">接口类型</typeparam>
     public abstract class Factory<TIValue> : IFactory where TIValue : class
     {
-        [Inject] private IHotUpdateManager _hotUpdateManager;
         // 具体类型到接口的映射
         protected readonly Dictionary<Type, TIValue> typeToInterfaceMap = new();
 
-        public virtual void InitFactory()
+        protected Factory(IHotUpdateManager hotUpdateManager)
         {
-            FactoryUtility.ScanAllType(typeToInterfaceMap, _hotUpdateManager.GetAssemblies());
+            FactoryUtility.ScanAllType(typeToInterfaceMap, hotUpdateManager.GetHotAssemblies());
         }
     }
 }

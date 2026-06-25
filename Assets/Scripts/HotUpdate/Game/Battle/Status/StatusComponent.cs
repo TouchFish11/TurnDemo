@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using HotUpdate.Base.Component;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.UI;
-using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Status.Data;
 using HotUpdate.Game.Battle.Status.Enum;
 

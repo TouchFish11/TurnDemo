@@ -66,7 +66,7 @@ namespace HotUpdate.Game.Main.Player
             // 给战士预制体添加战士逻辑组件，并关联到主玩家
             warriorObj.AddComponent<Warrior>();
             // 初始化主玩家基础数据
-            main = EntityHelper.InitEntity(main);
+            EntityHelper.InitEntity(main);
             // 初始化玩家相机
             await CreateMainCamera();
             // 设置跟随对象

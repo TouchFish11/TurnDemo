@@ -62,10 +62,5 @@ namespace HotUpdate.Base.Module
         {
             await _modules.GetValueOrDefault(moduleType).InitModuleAsync();
         }
-
-        public TInterface GetModule<TInterface>() where TInterface : IModule
-        {
-            return (TInterface)_modules.GetValueOrDefault(typeof(TInterface));
-        }
     }
 }

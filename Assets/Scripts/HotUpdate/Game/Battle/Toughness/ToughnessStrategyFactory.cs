@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Core.DI;
 using Core.HotUpdate;
 using Core.Log;
-using HotUpdate.Base.Factory;
 
 namespace HotUpdate.Game.Battle.Toughness
 {
@@ -16,14 +14,10 @@ namespace HotUpdate.Game.Battle.Toughness
     {
         // 缓存容器：键为韧性策略类型，值为对应的策略类型与实例的集合
         private static readonly Dictionary<E_ToughnessStrategyType, List<(Type, object)>> typeToToughnessMap = new();
-        
-        /// <summary>
-        /// 初始化工厂
-        /// 触发扫描所有韧性策略的逻辑，完成策略实例的注册
-        /// </summary>
-        void IFactory.InitFactory()
+
+        private ToughnessStrategyFactory(IHotUpdateManager hotUpdateManager)
         {
-            ScanAllToughnessStrategy();
+            ScanAllToughnessStrategy(hotUpdateManager);
         }
         
         public IToughnessReduceStrategy GetReduceStrategy<T>() where T : class, IToughnessReduceStrategy
@@ -63,15 +57,16 @@ namespace HotUpdate.Game.Battle.Toughness
             Logger.LogError($"未注册的韧性数值计算策略类型：{typeof(T)}");
             return null;
         }
-        
+
         /// <summary>
         /// 扫描并注册所有韧性策略
         /// 遍历当前程序集所有类型，筛选带有ToughnessStrategyAttribute特性的类型，
         /// 根据策略类型创建对应实例并缓存
         /// </summary>
-        private static void ScanAllToughnessStrategy()
+        /// <param name="hotUpdateManager"></param>
+        private static void ScanAllToughnessStrategy(IHotUpdateManager hotUpdateManager)
         {
-            foreach (var hotUpdateAssembly in DIContainer.GetInstance<IHotUpdateManager>().GetAssemblies())
+            foreach (var hotUpdateAssembly in hotUpdateManager.GetHotAssemblies())
             {
                 // 遍历当前执行程序集中的所有类型
                 foreach (var type in hotUpdateAssembly.GetTypes())

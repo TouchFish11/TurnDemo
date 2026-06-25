@@ -1,8 +1,6 @@
-using Core.DI;
 using Core.HotUpdate;
 using Core.Log;
 using HotUpdate.Base.Factory;
-using HotUpdate.Base.Utility;
 
 namespace HotUpdate.Game.Battle.Skill.Factory
 {
@@ -11,12 +9,9 @@ namespace HotUpdate.Game.Battle.Skill.Factory
     /// </summary>
     public class SkillCastPostHandlerFactory : Factory<ISkillCastPostHandler>, ISkillCastPostHandlerFactory
     {
-        /// <summary>
-        /// 初始化工厂
-        /// </summary>
-        void IFactory.InitFactory()
+        public SkillCastPostHandlerFactory(IHotUpdateManager hotUpdateManager) : base(hotUpdateManager)
         {
-            FactoryUtility.ScanAllType(typeToInterfaceMap, DIContainer.GetInstance<IHotUpdateManager>().GetAssemblies());
+            
         }
         
         public ISkillCastPostHandler GetSkillCastPostHandler<THandler>()where THandler : class, ISkillCastPostHandler

@@ -30,14 +30,12 @@ namespace HotUpdate.Game.Battle.Core
             DIContainer.BindSingleton<IBattleManager, BattleManager>();
             DIContainer.BindSingleton<ISkillKeyUIDataProviderFactory, SkillKeyUIDataProviderFactory>();
             DIContainer.BindType<IBattleContext, BattleContext>();
-            
-            // TODO：暂时写在这个方法中
-            DIContainer.Create<BattleCoordinator>(true);
-            DIContainer.Create<BattlePointProxy>(true);
         }
 
         public Task InitModuleAsync()
         {
+            DIContainer.Create<BattleCoordinator>(true);
+            DIContainer.Create<BattlePointProxy>(true);
             return Task.CompletedTask;
         }
     }

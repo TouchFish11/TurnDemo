@@ -4,7 +4,9 @@ using Game.Module;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Module;
 using HotUpdate.Base.UI;
+using HotUpdate.Game.Battle.UI;
 using HotUpdate.Game.Dialogue;
+using HotUpdate.UI.Battle.MonsterStateUI;
 
 namespace HotUpdate.UI
 {
@@ -17,6 +19,7 @@ namespace HotUpdate.UI
         public int Priority => 8;
         public void Register()
         {
+            DIContainer.BindType<IMonsterStateUIManager, MonsterStateUIManager>();
             DIContainer.BindSingleton<IUIService, UIService>();
             // 注册对话管理器
             DIContainer.BindSingleton<IDialogueManager, DialogueManager>();

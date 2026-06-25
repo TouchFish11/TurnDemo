@@ -4,7 +4,7 @@ namespace HotUpdate.Base.Component
     {
         public T Component { get; private set; }
         
-        private bool _isDisposed = false;
+        private bool _isDisposed;
         
         public void Init(IComponent component)
         {

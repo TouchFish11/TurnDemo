@@ -1971,7 +1971,7 @@ GameObject:
   - component: {fileID: 803687719153583918}
   - component: {fileID: 6417446483500396716}
   - component: {fileID: 8008935409753131439}
-  - component: {fileID: -4667589098862498832}
+  - component: {fileID: 3787717831728296499}
   m_Layer: 5
   m_Name: DialogueView
   m_TagString: Untagged
@@ -2051,7 +2051,7 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &-4667589098862498832
+--- !u!114 &3787717831728296499
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
