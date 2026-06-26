@@ -22,14 +22,13 @@ namespace HotUpdate.Base.Component
         /// <summary>
         /// 自动获取挂载同一 GameObject 下的 <see cref="IEntityObject"/> 组件，完成实体关联
         /// </summary>
-        private void Awake()
+        protected virtual void Awake()
         {
             EntityObject = GetComponent<IEntityObject>();
         }
         
-        void IComponent.Init(IEntityObject entityObject, IComponentCore<IComponent> componentCore)
+        void IComponent.Init(IComponentCore<IComponent> componentCore)
         {
-            EntityObject = entityObject;
             ComponentCore = componentCore;
             OnInit();
         }
@@ -44,7 +43,7 @@ namespace HotUpdate.Base.Component
             // 先走钩子函数销毁
             OnBaseDestroy();
             // 再释放 Core
-            ComponentCore.Dispose();
+            ComponentCore?.Dispose();
             ComponentCore = null;
             EntityObject = null;
         }

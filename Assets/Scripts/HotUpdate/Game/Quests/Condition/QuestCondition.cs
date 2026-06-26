@@ -1,4 +1,6 @@
 using System;
+using Core.DI;
+using Core.GlobalEvent;
 using HotUpdate.Base.Quest;
 using HotUpdate.Common.Config.Quest.Config;
 
@@ -10,6 +12,8 @@ namespace HotUpdate.Game.Quests.Condition
     /// </summary>
     public abstract class QuestCondition<T> : IQuestCondition, IDisposable where T : QuestConditionConfig
     {
+        [Inject] protected IEventCenter eventCenter;
+        
         protected readonly T conditionConfig;
         
         public event Action<int> OnProgressChanged;

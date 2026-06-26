@@ -1,4 +1,3 @@
-using HotUpdate.Base.Object;
 using UnityEngine;
 
 namespace HotUpdate.Base.Component
@@ -7,28 +6,19 @@ namespace HotUpdate.Base.Component
     /// 动画控制器组件
     /// </summary>
     [RequireComponent(typeof(Animator))]
-    public class AnimatorComponent : MonoBehaviour, IComponent
+    public class AnimatorComponent : BaseComponent
     {
-        private Animator _animator;
-    
-        public IEntityObject EntityObject { get; private set; }
-        
-        public Animator Animator => _animator;
+        public Animator Animator { get; private set; }
 
-        private void Awake()
+        protected override void Awake()
         {
-            _animator = GetComponent<Animator>();
+            base.Awake();
+            Animator = GetComponent<Animator>();
         }
 
-        void IComponent.Init(IEntityObject entityObject, IComponentCore<IComponent> componentCore)
+        protected override void OnBaseDestroy()
         {
-
-        }
-
-        public void Destroy()
-        {
-            EntityObject = null;
-            _animator = null;
+            Animator = null;
         }
     }
 }

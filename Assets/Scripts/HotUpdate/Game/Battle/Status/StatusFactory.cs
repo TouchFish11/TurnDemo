@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Core.DI;
 using Core.HotUpdate;
 using HotUpdate.Game.Battle.Object;
 
@@ -20,9 +19,9 @@ namespace HotUpdate.Game.Battle.Status
         /// </summary>
         private readonly Dictionary<int, Type> idToTypeMap = new();
 
-        private StatusFactory()
+        private StatusFactory(IHotUpdateManager hotUpdateManager)
         {
-            ScanAllStatu(idToTypeMap);
+            ScanAllStatu(idToTypeMap, hotUpdateManager);
         }
         
         /// <summary>
@@ -47,15 +46,16 @@ namespace HotUpdate.Game.Battle.Status
             // 未找到对应ID的状态类，返回null
             return null;
         }
-        
+
         /// <summary>
         /// 扫描所有热更新程序集中的状态类，构建状态ID与状态类的映射关系
         /// </summary>
         /// <param name="dic">用于存储映射关系的字典（Key：状态ID，Value：状态类Type）</param>
-        private static void ScanAllStatu(Dictionary<int, Type> dic)
+        /// <param name="hotUpdateManager"></param>
+        private static void ScanAllStatu(Dictionary<int, Type> dic, IHotUpdateManager hotUpdateManager)
         {
             // 遍历所有热更新程序集（通过AssemblyUtility工具类获取）
-            foreach (var assembly in DIContainer.GetInstance<IHotUpdateManager>().GetHotAssemblies())
+            foreach (var assembly in hotUpdateManager.GetHotAssemblies())
             {
                 // 遍历当前程序集中的所有类型
                 foreach (var type in assembly.GetTypes())

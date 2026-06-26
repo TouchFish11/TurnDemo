@@ -21,15 +21,24 @@ namespace HotUpdate.Game.Battle.TargetSelect
     {
         // 缓存筛选出的所有目标
         private List<IBattleEntityObject> _filterEntitys;
-        // 已选中的范围目标列表（包含主目标及范围内的其他目标）
-        private readonly List<IBattleEntityObject> _selectedTargets = new();
         // 当前选中的主目标（技能优先作用的核心目标）
         private IBattleEntityObject _mainTarget;
+        // 已选中的范围目标列表（包含主目标及范围内的其他目标）
+        private readonly List<IBattleEntityObject> _selectedTargets = new();
         // 当前生效的目标选择策略（不同技能有不同的目标选择规则）
         private ITargetSelectStrategy _currentSelectStrategy;
         
         /// <summary>
-        /// 核心目标选择入口
+        /// 点击选中主目标
+        /// 点击战斗实体时触发，直接将该实体设为主目标
+        /// </summary>
+        /// <param name="mainTarget">点击选中的战斗实体</param>
+        public void SelectMainTarget(IBattleEntityObject mainTarget)
+        {
+            _mainTarget = mainTarget;
+        }
+        
+        /// <summary>
         /// 根据技能、释放者、选择策略重新计算并更新主目标和范围目标
         /// </summary>
         /// <param name="context">战斗上下文</param>
@@ -51,7 +60,19 @@ namespace HotUpdate.Game.Battle.TargetSelect
             
             Logger.Log($"当前主目标：{_mainTarget}");
         }
-
+        
+        /// <summary>
+        /// 更新设置所有目标列表
+        /// 基于主目标和技能范围规则，重新计算所有受影响的目标
+        /// </summary>
+        public void SelectAllTargets(int skillRangeType)
+        {
+            // 清空旧的范围目标列表
+            _selectedTargets.Clear();
+            // 计算主目标范围内的所有有效目标（玩家角色类型，按技能范围规则筛选）
+            BattleUtility.GetRangeTargets(_mainTarget, skillRangeType, _filterEntitys, _selectedTargets);
+        }
+        
         /// <summary>
         /// 获取当前选中的主目标
         /// </summary>
@@ -110,19 +131,7 @@ namespace HotUpdate.Game.Battle.TargetSelect
                     break;
             }
         }
-
-        /// <summary>
-        /// 更新范围目标列表
-        /// 基于主目标和技能范围规则，重新计算所有受影响的目标，并触发UI更新事件
-        /// </summary>
-        public void UpdateTargets(int skillRangeType)
-        {
-            // 清空旧的范围目标列表
-            _selectedTargets.Clear();
-            // 计算主目标范围内的所有有效目标（玩家角色类型，按技能范围规则筛选）
-            BattleUtility.GetRangeTargets(_mainTarget, skillRangeType, _filterEntitys, _selectedTargets);
-        }
-
+        
         /// <summary>
         /// 切换到下一个主目标
         /// 右拖拽交互触发，在同类型目标列表中向后切换主目标
@@ -184,17 +193,7 @@ namespace HotUpdate.Game.Battle.TargetSelect
                 Logger.Log($"当前主目标：{_mainTarget}");
             }
         }
-
-        /// <summary>
-        /// 点击选中主目标
-        /// 点击战斗实体时触发，直接将该实体设为主目标
-        /// </summary>
-        /// <param name="mainTarget">点击选中的战斗实体</param>
-        public void SelectMainTarget(IBattleEntityObject mainTarget)
-        {
-            _mainTarget = mainTarget;
-        }
-
+        
         public void Dispose()
         {
             _filterEntitys.Clear();

@@ -40,14 +40,16 @@ namespace HotUpdate.Game.Battle.Object.Role
             AddState(EActPhase.TurnStart);
             AddState(EActPhase.Operator);
             AddState(EActPhase.TurnEnd);
-            // 添加组件
-            AddComponents(TextUtility.Split(RoleInfo.f_comNames, 2));
+
             // 初始化伤害链
             damageChain = DamageChainBuilder.GetRoleDamageChain();
             
             SkillFactory = GetSkillFactory();
             DefaultCastCondition = GetSkillCondition();
             DefaultTargetSelectStrategy = GetTargetSelectStrategy();
+            
+            // 添加组件
+            AddComponents(TextUtility.Split(RoleInfo.f_comNames, 2));
         }
         
         protected abstract ISkillFactory GetSkillFactory();

@@ -1,6 +1,3 @@
-using Core.DI;
-using Core.Pool;
-using Core.Time;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Status;
 using HotUpdate.Game.VFX;
@@ -25,13 +22,10 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Status
         private async void CreateVFX()
         {
             // 产生特效
-            var vfxInfo = DIContainer.GetInstance<IPoolManager>().GetData<VFXInfo>();
-            var pos = Owner.GameObject.transform.position;
-            pos = new Vector3(pos.x, 0.5f, pos.z);
-            await DIContainer.GetInstance<IVFXManager>().CreateVFX(AssetKeys.VFX_Heal, 
-                null, pos, Quaternion.identity, vfxInfo);
-
-            DIContainer.GetInstance<ITimerManager>().CreateTimer(false, 700, () =>
+            var vfxInfo = poolManager.GetData<VFXInfo>();
+            var pos = Owner.GameObject.transform.position; pos = new Vector3(pos.x, 0.5f, pos.z);
+            await vfxManager.CreateVFX(AssetKeys.VFX_Heal, null, pos, Quaternion.identity, vfxInfo);
+            timerManager.CreateTimer(false, 700, () =>
             {
                 vfxInfo.IsStop = true;
             });

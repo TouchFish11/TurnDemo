@@ -19,6 +19,7 @@ namespace HotUpdate.Game.Battle.Command
     public class MonsterActCommand : Command
     {
         [Inject] private IUIService _uiService;
+        [Inject] private IBattleCameraManager _battleCameraManager;
         
         // 韧性恢复速度
         private const float recoverySpeed = 55f;
@@ -73,7 +74,7 @@ namespace HotUpdate.Game.Battle.Command
                 var preMask = LayerGeter.GetPreBitLayer();
                 var mask = preMask | (1 << Sender.GameObject.layer);
                 // 创建相机
-                yield return TaskUtility.WaitForTask(DIContainer.GetInstance<IBattleCameraManager>().CreateCamera(null, pos, rotation, mask));
+                yield return TaskUtility.WaitForTask(_battleCameraManager.CreateCamera(null, pos, rotation, mask));
                 // 调用组件方法
                 Sender.GetComponent<StatusComponent>().UpdateStatus();
                 // 等待Dot显示完成
@@ -112,7 +113,7 @@ namespace HotUpdate.Game.Battle.Command
             var preMask = LayerGeter.GetPreBitLayer();
             var mask = preMask | (1 << Sender.GameObject.layer);
             // 创建相机
-            yield return TaskUtility.WaitForTask(DIContainer.GetInstance<IBattleCameraManager>().CreateCamera(null, pos, rotation, mask));
+            yield return TaskUtility.WaitForTask(_battleCameraManager.CreateCamera(null, pos, rotation, mask));
             
             float currentValue = 0;
             // 等待韧性值恢复至最大值

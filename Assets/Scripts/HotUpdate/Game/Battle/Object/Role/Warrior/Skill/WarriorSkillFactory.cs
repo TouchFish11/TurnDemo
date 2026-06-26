@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Core.DI;
 using HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Battle;
 using HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Normal;
 using HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Ultimate;
@@ -25,28 +26,28 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill
                 case 10:    // 普攻
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
                     phases = skillPhaseBuilder.
-                        AddSkillPreCastPhase(new WarriorNormalSkillPreCastPhaseStrategy()).
-                        AddSkillCastPhase(new WarriorNormalSkillCastPhaseStrategy()).
-                        AddSkillEventProcessPhase(new WarriorNormalSkillEventProcessPhaseStrategy()).
-                        AddSkillCastEndPhase(new WarriorNormalSkillCastEndPhaseStrategy()).
+                        AddSkillPreCastPhase(DIContainer.Create<WarriorNormalSkillPreCastPhaseStrategy>()).
+                        AddSkillCastPhase(DIContainer.Create<WarriorNormalSkillCastPhaseStrategy>()).
+                        AddSkillEventProcessPhase(DIContainer.Create<WarriorNormalSkillEventProcessPhaseStrategy>()).
+                        AddSkillCastEndPhase(DIContainer.Create<WarriorNormalSkillCastEndPhaseStrategy>()).
                         Build();
                     break;
                 case 11:    // 战技
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
                     phases = skillPhaseBuilder.
-                        AddSkillPreCastPhase(new WarriorBattleSkillPreCastPhaseStrategy()).
-                        AddSkillCastPhase(new WarriorBattleSkillCastPhaseStrategy()).
-                        AddSkillEventProcessPhase(new WarriorBattleSkillEventProcessPhaseStrategy()).
-                        AddSkillCastEndPhase(new WarriorBattleSkillCastEndPhaseStrategy()).
+                        AddSkillPreCastPhase(DIContainer.Create<WarriorBattleSkillPreCastPhaseStrategy>()).
+                        AddSkillCastPhase(DIContainer.Create<WarriorBattleSkillCastPhaseStrategy>()).
+                        AddSkillEventProcessPhase(DIContainer.Create<WarriorBattleSkillEventProcessPhaseStrategy>()).
+                        AddSkillCastEndPhase(DIContainer.Create<WarriorBattleSkillCastEndPhaseStrategy>()).
                         Build();
                     break;
                 case 12:    // 终结技
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseUltimateSkillCastPostHandler>();
                     phases = skillPhaseBuilder.
-                        AddSkillPreCastPhase(new WarriorUltimateSkillPreCastPhaseStrategy()).
-                        AddSkillCastPhase(new WarriorUltimateSkillCastPhaseStrategy()).
-                        AddSkillEventProcessPhase(new WarriorUltimateSkillEventProcessPhaseStrategy()).
-                        AddSkillCastEndPhase(new WarriorUltimateSkillCastEndPhaseStrategy()).
+                        AddSkillPreCastPhase(DIContainer.Create<WarriorUltimateSkillPreCastPhaseStrategy>()).
+                        AddSkillCastPhase(DIContainer.Create<WarriorUltimateSkillCastPhaseStrategy>()).
+                        AddSkillEventProcessPhase(DIContainer.Create<WarriorUltimateSkillEventProcessPhaseStrategy>()).
+                        AddSkillCastEndPhase(DIContainer.Create<WarriorUltimateSkillCastEndPhaseStrategy>()).
                         Build();
                     break;
             }

@@ -1,4 +1,3 @@
-using HotUpdate.Base.Object;
 using UnityEngine;
 
 namespace HotUpdate.Base.Component
@@ -7,23 +6,19 @@ namespace HotUpdate.Base.Component
     /// 角色控制器组件
     /// </summary>
     [RequireComponent(typeof(CharacterController))]
-    public class CharacterControllerComponent : MonoBehaviour, IComponent
+    public class CharacterControllerComponent : BaseComponent
     {
-        private CharacterController _controller;
-        
-        public IEntityObject EntityObject { get; private set; }
-        
-        public CharacterController CharacterController => _controller;
-        
-        void IComponent.Init(IEntityObject entityObject, IComponentCore<IComponent> componentCore)
+        public CharacterController CharacterController { get; private set; }
+
+        protected override void Awake()
         {
-            _controller = entityObject.GameObject.GetComponent<CharacterController>();
+            base.Awake();
+            CharacterController = EntityObject?.GameObject.GetComponent<CharacterController>();
         }
 
-        public void Destroy()
+        protected override void OnBaseDestroy()
         {
-            EntityObject = null;
-            _controller = null;
+            CharacterController = null;
         }
     }
 }

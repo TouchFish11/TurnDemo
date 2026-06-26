@@ -1,6 +1,5 @@
 using HotUpdate.Base.Component;
 using HotUpdate.Game.Battle.Object.Role;
-using HotUpdate.Game.Battle.Skill.Base;
 
 namespace HotUpdate.Game.Battle.Skill.Component
 {

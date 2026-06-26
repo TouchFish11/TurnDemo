@@ -5,6 +5,7 @@ using HotUpdate.Base.Enums;
 using HotUpdate.Base.UI;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Game.Animation.Component;
+using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.Skill;
 using HotUpdate.Game.Battle.Event.Turn;
@@ -29,20 +30,20 @@ namespace HotUpdate.Game.Battle.Event
         [Inject] private ISkillKeyUIDataProviderFactory _skillKeyUIDataProviderFactory;
         [Inject] private IUIService _uiService;
 
-        public BattleEventScheduler()
+        public BattleEventScheduler(IBattleContext context)
         {
             // 监听战斗事件
-            ListenerBattleEvent();
+            ListenerBattleEvent(context);
         }
         
-        private void ListenerBattleEvent()
+        private void ListenerBattleEvent(IBattleContext context)
         {
             // 监听回合开始事件
-            _battleCoordinator.Context.GetEventBus().AddListener<TurnStartEvent>(OnTurnStartDispatch);
+            context.GetEventBus().AddListener<TurnStartEvent>(OnTurnStartDispatch);
             // 监听角色技能选择事件
-            _battleCoordinator.Context.GetEventBus().AddListener<SelectSkillEvent>(SelectSkillEventScheduler);
+            context.GetEventBus().AddListener<SelectSkillEvent>(SelectSkillEventScheduler);
             // 监听玩家角色终结技释放后通用逻辑事件
-            _battleCoordinator.Context.GetEventBus().AddListener<UltimateCastEvent>(OnUltimateCastDispatch);
+            context.GetEventBus().AddListener<UltimateCastEvent>(OnUltimateCastDispatch);
         }
         
         /// <summary>

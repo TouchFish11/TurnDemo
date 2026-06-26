@@ -34,7 +34,7 @@ namespace HotUpdate.Game.Battle.StateMeachine
         public TurnLoopState(IBattleStateMachine battleStateMachine, IBattleContext context) : base(battleStateMachine, context)
         {
             // 创建战斗指令控制器实例
-            _commandsController = DIContainer.Create<BattleCommandsController>(parameterValues: this);
+            _commandsController = DIContainer.Create<BattleCommandsController>(parameterValues: new object[] { this, Context });
         }
 
         public override void Enter()
@@ -211,8 +211,8 @@ namespace HotUpdate.Game.Battle.StateMeachine
         {
             // 再让下一个实体行动
             _currentActEntity = Context.GetNextEntity();
-            // 更新当前实体
-            Context.SetCurrentEntity(_currentActEntity);
+            // 更新持有当前行动回合的实体
+            Context.CurrentTurnOwner = _currentActEntity;
         }
         
         /// <summary>
@@ -248,6 +248,9 @@ namespace HotUpdate.Game.Battle.StateMeachine
         {
             Context.GetEventBus().RemoveListener<InsertCommandEvent>(OnInsertCommand);
             _commandsController = null;
+            _currentActEntity = null;
+            _battleManager = null;
+            _monoAdapter = null;
         }
     }
 }

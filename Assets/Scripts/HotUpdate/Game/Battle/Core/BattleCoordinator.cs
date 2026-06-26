@@ -33,10 +33,11 @@ namespace HotUpdate.Game.Battle.Core
         [Inject] private IBinaryDataManager _binaryDataManager;
         [Inject] private IUIService _uiService;
         
+        // 上次选中的主目标
+        private IBattleEntityObject _lastTarget;
+        private List<IBattleEntityObject> _lastTargets;
         // 当前选中技能的配置信息
         private SkillInfo skillInfo;
-        // 技能释放者（释放当前技能的战斗实体）
-        private IBattleEntityObject caster;
         // 是否激活目标选择
         private bool _isActiveTargetSelect;
         // 是否激活战斗输入
@@ -142,7 +143,9 @@ namespace HotUpdate.Game.Battle.Core
             // 自动重新计算主目标
             TargetSelectManager.SelectMainTarget(Context, caster, skillInfo, targetSelectStrategy);
             // 基于主目标更新范围目标列表
-            TargetSelectManager.UpdateTargets(skillInfo.f_skillRangeType);
+            TargetSelectManager.SelectAllTargets(skillInfo.f_skillRangeType);
+            _lastTarget = TargetSelectManager.GetMainTarget();
+            _lastTargets = TargetSelectManager.GetTargets();
             // 触发目标选择变更事件，通知UI更新选中状态
             Context.GetEventBus().TriggerEvent(new SelectTargetEvent(Context, caster, TargetSelectManager.GetMainTarget(), TargetSelectManager.GetTargets()));
         }
@@ -306,22 +309,40 @@ namespace HotUpdate.Game.Battle.Core
         
         private void OnLeftDrag()
         {
+            // 选择上一个目标
             TargetSelectManager.SelectPreviousMainTarget();
-            TargetSelectManager.UpdateTargets(skillInfo.f_skillRangeType);
-            // 触发目标选择变更事件，通知UI更新选中状态
-            Context.GetEventBus().TriggerEvent(new SelectTargetEvent(Context, caster, TargetSelectManager.GetMainTarget(), TargetSelectManager.GetTargets()));
-            // 更新相机选择基准
-            BattleCameraManager.UpdateBaseRotation();
+            TargetSelectManager.SelectAllTargets(skillInfo.f_skillRangeType);
+            var newMainTarget = TargetSelectManager.GetMainTarget();
+            var newAllTarget = TargetSelectManager.GetTargets();
+            // 满足条件才去更新UI相关逻辑
+            if (CanUpdateTargetSelect(newMainTarget, newAllTarget))
+            {
+                _lastTarget = newMainTarget;
+                _lastTargets = newAllTarget;
+                // 触发目标选择变更事件，通知UI更新选中状态
+                Context.GetEventBus().TriggerEvent(new SelectTargetEvent(Context, Context.CurrentCommander ?? Context.CurrentTurnOwner, TargetSelectManager.GetMainTarget(), TargetSelectManager.GetTargets()));
+                // 更新相机选择基准
+                BattleCameraManager.UpdateBaseRotation(); 
+            }
         }
         
         private void OnRightDrag()
         {
+            // 选择下一个目标
             TargetSelectManager.SelectNextMainTarget();
-            TargetSelectManager.UpdateTargets(skillInfo.f_skillRangeType);
-            // 触发目标选择变更事件，通知UI更新选中状态
-            Context.GetEventBus().TriggerEvent(new SelectTargetEvent(Context, caster, TargetSelectManager.GetMainTarget(), TargetSelectManager.GetTargets()));
-            // 更新相机选择基准
-            BattleCameraManager.UpdateBaseRotation();
+            TargetSelectManager.SelectAllTargets(skillInfo.f_skillRangeType);
+            var newMainTarget = TargetSelectManager.GetMainTarget();
+            var newAllTarget = TargetSelectManager.GetTargets();
+            // 满足条件才去更新UI相关逻辑
+            if (CanUpdateTargetSelect(newMainTarget, newAllTarget))
+            {
+                _lastTarget = newMainTarget;
+                _lastTargets = newAllTarget;
+                // 触发目标选择变更事件，通知UI更新选中状态
+                Context.GetEventBus().TriggerEvent(new SelectTargetEvent(Context, Context.CurrentCommander ?? Context.CurrentTurnOwner, TargetSelectManager.GetMainTarget(), TargetSelectManager.GetTargets()));
+                // 更新相机选择基准
+                BattleCameraManager.UpdateBaseRotation();
+            }
         }
         
         private void OnClick()
@@ -354,12 +375,60 @@ namespace HotUpdate.Game.Battle.Core
             {
                 // 根据点击到的目标作为主目标
                 TargetSelectManager.SelectMainTarget(battleObject);
-                TargetSelectManager.UpdateTargets(skillInfo.f_skillRangeType);
-                // 触发目标选择变更事件，通知UI更新选中状态
-                Context.GetEventBus().TriggerEvent(new SelectTargetEvent(Context, caster, TargetSelectManager.GetMainTarget(), TargetSelectManager.GetTargets()));
+                TargetSelectManager.SelectAllTargets(skillInfo.f_skillRangeType);
+                var allTargets = TargetSelectManager.GetTargets();
+                if (CanUpdateTargetSelect(battleObject, allTargets))
+                {
+                    _lastTarget = battleObject;
+                    _lastTargets = allTargets;
+                    // 触发目标选择变更事件，通知UI更新选中状态
+                    Context.GetEventBus().TriggerEvent(new SelectTargetEvent(Context, Context.CurrentCommander ?? Context.CurrentTurnOwner, TargetSelectManager.GetMainTarget(), TargetSelectManager.GetTargets()));
+                }
             }
         }
 
+        /// <summary>
+        /// 能否更新目标目标标记UI
+        /// </summary>
+        /// <param name="mainTarget"></param>
+        /// <param name="allTargets"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        private bool CanUpdateTargetSelect(IBattleEntityObject mainTarget, List<IBattleEntityObject> allTargets)
+        {
+            return (E_SkillRangeType)skillInfo.f_skillRangeType switch
+            {
+                E_SkillRangeType.Single => _lastTarget == null || _lastTarget != mainTarget,
+                E_SkillRangeType.Diffusion => _lastTarget == null || _lastTarget != mainTarget || !IsSameTargets(allTargets),
+                E_SkillRangeType.All => !IsSameTargets(allTargets),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
+
+        /// <summary>
+        /// 目标列表是否相同
+        /// </summary>
+        /// <param name="newTargets"></param>
+        /// <returns></returns>
+        private bool IsSameTargets(List<IBattleEntityObject> newTargets)
+        {
+            if (_lastTargets == null)
+            {
+                _lastTargets = newTargets;
+                return false;
+            }
+            
+            foreach (var battleEntityObject in newTargets)
+            {
+                if (!_lastTargets.Contains(battleEntityObject))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        
         public void Dispose()
         {
             BattleInputHandler.OnLeftDrag -= OnLeftDrag;

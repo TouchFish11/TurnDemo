@@ -7,6 +7,7 @@ using Core.UI;
 using HotUpdate.Base.Scene;
 using HotUpdate.Base.UI;
 using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Event;
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Turn;
 using HotUpdate.Game.Inputs;
@@ -64,6 +65,7 @@ namespace HotUpdate.Game.Battle.Core
             // 创建战斗上下文，依赖战斗点代理
             _context = DIContainer.Create<BattleContext>();
             _context.InitStateMachine();
+            DIContainer.Create<BattleEventScheduler>(parameterValues: _context);
             // 监听战斗退出事件
             _context.GetEventBus().AddListener<QuitBattleEvent>(OnQuitBattleEvent);
             _battleService ??= DIContainer.Create<BattleService>(parameterValues: new object[] { this, _context });

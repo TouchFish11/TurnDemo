@@ -221,7 +221,7 @@ namespace HotUpdate.Base.Component
                         core = (IComponentCore<IComponent>)DIContainer.Create(null, coreAttribute.ComponentCore);
                         core.Init(componentToInit);
                     }
-                    componentToInit.Init(entityObject, core);
+                    componentToInit.Init(core);
                     yield return componentToInit;
                 }
                 

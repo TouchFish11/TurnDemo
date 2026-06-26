@@ -38,7 +38,7 @@ namespace HotUpdate.Game.Battle.Toughness
             }
 
             // 初始化韧性状态对象
-            _toughness = new ToughnessState(weakPropertys, monsterInfo.f_baseToughness);
+            _toughness = DIContainer.Create<ToughnessState>(parameterValues: new object[] { weakPropertys, monsterInfo.f_baseToughness });
             // 注册默认韧性扣除策略（从策略工厂获取）
             var reduceStrategy = toughnessStrategyFactory.GetReduceStrategy<DefaultToughnessReduceStrategy>();
             _toughnessReduceStrategies.Add(reduceStrategy);

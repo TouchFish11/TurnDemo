@@ -198,7 +198,7 @@ namespace HotUpdate.Game.Inputs
                 // 只在抬起时检测是否在UI上，来判断是否释放因为Alt键请求的显示
                 if (EventSystem.current && EventSystem.current.IsPointerOverGameObject())
                 {
-                    DIContainer.GetInstance<IEventCenter>().TriggerEvent(new MouseVisibleChangedEvent
+                    _eventCenter.TriggerEvent(new MouseVisibleChangedEvent
                     {
                         SourceName = nameof(Keyboard.current.leftAltKey), 
                         IsVisible = false 

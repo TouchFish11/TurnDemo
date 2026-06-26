@@ -40,7 +40,7 @@ namespace HotUpdate.Game.Battle.StateMeachine
 
         protected override void OnDispose()
         {
-            
+            _timerManager = null;
         }
     }
 }

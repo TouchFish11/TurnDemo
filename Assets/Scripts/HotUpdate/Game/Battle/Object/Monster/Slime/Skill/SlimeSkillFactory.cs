@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Core.DI;
 using HotUpdate.Game.Battle.Object.Monster.Slime.Strategys;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Base;
@@ -24,10 +25,10 @@ namespace HotUpdate.Game.Battle.Object.Monster.Slime.Skill
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
                     phases = skillPhaseBuilder.
                         AddMonsterCommonPhase().
-                        AddSkillPreCastPhase(new SlimeSkillPreCastPhaseStrategy()).
-                        AddSkillCastPhase(new SlimeSkillCastPhaseStrategy()).
-                        AddSkillEventProcessPhase(new SlimeSkillEventProcessPhaseStrategy()).
-                        AddSkillCastEndPhase(new SlimeSkillCastEndPhaseStrategy()).
+                        AddSkillPreCastPhase(DIContainer.Create<SlimeSkillPreCastPhaseStrategy>()).
+                        AddSkillCastPhase(DIContainer.Create<SlimeSkillCastPhaseStrategy>()).
+                        AddSkillEventProcessPhase(DIContainer.Create<SlimeSkillEventProcessPhaseStrategy>()).
+                        AddSkillCastEndPhase(DIContainer.Create<SlimeSkillCastEndPhaseStrategy>()).
                         Build();
                     break;
             }

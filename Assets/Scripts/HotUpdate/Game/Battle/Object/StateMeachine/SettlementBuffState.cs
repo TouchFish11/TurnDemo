@@ -17,6 +17,7 @@ namespace HotUpdate.Game.Battle.Object.StateMeachine
     public class SettlementBuffState : TurnState
     {
         [Inject] private IUIService _uiService;
+        [Inject] private IBattleCameraManager _battleCameraManager;
         
         public SettlementBuffState(IBattleEntityObject battleEntity) : base(battleEntity)
         {
@@ -45,7 +46,7 @@ namespace HotUpdate.Game.Battle.Object.StateMeachine
                 // 获取遮罩
                 var mask = LayerGeter.GetPreBitLayer() | (1 << PlayerObject.GameObject.layer);
                 // 创建相机
-                yield return TaskUtility.WaitForTask(DIContainer.GetInstance<IBattleCameraManager>().CreateCamera(null, pos, rotation, mask));
+                yield return TaskUtility.WaitForTask(_battleCameraManager.CreateCamera(null, pos, rotation, mask));
                 // 优化表现
                 yield return new WaitForSeconds(0.2f);
                 // 调用组件方法

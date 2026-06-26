@@ -1,5 +1,3 @@
-using Core.DI;
-using Core.GlobalEvent;
 using HotUpdate.Common.Config.Quest.Config;
 using HotUpdate.Common.Events;
 
@@ -17,7 +15,7 @@ namespace HotUpdate.Game.Quests.Condition
 
         public override void Enable()
         {
-            DIContainer.GetInstance<IEventCenter>().SubscribeEvent<DialogueEvent>(OnDialogueEvent);
+            eventCenter.SubscribeEvent<DialogueEvent>(OnDialogueEvent);
         }
 
         private void OnDialogueEvent(DialogueEvent dialogueEvent)
@@ -28,7 +26,7 @@ namespace HotUpdate.Game.Quests.Condition
 
         public override void Disable()
         {
-            DIContainer.GetInstance<IEventCenter>().UnsubscribeEvent<DialogueEvent>(OnDialogueEvent);
+            eventCenter.UnsubscribeEvent<DialogueEvent>(OnDialogueEvent);
         }
     }
 }

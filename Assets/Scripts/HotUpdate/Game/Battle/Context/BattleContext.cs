@@ -32,12 +32,15 @@ namespace HotUpdate.Game.Battle.Context
         private readonly List<IBattleEntityObject> _monsterObjects = new();
         // 场景玩家列表
         private readonly List<IBattleEntityObject> _roleObjects = new();
+        // 命令执行栈
+        private readonly Stack<IBattleEntityObject> _commanders = new();
         // 场景召唤物列表
         // ...
-        
-        // 当前行动实体
-        private IBattleEntityObject _currentEntity;
 
+        public IBattleEntityObject CurrentCommander => _commanders.Count > 0 ? _commanders.Peek() : null;
+        
+        public IBattleEntityObject CurrentTurnOwner { get; set; }
+        
         /// 当前战技点数
         public int CurentBattlePointCount { get; private set; }
 
@@ -85,7 +88,6 @@ namespace HotUpdate.Game.Battle.Context
         {
             return _roleObjects;
         }
-        
 
         public void ConsumeSkillPoint(int cost)
         {
@@ -97,6 +99,16 @@ namespace HotUpdate.Game.Battle.Context
         {
             MaxBattlePointCount = Mathf.Max(0, MaxBattlePointCount - cost);
             _eventBus.TriggerEvent(new OnBattlePointCountChangedEvent(this, CurentBattlePointCount, MaxBattlePointCount));
+        }
+
+        public void PushCommander(IBattleEntityObject commander)
+        {
+            _commanders.Push(commander);
+        }
+
+        public void PopCommander()
+        {
+            _commanders.Pop();
         }
 
         public void CleanupBattle()
@@ -122,8 +134,6 @@ namespace HotUpdate.Game.Battle.Context
             
             // 清空缓存池
             _poolManager.ClearAll();
-
-            _currentEntity = null;
             _battleMachine = null;
         }
 
@@ -233,16 +243,6 @@ namespace HotUpdate.Game.Battle.Context
             return _allBattleEntity[0];
         }
 
-        public IBattleEntityObject GetCurrentEntity()
-        {
-            return _currentEntity;
-        }
-
-        public void SetCurrentEntity(IBattleEntityObject battleEntity)
-        {
-            _currentEntity = battleEntity;
-        }
-
         public IBattleEntityObject GetFirstBattleEntity()
         {
             return _allBattleEntity[0];
@@ -257,10 +257,5 @@ namespace HotUpdate.Game.Battle.Context
         {
             return _eventBus;
         }
-        
-        // public IBattlePointProxy GetProxy()
-        // {
-        //     return _battlePointProxy;
-        // }
     }
 }

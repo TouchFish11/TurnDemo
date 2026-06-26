@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Core.DI;
 using HotUpdate.Game.Battle.Object.Role.Priest.Skill.Battle;
 using HotUpdate.Game.Battle.Object.Role.Priest.Skill.Normal;
 using HotUpdate.Game.Battle.Object.Role.Priest.Skill.Ultimate;
@@ -26,28 +27,28 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill
                 case 30:    // 普攻
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
                     phases = skillPhaseBuilder.
-                        AddSkillPreCastPhase(new PriestNormalSkillPreCastPhaseStrategy()).
-                        AddSkillCastPhase(new PriestNormalSkillCastPhaseStrategy()).
-                        AddSkillEventProcessPhase(new PriestNormalSkillEventProcessPhaseStrategy()).
-                        AddSkillCastEndPhase(new PriestNormalSkillCastEndPhaseStrategy()).
+                        AddSkillPreCastPhase(DIContainer.Create<PriestNormalSkillPreCastPhaseStrategy>()).
+                        AddSkillCastPhase(DIContainer.Create<PriestNormalSkillCastPhaseStrategy>()).
+                        AddSkillEventProcessPhase(DIContainer.Create<PriestNormalSkillEventProcessPhaseStrategy>()).
+                        AddSkillCastEndPhase(DIContainer.Create<PriestNormalSkillCastEndPhaseStrategy>()).
                         Build();
                     break;
                 case 31:    // 战技
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
                     phases = skillPhaseBuilder.
-                        AddSkillPreCastPhase(new PriestBattleSkillPreCastPhaseStrategy()).
-                        AddSkillCastPhase(new PriestBattleSkillCastPhaseStrategy()).
-                        AddSkillEventProcessPhase(new PriestBattleSkillEventProcessPhaseStrategy()).
-                        AddSkillCastEndPhase(new PriestNormalSkillCastEndPhaseStrategy()).
+                        AddSkillPreCastPhase(DIContainer.Create<PriestBattleSkillPreCastPhaseStrategy>()).
+                        AddSkillCastPhase(DIContainer.Create<PriestBattleSkillCastPhaseStrategy>()).
+                        AddSkillEventProcessPhase(DIContainer.Create<PriestBattleSkillEventProcessPhaseStrategy>()).
+                        AddSkillCastEndPhase(DIContainer.Create<PriestNormalSkillCastEndPhaseStrategy>()).
                         Build();
                     break;
                 case 32:    // 终结技
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseUltimateSkillCastPostHandler>();
                     phases = skillPhaseBuilder.
-                        AddSkillPreCastPhase(new PriestUltimateSkillPreCastPhaseStrategy()).
-                        AddSkillCastPhase(new PriestUltimateSkillCastPhaseStrategy()).
-                        AddSkillEventProcessPhase(new PriestUltimateSkillEventProcessPhaseStrategy()).
-                        AddSkillCastEndPhase(new PriestNormalSkillCastEndPhaseStrategy()).
+                        AddSkillPreCastPhase(DIContainer.Create<PriestUltimateSkillPreCastPhaseStrategy>()).
+                        AddSkillCastPhase(DIContainer.Create<PriestUltimateSkillCastPhaseStrategy>()).
+                        AddSkillEventProcessPhase(DIContainer.Create<PriestUltimateSkillEventProcessPhaseStrategy>()).
+                        AddSkillCastEndPhase(DIContainer.Create<PriestNormalSkillCastEndPhaseStrategy>()).
                         Build();
                     break;
             }

@@ -12,6 +12,8 @@ namespace HotUpdate.Game.Battle.Skill.Conditions
     /// </summary>
     public class PlayerDefaultCastSkillCondition : ICastSkillCondition
     {
+        [Inject] private IEventCenter _eventCenter;
+        
         public bool CanCast(IBattleEntityObject caster, SkillInfo skillInfo)
         {
             switch ((E_SkillType)skillInfo.f_SkillType)
@@ -27,7 +29,7 @@ namespace HotUpdate.Game.Battle.Skill.Conditions
                     }
 
                     // 全局提示
-                    DIContainer.GetInstance<IEventCenter>().TriggerEvent(new GlobalMessageEvent{Message = "战技点不足无法释放"});
+                    _eventCenter.TriggerEvent(new GlobalMessageEvent{Message = "战技点不足无法释放"});
                     return false;
                 case E_SkillType.UltimateSkill:
                     // 判断能量释放足够
@@ -39,7 +41,7 @@ namespace HotUpdate.Game.Battle.Skill.Conditions
                     }
 
                     // 全局提示
-                    DIContainer.GetInstance<IEventCenter>().TriggerEvent(new GlobalMessageEvent{Message = "能量不足无法释放"});
+                    _eventCenter.TriggerEvent(new GlobalMessageEvent{Message = "能量不足无法释放"});
                     return false;
                 case E_SkillType.EnhancedNormalAttack:
                 case E_SkillType.EnhancedCombatSkill:

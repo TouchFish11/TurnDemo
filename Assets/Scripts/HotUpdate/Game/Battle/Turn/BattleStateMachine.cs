@@ -35,11 +35,7 @@ namespace HotUpdate.Game.Battle.Turn
         
         public void ChangeState(EBattlePhase battlePhase)
         {
-            if (_currentState != null)
-            {
-                _battleStates[battlePhase].Exit();
-            }
-            
+            _currentState?.Exit();
             _currentState = _battleStates[battlePhase];
             _currentState.Enter();
         }

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Core.DI;
 using Core.Log;
-using Core.Mono.MonoFunction;
 using HotUpdate.Base;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Context;
@@ -26,10 +26,10 @@ namespace HotUpdate.Game.Battle.Damage
         {
             this.context = context;
             // 注册策略
-            _strategys.Add(E_DamageType.Direct, new DirectDamageStrategy());
-            _strategys.Add(E_DamageType.Dot, new DotDamageStrategy());
-            _strategys.Add(E_DamageType.Break, new BreakDamageStrategy());
-            _strategys.Add(E_DamageType.True, new TrueDamageStrategy());
+            _strategys.Add(E_DamageType.Direct, DIContainer.Create<DirectDamageStrategy>());
+            _strategys.Add(E_DamageType.Dot, DIContainer.Create<DotDamageStrategy>());
+            _strategys.Add(E_DamageType.Break, DIContainer.Create<BreakDamageStrategy>());
+            _strategys.Add(E_DamageType.True, DIContainer.Create<TrueDamageStrategy>());
 
             // 监听击破事件
             context.GetEventBus().AddListener<ToughnessBrokenEvent>(OnToughnessBrokenEvent);

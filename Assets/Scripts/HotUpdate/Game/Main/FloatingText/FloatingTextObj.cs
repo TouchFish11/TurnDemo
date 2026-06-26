@@ -6,7 +6,7 @@ using UnityEngine;
 namespace HotUpdate.Game.Main.FloatingText
 {
     /// <summary>
-    /// �����ı�
+    /// 浮动文本对象
     /// </summary>
     public class FloatingTextObj : MonoBehaviour
     {
@@ -16,9 +16,9 @@ namespace HotUpdate.Game.Main.FloatingText
         // �����NPCTransform
         private Transform followNpcTarget;
         // ͷ��ƫ����
-         private readonly Vector3 offset = new(0, 2, 0);
+        private readonly Vector3 offset = new(0, 2, 0);
         // ��С����
-         private readonly Vector3 minScale = Vector3.one * 0.2f;
+        private readonly Vector3 minScale = Vector3.one * 0.2f;
         // �������
         private readonly Vector3 maxScale = Vector3.one * 1.35f;
         // �����ٶ�

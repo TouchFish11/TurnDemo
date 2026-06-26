@@ -1,4 +1,3 @@
-using HotUpdate.Base.Object;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,21 +8,19 @@ namespace HotUpdate.Base.Component
     /// 对原生PlayerInput的封装
     /// </summary>
     [RequireComponent(typeof(PlayerInput))]
-    public class PlayerInputComponent : MonoBehaviour, IComponent
+    public class PlayerInputComponent : BaseComponent
     {
         public PlayerInput PlayerInput { get; private set; }
 
-        public IEntityObject EntityObject { get; private set; }
-        
-        void IComponent.Init(IEntityObject entityObject, IComponentCore<IComponent> componentCore)
+        protected override void Awake()
         {
-            PlayerInput = entityObject.GameObject.GetComponent<PlayerInput>();
+            base.Awake();
+            PlayerInput = EntityObject?.GameObject.GetComponent<PlayerInput>();
         }
 
-        public void Destroy()
+        protected override void OnBaseDestroy()
         {
             PlayerInput =  null;
-            EntityObject = null;
         }
     }
 }

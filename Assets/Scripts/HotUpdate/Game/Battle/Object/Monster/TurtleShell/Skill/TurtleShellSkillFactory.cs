@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Core.DI;
 using HotUpdate.Game.Battle.Object.Monster.TurtleShell.Strategys;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Base;
@@ -25,10 +26,10 @@ namespace HotUpdate.Game.Battle.Object.Monster.TurtleShell.Skill
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
                     phases = skillPhaseBuilder.
                         AddMonsterCommonPhase().
-                        AddSkillPreCastPhase(new TurtleShellSkillPreCastPhaseStrategy()).
-                        AddSkillCastPhase(new TurtleShellSkillCastPhaseStrategy()).
-                        AddSkillEventProcessPhase(new TurtleShellSkillEventProcessPhaseStrategy()).
-                        AddSkillCastEndPhase(new TurtleShellSkillCastEndPhaseStrategy()).
+                        AddSkillPreCastPhase(DIContainer.Create<TurtleShellSkillPreCastPhaseStrategy>()).
+                        AddSkillCastPhase(DIContainer.Create<TurtleShellSkillCastPhaseStrategy>()).
+                        AddSkillEventProcessPhase(DIContainer.Create<TurtleShellSkillEventProcessPhaseStrategy>()).
+                        AddSkillCastEndPhase(DIContainer.Create<TurtleShellSkillCastEndPhaseStrategy>()).
                         Build();
                     break;
             }

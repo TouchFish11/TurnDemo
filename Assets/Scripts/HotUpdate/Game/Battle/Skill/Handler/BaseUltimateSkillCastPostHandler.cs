@@ -38,8 +38,8 @@ namespace HotUpdate.Game.Battle.Skill.Handler
         {
             // 获取技能释放者的战斗上下文
             var context = skillContext.Caster.Context;
-            // 获取当前执行技能的实体（释放者）
-            var currentEntity = context.GetCurrentEntity();
+            // 获取当前回合的实体
+            var currentEntity = context.CurrentTurnOwner;
 
             // 判断能否处理
             if (!CanHandle(currentEntity))

@@ -1,8 +1,4 @@
-using Core.DI;
-using Core.Pool;
-using Core.Time;
 using HotUpdate.Base;
-
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage.Data;
 using HotUpdate.Game.Battle.Event.General;
@@ -36,13 +32,12 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Status
             };
             
             // 产生特效
-            var vfxInfo = DIContainer.GetInstance<IPoolManager>().GetData<VFXInfo>();
+            var vfxInfo = poolManager.GetData<VFXInfo>();
             var pos = Owner.GameObject.transform.position + Vector3.forward * 0.5f;
             pos = new Vector3(pos.x, 0.5f, pos.z);
-            await DIContainer.GetInstance<IVFXManager>().CreateVFX(AssetKeys.VFX_Dot_Burn, 
-                null, pos, Quaternion.identity, vfxInfo);
+            await vfxManager.CreateVFX(AssetKeys.VFX_Dot_Burn, null, pos, Quaternion.identity, vfxInfo);
 
-            DIContainer.GetInstance<ITimerManager>().CreateTimer(false, 500, () =>
+            timerManager.CreateTimer(false, 500, () =>
             {
                 vfxInfo.IsStop = true;
                 // 更新累计伤害UI

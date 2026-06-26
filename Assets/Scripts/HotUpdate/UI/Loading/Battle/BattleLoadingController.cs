@@ -11,6 +11,8 @@ namespace HotUpdate.UI.Loading.Battle
     /// </summary>
     public class BattleLoadingController : UIController<BattleLoadingView>, IBattleLoadingController
     {
+        protected override bool IsCursorVisible { get; set; } = true;
+
         protected override Task OnInit()
         {
             return Task.CompletedTask;

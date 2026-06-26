@@ -14,6 +14,8 @@ namespace HotUpdate.Base.Data
     [JsonObject(MemberSerialization.OptIn)]
     public abstract class ActivityData
     {
+        [Inject] protected IBinaryDataManager binaryDataManager;
+        
         [JsonProperty] protected int activityId;
         [JsonProperty] protected bool isComplete;
         [JsonProperty] protected int currentPro;
@@ -51,7 +53,7 @@ namespace HotUpdate.Base.Data
         /// </summary>
         private void CheckOver()
         {
-            var activityInfo = DIContainer.GetInstance<IBinaryDataManager>().GetConfig<ActivityInfoContainer>(EConfigLoadType.Excel).dataDic[activityId];
+            var activityInfo = binaryDataManager.GetConfig<ActivityInfoContainer>(EConfigLoadType.Excel).dataDic[activityId];
             isComplete = activityInfo.f_maxPro == currentPro;
         }
 

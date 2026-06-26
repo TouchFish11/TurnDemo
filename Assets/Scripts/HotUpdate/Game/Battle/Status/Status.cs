@@ -1,8 +1,10 @@
 using Core.DI;
 using Core.Pool;
+using Core.Time;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Status.Data;
+using HotUpdate.Game.VFX;
 
 namespace HotUpdate.Game.Battle.Status
 {
@@ -11,6 +13,10 @@ namespace HotUpdate.Game.Battle.Status
     /// </summary>
     public abstract class Status : IStatus, IPoolData
     {
+        [Inject] protected IPoolManager poolManager;
+        [Inject] protected IVFXManager vfxManager;
+        [Inject] protected ITimerManager timerManager;
+        
         // 状态是否有效（有效则生效，无效则触发移除逻辑）
         private bool _isValid;
         // 状态加成数据（如属性加成、数值变化等）

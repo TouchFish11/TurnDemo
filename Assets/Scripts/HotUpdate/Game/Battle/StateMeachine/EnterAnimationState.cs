@@ -50,13 +50,13 @@ namespace HotUpdate.Game.Battle.StateMeachine
 
         public override void Exit()
         {
-            _monoAdapter = null;
-            _battleCameraManager = null;
+
         }
 
         protected override void OnDispose()
         {
-            
+            _monoAdapter = null;
+            _battleCameraManager = null;
         }
     }
 }

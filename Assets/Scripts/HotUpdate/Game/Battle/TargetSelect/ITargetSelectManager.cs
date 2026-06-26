@@ -42,7 +42,7 @@ namespace HotUpdate.Game.Battle.TargetSelect
         /// 更新范围目标列表
         /// 基于主目标和技能范围规则，重新计算所有受影响的目标，并触发UI更新事件
         /// </summary>
-        void UpdateTargets(int skillRangeType);
+        void SelectAllTargets(int skillRangeType);
 
         /// <summary>
         /// 切换到下一个主目标

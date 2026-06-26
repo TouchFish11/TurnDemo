@@ -32,9 +32,9 @@ namespace HotUpdate.Game.Battle.Command
         /// <returns></returns>
         public MonsterActCommand GetMonsterActCommand(ToughnessComponent component, ISkill skill)
         {
-            var skillCommand = DIContainer.GetInstance<IPoolManager>().GetData<SkillCommand>();
+            var skillCommand = poolManager.GetData<SkillCommand>();
             skillCommand.Init(skill);
-            var command = DIContainer.GetInstance<IPoolManager>().GetData<MonsterActCommand>();
+            var command = poolManager.GetData<MonsterActCommand>();
             command.Init(component, skillCommand);
             return command;
         }

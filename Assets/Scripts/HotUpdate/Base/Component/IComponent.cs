@@ -18,9 +18,8 @@ namespace HotUpdate.Base.Component
         /// 初始化组件
         /// 在组件挂载到实体对象时有组件服务调用，用于初始化组件绑定的对象
         /// </summary>
-        /// <param name="entityObject">当前组件要归属的实体对象</param>
         /// <param name="componentCore">组件逻辑对象，可为null</param>
-        void Init(IEntityObject entityObject, IComponentCore<IComponent> componentCore);
+        void Init(IComponentCore<IComponent> componentCore);
         
         /// <summary>
         /// 组件销毁方法

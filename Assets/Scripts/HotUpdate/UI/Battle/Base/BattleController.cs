@@ -20,6 +20,8 @@ namespace HotUpdate.UI.Battle.Base
         
         public IMonsterStateUIManager MonsterStateUIManager { get; }
 
+        protected override bool IsCursorVisible { get; set; } = true;
+
         public BattleController(IMonsterStateUIManager monsterStateUIManager)
         {
             MonsterStateUIManager = monsterStateUIManager;

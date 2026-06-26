@@ -14,7 +14,6 @@ namespace HotUpdate.Game.Battle.Object.StateMeachine
         {
             // 触发回合开始事件
             PlayerObject.Context.GetEventBus().TriggerEvent(new TurnStartEvent(PlayerObject.Context, PlayerObject));
-
             PlayerObject.ChangeState(EActPhase.Operator);
         }
         

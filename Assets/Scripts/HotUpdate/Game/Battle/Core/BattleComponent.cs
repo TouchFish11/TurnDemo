@@ -12,12 +12,17 @@ namespace HotUpdate.Game.Battle.Core
         public IBattleEntityObject BattleEntity { get; private set; }
 
         protected IBattleContext Context { get; private set; }
-        
-        protected sealed override void OnInit()
+
+        protected sealed override void Awake()
         {
+            base.Awake();
             BattleEntity = (IBattleEntityObject)EntityObject;
             // 从战斗实体中获取战斗上下文
             Context = BattleEntity.Context;
+        }
+
+        protected sealed override void OnInit()
+        {
             OnBattleInit();
         }
 

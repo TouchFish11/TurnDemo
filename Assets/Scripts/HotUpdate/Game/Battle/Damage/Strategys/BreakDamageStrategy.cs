@@ -13,6 +13,8 @@ namespace HotUpdate.Game.Battle.Damage.Strategys
     /// </summary>
     public class BreakDamageStrategy : IDamageStrategy
     {
+        [Inject] private IBinaryDataManager _binaryDataManager;
+        
         public void CalcDamage(IBattleEntityObject attacker, IBattleEntityObject defender, SkillInfo skillInfo, out DamageResult damageResult)
         {
             damageResult = default;
@@ -20,9 +22,7 @@ namespace HotUpdate.Game.Battle.Damage.Strategys
 
         public void CalcBreakDamage(IBattleEntityObject attacker, IBattleEntityObject defender, int skillId, int resilienceValue, out DamageResult damageResult)
         {
-            var skillInfo = DIContainer.GetInstance<IBinaryDataManager>()
-                .GetConfig<SkillInfoContainer>(EConfigLoadType.Excel).dataDic[skillId];
-            
+            var skillInfo = _binaryDataManager.GetConfig<SkillInfoContainer>(EConfigLoadType.Excel).dataDic[skillId];
             damageResult = new DamageResult(attacker, defender, 25, skillInfo.f_elementType.ToElementType(), E_DamageType.Break, false, skillId, resilienceValue);
         }
     }

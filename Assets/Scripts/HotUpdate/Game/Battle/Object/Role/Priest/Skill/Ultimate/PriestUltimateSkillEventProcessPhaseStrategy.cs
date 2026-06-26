@@ -1,6 +1,4 @@
 using System.Threading.Tasks;
-using Core.DI;
-using Core.Pool;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
 using HotUpdate.Game.Battle.Status;
@@ -36,8 +34,8 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill.Ultimate
             foreach (var target in projectileData.targets)
             {
                 var projectileTrans = new ProjectileTrans(target.GameObject.transform.position, Quaternion.identity);
-                var newVFXInfo = DIContainer.GetInstance<IPoolManager>().GetData<VFXInfo>();
-                await DIContainer.GetInstance<IVFXManager>().CreateVFX(AssetKeys.VFX_WindPropertySkill_Hit, projectileTrans, default, newVFXInfo);
+                var newVFXInfo = poolManager.GetData<VFXInfo>();
+                await vfxManager.CreateVFX(AssetKeys.VFX_WindPropertySkill_Hit, projectileTrans, default, newVFXInfo);
                 // 计时器计时
                 timerManager.CreateTimer(false, 500, () =>
                 {

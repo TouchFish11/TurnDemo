@@ -21,7 +21,17 @@ namespace HotUpdate.Game.Battle.Context
         /// 获取战技点数的最大上限值
         /// </summary>
         int MaxBattlePointCount { get; }
-        
+
+        /// <summary>
+        /// 当前执行命令的实体，表示正在执行当前命令的对象
+        /// </summary>
+        IBattleEntityObject CurrentCommander { get; }
+
+        /// <summary>
+        /// 持有当前行动回合的实体，不受终结技、追击等“插队”逻辑的影响
+        /// </summary>
+        IBattleEntityObject CurrentTurnOwner { get; set; }
+
         /// <summary>
         /// 获取首个战斗实体（通常用于初始化或默认目标）
         /// </summary>
@@ -83,18 +93,6 @@ namespace HotUpdate.Game.Battle.Context
         /// <param name="battleEntity">目标怪物实体</param>
         /// <returns>实体对应的索引值；若不存在则返回-1（业务约定）</returns>
         int GetMonsterEntityIndex(IBattleEntityObject battleEntity);
-
-        /// <summary>
-        /// 获取当前处于行动回合的战斗实体
-        /// </summary>
-        /// <returns>当前行动的实体；若无则返回null</returns>
-        IBattleEntityObject GetCurrentEntity();
-
-        /// <summary>
-        /// 设置当前处于行动回合的战斗实体
-        /// </summary>
-        /// <param name="battleEntity">要设置为当前行动的实体</param>
-        void SetCurrentEntity(IBattleEntityObject battleEntity);
 
         /// <summary>
         /// 获取所有存活的战斗实体（包含玩家和怪物）
@@ -199,5 +197,9 @@ namespace HotUpdate.Game.Battle.Context
         /// 初始化战斗状态机
         /// </summary>
         void InitStateMachine();
+
+        void PushCommander(IBattleEntityObject commander);
+        
+        void PopCommander();
     }
 }

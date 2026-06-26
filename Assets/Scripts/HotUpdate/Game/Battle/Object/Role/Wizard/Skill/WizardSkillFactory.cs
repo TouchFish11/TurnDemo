@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Core.DI;
 using HotUpdate.Game.Battle.Object.Role.Wizard.Skill.Battle;
 using HotUpdate.Game.Battle.Object.Role.Wizard.Skill.Normal;
 using HotUpdate.Game.Battle.Object.Role.Wizard.Skill.Ultimate;
@@ -26,28 +27,28 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard.Skill
                 case 20:    // 普攻
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
                     phases = skillPhaseBuilder.
-                        AddSkillPreCastPhase(new WizardNormalSkillPreCastPhaseStrategy()).
-                        AddSkillCastPhase(new WizardNormalSkillCastPhaseStrategy()).
-                        AddSkillEventProcessPhase(new WizardNormalSkillEventProcessPhaseStrategy()).
-                        AddSkillCastEndPhase(new WizardNormalSkillCastEndPhaseStrategy()).
+                        AddSkillPreCastPhase(DIContainer.Create<WizardNormalSkillPreCastPhaseStrategy>()).
+                        AddSkillCastPhase(DIContainer.Create<WizardNormalSkillCastPhaseStrategy>()).
+                        AddSkillEventProcessPhase(DIContainer.Create<WizardNormalSkillEventProcessPhaseStrategy>()).
+                        AddSkillCastEndPhase(DIContainer.Create<WizardNormalSkillCastEndPhaseStrategy>()).
                         Build();
                     break;
                 case 21:    // 战技
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseSkillCastPostHandler>();
                     phases = skillPhaseBuilder.
-                        AddSkillPreCastPhase(new WizardBattleSkillPreCastPhaseStrategy()).
-                        AddSkillCastPhase(new WizardBattleSkillCastPhaseStrategy()).
-                        AddSkillEventProcessPhase(new WizardBattleSkillEventProcessPhaseStrategy()).
-                        AddSkillCastEndPhase(new WizardBattleSkillCastEndPhaseStrategy()).
+                        AddSkillPreCastPhase(DIContainer.Create<WizardBattleSkillPreCastPhaseStrategy>()).
+                        AddSkillCastPhase(DIContainer.Create<WizardBattleSkillCastPhaseStrategy>()).
+                        AddSkillEventProcessPhase(DIContainer.Create<WizardBattleSkillEventProcessPhaseStrategy>()).
+                        AddSkillCastEndPhase(DIContainer.Create<WizardBattleSkillCastEndPhaseStrategy>()).
                         Build();
                     break;
                 case 22:    // 终结技
                     handler = skillCastPostHandlerFactory.GetSkillCastPostHandler<BaseUltimateSkillCastPostHandler>();
                     phases = skillPhaseBuilder.
-                        AddSkillPreCastPhase(new WizardUltimateSkillPreCastPhaseStrategy()).
-                        AddSkillCastPhase(new WizardUltimateSkillCastPhaseStrategy()).
-                        AddSkillEventProcessPhase(new WizardUltimateSkillEventProcessPhaseStrategy()).
-                        AddSkillCastEndPhase(new WizardUltimateSkillCastEndPhaseStrategy()).
+                        AddSkillPreCastPhase(DIContainer.Create<WizardUltimateSkillPreCastPhaseStrategy>()).
+                        AddSkillCastPhase(DIContainer.Create<WizardUltimateSkillCastPhaseStrategy>()).
+                        AddSkillEventProcessPhase(DIContainer.Create<WizardUltimateSkillEventProcessPhaseStrategy>()).
+                        AddSkillCastEndPhase(DIContainer.Create<WizardUltimateSkillCastEndPhaseStrategy>()).
                         Build();
                     break;
             }
