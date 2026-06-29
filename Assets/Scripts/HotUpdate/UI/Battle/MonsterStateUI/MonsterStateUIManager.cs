@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
-using Core.Pool;
+using Core.Mono;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.UI;
 using UnityEngine;
@@ -16,7 +16,7 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
     public class MonsterStateUIManager : IMonsterStateUIManager
     {
         [Inject] private ObjectSpawner _objectSpawner;
-        [Inject] private IPoolManager _poolManager;
+        [Inject] private IMonoAdapter _monoAdapter;
         
         // 怪物实体到怪物血量UI的映射
         private readonly Dictionary<IBattleEntityObject, NormalMonsterStateUI> normalMonsterStateUIs = new();
@@ -31,7 +31,7 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
             // 从资源包加载怪物状态UI预制体，并挂载到怪物UI区域
             var monsterStateUI = await _objectSpawner.SpawnAsync<NormalMonsterStateUI>(AssetKeys.MonsterStateUI, monsterStateArea);
             // 初始化怪物状态UI（传入战斗实体、UI挂载区域）
-            await monsterStateUI.Init(monsterObject, monsterStateArea);
+            await monsterStateUI.Init(monsterObject, monsterStateArea, _monoAdapter);
             normalMonsterStateUIs.Add(monsterObject, monsterStateUI);
         }
 
@@ -46,7 +46,7 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
                 return;
             }
             
-            _poolManager.PushObj(normalMonsterStateUI.gameObject);
+            _objectSpawner.Release(normalMonsterStateUI);
             normalMonsterStateUIs.Remove(deadMonster);
         }
 
@@ -128,6 +128,15 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
             }
             normalMonsterStateUIs.Clear();
             _objectSpawner.Clear();
+        }
+
+        public void Dispose()
+        {
+            foreach (var normalMonsterStateUI in normalMonsterStateUIs.Values)
+            {
+                _objectSpawner.Release(normalMonsterStateUI);
+            }
+            _objectSpawner.Dispose();
         }
     }
 }

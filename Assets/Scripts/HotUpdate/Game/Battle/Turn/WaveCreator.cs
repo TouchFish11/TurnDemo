@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.DI;
-using HotUpdate.Base;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Object;
@@ -38,18 +37,13 @@ namespace HotUpdate.Game.Battle.Turn
         }
         
         /// <summary>
-        /// 推进到下一波次
+        /// 尝试推进到下一波次，更新波次索引
         /// </summary>
         /// <returns>若为true，则存在下一波次并推进；否则返回false，代表所有波次结束</returns>
-        public bool MoveWave()
+        public bool TryMoveWave()
         {
-            if (_waveIndex < _waveDatas.Count)
-            {
-                ++_waveIndex;
-                _waveHandler.UpdateCondition(_waveDatas[_waveIndex].WaveVictoryConditionType);
-                return true;
-            }
-            return false;
+            ++_waveIndex;
+            return _waveIndex < _waveDatas.Count;
         }
 
         /// <summary>
@@ -57,6 +51,8 @@ namespace HotUpdate.Game.Battle.Turn
         /// </summary>
         public async Task<List<IBattleEntityObject>> CreateWave()
         {
+            // 更新当前波次胜利条件
+            _waveHandler.UpdateCondition(_waveDatas[_waveIndex].WaveVictoryConditionType);
             // 创建当前波次的怪物
             return await _battleManager.GetBattleService().CreateMonsters(_waveDatas[_waveIndex].MonsterIds.ToArray());
         }

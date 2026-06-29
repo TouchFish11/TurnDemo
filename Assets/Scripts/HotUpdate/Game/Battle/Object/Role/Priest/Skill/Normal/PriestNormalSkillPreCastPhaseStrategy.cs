@@ -11,7 +11,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill.Normal
     {
         public override IEnumerator Execute()
         {
-            SkillHelper.InitSkillTarget(skill, battleCoordinator);
+            SkillHelper.InitRoleSkillTarget(skill, battleCoordinator);
             
             var skillContext = skill.SkillContext;
             

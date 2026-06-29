@@ -42,7 +42,7 @@ namespace HotUpdate.Game.Battle.Object.Monster
             damageChain = DamageChainBuilder.GetMonsterDamageChain();
             SkillFactory = GetSkillFactory();
             DefaultTargetSelectStrategy = GetTargetSelectStrategy();
-            DefaultTargetSelectStrategy = GetTargetSelectStrategy();
+            DefaultCastCondition = GetSkillCondition();
             // 根据配置的组件名称列表，为怪物添加对应的战斗组件（如韧性组件、动画组件等）
             AddComponents(TextUtility.Split(MonsterInfo.f_comNames, 2));
         }

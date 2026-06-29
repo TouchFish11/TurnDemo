@@ -1,5 +1,5 @@
 using HotUpdate.Game.Battle.Context;
-using HotUpdate.Game.Battle.Status;
+using HotUpdate.Game.Battle.Statuses;
 using HotUpdate.Game.VFX;
 using UnityEngine;
 
@@ -9,11 +9,11 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Status
     /// 生机
     /// </summary>
     [StatusTypeId(301)]
-    public class RejuvenationStatus : Battle.Status.Status
+    public class RejuvenationStatus : StatusBase
     {
         protected override void OnTurnStart(IBattleEntityObject owner, IBattleContext context)
         {
-            StatusProperty.SetRemainingRound(StatusProperty.RemainingRound - 1);
+            base.OnTurnStart(owner, context);
             owner.TakeHeal(20);
             // 创建VFX
             CreateVFX();

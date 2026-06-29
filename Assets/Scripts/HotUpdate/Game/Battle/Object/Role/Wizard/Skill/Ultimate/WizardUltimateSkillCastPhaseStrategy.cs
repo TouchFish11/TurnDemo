@@ -1,7 +1,7 @@
 using System.Collections;
-using Core.Utility;
 using HotUpdate.Base.Utility;
 using HotUpdate.Game.Animation.Component;
+using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
 using HotUpdate.Game.VFX;
 using UnityEngine;
@@ -26,8 +26,8 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard.Skill.Ultimate
             // 更新投射物变换信息（基于主目标位置，无旋转）
             SkillContext.ProjectileTrans = new ProjectileTrans(SkillContext.MainTarget.GameObject.transform.position, Quaternion.identity);
             // 创建终结技核心特效（命中目标处）
-            yield return TaskUtility.WaitForTask(vfxManager.CreateVFX(AssetKeys.VFX_WizardUltimateSkill, SkillContext.ProjectileTrans, SkillContext.ProjectileData, SkillContext.VFXInfo), 
-                projectile => SkillContext.Projectile = projectile);
+            var task = vfxManager.CreateVFX(AssetKeys.VFX_WizardUltimateSkill, SkillContext.ProjectileTrans, SkillContext.ProjectileData, SkillContext.VFXInfo);
+            yield return SkillHelper.WaitForCreateVFX(SkillContext, task);
         }
     }
 }

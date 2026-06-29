@@ -1,8 +1,9 @@
+using System;
 using HotUpdate.Game.Battle.Event;
 
 namespace HotUpdate.Game.Battle.UI
 {
-    public interface IBattleEventProcessor
+    public interface IBattleEventProcessor : IDisposable
     {
         /// <summary>
         /// 统一注册所有战斗事件

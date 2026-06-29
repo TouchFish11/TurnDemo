@@ -10,6 +10,8 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill.Normal
         
         public override IEnumerator Execute()
         {
+            // 等待特效结束
+            yield return new WaitWhile(() => SkillContext.VFXInfo.IsAlive);
             yield return s_waitForSeconds;
         }
     }

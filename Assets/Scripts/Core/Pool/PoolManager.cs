@@ -83,7 +83,7 @@ namespace Core.Pool
             // 已经存储过了就可以直接往容器中存储对象
             if (_objectPools.TryGetValue(obj.name, out var objectPool))
             {
-                objectPool?.Push(obj);
+                objectPool.Push(obj);
                 // 更新该对象子池状态
                 UpdatePoolState(objectPool);
             }

@@ -856,7 +856,7 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\VFX\Role\Priest\VFX_Priest_BattleSkill.prefab
       size: 708971
       name: VFX_Priest_BattleSkill.prefab
-      hash: 742450af4c9127865222076c297e93ef63262e70477b60d725737b60b43ec20c
+      hash: 7d7eb9ecc384d99571d8411012cedb37d64e54e9f7f8256790fe6b7649204f62
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\VFX\Role\Priest\VFX_Priest_NormalSkill.prefab
       size: 1071872

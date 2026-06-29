@@ -103,6 +103,11 @@ namespace HotUpdate.Game.Battle.Skill.Component
             return skillComponentCore.GetSkill(skillId);
         }
 
+        public int GetSkillIdByIndex(int index)
+        {
+            return skillComponentCore.GetSkillIdByIndex(index);
+        }
+
         protected override void OnBattleDestroy()
         {
             skillComponentCore = null;

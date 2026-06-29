@@ -7,8 +7,6 @@ using UnityEngine;
 
 namespace HotUpdate.Game.VFX
 {
-    using Task = System.Threading.Tasks.Task;
-
     /// <summary>
     /// 视觉特效（VFX）管理器
     /// 负责VFX的创建、更新、移除、缓存清理等核心逻辑，基于对象池管理VFX资源

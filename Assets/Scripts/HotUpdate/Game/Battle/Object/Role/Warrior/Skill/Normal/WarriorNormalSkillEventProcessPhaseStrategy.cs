@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
-using HotUpdate.Game.Battle.Status;
+using HotUpdate.Game.Battle.Statuses;
 using HotUpdate.Game.VFX;
 using UnityEngine;
 
@@ -28,8 +28,8 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Normal
                     target, SkillContext.SkillInfo, 
                     out var result);
                 target.TakeDamage(result);
-                // 恢复能量
-                //((PlayerSkill)projectileData.skill).RecoverEnergy();
+                // 恢复终结技能量
+                ((PlayerObject)projectileData.caster).RecoverUltimate(SkillContext.SkillInfo.f_recoveryEnergy);
             }
             
             foreach (var target in projectileData.targets)

@@ -1,6 +1,5 @@
-using Core.DI;
+using System;
 using Core.Mono;
-using Core.Pool;
 using Core.UI;
 using TMPro;
 using UnityEngine;
@@ -15,6 +14,7 @@ namespace HotUpdate.UI.Battle.FloatText
         // 治疗文字的移动根节点（用于控制位置和缩放）
         [InjectUI(1)] private RectTransform HealTextMover { get; set; }
         
+        private IMonoAdapter _monoAdapter;
         // 文字向上移动的速度（单位：像素/秒）
         private const float upMoveSpeed = 2.5f;
         // 文字显示后自动销毁的时长（单位：秒）
@@ -28,6 +28,8 @@ namespace HotUpdate.UI.Battle.FloatText
         
         // 文字当前显示时长（用于计时销毁）
         private float currentTime;
+
+        public event Action<HealTextUI> OnDurationOver;
         
         /// <summary>
         /// 组件启用时初始化
@@ -35,8 +37,6 @@ namespace HotUpdate.UI.Battle.FloatText
         /// </summary>
         protected override void OnEnable()
         {
-            // 注册帧更新监听，每帧执行OnUpdate逻辑
-            DIContainer.GetInstance<IMonoAdapter>().AddUpdateListener(OnUpdate);
             // 重置文字移动节点的锚点位置为初始值
             (HealTextMover.transform as RectTransform).anchoredPosition = Vector3.zero;
             // 设置文字初始缩放（放大显示）
@@ -47,10 +47,14 @@ namespace HotUpdate.UI.Battle.FloatText
         /// 初始化治疗文字的显示内容和样式
         /// </summary>
         /// <param name="healText"></param>
-        public void InitHealText(int healText)
+        /// <param name="monoAdapter"></param>
+        public void InitHealText(int healText, IMonoAdapter monoAdapter)
         {
             // 设置治疗数值文本内容（转为字符串）
             txtHealNum.text = healText.ToString();
+            // 注册帧更新监听，每帧执行OnUpdate逻辑
+            monoAdapter.AddUpdateListener(OnUpdate);
+            _monoAdapter = monoAdapter;
         }
         
         /// <summary>
@@ -66,8 +70,7 @@ namespace HotUpdate.UI.Battle.FloatText
             {
                 // 重置计时（避免重复回收）
                 currentTime = 0;
-                // 将当前游戏对象推回对象池
-                DIContainer.GetInstance<IPoolManager>().PushObj(gameObject);
+                OnDurationOver?.Invoke(this);
             }
 
             // 缩放过渡：从初始缩放值平滑过渡到最终缩放值
@@ -83,7 +86,7 @@ namespace HotUpdate.UI.Battle.FloatText
         protected override void OnDisable()
         {
             // 移除帧更新监听，停止逻辑执行
-            DIContainer.GetInstance<IMonoAdapter>().RemoveUpdateListener(OnUpdate);
+            _monoAdapter.RemoveUpdateListener(OnUpdate);
         }
     }
 }

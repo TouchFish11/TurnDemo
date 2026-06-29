@@ -1,5 +1,5 @@
 using HotUpdate.Game.Battle.Context;
-using HotUpdate.Game.Battle.Status;
+using HotUpdate.Game.Battle.Statuses;
 
 namespace HotUpdate.Game.Battle.Event.UI
 {

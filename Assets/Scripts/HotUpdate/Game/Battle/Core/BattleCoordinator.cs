@@ -14,10 +14,11 @@ using HotUpdate.Game.Battle.Inputs;
 using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Role;
+using HotUpdate.Game.Battle.Operation;
+using HotUpdate.Game.Battle.Operation.Provider;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.TargetSelect;
 using HotUpdate.Game.Battle.UI;
-using HotUpdate.Game.Battle.UI.Provider;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
@@ -219,7 +220,7 @@ namespace HotUpdate.Game.Battle.Core
 
             var controller = (IBattleController)_uiService.GetPanel(EUIPanelId.BattlePanel);
             // 隐藏行动提示
-            controller.BattleUiManager.SetActTipActive(E_ActTipType.Hide);
+            controller.BattleUiManager.SetActTipActive(EActTipType.Hide);
             // 激活怪物血量UI显示
             controller.MonsterStateUIManager.ActiveMonsterUIs();
             // 显示终结技立绘

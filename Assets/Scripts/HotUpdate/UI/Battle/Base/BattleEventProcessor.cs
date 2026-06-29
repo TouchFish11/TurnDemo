@@ -7,6 +7,7 @@ using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Object.Monster;
 using HotUpdate.Game.Battle.Object.Role;
+using HotUpdate.Game.Battle.Operation;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.UI;
 
@@ -26,7 +27,8 @@ namespace HotUpdate.UI.Battle.Base
         private readonly IBattleUIManager _uiManager;
         // 战斗UI初始化器，用于初始化战斗中各类UI组件
         private readonly IBattleUIInitializer _uiInitializer;
-
+        private IBattleEventBus _eventBus;
+        
         /// <summary>
         /// 战斗事件处理器构造函数
         /// </summary>
@@ -65,6 +67,30 @@ namespace HotUpdate.UI.Battle.Base
             eventBus.AddListener<StatusAddedEvent>(OnStatusAddedEvent);       // 状态添加事件
             eventBus.AddListener<BattleOverEvent>(OnBattleOverEvent);         // 战斗结束事件
             eventBus.AddListener<MonsterDeadEvent>(OnMonsterDeadEvent);       // 怪物死亡事件
+
+            _eventBus = eventBus;
+        }
+
+        private void UnsubscribeBattleEvents()
+        {
+            _eventBus.RemoveListener<TurnEndEvent>(OnTurnEnd);                   // 回合结束事件
+            _eventBus.RemoveListener<OnBattlePointCountChangedEvent>(OnBattlePointCountChanged); // 战斗点数变化事件
+            _eventBus.RemoveListener<SelectTargetEvent>(OnTargetSelectionChanged);      // 目标选择事件
+            _eventBus.RemoveListener<PostCastEvent>(OnPostCastDispatch);    // 监听技能释放后通用逻辑事件
+            _eventBus.RemoveListener<UpdateWaitCmdEvent>(OnUpdateWaitCmdDispatch);  // 监听更新等待队列事件
+            
+            _eventBus.RemoveListener<ApplyDamageEvent>(ApplyTakeDamage);            // 应用伤害事件
+            _eventBus.RemoveListener<ApplyShieldEvent>(ApplyShieldChanged);            // 提供护盾事件
+            _eventBus.RemoveListener<ApplyHealEvent>(ApplyHealChanged);            // 提供治疗事件
+            _eventBus.RemoveListener<ShieldChangedEvent>(OnShieldChanged);       // 护盾值变化事件
+            
+            _eventBus.RemoveListener<ClearCumulativeDamageEvent>(OnClearCumulativeDamageEvent);     // 清空累计伤害显示事件
+            _eventBus.RemoveListener<PlayerReleaseSkillEvent>(OnPlayerReleaseSkillEvent); // 玩家释放技能事件
+            _eventBus.RemoveListener<ActionBarSortPostEvent>(OnActionBarSortPostEvent); // 行动条排序完成事件
+            _eventBus.RemoveListener<TurnStartStatusChangedEvent>(OnTurnStartStatusChangedEvent); // 回合开始状态变化事件
+            _eventBus.RemoveListener<StatusAddedEvent>(OnStatusAddedEvent);       // 状态添加事件
+            _eventBus.RemoveListener<BattleOverEvent>(OnBattleOverEvent);         // 战斗结束事件
+            _eventBus.RemoveListener<MonsterDeadEvent>(OnMonsterDeadEvent);       // 怪物死亡事件
         }
 
         /// <summary>
@@ -185,7 +211,7 @@ namespace HotUpdate.UI.Battle.Base
             // 清空操作面板
             _uiManager.ClearOperator();
             // 显示玩家行动提示
-            _uiManager.SetActTipActive(E_ActTipType.Player);
+            _uiManager.SetActTipActive(EActTipType.Player);
         }
 
         /// <summary>
@@ -255,6 +281,11 @@ namespace HotUpdate.UI.Battle.Base
         private void OnBattleOverEvent(BattleOverEvent battleOverEvent)
         {
             _uiManager.ShowBattleOver(battleOverEvent.Context);
+        }
+
+        public void Dispose()
+        {
+            UnsubscribeBattleEvents();
         }
     }
 }

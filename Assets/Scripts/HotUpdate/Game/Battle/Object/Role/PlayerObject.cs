@@ -5,6 +5,7 @@ using Core.Utility;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Object.StateMeachine;
+using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.ResponsibilityChain.DamageChain;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Component;
@@ -129,6 +130,19 @@ namespace HotUpdate.Game.Battle.Object.Role
             var skillCommand = commandfactory.GetSkillCommand(skill);
             // 发送指令
             Context.GetEventBus().TriggerEvent(new InsertCommandEvent(Context, skillCommand));
+        }
+
+        public void RecoverUltimate(int value)
+        {
+            var propertyComponent = GetComponent<PropertyComponent>();
+            var current = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentEnergy);
+            var newValue = current + value;
+            if (newValue > RoleInfo.f_maxEnergy)
+            {
+                newValue = RoleInfo.f_maxEnergy;
+            }
+            
+            propertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentEnergy, newValue);
         }
     }
 }

@@ -12,9 +12,10 @@ using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Object.Monster;
 using HotUpdate.Game.Battle.Object.Role;
+using HotUpdate.Game.Battle.Operation;
+using HotUpdate.Game.Battle.Operation.Provider;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.UI;
-using HotUpdate.Game.Battle.UI.Provider;
 using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.Battle.Event
@@ -59,7 +60,7 @@ namespace HotUpdate.Game.Battle.Event
             var controller = (IBattleController)_uiService.GetPanel(EUIPanelId.BattlePanel);
             controller.BattleUiManager.ClearSelectMarker();
             controller.BattleUiManager.ClearOperator();
-            controller.BattleUiManager.SetActTipActive(E_ActTipType.Hide);
+            controller.BattleUiManager.SetActTipActive(EActTipType.Hide);
         }
         
         /// <summary>
@@ -96,7 +97,7 @@ namespace HotUpdate.Game.Battle.Event
                         // 玩家回合：激活目标选择功能
                         _battleCoordinator.IsActiveTargetSelect = true;
                         // 隐藏行动提示
-                        controller.BattleUiManager.SetActTipActive(E_ActTipType.Hide);
+                        controller.BattleUiManager.SetActTipActive(EActTipType.Hide);
                         // 获取技能按键UI数据提供器
                         var provider = _skillKeyUIDataProviderFactory.GetProvider<BaseSkillKeyUIDataProvider>();
                         // 根据数据更新玩家操作按键，按键触发技能选择事件
@@ -111,7 +112,7 @@ namespace HotUpdate.Game.Battle.Event
                         // 清空操作面板
                         controller.BattleUiManager.ClearOperator();
                         // 显示怪物行动提示
-                        controller.BattleUiManager.SetActTipActive(E_ActTipType.Monster);
+                        controller.BattleUiManager.SetActTipActive(EActTipType.Monster);
                         break;
                 }
             }

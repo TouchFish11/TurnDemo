@@ -9787,7 +9787,7 @@ GameObject:
   - component: {fileID: 5660267935541568282}
   - component: {fileID: 196862733239119355}
   - component: {fileID: 4642892430567096565}
-  - component: {fileID: -564807566312973161}
+  - component: {fileID: 7151970011118484489}
   m_Layer: 12
   m_Name: VFX_Priest_BattleSkill
   m_TagString: Untagged
@@ -14612,7 +14612,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
---- !u!114 &-564807566312973161
+--- !u!114 &7151970011118484489
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

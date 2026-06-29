@@ -3,7 +3,7 @@ using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage.Data;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Event.UI;
-using HotUpdate.Game.Battle.Status;
+using HotUpdate.Game.Battle.Statuses;
 using HotUpdate.Game.VFX;
 using UnityEngine;
 
@@ -13,7 +13,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.Slime.Status
     /// 冰蚀
     /// </summary>
     [StatusTypeId(1011)]
-    public class IceErosionStatus : Battle.Status.Status, IDotStatus
+    public class IceErosionStatus : StatusBase, IDotStatus
     {
         protected override void OnTurnStart(IBattleEntityObject owner, IBattleContext context)
         {

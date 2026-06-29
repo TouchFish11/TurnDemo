@@ -14,5 +14,11 @@ namespace HotUpdate.Game.Battle.Object.Role
         /// </summary>
         /// <param name="initData"></param>
         void RoleBattleInit(RoleBattleInitData initData);
+
+        /// <summary>
+        /// 恢复终结技
+        /// </summary>
+        /// <param name="value"></param>
+        void RecoverUltimate(int value);
     }
 }

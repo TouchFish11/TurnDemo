@@ -9,11 +9,12 @@ using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Role;
+using HotUpdate.Game.Battle.Operation;
+using HotUpdate.Game.Battle.Operation.Provider;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.TargetSelect;
 using HotUpdate.Game.Battle.TargetSelect.Strategys;
 using HotUpdate.Game.Battle.UI;
-using HotUpdate.Game.Battle.UI.Provider;
 
 namespace HotUpdate.Game.Battle.Skill.Handler
 {
@@ -53,7 +54,7 @@ namespace HotUpdate.Game.Battle.Skill.Handler
             var currentEntitySkillInfo = GetNormalSkillInfo(currentEntity);
             
             // 隐藏战斗界面的行动提示UI（如技能释放提示、行动按钮等）
-            ((IBattleController)_uiService.GetPanel(EUIPanelId.BattlePanel)).BattleUiManager.SetActTipActive(E_ActTipType.Hide);
+            ((IBattleController)_uiService.GetPanel(EUIPanelId.BattlePanel)).BattleUiManager.SetActTipActive(EActTipType.Hide);
             
             // 获取技能按键UI数据提供者（用于更新玩家操作区的技能按键状态）
             var provider = _skillKeyUIDataProviderFactory.GetProvider<BaseSkillKeyUIDataProvider>();

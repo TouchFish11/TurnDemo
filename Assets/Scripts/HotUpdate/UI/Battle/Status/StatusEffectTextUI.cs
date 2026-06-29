@@ -1,6 +1,5 @@
-using Core.DI;
+using System;
 using Core.Mono;
-using Core.Pool;
 using Core.UI;
 using TMPro;
 using UnityEngine;
@@ -28,10 +27,13 @@ namespace HotUpdate.UI.Battle.Status
         // 文本显示后自动销毁/回收的时间（可在Inspector面板配置）
         [SerializeField] private float destroyTime = 0.85f;
 
+        private IMonoAdapter _monoAdapter;
         // 移动组件的初始本地位置（用于每次激活时重置位置）
         private Vector3 originMoverPos;
         // 记录当前文本显示的累计时间
         private float currentTime;
+
+        public event Action<StatusEffectTextUI> OnDurationOver;
         
         /// <summary>
         /// 唤醒方法，初始化游戏物体引用和移动组件初始位置
@@ -50,19 +52,21 @@ namespace HotUpdate.UI.Battle.Status
         {
             // 重置移动组件到初始位置
             Mover.localPosition = originMoverPos;
-            // 向Mono管理器注册帧更新回调
-            DIContainer.GetInstance<IMonoAdapter>().AddUpdateListener(OnUpadte);
         }
-        
+
         /// <summary>
         /// 初始化文本
         /// </summary>
         /// <param name="icon"></param>
         /// <param name="buffName"></param>
-        public void InitText(Sprite icon, string buffName)
+        /// <param name="monoAdapter"></param>
+        public void InitText(Sprite icon, string buffName, IMonoAdapter monoAdapter)
         {
             imgIcon.sprite = icon;
             txtBuffName.text = buffName;
+            // 向Mono管理器注册帧更新回调
+            monoAdapter.AddUpdateListener(OnUpadte);
+            _monoAdapter = monoAdapter;
         }
 
         /// <summary>
@@ -78,8 +82,7 @@ namespace HotUpdate.UI.Battle.Status
             {
                 // 重置累计时间
                 currentTime = 0;
-                // 将当前游戏物体回收到对象池
-                DIContainer.GetInstance<IPoolManager>().PushObj(gameObject);
+                OnDurationOver?.Invoke(this);
             }
             // 让移动组件沿Y轴向上移动（基于帧率的平滑移动）
             Mover.Translate(Time.deltaTime * upMoveSpeed * Vector3.up);
@@ -92,7 +95,7 @@ namespace HotUpdate.UI.Battle.Status
         protected override void OnDisable()
         {
             // 从Mono管理器移除帧更新回调
-            DIContainer.GetInstance<IMonoAdapter>().RemoveUpdateListener(OnUpadte);
+            _monoAdapter.RemoveUpdateListener(OnUpadte);
         }
     }
 }

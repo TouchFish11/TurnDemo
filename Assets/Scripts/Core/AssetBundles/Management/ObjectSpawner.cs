@@ -14,7 +14,7 @@ using Object = UnityEngine.Object;
 namespace Core.AssetBundles.Management
 {
     /// <summary>
-    /// 对象生成器
+    /// 对象生成器，需要实例化的对象才使用此工具
     /// </summary>
     public class ObjectSpawner : IDisposable
     {

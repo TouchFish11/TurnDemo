@@ -30,7 +30,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard.Skill.Ultimate
             // 移除Pose特效
             vfxManager.RemoveVFX(skill.SkillContext.VFXInfo);
 
-            SkillHelper.InitSkillTarget(skill, battleCoordinator);
+            SkillHelper.InitRoleSkillTarget(skill, battleCoordinator);
         }
     }
 }

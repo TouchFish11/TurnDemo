@@ -3,7 +3,7 @@ using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage.Data;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Event.UI;
-using HotUpdate.Game.Battle.Status;
+using HotUpdate.Game.Battle.Statuses;
 using HotUpdate.Game.VFX;
 using UnityEngine;
 
@@ -13,11 +13,11 @@ namespace HotUpdate.Game.Battle.Object.Monster.TurtleShell.Status
     /// 风化
     /// </summary>
     [StatusTypeId(1021)]
-    public class WeatherStatus : Battle.Status.Status, IDotStatus
+    public class WeatherStatus : StatusBase, IDotStatus
     {
         protected override void OnTurnStart(IBattleEntityObject owner, IBattleContext context)
         {
-            StatusProperty.SetRemainingRound(StatusProperty.RemainingRound - 1);
+            base.OnTurnStart(owner, context);
             ApplyDamage();
         }
         

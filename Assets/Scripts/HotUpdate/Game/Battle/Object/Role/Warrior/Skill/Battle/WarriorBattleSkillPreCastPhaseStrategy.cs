@@ -11,7 +11,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Battle
     {
         public override IEnumerator Execute()
         {
-            SkillHelper.InitSkillTarget(skill, battleCoordinator);
+            SkillHelper.InitRoleSkillTarget(skill, battleCoordinator);
             var skillContext = skill.SkillContext;
             
             // 消耗战斗点数（BP），消耗数值取自技能配置表的f_costBP字段

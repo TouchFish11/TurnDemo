@@ -1,12 +1,13 @@
 using System.Collections;
 using Core.DI;
 using HotUpdate.Base.UI;
+using HotUpdate.Game.Battle.Operation;
 using HotUpdate.Game.Battle.UI;
 
 namespace HotUpdate.Game.Battle.Skill.Base.Phase
 {
     /// <summary>
-    /// 怪物技能通用阶段
+    /// 怪物技能通用阶段，处理UI相关的表现逻辑等
     /// </summary>
     public class MonsterCommonPhase : SkillFlowPhase
     {
@@ -29,7 +30,7 @@ namespace HotUpdate.Game.Battle.Skill.Base.Phase
             // 重置操作对象，取消当前选中的可操作实体
             controller.BattleUiManager.ClearOperator();
             // 激活战斗提示，显示怪物行动相关的提示类型（告知玩家当前是怪物回合/技能释放）
-            controller.BattleUiManager.SetActTipActive(E_ActTipType.Monster);
+            controller.BattleUiManager.SetActTipActive(EActTipType.Monster);
             yield break;
         }
     }

@@ -89,32 +89,50 @@ namespace HotUpdate.Game.Main.Data
 
         public void SaveData()
         {
-            // 保存音乐数据
-            _binaryDataManager.Save(FileUtility.LocalMusicDataFileName, MainDataCollection.MusicData);
-            Logger.Log($"{nameof(MainDataManager)}.{nameof(SaveData)}:音乐数据保存成功，{FileUtility.LocalMusicDataFileName}");
+            if(MainDataCollection != null)
+            {
+                // 保存音乐数据
+                _binaryDataManager.Save(FileUtility.LocalMusicDataFileName, MainDataCollection.MusicData);
+                Logger.Log($"{nameof(MainDataManager)}: 音乐数据保存成功，{FileUtility.LocalMusicDataFileName}");
+            }
             
             // 保存输入数据
-            _binaryDataManager.Save(FileUtility.LocalInputDataFileName, MainDataCollection.InputActionContainer);
-            Logger.Log($"{nameof(MainDataManager)}.{nameof(SaveData)}:输入数据保存成功，{FileUtility.LocalInputDataFileName}");
-             
-            // 保存设置数据
-            _jsonManager.SaveToJson(GameSettings, $"{PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingFileName)}", settings:NewtonsoftJsonUtility.SerializerSettings);
-            Logger.Log($"{nameof(MainDataManager)}.{nameof(SaveDataAsync)}:游戏设置数据保存成功，{GameSettings}");
+            if (MainDataCollection != null)
+            {
+                _binaryDataManager.Save(FileUtility.LocalInputDataFileName, MainDataCollection.InputActionContainer);
+                Logger.Log($"{nameof(MainDataManager)}: 输入数据保存成功，{FileUtility.LocalInputDataFileName}");
+            }
+
+            if (GameSettings != null)
+            {
+                // 保存设置数据
+                _jsonManager.SaveToJson(GameSettings, $"{PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingFileName)}", settings:NewtonsoftJsonUtility.SerializerSettings);
+                Logger.Log($"{nameof(MainDataManager)}: 游戏设置数据保存成功，{GameSettings}");
+            }
         }
 
         public async Task SaveDataAsync()
         {
-            // 保存音乐数据
-            await _binaryDataManager.SaveAsync(FileUtility.LocalMusicDataFileName, MainDataCollection.MusicData);
-            Logger.Log($"{nameof(MainDataManager)}.{nameof(SaveDataAsync)}:音乐数据保存成功，{FileUtility.LocalMusicDataFileName}");
+            if (MainDataCollection != null)
+            {
+                // 保存音乐数据
+                await _binaryDataManager.SaveAsync(FileUtility.LocalMusicDataFileName, MainDataCollection.MusicData);
+                Logger.Log($"{nameof(MainDataManager)}: 音乐数据保存成功，{FileUtility.LocalMusicDataFileName}");
+            }
             
-            // 保存输入数据
-            await _binaryDataManager.SaveAsync(FileUtility.LocalInputDataFileName, MainDataCollection.InputActionContainer);
-            Logger.Log($"{nameof(MainDataManager)}.{nameof(SaveDataAsync)}:输入数据保存成功，{FileUtility.LocalInputDataFileName}");
-            
-            // 保存设置数据
-            await _jsonManager.SaveToJsonAsync(GameSettings, $"{PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingFileName)}", settings:NewtonsoftJsonUtility.SerializerSettings);
-            Logger.Log($"{nameof(MainDataManager)}.{nameof(SaveDataAsync)}:游戏设置数据保存成功，{GameSettings}");
+            if (MainDataCollection != null)
+            {
+                // 保存输入数据
+                await _binaryDataManager.SaveAsync(FileUtility.LocalInputDataFileName, MainDataCollection.InputActionContainer);
+                Logger.Log($"{nameof(MainDataManager)}: 输入数据保存成功，{FileUtility.LocalInputDataFileName}");
+            }
+
+            if (GameSettings != null)
+            {
+                // 保存设置数据
+                await _jsonManager.SaveToJsonAsync(GameSettings, $"{PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingFileName)}", settings:NewtonsoftJsonUtility.SerializerSettings);
+                Logger.Log($"{nameof(MainDataManager)}: 游戏设置数据保存成功，{GameSettings}");
+            }
         }
     }
 }

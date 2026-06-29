@@ -1,5 +1,4 @@
-using HotUpdate.Game.Battle.Context;
-using HotUpdate.Game.Battle.Status;
+using HotUpdate.Game.Battle.Statuses;
 
 namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Status
 {
@@ -7,16 +6,11 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Status
     /// 渊涌
     /// </summary>
     [StatusTypeId(1051)]
-    public class SurgingFlowStatus : Battle.Status.Status
+    public class SurgingFlowStatus : StatusBase
     {
         protected override void OnAdd()
         {
             bonusData.AtkBuildBonus += 50;
-        }
-
-        protected override void OnTurnStart(IBattleEntityObject owner, IBattleContext context)
-        {
-            StatusProperty.SetRemainingRound(StatusProperty.RemainingRound - 1);
         }
 
         protected override void OnRemove()

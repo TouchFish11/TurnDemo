@@ -1,7 +1,7 @@
 using System.Collections;
-using Core.Utility;
 using HotUpdate.Base.Utility;
 using HotUpdate.Game.Animation.Component;
+using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
 using UnityEngine;
 
@@ -21,9 +21,8 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard.Skill.Normal
             // 等待动画播放到普攻状态
             yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).IsName(AttackState));
             // 创建普攻特效
-            yield return TaskUtility.WaitForTask(
-                vfxManager.CreateVFX(AssetKeys.VFX_WizardNormalSkill, SkillContext.ProjectileTrans, SkillContext.ProjectileData, SkillContext.VFXInfo)
-                , projectile => SkillContext.Projectile = projectile);
+            var task = vfxManager.CreateVFX(AssetKeys.VFX_WizardNormalSkill, SkillContext.ProjectileTrans, SkillContext.ProjectileData, SkillContext.VFXInfo);
+            yield return SkillHelper.WaitForCreateVFX(SkillContext, task);
         }
     }
 }

@@ -5,7 +5,7 @@ using HotUpdate.Base.Manager;
 using HotUpdate.Base.UI;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Layer;
-using HotUpdate.Game.Battle.Status;
+using HotUpdate.Game.Battle.Statuses;
 using HotUpdate.Game.Battle.Toughness;
 using HotUpdate.Game.Battle.UI;
 using UnityEngine;

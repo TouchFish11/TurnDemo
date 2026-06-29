@@ -1,5 +1,4 @@
-using HotUpdate.Game.Battle.Context;
-using HotUpdate.Game.Battle.Status;
+using HotUpdate.Game.Battle.Statuses;
 
 namespace HotUpdate.Game.Battle.Object.Role.Wizard.Status
 {
@@ -7,14 +6,8 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard.Status
     /// 恐惧III
     /// </summary>
     [StatusTypeId(221)]
-    public class FearStatusIII : Battle.Status.Status
+    public class FearStatusIII : StatusBase
     {
-        protected override void OnTurnStart(IBattleEntityObject owner, IBattleContext context)
-        {
-            // ����غ���
-            StatusProperty.SetRemainingRound(StatusProperty.RemainingRound - 1);
-        }
-
         protected override void OnPineChanged()
         {
             bonusData.AtkBuildBonus -= 40;

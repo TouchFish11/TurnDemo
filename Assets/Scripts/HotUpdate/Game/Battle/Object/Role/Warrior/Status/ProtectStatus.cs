@@ -1,5 +1,4 @@
-using HotUpdate.Game.Battle.Context;
-using HotUpdate.Game.Battle.Status;
+using HotUpdate.Game.Battle.Statuses;
 
 namespace HotUpdate.Game.Battle.Object.Role.Warrior.Status
 {
@@ -7,24 +6,14 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Status
     /// 庇佑
     /// </summary>
     [StatusTypeId(101)]
-    public class ProtectStatus : Battle.Status.Status
+    public class ProtectStatus : StatusBase
     {
         protected override void OnAdd()
         {
             bonusData.DefBuildBonus += 20;
             Owner.TakeSheild(150);
         }
-
-        protected override void OnTurnStart(IBattleEntityObject owner, IBattleContext context)
-        {
-            StatusProperty.SetRemainingRound(StatusProperty.RemainingRound - 1);
-        }
-
-        protected override void OnPineChanged()
-        {
-
-        }
-
+        
         protected override void OnRemove()
         {
             bonusData.DefBuildBonus -= 20;

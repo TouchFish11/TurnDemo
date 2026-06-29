@@ -1,6 +1,5 @@
-using Core.DI;
+using System;
 using Core.Mono;
-using Core.Pool;
 using Core.UI;
 using TMPro;
 using UnityEngine;
@@ -9,21 +8,22 @@ using UnityEngine.UI;
 namespace HotUpdate.UI.Battle
 {
     /// <summary>
-    /// ս����ϢUI
+    /// 战斗消息UI
     /// </summary>
     public class BattleMessageUI : UIBehaviourBase
     {
         [InjectUI] private TextMeshProUGUI txtMsg;
         [InjectUI] private Image msg;
         [InjectUI] private Image imgIcon;
-
-        // ͸����
+        
+        private IMonoAdapter _monoAdapter;
         private float msgAlpha;
         private float imgIconAlpha;
 
         private float duration = 3;
-        // ��ǰ����ʱ��
         private float currentDuration;
+
+        public event Action<BattleMessageUI> OnDurationOver;
 
         protected override void Awake()
         {
@@ -36,14 +36,15 @@ namespace HotUpdate.UI.Battle
         protected override void OnEnable()
         {
             currentDuration = 0;
-            DIContainer.GetInstance<IMonoAdapter>().AddUpdateListener(OnUpdate);
         }
 
-        public void InitMessage(Color color, string msg)
+        public void InitMessage(Color color, string msg, IMonoAdapter monoAdapter)
         {
             this.msg.color = new Color(color.r, color.g, color.b, msgAlpha);
             imgIcon.color = new Color(color.r, color.g, color.b, imgIconAlpha);
             txtMsg.text = msg;
+            monoAdapter.AddUpdateListener(OnUpdate);
+            _monoAdapter = monoAdapter;
         }
 
         private void OnUpdate()
@@ -51,13 +52,13 @@ namespace HotUpdate.UI.Battle
             currentDuration += Time.deltaTime;
             if (currentDuration >= duration)
             {
-                DIContainer.GetInstance<IPoolManager>().PushObj(gameObject);
+                OnDurationOver?.Invoke(this);
             }
         }
 
         protected override void OnDisable()
         {
-            DIContainer.GetInstance<IMonoAdapter>().RemoveUpdateListener(OnUpdate);
+            _monoAdapter.RemoveUpdateListener(OnUpdate);
         }
     }
 }

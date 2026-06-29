@@ -1,13 +1,11 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Mono;
-using Core.Pool;
 using Core.UI;
 using Core.Utility;
 using HotUpdate.Base.Manager;
-
-using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Monster;
@@ -42,6 +40,7 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
         /// </summary>
         [InjectUI(1)] private RectTransform WeaknessBar { get; set; }
         
+        private IMonoAdapter _monoAdapter;
         // 血量渐变动画速度（控制fade遮罩的动画速率）
         private const float fadeSpeed = 1f;
         // 弱点图标集合（存储当前怪物的所有弱点图标，便于后续回收）
@@ -55,29 +54,10 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
         // 血条UI的Y轴偏移量（根据怪物配置调整血条在怪物上方的显示位置）
         private float _bloodUiYOffset;
 
-        /// <summary>
-        /// 初始化（Awake）：注册战斗事件监听
-        /// 在对象创建时执行，订阅血量、韧性相关事件
-        /// </summary>
-        protected override void Awake()
-        {
-            base.Awake();
-            // 获取战斗管理器的事件总线，注册血量变化事件监听
-            DIContainer.GetInstance<IBattleManager>().GetContext().GetEventBus().AddListener<HpChangedEvent>(OnHpChangedEvent);
-            // 注册韧性变化事件监听
-            DIContainer.GetInstance<IBattleManager>().GetContext().GetEventBus().AddListener<ToughnessChangedEvent>(OnToughnessChangedEvent);
-            // 注册韧性破碎（破防）事件监听
-            DIContainer.GetInstance<IBattleManager>().GetContext().GetEventBus().AddListener<ToughnessBrokenEvent>(OnToughnessBrokenEvent);
-        }
-
-        /// <summary>
-        /// 启用（OnEnable）：注册帧更新回调
-        /// UI激活时执行，添加Update监听用于实时更新UI位置和血量动画
-        /// </summary>
         protected override void OnEnable()
         {
             // 注册帧更新事件，每帧执行OnUpdate方法
-            DIContainer.GetInstance<IMonoAdapter>().AddUpdateListener(OnUpdate);
+            _monoAdapter?.AddUpdateListener(OnUpdate);
         }
 
         /// <summary>
@@ -85,12 +65,13 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
         /// </summary>
         /// <param name="battleEntity">绑定的怪物战斗实体</param>
         /// <param name="monsterStateArea">UI父节点</param>
-        public async System.Threading.Tasks.Task Init(IBattleEntityObject battleEntity, Transform monsterStateArea)
+        /// <param name="monoAdapter"></param>
+        public async Task Init(IBattleEntityObject battleEntity, Transform monsterStateArea, IMonoAdapter monoAdapter)
         {
             // 回收已存在的弱点图标（避免重复创建，复用对象池）
             foreach (var weaknessIcon in weakneses)
             {
-                DIContainer.GetInstance<IPoolManager>().PushObj(weaknessIcon.gameObject);
+                _objectSpawner.Release(weaknessIcon.gameObject);
             }
             weakneses.Clear(); // 清空弱点图标集合
 
@@ -121,6 +102,15 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
                 weaknessIcon.color = ((int)elementType).ToElementTypeColor();
                 weakneses.Add(weaknessIcon); // 将图标加入集合，便于后续回收
             }
+
+            _monoAdapter = monoAdapter;
+
+            // 获取战斗管理器的事件总线，注册血量变化事件监听
+            BattleEntity.Context.GetEventBus().AddListener<HpChangedEvent>(OnHpChangedEvent);
+            // 注册韧性变化事件监听
+            BattleEntity.Context.GetEventBus().AddListener<ToughnessChangedEvent>(OnToughnessChangedEvent);
+            // 注册韧性破碎（破防）事件监听
+            BattleEntity.Context.GetEventBus().AddListener<ToughnessBrokenEvent>(OnToughnessBrokenEvent);
         }
 
         /// <summary>
@@ -192,9 +182,7 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
         {
             // 未绑定战斗实体时直接返回
             if (BattleEntity == null)
-            {
                 return;
-            }
 
             // 将怪物世界坐标转换为UI本地坐标，并应用Y轴偏移，更新UI位置
             UIUtility.WorldToLocalPointInRectangle(
@@ -230,7 +218,7 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
         /// </summary>
         protected override void OnDisable()
         {
-            DIContainer.GetInstance<IMonoAdapter>().RemoveUpdateListener(OnUpdate);
+            _monoAdapter.RemoveUpdateListener(OnUpdate);
         }
     }
 }

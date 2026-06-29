@@ -28,16 +28,22 @@ namespace HotUpdate.Game.Quests.Data
 
         public void SaveData()
         {
-            // 保存任务数据
-            _jsonManager.SaveToJson(QuestCollection, PathUtility.GetUserDataLocalSavePath(FileUtility.LocalTaskDataFileName));
-            Logger.Log($"{nameof(QuestDataManager)}.{nameof(SaveData)}:任务数据保存成功，{FileUtility.LocalTaskDataFileName}");
+            if (QuestCollection != null)
+            {
+                // 保存任务数据
+                _jsonManager.SaveToJson(QuestCollection, PathUtility.GetUserDataLocalSavePath(FileUtility.LocalTaskDataFileName));
+                Logger.Log($"{nameof(QuestDataManager)}: 任务数据保存成功，{FileUtility.LocalTaskDataFileName}");
+            }
         }
 
         public async Task SaveDataAsync()
         {
-            // 保存任务数据
-            await _jsonManager.SaveToJsonAsync(QuestCollection, PathUtility.GetUserDataLocalSavePath(FileUtility.LocalTaskDataFileName));
-            Logger.Log($"{nameof(QuestDataManager)}.{nameof(SaveDataAsync)}:任务数据保存成功，{FileUtility.LocalTaskDataFileName}");
+            if (QuestCollection != null)
+            {
+                // 保存任务数据
+                await _jsonManager.SaveToJsonAsync(QuestCollection, PathUtility.GetUserDataLocalSavePath(FileUtility.LocalTaskDataFileName));
+                Logger.Log($"{nameof(QuestDataManager)}: 任务数据保存成功，{FileUtility.LocalTaskDataFileName}");
+            }
         }
     }
 }

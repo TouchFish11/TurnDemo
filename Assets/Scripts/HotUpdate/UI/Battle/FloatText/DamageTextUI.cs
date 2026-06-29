@@ -1,6 +1,5 @@
-using Core.DI;
+using System;
 using Core.Mono;
-using Core.Pool;
 using Core.UI;
 using TMPro;
 using UnityEngine;
@@ -21,6 +20,7 @@ namespace HotUpdate.UI.Battle.FloatText
         // 伤害文字的移动根节点（用于控制位置和缩放）
         [InjectUI(1)] private RectTransform DamageTextMover { get; set; }
 
+        private IMonoAdapter _monoAdapter;
         // 文字向上移动的速度（单位：像素/秒）
         private const float upMoveSpeed = 2.5f;
         // 文字显示后自动销毁的时长（单位：秒）
@@ -38,6 +38,8 @@ namespace HotUpdate.UI.Battle.FloatText
         private Color originColor;
         // 文字初始透明度（记录原始透明度值）
         private float originAlpha;
+
+        public event Action<DamageTextUI> OnDurationOver;
         
         /// <summary>
         /// 组件启用时初始化
@@ -45,8 +47,6 @@ namespace HotUpdate.UI.Battle.FloatText
         /// </summary>
         protected override void OnEnable()
         {
-            // 注册帧更新监听，每帧执行OnUpdate逻辑
-            DIContainer.GetInstance<IMonoAdapter>().AddUpdateListener(OnUpdate);
             // 重置文字移动节点的锚点位置为初始值
             (DamageTextMover.transform as RectTransform).anchoredPosition = Vector3.zero;
             // 设置文字初始缩放（放大显示）
@@ -64,7 +64,8 @@ namespace HotUpdate.UI.Battle.FloatText
         /// <param name="textColor">文字颜色（如伤害类型对应的颜色）</param>
         /// <param name="damageTypeText">伤害类型文本（如"暴击"、"法术伤害"）</param>
         /// <param name="damage">伤害数值（需要显示的具体伤害值）</param>
-        public void InitDamageText(Color textColor, string damageTypeText, int damage)
+        /// <param name="monoAdapter"></param>
+        public void InitDamageText(Color textColor, string damageTypeText, int damage, IMonoAdapter monoAdapter)
         {
             // 设置伤害类型和数值的文字颜色
             txtDamageTip.color = textColor;
@@ -77,6 +78,10 @@ namespace HotUpdate.UI.Battle.FloatText
 
             // 记录初始颜色（用于后续透明度过渡）
             originColor = txtDamageTip.color;
+            
+            // 注册帧更新监听，每帧执行OnUpdate逻辑
+            monoAdapter.AddUpdateListener(OnUpdate);
+            _monoAdapter = monoAdapter;
         }
 
         /// <summary>
@@ -90,10 +95,9 @@ namespace HotUpdate.UI.Battle.FloatText
             // 达到销毁时长时，回收对象到对象池
             if (currentTime >= destroyTime)
             {
-                // 重置计时（避免重复回收）
+                // 重置计时
                 currentTime = 0;
-                // 将当前游戏对象推回对象池
-                DIContainer.GetInstance<IPoolManager>().PushObj(gameObject);
+                OnDurationOver?.Invoke(this);
             }
 
             // 缩放过渡：从初始缩放值平滑过渡到最终缩放值
@@ -109,7 +113,7 @@ namespace HotUpdate.UI.Battle.FloatText
         protected override void OnDisable()
         {
             // 移除帧更新监听，停止逻辑执行
-            DIContainer.GetInstance<IMonoAdapter>().RemoveUpdateListener(OnUpdate);
+            _monoAdapter.RemoveUpdateListener(OnUpdate);
         }
     }
 }

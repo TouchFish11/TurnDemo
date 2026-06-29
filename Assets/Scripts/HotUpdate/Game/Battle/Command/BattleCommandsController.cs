@@ -85,7 +85,7 @@ namespace HotUpdate.Game.Battle.Command
             yield return _turnLoopState.RemoveDeadMonster();
             // 检查当前波次是否结束，并更新退出标记
             _isQuit = _turnLoopState.CheckWaveOver();
-            if (!_isQuit)
+            if (_isQuit)
             {
                 // 过滤列表中无效的指令
                 FilterInvalidCommand();

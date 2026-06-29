@@ -3,7 +3,7 @@ using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage.Data;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Event.UI;
-using HotUpdate.Game.Battle.Status;
+using HotUpdate.Game.Battle.Statuses;
 using HotUpdate.Game.VFX;
 using UnityEngine;
 
@@ -13,11 +13,11 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Status
     /// 灼烧
     /// </summary>
     [StatusTypeId(1041)]
-    public class BurnStatus : Battle.Status.Status, IDotStatus
+    public class BurnStatus : StatusBase, IDotStatus
     {
         protected override void OnTurnStart(IBattleEntityObject owner, IBattleContext context)
         {
-            StatusProperty.SetRemainingRound(StatusProperty.RemainingRound - 1);
+            base.OnTurnStart(owner, context);
             ApplyDamage();
         }
         
@@ -41,10 +41,10 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Status
             {
                 vfxInfo.IsStop = true;
                 // 更新累计伤害UI
-                Owner.Context.GetEventBus().TriggerEvent(new ClearCumulativeDamageEvent(Owner.Context));
+                Owner.Context.GetEventBus().TriggerEvent(new ClearCumulativeDamageEvent(Context));
             });
             
-            Owner.Context.GetEventBus().TriggerEvent(new CalcDotDamageEvent(Owner.Context, damageCalcData));
+            Context.GetEventBus().TriggerEvent(new CalcDotDamageEvent(Context, damageCalcData));
         }
         
     }

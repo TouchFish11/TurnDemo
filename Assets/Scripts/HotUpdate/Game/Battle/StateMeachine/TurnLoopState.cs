@@ -123,9 +123,6 @@ namespace HotUpdate.Game.Battle.StateMeachine
                     Context.RemoveSceneMonster(battleEntityObject);
                 }
             }
-            
-            // 事件分发传递，更新行动轴UI显示
-            Context.GetEventBus().TriggerEvent(new ActionBarSortPostEvent(Context, Context.GetAliveEntitys()));
         }
         
         /// <summary>
@@ -232,7 +229,7 @@ namespace HotUpdate.Game.Battle.StateMeachine
 
         public void MoveWave()
         {
-            if (_battleManager.GetWaveCreator().MoveWave())
+            if (_battleManager.GetWaveCreator().TryMoveWave())
             {
                 _monoAdapter.StartCoroutine(_battleManager.GetBattleService().UpdateWave());
             }

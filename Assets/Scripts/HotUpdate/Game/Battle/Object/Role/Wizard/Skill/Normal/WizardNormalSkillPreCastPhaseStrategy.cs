@@ -1,4 +1,5 @@
 using System.Collections;
+using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
 using HotUpdate.Game.VFX;
@@ -10,7 +11,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard.Skill.Normal
     {
         public override IEnumerator Execute()
         {
-            SkillHelper.InitSkillTarget(skill, battleCoordinator);
+            SkillHelper.InitRoleSkillTarget(skill, battleCoordinator);
             
             // 初始化投射物核心数据（施法者、主目标、所有目标、当前技能）
             SkillContext.ProjectileData = new ProjectileData(SkillContext.Caster, SkillContext.MainTarget, SkillContext.AllTargets, SkillContext);
@@ -18,7 +19,8 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard.Skill.Normal
             SkillContext.ProjectileTrans = new ProjectileTrans(SkillContext.MainTarget.GameObject.transform.position, Quaternion.identity);
             // 初始化特效信息容器
             SkillContext.VFXInfo = poolManager.GetData<VFXInfo>();
-            
+            var context = skill.SkillContext.Caster.Context;
+            context.GetEventBus().TriggerEvent(new PlayerReleaseSkillEvent(context));
             yield break;
         }
     }

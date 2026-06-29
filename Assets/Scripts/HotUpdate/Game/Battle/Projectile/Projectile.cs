@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using Core.DI;
 using Core.Utility;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.VFX;
@@ -44,7 +43,6 @@ namespace HotUpdate.Game.Battle.Projectile
         /// </summary>
         private void Awake()
         {
-            DIContainer.InjectIntoInstance(this);
             // 获取挂载在当前GameObject上的粒子系统组件
             particleSystem = GetComponent<ParticleSystem>();
         }
@@ -60,10 +58,12 @@ namespace HotUpdate.Game.Battle.Projectile
             this.vFXInfo = vFXInfo;
             // 赋值抛射物核心数据
             this.projectileData = projectileData;
-            triggerTimes = TextUtility.SplitTofloatArr(projectileData.SkillContext.SkillInfo.f_dmgTimes, 2);
+            if(projectileData.SkillContext != null)
+                triggerTimes = TextUtility.SplitTofloatArr(projectileData.SkillContext.SkillInfo.f_dmgTimes, 2);
             // 播放VFX
             StartCoroutine(ExecuteVFX());
         }
+        
 
         protected void InvokeOnTrigger(HitResult hitResult)
         {
@@ -75,25 +75,5 @@ namespace HotUpdate.Game.Battle.Projectile
         /// </summary>
         /// <returns></returns>
         protected abstract IEnumerator ExecuteVFX();
-        
-        // /// <summary>
-        // /// 在触发时添加Buff
-        // /// </summary>
-        // protected abstract void AddStatusOnTrigger();
-        //
-        // /// <summary>
-        // /// 在触发时应用效果，伤害、回能
-        // /// </summary>
-        // protected abstract void ApplyEffectOnTrigger();
-        //
-        // /// <summary>
-        // /// 在触发时创建特效
-        // /// </summary>
-        // protected abstract void CreateVFXOnTrigger();
-        //
-        // /// <summary>
-        // /// 处理计时逻辑
-        // /// </summary>
-        // protected abstract void HandleTiming();
     }
 }

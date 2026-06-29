@@ -7,15 +7,13 @@ using Core.Serialize.Binary;
 using Core.UI;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Game.Battle.Context;
-using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Role;
 using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.Skill.Component;
-using HotUpdate.Game.Battle.Status;
-using HotUpdate.Game.Battle.Status.Enum;
+using HotUpdate.Game.Battle.Statuses;
 using HotUpdate.Game.Battle.Utility;
 using HotUpdate.UI.Battle.Status;
 using TMPro;
@@ -41,22 +39,18 @@ namespace HotUpdate.UI.Battle.Role
         [InjectUI] private ScrollRect svBuffBox;       // 状态图标的滚动容器
         [InjectUI] private TextMeshProUGUI txtBlood;   // 血量数值文本
 
+        private IMonoAdapter _monoAdapter;
         // 血量渐变速度
         private const float fadeSpeed = 1f;
-
         // 护盾相关变量
         private int currentShield;  // 当前护盾值
-
         // 能量条透明度
         private const float nonFullAhpha = 0.35f;  // 能量未满时的透明度
-
         // 终极技能ID
         private int ultimateSkillId;    
-
         // 角色相关
         private IBattleContext battleContext;  // 战斗上下文接口
         private IBattleEntityObject battleEntity;  // 战斗实体对象
-
         // 状态UI列表
         private readonly List<StatusGridUI> statusGridUIs = new();
 
@@ -65,24 +59,6 @@ namespace HotUpdate.UI.Battle.Role
         /// </summary>
         public int RoleId { get; private set; }
 
-        protected override void Awake()
-        {
-            base.Awake();
-
-            // 获取战斗上下文并注册事件监听
-            battleContext = DIContainer.GetInstance<IBattleManager>().GetContext();
-            battleContext.GetEventBus().AddListener<HpChangedEvent>(OnHpChanged);
-            battleContext.GetEventBus().AddListener<ShieldChangedEvent>(OnShieldChanged);
-            battleContext.GetEventBus().AddListener<EnergyChangedEvent>(OnEnergyChangedEvent);
-            battleContext.GetEventBus().AddListener<StatusAddedEvent>(OnStatusAddedEvent);
-        }
-
-        protected override void OnEnable()
-        {
-            // 注册Update监听，用于每帧更新渐变效果
-            DIContainer.GetInstance<IMonoAdapter>().AddUpdateListener(OnUpdate);
-        }
-
         /// <summary>
         /// 初始化角色状态UI
         /// </summary>
@@ -90,8 +66,11 @@ namespace HotUpdate.UI.Battle.Role
         /// <param name="icon">角色图标</param>
         /// <param name="ultimateSkillId">终极技能ID</param>
         /// <param name="battleEntity">战斗实体对象</param>
-        public void Init(RoleProperty playerProperty, Sprite icon, int ultimateSkillId, IBattleEntityObject battleEntity)
+        /// <param name="monoAdapter"></param>
+        public void Init(RoleProperty playerProperty, Sprite icon, int ultimateSkillId, IBattleEntityObject battleEntity, 
+            IMonoAdapter monoAdapter)
         {
+            _monoAdapter = monoAdapter;
             this.battleEntity = battleEntity;
             // 记录终极技能ID
             this.ultimateSkillId = ultimateSkillId;
@@ -125,6 +104,16 @@ namespace HotUpdate.UI.Battle.Role
             // 初始化护盾显示
             currentShield = 0;
             UpdateShield(currentShield);
+            
+            // 注册Update监听，用于每帧更新渐变效果
+            _monoAdapter.AddUpdateListener(OnUpdate);
+            
+            // 获取战斗上下文并注册事件监听
+            battleContext = battleEntity.Context;
+            battleContext.GetEventBus().AddListener<HpChangedEvent>(OnHpChanged);
+            battleContext.GetEventBus().AddListener<ShieldChangedEvent>(OnShieldChanged);
+            battleContext.GetEventBus().AddListener<EnergyChangedEvent>(OnEnergyChangedEvent);
+            battleContext.GetEventBus().AddListener<StatusAddedEvent>(OnStatusAddedEvent);
         }
 
         /// <summary>
@@ -211,15 +200,15 @@ namespace HotUpdate.UI.Battle.Role
             var status = statusAddedEvent.NewStatus;
 
             // 根据状态冲突类型处理
-            switch ((E_ConflictType)status.StatusProperty.StatusInfo.f_conflictType)
+            switch ((EConflictType)status.StatusProperty.StatusInfo.f_conflictType)
             {
-                case E_ConflictType.Add:      // 叠加类型
+                case EConflictType.Add:      // 叠加类型
                     OnConflict_Add(status);
                     break;
-                case E_ConflictType.Lonely:   // 独占类型
+                case EConflictType.Lonely:   // 独占类型
                     OnConflict_Lonel(status);
                     break;
-                case E_ConflictType.Cover:    // 覆盖类型
+                case EConflictType.Cover:    // 覆盖类型
                     OnConflict_Cover(status);
                     break;
             }
@@ -237,7 +226,7 @@ namespace HotUpdate.UI.Battle.Role
             {
                 // 创建新的状态图标
                 var statusGridUI = await _objectSpawner.SpawnAsync<StatusGridUI>(AssetKeys.StatusGridUI, svBuffBox.content);
-                statusGridUI.Init(status);
+                statusGridUI.Init(status, _monoAdapter);
                 statusGridUIs.Add(statusGridUI);
             }
         }
@@ -250,7 +239,7 @@ namespace HotUpdate.UI.Battle.Role
         {
             // 直接创建新的状态图标（独占类型总是创建新的）
             var statusGridUI = await _objectSpawner.SpawnAsync<StatusGridUI>(AssetKeys.StatusGridUI, svBuffBox.content);
-            statusGridUI.Init(newStatus);
+            statusGridUI.Init(newStatus, _monoAdapter);
             statusGridUIs.Add(statusGridUI);
         }
 
@@ -272,7 +261,7 @@ namespace HotUpdate.UI.Battle.Role
             
             // 创建新的状态图标
             var statusGridUI = await _objectSpawner.SpawnAsync<StatusGridUI>(AssetKeys.StatusGridUI, svBuffBox.content);
-            statusGridUI.Init(newStatus);
+            statusGridUI.Init(newStatus, _monoAdapter);
             statusGridUIs.Add(statusGridUI);
         }
 
@@ -339,7 +328,11 @@ namespace HotUpdate.UI.Battle.Role
         protected override void OnDisable()
         {
             // 移除Update监听
-            DIContainer.GetInstance<IMonoAdapter>().RemoveUpdateListener(OnUpdate);
+            _monoAdapter.RemoveUpdateListener(OnUpdate);
+            battleContext.GetEventBus().RemoveListener<HpChangedEvent>(OnHpChanged);
+            battleContext.GetEventBus().RemoveListener<ShieldChangedEvent>(OnShieldChanged);
+            battleContext.GetEventBus().RemoveListener<EnergyChangedEvent>(OnEnergyChangedEvent);
+            battleContext.GetEventBus().RemoveListener<StatusAddedEvent>(OnStatusAddedEvent);
         }
     }
 }

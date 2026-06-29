@@ -10,7 +10,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill.AbyssLock
     {
         public override IEnumerator Execute()
         {
-            SkillHelper.InitSkillTarget(skill, battleCoordinator);
+            SkillHelper.InitMonsterSkillTarget(skill, battleCoordinator);
 
             // 重新初始化投射物数据
             SkillContext.ProjectileData = new ProjectileData(SkillContext.Caster, SkillContext.MainTarget, SkillContext.AllTargets, SkillContext);

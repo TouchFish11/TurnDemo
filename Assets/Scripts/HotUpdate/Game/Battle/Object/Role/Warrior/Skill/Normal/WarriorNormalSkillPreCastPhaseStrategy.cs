@@ -9,7 +9,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Normal
     {
         public override IEnumerator Execute()
         {
-            SkillHelper.InitSkillTarget(skill, battleCoordinator);
+            SkillHelper.InitRoleSkillTarget(skill, battleCoordinator);
             
             var skillContext = skill.SkillContext;
             

@@ -29,7 +29,7 @@ namespace HotUpdate.Game.Battle.Object.Monster
 
             var animationComponent =  battleEntityObject.GetComponent<BattleAnimationComponent>();
             // 播放怪物死亡动画，并等待动画播放完成
-            monoAdapter.StartCoroutine(AnimationPlayUtility.WaitForAnimOver(animationComponent, AnimationUtility.Battle_Layer_Name, (int)E_AnimationType.Death));
+            animationComponent.StartCoroutine(AnimationPlayUtility.WaitForAnimOver(animationComponent, AnimationUtility.Battle_Layer_Name, (int)E_AnimationType.Death));
             // 等待死亡特效播放完毕（协程阻塞，直到特效销毁）
             yield return new WaitUntil(() => !vFXInfo.IsAlive);
         }

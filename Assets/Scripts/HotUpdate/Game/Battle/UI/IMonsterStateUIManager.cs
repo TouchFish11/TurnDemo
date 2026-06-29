@@ -1,10 +1,11 @@
+using System;
 using System.Threading.Tasks;
 using HotUpdate.Game.Battle.Object;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.UI
 {
-    public interface IMonsterStateUIManager
+    public interface IMonsterStateUIManager : IDisposable
     {
         /// <summary>
         /// 缓存怪物UI

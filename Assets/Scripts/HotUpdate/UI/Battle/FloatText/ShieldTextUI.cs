@@ -1,6 +1,5 @@
-using Core.DI;
+using System;
 using Core.Mono;
-using Core.Pool;
 using Core.UI;
 using TMPro;
 using UnityEngine;
@@ -14,6 +13,7 @@ namespace HotUpdate.UI.Battle.FloatText
         // 护盾文字的移动根节点（用于控制位置和缩放）
         [InjectUI(1)] private RectTransform ShieldTextMover { get; set; }
         
+        private IMonoAdapter _monoAdapter;
         // 文字向上移动的速度（单位：像素/秒）
         private const float upMoveSpeed = 2.5f;
         // 文字显示后自动销毁的时长（单位：秒）
@@ -28,14 +28,14 @@ namespace HotUpdate.UI.Battle.FloatText
         // 文字当前显示时长（用于计时销毁）
         private float currentTime;
         
+        public event Action<ShieldTextUI> OnDurationOver;
+        
         /// <summary>
         /// 组件启用时初始化
         /// 注册更新监听、重置位置/缩放/计时/透明度
         /// </summary>
         protected override void OnEnable()
         {
-            // 注册帧更新监听，每帧执行OnUpdate逻辑
-            DIContainer.GetInstance<IMonoAdapter>().AddUpdateListener(OnUpdate);
             // 重置文字移动节点的锚点位置为初始值
             (ShieldTextMover.transform as RectTransform).anchoredPosition = Vector3.zero;
             // 设置文字初始缩放（放大显示）
@@ -46,7 +46,8 @@ namespace HotUpdate.UI.Battle.FloatText
         /// 初始化护盾文字的显示内容和样式
         /// </summary>
         /// <param name="shieldAmount">护盾量</param>
-        public void InitshieldText(int shieldAmount)
+        /// <param name="monoAdapter"></param>
+        public void InitshieldText(int shieldAmount, IMonoAdapter monoAdapter)
         {
             if (shieldAmount > 0)
             {
@@ -58,6 +59,10 @@ namespace HotUpdate.UI.Battle.FloatText
                 // 设置护盾数值文本内容（转为字符串）
                 txtShieldNum.text = $"{shieldAmount}";
             }
+            
+            // 注册帧更新监听，每帧执行OnUpdate逻辑
+            monoAdapter.AddUpdateListener(OnUpdate);
+            _monoAdapter = monoAdapter;
         }
         
         /// <summary>
@@ -73,8 +78,7 @@ namespace HotUpdate.UI.Battle.FloatText
             {
                 // 重置计时（避免重复回收）
                 currentTime = 0;
-                // 将当前游戏对象推回对象池
-                DIContainer.GetInstance<IPoolManager>().PushObj(gameObject);
+                OnDurationOver?.Invoke(this);
             }
 
             // 缩放过渡：从初始缩放值平滑过渡到最终缩放值
@@ -90,8 +94,7 @@ namespace HotUpdate.UI.Battle.FloatText
         protected override void OnDisable()
         {
             // 移除帧更新监听，停止逻辑执行
-            DIContainer.GetInstance<IMonoAdapter>().RemoveUpdateListener(OnUpdate);
+            _monoAdapter.RemoveUpdateListener(OnUpdate);
         }
-        
     }
 }

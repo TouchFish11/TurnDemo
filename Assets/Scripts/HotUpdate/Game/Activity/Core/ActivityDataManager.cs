@@ -40,20 +40,24 @@ namespace HotUpdate.Game.Activity.Core
 
         public void SaveData()
         {
-            // 活动数据
-            _jsonManager.SaveToJson(ActivityDataCollection,
-                PathUtility.GetUserDataLocalSavePath(FileUtility.LocalActivityDataFileName),
-                settings: NewtonsoftJsonUtility.SerializerSettings);
-            Logger.Log($"[{nameof(ActivityDataManager)}] :活动数据 {FileUtility.LocalActivityDataFileName} 保存成功");
+            if (ActivityDataCollection != null)
+            {
+                // 活动数据
+                _jsonManager.SaveToJson(ActivityDataCollection, PathUtility.GetUserDataLocalSavePath(FileUtility.LocalActivityDataFileName), settings: NewtonsoftJsonUtility.SerializerSettings);
+                Logger.Log($"[{nameof(ActivityDataManager)}]:活动数据 {FileUtility.LocalActivityDataFileName} 保存成功"); 
+            }
         }
 
         public async Task SaveDataAsync()
         {
-            // 保存活动数据
-            await _jsonManager.SaveToJsonAsync(ActivityDataCollection,
-                PathUtility.GetUserDataLocalSavePath(FileUtility.LocalActivityDataFileName),
-                settings: NewtonsoftJsonUtility.SerializerSettings);
-            Logger.Log($"[{nameof(ActivityDataManager)}]: 活动数据 {FileUtility.LocalActivityDataFileName} 保存成功");
+            if (ActivityDataCollection != null)
+            {
+                // 保存活动数据
+                await _jsonManager.SaveToJsonAsync(ActivityDataCollection,
+                    PathUtility.GetUserDataLocalSavePath(FileUtility.LocalActivityDataFileName),
+                    settings: NewtonsoftJsonUtility.SerializerSettings);
+                Logger.Log($"[{nameof(ActivityDataManager)}]: 活动数据 {FileUtility.LocalActivityDataFileName} 保存成功");
+            }
         }
     }
 }

@@ -1,10 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.UI
 {
-    public interface IBattleUIInitializer
+    public interface IBattleUIInitializer : IDisposable
     {
         /// <summary>
         /// 初始化玩家角色UI

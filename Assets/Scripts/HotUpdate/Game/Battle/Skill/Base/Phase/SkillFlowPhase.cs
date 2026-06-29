@@ -5,7 +5,7 @@ using HotUpdate.Game.Battle.Core;
 namespace HotUpdate.Game.Battle.Skill.Base.Phase
 {
     /// <summary>
-    /// 技能阶段
+    /// 技能流程阶段
     /// </summary>
     public abstract class SkillFlowPhase : ISkillFlowPhase
     {

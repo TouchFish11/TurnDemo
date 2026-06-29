@@ -1,5 +1,4 @@
 using System.Collections;
-using Core.Utility;
 using HotUpdate.Base.Utility;
 using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Battle.Skill.Base;
@@ -38,9 +37,8 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Ultimate
             SkillContext.VFXInfo = poolManager.GetData<VFXInfo>();
             
             // 创建终结技核心攻击特效
-            yield return TaskUtility.WaitForTask(
-                vfxManager.CreateVFX(AssetKeys.VFX_WarriorUltimateSkill, SkillContext.ProjectileTrans, SkillContext.ProjectileData, SkillContext.VFXInfo), 
-                projectile => SkillContext.Projectile = projectile);
+            var task = vfxManager.CreateVFX(AssetKeys.VFX_WarriorUltimateSkill, SkillContext.ProjectileTrans, SkillContext.ProjectileData, SkillContext.VFXInfo);
+            yield return SkillHelper.WaitForCreateVFX(SkillContext, task);
         }
     }
 }

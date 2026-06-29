@@ -1,6 +1,7 @@
 using System.Collections;
 using HotUpdate.Base.Utility;
 using HotUpdate.Game.Animation.Component;
+using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
 using UnityEngine;
 
@@ -16,7 +17,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Normal
             yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).normalizedTime >= 0.9f && !SkillContext.VFXInfo.IsAlive);
             // 重置角色本地位置（防止动画位移残留）
             animator.transform.localPosition = Vector3.zero;
-            yield return new WaitForSeconds(0.1f);
+            yield return SkillHelper.Delay(100);
         }
     }
 }

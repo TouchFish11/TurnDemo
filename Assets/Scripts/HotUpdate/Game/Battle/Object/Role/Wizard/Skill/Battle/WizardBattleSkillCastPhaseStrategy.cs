@@ -1,7 +1,7 @@
 using System.Collections;
-using Core.Utility;
 using HotUpdate.Base.Utility;
 using HotUpdate.Game.Animation.Component;
+using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
 using UnityEngine;
 
@@ -23,9 +23,8 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard.Skill.Battle
             yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).IsName(BattleAttackState));
             
             // 触发技能特效：通过特效管理器创建战技特效
-            yield return TaskUtility.WaitForTask(
-                vfxManager.CreateVFX(AssetKeys.VFX_WizardBattleSkill, SkillContext.ProjectileTrans, SkillContext.ProjectileData, SkillContext.VFXInfo)
-                , projectile => SkillContext.Projectile = projectile);
+            var task = vfxManager.CreateVFX(AssetKeys.VFX_WizardBattleSkill, SkillContext.ProjectileTrans, SkillContext.ProjectileData, SkillContext.VFXInfo);
+            yield return SkillHelper.WaitForCreateVFX(SkillContext, task);
         }
     }
 }

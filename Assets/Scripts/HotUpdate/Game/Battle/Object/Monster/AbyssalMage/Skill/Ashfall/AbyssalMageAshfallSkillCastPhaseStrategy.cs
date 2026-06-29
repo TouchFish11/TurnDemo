@@ -1,7 +1,7 @@
 using System.Collections;
-using Core.Utility;
 using HotUpdate.Base.Utility;
 using HotUpdate.Game.Animation.Component;
+using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
 using UnityEngine;
 
@@ -30,7 +30,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill.Ashfall
         {
             // 创建特效
             var task = vfxManager.CreateVFX(AssetKeys.VFX_AshfallSkillProjectile, SkillContext.ProjectileTrans, SkillContext.ProjectileData, SkillContext.VFXInfo);
-            yield return TaskUtility.WaitForTask(task, projectile => SkillContext.Projectile = projectile);
+            yield return SkillHelper.WaitForCreateVFX(SkillContext, task);
         }
     }
 }

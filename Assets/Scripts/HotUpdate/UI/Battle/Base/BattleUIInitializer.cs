@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
+using Core.Mono;
 using Core.Serialize.Binary;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Game.Battle.Object;
@@ -21,6 +22,7 @@ namespace HotUpdate.UI.Battle.Base
     {
         [Inject] private ObjectSpawner _objectSpawner;
         [Inject] private IBinaryDataManager _binaryDataManager;
+        [Inject] private IMonoAdapter _monoAdapter;
         
         // 战斗视图接口，用于获取UI挂载节点等视图相关信息
         private readonly BattleView _view;
@@ -84,7 +86,7 @@ namespace HotUpdate.UI.Battle.Base
                 var roleProperty = playerPropertyComponent.GetProperty<RoleProperty>();
                 
                 // 初始化角色状态UI（传入属性、图标、必杀技ID、战斗实体）
-                roleStateUI.Init(roleProperty, iconHandle.Asset, targetSkillId, battleEntity);
+                roleStateUI.Init(roleProperty, iconHandle.Asset, targetSkillId, battleEntity, _monoAdapter);
                 // 将初始化后的角色状态UI缓存到数据模型中
                 _view.InitRoleStateUI(roleStateUI);
             }
@@ -102,6 +104,12 @@ namespace HotUpdate.UI.Battle.Base
                 // 将初始化后的怪物UI缓存
                 await _battleController.MonsterStateUIManager.CreateNormalMonsterStateUI(battleEntity, _view.MonsterStateArea);
             }
+        }
+
+        public void Dispose()
+        {
+            // 执行View的相关清理方法
+            _objectSpawner.Dispose();
         }
     }
 }

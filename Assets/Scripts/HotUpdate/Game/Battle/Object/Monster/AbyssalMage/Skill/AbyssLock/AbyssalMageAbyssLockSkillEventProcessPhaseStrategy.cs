@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
-using HotUpdate.Game.Battle.Status;
+using HotUpdate.Game.Battle.Statuses;
 
 namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill.AbyssLock
 {

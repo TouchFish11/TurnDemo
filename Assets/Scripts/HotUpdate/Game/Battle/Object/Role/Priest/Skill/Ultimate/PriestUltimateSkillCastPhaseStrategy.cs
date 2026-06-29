@@ -4,6 +4,7 @@ using HotUpdate.Base.UI;
 using HotUpdate.Base.Utility;
 using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Battle.Layer;
+using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
 using HotUpdate.Game.Battle.UI;
 using HotUpdate.Game.VFX;
@@ -31,7 +32,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill.Ultimate
             yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).IsName(Priest_Ultimate_02));
             yield return UpdateCamera_02();
 
-            CreateVFX();
+            yield return CreateVFX();
             
             // 等待特效已结束，确保技能流程完成
             yield return new WaitUntil(() => !SkillContext.VFXInfo.IsAlive);
@@ -69,7 +70,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill.Ultimate
             yield return TaskUtility.WaitForTask(battleCoordinator.SetCameraTrans(null, pos, Quaternion.identity, mask));
         }
 
-        private async void CreateVFX()
+        private IEnumerator CreateVFX()
         {
             // 重新初始化投射物数据（目标为主要攻击目标）
             var projectileData = new ProjectileData(SkillContext.Caster, SkillContext.MainTarget, SkillContext.AllTargets, SkillContext);
@@ -84,7 +85,8 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill.Ultimate
             SkillContext.VFXInfo = vFXInfo;
             
             // 创建终结技核心特效（命中目标处）
-            SkillContext.Projectile = await vfxManager.CreateVFX(AssetKeys.VFX_Priest_UltiamteSkill, projectileTrans, projectileData, vFXInfo);
+            var task = vfxManager.CreateVFX(AssetKeys.VFX_Priest_UltiamteSkill, projectileTrans, projectileData, vFXInfo);
+            yield return SkillHelper.WaitForCreateVFX(SkillContext, task);
         }
     }
 }

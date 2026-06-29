@@ -1,15 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using HotUpdate.Base;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.Operation;
 using HotUpdate.Game.Battle.Skill;
-using HotUpdate.Game.Battle.Status;
+using HotUpdate.Game.Battle.Statuses;
 
 namespace HotUpdate.Game.Battle.UI
 {
-    public interface IBattleUIManager
+    public interface IBattleUIManager : IDisposable
     {
         /// <summary>
         /// 显示战斗结束界面
@@ -106,7 +108,7 @@ namespace HotUpdate.Game.Battle.UI
         /// 控制"当前行动方"提示文本的显示/隐藏及内容
         /// </summary>
         /// <param name="actTipType">行动提示类型</param>
-        void SetActTipActive(E_ActTipType actTipType);
+        void SetActTipActive(EActTipType actTipType);
 
         /// <summary>
         /// 更新技能操作区UI

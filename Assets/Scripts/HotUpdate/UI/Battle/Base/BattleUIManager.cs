@@ -8,15 +8,16 @@ using Core.UI;
 using Core.Utility;
 using HotUpdate.Base;
 using HotUpdate.Base.Manager;
+using HotUpdate.Base.Service;
 using HotUpdate.Common.Config.ExcelInfo.Info;
-
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Monster;
 using HotUpdate.Game.Battle.Object.Role;
+using HotUpdate.Game.Battle.Operation;
 using HotUpdate.Game.Battle.Skill;
-using HotUpdate.Game.Battle.Status;
+using HotUpdate.Game.Battle.Statuses;
 using HotUpdate.Game.Battle.UI;
 using HotUpdate.Game.Battle.Utility;
 using HotUpdate.UI.Battle.ActionLine;
@@ -41,6 +42,7 @@ namespace HotUpdate.UI.Battle.Base
         [Inject] private IBattleCameraManager _battleCameraManager;
         [Inject] private IUIManager _uiManager;
         [Inject] private IMonoAdapter _monoAdapter;
+        [Inject] private IconService _iconService;
         
         #region 私有字段
         // 战斗界面视图层引用
@@ -148,9 +150,10 @@ namespace HotUpdate.UI.Battle.Base
         public async void ShowBattleMessage(string msg)
         {
             // 从资源包异步加载战斗提示UI预制体
-            var battleMessageUIWrapper= await _objectSpawner.SpawnAsync<BattleMessageUI>(AssetKeys.BattleMessageUI, _view.BattleMsgArea);
+            var battleMessageUI= await _objectSpawner.SpawnAsync<BattleMessageUI>(AssetKeys.BattleMessageUI, _view.BattleMsgArea);
             // 初始化提示文本（红色字体）
-            battleMessageUIWrapper.InitMessage(Color.red, msg);
+            battleMessageUI.InitMessage(Color.red, msg, _monoAdapter);
+            battleMessageUI.OnDurationOver += messageUI => _objectSpawner.Release(messageUI);
         }
 
         /// <summary>
@@ -180,7 +183,11 @@ namespace HotUpdate.UI.Battle.Base
                     damageResult.Target.GameObject.transform.position + dmgTextOffset))
             {
                 // 初始化伤害文本（元素颜色、伤害类型文本、最终伤害值）
-                damageTextUI.InitDamageText(((int)damageResult.ElementType).ToElementTypeColor(), GetDamgeTypeText(damageResult), damageResult.FinalDamage);
+                damageTextUI.InitDamageText(((int)damageResult.ElementType).ToElementTypeColor(), 
+                    GetDamgeTypeText(damageResult), 
+                    damageResult.FinalDamage, _monoAdapter);
+                
+                damageTextUI.OnDurationOver += dmgUI => _objectSpawner.Release(dmgUI);
             }
             
             // 更新累计伤害UI
@@ -218,7 +225,8 @@ namespace HotUpdate.UI.Battle.Base
                         target.SubGameObject.transform.position + dmgTextOffset))
                 {
                     // 初始化护盾文本
-                    shieldTextUI.InitshieldText(sheilAmount);
+                    shieldTextUI.InitshieldText(sheilAmount, _monoAdapter);
+                    shieldTextUI.OnDurationOver += shieldTextUI => _objectSpawner.Release(shieldTextUI);
                 }
             }
             catch (Exception e)
@@ -256,7 +264,8 @@ namespace HotUpdate.UI.Battle.Base
                     target.GameObject.transform.position + dmgTextOffset))
             {
                 // 初始化治疗文本
-                healTextUI.InitHealText(healAmount);
+                healTextUI.InitHealText(healAmount, _monoAdapter);
+                healTextUI.OnDurationOver += healUI => _objectSpawner.Release(healUI);
             }
         }
         
@@ -279,12 +288,13 @@ namespace HotUpdate.UI.Battle.Base
                         newStatus.Owner.SubGameObject.transform.position + Vector3.up * 0.5f, Vector2.zero))
                 {
                     // 初始化状态文本（显示状态名称）
-                    statusEffectTextUI.InitText(null, newStatus.StatusProperty.StatusInfo.f_name);
+                    statusEffectTextUI.InitText(null, newStatus.StatusProperty.StatusInfo.f_name, _monoAdapter);
+                    statusEffectTextUI.OnDurationOver += statusEffectTextUI => _objectSpawner.Release(statusEffectTextUI); 
                 }
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(BattleUIManager)}.{nameof(ShowStatusText)}：{e.Message}");
+                Logger.LogError($"{nameof(BattleUIManager)}:{e.Message}");
             }
         }
 
@@ -355,9 +365,9 @@ namespace HotUpdate.UI.Battle.Base
                     // 获取实体对应的图标名称
                     var iconName = GetIconByEntity(battleEntity);
                     // 加载图标精灵
-                    using var iconHandle = await GameAsset.LoadAssetAsync<Sprite>(iconName);
+                    var icon = await _iconService.LoadIconAsync(iconName);
                     // 初始化行动格子UI（图标、行动值、实体引用、是否第一个）
-                    actionGridUI.Init(iconHandle.Asset, battleEntity.ActionValue, battleEntity, isFirst);
+                    actionGridUI.Init(icon, battleEntity.ActionValue, battleEntity, isFirst);
                     // 更新模型层的行动条UI数据
                     _view.UpdateAcitonbar(actionGridUI);
                     isFirst = false;
@@ -438,16 +448,16 @@ namespace HotUpdate.UI.Battle.Base
         /// 控制"当前行动方"提示文本的显示/隐藏及内容
         /// </summary>
         /// <param name="actTipType">行动提示类型</param>
-        public void SetActTipActive(E_ActTipType actTipType)
+        public void SetActTipActive(EActTipType actTipType)
         {
-            var isActive = actTipType != E_ActTipType.Hide;
+            var isActive = actTipType != EActTipType.Hide;
             // 设置提示UI的激活状态
             _view.ActingTipUI.gameObject.SetActive(isActive);
             
             if (isActive)
             {
                 // 更新提示文本（区分玩家/怪物行动）
-                _view.ActingTipUI.UpdateTipText(actTipType == E_ActTipType.Monster);
+                _view.ActingTipUI.UpdateTipText(actTipType == EActTipType.Monster);
             }
         }
 
@@ -672,5 +682,11 @@ namespace HotUpdate.UI.Battle.Base
             return "+";
         }
         #endregion
+
+        public void Dispose()
+        {
+            _iconService.Dispose();
+            _objectSpawner.Dispose();
+        }
     }
 }

@@ -68,5 +68,7 @@ namespace HotUpdate.Game.Battle.Skill
         /// <param name="skillId">要获取的技能ID</param>
         /// <returns>对应的技能数据对象</returns>
         ISkill GetSkill(int skillId);
+
+        int GetSkillIdByIndex(int index);
     }
 }

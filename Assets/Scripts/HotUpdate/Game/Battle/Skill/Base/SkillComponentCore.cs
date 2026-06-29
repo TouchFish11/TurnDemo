@@ -21,7 +21,7 @@ namespace HotUpdate.Game.Battle.Skill.Base
         // 技能工厂
         protected ISkillFactory skillFactory;
         // 技能数据字典：Key为技能ID，Value为对应的技能数据对象，用于快速索引技能
-        protected HashSet<int> skillIds = new();
+        protected List<int> skillIds = new();
         // 施法条件集合：存储当前技能组件生效的所有施法条件，施法前需校验所有条件
         protected List<ICastSkillCondition> castSkillConditions = new();
         // 目标选择策略集合：存储当前技能组件的所有目标选择策略，按优先级排序后生效
@@ -174,6 +174,14 @@ namespace HotUpdate.Game.Battle.Skill.Base
         {
             // 为技能设置最高优先级的目标选择策略（排序后第一个即为最高优先级）
             return skillFactory.CreateSkill(Component.BattleEntity, skillId, targetSelectStrategies[0]);
+        }
+
+        public int GetSkillIdByIndex(int index)
+        {
+            if(index < 0 || index >= skillIds.Count)
+                throw new ArgumentOutOfRangeException(nameof(index));
+            
+            return skillIds[index];
         }
 
         protected override void OnDispose()
