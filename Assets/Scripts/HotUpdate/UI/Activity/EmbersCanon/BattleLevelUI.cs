@@ -58,5 +58,10 @@ namespace HotUpdate.UI.Activity.EmbersCanon
                 _eventCenter.TriggerEvent(new GlobalMessageEvent { Message = "该关卡已完成" });
             }
         }
+
+        protected override void OnDisable()
+        {
+            OnEnterBattle = null;
+        }
     }
 }

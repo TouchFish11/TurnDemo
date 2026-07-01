@@ -1,10 +1,11 @@
+using System;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.U2D;
 
 namespace HotUpdate.Base.Service
 {
-    public interface IIconService
+    public interface IIconService : IDisposable
     {
         /// <summary>
         /// 图集预加载

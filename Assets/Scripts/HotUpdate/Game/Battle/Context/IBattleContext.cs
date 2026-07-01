@@ -33,6 +33,11 @@ namespace HotUpdate.Game.Battle.Context
         IBattleEntityObject CurrentTurnOwner { get; set; }
 
         /// <summary>
+        /// 行动基准线
+        /// </summary>
+        float ActionLine { get; set; }
+
+        /// <summary>
         /// 获取首个战斗实体（通常用于初始化或默认目标）
         /// </summary>
         /// <returns>首个战斗实体对象</returns>

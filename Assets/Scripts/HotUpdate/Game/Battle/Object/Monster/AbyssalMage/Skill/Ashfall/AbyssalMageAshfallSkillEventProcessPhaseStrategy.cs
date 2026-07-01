@@ -12,7 +12,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill.Ashfall
         protected override async Task OnTrigger(HitResult hitResult)
         {
             // 计时器计时
-            timerManager.CreateTimer(false, 1020, () =>
+            timerManager.CreateTimer(false, 150, () =>
             {
                 SkillContext.VFXInfo.IsStop = true;
             });

@@ -10,7 +10,7 @@ namespace HotUpdate.UI.Battle.ActionLine
     /// </summary>
     public class WaitingActUI : UIBehaviourBase
     {
-        [Inject] private Image imgIcon;
+        [InjectUI] private Image imgIcon;
 
         public void Init(Sprite icon)
         {

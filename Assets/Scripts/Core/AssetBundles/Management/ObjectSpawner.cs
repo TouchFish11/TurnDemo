@@ -94,7 +94,7 @@ namespace Core.AssetBundles.Management
                 GameAsset.Release(_keyToHandleMap[key]);
                 _assetKeys.Remove(key);
                 _keyToHandleMap.Remove(key);
-                Logger.LogError($"[{nameof(ObjectSpawner)}]: Create obj error,{e.Message}");
+                Logger.LogError($"[{nameof(ObjectSpawner)}]: Create '{key}' obj error,{e.Message}");
                 return null;
             }
             finally

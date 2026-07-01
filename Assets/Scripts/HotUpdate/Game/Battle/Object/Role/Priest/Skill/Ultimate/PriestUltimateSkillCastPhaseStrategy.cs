@@ -33,9 +33,6 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill.Ultimate
             yield return UpdateCamera_02();
 
             yield return CreateVFX();
-            
-            // 等待特效已结束，确保技能流程完成
-            yield return new WaitUntil(() => !SkillContext.VFXInfo.IsAlive);
         }
         
         private IEnumerator UpdateCamera_01()

@@ -41,9 +41,10 @@ namespace Core.UI.ViewController
         /// <returns></returns>
         public async Task Activate()
         {
+            // 激活中，不允许执行任何修改父子关系的操作
+            view.ViewObj.SetActive(true);
             // 正在激活
             _controllerState = EControllerState.Activating;
-            view.ViewObj.SetActive(true);
             
             // 监听鼠标显隐事件
             if(IsCursorVisible)
@@ -58,7 +59,7 @@ namespace Core.UI.ViewController
             view.GetBinder().OnInputFieldValueChanged += InputFieldValueChanged;
             view.GetBinder().OnScrollRectValueChanged += ScrollRectValueChanged;
             view.GetBinder().OnDropdownValueChanged += DropdownValueChanged;
-            // 界面显示时执行
+            // 激活完成界面显示时执行
             await OnActive();
             // 先执行显示逻辑，再改变界面状态标识，激活完成可用
             _controllerState = EControllerState.Ready;
@@ -70,8 +71,6 @@ namespace Core.UI.ViewController
         /// <returns></returns>
         public async Task InActivate()
         {
-            // 先改变界面状态标识，再执行失活逻辑
-            _controllerState = EControllerState.InActivating;
             // 注销监听鼠标显隐事件
             if(IsCursorVisible)
                 eventCenter.TriggerEvent(new MouseVisibleChangedEvent { IsVisible = false, SourceName = ToString() });
@@ -85,7 +84,12 @@ namespace Core.UI.ViewController
             view.GetBinder().OnInputFieldValueChanged -= InputFieldValueChanged;
             view.GetBinder().OnScrollRectValueChanged -= ScrollRectValueChanged;
             view.GetBinder().OnDropdownValueChanged -= DropdownValueChanged;
+            
+            // 处理失活逻辑
             await OnInactivate();
+            // 改变界面状态标识
+            _controllerState = EControllerState.InActivating;
+            // 此时失活中，不允许执行任何修改父子对象的操作
             view.ViewObj.SetActive(false);
         }
 
@@ -96,13 +100,13 @@ namespace Core.UI.ViewController
         protected abstract Task OnInit();
         
         /// <summary>
-        /// 当界面被激活（显示）时执行，在这里执行界面初始化操作，每次显示时都会执行（若未被销毁）
+        /// 当界面被激活（显示）时执行，在这里执行界面初始化操作，显示动画等，每次显示时都会执行（若未被销毁）
         /// </summary>
         /// <returns></returns>
         protected abstract Task OnActive();
 
         /// <summary>
-        /// 当界面被失活（隐藏）时执行，可以在此执行界面清理操作
+        /// 当界面被失活（隐藏）时执行，可以在此执行界面清理操作，隐藏动画等
         /// </summary>
         /// <returns></returns>
         protected abstract Task OnInactivate();
@@ -217,20 +221,20 @@ namespace Core.UI.ViewController
         /// <param name="index">选中的索引</param>
         protected virtual void OnDropdownValueChanged(string dropdownName, int index) { }
 
-        public async Task Destroy()
+        public async Task Dispose()
         {
             await InActivate();
             // 界面被销毁
             _controllerState = EControllerState.Destroyed;
             view.Destroy();
-            await OnDestroy();
+            await OnDispose();
         }
         
         /// <summary>
-        /// 在UiView.Destroy之后执行
+        /// 在UI界面销毁前执行
         /// </summary>
         /// <returns></returns>
-        protected virtual Task OnDestroy()
+        protected virtual Task OnDispose()
         {
             return Task.CompletedTask;
         }

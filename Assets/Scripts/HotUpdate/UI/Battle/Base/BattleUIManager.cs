@@ -46,9 +46,9 @@ namespace HotUpdate.UI.Battle.Base
         
         #region 私有字段
         // 战斗界面视图层引用
-        private readonly BattleView _view;
+        private BattleView _view;
         // 战斗控制器引用
-        private readonly BattleController  _controller;
+        private BattleController  _controller;
 
         /// <summary>
         /// 文本X轴偏移范围（随机）
@@ -308,8 +308,8 @@ namespace HotUpdate.UI.Battle.Base
         {
             // 设置累计伤害UI区域激活状态
             _view.TotalDmgArea.gameObject.SetActive(isShow);
-            // 更新累计伤害数值（模型层计算+视图层刷新）
-            _view.UpdateTotalDmg(_view.SetCumulativeDamage(dmg, !isShow));
+            // 更新累计伤害数值
+            _view.UpdateCumulativeTotalDmg(_view.SetCumulativeDamage(dmg, !isShow));
         }
         #endregion
 
@@ -348,8 +348,9 @@ namespace HotUpdate.UI.Battle.Base
         /// 更新行动条（ActionBar）UI
         /// 为每个战斗实体创建行动格子UI，第一个实体的格子会特殊放大
         /// </summary>
+        /// <param name="context"></param>
         /// <param name="battleEntities">需要显示在行动条的战斗实体列表</param>
-        public async void UpdateActionBar(IEnumerable<IBattleEntityObject> battleEntities)
+        public async void UpdateActionBar(IBattleContext context, IEnumerable<IBattleEntityObject> battleEntities)
         {
             try
             {
@@ -366,8 +367,8 @@ namespace HotUpdate.UI.Battle.Base
                     var iconName = GetIconByEntity(battleEntity);
                     // 加载图标精灵
                     var icon = await _iconService.LoadIconAsync(iconName);
-                    // 初始化行动格子UI（图标、行动值、实体引用、是否第一个）
-                    actionGridUI.Init(icon, battleEntity.ActionValue, battleEntity, isFirst);
+                    // 初始化行动格子UI：计算差值作为剩余行动值
+                    actionGridUI.Init(icon, (int)(context.ActionLine - battleEntity.ActionValue), battleEntity, isFirst);
                     // 更新模型层的行动条UI数据
                     _view.UpdateAcitonbar(actionGridUI);
                     isFirst = false;
@@ -685,8 +686,14 @@ namespace HotUpdate.UI.Battle.Base
 
         public void Dispose()
         {
-            _iconService.Dispose();
             _objectSpawner.Dispose();
+            _iconService.Dispose();
+            _objectSpawner = null;
+            _iconService = null;
+            _battleCameraManager = null;
+            _uiManager = null;
+            _view = null;
+            _controller = null;
         }
     }
 }

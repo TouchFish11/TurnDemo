@@ -251,7 +251,7 @@ namespace HotUpdate.UI.Dialogue
             }
         }
 
-        protected override Task OnDestroy()
+        protected override Task OnDispose()
         {
             view.DestroyReviewView(_objectSpawner);
             _objectSpawner.Dispose();

@@ -45,13 +45,13 @@ namespace HotUpdate.Game.Battle.Core
             _context = context;
             _commandFactory = DIContainer.Create<Commandfactory>();
         }
-        
+
         /// <summary>
         /// 创建并缓存玩家角色
         /// </summary>
         /// <param name="roleIds"></param>
         /// <returns></returns>
-        public async Task<List<IBattleEntityObject>> CreatePlayerRoles(params int[] roleIds)
+        public async Task CreatePlayerRoles(params int[] roleIds)
         {
             var roles = new List<IBattleEntityObject>(roleIds.Length);
             var playerTrans = new List<Transform>(_battlePointProxy.BattlePoint.GetRoleTransforms());
@@ -87,8 +87,6 @@ namespace HotUpdate.Game.Battle.Core
                 _context.AddBattleEntity(battleEntityObject);
                 _context.AddSceneRole(battleEntityObject);
             }
-
-            return roles;
         }
         
         /// <summary>

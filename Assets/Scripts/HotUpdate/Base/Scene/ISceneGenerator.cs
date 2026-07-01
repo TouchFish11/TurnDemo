@@ -26,5 +26,10 @@ namespace HotUpdate.Base.Scene
         /// <param name="onLoadProgress">加载进度回调，可为null</param>
         /// <param name="sceneConfig">场景配置（当前仅占位，忽略）</param>
         Task InitSceneAsync(string sceneId, LoadSceneMode mode, Action<float> onLoadProgress, object sceneConfig = null);
+
+        /// <summary>
+        /// 重置缓存的数据
+        /// </summary>
+        void Reset();
     }
 }

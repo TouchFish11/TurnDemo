@@ -62,13 +62,18 @@ namespace HotUpdate.UI.Activity.OrbitalDeparture
             OrbitalDepartureHandler.ReceiveReward();
         }
         
-        protected override void OnHide()
+        protected override Task OnHide()
         {
             activityJoinComponent.OnClickJoin -= OnTriggerJoin;
             
             itemService.Clear();
-            objectSpawner.Clear();
             iconService.ReleaseAll();
+            return Task.CompletedTask;
+        }
+
+        protected override void OnDispose()
+        {
+            
         }
     }
 }

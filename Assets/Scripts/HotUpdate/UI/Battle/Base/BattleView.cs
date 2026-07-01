@@ -13,6 +13,9 @@ using UnityEngine.UI;
 
 namespace HotUpdate.UI.Battle.Base
 {
+    /// <summary>
+    /// 战斗界面
+    /// </summary>
     public class BattleView : UIView
     {
         [InjectUI] private ScrollRect svActionbar;
@@ -29,96 +32,95 @@ namespace HotUpdate.UI.Battle.Base
         [InjectUI] private Image imgIcon;
         
         /// <summary>
-        /// ��������
+        /// 操作区域根节点
         /// </summary>
         [InjectUI(1)] public RectTransform OperatorArea { get; private set; }
 
         /// <summary>
-        /// ���״̬����
+        /// 我方状态根节点
         /// </summary>
         [InjectUI(1)] public RectTransform PlayerArea { get; private set; }
 
         /// <summary>
-        /// Ŀ��������
+        /// 目标标记根节点
         /// </summary>
         [InjectUI(1)] public RectTransform SelectMarkerArea { get; private set; }
 
         /// <summary>
-        /// ����״̬����
+        /// 怪物状态根节点
         /// </summary>
         [InjectUI(1)] public RectTransform MonsterStateArea { get; private set; }
 
         /// <summary>
-        /// ս����������
+        /// 战斗状态提示根节点
         /// </summary>
         [InjectUI(1)] public RectTransform BattleStateTipArea { get; private set; }
 
         /// <summary>
-        /// ״̬�ı�����
+        /// 状态文本根节点
         /// </summary>
         [InjectUI(1)] public RectTransform BuffTextArea { get; private set; }
 
         /// <summary>
-        /// ս����Ϣ����
+        /// 战斗信息根节点
         /// </summary>
         [InjectUI(1)] public RectTransform BattleMsgArea { get; private set; }
 
         /// <summary>
-        /// ���˺�����
+        /// 总伤害根节点
         /// </summary>
         [InjectUI(1)] public RectTransform TotalDmgArea { get; private set; }
 
         /// <summary>
-        /// ������ʾ����
+        /// 立绘展示根节点
         /// </summary>
         [InjectUI(1)] public RectTransform PaintingDisplayArea { get; private set; }
         
         /// <summary>
-        /// 
+        /// 行动提示根节点
         /// </summary>
         [InjectUI(1)] public RectTransform ActingTipArea { get; private set; }
 
         /// <summary>
-        /// �ж�������
+        /// 行动条内容
         /// </summary>
         public Transform ActionBarContent => svActionbar.content;
 
         /// <summary>
-        /// ս��������
+        /// 战技点UI根节点
         /// </summary>
         public Transform PointContent => svPoint.content;
 
         /// <summary>
-        /// �ȴ���������
+        /// 等待队列内容
         /// </summary>
         public Transform WaitQueueContent => svWaitQueueArea.content;
 
         /// <summary>
-        /// ���ܼ���
+        /// 技能按键组
         /// </summary>
         public ToggleGroup SkillKeyGroup => binder.GetControl<ToggleGroup>(nameof(OperatorArea));
         
         /// <summary>
-        /// �ж���ʾUI����
+        /// 行动提示UI实例
         /// </summary>
         public ActingTipUI ActingTipUI { get; private set; }
         
         
-        // �ж�������UI�б�
+        // 行动条格子UI列表
         private readonly List<ActionGridUI> actions = new();
-        // ���ܰ���UI�б�
+        // 技能按键UI列表
         private readonly List<SkillKeyUI> skillKeyUIs = new();
-        // ��ɫ״̬UI�б�
+        // 角色状态UI列表
         private readonly List<RoleStateUI> roleStateUIs = new();
-        // ս����UI�б�
+        // 战技点UI列表
         private readonly List<BattlePointUI> battlePointUIs = new();
-        // ѡ����UI�б�
+        // 选择标记UI列表
         private readonly List<SelectMarkerUI> selectMarkerUIs = new();
-        // �ȴ��ж������б�
+        // 等待行动UI列表
         private readonly List<WaitingActUI> waitingActUIs = new();
-        // ��ǰ�ۼ��˺�
+        // 当前累计伤害
         private long currentCalcDamage;
-        
 
         protected override void Awake()
         {
@@ -138,10 +140,10 @@ namespace HotUpdate.UI.Battle.Base
         }
 
         /// <summary>
-        /// �������˺�
+        /// 更新累计总伤害
         /// </summary>
         /// <param name="dmg"></param>
-        public void UpdateTotalDmg(long dmg)
+        public void UpdateCumulativeTotalDmg(long dmg)
         {
             txtDmg.text = dmg.ToString();
         }
@@ -157,7 +159,7 @@ namespace HotUpdate.UI.Battle.Base
         }
 
         /// <summary>
-        /// �����սἼ��ʾ
+        /// 更新终结技显示
         /// </summary>
         /// <param name="isShow"></param>
         /// <param name="icon"></param>
@@ -175,7 +177,7 @@ namespace HotUpdate.UI.Battle.Base
         }
 
         /// <summary>
-        /// ����ս������
+        /// 更新战技点数量
         /// </summary>
         /// <param name="current"></param>
         public void UpdateBattlePointCount(int current)
@@ -184,18 +186,18 @@ namespace HotUpdate.UI.Battle.Base
         }
         
         /// <summary>
-        /// ͨ��ID��ȡ��ɫ״̬UI
-        /// ʹ��Linq��ѯ
+        /// 通过ID获取角色状态UI
+        /// 使用Linq查询
         /// </summary>
         /// <param name="roleId"></param>
-        /// <returns>δ�ҵ�����null</returns>
+        /// <returns>未找到返回null</returns>
         public RoleStateUI GetRoleStateUIById(int roleId)
         {
             return roleStateUIs.FirstOrDefault(r => r.RoleId == roleId);
         }
         
         /// <summary>
-        /// 
+        /// 缓存等待指令UI
         /// </summary>
         /// <param name="waitingActUI"></param>
         public void CacheWaitingCommmand(WaitingActUI waitingActUI)
@@ -213,7 +215,7 @@ namespace HotUpdate.UI.Battle.Base
         }
 
         /// <summary>
-        /// 
+        /// 清空行动条
         /// </summary>
         /// <param name="spawner"></param>
         public void ClearActionBar(ObjectSpawner spawner)
@@ -226,7 +228,7 @@ namespace HotUpdate.UI.Battle.Base
         }
 
         /// <summary>
-        /// 
+        /// 更新行动条
         /// </summary>
         /// <param name="actionGridUI"></param>
         public void UpdateAcitonbar(ActionGridUI actionGridUI)
@@ -235,7 +237,7 @@ namespace HotUpdate.UI.Battle.Base
         }
 
         /// <summary>
-        /// ��ȡ���е��ж�����
+        /// 获取所有的行动条格子UI
         /// </summary>
         /// <returns></returns>
         public List<ActionGridUI> GetActionGridUIs()
@@ -244,7 +246,7 @@ namespace HotUpdate.UI.Battle.Base
         }
 
         /// <summary>
-        /// ���ò���UI
+        /// 设置操作UI
         /// </summary>
         /// <param name="skillKeyUIs"></param>
         /// <param name="spawner"></param>
@@ -259,7 +261,7 @@ namespace HotUpdate.UI.Battle.Base
         }
 
         /// <summary>
-        /// �������UI
+        /// 清空操作UI
         /// </summary>
         /// <param name="spawner"></param>
         public void ClearOperator(ObjectSpawner spawner)
@@ -272,7 +274,7 @@ namespace HotUpdate.UI.Battle.Base
         }
 
         /// <summary>
-        /// ����ս������
+        /// 更新战点数量
         /// </summary>
         /// <param name="current"></param>
         /// <param name="battlePointUIs"></param>
@@ -288,7 +290,7 @@ namespace HotUpdate.UI.Battle.Base
         }
         
         /// <summary>
-        ///  缓存目标标记
+        /// 缓存目标标记
         /// </summary>
         /// <param name="selectMarkerUI"></param>
         public void AddSelectMarker(SelectMarkerUI selectMarkerUI)
@@ -310,7 +312,7 @@ namespace HotUpdate.UI.Battle.Base
         }
 
         /// <summary>
-        /// ��ʼ����ɫ״̬UI
+        /// 初始化角色状态UI
         /// </summary>
         /// <param name="roleStateUI"></param>
         public void InitRoleStateUI(RoleStateUI roleStateUI)
@@ -319,7 +321,7 @@ namespace HotUpdate.UI.Battle.Base
         }
 
         /// <summary>
-        /// �����ۼ��˺��ı�
+        /// 设置累计伤害文本
         /// </summary>
         /// <param name="dmg"></param>
         /// <param name="isClear"></param>

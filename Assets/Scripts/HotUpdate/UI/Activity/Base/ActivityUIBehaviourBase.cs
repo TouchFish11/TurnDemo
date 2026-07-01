@@ -46,12 +46,33 @@ namespace HotUpdate.UI.Activity.Base
             activityView = transform.GetComponentInParent<ActivityView>().transform;
             // 初始化活动界面
             await OnInit();
-            await OnShow();
+            await Show();
+        }
+
+        public Task Show()
+        {
+            return OnShow();
+        }
+
+        public Task Hide()
+        {
+            return OnHide();
+        }
+
+        public async Task Destroy()
+        {
+            await Hide();
+            OnDispose();
+            objectSpawner.Dispose();
+            objectSpawner = null;
+            itemService.Dispose();
+            itemService = null;
+            ((IDisposable)iconService).Dispose();
+            iconService = null;
         }
 
         /// <summary>
-        /// 在初始化时执行
-        /// 会执行OnShow
+        /// 仅在第一次创建对象时执行
         /// </summary>
         /// <returns></returns>
         protected abstract Task OnInit();
@@ -66,13 +87,10 @@ namespace HotUpdate.UI.Activity.Base
         /// 在活动界面隐藏时执行
         /// 用于取消事件的监听
         /// </summary>
-        protected abstract void OnHide();
+        protected abstract Task OnHide();
 
-        protected sealed override void OnDisable()
-        {
-            OnHide();
-        }
-
+        protected abstract void OnDispose();
+        
         /// <summary>
         /// 剩余时间转字符串
         /// </summary>
@@ -87,14 +105,6 @@ namespace HotUpdate.UI.Activity.Base
 
             long seconds = duration * 24 * 60 * 60;
             return $"{TextUtility.SecondToHMS(seconds, "天", "小时", string.Empty, string.Empty)}";
-        }
-
-        protected override void OnDestroy()
-        {
-            itemService.Dispose();
-            itemService = null;
-            ((IDisposable)iconService).Dispose();
-            iconService = null;
         }
     }
 }

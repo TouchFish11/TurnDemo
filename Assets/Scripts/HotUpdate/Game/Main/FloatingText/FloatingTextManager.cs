@@ -110,11 +110,8 @@ namespace HotUpdate.Game.Main.FloatingText
             // 清空NPC列表
             npcObjects.Clear();
             // 回收所有浮动文本对象至对象池
-            foreach (var text in npcToTextMap.Values)
-            {
-                _objectSpawner.Release(text);
-            }
-            _objectSpawner.Dispose();
+            _objectSpawner.Release(npcToTextMap.Values);
+            _objectSpawner.Clear();
             // 清空映射字典
             npcToTextMap.Clear();
             // 重置玩家引用

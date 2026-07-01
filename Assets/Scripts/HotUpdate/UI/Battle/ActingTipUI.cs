@@ -14,9 +14,9 @@ namespace HotUpdate.UI.Battle
     public class ActingTipUI : UIBehaviourBase
     {
         // 行动图标图片组件
-        [Inject] private Image imgActingIcon;
+        [InjectUI] private Image imgActingIcon;
         // 行动提示文本组件
-        [Inject] private TextMeshProUGUI txtActingTip;
+        [InjectUI] private TextMeshProUGUI txtActingTip;
 
         // 我方行动提示文本常量
         private const string PlayerTipText = "我方行动中...";

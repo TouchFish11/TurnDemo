@@ -48,8 +48,6 @@ namespace HotUpdate.UI.Battle.ActionLine
         private bool isFirstGrid;
         // 第一个格子的缩放系数
         private readonly float scaleFactor = 1.1f;
-        // 当前格子的行动值
-        private float actionValue;
         
         /// <summary>
         /// 只读属性：当前格子是否处于选中状态
@@ -89,13 +87,12 @@ namespace HotUpdate.UI.Battle.ActionLine
         /// <param name="actionValue">行动值</param>
         /// <param name="battleEntity">绑定的战斗实体</param>
         /// <param name="isFirst">是否为第一个行动格子</param>
-        public void Init(Sprite icon, float actionValue, IBattleEntityObject battleEntity, bool isFirst)
+        public void Init(Sprite icon, int actionValue, IBattleEntityObject battleEntity, bool isFirst)
         {
             this.battleEntity = battleEntity;
             isFirstGrid = isFirst;
             imgIcon.sprite = icon;
-            this.actionValue = actionValue;
-            txtActionValue.text = ((int)actionValue).ToString();
+            txtActionValue.text = actionValue.ToString();
 
             // 根据是否为第一个格子更新缩放
             UpdateScale();

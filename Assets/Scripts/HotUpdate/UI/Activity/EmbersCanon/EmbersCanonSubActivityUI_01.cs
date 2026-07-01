@@ -22,13 +22,26 @@ namespace HotUpdate.UI.Activity.EmbersCanon
 
         private readonly List<BattleLevelUI> _battleLevelUis = new();
         private EmbersCanonHandler _embersCanonHandler;
+        private ActivityInfo _activityInfo;
 
         public event Action OnClose;
         
         public async Task Init(ActivityInfo activityInfo, EmbersCanonHandler embersCanonHandler)
         {
+            _activityInfo = activityInfo;
+            _embersCanonHandler = embersCanonHandler;
+            await UpdateInfo();
+        }
+        
+        public Task Activate()
+        {
+            return UpdateInfo();
+        }
+
+        private async Task UpdateInfo()
+        {
             // 初始化关卡
-            var (battleConfigEntryColletion, embersCanonData) = await embersCanonHandler.InitLevels(activityInfo.f_id);
+            var (battleConfigEntryColletion, embersCanonData) = await _embersCanonHandler.InitLevels(_activityInfo.f_id);
             foreach (var battleConfigEntry in battleConfigEntryColletion.battleConfigs)
             {
                 var battleLevelUI = await _objectSpawner.SpawnAsync<BattleLevelUI>(AssetKeys.BattleLevelUI, svLevel.content);
@@ -47,8 +60,6 @@ namespace HotUpdate.UI.Activity.EmbersCanon
                 // 缓存UI
                 _battleLevelUis.Add(battleLevelUI);
             }
-            
-            _embersCanonHandler = embersCanonHandler;
         }
         
         protected override void OnButtonClick(string btnName)
@@ -61,18 +72,22 @@ namespace HotUpdate.UI.Activity.EmbersCanon
             }
         }
 
-        protected override void OnDisable()
+        public void Deactivate()
         {
             _objectSpawner.Release(_battleLevelUis);
             _battleLevelUis.Clear();
-            _objectSpawner.Dispose();
             _iconService.ReleaseAll();
-            OnClose = null;
         }
 
-        protected override void OnDestroy()
+        public void Destroy()
         {
+            _objectSpawner.Dispose();
             _objectSpawner = null;
+            _iconService.Dispose();
+            _iconService = null;
+            OnClose = null;
+            _embersCanonHandler = null;
+            _activityInfo = null;
         }
     }
 }

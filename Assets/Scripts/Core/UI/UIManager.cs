@@ -99,10 +99,10 @@ namespace Core.UI
         {
             if (_panels.TryGetValue(panelId, out var panelInfo))
             {
+                // 调用控制器的销毁
+                await panelInfo.Controller.Dispose();
                 // 回收界面
                 _objectSpawner.Release(panelInfo.View, true);
-                // 调用控制器的销毁
-                await panelInfo.Controller.Destroy();
                 // 从缓存中移除
                 _panels.Remove(panelId);
             }

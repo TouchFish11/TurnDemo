@@ -28,7 +28,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard.Skill.Ultimate
             yield return SkillHelper.WaitForUltimateConfirm(SkillContext);
             
             // 移除Pose特效
-            vfxManager.RemoveVFX(skill.SkillContext.VFXInfo);
+            vfxManager.RemoveVFX(vFXInfo);
 
             SkillHelper.InitRoleSkillTarget(skill, battleCoordinator);
         }

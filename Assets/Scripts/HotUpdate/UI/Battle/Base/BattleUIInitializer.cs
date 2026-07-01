@@ -25,9 +25,9 @@ namespace HotUpdate.UI.Battle.Base
         [Inject] private IMonoAdapter _monoAdapter;
         
         // 战斗视图接口，用于获取UI挂载节点等视图相关信息
-        private readonly BattleView _view;
+        private BattleView _view;
         // 战斗控制器
-        private readonly BattleController _battleController;
+        private BattleController _battleController;
 
         /// <summary>
         /// 构造函数
@@ -110,6 +110,11 @@ namespace HotUpdate.UI.Battle.Base
         {
             // 执行View的相关清理方法
             _objectSpawner.Dispose();
+            _objectSpawner = null;
+            _binaryDataManager = null;
+            _monoAdapter = null;
+            _view = null;
+            _battleController = null;
         }
     }
 }

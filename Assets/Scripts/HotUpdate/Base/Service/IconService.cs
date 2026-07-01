@@ -11,7 +11,7 @@ namespace HotUpdate.Base.Service
     /// <summary>
     /// 图片服务
     /// </summary>
-    public class IconService : IIconService, IDisposable
+    public class IconService : IIconService
     {
         // 正在加载图片的任务缓存
         private readonly Dictionary<string, Task<AssetHandle<Sprite>>> _keyToSpriteHandleTaskMap = new();

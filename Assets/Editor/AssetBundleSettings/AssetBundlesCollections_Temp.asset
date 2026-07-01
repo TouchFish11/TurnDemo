@@ -421,9 +421,9 @@ MonoBehaviour:
   - assetBundleName: scene
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\Scene\BeginScene.unity
-      size: 12647
+      size: 18102
       name: BeginScene.unity
-      hash: 8195bb02a4e9a70906fdded454a2e86a891543508778ef3bbf345ced5c9d535b
+      hash: eb774ef49ec794fdca47dd94d82732e9ef012d4f7210e7532fce219361d82978
       assetType: 1
     - assetPath: Assets\Editor\ArtRes\Scene\LevelScene.unity
       size: 89284
@@ -572,9 +572,9 @@ MonoBehaviour:
       hash: f1f2947c3b70cecdc2540a2b81f082249f37494ae6e2f29c948da492d6a4efdf
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Back\BackView.prefab
-      size: 3001
+      size: 2999
       name: BackView.prefab
-      hash: 8d01858134ee14c7ece72d5897995778504d16e33bd4a42c37f7467d93ce6a2a
+      hash: 38ae530c0f74aca7bd26790608fef33e80e5c4386cf907fca33f664df88a54f8
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Battle\BattleMessageUI.prefab
       size: 11503

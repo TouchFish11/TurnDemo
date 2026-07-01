@@ -18,7 +18,6 @@ namespace HotUpdate.UI.Activity.Base
     /// </summary>
     public class ActivityController : UIController<ActivityView>, IBlockOperation
     {
-
         [Inject] private ObjectSpawner _objectSpawner;
         [Inject] private IActivityDataManager _activityDataManager;
         [Inject] private ISceneManager _sceneManager;
@@ -31,12 +30,7 @@ namespace HotUpdate.UI.Activity.Base
         
         protected override bool IsCursorVisible { get; set; } = true;
 
-        protected override Task OnInit()
-        {
-            return Task.CompletedTask;
-        }
-
-        protected override async Task OnActive()
+        protected override async Task OnInit()
         {
             // 读取活动数据
             var infoDic = _binaryDataManager.GetConfig<ActivityInfoContainer>(EConfigLoadType.Excel).dataDic;
@@ -57,11 +51,24 @@ namespace HotUpdate.UI.Activity.Base
             view.GetFirstActivityUI().SelectActivity();
         }
 
-        protected override Task OnInactivate()
+        protected override async Task OnActive()
         {
-            _objectSpawner.Dispose();
+            // 执行子界面的激活逻辑
+            if (view.CurrentActivity != null)
+            {
+                await view.CurrentActivity.Show();
+            }
+        }
+
+        protected override async Task OnInactivate()
+        {
+            // 执行子界面的失活逻辑
+            if (view.CurrentActivity != null)
+            {
+                await view.CurrentActivity.Hide();
+            }
             // 显示主界面
-            return _uiService.ShowAsync(_uiService.GetPanel(EUIPanelId.MainPanel).PanelId);
+            await _uiService.ShowAsync(_uiService.GetPanel(EUIPanelId.MainPanel).PanelId);
         }
         
         protected override void OnButtonClick(string btnName)
@@ -74,10 +81,18 @@ namespace HotUpdate.UI.Activity.Base
             }
         }
 
+        /// <summary>
+        /// 更新活动详细界面
+        /// </summary>
+        /// <param name="selectId"></param>
+        /// <exception cref="NullReferenceException"></exception>
         public async void UpdateDetailActivity(int selectId)
         {
             if (view.CurrentActivity != null && selectId == view.CurrentActivity.ActivityId)
                 return;
+            
+            if(view.CurrentActivity != null)
+                await view.CurrentActivity.Hide();
             
             // 获取活动配置
             var activityInfo = _binaryDataManager.GetConfig<ActivityInfoContainer>(EConfigLoadType.Excel).dataDic[selectId];
@@ -105,10 +120,15 @@ namespace HotUpdate.UI.Activity.Base
             view.UpdateActivityDetailUI(activityUIBehaviourBase, _objectSpawner);
         }
 
-        protected override Task OnDestroy()
+        protected override async Task OnDispose()
         {
+            _objectSpawner.Dispose();
             _objectSpawner = null;
-            return Task.CompletedTask;
+
+            if (view.CurrentActivity != null)
+            {
+                await view.CurrentActivity.Destroy();
+            }
         }
     }
 }

@@ -127,7 +127,6 @@ namespace HotUpdate.Game.Battle.StateMeachine
         
         /// <summary>
         /// 排序顺序
-        /// 模拟行动值的变化
         /// </summary>
         private void SortOrder()
         {
@@ -237,8 +236,7 @@ namespace HotUpdate.Game.Battle.StateMeachine
 
         public override void Exit()
         {
-            // TODO：结束当前回合的循环
-            
+
         }
 
         protected override void OnDispose()

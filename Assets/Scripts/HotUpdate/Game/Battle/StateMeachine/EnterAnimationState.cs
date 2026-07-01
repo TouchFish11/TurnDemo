@@ -44,7 +44,7 @@ namespace HotUpdate.Game.Battle.StateMeachine
             // 调整相机视角，Task转协程
             yield return TaskUtility.WaitForTask(_battleCameraManager.CreateCamera(null, new Vector3(0, 1, -3.5f), Quaternion.identity, mask));
             // 延迟2秒
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(1f);
             BattleStateMachine.ChangeState(EBattlePhase.TurnLoop);
         }
 

@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Pool;
 using Core.Scene;
@@ -16,12 +15,11 @@ namespace HotUpdate.Game.Scene
     /// <summary>
     /// 场景生成器
     /// </summary>
-    public class SceneGenerator : ISceneGenerator, IDisposable
+    public class SceneGenerator : ISceneGenerator
     {
         [Inject] private IPlayerManager _playerManager;
         [Inject] private IFloatingTextManager _floatingTextManager;
         [Inject] private IPoolManager _poolManager;
-        [Inject] private ObjectSpawner _objectSpawner;
         [Inject] private ISceneManager _sceneManager;
         [Inject] private NpcFactory _npcFactory;
         
@@ -32,7 +30,7 @@ namespace HotUpdate.Game.Scene
             // TODO：可根据场景配置sceneConfig动态创建场景环境
             // ...
         }
-        
+
         /// <summary>
         /// 初始化主游戏场景核心内容
         /// 异步创建NPC、玩家对象，初始化UI界面、飘字管理器等游戏元素
@@ -59,14 +57,10 @@ namespace HotUpdate.Game.Scene
             // 清空对象池
             _poolManager.ClearAll();
         }
-
-        public void Dispose()
+        
+        public void Reset()
         {
-            _playerManager = null;
-            _floatingTextManager = null;
-            _poolManager = null;
-            _objectSpawner.Dispose();
-            _objectSpawner = null;
+            
         }
     }
 }

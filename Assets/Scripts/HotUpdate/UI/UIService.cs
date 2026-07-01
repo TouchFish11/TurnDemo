@@ -4,7 +4,6 @@ using Core.DI;
 using Core.UI;
 using Core.UI.ViewController;
 using HotUpdate.Base.UI;
-using HotUpdate.Game.Main.Back;
 using HotUpdate.Game.Main.Loading.Battle;
 using HotUpdate.UI.Activity.Base;
 using HotUpdate.UI.Back;

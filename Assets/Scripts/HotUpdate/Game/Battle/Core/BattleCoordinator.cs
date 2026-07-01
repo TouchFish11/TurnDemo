@@ -27,7 +27,7 @@ namespace HotUpdate.Game.Battle.Core
     /// <summary>
     /// 战斗协调器
     /// </summary>
-    public class BattleCoordinator : IDisposable
+    public class BattleCoordinator
     {
         [Inject] private BattlePointProxy _battlePointProxy;
         [Inject] private ISkillKeyUIDataProviderFactory _skillKeyUIDataProviderFactory;
@@ -107,6 +107,7 @@ namespace HotUpdate.Game.Battle.Core
         /// <param name="battleContext"></param>
         public void Init(IBattleContext battleContext)
         {
+            Reset();
             BattleCameraManager = DIContainer.Create<IBattleCameraManager>(parameterValues: new object[] { this, BattleInputHandler });
             TargetSelectManager = DIContainer.Create<ITargetSelectManager>();
             // 初始化角色战斗点，依赖玩家战斗实体对象创建完成
@@ -430,7 +431,7 @@ namespace HotUpdate.Game.Battle.Core
             return true;
         }
         
-        public void Dispose()
+        private void Reset()
         {
             BattleInputHandler.OnLeftDrag -= OnLeftDrag;
             BattleInputHandler.OnRightDrag -= OnRightDrag;

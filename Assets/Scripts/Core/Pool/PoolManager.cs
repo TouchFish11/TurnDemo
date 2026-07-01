@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Core.DI;
 using Core.Global;
+using Core.Mono;
 using Core.Systems.Memorys;
 using UnityEngine;
 using Logger = Core.Log.Logger;
@@ -78,6 +79,7 @@ namespace Core.Pool
             if (!_poolRootObj && _isOpenLayout)
             {
                 _poolRootObj = new GameObject("Pool");
+                Object.DontDestroyOnLoad(_poolRootObj);
             }
             
             // 已经存储过了就可以直接往容器中存储对象
@@ -161,12 +163,13 @@ namespace Core.Pool
             {
                 poolObj.Clear();
             }
-
-            _poolRootObj = null;
+            
             _objectPools.Clear();
             _poolDataDic.Clear();
             _actives.Clear();
             _lazies.Clear();
+            EngineUtility.Destroy(_poolRootObj);
+            _poolRootObj = null;
             GC.Collect();
         }
 

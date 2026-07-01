@@ -51,6 +51,9 @@ namespace HotUpdate.UI.Activity.EmbersCanon
             // 解析奖励ID数组，获取物品格子
             var itemGrids = await itemService.CreateItemGrid(activityInfo.f_awardIds);
             _awardPreviewComponent.SetAwards(itemGrids);
+            
+            if(_embersCanonSubActivityUI_01)
+                await _embersCanonSubActivityUI_01.Activate();
         }
 
         private async void OnTriggerJoin()
@@ -76,18 +79,26 @@ namespace HotUpdate.UI.Activity.EmbersCanon
 
         private void OnSubViewClose()
         {
+            _embersCanonSubActivityUI_01?.Deactivate();
             objectSpawner.Release(_embersCanonSubActivityUI_01);
+            _embersCanonSubActivityUI_01 = null;
         }
         
-        
-        protected override void OnHide()
+        protected override Task OnHide()
         {
             _activityJoinComponent.OnClickJoin -= OnTriggerJoin;
             _limitTimeAwardComponent.OnClickAward -= OnTriggerLimitTimeAward;
             
             itemService.Clear();
-            objectSpawner.Clear();
             iconService.ReleaseAll();
+            
+            _embersCanonSubActivityUI_01?.Deactivate();
+            return Task.CompletedTask;
+        }
+
+        protected override void OnDispose()
+        {
+            _embersCanonSubActivityUI_01.Destroy();
         }
     }
 }

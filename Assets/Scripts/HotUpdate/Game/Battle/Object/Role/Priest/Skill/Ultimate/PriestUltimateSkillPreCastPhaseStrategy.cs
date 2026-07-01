@@ -27,7 +27,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill.Ultimate
             yield return SkillHelper.WaitForUltimateConfirm(SkillContext);
             
             // 移除Pose特效
-            vfxManager.RemoveVFX(skill.SkillContext.VFXInfo);
+            vfxManager.RemoveVFX(vFXInfo);
             // 根据技能配置和选择策略，筛选出技能作用的目标
             SkillHelper.InitRoleSkillTarget(skill, battleCoordinator);
         }

@@ -25,7 +25,7 @@ namespace HotUpdate.UI.Dialogue
         // 对话内容文本组件
         [InjectUI] private TextMeshProUGUI txtDialogue;
         // 自动播放状态文本组件（显示"自动"等状态提示）
-        [Inject] private Text txtAuto;
+        [InjectUI] private Text txtAuto;
 
         // 对话主体容器（承载对话核心UI的根节点）
         [InjectUI(1)] public RectTransform DialogueBox { get; private set; }

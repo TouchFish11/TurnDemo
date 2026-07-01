@@ -26,8 +26,7 @@ namespace HotUpdate.Game.Battle.Utility
         public const float SPEED_CORRECTION = 1.0f;
         
         /// <summary>
-        /// 初始化行动顺序
-        /// 计算所有存活实体的行动值并排序，选出第一个行动的实体
+        /// 初始化起始行动顺序
         /// </summary>
         /// <param name="context">战斗上下文</param>
         public static void InitOrder(IBattleContext context)
@@ -51,8 +50,8 @@ namespace HotUpdate.Game.Battle.Utility
                 return b1.ActionValue > b2.ActionValue ? 1 : 0;
             });
 
-            // 将首个行动实体的行动值置为0，保证其最先行动
-            context.GetFirstBattleEntity().SetActionValue(0);
+            // 将首个行动实体的行动值置为基准线起始值
+            context.ActionLine = context.GetFirstBattleEntity().ActionValue;
             // 触发事件，通知行动轴UI更新
             context.GetEventBus().TriggerEvent(new ActionBarSortPostEvent(context, context.GetAliveEntitys()));
         }

@@ -81,8 +81,9 @@ namespace HotUpdate.Game.Battle.UI
         /// 更新行动条（ActionBar）UI
         /// 为每个战斗实体创建行动格子UI，第一个实体的格子会特殊放大
         /// </summary>
+        /// <param name="context"></param>
         /// <param name="battleEntities">需要显示在行动条的战斗实体列表</param>
-        void UpdateActionBar(IEnumerable<IBattleEntityObject> battleEntities);
+        void UpdateActionBar(IBattleContext context, IEnumerable<IBattleEntityObject> battleEntities);
 
         /// <summary>
         /// 设置行动格子高亮状态

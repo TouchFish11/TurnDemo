@@ -98,15 +98,14 @@ namespace HotUpdate.Game.Battle.Core
         {
             try
             {
-                // 清理战斗数据
-                _context.CleanupBattle();
-
                 // 创建黑背景界面遮挡
                 var controller = await _uiService.OpenAsync(EUIPanelId.BlackBackPanel, E_UILayer.Bot);
                 // 强制不可见，暂时这样处理，正常流程Bug：battleLoadingController销毁时未正确释放
                 _mouseManager.ForceInVisible();
                 // 销毁战斗界面
                 await _uiService.CloseAsync(quitBattleEvent.BattleUIController.PanelId, true);
+                // 清理战斗数据
+                _context.CleanupBattle();
                 // 执行战斗结束回调，在背景界面销毁前执行
                 if (OnBattleOver != null)
                 {

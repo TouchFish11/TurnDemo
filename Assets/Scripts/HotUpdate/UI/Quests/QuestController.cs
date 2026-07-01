@@ -289,10 +289,10 @@ namespace HotUpdate.UI.Quests
             }
         }
 
-        protected override Task OnDestroy()
+        protected override Task OnDispose()
         {
             _itemService.Dispose();
-            return base.OnDestroy();
+            return base.OnDispose();
         }
     }
 }

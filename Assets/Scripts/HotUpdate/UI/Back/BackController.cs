@@ -1,5 +1,4 @@
 using Core.UI.ViewController;
-using HotUpdate.Game.Main.Back;
 
 namespace HotUpdate.UI.Back
 {

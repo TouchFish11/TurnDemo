@@ -32,6 +32,6 @@ namespace Core.UI.ViewController
         /// 销毁
         /// 主要处理资源释放的逻辑
         /// </summary>
-        Task Destroy();
+        Task Dispose();
     }
 }

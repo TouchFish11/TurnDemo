@@ -1,9 +1,9 @@
 using Core.UI.ViewController;
 
-namespace HotUpdate.Game.Main.Back
+namespace HotUpdate.UI.Back
 {
     /// <summary>
-    /// ��������
+    /// 黑背景界面
     /// </summary>
     public class BackView : UIView
     {

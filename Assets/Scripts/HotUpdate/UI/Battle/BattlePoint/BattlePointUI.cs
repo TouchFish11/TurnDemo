@@ -1,18 +1,17 @@
-using Core.DI;
 using Core.UI;
 using UnityEngine.UI;
 
 namespace HotUpdate.UI.Battle.BattlePoint
 {
     /// <summary>
-    /// ս����UI
+    /// 战技点UI对象
     /// </summary>
     public class BattlePointUI : UIBehaviourBase
     {
-        [Inject] private Image imgHas;
+        [InjectUI] private Image imgHas;
 
         /// <summary>
-        /// ���õ�״̬
+        /// 设置战技点是否激活
         /// </summary>
         /// <param name="active"></param>
         public void SetActivePoint(bool active)

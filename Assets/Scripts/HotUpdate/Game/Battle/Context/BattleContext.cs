@@ -16,7 +16,6 @@ namespace HotUpdate.Game.Battle.Context
 {
     /// <summary>
     /// 战斗上下文
-    /// TODO：只保存数据，通过服务类提供给外部使用
     /// </summary>
     public class BattleContext : IBattleContext
     {
@@ -41,6 +40,8 @@ namespace HotUpdate.Game.Battle.Context
         
         public IBattleEntityObject CurrentTurnOwner { get; set; }
         
+        public float ActionLine { get; set; }
+        
         /// 当前战技点数
         public int CurentBattlePointCount { get; private set; }
 
@@ -52,6 +53,7 @@ namespace HotUpdate.Game.Battle.Context
             _eventBus = eventBus;
             // 更新起始战技点
             CurentBattlePointCount = 3;
+            ActionLine = 0;
         }
 
         public void InitStateMachine()
