@@ -38,7 +38,7 @@ namespace HotUpdate.Game.Battle.Context
 
         public IBattleEntityObject CurrentCommander => _commanders.Count > 0 ? _commanders.Peek() : null;
         
-        public IBattleEntityObject CurrentTurnOwner { get; set; }
+        public IBattleEntityObject CurrentTurnOwner { get; private set; }
         
         public float ActionLine { get; set; }
         
@@ -59,6 +59,16 @@ namespace HotUpdate.Game.Battle.Context
         public void InitStateMachine()
         {
             _battleMachine = DIContainer.Create<BattleStateMachine>(parameterValues: this);
+        }
+
+        /// <summary>
+        /// 设置持有当前回合的行动实体
+        /// </summary>
+        /// <param name="battleEntityObject"></param>
+        public void SetCurrentTurnOwner(IBattleEntityObject battleEntityObject)
+        {
+            CurrentTurnOwner = battleEntityObject;
+            _eventBus.TriggerEvent(new SwitchEntityTurnEvent(this, battleEntityObject));
         }
         
         public void AddSceneMonster(IBattleEntityObject battleEntity)

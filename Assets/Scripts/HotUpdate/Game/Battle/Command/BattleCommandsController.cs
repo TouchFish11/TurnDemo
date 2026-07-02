@@ -6,6 +6,7 @@ using HotUpdate.Base.UI;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.General;
+using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.StateMeachine;
 
@@ -68,6 +69,8 @@ namespace HotUpdate.Game.Battle.Command
         {
             // 压入执行者栈
             _battleContext.PushCommander(_currentCommand.Sender);
+            // 触发当前指令执行事件
+            _battleContext.GetEventBus().TriggerEvent(new CommandExecuteEvent(_battleContext, _currentCommand));
             // 执行当前指令
             yield return _currentCommand.Execute(_battleContext);
             // 弹出执行者栈
@@ -103,13 +106,14 @@ namespace HotUpdate.Game.Battle.Command
             // 反向遍历：避免移除元素导致的索引错乱
             for (var i = _battleCommands.Count - 1; i >= 0; i--)
             {
-                if (!_battleCommands[i].IsValid)
+                var cmd =  _battleCommands[i];
+                if (!cmd.IsValid)
                 {
+                    // 更新UI：刷新等待指令的显示列表
+                    _battleContext.GetEventBus().TriggerEvent(new UpdateWaitCmdEvent(_battleContext, cmd.Sender, cmd.Priority, false));
                     _battleCommands.RemoveAt(i);
                 }
             }
-            // 更新UI：刷新等待指令的显示列表
-            _battleContext.GetEventBus().TriggerEvent(new UpdateWaitCmdEvent(_battleContext, GetCommandSenders()));
         }
 
         /// <summary>
@@ -145,7 +149,7 @@ namespace HotUpdate.Game.Battle.Command
             // 按指令优先级重新排序列表
             SortCommand();
             // 更新UI：刷新等待指令的显示列表
-            _battleContext.GetEventBus().TriggerEvent(new UpdateWaitCmdEvent(_battleContext, GetCommandSenders()));
+            _battleContext.GetEventBus().TriggerEvent(new UpdateWaitCmdEvent(_battleContext, command.Sender, command.Priority, true));
         }
 
         /// <summary>
@@ -154,9 +158,10 @@ namespace HotUpdate.Game.Battle.Command
         /// </summary>
         public void RemoveFirst()
         {
+            var firstCommand = _battleCommands[0];
             _battleCommands.RemoveAt(0);
             // 更新UI：刷新等待指令的显示列表
-            _battleContext.GetEventBus().TriggerEvent(new UpdateWaitCmdEvent(_battleContext, GetCommandSenders()));
+            _battleContext.GetEventBus().TriggerEvent(new UpdateWaitCmdEvent(_battleContext, firstCommand.Sender, firstCommand.Priority, false));
         }
 
         /// <summary>

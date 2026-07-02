@@ -10,11 +10,26 @@ namespace HotUpdate.Game.Battle.Object.Role
         RoleInfo RoleInfo { get; }
         
         /// <summary>
+        /// 当前角色所处的行动阶段
+        /// </summary>
+        EActPhase CurrentActPhase { get; set; }
+        
+        /// <summary>
+        /// 当前持有回合的角色操作状态是否挂起
+        /// </summary>
+        bool OperatorSuspend { get; set; }
+        
+        /// <summary>
         /// 角色战斗初始化
         /// </summary>
         /// <param name="initData"></param>
         void RoleBattleInit(RoleBattleInitData initData);
 
+        /// <summary>
+        /// 发送角色行动挂起指令，在等待行动指令列表中占位
+        /// </summary>
+        void SendSuspendCommand();
+        
         /// <summary>
         /// 恢复终结技
         /// </summary>

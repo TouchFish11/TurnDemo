@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Mono;
@@ -314,33 +316,97 @@ namespace HotUpdate.UI.Battle.Base
         #endregion
 
         #region 行动队列/ActionBar相关
+
         /// <summary>
-        /// 更新等待行动队列UI
-        /// 为每个等待行动的战斗实体创建对应的UI并初始化
+        /// 设置当前执行指令的对象的Icon
         /// </summary>
-        /// <param name="battleEntities">等待行动的战斗实体列表</param>
-        public async void UpdateWaitingCommmand(List<IBattleEntityObject> battleEntities)
+        /// <param name="battleEntity"></param>
+        public async void SetCurrentCommanderDisplayUI(IBattleEntityObject battleEntity)
         {
             try
             {
-                _view.ClearWaitingActUI(_objectSpawner);
-                foreach (var battleEntity in battleEntities)
+                if(battleEntity == null)
+                    return;
+                
+                // 获取实体对应的图标名称
+                var iconName = GetIconByEntity(battleEntity);
+                var icon = await _iconService.LoadIconAsync(iconName);
+                _view.SetCurrentCommanderDisplayUI(icon);
+                
+                // 移除对应的行动格子
+                var index = _view.ActionGridUis.FindIndex(ui => ui.BattleEntity == battleEntity);
+                if (index >= 0)
                 {
-                    // 异步加载等待行动UI预制体
-                    var waitingActUIWrapper = await _objectSpawner.SpawnAsync<WaitingActUI>(AssetKeys.WaitingActUI, _view.WaitQueueContent);
-                    // 获取实体对应的图标名称
-                    var iconName = GetIconByEntity(battleEntity);
-                    // 加载图标精灵并初始化UI
-                    using var icon = await GameAsset.LoadAssetAsync<Sprite>(iconName);
-                    // 初始化UI
-                    waitingActUIWrapper.Init(icon.Asset);
-                    // 更新模型层的等待队列UI数据
-                    _view.CacheWaitingCommmand(waitingActUIWrapper);
+                    _view.ActionGridUis.RemoveAt(index);
+                    _objectSpawner.Release(_view.ActionBarContent.GetChild(index).GetComponent<ActionGridUI>());
                 }
             }
             catch (Exception e)
             {
-                Logger.Log($"{nameof(BattleUIManager)}.{nameof(UpdateWaitingCommmand)}：{e.Message}");
+                Logger.LogError($"[{nameof(BattleUIManager)}]: {e.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 更新等待行动队列UI
+        /// 为每个等待行动的战斗实体创建对应的UI并初始化
+        /// </summary>
+        public async void UpdateWaitingCommmand(IBattleEntityObject battleEntity, bool isAdd, int priority)
+        {
+            try
+            {
+                if (isAdd)
+                {
+                    // 异步加载等待行动UI预制体
+                    var waitingActUI = await _objectSpawner.SpawnAsync<WaitingActUI>(AssetKeys.WaitingActUI, _view.WaitQueueContent);
+                    // 获取实体对应的图标名称
+                    var iconName = GetIconByEntity(battleEntity);
+                    // 加载图标精灵并初始化UI
+                    var icon = await _iconService.LoadIconAsync(iconName);
+                    // 初始化UI
+                    waitingActUI.Init(icon, battleEntity, priority);
+                    // 缓存UI
+                    _view.WaitingActUIs.Add(waitingActUI);
+                }
+                else
+                {
+                    for (var i = _view.WaitingActUIs.Count - 1; i >= 0; i--)
+                    {
+                        var waitingActUI = _view.WaitingActUIs[i];
+                        _objectSpawner.Release(waitingActUI);
+                        _view.WaitingActUIs.RemoveAt(i);
+                    }   
+                }
+
+                var actUis = new List<WaitingActUI>();
+                _view.WaitQueueContent.GetComponentsInChildren(actUis);
+                actUis.Sort((a, b) =>
+                {
+                    if (a.Priority > b.Priority)
+                    {
+                        // c1优先级更高，排在前面（返回-1表示c1在c2前）
+                        return -1;
+                    }
+
+                    if (a.Priority < b.Priority)
+                    {
+                        // c2优先级更高，c1排在后面
+                        return 1;
+                    }
+
+                    // 优先级相同，保持原有顺序
+                    return 0;
+                });
+                
+                for (var i = 0; i < actUis.Count; i++)
+                {
+                    var waitingActUI = actUis[i];
+                    waitingActUI.transform.SetSiblingIndex(i);
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Log($"{nameof(BattleUIManager)}: {e.Message}");
             }
         }
 
@@ -354,30 +420,120 @@ namespace HotUpdate.UI.Battle.Base
         {
             try
             {
-                // 清空缓存
-                _view.ClearActionBar(_objectSpawner);
-            
-                // 标记是否为第一个实体（需要放大显示）
-                var isFirst = true;
-                foreach (var battleEntity in battleEntities)
+                var battleEntityObjects = battleEntities.ToList();
+                var girds = _view.ActionGridUis;
+
+                if (battleEntityObjects.Count == girds.Count)
                 {
-                    // 异步加载行动格子UI预制体
-                    var actionGridUI = await _objectSpawner.SpawnAsync<ActionGridUI>(AssetKeys.ActionGridUI, _view.ActionBarContent);
-                    // 获取实体对应的图标名称
-                    var iconName = GetIconByEntity(battleEntity);
-                    // 加载图标精灵
-                    var icon = await _iconService.LoadIconAsync(iconName);
-                    // 初始化行动格子UI：计算差值作为剩余行动值
-                    actionGridUI.Init(icon, (int)(context.ActionLine - battleEntity.ActionValue), battleEntity, isFirst);
-                    // 更新模型层的行动条UI数据
-                    _view.UpdateAcitonbar(actionGridUI);
-                    isFirst = false;
+                    for (var i = battleEntityObjects.Count - 1; i >= 0; i--)
+                    {
+                        var battleEntityObject = battleEntityObjects[i];
+                        var grid = girds.Find(ui => ui.BattleEntity == battleEntityObject);
+                        if (grid)
+                        {
+                            // 设置滑动到的目标索引
+                            grid.SetSlideTarget(i);
+                            // 设置行动值
+                            grid.SetActionValue(CalcRemainActionValue(context, battleEntityObject.ActionValue));
+                        }
+                    }
+                }
+                else if(girds.Count == 0)
+                {
+                    for (var i = 0; i < battleEntityObjects.Count; i++)
+                    {
+                        var battleEntity = battleEntityObjects[i];
+                        // 异步加载行动格子UI预制体
+                        var actionGridUI = await _objectSpawner.SpawnAsync<ActionGridUI>(AssetKeys.ActionGridUI, _view.ActionBarContent);
+                        // 获取实体对应的图标名称
+                        var iconName = GetIconByEntity(battleEntity);
+                        // 加载图标精灵
+                        var icon = await _iconService.LoadIconAsync(iconName);
+                        // 初始化行动格子UI：计算差值作为剩余行动值
+                        actionGridUI.Init(icon, i, battleEntity, _view.ActionBarContent);
+                        // 设置行动值
+                        actionGridUI.SetActionValue(CalcRemainActionValue(context, battleEntity.ActionValue));
+                        girds.Add(actionGridUI);
+                    }
+                }
+                // 存在死亡实体，需移除对应的格子
+                else if (battleEntityObjects.Count < girds.Count)
+                {
+                    for (var i = girds.Count - 1; i >= 0; i--)
+                    {
+                        var grid = girds[i];
+                        if (!battleEntityObjects.Contains(grid.BattleEntity))
+                        {
+                            _objectSpawner.Release(grid);
+                            girds.RemoveAt(i);
+                        }
+                    }
+                    
+                    // 更新位置
+                    for (var i = battleEntityObjects.Count - 1; i >= 0; i--)
+                    {
+                        var battleEntityObject = battleEntityObjects[i];
+                        var grid = girds.Find(ui => ui.BattleEntity == battleEntityObject);
+                        if (grid)
+                        {
+                            // 设置滑动到的目标索引
+                            grid.SetSlideTarget(i);
+                            // 设置行动值
+                            grid.SetActionValue(CalcRemainActionValue(context, battleEntityObject.ActionValue));
+                        }
+                    }
+                }
+                // 新增实体
+                else if(battleEntityObjects.Count > girds.Count)
+                {
+                    for (var i = battleEntityObjects.Count - 1; i >= 0; i--)
+                    {
+                        var battleEntityObject = battleEntityObjects[i];
+                        var grid = girds.Find(ui => ui.BattleEntity == battleEntityObject);
+                        // 存在直接更新格子位置
+                        if (grid)
+                        {
+                            // 设置滑动到的目标索引
+                            grid.SetSlideTarget(i);
+                            // 设置行动值
+                            grid.SetActionValue(CalcRemainActionValue(context, battleEntityObject.ActionValue));
+                        }
+                        // 新增格子
+                        else
+                        {
+                            // 异步加载行动格子UI预制体
+                            var actionGridUI = await _objectSpawner.SpawnAsync<ActionGridUI>(AssetKeys.ActionGridUI, _view.ActionBarContent);
+                            // 获取实体对应的图标名称
+                            var iconName = GetIconByEntity(battleEntityObject);
+                            // 加载图标精灵
+                            var icon = await _iconService.LoadIconAsync(iconName);
+                            // 初始化行动格子UI：计算差值作为剩余行动值
+                            actionGridUI.Init(icon, i, battleEntityObject, _view.ActionBarContent);
+                            // 设置行动值
+                            actionGridUI.SetActionValue(CalcRemainActionValue(context, battleEntityObject.ActionValue));
+                            girds.Add(actionGridUI);
+                        }
+                    }
                 }
             }
             catch (Exception e)
             {
-                Logger.LogError($"{typeof(BattleUIManager)}.{nameof(UpdateActionBar)}；{e.Message}");
+                Logger.LogError($"{typeof(BattleUIManager)}: Update action axis ui error,{e.Message}");
             }
+        }
+
+        /// <summary>
+        /// 计算剩余行动值
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="currentValue"></param>
+        /// <returns></returns>
+        private static int CalcRemainActionValue(IBattleContext context, float currentValue)
+        {
+            var remainActionValue = (int)(currentValue - context.ActionLine);
+            if (remainActionValue >= BattleUtility.MaxDisplayActionValue)
+                remainActionValue = BattleUtility.MaxDisplayActionValue;
+            return remainActionValue;
         }
 
         /// <summary>
@@ -388,8 +544,7 @@ namespace HotUpdate.UI.Battle.Base
         public void SetActionGridHighlights(List<IBattleEntityObject> selectedTargets)
         {
             // 获取模型层的行动格子UI列表
-            var actionGridUI = _view.GetActionGridUIs();
-
+            var actionGridUI = _view.ActionGridUis;
             // 先清空所有格子的高亮状态
             foreach (var actionGrid in actionGridUI)
             {
@@ -525,7 +680,7 @@ namespace HotUpdate.UI.Battle.Base
         /// <param name="current">当前可用点数</param>
         /// <param name="max">总点数上限</param>
         /// <returns>异步任务</returns>
-        public async System.Threading.Tasks.Task UpdateBattlePointCount(int current, int max)
+        public async Task UpdateBattlePointCount(int current, int max)
         {
             var battlePointUIs = new List<BattlePointUI>();
             for (var i = 0; i < max; i++)
@@ -686,6 +841,7 @@ namespace HotUpdate.UI.Battle.Base
 
         public void Dispose()
         {
+            _objectSpawner.Release(_view.ActionGridUis);
             _objectSpawner.Dispose();
             _iconService.Dispose();
             _objectSpawner = null;

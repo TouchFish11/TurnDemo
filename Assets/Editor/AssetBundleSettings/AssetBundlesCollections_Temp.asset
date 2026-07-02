@@ -421,14 +421,14 @@ MonoBehaviour:
   - assetBundleName: scene
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\Scene\BeginScene.unity
-      size: 18102
+      size: 19978
       name: BeginScene.unity
-      hash: eb774ef49ec794fdca47dd94d82732e9ef012d4f7210e7532fce219361d82978
+      hash: baaa3ced1cf0db42f09b07cd7d7ad7a25194bf3ba84771cd2fa7c89d1be19102
       assetType: 1
     - assetPath: Assets\Editor\ArtRes\Scene\LevelScene.unity
-      size: 89284
+      size: 107276
       name: LevelScene.unity
-      hash: 8d504540c41f454e50be480c84df804a97b4dacc024394837a5252ea1c8427ef
+      hash: 3d33e080ac09557aebbb49c5e941bb5a5099f6706b7ee695246469895815820c
       assetType: 1
     - assetPath: Assets\Editor\ArtRes\Scene\MainScene.unity
       size: 32902
@@ -495,9 +495,9 @@ MonoBehaviour:
   - assetBundleName: tmp_asset
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\TMP_Asset\MSYH_SDF.asset
-      size: 8502071
+      size: 8508661
       name: MSYH_SDF.asset
-      hash: 132ad5ad8b409ebf97331a557389c98c8b7ace18304b4886ec444bc7b2e509f6
+      hash: 387ab796b26f79ad517f989b5c25cfbb98cf7932c92dfd5c46bde52f151a1aa8
       assetType: 0
   - assetBundleName: ui
     assetInfos:
@@ -582,9 +582,9 @@ MonoBehaviour:
       hash: d4adef4129a947cfdbb8cbe8f5a422d38e98828e39bf4ea336ec910a116fbd9f
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Battle\BattleView.prefab
-      size: 92248
+      size: 95517
       name: BattleView.prefab
-      hash: c7e4339f0ad224a2c30a0ad22f1344da476319019f7a03a83c2d3b97033cc287
+      hash: 34213a1b22479cf73301482da0261777e5614a175f8d96d724853b7cd4244800
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Battle\SelectMarkerUI.prefab
       size: 17123
@@ -592,9 +592,9 @@ MonoBehaviour:
       hash: 40fb01220ac4ae1212a5c0764d740e2ceb7770909b38b934f90a39754e7f2c07
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Battle\ActionLine\ActionGridUI.prefab
-      size: 24487
+      size: 24505
       name: ActionGridUI.prefab
-      hash: 9e9525277b2d4d9e19e4eba8517ae63eb01d7d1529f382a8211811595993a5c4
+      hash: 9f3641b30192bc2ccab4bb26d038f09cfbef5aed15d37cd09112d3e67eb688d3
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Battle\ActionLine\WaitingActUI.prefab
       size: 4839

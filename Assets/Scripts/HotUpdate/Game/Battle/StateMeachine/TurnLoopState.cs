@@ -6,11 +6,9 @@ using HotUpdate.Game.Battle.Command;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.Turn;
-using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Monster;
 using HotUpdate.Game.Battle.Object.Role;
-using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.Turn;
 using HotUpdate.Game.Battle.Utility;
 
@@ -28,8 +26,6 @@ namespace HotUpdate.Game.Battle.StateMeachine
         private BattleCommandsController _commandsController;
         // 战斗是否结束
         private bool _isBattleOver;
-        // 当前行动实体
-        private IBattleEntityObject _currentActEntity;
         
         public TurnLoopState(IBattleStateMachine battleStateMachine, IBattleContext context) : base(battleStateMachine, context)
         {
@@ -62,14 +58,13 @@ namespace HotUpdate.Game.Battle.StateMeachine
                 }
 
                 // 当前实体正在行动，等待其行动结束
-                if (_currentActEntity == null || !_currentActEntity.CanAct)
+                if (Context.CurrentTurnOwner == null || !Context.CurrentTurnOwner.CanAct)
                 {
-                    // 排序位置
-                    SortOrder();
+                    BattleUtility.UpdateOrder(Context);
                     // 更新当前行动实体
-                    UpdateActEntity();
+                    Context.SetCurrentTurnOwner(Context.GetNextEntity());
                     // 启用当前实体行动
-                    _currentActEntity?.ExecuteAction();
+                    Context.CurrentTurnOwner.ExecuteAction();
                 }
 
                 yield return null;
@@ -98,9 +93,9 @@ namespace HotUpdate.Game.Battle.StateMeachine
                 yield return battleEntity.Die();
                 deadEntities.Add(battleEntity);
 
-                if (battleEntity == _currentActEntity)
+                if (battleEntity == Context.CurrentTurnOwner)
                 {
-                    _currentActEntity = null;
+                    Context.SetCurrentTurnOwner(null);
                 }
                 if (battleEntity is MonsterObject)
                 {
@@ -123,92 +118,6 @@ namespace HotUpdate.Game.Battle.StateMeachine
                     Context.RemoveSceneMonster(battleEntityObject);
                 }
             }
-        }
-        
-        /// <summary>
-        /// 排序顺序
-        /// </summary>
-        private void SortOrder()
-        {
-            if (_currentActEntity == null)
-            {
-                return;
-            }
-
-            // 暂时移除第一个角色，不参与计算
-            Context.RemoveBattleEntity(_currentActEntity);
-            var toatalSpeed = 0;
-            // 重新计算剩下实体各自的剩余行动值
-            foreach (var battleEntityObject in Context.GetAliveEntitys())
-            {
-                var speed = battleEntityObject.GetComponent<PropertyComponent>().GetPropertyValue(E_DynamicPropertyType.CurrentSpeed);
-                toatalSpeed += speed;
-            }
-
-            foreach (var battleEntityObject in Context.GetAliveEntitys())
-            {
-                var oldAV = battleEntityObject.ActionValue;
-                var speed = battleEntityObject.GetComponent<PropertyComponent>().GetPropertyValue(E_DynamicPropertyType.CurrentSpeed);
-                var newAV = (1 - speed / (float)toatalSpeed) * oldAV;
-                battleEntityObject.SetActionValue(newAV);
-            }
-
-            // 基于行动值初始化行动顺序
-            Context.Sort((c1, c2) =>
-            {
-                // 比较行动值确定行动顺序。行动值低，越先行动
-                if (c1.ActionValue < c2.ActionValue)
-                {
-                    return -1;
-                }
-
-                return c1.ActionValue > c2.ActionValue ? 1 : 0;
-            });
-
-            InsertOrder(_currentActEntity);
-            Context.GetNextEntity().SetActionValue(0);
-            // 事件分发传递，更新行动轴UI显示
-            Context.GetEventBus().TriggerEvent(new ActionBarSortPostEvent(Context, Context.GetAliveEntitys()));
-        }
-        
-        /// <summary>
-        /// 插入队列
-        /// </summary>
-        /// <param name="actEndEntity"></param>
-        public void InsertOrder(IBattleEntityObject actEndEntity)
-        {
-            var speed = actEndEntity.GetComponent<PropertyComponent>().GetPropertyValue(E_DynamicPropertyType.CurrentSpeed);
-            actEndEntity.SetActionValue(BattleUtility.CalcActionValue(speed));
-            var index = -1;
-            foreach (var battleEntityObject in Context.GetAliveEntitys())
-            {
-                if (!(battleEntityObject.ActionValue > actEndEntity.ActionValue))
-                {
-                    continue;
-                }
-                
-                index = Context.GetEntityIndex(battleEntityObject);
-                // 找到第一个行动值大于当前角色的索引，插入到该位置前
-                Context.Insert(index, actEndEntity);
-                break;
-            }
-
-            if (index == -1)
-            {
-                // 所有角色行动值都更小，插入末尾
-                Context.AddBattleEntity(actEndEntity);
-            }
-        }
-        
-        /// <summary>
-        /// 更新当前行动实体
-        /// </summary>
-        public void UpdateActEntity()
-        {
-            // 再让下一个实体行动
-            _currentActEntity = Context.GetNextEntity();
-            // 更新持有当前行动回合的实体
-            Context.CurrentTurnOwner = _currentActEntity;
         }
         
         /// <summary>
@@ -243,7 +152,6 @@ namespace HotUpdate.Game.Battle.StateMeachine
         {
             Context.GetEventBus().RemoveListener<InsertCommandEvent>(OnInsertCommand);
             _commandsController = null;
-            _currentActEntity = null;
             _battleManager = null;
             _monoAdapter = null;
         }

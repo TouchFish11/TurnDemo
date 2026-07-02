@@ -1,6 +1,8 @@
 using System.Collections;
+using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Object.Role;
+using UnityEngine;
 
 namespace HotUpdate.Game.Battle.Object.StateMeachine
 {
@@ -9,6 +11,8 @@ namespace HotUpdate.Game.Battle.Object.StateMeachine
     /// </summary>
     public class OperatorState : TurnState
     {
+        private Coroutine _coroutine;
+        
         public OperatorState(IBattleEntityObject battleEntity) : base(battleEntity)
         { 
 
@@ -19,14 +23,14 @@ namespace HotUpdate.Game.Battle.Object.StateMeachine
             // 监听技能释放事件
             PlayerObject.Context.GetEventBus().AddListener<RoleTriggerSkillEvent>(OnCastSkill);
             PlayerObject.Context.GetEventBus().AddListener<RoleTriggerUltimateSkillEvent>(OnCastUltimateSkill);
-            PlayerObject.StartCoroutine(OnExceuteAction());
+            // 否则说明之前协程停止过，重新启动而不重复监听事件
+            _coroutine = PlayerObject.StartCoroutine(OnExceuteAction());
         }
 
         private IEnumerator OnExceuteAction()
         {
             // TODO：玩家自动逻辑预留
-            bool isAuto = false;
-
+            var isAuto = false;
             while (PlayerObject.CanAct)
             {
                 if (!isAuto)
@@ -36,7 +40,6 @@ namespace HotUpdate.Game.Battle.Object.StateMeachine
                 else
                 {
                     // 执行每个角色自己的自动选择技能策略
-                    
                     yield break;
                 }
             }
@@ -75,6 +78,8 @@ namespace HotUpdate.Game.Battle.Object.StateMeachine
             // 移除事件监听
             PlayerObject.Context.GetEventBus().RemoveListener<RoleTriggerSkillEvent>(OnCastSkill);
             PlayerObject.Context.GetEventBus().RemoveListener<RoleTriggerUltimateSkillEvent>(OnCastUltimateSkill);
+            _coroutine = null;
+            PlayerObject.OperatorSuspend = false;
         }
     }
 }

@@ -98,7 +98,6 @@ namespace HotUpdate.Game.Battle.Core
         public BattleCoordinator(IBattleInputHandler battleInputHandler)
         {
             BattleInputHandler = battleInputHandler;
-            IsActiveTargetSelect = true;
         }
 
         /// <summary>
@@ -108,6 +107,7 @@ namespace HotUpdate.Game.Battle.Core
         public void Init(IBattleContext battleContext)
         {
             Reset();
+            IsActiveTargetSelect = true;
             BattleCameraManager = DIContainer.Create<IBattleCameraManager>(parameterValues: new object[] { this, BattleInputHandler });
             TargetSelectManager = DIContainer.Create<ITargetSelectManager>();
             // 初始化角色战斗点，依赖玩家战斗实体对象创建完成

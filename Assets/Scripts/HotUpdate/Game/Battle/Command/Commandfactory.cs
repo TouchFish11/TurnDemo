@@ -13,7 +13,7 @@ namespace HotUpdate.Game.Battle.Command
         [Inject] private IPoolManager poolManager;
         
         /// <summary>
-        /// 获取技能指令
+        /// 获取玩家角色的技能指令
         /// </summary>
         /// <param name="skill"></param>
         /// <returns></returns>
@@ -25,7 +25,7 @@ namespace HotUpdate.Game.Battle.Command
         }
 
         /// <summary>
-        /// 获取怪物行动指令
+        /// 获取怪物的行动指令
         /// </summary>
         /// <param name="component"></param>
         /// <param name="skill"></param>
@@ -38,7 +38,17 @@ namespace HotUpdate.Game.Battle.Command
             command.Init(component, skillCommand);
             return command;
         }
+
+        /// <summary>
+        /// 获取玩家角色的行动指令
+        /// </summary>
+        /// <returns></returns>
+        public RoleActPlaceholderCommand GetRoleActCommand()
+        {
+            var roleActCommand = poolManager.GetData<RoleActPlaceholderCommand>();
+            return roleActCommand;
+        }
         
-        // ...
+        //...
     }
 }

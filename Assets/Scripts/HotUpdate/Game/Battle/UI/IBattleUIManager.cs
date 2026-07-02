@@ -74,8 +74,10 @@ namespace HotUpdate.Game.Battle.UI
         /// 更新等待行动队列UI
         /// 为每个等待行动的战斗实体创建对应的UI并初始化
         /// </summary>
-        /// <param name="battleEntities">等待行动的战斗实体列表</param>
-        void UpdateWaitingCommmand(List<IBattleEntityObject> battleEntities);
+        /// <param name="battleEntity"></param>
+        /// <param name="isAdd"></param>
+        /// <param name="priority"></param>
+        void UpdateWaitingCommmand(IBattleEntityObject battleEntity, bool isAdd, int priority);
 
         /// <summary>
         /// 更新行动条（ActionBar）UI
@@ -151,5 +153,11 @@ namespace HotUpdate.Game.Battle.UI
         /// <param name="roleInfo">角色信息</param>
         /// <param name="skillInfo">技能信息</param>
         IEnumerator ShowPaiting(RoleInfo roleInfo, SkillInfo skillInfo);
+
+        /// <summary>
+        /// 设置当前执行指令的对象的Icon
+        /// </summary>
+        /// <param name="battleEntity"></param>
+        void SetCurrentCommanderDisplayUI(IBattleEntityObject battleEntity);
     }
 }

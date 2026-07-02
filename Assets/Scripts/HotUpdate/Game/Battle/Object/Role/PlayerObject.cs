@@ -20,11 +20,14 @@ namespace HotUpdate.Game.Battle.Object.Role
     /// </summary>
     public abstract class PlayerObject : BattleObject, IPlayerObject
     {
+        // 角色回合阶段状态缓存
         private readonly Dictionary<EActPhase, ITurnState> _turnStates = new();
-        // 当前状态
+        // 当前所处状态
         private ITurnState _currentState;
         
         public RoleInfo RoleInfo { get; private set; }
+        
+        public EActPhase CurrentActPhase { get; set; }
 
         public override ISkillFactory SkillFactory { get; protected set; }
         
@@ -32,11 +35,14 @@ namespace HotUpdate.Game.Battle.Object.Role
         
         public override ITargetSelectStrategy DefaultTargetSelectStrategy { get; protected set; }
 
+        public bool OperatorSuspend { get; set; }
+
         public void RoleBattleInit(RoleBattleInitData initData)
         {
             BattleInit(initData);
             
             RoleInfo = initData.RoleInfo;
+            CurrentActPhase = EActPhase.SettlementBuff;
             AddState(EActPhase.SettlementBuff);
             AddState(EActPhase.TurnStart);
             AddState(EActPhase.Operator);
@@ -52,7 +58,7 @@ namespace HotUpdate.Game.Battle.Object.Role
             // 添加组件
             AddComponents(TextUtility.Split(RoleInfo.f_comNames, 2));
         }
-        
+
         protected abstract ISkillFactory GetSkillFactory();
         
         protected virtual ICastSkillCondition GetSkillCondition()
@@ -66,7 +72,7 @@ namespace HotUpdate.Game.Battle.Object.Role
         }
         
         /// <summary>
-        /// 切换状态
+        /// 切换行动状态
         /// </summary>
         /// <param name="eActPhase"></param>
         public void ChangeState(EActPhase eActPhase)
@@ -103,10 +109,15 @@ namespace HotUpdate.Game.Battle.Object.Role
             }
         }
 
-        public override void ExecuteAction()
+        protected override void OnExecuteAction()
         {
-            base.ExecuteAction();
             ChangeState(EActPhase.SettlementBuff);
+        }
+        
+        public void SendSuspendCommand()
+        {
+            // 发送对象的行动指令，占位指令
+            Context.GetEventBus().TriggerEvent(new InsertCommandEvent(Context, commandfactory.GetRoleActCommand()));
         }
 
         public override void CastSkill(int skillId)

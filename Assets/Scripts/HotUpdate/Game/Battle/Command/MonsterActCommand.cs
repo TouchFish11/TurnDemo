@@ -27,8 +27,8 @@ namespace HotUpdate.Game.Battle.Command
         public ToughnessComponent ToughnessComponent { get; private set; }
         // 技能指令
         private SkillCommand _skillCommand;
-        
-        public override int Priority { get; protected set; }
+
+        public override int Priority { get; protected set; } = 3;
 
         public void Init(ToughnessComponent toughnessComponent, SkillCommand skillCommand)
         {

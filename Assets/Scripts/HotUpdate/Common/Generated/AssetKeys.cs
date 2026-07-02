@@ -145,6 +145,7 @@ public static class AssetKeys
     public const string Activity_Pic_03 = "Activity_Pic_03";
     public const string Activity_Pic_01 = "Activity_Pic_01";
     public const string Atlas_Activity = "Atlas_Activity";
+    public const string MSYH_SDF = "MSYH_SDF";
     public const string UniTaskTestScene = "UniTaskTestScene";
     public const string StatsTest = "StatsTest";
     public const string RoleTestScene = "RoleTestScene";
@@ -152,7 +153,6 @@ public static class AssetKeys
     public const string OtherTest = "OtherTest";
     public const string MainScene = "MainScene";
     public const string LevelScene = "LevelScene";
-    public const string BeginScene = "BeginScene";
     public const string UI_3D_FloatingText = "UI_3D_FloatingText";
     public const string Prefab_Wizard = "Prefab_Wizard";
     public const string Prefab_Warrior = "Prefab_Warrior";
@@ -241,5 +241,5 @@ public static class AssetKeys
     public const string FireFly_Attack_Anim = "FireFly_Attack_Anim";
     public const string TurtleShell_Attack_Anim = "TurtleShell_Attack_Anim";
     public const string Slime_Attack_Anim = "Slime_Attack_Anim";
-    public const string MSYH_SDF = "MSYH_SDF";
+    public const string BeginScene = "BeginScene";
 }

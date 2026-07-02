@@ -138,6 +138,7 @@ MonoBehaviour:
   moveRange: 3
   moveSpeed: 5
   falshSpeed: 1.5
+  slidingSpeed: 6
 --- !u!1 &4441154039650325763
 GameObject:
   m_ObjectHideFlags: 0

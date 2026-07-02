@@ -27,6 +27,11 @@ namespace HotUpdate.Game.Battle.Summon.Summons
             return isTrue;
         }
 
+        protected override void OnExecuteAction()
+        {
+            
+        }
+
         public override void CastSkill(int skillId)
         {
             

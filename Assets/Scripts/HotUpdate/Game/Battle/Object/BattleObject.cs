@@ -97,11 +97,17 @@ namespace HotUpdate.Game.Battle.Object
             deathHandler = initData.DeathHandler;
         }
 
-        public virtual void ExecuteAction()
+        public void ExecuteAction()
         {
-            // 重置标志
+            // 重置行动标志
             CanAct = true;
+            OnExecuteAction();
         }
+
+        /// <summary>
+        /// 在行动时的执行逻辑
+        /// </summary>
+        protected abstract void OnExecuteAction();
         
         public void TakeHeal(int healAmount)
         {

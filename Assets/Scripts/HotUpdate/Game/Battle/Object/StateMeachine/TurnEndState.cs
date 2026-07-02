@@ -1,4 +1,5 @@
 using HotUpdate.Game.Battle.Event.Turn;
+using HotUpdate.Game.Battle.Object.Role;
 
 namespace HotUpdate.Game.Battle.Object.StateMeachine
 {
@@ -20,7 +21,8 @@ namespace HotUpdate.Game.Battle.Object.StateMeachine
         
         public override void Exit()
         {
-
+            // 重置角色行动状态
+            PlayerObject.CurrentActPhase = EActPhase.SettlementBuff;
         }
     }
 }

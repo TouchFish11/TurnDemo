@@ -10,7 +10,7 @@ namespace HotUpdate.Game.Battle.Command
     /// </summary>
     public class SkillCommand : Command
     {
-        public override int Priority { get; protected set; }
+        public override int Priority { get; protected set; } = 1;
         
         public ISkill Skill { get; private set; }
 

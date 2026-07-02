@@ -18,6 +18,8 @@ namespace HotUpdate.UI.Battle.Base
     /// </summary>
     public class BattleView : UIView
     {
+        #region UI组件
+
         [InjectUI] private ScrollRect svActionbar;
         [InjectUI] private ScrollRect svPoint;
         [InjectUI] private ScrollRect svWaitQueueArea;
@@ -30,6 +32,7 @@ namespace HotUpdate.UI.Battle.Base
 
         [InjectUI] private Image imgActingIcon;
         [InjectUI] private Image imgIcon;
+        [InjectUI] private Image imgCurrent;
         
         /// <summary>
         /// 操作区域根节点
@@ -81,20 +84,43 @@ namespace HotUpdate.UI.Battle.Base
         /// </summary>
         [InjectUI(1)] public RectTransform ActingTipArea { get; private set; }
 
+        #endregion
+        
+        // 技能按键UI列表
+        private readonly List<SkillKeyUI> skillKeyUIs = new();
+        // 角色状态UI列表
+        private readonly List<RoleStateUI> roleStateUIs = new();
+        // 战技点UI列表
+        private readonly List<BattlePointUI> battlePointUIs = new();
+        // 选择标记UI列表
+        private readonly List<SelectMarkerUI> selectMarkerUIs = new();
+        // 当前累计伤害
+        private long currentCalcDamage;
+        
+        /// <summary>
+        /// 行动条格子UI列表
+        /// </summary>
+        public List<ActionGridUI> ActionGridUis { get; } = new();
+        
+        /// <summary>
+        /// 等待行动UI列表
+        /// </summary>
+        public List<WaitingActUI> WaitingActUIs { get; } = new();
+        
         /// <summary>
         /// 行动条内容
         /// </summary>
-        public Transform ActionBarContent => svActionbar.content;
+        public RectTransform ActionBarContent => svActionbar.content;
 
         /// <summary>
         /// 战技点UI根节点
         /// </summary>
-        public Transform PointContent => svPoint.content;
+        public RectTransform PointContent => svPoint.content;
 
         /// <summary>
         /// 等待队列内容
         /// </summary>
-        public Transform WaitQueueContent => svWaitQueueArea.content;
+        public RectTransform WaitQueueContent => svWaitQueueArea.content;
 
         /// <summary>
         /// 技能按键组
@@ -105,27 +131,12 @@ namespace HotUpdate.UI.Battle.Base
         /// 行动提示UI实例
         /// </summary>
         public ActingTipUI ActingTipUI { get; private set; }
-        
-        
-        // 行动条格子UI列表
-        private readonly List<ActionGridUI> actions = new();
-        // 技能按键UI列表
-        private readonly List<SkillKeyUI> skillKeyUIs = new();
-        // 角色状态UI列表
-        private readonly List<RoleStateUI> roleStateUIs = new();
-        // 战技点UI列表
-        private readonly List<BattlePointUI> battlePointUIs = new();
-        // 选择标记UI列表
-        private readonly List<SelectMarkerUI> selectMarkerUIs = new();
-        // 等待行动UI列表
-        private readonly List<WaitingActUI> waitingActUIs = new();
-        // 当前累计伤害
-        private long currentCalcDamage;
 
         protected override void Awake()
         {
             base.Awake();
 
+            imgCurrent.color = new Color(imgCurrent.color.r, imgCurrent.color.g, imgCurrent.color.b, 0);
             BattleStateTipArea.gameObject.SetActive(false);
             TotalDmgArea.gameObject.SetActive(false);
             PaintingDisplayArea.gameObject.SetActive(false);
@@ -177,6 +188,18 @@ namespace HotUpdate.UI.Battle.Base
         }
 
         /// <summary>
+        /// 设置当前执行指令的对象的Icon
+        /// </summary>
+        /// <param name="icon"></param>
+        public void SetCurrentCommanderDisplayUI(Sprite icon)
+        {
+            var color = imgCurrent.color;
+            var alpha = icon ? 1 : 0;
+            imgCurrent.color = new Color(color.r, color.g, color.b, alpha);
+            imgCurrent.sprite = icon;
+        }
+
+        /// <summary>
         /// 更新战技点数量
         /// </summary>
         /// <param name="current"></param>
@@ -196,55 +219,6 @@ namespace HotUpdate.UI.Battle.Base
             return roleStateUIs.FirstOrDefault(r => r.RoleId == roleId);
         }
         
-        /// <summary>
-        /// 缓存等待指令UI
-        /// </summary>
-        /// <param name="waitingActUI"></param>
-        public void CacheWaitingCommmand(WaitingActUI waitingActUI)
-        {
-            waitingActUIs.Add(waitingActUI);
-        }
-
-        public void ClearWaitingActUI(ObjectSpawner spawner)
-        {
-            foreach (var waitingActUI in waitingActUIs)
-            {
-                spawner.Release(waitingActUI);
-            }
-            waitingActUIs.Clear();
-        }
-
-        /// <summary>
-        /// 清空行动条
-        /// </summary>
-        /// <param name="spawner"></param>
-        public void ClearActionBar(ObjectSpawner spawner)
-        {
-            foreach (var actionGridUI in actions)
-            {
-                spawner.Release(actionGridUI);
-            }
-            actions.Clear();
-        }
-
-        /// <summary>
-        /// 更新行动条
-        /// </summary>
-        /// <param name="actionGridUI"></param>
-        public void UpdateAcitonbar(ActionGridUI actionGridUI)
-        {
-            actions.Add(actionGridUI);
-        }
-
-        /// <summary>
-        /// 获取所有的行动条格子UI
-        /// </summary>
-        /// <returns></returns>
-        public List<ActionGridUI> GetActionGridUIs()
-        {
-            return actions.ConvertAll(p => p);
-        }
-
         /// <summary>
         /// 设置操作UI
         /// </summary>

@@ -59,9 +59,8 @@ namespace HotUpdate.Game.Battle.Object.Monster
             return targetSelectStrategyFactory.GetTargetSelectStrategy<MonsterBaseTargetSelectStrategy>();
         }
 
-        public override void ExecuteAction()
+        protected override void OnExecuteAction()
         {
-            base.ExecuteAction();
             // TODO：可以封装随机选择的策略类，用于玩家/怪物AI
             var skillId = SelectSkill();
             // 释放选中的技能

@@ -24,9 +24,14 @@ namespace HotUpdate.Game.Battle.Utility
         /// 速度修正系数（平衡不同速度区间）
         /// </summary>
         public const float SPEED_CORRECTION = 1.0f;
+
+        /// <summary>
+        /// 显示的最大行动值
+        /// </summary>
+        public const int MaxDisplayActionValue = 999;
         
         /// <summary>
-        /// 初始化起始行动顺序
+        /// 首次初始化起始行动顺序，仅在战斗开始后转波次时调用
         /// </summary>
         /// <param name="context">战斗上下文</param>
         public static void InitOrder(IBattleContext context)
@@ -56,6 +61,59 @@ namespace HotUpdate.Game.Battle.Utility
             context.GetEventBus().TriggerEvent(new ActionBarSortPostEvent(context, context.GetAliveEntitys()));
         }
 
+        /// <summary>
+        /// 更新行动基准和当前持有回合实体的行动值、位置，触发事件更新UI
+        /// </summary>
+        /// <param name="context"></param>
+        public static void UpdateOrder(IBattleContext context)
+        {
+            var currentTurnOwner = context.CurrentTurnOwner;
+            if (currentTurnOwner == null) 
+                return;
+            
+            // 将当前行动实体的行动值作为行动基准线值
+            context.ActionLine = currentTurnOwner.ActionValue;
+            // 基于新速度，更新当前持有回合的实体的行动值
+            var newSpeed = currentTurnOwner.GetComponent<PropertyComponent>().GetPropertyValue(E_DynamicPropertyType.CurrentSpeed);
+            currentTurnOwner.SetActionValue(context.ActionLine + CalcActionValue(newSpeed));
+            // 将当前实体插入到对应的位置
+            InsertActionAxis(currentTurnOwner);
+            // 触发事件，通知行动轴UI更新
+            context.GetEventBus().TriggerEvent(new ActionBarSortPostEvent(context, context.GetAliveEntitys()));
+        }
+        
+        /// <summary>
+        /// 插入行动轴
+        /// </summary>
+        /// <param name="actEndEntity">当前回合结束的行动实体对象</param>
+        public static void InsertActionAxis(IBattleEntityObject actEndEntity)
+        {
+            var context = actEndEntity.Context;
+            // 先从列表中移除
+            context.RemoveBattleEntity(actEndEntity);
+            
+            var index = -1;
+            foreach (var battleEntityObject in context.GetAliveEntitys())
+            {
+                // 跳过行动值小的对象
+                if (battleEntityObject.ActionValue < actEndEntity.ActionValue)
+                {
+                    continue;
+                }
+                
+                // 找到第一个行动值大于当前角色的索引，插入到该位置前
+                index = context.GetEntityIndex(battleEntityObject);
+                context.Insert(index, actEndEntity);
+                break;
+            }
+
+            if (index == -1)
+            {
+                // 所有角色行动值都更小，当前实体插入末尾
+                context.AddBattleEntity(actEndEntity);
+            }
+        }
+        
         /// <summary>
         /// 计算行动值
         /// 行动值 = 基础行动值 / 速度 * 修正系数

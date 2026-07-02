@@ -49,6 +49,9 @@ namespace HotUpdate.UI.Battle.Base
         /// <param name="eventBus">战斗事件总线</param>
         public void RegisterBattleEvents(IBattleEventBus eventBus)
         {
+            eventBus.AddListener<CommandExecuteEvent>(OnCommandExecuteEvent);     // 当前指令执行事件
+            eventBus.AddListener<InsertCommandEvent>(OnInsertCommandEvent);     // 指令插入事件
+            eventBus.AddListener<SwitchEntityTurnEvent>(OnSwitchEntityTurnEvent);   // 切换实体回合事件
             eventBus.AddListener<TurnEndEvent>(OnTurnEnd);                   // 回合结束事件
             eventBus.AddListener<OnBattlePointCountChangedEvent>(OnBattlePointCountChanged); // 战斗点数变化事件
             eventBus.AddListener<SelectTargetEvent>(OnTargetSelectionChanged);      // 目标选择事件
@@ -73,6 +76,9 @@ namespace HotUpdate.UI.Battle.Base
 
         private void UnsubscribeBattleEvents()
         {
+            _eventBus.RemoveListener<CommandExecuteEvent>(OnCommandExecuteEvent);     // 指令插入事件
+            _eventBus.RemoveListener<InsertCommandEvent>(OnInsertCommandEvent);     // 指令插入事件
+            _eventBus.RemoveListener<SwitchEntityTurnEvent>(OnSwitchEntityTurnEvent);   // 切换实体回合事件
             _eventBus.RemoveListener<TurnEndEvent>(OnTurnEnd);                   // 回合结束事件
             _eventBus.RemoveListener<OnBattlePointCountChangedEvent>(OnBattlePointCountChanged); // 战斗点数变化事件
             _eventBus.RemoveListener<SelectTargetEvent>(OnTargetSelectionChanged);      // 目标选择事件
@@ -93,6 +99,41 @@ namespace HotUpdate.UI.Battle.Base
             _eventBus.RemoveListener<MonsterDeadEvent>(OnMonsterDeadEvent);       // 怪物死亡事件
         }
 
+        /// <summary>
+        /// 当前执行执行事件
+        /// </summary>
+        /// <param name="commandExecuteEvent"></param>
+        private void OnCommandExecuteEvent(CommandExecuteEvent commandExecuteEvent)
+        {
+            // 更新UI显示，设置当前执行指令的对象的Icon
+            _uiManager.SetCurrentCommanderDisplayUI(commandExecuteEvent.CurrentCommand.Sender);
+        }
+        
+        private void OnInsertCommandEvent(InsertCommandEvent insertCommandEvent)
+        {
+            var context = insertCommandEvent.Context;
+            // 只有玩家角色才处理
+            if (context.CurrentTurnOwner is IPlayerObject playerObject)
+            {
+                // 若当前命令执行者不是回合持有者
+                if (context.CurrentCommander != null && context.CurrentCommander != playerObject && !playerObject.OperatorSuspend)
+                {
+                    // 发送占位指令当当前指令执行完毕后继续执行当前回合的角色行动逻辑
+                    playerObject.OperatorSuspend = true;
+                    ((PlayerObject)context.CurrentTurnOwner).SendSuspendCommand();
+                }
+            }
+        }
+        
+        /// <summary>
+        /// 切换实体回合事件
+        /// </summary>
+        /// <param name="switchEntityTurnEvent"></param>
+        private void OnSwitchEntityTurnEvent(SwitchEntityTurnEvent switchEntityTurnEvent)
+        {
+            _uiManager.SetCurrentCommanderDisplayUI(switchEntityTurnEvent.CurrentBattleEntityObject);
+        }
+        
         /// <summary>
         /// 回合结束事件处理方法
         /// 预留回合结束后的逻辑扩展点
@@ -260,7 +301,7 @@ namespace HotUpdate.UI.Battle.Base
         /// <param name="updateWaitCmdEvent"></param>
         private void OnUpdateWaitCmdDispatch(UpdateWaitCmdEvent updateWaitCmdEvent)
         {
-            _uiManager.UpdateWaitingCommmand(updateWaitCmdEvent.BattleEntities);
+            _uiManager.UpdateWaitingCommmand(updateWaitCmdEvent.CurrentEntity, updateWaitCmdEvent.AddOrRemoveCmd, updateWaitCmdEvent.Priority);
         }
 
         /// <summary>

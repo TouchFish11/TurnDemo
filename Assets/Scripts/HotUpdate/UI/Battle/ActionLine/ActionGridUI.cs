@@ -1,6 +1,7 @@
 using Core.DI;
 using Core.Mono;
 using Core.UI;
+using Core.Utility;
 using HotUpdate.Game.Battle.Object;
 using TMPro;
 using UnityEngine;
@@ -30,6 +31,8 @@ namespace HotUpdate.UI.Battle.ActionLine
         [SerializeField] private float moveSpeed = 5f;
         // 闪烁动画的速度
         [SerializeField] private float falshSpeed = 1.5f;
+        // 格子滑动速度
+        [SerializeField] private float slidingSpeed = 6f;
         
         // 选中框的矩形变换组件
         private RectTransform imgSelectRect;
@@ -40,19 +43,33 @@ namespace HotUpdate.UI.Battle.ActionLine
         // 闪烁动画的计时变量
         private float time;
         // 选中框的初始本地位置（用于位移动画复位）
-        private Vector3 initLocalPos; 
-        // 绑定的战斗实体对象
-        private IBattleEntityObject battleEntity;
-        // 是否处于选中状态
+        private Vector3 initLocalPos;
         // 是否为第一个行动格子（用于区分缩放）
         private bool isFirstGrid;
-        // 第一个格子的缩放系数
-        private readonly float scaleFactor = 1.1f;
-        
+        // 父对象content
+        private VerticalLayoutGroup _actionBarContent;
+        // 起始Y坐标
+        private float _startY;
+        // 滑动到的目标Y
+        private float _targetY;
+        // 当前索引
+        private int _currentIndex;
+        // 滑动插值时间
+        private float _slidingTime;
+        // 是否正在滑动
+        private bool _isSliding;
+        // 自身UI变换组件
+        private RectTransform _rectTransform;
+
         /// <summary>
         /// 只读属性：当前格子是否处于选中状态
         /// </summary>
         public bool IsSelect { get; private set; }
+        
+        /// <summary>
+        /// 绑定的战斗实体对象
+        /// </summary>
+        public IBattleEntityObject BattleEntity { get; private set; }
 
         /// <summary>
         /// 初始化函数（生命周期）
@@ -65,6 +82,8 @@ namespace HotUpdate.UI.Battle.ActionLine
             imgSelectRect = imgSelect.rectTransform;
             initLocalPos = imgSelectRect.localPosition;
 
+            _rectTransform = this.transform as RectTransform;
+            
             // 初始状态隐藏选中框和闪烁特效
             imgSelect.gameObject.SetActive(false);
             images = Flashing.GetComponentsInChildren<Image>();
@@ -84,36 +103,17 @@ namespace HotUpdate.UI.Battle.ActionLine
         /// 初始化UI数据
         /// </summary>
         /// <param name="icon">格子显示的图标</param>
-        /// <param name="actionValue">行动值</param>
+        /// <param name="targetIndex"></param>
         /// <param name="battleEntity">绑定的战斗实体</param>
-        /// <param name="isFirst">是否为第一个行动格子</param>
-        public void Init(Sprite icon, int actionValue, IBattleEntityObject battleEntity, bool isFirst)
+        /// <param name="parent"></param>
+        public void Init(Sprite icon, int targetIndex, IBattleEntityObject battleEntity, RectTransform parent)
         {
-            this.battleEntity = battleEntity;
-            isFirstGrid = isFirst;
+            this.BattleEntity = battleEntity;
             imgIcon.sprite = icon;
-            txtActionValue.text = actionValue.ToString();
-
-            // 根据是否为第一个格子更新缩放
-            UpdateScale();
+            _actionBarContent = parent.GetComponent<VerticalLayoutGroup>();
+            _rectTransform.SetSiblingIndex(targetIndex);
         }
-
-        /// <summary>
-        /// 更新格子缩放比例
-        /// 第一个格子使用放大系数，其余格子为原始大小
-        /// </summary>
-        private void UpdateScale()
-        {
-            if (isFirstGrid)
-            {
-                transform.localScale = Vector3.one * scaleFactor;
-            }
-            else
-            {
-                transform.localScale = Vector3.one;
-            }
-        }
-
+        
         /// <summary>
         /// 检查并更新选中状态
         /// </summary>
@@ -121,11 +121,52 @@ namespace HotUpdate.UI.Battle.ActionLine
         public void CheckSelect(IBattleEntityObject battleEntity)
         {
             // 判断当前格子绑定的实体是否为选中实体
-            IsSelect = this.battleEntity == battleEntity;
+            IsSelect = this.BattleEntity == battleEntity;
             // 设置闪烁特效状态
             SetFlashing();
             // 设置选中框状态
             SetSelecting();
+        }
+
+        /// <summary>
+        /// 设置剩余行动值
+        /// </summary>
+        /// <param name="remainActionValue"></param>
+        public void SetActionValue(float remainActionValue)
+        {
+            txtActionValue.text = remainActionValue.ToString();
+        }
+        
+        /// <summary>
+        /// 设置UI格子滑动到的目标位置索引
+        /// </summary>
+        /// <param name="targetIndex"></param>
+        public void SetSlideTarget(int targetIndex)
+        {
+            _targetY = targetIndex * -(_rectTransform.rect.height + _actionBarContent.spacing);
+            _slidingTime = 0;
+            _isSliding = true;
+            _startY = _rectTransform.anchoredPosition.y;
+            _currentIndex = targetIndex;
+        }
+
+        /// <summary>
+        /// 滑动到目标位置
+        /// </summary>
+        private void SlideToTarget()
+        {
+            if(!_isSliding)
+                return;
+            
+            _slidingTime += TimeUtil.DeltaTime * slidingSpeed;
+            var currentY = Mathf.Lerp(_startY, _targetY, _slidingTime);
+            _rectTransform.anchoredPosition = new Vector2(_rectTransform.anchoredPosition.x, currentY);
+            
+            if (Mathf.Approximately(_rectTransform.anchoredPosition.y, _targetY))
+            {
+                _isSliding = false;
+                _rectTransform.SetSiblingIndex(_currentIndex);
+            }
         }
 
         /// <summary>
@@ -144,31 +185,15 @@ namespace HotUpdate.UI.Battle.ActionLine
         }
 
         /// <summary>
-        /// 设置选中框显示状态
-        /// 选中时显示选中框并复位到初始位置，未选中时隐藏
+        /// 闪烁动画
         /// </summary>
-        private void SetSelecting()
-        {
-            imgSelect.gameObject.SetActive(IsSelect);
-            imgSelectRect.transform.localPosition = initLocalPos;
-        }
-
-        /// <summary>
-        /// 帧更新逻辑（仅在选中状态下执行）
-        /// 处理选中框的水平位移动画和闪烁特效的透明度动画
-        /// </summary>
-        private void OnUpdate()
+        private void FlashAnim()
         {
             if (!IsSelect)
             {
                 return;
             }
-
-            // 选中框水平位移计算（基于正弦曲线的平滑往复运动）
-            var xOffset = Mathf.Sin(Time.time * moveSpeed) * moveRange;
-            // 应用位移（保持初始Y/Z轴位置不变）
-            imgSelectRect.localPosition = new Vector3(initLocalPos.x + xOffset, initLocalPos.y, initLocalPos.z);
-
+            
             // 闪烁特效透明度计算（PingPong实现0-1之间的往复变化）
             time += Time.deltaTime * falshSpeed;
             currentAlpha = 1 - Mathf.PingPong(time, 1f);
@@ -179,6 +204,43 @@ namespace HotUpdate.UI.Battle.ActionLine
             {
                 image.color = color;
             }
+        }
+
+        /// <summary>
+        /// 设置选中框显示状态
+        /// 选中时显示选中框并复位到初始位置，未选中时隐藏
+        /// </summary>
+        private void SetSelecting()
+        {
+            imgSelect.gameObject.SetActive(IsSelect);
+            imgSelectRect.transform.localPosition = initLocalPos;
+        }
+
+        /// <summary>
+        /// 选中动画
+        /// </summary>
+        private void SelectAnim()
+        {
+            if (!IsSelect)
+            {
+                return;
+            }
+            
+            // 选中框水平位移计算（基于正弦曲线的平滑往复运动）
+            var xOffset = Mathf.Sin(Time.time * moveSpeed) * moveRange;
+            // 应用位移（保持初始Y/Z轴位置不变）
+            imgSelectRect.localPosition = new Vector3(initLocalPos.x + xOffset, initLocalPos.y, initLocalPos.z);
+        }
+        
+        /// <summary>
+        /// 帧更新逻辑（仅在选中状态下执行）
+        /// 处理选中框的水平位移动画和闪烁特效的透明度动画
+        /// </summary>
+        private void OnUpdate()
+        {
+            SlideToTarget();
+            SelectAnim();
+            FlashAnim();
         }
 
         /// <summary>

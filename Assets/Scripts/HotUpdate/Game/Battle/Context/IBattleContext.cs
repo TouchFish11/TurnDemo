@@ -30,7 +30,7 @@ namespace HotUpdate.Game.Battle.Context
         /// <summary>
         /// 持有当前行动回合的实体，不受终结技、追击等“插队”逻辑的影响
         /// </summary>
-        IBattleEntityObject CurrentTurnOwner { get; set; }
+        IBattleEntityObject CurrentTurnOwner { get; }
 
         /// <summary>
         /// 行动基准线
@@ -206,5 +206,11 @@ namespace HotUpdate.Game.Battle.Context
         void PushCommander(IBattleEntityObject commander);
         
         void PopCommander();
+
+        /// <summary>
+        /// 设置持有当前回合的行动实体
+        /// </summary>
+        /// <param name="battleEntityObject"></param>
+        void SetCurrentTurnOwner(IBattleEntityObject battleEntityObject);
     }
 }
