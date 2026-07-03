@@ -2,6 +2,7 @@ using System.Collections;
 using Core.DI;
 using Core.Mono;
 using Core.Pool;
+using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.VFX;
 
 namespace HotUpdate.Game.Battle.Object
@@ -16,6 +17,8 @@ namespace HotUpdate.Game.Battle.Object
         [Inject] protected IMonoAdapter monoAdapter;
  
         protected IBattleEntityObject battleEntityObject;
+        
+        protected IBattleContext Context => battleEntityObject.Context;
 
         public void InitEntity(IBattleEntityObject entity)
         {   
@@ -25,6 +28,7 @@ namespace HotUpdate.Game.Battle.Object
         public IEnumerator HandleDeath()
         {
             yield return OnHandle();
+            battleEntityObject.Destroy();
         }
 
         protected abstract IEnumerator OnHandle();

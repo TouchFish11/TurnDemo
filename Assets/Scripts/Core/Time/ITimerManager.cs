@@ -63,6 +63,6 @@ namespace Core.Time
         /// 设置全局时间流速（影响游戏时间缩放）
         /// </summary>
         /// <param name="timeRate">时间流速枚举（Normal/Zero/Recovery等）</param>
-        void SetTimeRate(E_TimeRate timeRate);
+        void SetTimeRate(ETimeRate timeRate);
     }
 }

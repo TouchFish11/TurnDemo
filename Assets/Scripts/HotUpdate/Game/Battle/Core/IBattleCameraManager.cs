@@ -1,7 +1,8 @@
 using System.Threading.Tasks;
+using HotUpdate.Game.Battle.Context;
 using UnityEngine;
 
-namespace HotUpdate.Base.Manager
+namespace HotUpdate.Game.Battle.Core
 {
     /// <summary>
     /// 战斗相机管理器接口
@@ -33,6 +34,9 @@ namespace HotUpdate.Base.Manager
         Camera CurrentActiveCamera { get; }
 
         UnityEngine.Object RayCast(int layerMask);
+        
         void UpdateBaseRotation();
+        
+        void Init(IBattleContext context);
     }
 }

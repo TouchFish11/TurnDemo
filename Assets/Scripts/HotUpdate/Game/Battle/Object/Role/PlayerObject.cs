@@ -35,8 +35,6 @@ namespace HotUpdate.Game.Battle.Object.Role
         
         public override ITargetSelectStrategy DefaultTargetSelectStrategy { get; protected set; }
 
-        public bool OperatorSuspend { get; set; }
-
         public void RoleBattleInit(RoleBattleInitData initData)
         {
             BattleInit(initData);

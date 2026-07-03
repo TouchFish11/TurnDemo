@@ -1,7 +1,6 @@
 using Core.Utility;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Event.Turn;
-using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.ResponsibilityChain.DamageChain;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Conditions;
@@ -89,16 +88,6 @@ namespace HotUpdate.Game.Battle.Object.Monster
             var actCommand = commandfactory.GetMonsterActCommand(toughnessComponent, skill);
             // 发送指令
             Context.GetEventBus().TriggerEvent(new InsertCommandEvent(Context, actCommand));
-        }
-        
-        /// <summary>
-        /// 怪物对象禁用时的清理逻辑
-        /// 触发怪物死亡事件
-        /// </summary>
-        public override void Destroy()
-        {
-            Context.GetEventBus().TriggerEvent(new MonsterDeadEvent(Context, this));
-            base.Destroy();
         }
     }
 }

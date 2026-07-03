@@ -27,8 +27,8 @@ namespace HotUpdate.Game.Battle.Core
     public class BattleService
     {
         [Inject] private IBinaryDataManager _binaryDataManager;
-        [Inject] private RoleFactory _roleFactory;
-        [Inject] private MonsterFactory _monsterFactory;
+        [Inject] private IRoleFactory _roleFactory;
+        [Inject] private IMonsterFactory _monsterFactory;
         [Inject] private BattlePointProxy _battlePointProxy;
         [Inject] private ICastSkillConditionFactory _castSkillConditionFactory;
         [Inject] private ITargetSelectStrategyFactory _targetSelectStrategyFactory;

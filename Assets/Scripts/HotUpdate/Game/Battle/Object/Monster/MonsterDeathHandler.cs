@@ -1,4 +1,5 @@
 using System.Collections;
+using Core.DI;
 using Core.Utility;
 using HotUpdate.Base.Enums;
 using HotUpdate.Base.Utility;
@@ -14,6 +15,8 @@ namespace HotUpdate.Game.Battle.Object.Monster
     /// </summary>
     public class MonsterDeathHandler : DeathHandler
     {
+        [Inject] private IMonsterFactory _monsterFactory;
+        
         protected override IEnumerator OnHandle()
         {
             // 初始化特效信息对象（用于追踪特效生命周期）
@@ -29,9 +32,11 @@ namespace HotUpdate.Game.Battle.Object.Monster
 
             var animationComponent =  battleEntityObject.GetComponent<BattleAnimationComponent>();
             // 播放怪物死亡动画，并等待动画播放完成
-            animationComponent.StartCoroutine(AnimationPlayUtility.WaitForAnimOver(animationComponent, AnimationUtility.Battle_Layer_Name, (int)E_AnimationType.Death));
+            yield return AnimationPlayUtility.WaitForAnimOver(animationComponent, AnimationUtility.Battle_Layer_Name, (int)E_AnimationType.Death);
             // 等待死亡特效播放完毕（协程阻塞，直到特效销毁）
             yield return new WaitUntil(() => !vFXInfo.IsAlive);
+            // 死亡动画效果结束后才回收到对象池中
+            _monsterFactory.CollectDeadMonster((MonsterObject)battleEntityObject);
         }
     }
 }

@@ -31,14 +31,14 @@ namespace HotUpdate.Game.Battle.Context
         private readonly List<IBattleEntityObject> _monsterObjects = new();
         // 场景玩家列表
         private readonly List<IBattleEntityObject> _roleObjects = new();
-        // 命令执行栈
-        private readonly Stack<IBattleEntityObject> _commanders = new();
         // 场景召唤物列表
         // ...
-
-        public IBattleEntityObject CurrentCommander => _commanders.Count > 0 ? _commanders.Peek() : null;
         
+        public IBattleEntityObject CurrentCommander { get; set; }
+
         public IBattleEntityObject CurrentTurnOwner { get; private set; }
+        
+        public bool IsExecutingCommand { get; private set; }
         
         public float ActionLine { get; set; }
         
@@ -111,16 +111,6 @@ namespace HotUpdate.Game.Battle.Context
         {
             MaxBattlePointCount = Mathf.Max(0, MaxBattlePointCount - cost);
             _eventBus.TriggerEvent(new OnBattlePointCountChangedEvent(this, CurentBattlePointCount, MaxBattlePointCount));
-        }
-
-        public void PushCommander(IBattleEntityObject commander)
-        {
-            _commanders.Push(commander);
-        }
-
-        public void PopCommander()
-        {
-            _commanders.Pop();
         }
 
         public void CleanupBattle()

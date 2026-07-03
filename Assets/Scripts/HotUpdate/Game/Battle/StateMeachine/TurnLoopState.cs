@@ -21,6 +21,7 @@ namespace HotUpdate.Game.Battle.StateMeachine
     {
         [Inject] private IMonoAdapter _monoAdapter;
         [Inject] private IBattleManager _battleManager;
+        [Inject] private IMonsterFactory _monsterFactory;
         
         // 战斗指令控制器
         private BattleCommandsController _commandsController;
@@ -83,39 +84,36 @@ namespace HotUpdate.Game.Battle.StateMeachine
         }
         
         /// <summary>
-        /// 移除死亡怪物实体
+        /// 处理死亡的战斗实体
         /// </summary>
-        public IEnumerator RemoveDeadMonster()
+        public void HandleDeadEntity()
         {
             var  deadEntities = new List<IBattleEntityObject>();
+            // 播放死亡动画
             foreach (var battleEntity in Context.GetDeadEntitys())
             {
-                yield return battleEntity.Die();
+                _monoAdapter.StartCoroutine(battleEntity.Die());
                 deadEntities.Add(battleEntity);
 
                 if (battleEntity == Context.CurrentTurnOwner)
                 {
                     Context.SetCurrentTurnOwner(null);
                 }
-                if (battleEntity is MonsterObject)
-                {
-                    battleEntity.Destroy();
-                    EngineUtility.Destroy(battleEntity.GameObject);
-                }
             }
             
-            // 移除
+            // 从上下文中移除
             foreach (var battleEntityObject in deadEntities)
             {
                 Context.RemoveBattleEntity(battleEntityObject);
 
-                if (battleEntityObject is PlayerObject)
+                switch (battleEntityObject)
                 {
-                    Context.RemoveSceneRole(battleEntityObject);
-                }
-                else
-                {
-                    Context.RemoveSceneMonster(battleEntityObject);
+                    case PlayerObject playerObject:
+                        Context.RemoveSceneRole(playerObject);
+                        break;
+                    case MonsterObject monsterObject:
+                        Context.RemoveSceneMonster(monsterObject);
+                        break;
                 }
             }
         }

@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Role;
 using HotUpdate.Game.Point;
@@ -12,14 +12,14 @@ namespace HotUpdate.Game.Battle.Core
     /// <summary>
     /// 场景战斗点代理
     /// </summary>
-    public class BattlePointProxy : IDisposable
+    public class BattlePointProxy : IBattlePointProxy
     {
         // 场景战斗点对象
         private BattlePoint _battlePoint;
         // 怪物中心点x值
         private readonly float[] monstetCenterXs = { 6f, 4f, 2f, 0f };
         // 点信息列表
-        private List<PointInfo> pointInfos = new();
+        private readonly List<PointInfo> pointInfos = new();
         // 战斗上下文
         private IBattleContext context;
         // 当前怪物数量
@@ -35,7 +35,7 @@ namespace HotUpdate.Game.Battle.Core
                 return _battlePoint ??= UnityEngine.Object.FindFirstObjectByType<BattlePoint>();
             }
         }
-
+        
         /// <summary>
         /// 初始化战斗点对象
         /// </summary>
@@ -44,6 +44,7 @@ namespace HotUpdate.Game.Battle.Core
         public void InitProxy(IBattleContext ctx, List<IBattleEntityObject> players)
         {
             context = ctx;
+            context.GetEventBus().AddListener<QuitBattleEvent>(OnQuitBattleEvent);
             var index = 0;
             foreach (var roleTrans in BattlePoint.GetRoleTransforms())
             {
@@ -156,11 +157,13 @@ namespace HotUpdate.Game.Battle.Core
             }
             currentMonsterCount = newLiveCount;
         }
-        
-        public void Dispose()
+
+        private void OnQuitBattleEvent(QuitBattleEvent quitBattleEvent)
         {
+            context.GetEventBus().RemoveListener<QuitBattleEvent>(OnQuitBattleEvent);
             pointInfos.Clear();
-            pointInfos = null;
+            context = null;
+            _battlePoint = null;
         }
     }
 }

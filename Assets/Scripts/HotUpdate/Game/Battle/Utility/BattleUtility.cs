@@ -95,8 +95,8 @@ namespace HotUpdate.Game.Battle.Utility
             var index = -1;
             foreach (var battleEntityObject in context.GetAliveEntitys())
             {
-                // 跳过行动值小的对象
-                if (battleEntityObject.ActionValue < actEndEntity.ActionValue)
+                // 跳过行动值小于等于的对象
+                if (battleEntityObject.ActionValue <= actEndEntity.ActionValue)
                 {
                     continue;
                 }

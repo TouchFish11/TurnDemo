@@ -32,7 +32,6 @@ namespace HotUpdate.UI.Battle.Base
 
         [InjectUI] private Image imgActingIcon;
         [InjectUI] private Image imgIcon;
-        [InjectUI] private Image imgCurrent;
         
         /// <summary>
         /// 操作区域根节点
@@ -128,20 +127,25 @@ namespace HotUpdate.UI.Battle.Base
         public ToggleGroup SkillKeyGroup => binder.GetControl<ToggleGroup>(nameof(OperatorArea));
         
         /// <summary>
-        /// 行动提示UI实例
+        /// 行动提示UI对象
         /// </summary>
         public ActingTipUI ActingTipUI { get; private set; }
+        
+        /// <summary>
+        /// 当前执行指令格子对象
+        /// </summary>
+        public ActionExecuteGrid ActionExecuteGrid { get; private set; }
 
         protected override void Awake()
         {
             base.Awake();
-
-            imgCurrent.color = new Color(imgCurrent.color.r, imgCurrent.color.g, imgCurrent.color.b, 0);
+            
             BattleStateTipArea.gameObject.SetActive(false);
             TotalDmgArea.gameObject.SetActive(false);
             PaintingDisplayArea.gameObject.SetActive(false);
 
             ActingTipUI = ActingTipArea.gameObject.AddComponent<ActingTipUI>();
+            ActionExecuteGrid = ActionBarContent.GetComponentInChildren<ActionExecuteGrid>(true);
         }
 
         protected override void Start()
@@ -185,18 +189,6 @@ namespace HotUpdate.UI.Battle.Base
             
             imgIcon.sprite = icon;
             txtUltimateTip.text = tip;
-        }
-
-        /// <summary>
-        /// 设置当前执行指令的对象的Icon
-        /// </summary>
-        /// <param name="icon"></param>
-        public void SetCurrentCommanderDisplayUI(Sprite icon)
-        {
-            var color = imgCurrent.color;
-            var alpha = icon ? 1 : 0;
-            imgCurrent.color = new Color(color.r, color.g, color.b, alpha);
-            imgCurrent.sprite = icon;
         }
 
         /// <summary>

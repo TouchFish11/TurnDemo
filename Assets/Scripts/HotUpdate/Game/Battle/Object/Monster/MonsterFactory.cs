@@ -13,23 +13,23 @@ namespace HotUpdate.Game.Battle.Object.Monster
     {
         [Inject] private ObjectSpawner _objectSpawner;
         
-        public void InitFactory()
-        {
-
-        }
-        
         public async Task<IMonsterObject> CreateMonster(int monsterId, Transform parent, bool stay = false)
         {
             IMonsterObject monsterObject = monsterId switch
             {
-                1 => (await _objectSpawner.SpawnAsync<Slime.Slime>(AssetKeys.Prefab_Slime, parent, worldSpace:stay)),
-                2 => (await _objectSpawner.SpawnAsync<TurtleShell.TurtleShell>(AssetKeys.Prefab_TurtleShell, parent, worldSpace:stay)),
-                4 => (await _objectSpawner.SpawnAsync<AbyssalMage.AbyssalMage>(AssetKeys.Prefab_AbyssalMage, parent, worldSpace:stay)),
+                1 => await _objectSpawner.SpawnAsync<Slime.Slime>(AssetKeys.Prefab_Slime, parent, worldSpace:stay),
+                2 => await _objectSpawner.SpawnAsync<TurtleShell.TurtleShell>(AssetKeys.Prefab_TurtleShell, parent, worldSpace:stay),
+                4 => await _objectSpawner.SpawnAsync<AbyssalMage.AbyssalMage>(AssetKeys.Prefab_AbyssalMage, parent, worldSpace:stay),
                 _ => null
             };
             
             EntityHelper.InitEntity(monsterObject);
             return monsterObject;
+        }
+
+        public void CollectDeadMonster(MonsterObject monsterObject)
+        {
+            _objectSpawner.Release(monsterObject);
         }
     }
 }

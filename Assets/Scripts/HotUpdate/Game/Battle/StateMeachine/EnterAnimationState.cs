@@ -5,6 +5,7 @@ using Core.Utility;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.UI;
 using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Turn;
 using HotUpdate.Game.Battle.UI;

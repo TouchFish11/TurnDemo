@@ -9,10 +9,10 @@ using Core.Mono;
 using Core.UI;
 using Core.Utility;
 using HotUpdate.Base;
-using HotUpdate.Base.Manager;
 using HotUpdate.Base.Service;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Monster;
@@ -96,7 +96,7 @@ namespace HotUpdate.UI.Battle.Base
         /// <param name="context">战斗上下文，用于触发退出战斗事件</param>
         public void ShowBattleOver(IBattleContext context)
         {
-            DIContainer.GetInstance<IMonoAdapter>().StartCoroutine(ShowBattleOver_Cor());
+            _monoAdapter.StartCoroutine(ShowBattleOver_Cor());
             return;
 
             // 战斗结束界面显示协程
@@ -317,6 +317,31 @@ namespace HotUpdate.UI.Battle.Base
 
         #region 行动队列/ActionBar相关
 
+        public void RemoveActionGrid(IBattleEntityObject battleEntity)
+        {
+            var actionGridUI = _view.ActionGridUis.Find(ui => ui.BattleEntity == battleEntity);
+            _view.ActionGridUis.Remove(actionGridUI);
+            _objectSpawner.Release(actionGridUI);
+            
+            // 其它格子需要移动
+            var context = battleEntity.Context;
+            var list = new List<IBattleEntityObject>(context.GetAliveEntitys());
+            list.Remove(battleEntity);
+            
+            for (var i = 0; i < list.Count; i++)
+            {
+                var battleEntityObject = list[i];
+                var grid = _view.ActionGridUis.Find(ui => ui.BattleEntity == battleEntityObject);
+                if (grid)
+                {
+                    // 设置滑动到的目标索引
+                    grid.SetSlideTarget(i);
+                    // 设置行动值
+                    grid.SetActionValue(CalcRemainActionValue(context, battleEntityObject.ActionValue));
+                }
+            }
+        }
+        
         /// <summary>
         /// 设置当前执行指令的对象的Icon
         /// </summary>
@@ -325,21 +350,16 @@ namespace HotUpdate.UI.Battle.Base
         {
             try
             {
-                if(battleEntity == null)
+                // 不显示当前执行指令的对象图标
+                if (battleEntity == null)
+                {
+                    _view.ActionExecuteGrid.UpdateGrid(null, null);
                     return;
+                }
                 
                 // 获取实体对应的图标名称
-                var iconName = GetIconByEntity(battleEntity);
-                var icon = await _iconService.LoadIconAsync(iconName);
-                _view.SetCurrentCommanderDisplayUI(icon);
-                
-                // 移除对应的行动格子
-                var index = _view.ActionGridUis.FindIndex(ui => ui.BattleEntity == battleEntity);
-                if (index >= 0)
-                {
-                    _view.ActionGridUis.RemoveAt(index);
-                    _objectSpawner.Release(_view.ActionBarContent.GetChild(index).GetComponent<ActionGridUI>());
-                }
+                var icon = await GetIconByEntity(battleEntity);
+                _view.ActionExecuteGrid.UpdateGrid(icon, battleEntity);
             }
             catch (Exception e)
             {
@@ -348,66 +368,58 @@ namespace HotUpdate.UI.Battle.Base
         }
 
         /// <summary>
-        /// 更新等待行动队列UI
+        /// 更新等待行动队列UI内容
         /// 为每个等待行动的战斗实体创建对应的UI并初始化
         /// </summary>
-        public async void UpdateWaitingCommmand(IBattleEntityObject battleEntity, bool isAdd, int priority)
+        public async void UpdateWaitingContent(IBattleContext context, List<IDisplayPendingExecution> displayPendingExecutions)
         {
             try
             {
-                if (isAdd)
+                // 转存命令对象
+                var displayobjs = new List<IDisplayPendingExecution>(displayPendingExecutions);
+                // 当前角色回合被其它逻辑插队的情况
+                if (context.CurrentCommander == null)
+                {
+                    displayobjs.Add((IDisplayPendingExecution)context.CurrentTurnOwner);
+                }
+                // 当前持有回合的角色正在执行自己的命令，然后有其它逻辑插队，这时不需要插入自己
+                else if(context.CurrentCommander != null && context.CurrentCommander == context.CurrentTurnOwner)
+                {
+
+                }
+                // 有其它命令逻辑正在执行，需要排队
+                else
+                {
+                    displayobjs.Add((IDisplayPendingExecution)context.CurrentTurnOwner);
+                }
+                
+                _objectSpawner.Release(_view.WaitingActUIs);
+                foreach (var displayobj in displayobjs)
                 {
                     // 异步加载等待行动UI预制体
                     var waitingActUI = await _objectSpawner.SpawnAsync<WaitingActUI>(AssetKeys.WaitingActUI, _view.WaitQueueContent);
-                    // 获取实体对应的图标名称
-                    var iconName = GetIconByEntity(battleEntity);
                     // 加载图标精灵并初始化UI
-                    var icon = await _iconService.LoadIconAsync(iconName);
+                    var icon = await GetIconByEntity(displayobj.BattleEntity);
                     // 初始化UI
-                    waitingActUI.Init(icon, battleEntity, priority);
+                    waitingActUI.Init(icon, displayobj.BattleEntity.BattleEntityId);
                     // 缓存UI
                     _view.WaitingActUIs.Add(waitingActUI);
-                }
-                else
-                {
-                    for (var i = _view.WaitingActUIs.Count - 1; i >= 0; i--)
-                    {
-                        var waitingActUI = _view.WaitingActUIs[i];
-                        _objectSpawner.Release(waitingActUI);
-                        _view.WaitingActUIs.RemoveAt(i);
-                    }   
-                }
-
-                var actUis = new List<WaitingActUI>();
-                _view.WaitQueueContent.GetComponentsInChildren(actUis);
-                actUis.Sort((a, b) =>
-                {
-                    if (a.Priority > b.Priority)
-                    {
-                        // c1优先级更高，排在前面（返回-1表示c1在c2前）
-                        return -1;
-                    }
-
-                    if (a.Priority < b.Priority)
-                    {
-                        // c2优先级更高，c1排在后面
-                        return 1;
-                    }
-
-                    // 优先级相同，保持原有顺序
-                    return 0;
-                });
-                
-                for (var i = 0; i < actUis.Count; i++)
-                {
-                    var waitingActUI = actUis[i];
-                    waitingActUI.transform.SetSiblingIndex(i);
                 }
             }
             catch (Exception e)
             {
                 Logger.Log($"{nameof(BattleUIManager)}: {e.Message}");
             }
+        }
+
+        /// <summary>
+        /// 移除等待列表中的第一个UI
+        /// </summary>
+        public void RemoveFirstWaitingActUI()
+        {
+            var waitingUI = _view.WaitingActUIs[0];
+            _view.WaitingActUIs.RemoveAt(0);
+            _objectSpawner.Release(waitingUI);
         }
 
         /// <summary>
@@ -422,7 +434,10 @@ namespace HotUpdate.UI.Battle.Base
             {
                 var battleEntityObjects = battleEntities.ToList();
                 var girds = _view.ActionGridUis;
-
+                // 特殊格子高度 + 间隙
+                var startY = _view.ActionExecuteGrid.RectTransform.anchoredPosition.y - _view.ActionExecuteGrid.RectTransform.rect.height - 10;
+                var startX = _view.ActionExecuteGrid.RectTransform.anchoredPosition.x;
+                    
                 if (battleEntityObjects.Count == girds.Count)
                 {
                     for (var i = battleEntityObjects.Count - 1; i >= 0; i--)
@@ -445,12 +460,10 @@ namespace HotUpdate.UI.Battle.Base
                         var battleEntity = battleEntityObjects[i];
                         // 异步加载行动格子UI预制体
                         var actionGridUI = await _objectSpawner.SpawnAsync<ActionGridUI>(AssetKeys.ActionGridUI, _view.ActionBarContent);
-                        // 获取实体对应的图标名称
-                        var iconName = GetIconByEntity(battleEntity);
                         // 加载图标精灵
-                        var icon = await _iconService.LoadIconAsync(iconName);
+                        var icon = await GetIconByEntity(battleEntity);
                         // 初始化行动格子UI：计算差值作为剩余行动值
-                        actionGridUI.Init(icon, i, battleEntity, _view.ActionBarContent);
+                        actionGridUI.Init(icon, startX, startY, i, battleEntity);
                         // 设置行动值
                         actionGridUI.SetActionValue(CalcRemainActionValue(context, battleEntity.ActionValue));
                         girds.Add(actionGridUI);
@@ -503,12 +516,10 @@ namespace HotUpdate.UI.Battle.Base
                         {
                             // 异步加载行动格子UI预制体
                             var actionGridUI = await _objectSpawner.SpawnAsync<ActionGridUI>(AssetKeys.ActionGridUI, _view.ActionBarContent);
-                            // 获取实体对应的图标名称
-                            var iconName = GetIconByEntity(battleEntityObject);
                             // 加载图标精灵
-                            var icon = await _iconService.LoadIconAsync(iconName);
+                            var icon = await GetIconByEntity(battleEntityObject);
                             // 初始化行动格子UI：计算差值作为剩余行动值
-                            actionGridUI.Init(icon, i, battleEntityObject, _view.ActionBarContent);
+                            actionGridUI.Init(icon, startX, startY, i, battleEntityObject);
                             // 设置行动值
                             actionGridUI.SetActionValue(CalcRemainActionValue(context, battleEntityObject.ActionValue));
                             girds.Add(actionGridUI);
@@ -561,6 +572,7 @@ namespace HotUpdate.UI.Battle.Base
                         if (!actionGrid.IsSelect)
                         {
                             actionGrid.CheckSelect(battleEntity);
+                            _view.ActionExecuteGrid.CheckSelect(battleEntity);
                         }
                     }
                 }
@@ -568,12 +580,14 @@ namespace HotUpdate.UI.Battle.Base
             // 单目标选中：高亮匹配的格子
             else if (selectedTargets.Count == 1)
             {
+                if (_view.ActionExecuteGrid.CheckSelect(selectedTargets[0]))
+                {
+                    return;
+                }
+                
                 foreach (var actionGrid in actionGridUI)
                 {
-                    foreach (var battleEntity in selectedTargets)
-                    {
-                        actionGrid.CheckSelect(battleEntity);
-                    }
+                    actionGrid.CheckSelect(selectedTargets[0]);
                 }
             }
         }
@@ -751,7 +765,7 @@ namespace HotUpdate.UI.Battle.Base
         /// </summary>
         /// <param name="battleEntity">战斗实体</param>
         /// <returns>图标名称（用于加载精灵）</returns>
-        public static string GetIconByEntity(IBattleEntityObject battleEntity)
+        public Task<Sprite> GetIconByEntity(IBattleEntityObject battleEntity)
         {
             var iconName = string.Empty;
             switch (battleEntity)
@@ -770,7 +784,7 @@ namespace HotUpdate.UI.Battle.Base
                     break;
             }
             
-            return iconName;
+            return _iconService.LoadIconAsync(iconName);
         }
 
         /// <summary>

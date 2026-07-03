@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Core.Log;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Monster;
 using HotUpdate.Game.Battle.Object.Role;
@@ -17,7 +18,7 @@ namespace HotUpdate.Game.Battle.TargetSelect
     /// 响应技能选择、拖拽切换目标、点击选中目标等交互事件，同步更新目标选择UI
     /// 单例模式实现，全局唯一管理战斗目标选择流程
     /// </summary>
-    public class TargetSelectManager : ITargetSelectManager, IDisposable
+    public class TargetSelectManager : ITargetSelectManager
     {
         // 缓存筛选出的所有目标
         private List<IBattleEntityObject> _filterEntitys;
@@ -27,6 +28,14 @@ namespace HotUpdate.Game.Battle.TargetSelect
         private readonly List<IBattleEntityObject> _selectedTargets = new();
         // 当前生效的目标选择策略（不同技能有不同的目标选择规则）
         private ITargetSelectStrategy _currentSelectStrategy;
+        private IBattleContext _context;
+
+        public void Init(IBattleContext context)
+        {
+            // 监听战斗退出事件
+            context.GetEventBus().AddListener<QuitBattleEvent>(OnQuitBattleEvent);
+            _context = context;
+        }
         
         /// <summary>
         /// 点击选中主目标
@@ -193,13 +202,15 @@ namespace HotUpdate.Game.Battle.TargetSelect
                 Logger.Log($"当前主目标：{_mainTarget}");
             }
         }
-        
-        public void Dispose()
+
+        private void OnQuitBattleEvent(QuitBattleEvent quitBattleEvent)
         {
+            _context.GetEventBus().AddListener<QuitBattleEvent>(OnQuitBattleEvent);
             _filterEntitys.Clear();
             _selectedTargets.Clear();
             _mainTarget = null;
             _currentSelectStrategy = null;
+            _context = null;
         }
     }
 }

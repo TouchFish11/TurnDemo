@@ -25,7 +25,7 @@ namespace HotUpdate.Game.Battle.Context
         /// <summary>
         /// 当前执行命令的实体，表示正在执行当前命令的对象
         /// </summary>
-        IBattleEntityObject CurrentCommander { get; }
+        IBattleEntityObject CurrentCommander { get; set; }
 
         /// <summary>
         /// 持有当前行动回合的实体，不受终结技、追击等“插队”逻辑的影响
@@ -202,10 +202,6 @@ namespace HotUpdate.Game.Battle.Context
         /// 初始化战斗状态机
         /// </summary>
         void InitStateMachine();
-
-        void PushCommander(IBattleEntityObject commander);
-        
-        void PopCommander();
 
         /// <summary>
         /// 设置持有当前回合的行动实体

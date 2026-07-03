@@ -16,6 +16,7 @@ namespace HotUpdate.Game.Battle.Object.Role
             var animationComponent = battleEntityObject.GetComponent<BattleAnimationComponent>();
              // 等待死亡动画播放结束
             yield return AnimationPlayUtility.WaitForAnimOver(animationComponent, AnimationUtility.Battle_Layer_Name, (int)E_AnimationType.Death);
+            // 角色留在场上
         }
     }
 }

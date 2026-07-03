@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using HotUpdate.Base;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Context;
@@ -8,6 +9,7 @@ using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Operation;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Statuses;
+using UnityEngine;
 
 namespace HotUpdate.Game.Battle.UI
 {
@@ -74,10 +76,9 @@ namespace HotUpdate.Game.Battle.UI
         /// 更新等待行动队列UI
         /// 为每个等待行动的战斗实体创建对应的UI并初始化
         /// </summary>
-        /// <param name="battleEntity"></param>
-        /// <param name="isAdd"></param>
-        /// <param name="priority"></param>
-        void UpdateWaitingCommmand(IBattleEntityObject battleEntity, bool isAdd, int priority);
+        /// <param name="context"></param>
+        /// <param name="commands"></param>
+        void UpdateWaitingContent(IBattleContext context, List<IDisplayPendingExecution> commands);
 
         /// <summary>
         /// 更新行动条（ActionBar）UI
@@ -137,7 +138,7 @@ namespace HotUpdate.Game.Battle.UI
         /// <param name="current">当前可用点数</param>
         /// <param name="max">总点数上限</param>
         /// <returns>异步任务</returns>
-        System.Threading.Tasks.Task UpdateBattlePointCount(int current, int max);
+        Task UpdateBattlePointCount(int current, int max);
 
         /// <summary>
         /// 更新玩家状态条UI
@@ -159,5 +160,24 @@ namespace HotUpdate.Game.Battle.UI
         /// </summary>
         /// <param name="battleEntity"></param>
         void SetCurrentCommanderDisplayUI(IBattleEntityObject battleEntity);
+
+        /// <summary>
+        /// 通过战斗实体获取对应的图标名称
+        /// 区分玩家/怪物类型，返回不同的图标配置
+        /// </summary>
+        /// <param name="battleEntity">战斗实体</param>
+        /// <returns>图标名称（用于加载精灵）</returns>
+        Task<Sprite> GetIconByEntity(IBattleEntityObject battleEntity);
+
+        /// <summary>
+        /// 移除指定对象对应的行动格子
+        /// </summary>
+        /// <param name="holdCurrentTurnObj"></param>
+        void RemoveActionGrid(IBattleEntityObject holdCurrentTurnObj);
+
+        /// <summary>
+        /// 移除等待列表中的第一个UI
+        /// </summary>
+        void RemoveFirstWaitingActUI();
     }
 }

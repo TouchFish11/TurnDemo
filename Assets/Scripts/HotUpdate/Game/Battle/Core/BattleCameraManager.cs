@@ -1,11 +1,10 @@
-using System;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Mono;
 using Core.Serialize.Binary;
-using HotUpdate.Base.Manager;
-using HotUpdate.Game.Battle.Event;
+using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Inputs;
 using HotUpdate.Game.Battle.Object;
 using UnityEngine;
@@ -15,13 +14,12 @@ namespace HotUpdate.Game.Battle.Core
     /// <summary>
     /// 战斗相机管理器
     /// </summary>
-    public class BattleCameraManager : IBattleCameraManager, IDisposable
+    public class BattleCameraManager : IBattleCameraManager
     {
         [Inject] private IBinaryDataManager _binaryDataManager;
         [Inject] private ObjectSpawner _objectSpawner;
         
         private readonly IMonoAdapter _monoAdapter;
-        private readonly IBattleInputHandler _battleInputHandler;
         // X轴旋转角度限制
         private const float minXAngle = -3f;
         private const float maxXAngle = 3f;
@@ -41,20 +39,22 @@ namespace HotUpdate.Game.Battle.Core
         private float lastDeltaX;
         // 相机起始角度
         private Quaternion _originRot;
+        private IBattleContext _context;
         
         public Camera CurrentActiveCamera { get; private set; }
         
-        public BattleCameraManager(IBattleInputHandler battleInputHandler, 
-            IMonoAdapter monoAdapter, IBattleManager battleManager)
+        public BattleCameraManager(IBattleInputHandler battleInputHandler, IMonoAdapter monoAdapter)
         {
             battleInputHandler.OnDrag += OnDrag;
             battleInputHandler.OnRebound += OnRebound;
-            
-            monoAdapter.AddUpdateListener(OnUpdate);
-            battleManager.GetContext().GetEventBus().AddListener<BattleOverEvent>(OnBattleOverEvent);
-            
-            _battleInputHandler = battleInputHandler;
             _monoAdapter = monoAdapter;
+        }
+
+        public void Init(IBattleContext context)
+        {
+            _monoAdapter.AddUpdateListener(OnUpdate);
+            context.GetEventBus().AddListener<QuitBattleEvent>(OnBattleOverEvent);
+            _context = context;
         }
 
         public async Task<Camera> CreateCamera(Transform cameraTrans, Vector3 localPos, Quaternion localRot)
@@ -198,19 +198,13 @@ namespace HotUpdate.Game.Battle.Core
         /// 战斗结束事件回调
         /// </summary>
         /// <param name="quitBattleEvent"></param>
-        private void OnBattleOverEvent(BattleOverEvent quitBattleEvent)
+        private void OnBattleOverEvent(QuitBattleEvent quitBattleEvent)
         {
-            _battleInputHandler.OnDrag -= OnDrag;
-            _battleInputHandler.OnRebound -= OnRebound;
+            _context.GetEventBus().RemoveListener<QuitBattleEvent>(OnBattleOverEvent);
             _monoAdapter.RemoveUpdateListener(OnUpdate);
-        }
-
-        public void Dispose()
-        {
             _objectSpawner.Release(CurrentActiveCamera);
             CurrentActiveCamera = null;
-            _objectSpawner.Dispose();
-            _objectSpawner = null;
+            _objectSpawner.Clear();
         }
     }
 }

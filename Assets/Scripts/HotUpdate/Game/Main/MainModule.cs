@@ -6,16 +6,6 @@ using HotUpdate.Base.Module;
 using HotUpdate.Base.Scene;
 using HotUpdate.Base.Service;
 using HotUpdate.Game.Activity.Core;
-using HotUpdate.Game.Battle.Object.Monster;
-using HotUpdate.Game.Battle.Object.Role;
-using HotUpdate.Game.Battle.Operation;
-using HotUpdate.Game.Battle.Skill;
-using HotUpdate.Game.Battle.Skill.Conditions;
-using HotUpdate.Game.Battle.Skill.Factory;
-using HotUpdate.Game.Battle.Statuses;
-using HotUpdate.Game.Battle.TargetSelect;
-using HotUpdate.Game.Battle.Toughness;
-using HotUpdate.Game.Battle.UI;
 using HotUpdate.Game.Inputs;
 using HotUpdate.Game.Interact;
 using HotUpdate.Game.Main.FloatingText;
@@ -52,25 +42,17 @@ namespace HotUpdate.Game.Main
             DIContainer.BindSingleton<IQuestManager, QuestManager>();
             // 注册图标服务
             DIContainer.BindType<IIconService, IconService>();
+            BindFactorys();
         }
 
         public Task InitModuleAsync()
         {
-            BindFactorys();
             return Task.CompletedTask;
         }
 
         private static void BindFactorys()
         {
             DIContainer.BindSingleton<IActivityDataFactory, ActivityDataFactory>();
-            DIContainer.BindSingleton<ICastSkillConditionFactory, CastSkillConditionFactory>();
-            DIContainer.BindSingleton<ISkillCastPostHandlerFactory, SkillCastPostHandlerFactory>();
-            DIContainer.BindSingleton<ISkillKeyUIDataProviderFactory, SkillKeyUIDataProviderFactory>();
-            DIContainer.BindSingleton<IStatusFactory, StatusFactory>();
-            DIContainer.BindSingleton<ITargetSelectStrategyFactory, TargetSelectStrategyFactory>();
-            DIContainer.BindSingleton<IToughnessStrategyFactory, ToughnessStrategyFactory>();
-            DIContainer.BindSingleton<IRoleFactory, RoleFactory>();
-            DIContainer.BindSingleton<IMonsterFactory, MonsterFactory>();
             DIContainer.BindSingleton<INpcFactory, NpcFactory>();
         }
     }

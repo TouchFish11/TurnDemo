@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using HotUpdate.Base.Component;
 using HotUpdate.Base.Object;
 using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Battle.Object;

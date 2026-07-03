@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using Core.DI;
 using Core.Serialize.Binary;
 using Core.Utility;
-using HotUpdate.Base.Manager;
 using HotUpdate.Base.UI;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Inputs;
 using HotUpdate.Game.Battle.Layer;
@@ -27,7 +27,7 @@ namespace HotUpdate.Game.Battle.Core
     /// <summary>
     /// 战斗协调器
     /// </summary>
-    public class BattleCoordinator
+    public class BattleCoordinator : IBattleCoordinator
     {
         [Inject] private BattlePointProxy _battlePointProxy;
         [Inject] private ISkillKeyUIDataProviderFactory _skillKeyUIDataProviderFactory;
@@ -44,9 +44,9 @@ namespace HotUpdate.Game.Battle.Core
         // 是否激活战斗输入
         private bool _isActiveInput;
         
-        public IBattleInputHandler BattleInputHandler { get; }
-        public IBattleCameraManager BattleCameraManager { get; private set; }
-        public ITargetSelectManager TargetSelectManager { get; private set; }
+        [Inject] public IBattleInputHandler BattleInputHandler { get; private set; }
+        [Inject] public IBattleCameraManager BattleCameraManager { get; private set; }
+        [Inject] public ITargetSelectManager TargetSelectManager { get; private set; }
         public IBattleContext Context { get; private set; }
 
         /// <summary>
@@ -94,11 +94,6 @@ namespace HotUpdate.Game.Battle.Core
                 }
             }
         }
-        
-        public BattleCoordinator(IBattleInputHandler battleInputHandler)
-        {
-            BattleInputHandler = battleInputHandler;
-        }
 
         /// <summary>
         /// 初始化战斗协调器
@@ -106,10 +101,8 @@ namespace HotUpdate.Game.Battle.Core
         /// <param name="battleContext"></param>
         public void Init(IBattleContext battleContext)
         {
-            Reset();
+            battleContext.GetEventBus().AddListener<QuitBattleEvent>(OnQuitBattleEvent);
             IsActiveTargetSelect = true;
-            BattleCameraManager = DIContainer.Create<IBattleCameraManager>(parameterValues: new object[] { this, BattleInputHandler });
-            TargetSelectManager = DIContainer.Create<ITargetSelectManager>();
             // 初始化角色战斗点，依赖玩家战斗实体对象创建完成
             _battlePointProxy.InitProxy(battleContext, new List<IBattleEntityObject>(battleContext.GetAlivePlayerEntitys()));
             Context = battleContext;
@@ -430,11 +423,12 @@ namespace HotUpdate.Game.Battle.Core
 
             return true;
         }
-        
-        private void Reset()
+
+        private void OnQuitBattleEvent(QuitBattleEvent quitBattleEvent)
         {
             BattleInputHandler.OnLeftDrag -= OnLeftDrag;
             BattleInputHandler.OnRightDrag -= OnRightDrag;
+            Context.GetEventBus().RemoveListener<QuitBattleEvent>(OnQuitBattleEvent);
         }
     }
 }

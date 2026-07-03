@@ -1,5 +1,4 @@
 using Core.UI;
-using HotUpdate.Game.Battle.Object;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,21 +11,20 @@ namespace HotUpdate.UI.Battle.ActionLine
     {
         [InjectUI] private Image imgIcon;
         
-        public IBattleEntityObject BattleEntity { get; private set; }
-        
-        public int Priority { get; private set; }
+        /// <summary>
+        /// 实体对象ID
+        /// </summary>
+        public int BattleEntityId { get; private set; }
 
         /// <summary>
         /// 初始化图标
         /// </summary>
         /// <param name="icon"></param>
-        /// <param name="battleEntity"></param>
-        /// <param name="Priority"></param>
-        public void Init(Sprite icon, IBattleEntityObject battleEntity, int Priority)
+        /// <param name="battleEntityId"></param>
+        public void Init(Sprite icon, int battleEntityId)
         {
             imgIcon.sprite = icon;
-            BattleEntity = battleEntity;
-            this.Priority = Priority;
+            BattleEntityId = battleEntityId;
         }
     }
 }

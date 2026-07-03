@@ -50,18 +50,18 @@ namespace HotUpdate.UI.Battle.Base
         public void RegisterBattleEvents(IBattleEventBus eventBus)
         {
             eventBus.AddListener<CommandExecuteEvent>(OnCommandExecuteEvent);     // 当前指令执行事件
-            eventBus.AddListener<InsertCommandEvent>(OnInsertCommandEvent);     // 指令插入事件
             eventBus.AddListener<SwitchEntityTurnEvent>(OnSwitchEntityTurnEvent);   // 切换实体回合事件
             eventBus.AddListener<TurnEndEvent>(OnTurnEnd);                   // 回合结束事件
             eventBus.AddListener<OnBattlePointCountChangedEvent>(OnBattlePointCountChanged); // 战斗点数变化事件
             eventBus.AddListener<SelectTargetEvent>(OnTargetSelectionChanged);      // 目标选择事件
             eventBus.AddListener<PostCastEvent>(OnPostCastDispatch);    // 监听技能释放后通用逻辑事件
-            eventBus.AddListener<UpdateWaitCmdEvent>(OnUpdateWaitCmdDispatch);  // 监听更新等待队列事件
+            eventBus.AddListener<UpdateWaitUiEvent>(OnUpdateWaitContentDispatch);  // 监听更新等待队列事件
             
             eventBus.AddListener<ApplyDamageEvent>(ApplyTakeDamage);            // 应用伤害事件
             eventBus.AddListener<ApplyShieldEvent>(ApplyShieldChanged);            // 提供护盾事件
             eventBus.AddListener<ApplyHealEvent>(ApplyHealChanged);            // 提供治疗事件
             eventBus.AddListener<ShieldChangedEvent>(OnShieldChanged);       // 护盾值变化事件
+            eventBus.AddListener<HpChangedEvent>(OnHpChangedEvent);       // 血量变化事件
             
             eventBus.AddListener<ClearCumulativeDamageEvent>(OnClearCumulativeDamageEvent);     // 清空累计伤害显示事件
             eventBus.AddListener<PlayerReleaseSkillEvent>(OnPlayerReleaseSkillEvent); // 玩家释放技能事件
@@ -69,26 +69,26 @@ namespace HotUpdate.UI.Battle.Base
             eventBus.AddListener<TurnStartStatusChangedEvent>(OnTurnStartStatusChangedEvent); // 回合开始状态变化事件
             eventBus.AddListener<StatusAddedEvent>(OnStatusAddedEvent);       // 状态添加事件
             eventBus.AddListener<BattleOverEvent>(OnBattleOverEvent);         // 战斗结束事件
-            eventBus.AddListener<MonsterDeadEvent>(OnMonsterDeadEvent);       // 怪物死亡事件
+            eventBus.AddListener<EntityDeadEvent>(OnEntityDeadEvent);       // 怪物死亡事件
 
             _eventBus = eventBus;
         }
 
         private void UnsubscribeBattleEvents()
         {
-            _eventBus.RemoveListener<CommandExecuteEvent>(OnCommandExecuteEvent);     // 指令插入事件
-            _eventBus.RemoveListener<InsertCommandEvent>(OnInsertCommandEvent);     // 指令插入事件
+            _eventBus.RemoveListener<CommandExecuteEvent>(OnCommandExecuteEvent);     // 当前指令执行事件
             _eventBus.RemoveListener<SwitchEntityTurnEvent>(OnSwitchEntityTurnEvent);   // 切换实体回合事件
             _eventBus.RemoveListener<TurnEndEvent>(OnTurnEnd);                   // 回合结束事件
             _eventBus.RemoveListener<OnBattlePointCountChangedEvent>(OnBattlePointCountChanged); // 战斗点数变化事件
             _eventBus.RemoveListener<SelectTargetEvent>(OnTargetSelectionChanged);      // 目标选择事件
             _eventBus.RemoveListener<PostCastEvent>(OnPostCastDispatch);    // 监听技能释放后通用逻辑事件
-            _eventBus.RemoveListener<UpdateWaitCmdEvent>(OnUpdateWaitCmdDispatch);  // 监听更新等待队列事件
+            _eventBus.RemoveListener<UpdateWaitUiEvent>(OnUpdateWaitContentDispatch);  // 监听更新等待队列事件
             
             _eventBus.RemoveListener<ApplyDamageEvent>(ApplyTakeDamage);            // 应用伤害事件
             _eventBus.RemoveListener<ApplyShieldEvent>(ApplyShieldChanged);            // 提供护盾事件
             _eventBus.RemoveListener<ApplyHealEvent>(ApplyHealChanged);            // 提供治疗事件
             _eventBus.RemoveListener<ShieldChangedEvent>(OnShieldChanged);       // 护盾值变化事件
+            _eventBus.RemoveListener<HpChangedEvent>(OnHpChangedEvent);       // 血量变化事件
             
             _eventBus.RemoveListener<ClearCumulativeDamageEvent>(OnClearCumulativeDamageEvent);     // 清空累计伤害显示事件
             _eventBus.RemoveListener<PlayerReleaseSkillEvent>(OnPlayerReleaseSkillEvent); // 玩家释放技能事件
@@ -96,33 +96,17 @@ namespace HotUpdate.UI.Battle.Base
             _eventBus.RemoveListener<TurnStartStatusChangedEvent>(OnTurnStartStatusChangedEvent); // 回合开始状态变化事件
             _eventBus.RemoveListener<StatusAddedEvent>(OnStatusAddedEvent);       // 状态添加事件
             _eventBus.RemoveListener<BattleOverEvent>(OnBattleOverEvent);         // 战斗结束事件
-            _eventBus.RemoveListener<MonsterDeadEvent>(OnMonsterDeadEvent);       // 怪物死亡事件
+            _eventBus.RemoveListener<EntityDeadEvent>(OnEntityDeadEvent);       // 怪物死亡事件
         }
 
         /// <summary>
-        /// 当前执行执行事件
+        /// 当前指令执行事件
         /// </summary>
         /// <param name="commandExecuteEvent"></param>
         private void OnCommandExecuteEvent(CommandExecuteEvent commandExecuteEvent)
         {
             // 更新UI显示，设置当前执行指令的对象的Icon
             _uiManager.SetCurrentCommanderDisplayUI(commandExecuteEvent.CurrentCommand.Sender);
-        }
-        
-        private void OnInsertCommandEvent(InsertCommandEvent insertCommandEvent)
-        {
-            var context = insertCommandEvent.Context;
-            // 只有玩家角色才处理
-            if (context.CurrentTurnOwner is IPlayerObject playerObject)
-            {
-                // 若当前命令执行者不是回合持有者
-                if (context.CurrentCommander != null && context.CurrentCommander != playerObject && !playerObject.OperatorSuspend)
-                {
-                    // 发送占位指令当当前指令执行完毕后继续执行当前回合的角色行动逻辑
-                    playerObject.OperatorSuspend = true;
-                    ((PlayerObject)context.CurrentTurnOwner).SendSuspendCommand();
-                }
-            }
         }
         
         /// <summary>
@@ -132,6 +116,8 @@ namespace HotUpdate.UI.Battle.Base
         private void OnSwitchEntityTurnEvent(SwitchEntityTurnEvent switchEntityTurnEvent)
         {
             _uiManager.SetCurrentCommanderDisplayUI(switchEntityTurnEvent.CurrentBattleEntityObject);
+            // 移除持有当前回合的对象对应的行动格子
+            _uiManager.RemoveActionGrid(switchEntityTurnEvent.CurrentBattleEntityObject);
         }
         
         /// <summary>
@@ -156,14 +142,17 @@ namespace HotUpdate.UI.Battle.Base
         }
 
         /// <summary>
-        /// 怪物死亡事件处理方法
-        /// 隐藏死亡怪物的常规状态UI
+        /// 实体死亡事件处理方法
         /// </summary>
-        /// <param name="monsterDeadEvent">怪物死亡事件数据</param>
-        private void OnMonsterDeadEvent(MonsterDeadEvent monsterDeadEvent)
+        /// <param name="entityDeadEvent">怪物死亡事件数据</param>
+        private void OnEntityDeadEvent(EntityDeadEvent entityDeadEvent)
         {
-            // 调用控制器维护的怪物状态UI管理器对象隐藏死亡的怪物的UI
-            _battleController.MonsterStateUIManager.RemoveNormalMonsterStateUI(monsterDeadEvent.DeadMonster);
+            if (entityDeadEvent.DeadEntity is MonsterObject monsterObject)
+            {
+                // 调用控制器维护的怪物状态UI管理器对象隐藏死亡的怪物的UI
+                _battleController.MonsterStateUIManager.RemoveNormalMonsterStateUI(entityDeadEvent.DeadEntity);
+                _uiManager.RemoveActionGrid(monsterObject);
+            }
         }
 
         /// <summary>
@@ -235,6 +224,14 @@ namespace HotUpdate.UI.Battle.Base
                 _uiManager.ShowShieldText(onShieldChangedEvent.Target, onShieldChangedEvent.DeltaShield);
             }
         }
+
+        private void OnHpChangedEvent(HpChangedEvent hpChangedEvent)
+        {
+            if (!hpChangedEvent.Target.IsDead && hpChangedEvent.CurrentHp <= 0)
+            {
+                _uiManager.RemoveActionGrid(hpChangedEvent.Target);
+            }
+        }
         
         /// <summary>
         /// 玩家释放技能事件处理方法
@@ -298,10 +295,10 @@ namespace HotUpdate.UI.Battle.Base
         /// <summary>
         /// 更新等待队列事件回调
         /// </summary>
-        /// <param name="updateWaitCmdEvent"></param>
-        private void OnUpdateWaitCmdDispatch(UpdateWaitCmdEvent updateWaitCmdEvent)
+        /// <param name="updateWaitUiEvent"></param>
+        private void OnUpdateWaitContentDispatch(UpdateWaitUiEvent updateWaitUiEvent)
         {
-            _uiManager.UpdateWaitingCommmand(updateWaitCmdEvent.CurrentEntity, updateWaitCmdEvent.AddOrRemoveCmd, updateWaitCmdEvent.Priority);
+            _uiManager.UpdateWaitingContent(updateWaitUiEvent.Context, updateWaitUiEvent.DisplayPendingCommands);
         }
 
         /// <summary>

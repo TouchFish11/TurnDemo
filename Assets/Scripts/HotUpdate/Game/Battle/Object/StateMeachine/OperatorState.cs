@@ -1,5 +1,4 @@
 using System.Collections;
-using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Object.Role;
 using UnityEngine;
@@ -79,7 +78,6 @@ namespace HotUpdate.Game.Battle.Object.StateMeachine
             PlayerObject.Context.GetEventBus().RemoveListener<RoleTriggerSkillEvent>(OnCastSkill);
             PlayerObject.Context.GetEventBus().RemoveListener<RoleTriggerUltimateSkillEvent>(OnCastUltimateSkill);
             _coroutine = null;
-            PlayerObject.OperatorSuspend = false;
         }
     }
 }

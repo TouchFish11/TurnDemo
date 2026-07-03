@@ -10,7 +10,6 @@ using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.UI;
 using HotUpdate.UI.Battle.Role;
-using UnityEngine;
 
 namespace HotUpdate.UI.Battle.Base
 {
@@ -76,17 +75,15 @@ namespace HotUpdate.UI.Battle.Base
                     continue;
                 }
                 
-                // 根据战斗实体获取对应的图标名称
-                var iconName = BattleUIManager.GetIconByEntity(battleEntity);
                 // 从图集加载角色图标
-                using var iconHandle = await GameAsset.LoadAssetAsync<Sprite>(iconName);
+                var icon = await _battleController.BattleUiManager.GetIconByEntity(battleEntity);
                 // 获取当前实体的玩家属性组件
                 var playerPropertyComponent = battleEntity.GetComponent<PlayerPropertyComponent>();
                 // 获取角色核心属性数据
                 var roleProperty = playerPropertyComponent.GetProperty<RoleProperty>();
                 
                 // 初始化角色状态UI（传入属性、图标、必杀技ID、战斗实体）
-                roleStateUI.Init(roleProperty, iconHandle.Asset, targetSkillId, battleEntity, _monoAdapter);
+                roleStateUI.Init(roleProperty, icon, targetSkillId, battleEntity, _monoAdapter);
                 // 将初始化后的角色状态UI缓存到数据模型中
                 _view.InitRoleStateUI(roleStateUI);
             }

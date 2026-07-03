@@ -2,6 +2,8 @@ using System;
 using Core.DI;
 using Core.Mono;
 using Core.Serialize.Binary;
+using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Event.Turn;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,11 +14,11 @@ namespace HotUpdate.Game.Battle.Inputs
     /// 负责处理战斗中的鼠标拖拽、点击选择目标、技能释放目标选择等核心输入逻辑
     /// 继承自单例自动挂载 MonoBehaviour 基类，保证全局唯一且自动初始化
     /// </summary>
-    public class BattleInputHandler : IBattleInputHandler, IDisposable
+    public class BattleInputHandler : IBattleInputHandler
     {
         [Inject] private IBinaryDataManager _binaryDataManager;
+        [Inject] private IMonoAdapter _monoAdapter;
         
-        private readonly IMonoAdapter _monoAdapter;
         // 拖拽起始位置（屏幕坐标）
         private Vector3 _dragStartPosition;
         // 是否处于拖拽状态（用于区分点击和拖拽行为）
@@ -27,6 +29,8 @@ namespace HotUpdate.Game.Battle.Inputs
         private float nowDeltaX;
         // 能否输入
         private bool _canInput;
+        // 战斗上下文
+        private IBattleContext _context;
         // 拖拽阈值（超过该距离判定为拖拽，否则为点击）
         private const float dragThreshold = 50f;
         // 激活拖拽的最小偏移
@@ -58,11 +62,17 @@ namespace HotUpdate.Game.Battle.Inputs
         /// </summary>
         public event Action OnClick;
 
-        public BattleInputHandler(IMonoAdapter monoAdapter)
+        private BattleInputHandler()
         {
+
+        }
+
+        public void Init(IBattleContext context)
+        {
+            context.GetEventBus().AddListener<QuitBattleEvent>(OnQuitBattleEvent);
             // 注册帧更新监听，每帧执行输入处理逻辑
-            monoAdapter.AddUpdateListener(OnUpdate);
-            _monoAdapter = monoAdapter;
+            _monoAdapter.AddUpdateListener(OnUpdate);
+            _context = context;
         }
 
         /// <summary>
@@ -160,8 +170,9 @@ namespace HotUpdate.Game.Battle.Inputs
             }
         }
 
-        public void Dispose()
+        private void OnQuitBattleEvent(QuitBattleEvent quitBattleEvent)
         {
+            _context.GetEventBus().RemoveListener<QuitBattleEvent>(OnQuitBattleEvent);
             // 移除帧更新监听
             _monoAdapter.RemoveUpdateListener(OnUpdate);
         }

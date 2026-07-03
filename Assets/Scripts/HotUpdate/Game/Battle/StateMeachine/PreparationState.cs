@@ -18,7 +18,7 @@ namespace HotUpdate.Game.Battle.StateMeachine
     public class PreparationState : BattleState
     {
         [Inject] private IBattleManager _battleManager;
-        [Inject] private BattleCoordinator _battleCoordinator;
+        [Inject] private IBattleCoordinator _battleCoordinator;
         [Inject] private IMonoAdapter _monoAdapter;
         
         public PreparationState(IBattleStateMachine battleStateMachine, IBattleContext context) : base(battleStateMachine, context)

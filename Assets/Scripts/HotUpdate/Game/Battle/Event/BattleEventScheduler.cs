@@ -24,27 +24,30 @@ namespace HotUpdate.Game.Battle.Event
     /// 战斗事件逻辑调度器
     /// 监听复杂战斗事件，执行其它模块的统一调用
     /// </summary>
-    public class BattleEventScheduler : IBattleEventScheduler, IDisposable
+    public class BattleEventScheduler : IBattleEventScheduler
     {
         [Inject] private IBinaryDataManager _binaryDataManager;
         [Inject] private BattleCoordinator _battleCoordinator;
         [Inject] private ISkillKeyUIDataProviderFactory _skillKeyUIDataProviderFactory;
         [Inject] private IUIService _uiService;
-
-        public BattleEventScheduler(IBattleContext context)
-        {
-            // 监听战斗事件
-            ListenerBattleEvent(context);
-        }
         
-        private void ListenerBattleEvent(IBattleContext context)
+        private IBattleContext _context;
+
+        private BattleEventScheduler()
         {
+
+        }
+
+        public void Init(IBattleContext context)
+        {
+            context.GetEventBus().AddListener<QuitBattleEvent>(OnQuitBattleEvent);
             // 监听回合开始事件
             context.GetEventBus().AddListener<TurnStartEvent>(OnTurnStartDispatch);
             // 监听角色技能选择事件
             context.GetEventBus().AddListener<SelectSkillEvent>(SelectSkillEventScheduler);
             // 监听玩家角色终结技释放后通用逻辑事件
             context.GetEventBus().AddListener<UltimateCastEvent>(OnUltimateCastDispatch);
+            _context = context;
         }
         
         /// <summary>
@@ -166,15 +169,16 @@ namespace HotUpdate.Game.Battle.Event
             }
         }
         
-        public void Dispose()
+        private void OnQuitBattleEvent(QuitBattleEvent quitBattleEvent)
         {
+            _context.GetEventBus().RemoveListener<QuitBattleEvent>(OnQuitBattleEvent);
             // 监听回合开始事件
-            _battleCoordinator.Context.GetEventBus().RemoveListener<TurnStartEvent>(OnTurnStartDispatch);
+            _context.GetEventBus().RemoveListener<TurnStartEvent>(OnTurnStartDispatch);
             // 监听角色技能选择事件
-            _battleCoordinator.Context.GetEventBus().RemoveListener<SelectSkillEvent>(SelectSkillEventScheduler);
+            _context.GetEventBus().RemoveListener<SelectSkillEvent>(SelectSkillEventScheduler);
             // 监听技能释放后通用逻辑事件
-            _battleCoordinator.Context.GetEventBus().RemoveListener<UltimateCastEvent>(OnUltimateCastDispatch);
-            _battleCoordinator = null;
+            _context.GetEventBus().RemoveListener<UltimateCastEvent>(OnUltimateCastDispatch);
+            _context = null;
         }
     }
 }

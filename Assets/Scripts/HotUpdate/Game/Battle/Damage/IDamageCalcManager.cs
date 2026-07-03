@@ -1,5 +1,6 @@
 using HotUpdate.Base;
 using HotUpdate.Common.Config.ExcelInfo.Info;
+using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.Damage
@@ -17,5 +18,7 @@ namespace HotUpdate.Game.Battle.Damage
         /// <param name="skillInfo"></param>
         /// <param name="damageResult"></param>
         void CalcSkillDamage(IBattleEntityObject source, IBattleEntityObject target, SkillInfo skillInfo, out DamageResult damageResult);
+
+        void Init(IBattleContext context);
     }
 }

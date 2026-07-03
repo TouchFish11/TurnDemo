@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Core.DI;
 using Core.Log;
@@ -8,6 +7,7 @@ using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage.Data;
 using HotUpdate.Game.Battle.Damage.Strategys;
 using HotUpdate.Game.Battle.Event.General;
+using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Utility;
 
@@ -16,15 +16,20 @@ namespace HotUpdate.Game.Battle.Damage
     /// <summary>
     /// 伤害计算管理器
     /// </summary>
-    public class DamageCalcManager : IDamageCalcManager, IDisposable
+    public class DamageCalcManager : IDamageCalcManager
     {
         // 伤害计算策略缓存
         private readonly Dictionary<E_DamageType, IDamageStrategy> _strategys = new();
         private IBattleContext context;
         
-        public DamageCalcManager(IBattleContext context)
+        private DamageCalcManager()
         {
-            this.context = context;
+
+        }
+
+        public void Init(IBattleContext context)
+        {
+            context.GetEventBus().AddListener<QuitBattleEvent>(OnQuitBattleEvent);
             // 注册策略
             _strategys.Add(E_DamageType.Direct, DIContainer.Create<DirectDamageStrategy>());
             _strategys.Add(E_DamageType.Dot, DIContainer.Create<DotDamageStrategy>());
@@ -35,8 +40,9 @@ namespace HotUpdate.Game.Battle.Damage
             context.GetEventBus().AddListener<ToughnessBrokenEvent>(OnToughnessBrokenEvent);
             // 监听Dot事件
             context.GetEventBus().AddListener<CalcDotDamageEvent>(OnCalcDotDamageEvent);
+            this.context = context;
         }
-
+        
         /// <summary>
         /// 计算技能伤害
         /// </summary>
@@ -117,8 +123,9 @@ namespace HotUpdate.Game.Battle.Damage
             }
         }
 
-        public void Dispose()
+        private void OnQuitBattleEvent(QuitBattleEvent quitBattleEvent)
         {
+            context.GetEventBus().RemoveListener<QuitBattleEvent>(OnQuitBattleEvent);
             _strategys.Clear();
             // 取消监听击破事件
             context.GetEventBus().RemoveListener<ToughnessBrokenEvent>(OnToughnessBrokenEvent);

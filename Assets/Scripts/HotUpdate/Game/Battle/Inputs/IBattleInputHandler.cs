@@ -1,4 +1,5 @@
 using System;
+using HotUpdate.Game.Battle.Context;
 
 namespace HotUpdate.Game.Battle.Inputs
 {
@@ -33,5 +34,7 @@ namespace HotUpdate.Game.Battle.Inputs
         void SetInputState(bool activeInput);
 
         event Action OnClick;
+        
+        void Init(IBattleContext context);
     }
 }

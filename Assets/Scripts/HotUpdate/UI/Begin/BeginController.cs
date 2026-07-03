@@ -23,7 +23,9 @@ namespace HotUpdate.UI.Begin
         [Inject] private readonly IAssetBundleUpdater _assetBundleUpdater;
         [Inject] private IUIService _uiService;
         private string _speed;
-        
+
+        protected override bool IsCursorVisible => true;
+
         /// <summary>
         /// 点击进入游戏事件
         /// </summary>

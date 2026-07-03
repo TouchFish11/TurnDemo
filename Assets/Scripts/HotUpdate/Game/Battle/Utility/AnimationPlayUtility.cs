@@ -44,7 +44,7 @@ namespace HotUpdate.Game.Battle.Utility
         {
             battleAnimationComponent.SetAnimationState(type);
             yield return new WaitUntil(() => battleAnimationComponent.GetCurrentAnimatorStateInfo(layerName).IsName(((E_AnimationType)type).ToString()));
-            yield return new WaitUntil(() => battleAnimationComponent.GetCurrentAnimatorStateInfo(layerName).normalizedTime >= 0.9);
+            yield return new WaitUntil(() => battleAnimationComponent.GetCurrentAnimatorStateInfo(layerName).normalizedTime >= 1);
             playOver?.Invoke();
         }
     }

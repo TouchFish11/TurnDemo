@@ -1,15 +1,18 @@
 using System.Collections;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.UI;
 
 namespace HotUpdate.Game.Battle.Command
 {
     /// <summary>
     /// 战斗指令基类
     /// </summary>
-    public abstract class Command : ICommand
+    public abstract class Command : ICommand, IDisplayPendingExecution
     {
         public IBattleEntityObject Sender { get; protected set; }
+        
+        public IBattleEntityObject BattleEntity => Sender;
 
         public abstract int Priority { get; protected set; }
 

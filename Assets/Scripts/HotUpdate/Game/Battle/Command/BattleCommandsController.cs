@@ -1,14 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using Core.DI;
-using HotUpdate.Base.Manager;
 using HotUpdate.Base.UI;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Event.Turn;
-using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.StateMeachine;
+using HotUpdate.Game.Battle.UI;
 
 namespace HotUpdate.Game.Battle.Command
 {
@@ -22,6 +21,7 @@ namespace HotUpdate.Game.Battle.Command
         [Inject] private IBattleCameraManager _battleCameraManager;
         [Inject] private IBattleManager _battleManager;
         
+        // TODO:放到战斗上下文中，外部需要获取到指令列表，处理等待列表UI显示的问题
         // 战斗指令列表，存储待执行的战斗指令
         private readonly List<ICommand> _battleCommands = new();
         // 回合循环状态
@@ -53,7 +53,7 @@ namespace HotUpdate.Game.Battle.Command
                 TakeFirst();
                 yield return ExecuteInternal();
                 // 执行完指令后的处理逻辑
-                yield return OnPostCommandExcute();
+                ExcuteCommandEnd();
                 // 判断是否退出战斗
                 if (_isQuit) 
                     yield break;
@@ -67,14 +67,14 @@ namespace HotUpdate.Game.Battle.Command
 
         private IEnumerator ExecuteInternal()
         {
-            // 压入执行者栈
-            _battleContext.PushCommander(_currentCommand.Sender);
+            // 记录当前执行命令的对象
+            _battleContext.CurrentCommander = _currentCommand.Sender;
             // 触发当前指令执行事件
             _battleContext.GetEventBus().TriggerEvent(new CommandExecuteEvent(_battleContext, _currentCommand));
             // 执行当前指令
             yield return _currentCommand.Execute(_battleContext);
-            // 弹出执行者栈
-            _battleContext.PopCommander();
+            // 重置为空
+            _battleContext.CurrentCommander = null;
         }
 
         /// <summary>
@@ -82,10 +82,10 @@ namespace HotUpdate.Game.Battle.Command
         /// 清理死亡怪物、检查战斗结束状态、过滤无效指令
         /// </summary>
         /// <returns></returns>
-        private IEnumerator OnPostCommandExcute()
+        private void ExcuteCommandEnd()
         {
             // 移除战斗中死亡的怪物
-            yield return _turnLoopState.RemoveDeadMonster();
+            _turnLoopState.HandleDeadEntity();
             // 检查当前波次是否结束，并更新退出标记
             _isQuit = _turnLoopState.CheckWaveOver();
             if (_isQuit)
@@ -109,11 +109,12 @@ namespace HotUpdate.Game.Battle.Command
                 var cmd =  _battleCommands[i];
                 if (!cmd.IsValid)
                 {
-                    // 更新UI：刷新等待指令的显示列表
-                    _battleContext.GetEventBus().TriggerEvent(new UpdateWaitCmdEvent(_battleContext, cmd.Sender, cmd.Priority, false));
                     _battleCommands.RemoveAt(i);
                 }
             }
+            
+            // 更新UI：刷新等待指令的显示列表
+            _battleContext.GetEventBus().TriggerEvent(new UpdateWaitUiEvent(_battleContext, GetDisplayPendingCmds()));
         }
 
         /// <summary>
@@ -141,6 +142,13 @@ namespace HotUpdate.Game.Battle.Command
             {
                 // 当前无执行指令，直接执行新指令
                 _currentCommand = command;
+                // 这是插队命令，将当前行动回合的角色显示到等待列表中
+                if (command.Sender != _battleContext.CurrentTurnOwner)
+                {
+                    // 更新等待列表UI
+                    _battleContext.GetEventBus().TriggerEvent(new UpdateWaitUiEvent(_battleContext, GetDisplayPendingCmds()));
+                }
+                
                 return;
             }
 
@@ -148,8 +156,8 @@ namespace HotUpdate.Game.Battle.Command
             _battleCommands.Add(command);
             // 按指令优先级重新排序列表
             SortCommand();
-            // 更新UI：刷新等待指令的显示列表
-            _battleContext.GetEventBus().TriggerEvent(new UpdateWaitCmdEvent(_battleContext, command.Sender, command.Priority, true));
+            // 更新等待列表UI
+            _battleContext.GetEventBus().TriggerEvent(new UpdateWaitUiEvent(_battleContext, GetDisplayPendingCmds()));
         }
 
         /// <summary>
@@ -158,10 +166,7 @@ namespace HotUpdate.Game.Battle.Command
         /// </summary>
         public void RemoveFirst()
         {
-            var firstCommand = _battleCommands[0];
             _battleCommands.RemoveAt(0);
-            // 更新UI：刷新等待指令的显示列表
-            _battleContext.GetEventBus().TriggerEvent(new UpdateWaitCmdEvent(_battleContext, firstCommand.Sender, firstCommand.Priority, false));
         }
 
         /// <summary>
@@ -194,14 +199,9 @@ namespace HotUpdate.Game.Battle.Command
         /// 用于UI层显示等待执行指令的实体列表
         /// </summary>
         /// <returns>指令发送者（战斗实体）列表</returns>
-        public List<IBattleEntityObject> GetCommandSenders()
+        public List<IDisplayPendingExecution> GetDisplayPendingCmds()
         {
-            var battleEntities = new List<IBattleEntityObject>(_battleCommands.Count);
-            foreach (var command in _battleCommands)
-            {
-                battleEntities.Add(command.Sender);
-            }
-            return battleEntities;
+            return _battleCommands.ConvertAll(cmd => (IDisplayPendingExecution)cmd);
         }
     }
 }

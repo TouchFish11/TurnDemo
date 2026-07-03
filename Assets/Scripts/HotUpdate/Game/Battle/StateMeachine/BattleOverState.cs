@@ -28,7 +28,7 @@ namespace HotUpdate.Game.Battle.StateMeachine
         private void BattleOver()
         {
             // 切换为正常倍速
-            _timerManager.SetTimeRate(E_TimeRate.Normal);
+            _timerManager.SetTimeRate(ETimeRate.Normal);
             // 触发战斗结束事件
             Context.GetEventBus().TriggerEvent(new BattleOverEvent(Context));
         }

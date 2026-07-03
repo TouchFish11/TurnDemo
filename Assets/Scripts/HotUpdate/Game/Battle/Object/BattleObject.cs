@@ -5,11 +5,13 @@ using HotUpdate.Game.Battle.Command;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Event.General;
+using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.ResponsibilityChain;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Conditions;
 using HotUpdate.Game.Battle.TargetSelect;
+using HotUpdate.Game.Battle.UI;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.Object
@@ -18,7 +20,7 @@ namespace HotUpdate.Game.Battle.Object
     /// 战斗对象基类
     /// 所有参与战斗的实体（角色、怪物、NPC等）的抽象基类，实现了战斗实体核心接口，定义战斗行为规范
     /// </summary>
-    public abstract class BattleObject : EntityObject, IBattleEntityObject, IDamagable
+    public abstract class BattleObject : EntityObject, IBattleEntityObject, IDamagable, IDisplayPendingExecution
     {
         // 技能释放条件工厂
         protected ICastSkillConditionFactory castSkillConditionFactory;
@@ -66,6 +68,8 @@ namespace HotUpdate.Game.Battle.Object
         public abstract ICastSkillCondition DefaultCastCondition { get; protected set;}
         
         public abstract ITargetSelectStrategy DefaultTargetSelectStrategy { get; protected set;}
+
+        public IBattleEntityObject BattleEntity => this;
 
         /// <summary>
         /// 是否死亡（当前血量≤0判定为死亡）
@@ -140,6 +144,8 @@ namespace HotUpdate.Game.Battle.Object
 
         public IEnumerator Die()
         {
+            // 触发实体死亡事件
+            Context.GetEventBus().TriggerEvent(new EntityDeadEvent(Context, this));
             yield return deathHandler.HandleDeath();
         }
         

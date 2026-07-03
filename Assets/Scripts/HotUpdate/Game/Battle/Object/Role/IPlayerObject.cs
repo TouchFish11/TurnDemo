@@ -15,11 +15,6 @@ namespace HotUpdate.Game.Battle.Object.Role
         EActPhase CurrentActPhase { get; set; }
         
         /// <summary>
-        /// 当前持有回合的角色操作状态是否挂起
-        /// </summary>
-        bool OperatorSuspend { get; set; }
-        
-        /// <summary>
         /// 角色战斗初始化
         /// </summary>
         /// <param name="initData"></param>

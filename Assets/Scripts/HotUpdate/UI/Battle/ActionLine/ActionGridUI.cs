@@ -32,7 +32,9 @@ namespace HotUpdate.UI.Battle.ActionLine
         // 闪烁动画的速度
         [SerializeField] private float falshSpeed = 1.5f;
         // 格子滑动速度
-        [SerializeField] private float slidingSpeed = 6f;
+        [SerializeField] private float slidingSpeed = 5f;
+        // 格子间间隙
+        [SerializeField] private float space = 10f;
         
         // 选中框的矩形变换组件
         private RectTransform imgSelectRect;
@@ -44,12 +46,10 @@ namespace HotUpdate.UI.Battle.ActionLine
         private float time;
         // 选中框的初始本地位置（用于位移动画复位）
         private Vector3 initLocalPos;
-        // 是否为第一个行动格子（用于区分缩放）
-        private bool isFirstGrid;
-        // 父对象content
-        private VerticalLayoutGroup _actionBarContent;
         // 起始Y坐标
         private float _startY;
+        // 基础的Y坐标偏移
+        private float _baseOffsetY;
         // 滑动到的目标Y
         private float _targetY;
         // 当前索引
@@ -82,7 +82,7 @@ namespace HotUpdate.UI.Battle.ActionLine
             imgSelectRect = imgSelect.rectTransform;
             initLocalPos = imgSelectRect.localPosition;
 
-            _rectTransform = this.transform as RectTransform;
+            _rectTransform = transform as RectTransform;
             
             // 初始状态隐藏选中框和闪烁特效
             imgSelect.gameObject.SetActive(false);
@@ -103,15 +103,18 @@ namespace HotUpdate.UI.Battle.ActionLine
         /// 初始化UI数据
         /// </summary>
         /// <param name="icon">格子显示的图标</param>
+        /// <param name="startX"></param>
+        /// <param name="startY"></param>
         /// <param name="targetIndex"></param>
         /// <param name="battleEntity">绑定的战斗实体</param>
-        /// <param name="parent"></param>
-        public void Init(Sprite icon, int targetIndex, IBattleEntityObject battleEntity, RectTransform parent)
+        public void Init(Sprite icon, float startX, float startY, int targetIndex, IBattleEntityObject battleEntity)
         {
-            this.BattleEntity = battleEntity;
+            BattleEntity = battleEntity;
             imgIcon.sprite = icon;
-            _actionBarContent = parent.GetComponent<VerticalLayoutGroup>();
             _rectTransform.SetSiblingIndex(targetIndex);
+            var initY = startY + targetIndex * -(_rectTransform.rect.height + space);
+            _rectTransform.anchoredPosition = new Vector2(startX, initY);
+            _baseOffsetY = startY;
         }
         
         /// <summary>
@@ -121,11 +124,20 @@ namespace HotUpdate.UI.Battle.ActionLine
         public void CheckSelect(IBattleEntityObject battleEntity)
         {
             // 判断当前格子绑定的实体是否为选中实体
-            IsSelect = this.BattleEntity == battleEntity;
+            IsSelect = BattleEntity == battleEntity;
             // 设置闪烁特效状态
             SetFlashing();
             // 设置选中框状态
             SetSelecting();
+        }
+
+        /// <summary>
+        /// 设置格子图标
+        /// </summary>
+        /// <param name="icon"></param>
+        public void SetIcon(Sprite icon)
+        {
+            imgIcon.sprite = icon;
         }
 
         /// <summary>
@@ -143,11 +155,12 @@ namespace HotUpdate.UI.Battle.ActionLine
         /// <param name="targetIndex"></param>
         public void SetSlideTarget(int targetIndex)
         {
-            _targetY = targetIndex * -(_rectTransform.rect.height + _actionBarContent.spacing);
+            _targetY = _baseOffsetY + targetIndex * -(_rectTransform.rect.height + space);
             _slidingTime = 0;
             _isSliding = true;
             _startY = _rectTransform.anchoredPosition.y;
             _currentIndex = targetIndex;
+            _rectTransform.SetSiblingIndex(_currentIndex);
         }
 
         /// <summary>
@@ -165,7 +178,6 @@ namespace HotUpdate.UI.Battle.ActionLine
             if (Mathf.Approximately(_rectTransform.anchoredPosition.y, _targetY))
             {
                 _isSliding = false;
-                _rectTransform.SetSiblingIndex(_currentIndex);
             }
         }
 

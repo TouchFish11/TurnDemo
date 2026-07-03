@@ -16,11 +16,11 @@ namespace HotUpdate.Game.Battle.Property
         private readonly Dictionary<E_PropertyBonusType, int> _bonusToValueMap = new();
         // 当前战斗实体的核心属性容器
         protected BattleProperty battleProperty;
-
+        
         /// <summary>
         /// 战斗实体是否死亡标识
         /// </summary>
-        public bool IsDeath { get; protected set; }
+        public bool IsDeath => battleProperty.CurrentHp == 0;
         
         /// <summary>
         /// 设置动态属性值（会触发对应属性变更事件）

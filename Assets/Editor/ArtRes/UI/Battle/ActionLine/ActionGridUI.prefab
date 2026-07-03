@@ -113,7 +113,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 77.987, y: -35}
-  m_SizeDelta: {x: 130, y: 60}
+  m_SizeDelta: {x: 191.56, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &890339993854061349
 CanvasRenderer:
@@ -138,7 +138,8 @@ MonoBehaviour:
   moveRange: 3
   moveSpeed: 5
   falshSpeed: 1.5
-  slidingSpeed: 6
+  slidingSpeed: 5
+  space: 10
 --- !u!1 &4441154039650325763
 GameObject:
   m_ObjectHideFlags: 0
@@ -823,7 +824,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.7921569}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.9647059}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

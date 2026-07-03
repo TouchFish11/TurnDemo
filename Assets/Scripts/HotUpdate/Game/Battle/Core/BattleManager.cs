@@ -7,8 +7,10 @@ using Core.UI;
 using HotUpdate.Base.Scene;
 using HotUpdate.Base.UI;
 using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Event;
 using HotUpdate.Game.Battle.Event.Turn;
+using HotUpdate.Game.Battle.Inputs;
 using HotUpdate.Game.Battle.Turn;
 using HotUpdate.Game.Inputs;
 using UnityEngine.SceneManagement;
@@ -25,6 +27,10 @@ namespace HotUpdate.Game.Battle.Core
         [Inject] private IMouseManager _mouseManager;
         [Inject] private IPoolManager _poolManager;
         [Inject] private IUIService _uiService;
+        [Inject] private IBattleEventScheduler battleEventScheduler;
+        [Inject] private IDamageCalcManager damageCalcManager;
+        [Inject] private IBattleInputHandler battleInputHandler;
+        [Inject] private BattleCameraManager battleCameraManager;
         
         // 战斗上下文
         private IBattleContext _context;
@@ -62,12 +68,18 @@ namespace HotUpdate.Game.Battle.Core
             await _sceneGenerator.InitSceneAsync(AssetKeys.LevelScene, LoadSceneMode.Single, battleLoadingController.UpdateProgress);
             // 隐藏主界面
             await _uiService.CloseAsync(_uiService.GetPanel(EUIPanelId.MainPanel).PanelId, false);
-            // 创建战斗上下文，依赖战斗点代理
+            // 创建战斗上下文
             _context = DIContainer.Create<BattleContext>();
+            // 初始化战斗状态机
             _context.InitStateMachine();
-            DIContainer.Create<BattleEventScheduler>(parameterValues: _context);
+            // 初始化战斗事件调度器
+            battleEventScheduler.Init(_context);
+            damageCalcManager.Init(_context);
+            battleInputHandler.Init(_context);
+            battleCameraManager.Init(_context);
             // 监听战斗退出事件
             _context.GetEventBus().AddListener<QuitBattleEvent>(OnQuitBattleEvent);
+            // 创建战斗服务
             _battleService ??= DIContainer.Create<BattleService>(parameterValues: new object[] { this, _context });
             // 重新初始化
             _creator.Init(_context, waveDatas);
@@ -98,6 +110,7 @@ namespace HotUpdate.Game.Battle.Core
         {
             try
             {
+                _context.GetEventBus().RemoveListener<QuitBattleEvent>(OnQuitBattleEvent);
                 // 创建黑背景界面遮挡
                 var controller = await _uiService.OpenAsync(EUIPanelId.BlackBackPanel, E_UILayer.Bot);
                 // 强制不可见，暂时这样处理，正常流程Bug：battleLoadingController销毁时未正确释放

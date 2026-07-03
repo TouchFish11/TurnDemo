@@ -38,12 +38,12 @@ namespace Core.Time
         // 不受游戏时间影响的协程等待对象（复用避免重复创建）
         private readonly WaitForSecondsRealtime _WaitForSecondsRealTime = new(IntervalTime);
         // 当前全局时间流速（控制TimeScale）
-        private E_TimeRate _timeRate;
+        private ETimeRate _timeRate;
         
         private TimerManager(IMonoAdapter monoAdapter, IPoolManager poolManager)
         {
             // 初始化时间流速为正常速度
-            _timeRate = E_TimeRate.Normal;
+            _timeRate = ETimeRate.Normal;
             // 启动受游戏时间影响的定时器轮询协程
             _coroutine = monoAdapter.StartCoroutine(StartTiming(false, _timerDic));
             // 启动不受游戏时间影响的定时器轮询协程
@@ -203,16 +203,16 @@ namespace Core.Time
             return _timerDic.TryGetValue(id, out var timer) ? timer : _realTimerDic.GetValueOrDefault(id);
         }
 
-        public void SetTimeRate(E_TimeRate timeRate)
+        public void SetTimeRate(ETimeRate timeRate)
         {
             // 非恢复/非零速时，更新本地枚举并设置TimeScale
-            if (timeRate != E_TimeRate.Recovery && timeRate != E_TimeRate.Zero)
+            if (timeRate != ETimeRate.Recovery && timeRate != ETimeRate.Zero)
             {
                 _timeRate = timeRate;
                 TimeUtil.Timescale = (int)_timeRate;
             }
             // 恢复时间流速时，直接设置TimeScale为恢复值
-            else if(timeRate == E_TimeRate.Recovery)
+            else if(timeRate == ETimeRate.Recovery)
             {
                 TimeUtil.Timescale = (int)_timeRate;
             }
