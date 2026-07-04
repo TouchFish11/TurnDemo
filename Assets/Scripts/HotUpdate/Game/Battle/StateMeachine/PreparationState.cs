@@ -36,7 +36,7 @@ namespace HotUpdate.Game.Battle.StateMeachine
 
                 // TODO：暂时写死，可根据配置优化
                 // 创建并缓存战斗角色
-                await _battleManager.GetBattleService().CreatePlayerRoles(1,2,3);
+                await _battleManager.BattleService.CreatePlayerRoles(1,2,3);
                 // 初始化战斗协调器
                 _battleCoordinator.Init(Context);
                 // 初始化角色UI
@@ -44,7 +44,7 @@ namespace HotUpdate.Game.Battle.StateMeachine
                 // 更新战技点UI
                 await battleController.BattleUiManager.UpdateBattlePointCount(Context.CurentBattlePointCount, Context.MaxBattlePointCount);
                 // 更新波次
-                await TaskUtility.WaitForCoroutine(_battleManager.GetBattleService().UpdateWave(), _monoAdapter);
+                await TaskUtility.WaitForCoroutine(_battleManager.BattleService.UpdateWave(), _monoAdapter);
                 // 隐藏加载界面
                 await uiService.CloseAsync(uiService.GetPanel(EUIPanelId.BattleLoadingkPanel).PanelId, true);
 

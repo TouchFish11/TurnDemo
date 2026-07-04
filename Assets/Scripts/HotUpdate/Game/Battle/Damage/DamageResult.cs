@@ -1,6 +1,8 @@
 using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.Property;
+using HotUpdate.Game.Battle.Skill;
 
-namespace HotUpdate.Base
+namespace HotUpdate.Game.Battle.Damage
 {
     /// <summary>
     /// 伤害结果结构体

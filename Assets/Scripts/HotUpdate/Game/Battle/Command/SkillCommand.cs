@@ -2,6 +2,7 @@ using System.Collections;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Event.Skill;
 using HotUpdate.Game.Battle.Skill;
+using HotUpdate.Game.Battle.Skill.Base;
 
 namespace HotUpdate.Game.Battle.Command
 {
@@ -32,7 +33,7 @@ namespace HotUpdate.Game.Battle.Command
         public override IEnumerator Execute(IBattleContext context)
         {
             yield return Skill.Cast(context);
-            Sender.Context.GetEventBus().TriggerEvent(new PostCastEvent(Sender.Context));
+            Sender.Context.EventBus.TriggerEvent(new PostCastEvent(Sender.Context));
         }
 
         public override IEnumerator ExcutePostProcess(IBattleContext context)

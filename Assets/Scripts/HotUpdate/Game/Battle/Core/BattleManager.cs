@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.DI;
+using Core.Mono;
 using Core.Pool;
 using Core.UI;
 using HotUpdate.Base.Scene;
 using HotUpdate.Base.UI;
+using HotUpdate.Game.Battle.Command;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Event;
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Inputs;
+using HotUpdate.Game.Battle.TargetSelect;
 using HotUpdate.Game.Battle.Turn;
 using HotUpdate.Game.Inputs;
 using UnityEngine.SceneManagement;
@@ -30,17 +33,16 @@ namespace HotUpdate.Game.Battle.Core
         [Inject] private IBattleEventScheduler battleEventScheduler;
         [Inject] private IDamageCalcManager damageCalcManager;
         [Inject] private IBattleInputHandler battleInputHandler;
-        [Inject] private BattleCameraManager battleCameraManager;
+        [Inject] private IBattleCameraManager battleCameraManager;
+        [Inject] private IBattleCommandsController battleCommandsController;
+        [Inject] private ITargetSelectManager targetSelectManager;
         
-        // 战斗上下文
-        private IBattleContext _context;
-        // 回合创建器
-        private WaveCreator _creator;
-        // 战斗服务对象
-        private BattleService _battleService;
+        public WaveCreator WaveCreator { get; private set; }
+        
+        public BattleService BattleService { get; private set; }
         
         /// <summary>
-        /// 战斗结束事件
+        /// 战斗结束委托
         /// </summary>
         private Func<BattleResult, Task> OnBattleOver;
         
@@ -52,8 +54,6 @@ namespace HotUpdate.Game.Battle.Core
         /// <param name="onBattleOver">在结束后执行回调，一般用于恢复场景、UI逻辑</param>
         public async Task EnterBattle(List<WaveData> waveDatas, Func<Task> OnpreEnter, Func<BattleResult, Task> onBattleOver)
         {
-            _creator ??= DIContainer.Create<WaveCreator>(parameterValues: this);
-            
             // 缓存战斗结束回调
             OnBattleOver = onBattleOver;
             // 创建战斗加载界面
@@ -68,38 +68,37 @@ namespace HotUpdate.Game.Battle.Core
             await _sceneGenerator.InitSceneAsync(AssetKeys.LevelScene, LoadSceneMode.Single, battleLoadingController.UpdateProgress);
             // 隐藏主界面
             await _uiService.CloseAsync(_uiService.GetPanel(EUIPanelId.MainPanel).PanelId, false);
+            
             // 创建战斗上下文
-            _context = DIContainer.Create<BattleContext>();
-            // 初始化战斗状态机
-            _context.InitStateMachine();
-            // 初始化战斗事件调度器
-            battleEventScheduler.Init(_context);
-            damageCalcManager.Init(_context);
-            battleInputHandler.Init(_context);
-            battleCameraManager.Init(_context);
+            var context = DIContainer.Create<BattleContext>();
+            var battleEventBus = DIContainer.Create<BattleEventBus>();
+            var battleStateMachine = DIContainer.Create<BattleStateMachine>(parameterValues: context);
+            context.Init(battleEventBus, battleStateMachine);
             // 监听战斗退出事件
-            _context.GetEventBus().AddListener<QuitBattleEvent>(OnQuitBattleEvent);
+            context.EventBus.AddListener<QuitBattleEvent>(OnQuitBattleEvent);
+            
+            // 初始化各个战斗管理器
+            battleEventScheduler.Init(context);
+            damageCalcManager.Init(context);
+            battleInputHandler.Init(context);
+            battleCameraManager.Init(context);
+            battleCommandsController.Init(context, this);
+            targetSelectManager.Init(context);
+            
             // 创建战斗服务
-            _battleService ??= DIContainer.Create<BattleService>(parameterValues: new object[] { this, _context });
-            // 重新初始化
-            _creator.Init(_context, waveDatas);
+            BattleService ??= DIContainer.Create<BattleService>();
+            BattleService.Init(this, context);
+            // 创建WaveCreator并初始化
+            WaveCreator ??= DIContainer.Create<WaveCreator>(parameterValues: this);
+            WaveCreator.Init(context, waveDatas);
+            
             // 开始战斗
-            _context.GetStateMachine().StartBattle();
-        }
-        
-        public IBattleContext GetContext()
-        {
-            return _context;
-        }
-
-        public IWaveCreator GetWaveCreator()
-        {
-            return _creator;
+            context.BattleMachine.StartBattle();
         }
 
         public BattleService GetBattleService()
         {
-            return  _battleService;
+            return  BattleService;
         }
         
         /// <summary>
@@ -110,7 +109,8 @@ namespace HotUpdate.Game.Battle.Core
         {
             try
             {
-                _context.GetEventBus().RemoveListener<QuitBattleEvent>(OnQuitBattleEvent);
+                var context = quitBattleEvent.Context;
+                context.EventBus.RemoveListener<QuitBattleEvent>(OnQuitBattleEvent);
                 // 创建黑背景界面遮挡
                 var controller = await _uiService.OpenAsync(EUIPanelId.BlackBackPanel, E_UILayer.Bot);
                 // 强制不可见，暂时这样处理，正常流程Bug：battleLoadingController销毁时未正确释放
@@ -118,7 +118,7 @@ namespace HotUpdate.Game.Battle.Core
                 // 销毁战斗界面
                 await _uiService.CloseAsync(quitBattleEvent.BattleUIController.PanelId, true);
                 // 清理战斗数据
-                _context.CleanupBattle();
+                ClearBattle(context);
                 // 执行战斗结束回调，在背景界面销毁前执行
                 if (OnBattleOver != null)
                 {
@@ -132,6 +132,27 @@ namespace HotUpdate.Game.Battle.Core
             {
                 Logger.LogError($"{nameof(BattleManager)}: Battle quit error,{e.Message}");
             }
+        }
+
+        /// <summary>
+        /// 清理战斗数据缓存
+        /// </summary>
+        /// <param name="context"></param>
+        private void ClearBattle(IBattleContext context)
+        {
+            // 销毁所有实体 GameObject
+            foreach (var entity in context.AllBattleEntity)
+            {
+                entity.Destroy();
+                EngineUtility.Destroy(entity.GameObject);
+            }
+            // 销毁状态机
+            context.BattleMachine.Dispose();
+            // 清空事件总线
+            context.EventBus.Clear();
+            context.CleanData();
+            // 清空缓存池
+            _poolManager.ClearAll();
         }
     }
 }

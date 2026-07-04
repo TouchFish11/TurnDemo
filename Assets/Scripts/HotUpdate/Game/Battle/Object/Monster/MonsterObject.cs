@@ -2,8 +2,9 @@ using Core.Utility;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.ResponsibilityChain.DamageChain;
-using HotUpdate.Game.Battle.Skill;
+using HotUpdate.Game.Battle.Skill.Component;
 using HotUpdate.Game.Battle.Skill.Conditions;
+using HotUpdate.Game.Battle.Skill.Factory;
 using HotUpdate.Game.Battle.TargetSelect;
 using HotUpdate.Game.Battle.TargetSelect.Strategys;
 using HotUpdate.Game.Battle.Toughness;
@@ -81,13 +82,17 @@ namespace HotUpdate.Game.Battle.Object.Monster
                 return;
             }
             
+            // 默认只能行动一次
+            CanAct = false;
             // 获取技能数据
             var skill = skillComponent.GetSkill(skillId);
             var toughnessComponent = GetComponent<ToughnessComponent>();
             // 获取怪物行动指令
             var actCommand = commandfactory.GetMonsterActCommand(toughnessComponent, skill);
             // 发送指令
-            Context.GetEventBus().TriggerEvent(new InsertCommandEvent(Context, actCommand));
+            Context.EventBus.TriggerEvent(new InsertCommandEvent(Context, actCommand));
+            // 正在行动
+            Acting = true;
         }
     }
 }

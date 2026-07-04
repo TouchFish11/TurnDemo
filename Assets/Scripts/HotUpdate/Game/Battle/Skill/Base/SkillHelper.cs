@@ -80,7 +80,7 @@ namespace HotUpdate.Game.Battle.Skill.Base
             skillContext.PropertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentEnergy, 0);
             // 终结释放通用逻辑、禁用输入、更新UI显示
             var context = skillContext.Caster.Context;
-            context.GetEventBus().TriggerEvent(new UltimateCastEvent(context));
+            context.EventBus.TriggerEvent(new UltimateCastEvent(context));
         }
 
         /// <summary>

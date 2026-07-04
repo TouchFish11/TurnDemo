@@ -7,6 +7,7 @@ using HotUpdate.Base.Component;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Game.Battle.Skill.Component;
 using HotUpdate.Game.Battle.Skill.Conditions;
+using HotUpdate.Game.Battle.Skill.Factory;
 using HotUpdate.Game.Battle.TargetSelect;
 
 namespace HotUpdate.Game.Battle.Skill.Base

@@ -19,11 +19,6 @@ namespace HotUpdate.Game.Battle.Object.Role
         /// </summary>
         /// <param name="initData"></param>
         void RoleBattleInit(RoleBattleInitData initData);
-
-        /// <summary>
-        /// 发送角色行动挂起指令，在等待行动指令列表中占位
-        /// </summary>
-        void SendSuspendCommand();
         
         /// <summary>
         /// 恢复终结技

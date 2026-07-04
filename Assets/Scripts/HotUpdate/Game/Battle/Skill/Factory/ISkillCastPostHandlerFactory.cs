@@ -1,6 +1,7 @@
 using HotUpdate.Base.Factory;
+using HotUpdate.Game.Battle.Skill.Handler;
 
-namespace HotUpdate.Game.Battle.Skill
+namespace HotUpdate.Game.Battle.Skill.Factory
 {
     public interface ISkillCastPostHandlerFactory : IFactory
     {

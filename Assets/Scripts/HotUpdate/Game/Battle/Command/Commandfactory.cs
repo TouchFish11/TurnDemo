@@ -1,6 +1,7 @@
 using Core.DI;
 using Core.Pool;
 using HotUpdate.Game.Battle.Skill;
+using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Toughness;
 
 namespace HotUpdate.Game.Battle.Command

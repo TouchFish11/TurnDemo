@@ -277,7 +277,7 @@ GameObject:
   m_Component:
   - component: {fileID: 660551486}
   m_Layer: 0
-  m_Name: "4.\u884C\u52A8\u8F74\u6ED1\u52A8\u6548\u679C"
+  m_Name: "4.\u884C\u52A8\u8F74\u6ED1\u52A8\u6548\u679C\uFF08\u5B8C\u6210\uFF09"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

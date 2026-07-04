@@ -25,7 +25,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Battle
             skillContext.VFXInfo = poolManager.GetData<VFXInfo>();
             
             var context = skill.SkillContext.Caster.Context;
-            context.GetEventBus().TriggerEvent(new PlayerReleaseSkillEvent(context));
+            context.EventBus.TriggerEvent(new PlayerReleaseSkillEvent(context));
             yield break;
         }
     }

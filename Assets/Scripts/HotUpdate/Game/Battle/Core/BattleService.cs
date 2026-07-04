@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.DI;
+using Core.Mono;
 using Core.Serialize.Binary;
 using Core.Utility;
-using HotUpdate.Base.Manager;
 using HotUpdate.Base.UI;
 using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Game.Battle.Command;
 using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Monster;
@@ -34,16 +35,26 @@ namespace HotUpdate.Game.Battle.Core
         [Inject] private ITargetSelectStrategyFactory _targetSelectStrategyFactory;
         [Inject] private IBattleCameraManager _battleCameraManager;
         [Inject] private IUIService _uiService;
+        [Inject] private IMonoAdapter _monoAdapter;
         
-        private readonly IBattleManager _battleManager;
-        private readonly IBattleContext _context;
+        private IBattleManager _battleManager;
+        private IBattleContext _context;
         private readonly Commandfactory _commandFactory;
 
-        public BattleService(IBattleManager battleManager, IBattleContext context)
+        private BattleService()
+        {
+            _commandFactory = DIContainer.Create<Commandfactory>();
+        }
+
+        /// <summary>
+        /// 初始化
+        /// </summary>
+        /// <param name="battleManager"></param>
+        /// <param name="context"></param>
+        public void Init(IBattleManager battleManager, IBattleContext context)
         {
             _battleManager = battleManager;
             _context = context;
-            _commandFactory = DIContainer.Create<Commandfactory>();
         }
 
         /// <summary>
@@ -84,8 +95,8 @@ namespace HotUpdate.Game.Battle.Core
             // 缓存角色
             foreach (var battleEntityObject in roles)
             {
-                _context.AddBattleEntity(battleEntityObject);
-                _context.AddSceneRole(battleEntityObject);
+                _context.AllBattleEntity.Add(battleEntityObject);
+                _context.SceneRoleObjects.Add(battleEntityObject);
             }
         }
         
@@ -191,8 +202,8 @@ namespace HotUpdate.Game.Battle.Core
             
             foreach (var battleEntityObject in monsters)
             {
-                _context.AddBattleEntity(battleEntityObject);
-                _context.AddSceneMonster(battleEntityObject);
+                _context.AllBattleEntity.Add(battleEntityObject);
+                _context.SceneMonsterObjects.Add(battleEntityObject);
             }
             
             return monsters;
@@ -219,7 +230,7 @@ namespace HotUpdate.Game.Battle.Core
             // ...
 
             // 创建怪物
-            yield return TaskUtility.WaitForTask(_battleManager.GetWaveCreator().CreateWave());
+            yield return TaskUtility.WaitForTask(_battleManager.WaveCreator.CreateWave());
             
             // 初始化行动顺序
             BattleUtility.InitOrder(_context);
@@ -233,6 +244,65 @@ namespace HotUpdate.Game.Battle.Core
 
             // 显示行动轴UI
             // ...
+        }
+        
+        /// <summary>
+        /// 处理死亡的战斗实体
+        /// </summary>
+        public IEnumerator HandleDeadEntity()
+        {
+            var cTask = new List<Task>();
+            var deadEntities = new List<IBattleEntityObject>(_context.AllBattleEntity.FindAll(battleEntity => battleEntity.IsDead));
+            // 播放死亡动画
+            foreach (var battleEntity in deadEntities)
+            {
+                // 从上下文中移除死亡实体
+                _context.AllBattleEntity.Remove(battleEntity);
+                switch (battleEntity)
+                {
+                    case MonsterObject:
+                        _context.SceneMonsterObjects.Remove(battleEntity);
+                        break;
+                    case PlayerObject:
+                        _context.SceneRoleObjects.Remove(battleEntity);
+                        break;
+                }
+                
+                var coroutine = _monoAdapter.StartCoroutine(battleEntity.Die());
+                cTask.Add(TaskUtility.WaitForCoroutine(coroutine, _monoAdapter));
+
+                if (battleEntity == _context.CurrentTurnOwner)
+                {
+                    _context.SetCurrentTurnOwner(null);
+                }
+            }
+            
+            // 触发实体死亡事件
+            _context.EventBus.TriggerEvent(new EntityDeadEvent(_context, deadEntities));
+
+            // 等待所有死亡动画处理完成
+            yield return TaskUtility.WaitForTask(Task.WhenAll(cTask));
+        }
+
+        /// <summary>
+        /// 检查当前波次是否结束
+        /// </summary>
+        /// <returns></returns>
+        public bool CheckWaveOver()
+        {
+            // 每次执行完命令后，检查战斗是否结束
+            return _battleManager.WaveCreator.CheckOver();
+        }
+        
+        /// <summary>
+        /// 推进到下一波
+        /// </summary>
+        public void MoveWave()
+        {
+            if (_battleManager.WaveCreator.TryMoveWave())
+            {
+                _monoAdapter.StartCoroutine(_battleManager.BattleService.UpdateWave());
+            }
         }
     }
 }

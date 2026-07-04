@@ -153,6 +153,7 @@ public static class AssetKeys
     public const string OtherTest = "OtherTest";
     public const string MainScene = "MainScene";
     public const string LevelScene = "LevelScene";
+    public const string BeginScene = "BeginScene";
     public const string UI_3D_FloatingText = "UI_3D_FloatingText";
     public const string Prefab_Wizard = "Prefab_Wizard";
     public const string Prefab_Warrior = "Prefab_Warrior";
@@ -165,7 +166,6 @@ public static class AssetKeys
     public const string Prefab_AbyssalMage = "Prefab_AbyssalMage";
     public const string Prefab_Npc = "Prefab_Npc";
     public const string Prefab_Main_Warrior = "Prefab_Main_Warrior";
-    public const string Prefab_Player = "Prefab_Player";
     public const string MergedMesh = "MergedMesh";
     public const string Ground = "Ground";
     public const string HotUpdateAssemblySettings = "HotUpdateAssemblySettings";
@@ -218,17 +218,17 @@ public static class AssetKeys
     public const string CubemapStars = "CubemapStars";
     public const string MainCamera = "MainCamera";
     public const string BattleCamera = "BattleCamera";
+    public const string Prefab_Player = "Prefab_Player";
+    public const string WizardAnimtor = "WizardAnimtor";
+    public const string WarriorAnimtor = "WarriorAnimtor";
     public const string PriestAnimator = "PriestAnimator";
-    public const string HertaAnimtor = "HertaAnimtor";
     public const string GunmanAnimator = "GunmanAnimator";
-    public const string FireFlyAnimtor = "FireFlyAnimtor";
     public const string BaseRole = "BaseRole";
     public const string TurtleShellAnimtor = "TurtleShellAnimtor";
     public const string SlimeAnimtor = "SlimeAnimtor";
     public const string ChestAnimator = "ChestAnimator";
     public const string BaseMonster = "BaseMonster";
     public const string AbyssalMageAnimator = "AbyssalMageAnimator";
-    public const string PlayerController = "PlayerController";
     public const string Priest_Ultimate_02_Anim = "Priest_Ultimate_02_Anim";
     public const string Priest_Ultimate_01_Anim = "Priest_Ultimate_01_Anim";
     public const string Priest_BattleAttack_Anim = "Priest_BattleAttack_Anim";
@@ -241,5 +241,5 @@ public static class AssetKeys
     public const string FireFly_Attack_Anim = "FireFly_Attack_Anim";
     public const string TurtleShell_Attack_Anim = "TurtleShell_Attack_Anim";
     public const string Slime_Attack_Anim = "Slime_Attack_Anim";
-    public const string BeginScene = "BeginScene";
+    public const string PlayerController = "PlayerController";
 }

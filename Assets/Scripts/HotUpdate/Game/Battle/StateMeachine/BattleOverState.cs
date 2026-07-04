@@ -30,7 +30,7 @@ namespace HotUpdate.Game.Battle.StateMeachine
             // 切换为正常倍速
             _timerManager.SetTimeRate(ETimeRate.Normal);
             // 触发战斗结束事件
-            Context.GetEventBus().TriggerEvent(new BattleOverEvent(Context));
+            Context.EventBus.TriggerEvent(new BattleOverEvent(Context));
         }
 
         public override void Exit()

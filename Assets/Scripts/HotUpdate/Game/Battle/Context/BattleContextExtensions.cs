@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using HotUpdate.Game.Battle.Object;
-
 namespace HotUpdate.Game.Battle.Context
 {
     /// <summary>
@@ -8,45 +5,6 @@ namespace HotUpdate.Game.Battle.Context
     /// </summary>
     public static class BattleContextExtensions
     {
-        /// <summary>
-        /// 获取所有存活的实体
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="battleEntitys"></param>
-        public static void GetAliveEntitys(this IBattleContext context, List<IBattleEntityObject>  battleEntitys)
-        {
-            foreach (var battleEntityObject in context.GetAliveEntitys())
-            {
-                battleEntitys.Add(battleEntityObject);
-            }
-        }
-
-        /// <summary>
-        /// 获取所有存活的怪物实体
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="battleEntitys"></param>
-        public static void GetAliveMonsterEntitys(this IBattleContext context, List<IBattleEntityObject> battleEntitys)
-        {
-            foreach (var battleEntityObject in context.GetAliveMonsterEntitys())
-            {
-                battleEntitys.Add(battleEntityObject);
-            }
-        }
-
-        /// <summary>
-        /// 获取所有存活的玩家实体
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="battleEntitys"></param>
-        public static void GetAlivePlayerEntitys(this IBattleContext context, List<IBattleEntityObject> battleEntitys)
-        {
-            foreach (var battleEntityObject in context.GetAlivePlayerEntitys())
-            {
-                battleEntitys.Add(battleEntityObject);
-            }
-        }
-
         /// <summary>
         /// 获取存活怪物数量
         /// </summary>

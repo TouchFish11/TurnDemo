@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Core.DI;
 using Game.Module;
 using HotUpdate.Base.Module;
+using HotUpdate.Game.Battle.Command;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Event;
@@ -36,6 +37,7 @@ namespace HotUpdate.Game.Battle.Core
             DIContainer.BindSingleton<IBattleManager, BattleManager>();
             DIContainer.BindSingleton<IBattleCoordinator, BattleCoordinator>();
             DIContainer.BindSingleton<IBattlePointProxy, BattlePointProxy>();
+            DIContainer.BindSingleton<IBattleCommandsController, BattleCommandsController>();
             
             DIContainer.BindSingleton<ICastSkillConditionFactory, CastSkillConditionFactory>();
             DIContainer.BindSingleton<ISkillCastPostHandlerFactory, SkillCastPostHandlerFactory>();

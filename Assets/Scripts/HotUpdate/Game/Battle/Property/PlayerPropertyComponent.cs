@@ -27,7 +27,7 @@ namespace HotUpdate.Game.Battle.Property
                 case E_DynamicPropertyType.CurrentEnergy:
                     var currentEnergyDelta = RoleProperty.CurrentEnergy - newValue;
                     RoleProperty.CurrentEnergy = newValue;
-                    Context.GetEventBus().TriggerEvent(new EnergyChangedEvent(Context, BattleEntity, RoleProperty.CurrentEnergy, RoleProperty.BaseEnergy, currentEnergyDelta));
+                    Context.EventBus.TriggerEvent(new EnergyChangedEvent(Context, BattleEntity, RoleProperty.CurrentEnergy, RoleProperty.BaseEnergy, currentEnergyDelta));
                     break;
             }
         }

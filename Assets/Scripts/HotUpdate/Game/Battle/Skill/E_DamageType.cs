@@ -1,4 +1,4 @@
-namespace HotUpdate.Base
+namespace HotUpdate.Game.Battle.Skill
 {
     /// <summary>
     /// 伤害类型

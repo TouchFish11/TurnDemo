@@ -2,10 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Object;
-using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
 
-namespace HotUpdate.Game.Battle.Skill
+namespace HotUpdate.Game.Battle.Skill.Base
 {
     /// <summary>
     /// 技能接口

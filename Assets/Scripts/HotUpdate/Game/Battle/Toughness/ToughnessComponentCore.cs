@@ -6,6 +6,7 @@ using HotUpdate.Base.Component;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Monster;
+using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.Toughness.CalcStrategy;
 using HotUpdate.Game.Battle.Toughness.ReduceStrategy;
 using HotUpdate.Game.Battle.Utility;
@@ -180,7 +181,7 @@ namespace HotUpdate.Game.Battle.Toughness
             SetToughnessValue(current, _toughness.MaxToughnessVaue);
 
             // 触发韧性值变更事件（供UI、其他组件监听）
-            Component.BattleEntity.Context.GetEventBus().TriggerEvent(
+            Component.BattleEntity.Context.EventBus.TriggerEvent(
                 new ToughnessChangedEvent(
                     Component.BattleEntity.Context, 
                     Component.BattleEntity, 
@@ -192,7 +193,7 @@ namespace HotUpdate.Game.Battle.Toughness
             // 判断是否触发破韧，若破韧则触发破韧事件（供眩晕、增伤等逻辑监听）
             if (IsToughnessBroken())
             {
-                Component.BattleEntity.Context.GetEventBus().TriggerEvent(new ToughnessBrokenEvent(Component.BattleEntity.Context, reducer, Component.BattleEntity, resilienceValue, skillId));
+                Component.BattleEntity.Context.EventBus.TriggerEvent(new ToughnessBrokenEvent(Component.BattleEntity.Context, reducer, Component.BattleEntity, resilienceValue, skillId));
             }
         }
 
@@ -207,7 +208,7 @@ namespace HotUpdate.Game.Battle.Toughness
             // 调用状态对象的内部方法更新值（保证状态一致性）
             _toughness.SetToughnessValue(current, max);
             // 触发韧性值变更事件
-            Component.BattleEntity.Context.GetEventBus().TriggerEvent(
+            Component.BattleEntity.Context.EventBus.TriggerEvent(
                 new ToughnessChangedEvent(
                     Component.BattleEntity.Context, 
                     Component.BattleEntity, 

@@ -33,7 +33,7 @@ namespace HotUpdate.Game.Battle.TargetSelect
         public void Init(IBattleContext context)
         {
             // 监听战斗退出事件
-            context.GetEventBus().AddListener<QuitBattleEvent>(OnQuitBattleEvent);
+            context.EventBus.AddListener<QuitBattleEvent>(OnQuitBattleEvent);
             _context = context;
         }
         
@@ -118,8 +118,8 @@ namespace HotUpdate.Game.Battle.TargetSelect
                 {
                     _filterEntitys = targetType switch
                     {
-                        E_SkillTargetType.Enemy => context.GetSceneMonsters(),
-                        E_SkillTargetType.Friend => context.GetSceneRoles(),
+                        E_SkillTargetType.Enemy => context.SceneMonsterObjects,
+                        E_SkillTargetType.Friend => context.SceneRoleObjects,
                         _ => _filterEntitys
                     };
                     break;
@@ -129,8 +129,8 @@ namespace HotUpdate.Game.Battle.TargetSelect
                 {
                     _filterEntitys = targetType switch
                     {
-                        E_SkillTargetType.Enemy => context.GetSceneRoles(),
-                        E_SkillTargetType.Friend => context.GetSceneMonsters(),
+                        E_SkillTargetType.Enemy => context.SceneRoleObjects,
+                        E_SkillTargetType.Friend => context.SceneMonsterObjects,
                         _ => _filterEntitys
                     };
                     break;
@@ -205,7 +205,7 @@ namespace HotUpdate.Game.Battle.TargetSelect
 
         private void OnQuitBattleEvent(QuitBattleEvent quitBattleEvent)
         {
-            _context.GetEventBus().AddListener<QuitBattleEvent>(OnQuitBattleEvent);
+            _context.EventBus.AddListener<QuitBattleEvent>(OnQuitBattleEvent);
             _filterEntitys.Clear();
             _selectedTargets.Clear();
             _mainTarget = null;

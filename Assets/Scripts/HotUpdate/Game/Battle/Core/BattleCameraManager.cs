@@ -53,7 +53,7 @@ namespace HotUpdate.Game.Battle.Core
         public void Init(IBattleContext context)
         {
             _monoAdapter.AddUpdateListener(OnUpdate);
-            context.GetEventBus().AddListener<QuitBattleEvent>(OnBattleOverEvent);
+            context.EventBus.AddListener<QuitBattleEvent>(OnBattleOverEvent);
             _context = context;
         }
 
@@ -200,7 +200,7 @@ namespace HotUpdate.Game.Battle.Core
         /// <param name="quitBattleEvent"></param>
         private void OnBattleOverEvent(QuitBattleEvent quitBattleEvent)
         {
-            _context.GetEventBus().RemoveListener<QuitBattleEvent>(OnBattleOverEvent);
+            _context.EventBus.RemoveListener<QuitBattleEvent>(OnBattleOverEvent);
             _monoAdapter.RemoveUpdateListener(OnUpdate);
             _objectSpawner.Release(CurrentActiveCamera);
             CurrentActiveCamera = null;

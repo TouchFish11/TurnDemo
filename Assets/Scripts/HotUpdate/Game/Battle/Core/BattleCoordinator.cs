@@ -17,6 +17,7 @@ using HotUpdate.Game.Battle.Object.Role;
 using HotUpdate.Game.Battle.Operation;
 using HotUpdate.Game.Battle.Operation.Provider;
 using HotUpdate.Game.Battle.Skill;
+using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.TargetSelect;
 using HotUpdate.Game.Battle.UI;
 using UnityEngine;
@@ -34,47 +35,24 @@ namespace HotUpdate.Game.Battle.Core
         [Inject] private IBinaryDataManager _binaryDataManager;
         [Inject] private IUIService _uiService;
         
+        [Inject] public IBattleInputHandler BattleInputHandler { get; private set; }
+        [Inject] public IBattleCameraManager BattleCameraManager { get; private set; }
+        [Inject] public ITargetSelectManager TargetSelectManager { get; private set; }
+        
         // 上次选中的主目标
         private IBattleEntityObject _lastTarget;
         private List<IBattleEntityObject> _lastTargets;
         // 当前选中技能的配置信息
         private SkillInfo skillInfo;
-        // 是否激活目标选择
-        private bool _isActiveTargetSelect;
         // 是否激活战斗输入
         private bool _isActiveInput;
         
-        [Inject] public IBattleInputHandler BattleInputHandler { get; private set; }
-        [Inject] public IBattleCameraManager BattleCameraManager { get; private set; }
-        [Inject] public ITargetSelectManager TargetSelectManager { get; private set; }
         public IBattleContext Context { get; private set; }
 
         /// <summary>
         /// 是否激活目标选择
         /// </summary>
-        public bool IsActiveTargetSelect
-        {
-            get => _isActiveTargetSelect;
-            set
-            {
-                // 激活目标选择
-                if (value && !_isActiveTargetSelect)
-                {
-                    BattleInputHandler.OnLeftDrag += OnLeftDrag;   // 左拖拽：切换上一个主目标
-                    BattleInputHandler.OnRightDrag += OnRightDrag;     // 右拖拽：切换下一个主目标
-                    BattleInputHandler.OnClick += OnClick;
-                }
-                // 禁用目标选择
-                else if(!value && _isActiveTargetSelect)
-                {
-                    BattleInputHandler.OnLeftDrag -= OnLeftDrag;
-                    BattleInputHandler.OnRightDrag -= OnRightDrag;
-                    BattleInputHandler.OnClick -= OnClick;
-                }
-
-                _isActiveTargetSelect = value;
-            }
-        }
+        public bool IsActiveTargetSelect { get; set; }
 
         /// <summary>
         /// 是否激活战斗输入
@@ -87,10 +65,12 @@ namespace HotUpdate.Game.Battle.Core
                 if (value && !_isActiveInput)
                 {
                     BattleInputHandler.SetInputState(true);
+                    _isActiveInput = true;
                 }
                 else if (!value && _isActiveInput)
                 {
                     BattleInputHandler.SetInputState(false);
+                    _isActiveInput = false;
                 }
             }
         }
@@ -101,8 +81,12 @@ namespace HotUpdate.Game.Battle.Core
         /// <param name="battleContext"></param>
         public void Init(IBattleContext battleContext)
         {
-            battleContext.GetEventBus().AddListener<QuitBattleEvent>(OnQuitBattleEvent);
-            IsActiveTargetSelect = true;
+            battleContext.EventBus.AddListener<QuitBattleEvent>(OnQuitBattleEvent);
+            
+            BattleInputHandler.OnLeftDrag += OnLeftDrag;   // 左拖拽：切换上一个主目标
+            BattleInputHandler.OnRightDrag += OnRightDrag;     // 右拖拽：切换下一个主目标
+            BattleInputHandler.OnClick += OnClick;
+            
             // 初始化角色战斗点，依赖玩家战斗实体对象创建完成
             _battlePointProxy.InitProxy(battleContext, new List<IBattleEntityObject>(battleContext.GetAlivePlayerEntitys()));
             Context = battleContext;
@@ -142,7 +126,7 @@ namespace HotUpdate.Game.Battle.Core
             _lastTarget = TargetSelectManager.GetMainTarget();
             _lastTargets = TargetSelectManager.GetTargets();
             // 触发目标选择变更事件，通知UI更新选中状态
-            Context.GetEventBus().TriggerEvent(new SelectTargetEvent(Context, caster, TargetSelectManager.GetMainTarget(), TargetSelectManager.GetTargets()));
+            Context.EventBus.TriggerEvent(new SelectTargetEvent(Context, caster, TargetSelectManager.GetMainTarget(), TargetSelectManager.GetTargets()));
         }
 
         /// <summary>
@@ -304,6 +288,9 @@ namespace HotUpdate.Game.Battle.Core
         
         private void OnLeftDrag()
         {
+            if(!IsActiveTargetSelect)
+                return;
+            
             // 选择上一个目标
             TargetSelectManager.SelectPreviousMainTarget();
             TargetSelectManager.SelectAllTargets(skillInfo.f_skillRangeType);
@@ -315,7 +302,7 @@ namespace HotUpdate.Game.Battle.Core
                 _lastTarget = newMainTarget;
                 _lastTargets = newAllTarget;
                 // 触发目标选择变更事件，通知UI更新选中状态
-                Context.GetEventBus().TriggerEvent(new SelectTargetEvent(Context, Context.CurrentCommander ?? Context.CurrentTurnOwner, TargetSelectManager.GetMainTarget(), TargetSelectManager.GetTargets()));
+                Context.EventBus.TriggerEvent(new SelectTargetEvent(Context, Context.CurrentCommand?.Sender ?? Context.CurrentTurnOwner, TargetSelectManager.GetMainTarget(), TargetSelectManager.GetTargets()));
                 // 更新相机选择基准
                 BattleCameraManager.UpdateBaseRotation(); 
             }
@@ -323,6 +310,9 @@ namespace HotUpdate.Game.Battle.Core
         
         private void OnRightDrag()
         {
+            if(!IsActiveTargetSelect)
+                return;
+            
             // 选择下一个目标
             TargetSelectManager.SelectNextMainTarget();
             TargetSelectManager.SelectAllTargets(skillInfo.f_skillRangeType);
@@ -334,7 +324,7 @@ namespace HotUpdate.Game.Battle.Core
                 _lastTarget = newMainTarget;
                 _lastTargets = newAllTarget;
                 // 触发目标选择变更事件，通知UI更新选中状态
-                Context.GetEventBus().TriggerEvent(new SelectTargetEvent(Context, Context.CurrentCommander ?? Context.CurrentTurnOwner, TargetSelectManager.GetMainTarget(), TargetSelectManager.GetTargets()));
+                Context.EventBus.TriggerEvent(new SelectTargetEvent(Context, Context.CurrentCommand?.Sender ?? Context.CurrentTurnOwner, TargetSelectManager.GetMainTarget(), TargetSelectManager.GetTargets()));
                 // 更新相机选择基准
                 BattleCameraManager.UpdateBaseRotation();
             }
@@ -342,6 +332,9 @@ namespace HotUpdate.Game.Battle.Core
         
         private void OnClick()
         {
+            if(!IsActiveTargetSelect)
+                return;
+            
             // 执行相机进行射线检测
             // 根据选中的技能ID获取技能配置信息
             // 将技能范围类型转换为技能目标类型（友方/敌方）
@@ -377,7 +370,7 @@ namespace HotUpdate.Game.Battle.Core
                     _lastTarget = battleObject;
                     _lastTargets = allTargets;
                     // 触发目标选择变更事件，通知UI更新选中状态
-                    Context.GetEventBus().TriggerEvent(new SelectTargetEvent(Context, Context.CurrentCommander ?? Context.CurrentTurnOwner, TargetSelectManager.GetMainTarget(), TargetSelectManager.GetTargets()));
+                    Context.EventBus.TriggerEvent(new SelectTargetEvent(Context, Context.CurrentCommand?.Sender ?? Context.CurrentTurnOwner, TargetSelectManager.GetMainTarget(), TargetSelectManager.GetTargets()));
                 }
             }
         }
@@ -428,7 +421,9 @@ namespace HotUpdate.Game.Battle.Core
         {
             BattleInputHandler.OnLeftDrag -= OnLeftDrag;
             BattleInputHandler.OnRightDrag -= OnRightDrag;
-            Context.GetEventBus().RemoveListener<QuitBattleEvent>(OnQuitBattleEvent);
+            BattleInputHandler.OnClick -= OnClick;
+            
+            Context.EventBus.RemoveListener<QuitBattleEvent>(OnQuitBattleEvent);
         }
     }
 }

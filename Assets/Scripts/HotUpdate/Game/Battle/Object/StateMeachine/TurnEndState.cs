@@ -16,7 +16,7 @@ namespace HotUpdate.Game.Battle.Object.StateMeachine
         public override void Enter()
         {
             // 触发回合结束事件（供外部监听）
-            PlayerObject.Context.GetEventBus().TriggerEvent(new TurnEndEvent(PlayerObject.Context, PlayerObject));
+            PlayerObject.Context.EventBus.TriggerEvent(new TurnEndEvent(PlayerObject.Context, PlayerObject));
         }
         
         public override void Exit()

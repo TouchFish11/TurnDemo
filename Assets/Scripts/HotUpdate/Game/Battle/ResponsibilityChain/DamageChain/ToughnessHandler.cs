@@ -1,4 +1,5 @@
 using HotUpdate.Base;
+using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Toughness;
 
 namespace HotUpdate.Game.Battle.ResponsibilityChain.DamageChain

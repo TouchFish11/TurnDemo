@@ -50,7 +50,7 @@ namespace HotUpdate.Game.Battle.Statuses
             // 更新状态加成数据
             UpdateStatusBonus();
             // 通知UI状态发生变更
-            BattleEntity.Context.GetEventBus().TriggerEvent(new TurnStartStatusChangedEvent(BattleEntity.Context, BattleEntity));
+            BattleEntity.Context.EventBus.TriggerEvent(new TurnStartStatusChangedEvent(BattleEntity.Context, BattleEntity));
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace HotUpdate.Game.Battle.Statuses
             // 更新状态加成
             UpdateStatusBonus();
             // 触发状态添加事件
-            BattleEntity.Context.GetEventBus().TriggerEvent(new StatusAddedEvent(BattleEntity.Context, status));
+            BattleEntity.Context.EventBus.TriggerEvent(new StatusAddedEvent(BattleEntity.Context, status));
         }
 
         /// <summary>

@@ -3,7 +3,7 @@ using HotUpdate.Base.Component;
 using HotUpdate.Base.Object;
 using UnityEngine;
 
-namespace HotUpdate.Game.Animation.Core
+namespace HotUpdate.Game.Animation
 {
     /// <summary>
     /// 动画触发器

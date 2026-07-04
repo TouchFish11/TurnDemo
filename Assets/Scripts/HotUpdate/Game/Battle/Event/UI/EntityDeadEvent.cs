@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Object;
 
@@ -8,11 +9,11 @@ namespace HotUpdate.Game.Battle.Event.UI
     /// </summary>
     public class EntityDeadEvent : BattleEvent
     {
-        public IBattleEntityObject DeadEntity { get; }
+        public List<IBattleEntityObject> DeadEntitys { get; }
 
-        public EntityDeadEvent(IBattleContext context, IBattleEntityObject deadEntity) : base(context)
+        public EntityDeadEvent(IBattleContext context, List<IBattleEntityObject> deadEntitys) : base(context)
         {
-            DeadEntity = deadEntity;
+            DeadEntitys = deadEntitys;
         }
     }
 }

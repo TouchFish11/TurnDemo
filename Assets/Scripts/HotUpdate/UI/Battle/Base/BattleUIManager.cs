@@ -13,6 +13,7 @@ using HotUpdate.Base.Service;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;
+using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Monster;
@@ -115,7 +116,7 @@ namespace HotUpdate.UI.Battle.Base
                 yield return s_waitForSeconds0_5;
 
                 // 触发退出战斗事件
-                context.GetEventBus().TriggerEvent(new QuitBattleEvent(context, _controller));
+                context.EventBus.TriggerEvent(new QuitBattleEvent(context, _controller));
             }
         }
 
@@ -317,7 +318,32 @@ namespace HotUpdate.UI.Battle.Base
 
         #region 行动队列/ActionBar相关
 
+        public void SlidingActionGrids(IBattleContext context)
+        {
+            // 其它格子需要移动
+            var list = new List<IBattleEntityObject>(context.GetAliveEntitys());
+            for (var i = 0; i < list.Count; i++)
+            {
+                var battleEntityObject = list[i];
+                var grid = _view.ActionGridUis.Find(ui => ui.BattleEntity == battleEntityObject);
+                if (grid)
+                {
+                    // 设置滑动到的目标索引
+                    grid.SetSlideTarget(i);
+                    // 设置行动值
+                    grid.SetActionValue(CalcRemainActionValue(context, battleEntityObject.ActionValue));
+                }
+            }
+        }
+        
         public void RemoveActionGrid(IBattleEntityObject battleEntity)
+        {
+            var actionGridUI = _view.ActionGridUis.Find(ui => ui.BattleEntity == battleEntity);
+            _view.ActionGridUis.Remove(actionGridUI);
+            _objectSpawner.Release(actionGridUI);
+        }
+        
+        public void SwitchTurnUpdateActionGrid(IBattleEntityObject battleEntity)
         {
             var actionGridUI = _view.ActionGridUis.Find(ui => ui.BattleEntity == battleEntity);
             _view.ActionGridUis.Remove(actionGridUI);
@@ -375,33 +401,15 @@ namespace HotUpdate.UI.Battle.Base
         {
             try
             {
-                // 转存命令对象
-                var displayobjs = new List<IDisplayPendingExecution>(displayPendingExecutions);
-                // 当前角色回合被其它逻辑插队的情况
-                if (context.CurrentCommander == null)
-                {
-                    displayobjs.Add((IDisplayPendingExecution)context.CurrentTurnOwner);
-                }
-                // 当前持有回合的角色正在执行自己的命令，然后有其它逻辑插队，这时不需要插入自己
-                else if(context.CurrentCommander != null && context.CurrentCommander == context.CurrentTurnOwner)
-                {
-
-                }
-                // 有其它命令逻辑正在执行，需要排队
-                else
-                {
-                    displayobjs.Add((IDisplayPendingExecution)context.CurrentTurnOwner);
-                }
-                
                 _objectSpawner.Release(_view.WaitingActUIs);
-                foreach (var displayobj in displayobjs)
+                foreach (var displayPendingExecution in displayPendingExecutions)
                 {
                     // 异步加载等待行动UI预制体
                     var waitingActUI = await _objectSpawner.SpawnAsync<WaitingActUI>(AssetKeys.WaitingActUI, _view.WaitQueueContent);
                     // 加载图标精灵并初始化UI
-                    var icon = await GetIconByEntity(displayobj.BattleEntity);
+                    var icon = await GetIconByEntity(displayPendingExecution.BattleEntity);
                     // 初始化UI
-                    waitingActUI.Init(icon, displayobj.BattleEntity.BattleEntityId);
+                    waitingActUI.Init(icon, displayPendingExecution.BattleEntity.BattleEntityId);
                     // 缓存UI
                     _view.WaitingActUIs.Add(waitingActUI);
                 }
@@ -417,9 +425,12 @@ namespace HotUpdate.UI.Battle.Base
         /// </summary>
         public void RemoveFirstWaitingActUI()
         {
-            var waitingUI = _view.WaitingActUIs[0];
-            _view.WaitingActUIs.RemoveAt(0);
-            _objectSpawner.Release(waitingUI);
+            if (_view.WaitingActUIs.Count > 0)
+            {
+                var waitingUI = _view.WaitingActUIs[0];
+                _view.WaitingActUIs.RemoveAt(0);
+                _objectSpawner.Release(waitingUI);
+            }
         }
 
         /// <summary>
@@ -440,18 +451,19 @@ namespace HotUpdate.UI.Battle.Base
                     
                 if (battleEntityObjects.Count == girds.Count)
                 {
-                    for (var i = battleEntityObjects.Count - 1; i >= 0; i--)
-                    {
-                        var battleEntityObject = battleEntityObjects[i];
-                        var grid = girds.Find(ui => ui.BattleEntity == battleEntityObject);
-                        if (grid)
-                        {
-                            // 设置滑动到的目标索引
-                            grid.SetSlideTarget(i);
-                            // 设置行动值
-                            grid.SetActionValue(CalcRemainActionValue(context, battleEntityObject.ActionValue));
-                        }
-                    }
+                    SlidingActionGrids(context);
+                    // for (var i = battleEntityObjects.Count - 1; i >= 0; i--)
+                    // {
+                    //     var battleEntityObject = battleEntityObjects[i];
+                    //     var grid = girds.Find(ui => ui.BattleEntity == battleEntityObject);
+                    //     if (grid)
+                    //     {
+                    //         // 设置滑动到的目标索引
+                    //         grid.SetSlideTarget(i);
+                    //         // 设置行动值
+                    //         grid.SetActionValue(CalcRemainActionValue(context, battleEntityObject.ActionValue));
+                    //     }
+                    // }
                 }
                 else if(girds.Count == 0)
                 {
@@ -482,19 +494,20 @@ namespace HotUpdate.UI.Battle.Base
                         }
                     }
                     
-                    // 更新位置
-                    for (var i = battleEntityObjects.Count - 1; i >= 0; i--)
-                    {
-                        var battleEntityObject = battleEntityObjects[i];
-                        var grid = girds.Find(ui => ui.BattleEntity == battleEntityObject);
-                        if (grid)
-                        {
-                            // 设置滑动到的目标索引
-                            grid.SetSlideTarget(i);
-                            // 设置行动值
-                            grid.SetActionValue(CalcRemainActionValue(context, battleEntityObject.ActionValue));
-                        }
-                    }
+                    SlidingActionGrids(context);
+                    // // 更新位置
+                    // for (var i = battleEntityObjects.Count - 1; i >= 0; i--)
+                    // {
+                    //     var battleEntityObject = battleEntityObjects[i];
+                    //     var grid = girds.Find(ui => ui.BattleEntity == battleEntityObject);
+                    //     if (grid)
+                    //     {
+                    //         // 设置滑动到的目标索引
+                    //         grid.SetSlideTarget(i);
+                    //         // 设置行动值
+                    //         grid.SetActionValue(CalcRemainActionValue(context, battleEntityObject.ActionValue));
+                    //     }
+                    // }
                 }
                 // 新增实体
                 else if(battleEntityObjects.Count > girds.Count)

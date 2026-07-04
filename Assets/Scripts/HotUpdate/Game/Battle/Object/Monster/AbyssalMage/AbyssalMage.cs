@@ -2,6 +2,7 @@ using Core.DI;
 using HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Conditions;
+using HotUpdate.Game.Battle.Skill.Factory;
 using HotUpdate.Game.Battle.TargetSelect;
 using HotUpdate.Game.Battle.TargetSelect.Strategys;
 

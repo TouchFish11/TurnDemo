@@ -1,7 +1,6 @@
 using System.Collections;
 using Core.DI;
 using Core.Utility;
-using HotUpdate.Base.Manager;
 using HotUpdate.Base.UI;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Layer;

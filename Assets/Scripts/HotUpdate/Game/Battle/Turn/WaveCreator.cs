@@ -54,7 +54,7 @@ namespace HotUpdate.Game.Battle.Turn
             // 更新当前波次胜利条件
             _waveHandler.UpdateCondition(_waveDatas[_waveIndex].WaveVictoryConditionType);
             // 创建当前波次的怪物
-            return await _battleManager.GetBattleService().CreateMonsters(_waveDatas[_waveIndex].MonsterIds.ToArray());
+            return await _battleManager.BattleService.CreateMonsters(_waveDatas[_waveIndex].MonsterIds.ToArray());
         }
     }
 }

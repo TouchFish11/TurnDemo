@@ -3,7 +3,6 @@ using Core.UI;
 using Core.Utility;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Context;
-using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Skill;
@@ -107,8 +106,6 @@ namespace HotUpdate.UI.Battle.SkillKey
 
             // 注册点击事件监听
             UIUtility.AddCustomEventListener(this, EventTriggerType.PointerClick, OnClick);
-            // 从服务定位器获取战斗上下文
-            battleContext = DIContainer.GetInstance<IBattleManager>().GetContext();
         }
 
         /// <summary>
@@ -123,6 +120,8 @@ namespace HotUpdate.UI.Battle.SkillKey
             skillId = skillInfo.f_id;
             // 设置Toggle分组（实现技能按键互斥选中）
             togSkillKeyUI.group = group;
+            // 记录上下文
+            battleContext = battleEntity.Context;
             // 绑定战斗实体
             this.battleEntity = battleEntity;
             // 从工厂获取玩家基础目标选择策略（目标选择的规则逻辑）
@@ -175,7 +174,7 @@ namespace HotUpdate.UI.Battle.SkillKey
                     transform.localScale = SelectedScale;
                     triggerPhase = E_TriggerPhase.Selected;
                     // 触发技能选中事件
-                    battleContext?.GetEventBus().TriggerEvent(new SelectSkillEvent(battleContext, skillId, battleEntity, _targetSelectStrategy));
+                    battleContext?.EventBus.TriggerEvent(new SelectSkillEvent(battleContext, skillId, battleEntity, _targetSelectStrategy));
                 }
             }
             else
@@ -198,7 +197,7 @@ namespace HotUpdate.UI.Battle.SkillKey
                 // 重置为选中状态（避免重复触发）
                 triggerPhase = E_TriggerPhase.Selected;
                 // 触发玩家技能执行事件（通知战斗系统释放技能）
-                battleContext.GetEventBus().TriggerEvent(new RoleTriggerSkillEvent(battleContext, skillId, battleEntity));
+                battleContext.EventBus.TriggerEvent(new RoleTriggerSkillEvent(battleContext, skillId, battleEntity));
             }
             else
             {

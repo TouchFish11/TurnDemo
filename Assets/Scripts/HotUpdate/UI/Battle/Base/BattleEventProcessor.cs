@@ -61,7 +61,7 @@ namespace HotUpdate.UI.Battle.Base
             eventBus.AddListener<ApplyShieldEvent>(ApplyShieldChanged);            // 提供护盾事件
             eventBus.AddListener<ApplyHealEvent>(ApplyHealChanged);            // 提供治疗事件
             eventBus.AddListener<ShieldChangedEvent>(OnShieldChanged);       // 护盾值变化事件
-            eventBus.AddListener<HpChangedEvent>(OnHpChangedEvent);       // 血量变化事件
+            //eventBus.AddListener<HpChangedEvent>(OnHpChangedEvent);       // 血量变化事件
             
             eventBus.AddListener<ClearCumulativeDamageEvent>(OnClearCumulativeDamageEvent);     // 清空累计伤害显示事件
             eventBus.AddListener<PlayerReleaseSkillEvent>(OnPlayerReleaseSkillEvent); // 玩家释放技能事件
@@ -69,7 +69,7 @@ namespace HotUpdate.UI.Battle.Base
             eventBus.AddListener<TurnStartStatusChangedEvent>(OnTurnStartStatusChangedEvent); // 回合开始状态变化事件
             eventBus.AddListener<StatusAddedEvent>(OnStatusAddedEvent);       // 状态添加事件
             eventBus.AddListener<BattleOverEvent>(OnBattleOverEvent);         // 战斗结束事件
-            eventBus.AddListener<EntityDeadEvent>(OnEntityDeadEvent);       // 怪物死亡事件
+            eventBus.AddListener<EntityDeadEvent>(OnEntityDeadEvent);       // 实体死亡事件
 
             _eventBus = eventBus;
         }
@@ -88,7 +88,7 @@ namespace HotUpdate.UI.Battle.Base
             _eventBus.RemoveListener<ApplyShieldEvent>(ApplyShieldChanged);            // 提供护盾事件
             _eventBus.RemoveListener<ApplyHealEvent>(ApplyHealChanged);            // 提供治疗事件
             _eventBus.RemoveListener<ShieldChangedEvent>(OnShieldChanged);       // 护盾值变化事件
-            _eventBus.RemoveListener<HpChangedEvent>(OnHpChangedEvent);       // 血量变化事件
+            //_eventBus.RemoveListener<HpChangedEvent>(OnHpChangedEvent);       // 血量变化事件
             
             _eventBus.RemoveListener<ClearCumulativeDamageEvent>(OnClearCumulativeDamageEvent);     // 清空累计伤害显示事件
             _eventBus.RemoveListener<PlayerReleaseSkillEvent>(OnPlayerReleaseSkillEvent); // 玩家释放技能事件
@@ -96,7 +96,7 @@ namespace HotUpdate.UI.Battle.Base
             _eventBus.RemoveListener<TurnStartStatusChangedEvent>(OnTurnStartStatusChangedEvent); // 回合开始状态变化事件
             _eventBus.RemoveListener<StatusAddedEvent>(OnStatusAddedEvent);       // 状态添加事件
             _eventBus.RemoveListener<BattleOverEvent>(OnBattleOverEvent);         // 战斗结束事件
-            _eventBus.RemoveListener<EntityDeadEvent>(OnEntityDeadEvent);       // 怪物死亡事件
+            _eventBus.RemoveListener<EntityDeadEvent>(OnEntityDeadEvent);       // 实体死亡事件
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace HotUpdate.UI.Battle.Base
         {
             _uiManager.SetCurrentCommanderDisplayUI(switchEntityTurnEvent.CurrentBattleEntityObject);
             // 移除持有当前回合的对象对应的行动格子
-            _uiManager.RemoveActionGrid(switchEntityTurnEvent.CurrentBattleEntityObject);
+            _uiManager.SwitchTurnUpdateActionGrid(switchEntityTurnEvent.CurrentBattleEntityObject);
         }
         
         /// <summary>
@@ -147,12 +147,18 @@ namespace HotUpdate.UI.Battle.Base
         /// <param name="entityDeadEvent">怪物死亡事件数据</param>
         private void OnEntityDeadEvent(EntityDeadEvent entityDeadEvent)
         {
-            if (entityDeadEvent.DeadEntity is MonsterObject monsterObject)
+            foreach (var deadEntity in entityDeadEvent.DeadEntitys)
             {
-                // 调用控制器维护的怪物状态UI管理器对象隐藏死亡的怪物的UI
-                _battleController.MonsterStateUIManager.RemoveNormalMonsterStateUI(entityDeadEvent.DeadEntity);
-                _uiManager.RemoveActionGrid(monsterObject);
+                if (deadEntity is MonsterObject)
+                {
+                    // 调用控制器维护的怪物状态UI管理器对象隐藏死亡的怪物的UI
+                    _battleController.MonsterStateUIManager.RemoveNormalMonsterStateUI(deadEntity);
+                }
+                
+                _uiManager.RemoveActionGrid(deadEntity);
             }
+            
+            _uiManager.SlidingActionGrids(entityDeadEvent.Context);
         }
 
         /// <summary>
@@ -225,13 +231,13 @@ namespace HotUpdate.UI.Battle.Base
             }
         }
 
-        private void OnHpChangedEvent(HpChangedEvent hpChangedEvent)
-        {
-            if (!hpChangedEvent.Target.IsDead && hpChangedEvent.CurrentHp <= 0)
-            {
-                _uiManager.RemoveActionGrid(hpChangedEvent.Target);
-            }
-        }
+        // private void OnHpChangedEvent(HpChangedEvent hpChangedEvent)
+        // {
+        //     if (!hpChangedEvent.Target.IsDead && hpChangedEvent.CurrentHp <= 0)
+        //     {
+        //         _uiManager.RemoveActionGrid(hpChangedEvent.Target);
+        //     }
+        // }
         
         /// <summary>
         /// 玩家释放技能事件处理方法

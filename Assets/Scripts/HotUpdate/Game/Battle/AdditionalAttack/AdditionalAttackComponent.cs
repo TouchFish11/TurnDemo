@@ -19,7 +19,7 @@
 //             _additionalAttacks.Add(new BreakToughnessAdditionalAttack());
 //
 //             // ���ġ��ƶ��¼����������ƶܣ�����׷�ӹ�����
-//             battleEntity.Context.GetEventBus().AddListener<ToughnessBrokenEvent>(OnToughnessBrokenHandler);
+//             battleEntity.Context.EventBus.AddListener<ToughnessBrokenEvent>(OnToughnessBrokenHandler);
 //         }
 //
 //         /// <summary>
@@ -49,7 +49,7 @@
 //             base.Destroy();
 //             _additionalAttacks.Clear();
 //             // �Ƴ�����
-//             BattleEntity.Context.GetEventBus().RemoveListener<ToughnessBrokenEvent>(OnToughnessBrokenHandler);
+//             BattleEntity.Context.EventBus.RemoveListener<ToughnessBrokenEvent>(OnToughnessBrokenHandler);
 //         }
 //     }
 // }

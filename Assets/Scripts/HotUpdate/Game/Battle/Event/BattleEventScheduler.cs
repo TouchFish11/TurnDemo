@@ -40,14 +40,25 @@ namespace HotUpdate.Game.Battle.Event
 
         public void Init(IBattleContext context)
         {
-            context.GetEventBus().AddListener<QuitBattleEvent>(OnQuitBattleEvent);
+            context.EventBus.AddListener<QuitBattleEvent>(OnQuitBattleEvent);
             // 监听回合开始事件
-            context.GetEventBus().AddListener<TurnStartEvent>(OnTurnStartDispatch);
+            context.EventBus.AddListener<TurnStartEvent>(OnTurnStartDispatch);
             // 监听角色技能选择事件
-            context.GetEventBus().AddListener<SelectSkillEvent>(SelectSkillEventScheduler);
+            context.EventBus.AddListener<SelectSkillEvent>(SelectSkillEventScheduler);
             // 监听玩家角色终结技释放后通用逻辑事件
-            context.GetEventBus().AddListener<UltimateCastEvent>(OnUltimateCastDispatch);
+            context.EventBus.AddListener<UltimateCastEvent>(OnUltimateCastDispatch);
+            // 监听玩家操作技能触发事件
+            context.EventBus.AddListener<RoleTriggerSkillEvent>(OnRoleTriggerSkillEvent);
             _context = context;
+        }
+
+        /// <summary>
+        /// 监听玩家技能按键触发操作
+        /// </summary>
+        /// <param name="roleTriggerSkillEvent"></param>
+        private void OnRoleTriggerSkillEvent(RoleTriggerSkillEvent roleTriggerSkillEvent)
+        {
+            roleTriggerSkillEvent.Caster.CastSkill(roleTriggerSkillEvent.SkillId);
         }
         
         /// <summary>
@@ -171,13 +182,11 @@ namespace HotUpdate.Game.Battle.Event
         
         private void OnQuitBattleEvent(QuitBattleEvent quitBattleEvent)
         {
-            _context.GetEventBus().RemoveListener<QuitBattleEvent>(OnQuitBattleEvent);
-            // 监听回合开始事件
-            _context.GetEventBus().RemoveListener<TurnStartEvent>(OnTurnStartDispatch);
-            // 监听角色技能选择事件
-            _context.GetEventBus().RemoveListener<SelectSkillEvent>(SelectSkillEventScheduler);
-            // 监听技能释放后通用逻辑事件
-            _context.GetEventBus().RemoveListener<UltimateCastEvent>(OnUltimateCastDispatch);
+            _context.EventBus.RemoveListener<QuitBattleEvent>(OnQuitBattleEvent);
+            _context.EventBus.RemoveListener<TurnStartEvent>(OnTurnStartDispatch);
+            _context.EventBus.RemoveListener<SelectSkillEvent>(SelectSkillEventScheduler);
+            _context.EventBus.RemoveListener<UltimateCastEvent>(OnUltimateCastDispatch);
+            _context.EventBus.RemoveListener<RoleTriggerSkillEvent>(OnRoleTriggerSkillEvent);
             _context = null;
         }
     }

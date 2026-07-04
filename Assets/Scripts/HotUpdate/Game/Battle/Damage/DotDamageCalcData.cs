@@ -1,7 +1,7 @@
-using HotUpdate.Base;
 using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.Property;
 
-namespace HotUpdate.Game.Battle.Damage.Data
+namespace HotUpdate.Game.Battle.Damage
 {
     /// <summary>
     /// 持续伤害计算数据

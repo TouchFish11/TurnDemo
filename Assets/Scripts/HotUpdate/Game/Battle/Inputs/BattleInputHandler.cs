@@ -69,7 +69,7 @@ namespace HotUpdate.Game.Battle.Inputs
 
         public void Init(IBattleContext context)
         {
-            context.GetEventBus().AddListener<QuitBattleEvent>(OnQuitBattleEvent);
+            context.EventBus.AddListener<QuitBattleEvent>(OnQuitBattleEvent);
             // 注册帧更新监听，每帧执行输入处理逻辑
             _monoAdapter.AddUpdateListener(OnUpdate);
             _context = context;
@@ -172,7 +172,7 @@ namespace HotUpdate.Game.Battle.Inputs
 
         private void OnQuitBattleEvent(QuitBattleEvent quitBattleEvent)
         {
-            _context.GetEventBus().RemoveListener<QuitBattleEvent>(OnQuitBattleEvent);
+            _context.EventBus.RemoveListener<QuitBattleEvent>(OnQuitBattleEvent);
             // 移除帧更新监听
             _monoAdapter.RemoveUpdateListener(OnUpdate);
         }

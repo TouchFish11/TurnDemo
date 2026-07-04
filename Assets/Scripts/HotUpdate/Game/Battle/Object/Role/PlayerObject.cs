@@ -10,6 +10,7 @@ using HotUpdate.Game.Battle.ResponsibilityChain.DamageChain;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Component;
 using HotUpdate.Game.Battle.Skill.Conditions;
+using HotUpdate.Game.Battle.Skill.Factory;
 using HotUpdate.Game.Battle.TargetSelect;
 using HotUpdate.Game.Battle.TargetSelect.Strategys;
 
@@ -96,7 +97,7 @@ namespace HotUpdate.Game.Battle.Object.Role
                     _turnStates.TryAdd(EActPhase.TurnStart, DIContainer.Create<TurnStartState>(parameterValues: this));
                     break;
                 case EActPhase.Operator:
-                    _turnStates.TryAdd(EActPhase.Operator, DIContainer.Create<OperatorState>(parameterValues: this));
+                    _turnStates.TryAdd(EActPhase.Operator, DIContainer.Create<TurnExecutingState>(parameterValues: this));
                     break;
                 case EActPhase.TurnEnd:
                     _turnStates.TryAdd(EActPhase.TurnEnd, DIContainer.Create<TurnEndState>(parameterValues: this));
@@ -112,12 +113,6 @@ namespace HotUpdate.Game.Battle.Object.Role
             ChangeState(EActPhase.SettlementBuff);
         }
         
-        public void SendSuspendCommand()
-        {
-            // 发送对象的行动指令，占位指令
-            Context.GetEventBus().TriggerEvent(new InsertCommandEvent(Context, commandfactory.GetRoleActCommand()));
-        }
-
         public override void CastSkill(int skillId)
         {
             var skillComponent = GetComponent<PlayerSkillComponent>();
@@ -135,10 +130,17 @@ namespace HotUpdate.Game.Battle.Object.Role
                 skillComponent.IsTrigger = true;
                 skillComponent.IsRelease = false;
             }
+            else
+            {
+                // 非终结技默认只能行动一次
+                CanAct = false;
+            }
             
             var skillCommand = commandfactory.GetSkillCommand(skill);
             // 发送指令
-            Context.GetEventBus().TriggerEvent(new InsertCommandEvent(Context, skillCommand));
+            Context.EventBus.TriggerEvent(new InsertCommandEvent(Context, skillCommand));
+            // 正在行动
+            Acting = true;
         }
 
         public void RecoverUltimate(int value)

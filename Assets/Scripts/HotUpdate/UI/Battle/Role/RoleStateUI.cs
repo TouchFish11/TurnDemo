@@ -110,10 +110,10 @@ namespace HotUpdate.UI.Battle.Role
             
             // 获取战斗上下文并注册事件监听
             battleContext = battleEntity.Context;
-            battleContext.GetEventBus().AddListener<HpChangedEvent>(OnHpChanged);
-            battleContext.GetEventBus().AddListener<ShieldChangedEvent>(OnShieldChanged);
-            battleContext.GetEventBus().AddListener<EnergyChangedEvent>(OnEnergyChangedEvent);
-            battleContext.GetEventBus().AddListener<StatusAddedEvent>(OnStatusAddedEvent);
+            battleContext.EventBus.AddListener<HpChangedEvent>(OnHpChanged);
+            battleContext.EventBus.AddListener<ShieldChangedEvent>(OnShieldChanged);
+            battleContext.EventBus.AddListener<EnergyChangedEvent>(OnEnergyChangedEvent);
+            battleContext.EventBus.AddListener<StatusAddedEvent>(OnStatusAddedEvent);
         }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace HotUpdate.UI.Battle.Role
                 case "btnSkill":
                     if (!battleEntity.GetComponent<PlayerSkillComponent>().IsTrigger)
                     {
-                        battleContext.GetEventBus().TriggerEvent(new RoleTriggerUltimateSkillEvent(battleContext, battleEntity, ultimateSkillId));
+                        battleContext.EventBus.TriggerEvent(new RoleTriggerSkillEvent(battleContext, ultimateSkillId, battleEntity));
                     }
                     break;
             }
@@ -329,10 +329,10 @@ namespace HotUpdate.UI.Battle.Role
         {
             // 移除Update监听
             _monoAdapter.RemoveUpdateListener(OnUpdate);
-            battleContext.GetEventBus().RemoveListener<HpChangedEvent>(OnHpChanged);
-            battleContext.GetEventBus().RemoveListener<ShieldChangedEvent>(OnShieldChanged);
-            battleContext.GetEventBus().RemoveListener<EnergyChangedEvent>(OnEnergyChangedEvent);
-            battleContext.GetEventBus().RemoveListener<StatusAddedEvent>(OnStatusAddedEvent);
+            battleContext.EventBus.RemoveListener<HpChangedEvent>(OnHpChanged);
+            battleContext.EventBus.RemoveListener<ShieldChangedEvent>(OnShieldChanged);
+            battleContext.EventBus.RemoveListener<EnergyChangedEvent>(OnEnergyChangedEvent);
+            battleContext.EventBus.RemoveListener<StatusAddedEvent>(OnStatusAddedEvent);
         }
     }
 }

@@ -107,11 +107,11 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
             _monoAdapter = monoAdapter;
 
             // 获取战斗管理器的事件总线，注册血量变化事件监听
-            BattleEntity.Context.GetEventBus().AddListener<HpChangedEvent>(OnHpChangedEvent);
+            BattleEntity.Context.EventBus.AddListener<HpChangedEvent>(OnHpChangedEvent);
             // 注册韧性变化事件监听
-            BattleEntity.Context.GetEventBus().AddListener<ToughnessChangedEvent>(OnToughnessChangedEvent);
+            BattleEntity.Context.EventBus.AddListener<ToughnessChangedEvent>(OnToughnessChangedEvent);
             // 注册韧性破碎（破防）事件监听
-            BattleEntity.Context.GetEventBus().AddListener<ToughnessBrokenEvent>(OnToughnessBrokenEvent);
+            BattleEntity.Context.EventBus.AddListener<ToughnessBrokenEvent>(OnToughnessBrokenEvent);
         }
 
         /// <summary>

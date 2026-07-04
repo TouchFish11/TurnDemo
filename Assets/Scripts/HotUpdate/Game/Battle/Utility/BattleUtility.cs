@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using HotUpdate.Base;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Object;
@@ -45,7 +44,7 @@ namespace HotUpdate.Game.Battle.Utility
             }
 
             // 基于行动值升序排列（行动值越小越先行动）
-            context.Sort((b1, b2) =>
+            context.AllBattleEntity.Sort((b1, b2) =>
             {
                 if (b1.ActionValue < b2.ActionValue)
                 {
@@ -56,9 +55,9 @@ namespace HotUpdate.Game.Battle.Utility
             });
 
             // 将首个行动实体的行动值置为基准线起始值
-            context.ActionLine = context.GetFirstBattleEntity().ActionValue;
+            context.ActionLine = context.AllBattleEntity[0].ActionValue;
             // 触发事件，通知行动轴UI更新
-            context.GetEventBus().TriggerEvent(new ActionBarSortPostEvent(context, context.GetAliveEntitys()));
+            context.EventBus.TriggerEvent(new ActionBarSortPostEvent(context, context.GetAliveEntitys()));
         }
 
         /// <summary>
@@ -79,7 +78,7 @@ namespace HotUpdate.Game.Battle.Utility
             // 将当前实体插入到对应的位置
             InsertActionAxis(currentTurnOwner);
             // 触发事件，通知行动轴UI更新
-            context.GetEventBus().TriggerEvent(new ActionBarSortPostEvent(context, context.GetAliveEntitys()));
+            context.EventBus.TriggerEvent(new ActionBarSortPostEvent(context, context.GetAliveEntitys()));
         }
         
         /// <summary>
@@ -90,7 +89,7 @@ namespace HotUpdate.Game.Battle.Utility
         {
             var context = actEndEntity.Context;
             // 先从列表中移除
-            context.RemoveBattleEntity(actEndEntity);
+            context.AllBattleEntity.Remove(actEndEntity);
             
             var index = -1;
             foreach (var battleEntityObject in context.GetAliveEntitys())
@@ -102,15 +101,15 @@ namespace HotUpdate.Game.Battle.Utility
                 }
                 
                 // 找到第一个行动值大于当前角色的索引，插入到该位置前
-                index = context.GetEntityIndex(battleEntityObject);
-                context.Insert(index, actEndEntity);
+                index = context.AllBattleEntity.IndexOf(battleEntityObject);
+                context.AllBattleEntity.Insert(index, actEndEntity);
                 break;
             }
 
             if (index == -1)
             {
                 // 所有角色行动值都更小，当前实体插入末尾
-                context.AddBattleEntity(actEndEntity);
+                context.AllBattleEntity.Add(actEndEntity);
             }
         }
         

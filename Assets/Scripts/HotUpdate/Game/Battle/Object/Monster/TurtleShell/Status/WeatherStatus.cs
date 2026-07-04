@@ -1,8 +1,9 @@
 using HotUpdate.Base;
 using HotUpdate.Game.Battle.Context;
-using HotUpdate.Game.Battle.Damage.Data;
+using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Event.UI;
+using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.Statuses;
 using HotUpdate.Game.VFX;
 using UnityEngine;
@@ -40,10 +41,10 @@ namespace HotUpdate.Game.Battle.Object.Monster.TurtleShell.Status
             {
                 vfxInfo.IsStop = true;
                 // 更新累计伤害UI
-                Owner.Context.GetEventBus().TriggerEvent(new ClearCumulativeDamageEvent(Owner.Context));
+                Owner.Context.EventBus.TriggerEvent(new ClearCumulativeDamageEvent(Owner.Context));
             });
             
-            Owner.Context.GetEventBus().TriggerEvent(new CalcDotDamageEvent(Owner.Context, damageCalcData));
+            Owner.Context.EventBus.TriggerEvent(new CalcDotDamageEvent(Owner.Context, damageCalcData));
         }
     }
 }

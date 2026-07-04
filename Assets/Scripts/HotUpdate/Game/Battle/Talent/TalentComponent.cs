@@ -10,8 +10,8 @@ namespace HotUpdate.Game.Battle.Talent
 
         protected override void OnBattleInit()
         {
-            //BattleEntity.Context.GetEventBus().AddListener<TurnStartEvent>(OnBattleEventHandler);
-            //BattleEntity.Context.GetEventBus().AddListener<TurnEndEvent>(OnBattleEventHandler);
+            //BattleEntity.Context.EventBus.AddListener<TurnStartEvent>(OnBattleEventHandler);
+            //BattleEntity.Context.EventBus.AddListener<TurnEndEvent>(OnBattleEventHandler);
         }
         
         private void OnBattleEventHandler(BattleEvent battleEvent)

@@ -1,6 +1,6 @@
 using HotUpdate.Base.Data;
 
-namespace HotUpdate.Base
+namespace HotUpdate.Base.UI
 {
     /// <summary>
     /// 确认内容接口

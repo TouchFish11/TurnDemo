@@ -1,5 +1,6 @@
 using Core.DI;
 using HotUpdate.Base.Manager;
+using HotUpdate.Game.Battle.Command;
 using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Event;
 using HotUpdate.Game.Battle.Inputs;
@@ -21,7 +22,8 @@ namespace HotUpdate.Game.Battle.Core
             IBattleCameraManager battleCameraManager,
             IBattleManager battleManager,
             IBattleCoordinator battleCoordinator,
-            IBattlePointProxy battlePointProxy
+            IBattlePointProxy battlePointProxy,
+            IBattleCommandsController battleCommandsController
             )
         {
             

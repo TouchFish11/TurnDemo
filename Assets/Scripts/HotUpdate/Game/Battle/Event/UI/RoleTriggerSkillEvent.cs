@@ -5,7 +5,7 @@ namespace HotUpdate.Game.Battle.Event.UI
 {
     /// <summary>
 	/// 角色触发技能事件
-	/// 技能按键按下时触发该事件；非终结技技能使用该事件
+	/// 技能按键按下时触发该事件；仅非终结技技能使用该事件
     /// </summary>
     public class RoleTriggerSkillEvent : BattleEvent
     {

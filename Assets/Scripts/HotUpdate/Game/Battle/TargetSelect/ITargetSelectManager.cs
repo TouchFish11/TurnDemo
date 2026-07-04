@@ -55,5 +55,7 @@ namespace HotUpdate.Game.Battle.TargetSelect
         /// 左拖拽交互触发，在同类型目标列表中向前切换主目标
         /// </summary>
         void SelectPreviousMainTarget();
+
+        void Init(IBattleContext context);
     }
 }

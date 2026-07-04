@@ -4,11 +4,11 @@ using Core.Log;
 using HotUpdate.Base;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Context;
-using HotUpdate.Game.Battle.Damage.Data;
 using HotUpdate.Game.Battle.Damage.Strategys;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Utility;
 
 namespace HotUpdate.Game.Battle.Damage
@@ -29,7 +29,7 @@ namespace HotUpdate.Game.Battle.Damage
 
         public void Init(IBattleContext context)
         {
-            context.GetEventBus().AddListener<QuitBattleEvent>(OnQuitBattleEvent);
+            context.EventBus.AddListener<QuitBattleEvent>(OnQuitBattleEvent);
             // 注册策略
             _strategys.Add(E_DamageType.Direct, DIContainer.Create<DirectDamageStrategy>());
             _strategys.Add(E_DamageType.Dot, DIContainer.Create<DotDamageStrategy>());
@@ -37,9 +37,9 @@ namespace HotUpdate.Game.Battle.Damage
             _strategys.Add(E_DamageType.True, DIContainer.Create<TrueDamageStrategy>());
 
             // 监听击破事件
-            context.GetEventBus().AddListener<ToughnessBrokenEvent>(OnToughnessBrokenEvent);
+            context.EventBus.AddListener<ToughnessBrokenEvent>(OnToughnessBrokenEvent);
             // 监听Dot事件
-            context.GetEventBus().AddListener<CalcDotDamageEvent>(OnCalcDotDamageEvent);
+            context.EventBus.AddListener<CalcDotDamageEvent>(OnCalcDotDamageEvent);
             this.context = context;
         }
         
@@ -125,12 +125,12 @@ namespace HotUpdate.Game.Battle.Damage
 
         private void OnQuitBattleEvent(QuitBattleEvent quitBattleEvent)
         {
-            context.GetEventBus().RemoveListener<QuitBattleEvent>(OnQuitBattleEvent);
+            context.EventBus.RemoveListener<QuitBattleEvent>(OnQuitBattleEvent);
             _strategys.Clear();
             // 取消监听击破事件
-            context.GetEventBus().RemoveListener<ToughnessBrokenEvent>(OnToughnessBrokenEvent);
+            context.EventBus.RemoveListener<ToughnessBrokenEvent>(OnToughnessBrokenEvent);
             // 取消监听Dot事件
-            context.GetEventBus().RemoveListener<CalcDotDamageEvent>(OnCalcDotDamageEvent);
+            context.EventBus.RemoveListener<CalcDotDamageEvent>(OnCalcDotDamageEvent);
             context = null;
         }
     }

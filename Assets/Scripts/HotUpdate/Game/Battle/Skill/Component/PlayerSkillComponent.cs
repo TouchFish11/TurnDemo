@@ -9,7 +9,14 @@ namespace HotUpdate.Game.Battle.Skill.Component
     [ComponentId(typeof(PlayerSkillComponent))]
     public class PlayerSkillComponent : SkillComponent
     {
+        /// <summary>
+        /// 终结技是否触发，点击角色终结技图标触发
+        /// </summary>
         public bool IsTrigger { get; set; }
+        
+        /// <summary>
+        /// 终结技是否释放，按下技能按键后确认释放
+        /// </summary>
         public bool IsRelease { get; set; }
 
         protected override void OnBattleInit()

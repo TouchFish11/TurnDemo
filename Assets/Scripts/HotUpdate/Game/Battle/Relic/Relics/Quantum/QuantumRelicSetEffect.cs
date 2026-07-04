@@ -34,7 +34,7 @@ namespace HotUpdate.Game.Battle.Relic.Relics.Quantum
             Console.WriteLine($"{owner.GameObject.name}����{SetName}4����Ч����������׷�������˺�");
 
             // ���ġ������ͷ��¼������ж��Ƿ񱩻�������׷���˺���
-            //BattleEntity.Context.GetEventBus().AddListener<SkillCastEvent>(OnSkillCastHandler);
+            //BattleEntity.Context.EventBus.AddListener<SkillCastEvent>(OnSkillCastHandler);
 
             // �����߼���2����/4���׻������Լӳɣ�ֱ�ӵ��ý�ɫ����API��
             var attributeBonus = RequiredCount switch

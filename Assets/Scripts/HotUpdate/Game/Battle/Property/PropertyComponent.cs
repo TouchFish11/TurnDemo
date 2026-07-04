@@ -35,13 +35,13 @@ namespace HotUpdate.Game.Battle.Property
                     // 更新当前血量
                     battleProperty.CurrentHp = newValue;
                     // 触发血量变更事件（通知事件总线）
-                    Context.GetEventBus().TriggerEvent(new HpChangedEvent(Context, battleProperty.CurrentHp, battleProperty.MaxHp, BattleEntity));
+                    Context.EventBus.TriggerEvent(new HpChangedEvent(Context, battleProperty.CurrentHp, battleProperty.MaxHp, BattleEntity));
                     break;
                 case E_DynamicPropertyType.MaxHp:
                     // 更新最大血量
                     battleProperty.MaxHp = newValue;
                     // 触发血量变更事件（当前血量、新最大血量）
-                    Context.GetEventBus().TriggerEvent(new HpChangedEvent(Context, battleProperty.CurrentHp, newValue, BattleEntity));
+                    Context.EventBus.TriggerEvent(new HpChangedEvent(Context, battleProperty.CurrentHp, newValue, BattleEntity));
                     break;
                 case E_DynamicPropertyType.TotalAtk:
                     // 更新总攻击力
@@ -69,7 +69,7 @@ namespace HotUpdate.Game.Battle.Property
                     // 更新当前护盾值
                     battleProperty.CurrentShield = newValue;
                     // 触发护盾变更事件
-                    Context.GetEventBus().TriggerEvent(new ShieldChangedEvent(Context, battleProperty.CurrentShield, BattleEntity, currentShieldDelta));
+                    Context.EventBus.TriggerEvent(new ShieldChangedEvent(Context, battleProperty.CurrentShield, BattleEntity, currentShieldDelta));
                     break;
             }
         }

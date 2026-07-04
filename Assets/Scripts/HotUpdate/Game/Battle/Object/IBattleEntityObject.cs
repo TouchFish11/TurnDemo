@@ -2,8 +2,10 @@ using System.Collections;
 using HotUpdate.Base;
 using HotUpdate.Base.Object;
 using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Conditions;
+using HotUpdate.Game.Battle.Skill.Factory;
 using HotUpdate.Game.Battle.TargetSelect;
 using UnityEngine;
 
@@ -51,6 +53,11 @@ namespace HotUpdate.Game.Battle.Object
         /// 用于判断实体当前是否具备行动能力（如未被眩晕、冻结、死亡）
         /// </summary>
         bool CanAct { get; set; }
+        
+        /// <summary>
+        /// 是否正在行动
+        /// </summary>
+        bool Acting { get; set; }
 
         /// <summary>
         /// 战斗上下文

@@ -112,25 +112,25 @@ MonoBehaviour:
       name: BaseRole.controller
       hash: 88a8b9e8e2dac26ecafc7c67e00ab56d1b677518ea1cc439d06618b9cc6d1713
       assetType: 0
-    - assetPath: Assets\Editor\ArtRes\Animator\Role\FireFlyAnimtor.controller
-      size: 35982
-      name: FireFlyAnimtor.controller
-      hash: 77cb4b134606031b0c86b61b9fc096fb17421364a0b18610a51675a722f14729
-      assetType: 0
     - assetPath: Assets\Editor\ArtRes\Animator\Role\GunmanAnimator.controller
       size: 33691
       name: GunmanAnimator.controller
       hash: 5121291e047f18246076acc4fbee7f1632bcc9b8b6be1bc9f6ebdf5969c5e388
       assetType: 0
-    - assetPath: Assets\Editor\ArtRes\Animator\Role\HertaAnimtor.controller
-      size: 33886
-      name: HertaAnimtor.controller
-      hash: ce682ba238196ab3c2c411d822b265a404a6eed255dbfb98d19621a8bdc69cb6
-      assetType: 0
     - assetPath: Assets\Editor\ArtRes\Animator\Role\PriestAnimator.controller
       size: 35970
       name: PriestAnimator.controller
       hash: c85521b2edc80a8411e477f1494d4ee3fe13fce80c6ebee07f4c112d6ae5958e
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\Animator\Role\WarriorAnimtor.controller
+      size: 35982
+      name: WarriorAnimtor.controller
+      hash: 1b7b1e1c6d2fa2a233532540ff63ff8abdc1018bc55dfa13c53ae20d9504d7cb
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\Animator\Role\WizardAnimtor.controller
+      size: 33887
+      name: WizardAnimtor.controller
+      hash: b67cb4225ce37ed1734a125518614eedc121d92272c1a553a329f395f2fde6c8
       assetType: 0
   - assetBundleName: camera
     assetInfos:
@@ -406,12 +406,12 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\Prefab\Role\Prefab_Warrior.prefab
       size: 92911
       name: Prefab_Warrior.prefab
-      hash: be56ecff8785c92aedf89163ba93d8e862e03c44ffb0f861983d35e120d2b0c4
+      hash: 3435318450ac69747c7f2743fa87d86d8ddf1fe07652da86734c989cef0a803c
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Prefab\Role\Prefab_Wizard.prefab
-      size: 91843
+      size: 91844
       name: Prefab_Wizard.prefab
-      hash: bdca6f9e31198c952281373d2bc68c22a70c3f0da146fa2d1a26ceaa89694bc3
+      hash: ea47acd9a40383c7660e47140d2d19a6fd024260ff0ab5f09b2a3c5c285ae2b6
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Prefab\UI\UI_3D_FloatingText.prefab
       size: 11096
@@ -421,9 +421,9 @@ MonoBehaviour:
   - assetBundleName: scene
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\Scene\BeginScene.unity
-      size: 19978
+      size: 17419
       name: BeginScene.unity
-      hash: baaa3ced1cf0db42f09b07cd7d7ad7a25194bf3ba84771cd2fa7c89d1be19102
+      hash: b21a9120e77fd82da29ade6b328c3c934e99241c5b36ea00275f6efce5d65bcd
       assetType: 1
     - assetPath: Assets\Editor\ArtRes\Scene\LevelScene.unity
       size: 112279
@@ -594,7 +594,7 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\UI\Battle\ActionLine\ActionGridUI.prefab
       size: 24520
       name: ActionGridUI.prefab
-      hash: a4f334d275e96461e946548eae04b18c4460d385681d17599befcca3f2271fbc
+      hash: 25d75a08f23d54f705ec15165fa96b4bd54836221f43371dbfe409643d7dd6bb
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Battle\ActionLine\WaitingActUI.prefab
       size: 4839

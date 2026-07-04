@@ -44,7 +44,7 @@ namespace HotUpdate.Game.Battle.Core
         public void InitProxy(IBattleContext ctx, List<IBattleEntityObject> players)
         {
             context = ctx;
-            context.GetEventBus().AddListener<QuitBattleEvent>(OnQuitBattleEvent);
+            context.EventBus.AddListener<QuitBattleEvent>(OnQuitBattleEvent);
             var index = 0;
             foreach (var roleTrans in BattlePoint.GetRoleTransforms())
             {
@@ -105,7 +105,7 @@ namespace HotUpdate.Game.Battle.Core
                 return;
             }
 
-            var monsters = context.GetSceneMonsters();
+            var monsters = context.SceneMonsterObjects;
             switch (newLiveCount)
             {
                 // 居中显示，放在索引2的位置
@@ -160,7 +160,7 @@ namespace HotUpdate.Game.Battle.Core
 
         private void OnQuitBattleEvent(QuitBattleEvent quitBattleEvent)
         {
-            context.GetEventBus().RemoveListener<QuitBattleEvent>(OnQuitBattleEvent);
+            context.EventBus.RemoveListener<QuitBattleEvent>(OnQuitBattleEvent);
             pointInfos.Clear();
             context = null;
             _battlePoint = null;

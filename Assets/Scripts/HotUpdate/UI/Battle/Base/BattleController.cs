@@ -57,7 +57,7 @@ namespace HotUpdate.UI.Battle.Base
         public void InitBattleController(IBattleContext battleContext)
         {
             // 注册战斗相关事件
-            EventProcessor.RegisterBattleEvents(battleContext.GetEventBus());
+            EventProcessor.RegisterBattleEvents(battleContext.EventBus);
         }
     }
 }

@@ -1,6 +1,7 @@
 using Core.UI;
 using HotUpdate.Base;
 using HotUpdate.Base.Data;
+using HotUpdate.Base.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

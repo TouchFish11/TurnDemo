@@ -22,7 +22,7 @@ namespace HotUpdate.Game.Animation.Component
         {
             _battleAnimationComponentCore = (BattleAnimationComponentCore)ComponentCore;
             // 注册技能选择事件监听
-            //battleEntity.Context.GetEventBus().AddListener<SelectSkillEvent>(OnSelectSkillEvent);
+            //battleEntity.Context.EventBus.AddListener<SelectSkillEvent>(OnSelectSkillEvent);
             // 初始化默认动画类型：玩家默认预普通攻击动画，其他实体（怪物）默认无动画
             _battleAnimationComponentCore.CurrentAnimationType = BattleEntity is IPlayerObject ? E_AnimationType.PreNormalAttack : E_AnimationType.None;
         }

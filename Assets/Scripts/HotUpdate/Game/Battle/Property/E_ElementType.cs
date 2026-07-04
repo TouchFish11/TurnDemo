@@ -1,5 +1,5 @@
 
-namespace HotUpdate.Base
+namespace HotUpdate.Game.Battle.Property
 {
     /// <summary>
     /// 属性类型

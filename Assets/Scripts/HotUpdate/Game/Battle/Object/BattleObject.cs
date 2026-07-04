@@ -5,11 +5,11 @@ using HotUpdate.Game.Battle.Command;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Event.General;
-using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.ResponsibilityChain;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Conditions;
+using HotUpdate.Game.Battle.Skill.Factory;
 using HotUpdate.Game.Battle.TargetSelect;
 using HotUpdate.Game.Battle.UI;
 using UnityEngine;
@@ -32,7 +32,9 @@ namespace HotUpdate.Game.Battle.Object
         protected IDeathHandler deathHandler;
         // 伤害处理链
         protected Handler<DamageResult> damageChain;
-        
+
+        public bool Acting { get; set; }
+
         /// <summary>
         /// 战斗上下文，提供战斗环境、事件总线、规则等核心战斗数据访问
         /// </summary>
@@ -105,6 +107,7 @@ namespace HotUpdate.Game.Battle.Object
         {
             // 重置行动标志
             CanAct = true;
+            Acting = false;
             OnExecuteAction();
         }
 
@@ -119,7 +122,7 @@ namespace HotUpdate.Game.Battle.Object
             var currentHp = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentHp);
             propertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentHp, currentHp + healAmount);
             // 触发应用治疗事件
-            Context.GetEventBus().TriggerEvent(new ApplyHealEvent(Context, this, healAmount));
+            Context.EventBus.TriggerEvent(new ApplyHealEvent(Context, this, healAmount));
         }
 
         /// <summary>
@@ -132,7 +135,7 @@ namespace HotUpdate.Game.Battle.Object
             var currentShield = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentShield);
             propertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentShield, currentShield + shieldAmount);
             // 触发应用护盾件
-            Context.GetEventBus().TriggerEvent(new ApplyShieldEvent(Context, this, shieldAmount));
+            Context.EventBus.TriggerEvent(new ApplyShieldEvent(Context, this, shieldAmount));
         }
 
         public abstract void CastSkill(int skillId);
@@ -144,8 +147,6 @@ namespace HotUpdate.Game.Battle.Object
 
         public IEnumerator Die()
         {
-            // 触发实体死亡事件
-            Context.GetEventBus().TriggerEvent(new EntityDeadEvent(Context, this));
             yield return deathHandler.HandleDeath();
         }
         

@@ -1,5 +1,6 @@
 using HotUpdate.Base;
 using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Damage;
 
 namespace HotUpdate.Game.Battle.Event.General
 {

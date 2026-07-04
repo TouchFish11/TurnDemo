@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using HotUpdate.Game.Battle.Core;
-using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Conditions;
 using HotUpdate.Game.Battle.TargetSelect;
 
-namespace HotUpdate.Game.Battle.Skill
+namespace HotUpdate.Game.Battle.Skill.Component
 {
     public interface ISkillComponent : IBattleComponent
     {

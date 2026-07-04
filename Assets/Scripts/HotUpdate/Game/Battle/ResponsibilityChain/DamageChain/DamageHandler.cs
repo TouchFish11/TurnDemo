@@ -2,6 +2,7 @@ using Core.Log;
 using HotUpdate.Base;
 using HotUpdate.Base.Enums;
 using HotUpdate.Game.Animation.Component;
+using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Property;
 
@@ -26,7 +27,7 @@ namespace HotUpdate.Game.Battle.ResponsibilityChain.DamageChain
 
             var context = request.Target.Context;
             // 执行应用伤害事件，显示伤害文本，显示护盾处理后的最终伤害
-            context.GetEventBus().TriggerEvent(new ApplyDamageEvent(context, request));
+            context.EventBus.TriggerEvent(new ApplyDamageEvent(context, request));
             
             // 播放受击动画
             target.GetComponent<BattleAnimationComponent>().SetAnimationState((int)E_AnimationType.Hit);

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using HotUpdate.Base;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Operation;
 using HotUpdate.Game.Battle.Skill;
@@ -170,14 +171,26 @@ namespace HotUpdate.Game.Battle.UI
         Task<Sprite> GetIconByEntity(IBattleEntityObject battleEntity);
 
         /// <summary>
-        /// 移除指定对象对应的行动格子
+        /// 切换回合时更新行动格子
         /// </summary>
-        /// <param name="holdCurrentTurnObj"></param>
-        void RemoveActionGrid(IBattleEntityObject holdCurrentTurnObj);
+        /// <param name="holdCurrentTurnObj">持有当前回合的对象</param>
+        void SwitchTurnUpdateActionGrid(IBattleEntityObject holdCurrentTurnObj);
 
         /// <summary>
         /// 移除等待列表中的第一个UI
         /// </summary>
         void RemoveFirstWaitingActUI();
+
+        /// <summary>
+        /// 平滑移动行动轴格子对象
+        /// </summary>
+        /// <param name="context"></param>
+        void SlidingActionGrids(IBattleContext context);
+
+        /// <summary>
+        /// 移除指定对象对应的行动格子
+        /// </summary>
+        /// <param name="battleEntity"></param>
+        void RemoveActionGrid(IBattleEntityObject battleEntity);
     }
 }
