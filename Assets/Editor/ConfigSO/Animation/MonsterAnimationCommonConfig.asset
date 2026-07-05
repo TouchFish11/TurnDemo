@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae6ffb86f23ca12408f7fbe603604835, type: 3}
+  m_Name: MonsterAnimationCommonConfig
+  m_EditorClassIdentifier: 
+  commonCollectionSO: {fileID: 0}
+  animationConfigCollection:
+    animationConfigs:
+    - layer: 0
+      animationStateName: IdleBattle
+      animationHash: 1238505925
+      animationType: 1
+      loop: 1
+      transitionInTime: 0.1
+      ignores: []
+    - layer: 1
+      animationStateName: IdleBattle
+      animationHash: 2110659171
+      animationType: 1
+      loop: 1
+      transitionInTime: 0.1
+      ignores: []
+    - layer: 1
+      animationStateName: Hit
+      animationHash: -814593744
+      animationType: 9
+      loop: 0
+      transitionInTime: 0.1
+      ignores: []
+    - layer: 1
+      animationStateName: Death
+      animationHash: 208565488
+      animationType: 10
+      loop: 0
+      transitionInTime: 0.1
+      ignores: []
+    - layer: 1
+      animationStateName: Rebirth
+      animationHash: -94673583
+      animationType: 11
+      loop: 0
+      transitionInTime: 0.1
+      ignores: []

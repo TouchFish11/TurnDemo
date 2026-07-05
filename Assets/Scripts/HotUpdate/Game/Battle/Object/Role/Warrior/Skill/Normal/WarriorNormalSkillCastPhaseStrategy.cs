@@ -25,7 +25,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Normal
             // 获取动画组件并切换到普攻动画
             var animationComponent = caster.GetComponent<BattleAnimationComponent>();
             animationComponent.SetAnimationState(skillInfo.f_animationType);
-            var animator = animationComponent.GetAnimator();
+            var animator = animationComponent.Animator;
 
             // 等待动画切换到翻滚状态
             yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).IsName(RollState));

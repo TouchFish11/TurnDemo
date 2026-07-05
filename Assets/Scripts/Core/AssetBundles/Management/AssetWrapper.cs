@@ -61,7 +61,7 @@ namespace Core.AssetBundles.Management
         public void Retain()
         {
             ++RefCount;
-            Logger.Log($"[AssetWrapper]: '{AssetKey}' asset refCount Add to: {RefCount}");
+            //Logger.Log($"[AssetWrapper]: '{AssetKey}' asset refCount Add to: {RefCount}");
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace Core.AssetBundles.Management
             if (RefCount > 0)
             {
                 --RefCount;
-                Logger.Log($"[AssetWrapper]: '{AssetKey}' asset refCount Reduce to: {RefCount}");
+                //Logger.Log($"[AssetWrapper]: '{AssetKey}' asset refCount Reduce to: {RefCount}");
                 
                 if (RefCount != 0) 
                     return;

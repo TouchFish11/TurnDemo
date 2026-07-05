@@ -1,5 +1,4 @@
 using System.Collections;
-using HotUpdate.Base;
 using HotUpdate.Base.Object;
 using HotUpdate.Game.Battle.Command;
 using HotUpdate.Game.Battle.Context;
@@ -7,7 +6,6 @@ using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.ResponsibilityChain;
-using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Conditions;
 using HotUpdate.Game.Battle.Skill.Factory;
 using HotUpdate.Game.Battle.TargetSelect;

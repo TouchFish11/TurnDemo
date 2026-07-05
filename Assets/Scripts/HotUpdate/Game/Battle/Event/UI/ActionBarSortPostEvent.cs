@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using HotUpdate.Game.Battle.Context;
-using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.Event.UI
 {
@@ -9,11 +7,9 @@ namespace HotUpdate.Game.Battle.Event.UI
     /// </summary>
     public class ActionBarSortPostEvent : BattleEvent
     {
-        public IEnumerable<IBattleEntityObject> battleEntities { get; }
-
-        public ActionBarSortPostEvent(IBattleContext context, IEnumerable<IBattleEntityObject> battleEntities) : base(context)
+        public ActionBarSortPostEvent(IBattleContext context) : base(context)
         {
-            this.battleEntities = battleEntities;
+
         }
     }
 }

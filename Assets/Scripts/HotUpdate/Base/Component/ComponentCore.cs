@@ -1,3 +1,5 @@
+using System;
+
 namespace HotUpdate.Base.Component
 {
     public class ComponentCore<T> : IComponentCore<T> where T : IComponent
@@ -17,7 +19,7 @@ namespace HotUpdate.Base.Component
             
         }
 
-        public void Dispose()
+        void IDisposable.Dispose()
         {
             if (_isDisposed) 
                 return;

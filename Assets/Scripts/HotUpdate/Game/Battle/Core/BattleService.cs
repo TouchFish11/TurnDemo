@@ -232,8 +232,9 @@ namespace HotUpdate.Game.Battle.Core
             // 创建怪物
             yield return TaskUtility.WaitForTask(_battleManager.WaveCreator.CreateWave());
             
-            // 初始化行动顺序
+            // 初始化行动顺序并更新行动轴内容
             BattleUtility.InitOrder(_context);
+            controller.BattleUiManager.InitActionbarContent(_context);
             
             // 初始化怪物UI
             yield return TaskUtility.WaitForTask(controller.UiInitializer.InitMonsterUIs(_context.GetAliveMonsterEntitys()));
@@ -276,12 +277,15 @@ namespace HotUpdate.Game.Battle.Core
                     _context.SetCurrentTurnOwner(null);
                 }
             }
-            
-            // 触发实体死亡事件
-            _context.EventBus.TriggerEvent(new EntityDeadEvent(_context, deadEntities));
 
-            // 等待所有死亡动画处理完成
-            yield return TaskUtility.WaitForTask(Task.WhenAll(cTask));
+            if (deadEntities.Count > 0)
+            {
+                // 触发实体死亡事件
+                _context.EventBus.TriggerEvent(new EntityDeadEvent(_context, deadEntities));
+
+                // 等待所有死亡动画处理完成
+                yield return TaskUtility.WaitForTask(Task.WhenAll(cTask));
+            }
         }
 
         /// <summary>

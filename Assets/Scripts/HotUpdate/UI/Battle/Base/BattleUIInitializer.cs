@@ -86,7 +86,7 @@ namespace HotUpdate.UI.Battle.Base
                 // 初始化角色状态UI（传入属性、图标、必杀技ID、战斗实体）
                 roleStateUI.Init(roleProperty, icon, targetSkillId, battleEntity, _monoAdapter);
                 // 将初始化后的角色状态UI缓存到数据模型中
-                _view.InitRoleStateUI(roleStateUI);
+                _view.RoleStateUIs.Add(roleStateUI);
             }
         }
 

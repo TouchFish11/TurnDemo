@@ -1,5 +1,4 @@
 using Core.Log;
-using HotUpdate.Base;
 using HotUpdate.Base.Enums;
 using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Battle.Damage;
@@ -24,7 +23,6 @@ namespace HotUpdate.Game.Battle.ResponsibilityChain.DamageChain
             }
             
             var target = request.Target;
-
             var context = request.Target.Context;
             // 执行应用伤害事件，显示伤害文本，显示护盾处理后的最终伤害
             context.EventBus.TriggerEvent(new ApplyDamageEvent(context, request));
@@ -37,7 +35,6 @@ namespace HotUpdate.Game.Battle.ResponsibilityChain.DamageChain
             var currentHp = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentHp);
             // 扣减最终伤害量
             propertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentHp, currentHp - request.FinalDamage);
-
             // 修正血量：最小为0（防止血量为负数）
             currentHp = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentHp);
             if (currentHp <= 0)

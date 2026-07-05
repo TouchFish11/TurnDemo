@@ -2,7 +2,6 @@ using System.Collections;
 using Core.Pool;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Object;
-using HotUpdate.Game.Battle.UI;
 
 namespace HotUpdate.Game.Battle.Command
 {

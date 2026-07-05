@@ -1,6 +1,6 @@
 using System;
 
-namespace Game.Test.Animation
+namespace HotUpdate.Base.Animation
 {
     /// <summary>
     /// 动画忽略
@@ -20,7 +20,7 @@ namespace Game.Test.Animation
         public AnimationIgnore(EAnimationType ignoreType)
         {
             this.ignoreType = ignoreType;
-            this.currentIgnoreTime = ignoreTime;
+            currentIgnoreTime = ignoreTime;
         }
 
         public void Update(float deltaTime)

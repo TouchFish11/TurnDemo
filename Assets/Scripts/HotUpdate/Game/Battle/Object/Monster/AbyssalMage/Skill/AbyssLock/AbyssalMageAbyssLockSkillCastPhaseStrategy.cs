@@ -25,12 +25,12 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill.AbyssLock
             animationComponent.SetAnimationState(SkillContext.SkillInfo.f_animationType);
             // 动画切换到第一段
             yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).IsName(Attack01));
-            yield return UpdateCamera_01();
+            yield return UpdateCamera();
             // 第一段VEX
             yield return CreateVFX_01();
         }
         
-        private IEnumerator UpdateCamera_01()
+        private IEnumerator UpdateCamera()
         {
             // 设置Mask
             var mask = LayerGeter.GetPreBitLayer() | LayerGeter.GetRoleBitLayer() | LayerGeter.GetMonsterBitLayer();

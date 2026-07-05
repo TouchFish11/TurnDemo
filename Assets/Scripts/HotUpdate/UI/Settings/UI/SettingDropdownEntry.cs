@@ -1,6 +1,4 @@
-using Core.DI;
 using Core.UI;
-using HotUpdate.Base.Settings;
 using HotUpdate.UI.Settings.ViewModel;
 using TMPro;
 

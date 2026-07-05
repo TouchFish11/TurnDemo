@@ -178,7 +178,7 @@ namespace HotUpdate.UI.Battle.Base
         /// <param name="actionBarSortPostEvent">行动条排序完成事件数据</param>
         private void OnActionBarSortPostEvent(ActionBarSortPostEvent actionBarSortPostEvent)
         {
-            _uiManager.UpdateActionBar(actionBarSortPostEvent.Context, actionBarSortPostEvent.battleEntities);
+            _uiManager.InsertActionGridToTarget(actionBarSortPostEvent.Context);
         }
 
         /// <summary>

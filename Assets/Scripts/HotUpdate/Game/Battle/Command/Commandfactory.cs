@@ -1,6 +1,5 @@
 using Core.DI;
 using Core.Pool;
-using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Toughness;
 
@@ -38,16 +37,6 @@ namespace HotUpdate.Game.Battle.Command
             var command = poolManager.GetData<MonsterActCommand>();
             command.Init(component, skillCommand);
             return command;
-        }
-
-        /// <summary>
-        /// 获取玩家角色的行动指令
-        /// </summary>
-        /// <returns></returns>
-        public RoleActPlaceholderCommand GetRoleActCommand()
-        {
-            var roleActCommand = poolManager.GetData<RoleActPlaceholderCommand>();
-            return roleActCommand;
         }
         
         //...

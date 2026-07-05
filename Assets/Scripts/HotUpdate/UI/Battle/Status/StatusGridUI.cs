@@ -1,4 +1,3 @@
-using Core.DI;
 using Core.Mono;
 using Core.UI;
 using HotUpdate.Game.Battle.Statuses;

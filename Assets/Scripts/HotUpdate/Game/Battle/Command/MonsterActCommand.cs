@@ -1,7 +1,6 @@
 using System.Collections;
 using Core.DI;
 using Core.Utility;
-using HotUpdate.Base.Manager;
 using HotUpdate.Base.UI;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;
@@ -42,7 +41,7 @@ namespace HotUpdate.Game.Battle.Command
         {
             // buff结算
             yield return UpdateStatus();
-            if (!Sender.CanAct)
+            if (!Sender.CanAct && !Sender.Acting)
             {
                 yield break;
             }

@@ -1,8 +1,6 @@
-using System;
 using HotUpdate.Base.Animation;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Enums;
-using HotUpdate.Base.Utility;
 using HotUpdate.Game.Inputs;
 using UnityEngine;
 
@@ -17,6 +15,10 @@ namespace HotUpdate.Game.Animation.Component
     public class NormalAnimationComponent : BaseComponent, IAnimationComponent
     {
         private NormalAnimationComponentCore _normalAnimationComponentCore;
+
+        public Animator Animator => _normalAnimationComponentCore.GetAnimator();
+        
+        public AnimationParameter Parameter => _normalAnimationComponentCore.GetParameter();
         
         protected override void OnInit()
         {
@@ -28,40 +30,15 @@ namespace HotUpdate.Game.Animation.Component
             EntityObject.GetComponent<InputComponent>().AddMouseLeftClickListener(OnAttack);
             
             // 初始化时将战斗层、技能层动画权重设为0，优先使用基础动画层
-            animatorComponent.Animator.SetLayerWeight(animatorComponent.Animator.GetLayerIndex(AnimationUtility.Battle_Layer_Name), 0);
-            animatorComponent.Animator.SetLayerWeight(animatorComponent.Animator.GetLayerIndex(AnimationUtility.Skill_Layer_Name), 0);
-        }
-        
-        /// <summary>
-        /// 设置动画器引用
-        /// 预留方法，用于外部设置Animator组件引用
-        /// </summary>
-        /// <param name="animator">目标Animator组件</param>
-        public void SetAnimator(Animator animator)
-        {
-            throw new NotImplementedException();
+            animatorComponent.SetLayerWeight(EAnimationLayer.BattleLayer, 0);
+            animatorComponent.SetLayerWeight(EAnimationLayer.SkillLayer, 0);
         }
 
-        /// <summary>
-        /// 设置动画播放状态
-        /// 根据指定的动画类型切换对应的动画参数
-        /// </summary>
-        /// <param name="type"></param>
         public void SetAnimationState(int type)
         {
             _normalAnimationComponentCore.SetAnimationState(type);
         }
-
-        public Animator GetAnimator()
-        {
-            return _normalAnimationComponentCore.GetAnimator();
-        }
-
-        public AnimationParameter GetParameter()
-        {
-            return _normalAnimationComponentCore.GetParameter();
-        }
-
+        
         public AnimatorStateInfo GetCurrentAnimatorStateInfo(string layerName)
         {
             return _normalAnimationComponentCore.GetCurrentAnimatorStateInfo(layerName);
@@ -75,7 +52,7 @@ namespace HotUpdate.Game.Animation.Component
         private void OnMove(Vector3 inputDir)
         {
             // 输入方向非零则播放跑步动画，否则播放待机动画
-            SetAnimationState((int)(inputDir != Vector3.zero ? E_AnimationType.Run : E_AnimationType.Idle));
+            _normalAnimationComponentCore.SetAnimationState((int)(inputDir != Vector3.zero ? E_AnimationType.Run : E_AnimationType.Idle));
         }
 
         /// <summary>
@@ -84,7 +61,7 @@ namespace HotUpdate.Game.Animation.Component
         /// </summary>
         private void OnAttack()
         {
-            SetAnimationState((int)E_AnimationType.NormalAttack);
+            _normalAnimationComponentCore.SetAnimationState((int)E_AnimationType.NormalAttack);
         }
         
         protected override void OnBaseDestroy()

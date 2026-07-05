@@ -1,10 +1,9 @@
 using HotUpdate.Base.Animation;
 using HotUpdate.Base.Component;
-using HotUpdate.Base.Enums;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
-namespace HotUpdate.Game.Animation
+namespace HotUpdate.Game.Animation.Component
 {
     public abstract class AnimationComponentCore<T> : ComponentCore<T> where  T : IAnimationComponent
     {
@@ -16,7 +15,7 @@ namespace HotUpdate.Game.Animation
         /// <summary>
         /// 当前动画类型
         /// </summary>
-        public abstract E_AnimationType CurrentAnimationType { get; set; }
+        public abstract EAnimationType AnimationType { get; set; }
 
         /// <summary>
         /// 动画参数
@@ -33,7 +32,13 @@ namespace HotUpdate.Game.Animation
         /// 设置动画类型
         /// </summary>
         /// <param name="type"></param>
-        public abstract void SetAnimationState(int type);
+        public virtual void SetAnimationState(int type)
+        {
+            var animationType = (EAnimationType)type;
+            AnimatorComponent.Play(animationType);
+            // 更新当前动画类型
+            AnimationType = animationType;
+        }
 
         /// <summary>
         /// 获取Animator

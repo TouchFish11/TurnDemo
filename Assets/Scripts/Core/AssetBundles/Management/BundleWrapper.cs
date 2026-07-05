@@ -320,7 +320,7 @@ namespace Core.AssetBundles.Management
         public void Retain()
         {
             ++RefCount;
-            Logger.Log($"[{nameof(BundleWrapper)}]: '{BundleName}' assetBundle is referenced, refCount updated to {RefCount}");
+            //Logger.Log($"[{nameof(BundleWrapper)}]: '{BundleName}' assetBundle is referenced, refCount updated to {RefCount}");
         }
 
         /// <summary>
@@ -332,7 +332,7 @@ namespace Core.AssetBundles.Management
             if (RefCount > 0)
             {
                 --RefCount;
-                Logger.Log($"[BundleWrapper]: '{BundleName}' assetBundle is released, refCount updated to {RefCount}");
+                //Logger.Log($"[BundleWrapper]: '{BundleName}' assetBundle is released, refCount updated to {RefCount}");
                 
                 if (RefCount != 0) 
                     return;

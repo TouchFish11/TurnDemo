@@ -24,12 +24,12 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill.Frostfall
             animationComponent.SetAnimationState(SkillContext.SkillInfo.f_animationType);
             yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).IsName(Attack02));
             // 切换相机视角
-            yield return UpdateCamera_02();
+            yield return UpdateCamera();
             // VEX
             yield return CreateVFX_02();
         }
         
-        private IEnumerator UpdateCamera_02()
+        private IEnumerator UpdateCamera()
         {
             // 设置Mask
             var mask = LayerGeter.GetPreBitLayer() | LayerGeter.GetRoleBitLayer() | LayerGeter.GetMonsterBitLayer();

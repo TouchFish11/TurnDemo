@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
-using HotUpdate.Base;
 using HotUpdate.Base.Enums;
 using HotUpdate.Base.UI;
 using HotUpdate.UI.Begin;

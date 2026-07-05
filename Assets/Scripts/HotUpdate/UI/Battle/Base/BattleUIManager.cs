@@ -1,14 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Mono;
 using Core.UI;
 using Core.Utility;
-using HotUpdate.Base;
 using HotUpdate.Base.Service;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Context;
@@ -317,14 +315,14 @@ namespace HotUpdate.UI.Battle.Base
         #endregion
 
         #region 行动队列/ActionBar相关
-
+        
         public void SlidingActionGrids(IBattleContext context)
         {
+            var displayEntities = context.AllBattleEntity.FindAll(be => be != context.CurrentTurnOwner);
             // 其它格子需要移动
-            var list = new List<IBattleEntityObject>(context.GetAliveEntitys());
-            for (var i = 0; i < list.Count; i++)
+            for (var i = 0; i < displayEntities.Count; i++)
             {
-                var battleEntityObject = list[i];
+                var battleEntityObject = displayEntities[i];
                 var grid = _view.ActionGridUis.Find(ui => ui.BattleEntity == battleEntityObject);
                 if (grid)
                 {
@@ -345,9 +343,7 @@ namespace HotUpdate.UI.Battle.Base
         
         public void SwitchTurnUpdateActionGrid(IBattleEntityObject battleEntity)
         {
-            var actionGridUI = _view.ActionGridUis.Find(ui => ui.BattleEntity == battleEntity);
-            _view.ActionGridUis.Remove(actionGridUI);
-            _objectSpawner.Release(actionGridUI);
+            RemoveActionGrid(battleEntity);
             
             // 其它格子需要移动
             var context = battleEntity.Context;
@@ -433,110 +429,62 @@ namespace HotUpdate.UI.Battle.Base
             }
         }
 
-        /// <summary>
-        /// 更新行动条（ActionBar）UI
-        /// 为每个战斗实体创建行动格子UI，第一个实体的格子会特殊放大
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="battleEntities">需要显示在行动条的战斗实体列表</param>
-        public async void UpdateActionBar(IBattleContext context, IEnumerable<IBattleEntityObject> battleEntities)
+        public async Task InitActionbarContent(IBattleContext context)
+        {
+            // 特殊格子高度 + 间隙
+            var startY = _view.ActionExecuteGrid.RectTransform.anchoredPosition.y - _view.ActionExecuteGrid.RectTransform.rect.height - 10;
+            var startX = _view.ActionExecuteGrid.RectTransform.anchoredPosition.x;
+            
+            for (var i = 0; i < context.AllBattleEntity.Count; i++)
+            {
+                var battleEntity = context.AllBattleEntity[i];
+                // 异步加载行动格子UI预制体
+                var actionGridUI = await _objectSpawner.SpawnAsync<ActionGridUI>(AssetKeys.ActionGridUI, _view.ActionBarContent);
+                // 加载图标精灵
+                var icon = await GetIconByEntity(battleEntity);
+                // 初始化行动格子UI：计算差值作为剩余行动值
+                actionGridUI.Init(icon, startX, startY, i, battleEntity);
+                // 设置行动值
+                actionGridUI.SetActionValue(CalcRemainActionValue(context, battleEntity.ActionValue));
+                _view.ActionGridUis.Add(actionGridUI);
+            }
+        }
+        
+        public async void InsertActionGridToTarget(IBattleContext context)
         {
             try
             {
-                var battleEntityObjects = battleEntities.ToList();
-                var girds = _view.ActionGridUis;
+                var displayEntities = new List<IBattleEntityObject>(context.AllBattleEntity);
+                
                 // 特殊格子高度 + 间隙
                 var startY = _view.ActionExecuteGrid.RectTransform.anchoredPosition.y - _view.ActionExecuteGrid.RectTransform.rect.height - 10;
                 var startX = _view.ActionExecuteGrid.RectTransform.anchoredPosition.x;
-                    
-                if (battleEntityObjects.Count == girds.Count)
+                var girds = _view.ActionGridUis;
+                
+                for (var i = displayEntities.Count - 1; i >= 0; i--)
                 {
-                    SlidingActionGrids(context);
-                    // for (var i = battleEntityObjects.Count - 1; i >= 0; i--)
-                    // {
-                    //     var battleEntityObject = battleEntityObjects[i];
-                    //     var grid = girds.Find(ui => ui.BattleEntity == battleEntityObject);
-                    //     if (grid)
-                    //     {
-                    //         // 设置滑动到的目标索引
-                    //         grid.SetSlideTarget(i);
-                    //         // 设置行动值
-                    //         grid.SetActionValue(CalcRemainActionValue(context, battleEntityObject.ActionValue));
-                    //     }
-                    // }
-                }
-                else if(girds.Count == 0)
-                {
-                    for (var i = 0; i < battleEntityObjects.Count; i++)
+                    var battleEntityObject = displayEntities[i];
+                    var grid = girds.Find(ui => ui.BattleEntity == battleEntityObject);
+                    // 存在直接更新格子位置
+                    if (grid)
                     {
-                        var battleEntity = battleEntityObjects[i];
+                        // 设置滑动到的目标索引
+                        grid.SetSlideTarget(i);
+                        // 设置行动值
+                        grid.SetActionValue(CalcRemainActionValue(context, battleEntityObject.ActionValue));
+                    }
+                    // 新增格子
+                    else
+                    {
                         // 异步加载行动格子UI预制体
                         var actionGridUI = await _objectSpawner.SpawnAsync<ActionGridUI>(AssetKeys.ActionGridUI, _view.ActionBarContent);
                         // 加载图标精灵
-                        var icon = await GetIconByEntity(battleEntity);
+                        var icon = await GetIconByEntity(battleEntityObject);
                         // 初始化行动格子UI：计算差值作为剩余行动值
-                        actionGridUI.Init(icon, startX, startY, i, battleEntity);
+                        actionGridUI.Init(icon, startX, startY, i, battleEntityObject);
                         // 设置行动值
-                        actionGridUI.SetActionValue(CalcRemainActionValue(context, battleEntity.ActionValue));
+                        actionGridUI.SetActionValue(CalcRemainActionValue(context, battleEntityObject.ActionValue));
                         girds.Add(actionGridUI);
-                    }
-                }
-                // 存在死亡实体，需移除对应的格子
-                else if (battleEntityObjects.Count < girds.Count)
-                {
-                    for (var i = girds.Count - 1; i >= 0; i--)
-                    {
-                        var grid = girds[i];
-                        if (!battleEntityObjects.Contains(grid.BattleEntity))
-                        {
-                            _objectSpawner.Release(grid);
-                            girds.RemoveAt(i);
-                        }
-                    }
-                    
-                    SlidingActionGrids(context);
-                    // // 更新位置
-                    // for (var i = battleEntityObjects.Count - 1; i >= 0; i--)
-                    // {
-                    //     var battleEntityObject = battleEntityObjects[i];
-                    //     var grid = girds.Find(ui => ui.BattleEntity == battleEntityObject);
-                    //     if (grid)
-                    //     {
-                    //         // 设置滑动到的目标索引
-                    //         grid.SetSlideTarget(i);
-                    //         // 设置行动值
-                    //         grid.SetActionValue(CalcRemainActionValue(context, battleEntityObject.ActionValue));
-                    //     }
-                    // }
-                }
-                // 新增实体
-                else if(battleEntityObjects.Count > girds.Count)
-                {
-                    for (var i = battleEntityObjects.Count - 1; i >= 0; i--)
-                    {
-                        var battleEntityObject = battleEntityObjects[i];
-                        var grid = girds.Find(ui => ui.BattleEntity == battleEntityObject);
-                        // 存在直接更新格子位置
-                        if (grid)
-                        {
-                            // 设置滑动到的目标索引
-                            grid.SetSlideTarget(i);
-                            // 设置行动值
-                            grid.SetActionValue(CalcRemainActionValue(context, battleEntityObject.ActionValue));
-                        }
-                        // 新增格子
-                        else
-                        {
-                            // 异步加载行动格子UI预制体
-                            var actionGridUI = await _objectSpawner.SpawnAsync<ActionGridUI>(AssetKeys.ActionGridUI, _view.ActionBarContent);
-                            // 加载图标精灵
-                            var icon = await GetIconByEntity(battleEntityObject);
-                            // 初始化行动格子UI：计算差值作为剩余行动值
-                            actionGridUI.Init(icon, startX, startY, i, battleEntityObject);
-                            // 设置行动值
-                            actionGridUI.SetActionValue(CalcRemainActionValue(context, battleEntityObject.ActionValue));
-                            girds.Add(actionGridUI);
-                        }
                     }
                 }
             }
@@ -613,7 +561,8 @@ namespace HotUpdate.UI.Battle.Base
         /// </summary>
         public void ClearSelectMarker()
         {
-            _view.ClearSelectMarkers(_objectSpawner);
+            _objectSpawner.Release(_view.SelectMarkerUIs);
+            _view.SelectMarkerUIs.Clear();
         }
 
         /// <summary>
@@ -623,7 +572,8 @@ namespace HotUpdate.UI.Battle.Base
         public void ClearOperator()
         {
             // 清空操作区UI
-            _view.ClearOperator(_objectSpawner);
+            _objectSpawner.Release(_view.SkillKeyUIs);
+            _view.SkillKeyUIs.Clear();
         }
 
         /// <summary>
@@ -668,7 +618,9 @@ namespace HotUpdate.UI.Battle.Base
             }
             
             // 设置操作区UI列表
-            _view.SetOperator(skillKeyUIs, _objectSpawner);
+            _objectSpawner.Release(_view.SkillKeyUIs);
+            _view.SkillKeyUIs.Clear();
+            _view.SkillKeyUIs.AddRange(skillKeyUIs);
         }
 
         /// <summary>
@@ -680,7 +632,8 @@ namespace HotUpdate.UI.Battle.Base
         public async void SetTargetMarkers(List<IBattleEntityObject> selectedTargets, E_SkillTargetType skillTargetType)
         {
             // 清空目标标记缓存
-            _view.ClearSelectMarkers(_objectSpawner);
+            _objectSpawner.Release(_view.SelectMarkerUIs);
+            _view.SelectMarkerUIs.Clear();
             
             if (selectedTargets == null)
             {
@@ -694,7 +647,7 @@ namespace HotUpdate.UI.Battle.Base
                 // 初始化目标标记
                 selectMarkerUI.InitSelectMarker(battleEntity, skillTargetType, _view.SelectMarkerArea);
                 // 缓存标记
-                _view.AddSelectMarker(selectMarkerUI);
+                _view.SelectMarkerUIs.Add(selectMarkerUI);
             }
         }
         #endregion
@@ -719,9 +672,10 @@ namespace HotUpdate.UI.Battle.Base
                 battlePointUIs.Add(battlePointUIWrapper);
             }
             
-            // 更新模型层的战斗点数数据
-            _view.UpdateBattlePointCount(current, battlePointUIs, _objectSpawner);
-            // 刷新视图层的点数显示
+            _objectSpawner.Release(_view.BattlePointUIs);
+            _view.BattlePointUIs.Clear();
+            _view.BattlePointUIs.AddRange(battlePointUIs);
+            // 刷新文本数显示
             _view.UpdateBattlePointCount(current);
         }
 
@@ -733,8 +687,8 @@ namespace HotUpdate.UI.Battle.Base
         public void UpdatePlayerStatuebar(IBattleEntityObject currentBattleEntity)
         {
             // 获取该实体对应的状态UI
-            var roleStateUI = _view.GetRoleStateUIById(currentBattleEntity.BattleEntityId);
-            if (roleStateUI != null)
+            var roleStateUI = _view.RoleStateUIs.Find(r => r.RoleId == currentBattleEntity.BattleEntityId);
+            if (roleStateUI)
             {
                 // 刷新状态数值
                 roleStateUI.UpdateStatus();
@@ -752,11 +706,12 @@ namespace HotUpdate.UI.Battle.Base
         public IEnumerator ShowPaiting(RoleInfo roleInfo, SkillInfo skillInfo)
         {
             // 加载角色立绘图标
-            var iconTask = GameAsset.LoadAssetAsync<Sprite>(roleInfo.f_icon);
+
+            var iconTask = _iconService.LoadIconAsync(roleInfo.f_icon);
             yield return TaskUtility.WaitForTask(iconTask);
             
             // 启动协程控制显示时长
-            yield return ShowPaiting_Cor(iconTask.Result.Asset, skillInfo);
+            yield return ShowPaiting_Cor(iconTask.Result, skillInfo);
             
             yield break;
 

@@ -1,16 +1,15 @@
 using System;
 using HotUpdate.Base.Component;
-using HotUpdate.Base.Object;
 using UnityEngine;
 
-namespace HotUpdate.Game.Animation
+namespace HotUpdate.Game.Animation.Component
 {
     /// <summary>
     /// 动画触发器
     /// </summary>
     [RequireComponent(typeof(AnimatorComponent))]
     [DisallowMultipleComponent]
-    public class AnimationTrigger : MonoBehaviour, IComponent
+    public class AnimationTrigger : BaseComponent
     {
         public event Action<int> OnAttack;
         
@@ -23,18 +22,6 @@ namespace HotUpdate.Game.Animation
         private void OnDestroy()
         {
             OnAttack = null;
-        }
-
-        public IEntityObject EntityObject { get; }
-        
-        public void Init(IComponentCore<IComponent> componentCore)
-        {
-
-        }
-
-        public void Destroy()
-        {
-
         }
     }
 }

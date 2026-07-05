@@ -56,8 +56,6 @@ namespace HotUpdate.Game.Battle.Utility
 
             // 将首个行动实体的行动值置为基准线起始值
             context.ActionLine = context.AllBattleEntity[0].ActionValue;
-            // 触发事件，通知行动轴UI更新
-            context.EventBus.TriggerEvent(new ActionBarSortPostEvent(context, context.GetAliveEntitys()));
         }
 
         /// <summary>
@@ -78,7 +76,7 @@ namespace HotUpdate.Game.Battle.Utility
             // 将当前实体插入到对应的位置
             InsertActionAxis(currentTurnOwner);
             // 触发事件，通知行动轴UI更新
-            context.EventBus.TriggerEvent(new ActionBarSortPostEvent(context, context.GetAliveEntitys()));
+            context.EventBus.TriggerEvent(new ActionBarSortPostEvent(context));
         }
         
         /// <summary>

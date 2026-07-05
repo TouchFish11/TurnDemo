@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Core.AssetBundles.Management;
-using Core.DI;
 using Core.UI;
 using Core.UI.ViewController;
 using TMPro;

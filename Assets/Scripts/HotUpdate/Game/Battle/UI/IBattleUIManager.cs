@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using HotUpdate.Base;
 using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage;
@@ -82,12 +81,10 @@ namespace HotUpdate.Game.Battle.UI
         void UpdateWaitingContent(IBattleContext context, List<IDisplayPendingExecution> commands);
 
         /// <summary>
-        /// 更新行动条（ActionBar）UI
-        /// 为每个战斗实体创建行动格子UI，第一个实体的格子会特殊放大
+        /// 将当前行动结束的实体UI插入到指定位置
         /// </summary>
         /// <param name="context"></param>
-        /// <param name="battleEntities">需要显示在行动条的战斗实体列表</param>
-        void UpdateActionBar(IBattleContext context, IEnumerable<IBattleEntityObject> battleEntities);
+        void InsertActionGridToTarget(IBattleContext context);
 
         /// <summary>
         /// 设置行动格子高亮状态
@@ -192,5 +189,12 @@ namespace HotUpdate.Game.Battle.UI
         /// </summary>
         /// <param name="battleEntity"></param>
         void RemoveActionGrid(IBattleEntityObject battleEntity);
+
+        /// <summary>
+        /// 初始化行动轴格子内容
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        Task InitActionbarContent(IBattleContext context);
     }
 }

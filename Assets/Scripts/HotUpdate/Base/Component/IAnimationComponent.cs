@@ -6,23 +6,15 @@ namespace HotUpdate.Base.Component
     public interface IAnimationComponent : IComponent
     {
         /// <summary>
-        /// 设置动画类型
+        /// Unity动画控制器
         /// </summary>
-        /// <param name="type"></param>
-        void SetAnimationState(int type);
-
+        Animator Animator { get; }
+        
         /// <summary>
-        /// 获取Animator
+        /// 动画参数
         /// </summary>
-        /// <returns></returns>
-        Animator GetAnimator();
-
-        /// <summary>
-        /// 获取动画参数
-        /// </summary>
-        /// <returns></returns>
-        AnimationParameter GetParameter();
-
+        AnimationParameter Parameter { get; }
+        
         /// <summary>
         /// 获取当前动画状态信息
         /// </summary>

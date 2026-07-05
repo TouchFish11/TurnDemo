@@ -374,7 +374,7 @@ namespace Core.AssetBundles.Management
             }
 
 #if UNITY_EDITOR
-            Logger.Log($"[{nameof(ObjectSpawner)}]: The object ‘{obj.name}’ released.");      
+            //Logger.Log($"[{nameof(ObjectSpawner)}]: The object ‘{obj.name}’ released.");      
 #endif
             return true;
         }

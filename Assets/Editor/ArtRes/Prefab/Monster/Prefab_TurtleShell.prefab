@@ -204,7 +204,6 @@ GameObject:
   m_Component:
   - component: {fileID: 918246367833428249}
   - component: {fileID: 6674926625030128700}
-  - component: {fileID: 8187239376867546666}
   - component: {fileID: 8321461470769455905}
   m_Layer: 0
   m_Name: TurtleShellModel
@@ -251,18 +250,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &8187239376867546666
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3190074845036211744}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1517df3647e8bd249923fe0376fc96b5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &8321461470769455905
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -6,6 +6,7 @@ using HotUpdate.Game.Battle.Object;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Logger = Core.Log.Logger;
 
 namespace HotUpdate.UI.Battle.ActionLine
 {
@@ -155,12 +156,19 @@ namespace HotUpdate.UI.Battle.ActionLine
         /// <param name="targetIndex"></param>
         public void SetSlideTarget(int targetIndex)
         {
+            Logger.Log($"[{nameof(ActionGridUI)}]: {BattleEntity.GameObject.name}索引从" +
+                       $"：{_currentIndex}更新为{targetIndex}");
             _targetY = _baseOffsetY + targetIndex * -(_rectTransform.rect.height + space);
             _slidingTime = 0;
             _isSliding = true;
             _startY = _rectTransform.anchoredPosition.y;
             _currentIndex = targetIndex;
-            _rectTransform.SetSiblingIndex(_currentIndex);
+            
+            // _rectTransform.anchoredPosition =
+            //     new Vector2(
+            //         _rectTransform.anchoredPosition.x,
+            //         _targetY);
+            //_rectTransform.SetSiblingIndex(_currentIndex);
         }
 
         /// <summary>
@@ -262,6 +270,7 @@ namespace HotUpdate.UI.Battle.ActionLine
         protected override void OnDisable()
         {
             DIContainer.GetInstance<IMonoAdapter>().RemoveUpdateListener(OnUpdate);
+            BattleEntity = null;
         }
     }
 }

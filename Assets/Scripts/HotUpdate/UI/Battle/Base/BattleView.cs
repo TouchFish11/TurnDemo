@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
-using Core.AssetBundles.Management;
 using Core.UI;
 using Core.UI.ViewController;
 using HotUpdate.UI.Battle.ActionLine;
@@ -85,14 +83,26 @@ namespace HotUpdate.UI.Battle.Base
 
         #endregion
         
-        // 技能按键UI列表
-        private readonly List<SkillKeyUI> skillKeyUIs = new();
-        // 角色状态UI列表
-        private readonly List<RoleStateUI> roleStateUIs = new();
-        // 战技点UI列表
-        private readonly List<BattlePointUI> battlePointUIs = new();
-        // 选择标记UI列表
-        private readonly List<SelectMarkerUI> selectMarkerUIs = new();
+        /// <summary>
+        /// 技能按键UI列表
+        /// </summary>
+        public List<SkillKeyUI> SkillKeyUIs { get; } = new();
+        
+        /// <summary>
+        /// 角色状态UI列表
+        /// </summary>
+        public List<RoleStateUI> RoleStateUIs { get; } = new();
+        
+        /// <summary>
+        /// 战技点UI列表
+        /// </summary>
+        public List<BattlePointUI> BattlePointUIs { get; } = new();
+        
+        /// <summary>
+        /// 选择标记UI列表
+        /// </summary>
+        public List<SelectMarkerUI> SelectMarkerUIs { get; } = new();
+        
         // 当前累计伤害
         private long currentCalcDamage;
         
@@ -200,92 +210,6 @@ namespace HotUpdate.UI.Battle.Base
             txtCount.text = current.ToString();
         }
         
-        /// <summary>
-        /// 通过ID获取角色状态UI
-        /// 使用Linq查询
-        /// </summary>
-        /// <param name="roleId"></param>
-        /// <returns>未找到返回null</returns>
-        public RoleStateUI GetRoleStateUIById(int roleId)
-        {
-            return roleStateUIs.FirstOrDefault(r => r.RoleId == roleId);
-        }
-        
-        /// <summary>
-        /// 设置操作UI
-        /// </summary>
-        /// <param name="skillKeyUIs"></param>
-        /// <param name="spawner"></param>
-        public void SetOperator(List<SkillKeyUI> skillKeyUIs, ObjectSpawner spawner)
-        {
-            foreach (var skillKeyUI in this.skillKeyUIs)
-            {
-                spawner.Release(skillKeyUI);
-            }
-            this.skillKeyUIs.Clear();
-            this.skillKeyUIs.AddRange(skillKeyUIs);
-        }
-
-        /// <summary>
-        /// 清空操作UI
-        /// </summary>
-        /// <param name="spawner"></param>
-        public void ClearOperator(ObjectSpawner spawner)
-        {
-            foreach (var skillKeyUI in skillKeyUIs)
-            {
-                spawner.Release(skillKeyUI);
-            }
-            skillKeyUIs.Clear();
-        }
-
-        /// <summary>
-        /// 更新战点数量
-        /// </summary>
-        /// <param name="current"></param>
-        /// <param name="battlePointUIs"></param>
-        /// <param name="spawner"></param>
-        public void UpdateBattlePointCount(int current, IEnumerable<BattlePointUI> battlePointUIs, ObjectSpawner spawner)
-        {
-            foreach (var battlePointUI in this.battlePointUIs)
-            {
-                spawner.Release(battlePointUI);
-            }
-            this.battlePointUIs.Clear();
-            this.battlePointUIs.AddRange(battlePointUIs);
-        }
-        
-        /// <summary>
-        /// 缓存目标标记
-        /// </summary>
-        /// <param name="selectMarkerUI"></param>
-        public void AddSelectMarker(SelectMarkerUI selectMarkerUI)
-        {
-            selectMarkerUIs.Add(selectMarkerUI);
-        }
-
-        /// <summary>
-        /// 清理所有标记
-        /// </summary>
-        /// <param name="spawner"></param>
-        public void ClearSelectMarkers(ObjectSpawner spawner)
-        {
-            foreach (var selectMarkerUI in selectMarkerUIs)
-            {
-                spawner.Release(selectMarkerUI);
-            }
-            selectMarkerUIs.Clear();
-        }
-
-        /// <summary>
-        /// 初始化角色状态UI
-        /// </summary>
-        /// <param name="roleStateUI"></param>
-        public void InitRoleStateUI(RoleStateUI roleStateUI)
-        {
-            roleStateUIs.Add(roleStateUI);
-        }
-
         /// <summary>
         /// 设置累计伤害文本
         /// </summary>
