@@ -12,7 +12,7 @@ namespace HotUpdate.Base.Animation
     {
         /// 实体通用动画集合
         [SerializeField] public AnimationConfigCollection commonCollection;
-        /// 实体差异动画集合
+        /// 实体差异动画集合；也是顶层通用集合的配置集合
         [SerializeField] public List<AnimationConfig> animationConfigs;
     }
 }

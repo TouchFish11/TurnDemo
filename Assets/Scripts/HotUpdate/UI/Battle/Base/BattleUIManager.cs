@@ -8,7 +8,7 @@ using Core.Mono;
 using Core.UI;
 using Core.Utility;
 using HotUpdate.Base.Service;
-using HotUpdate.Common.Config.ExcelInfo.Info;
+
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Damage;

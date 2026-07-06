@@ -22,9 +22,9 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill.AbyssLock
             var animationComponent = SkillContext.Caster.GetComponent<BattleAnimationComponent>();
             
             // 根据配置表设置技能对应的动画状态
-            animationComponent.SetAnimationState(SkillContext.SkillInfo.f_animationType);
+            animationComponent.SetSkillState(SkillContext.SkillInfo.f_animName);
             // 动画切换到第一段
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).IsName(Attack01));
+            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationLayer.Skill_Layer_Name).IsName(Attack01));
             yield return UpdateCamera();
             // 第一段VEX
             yield return CreateVFX_01();

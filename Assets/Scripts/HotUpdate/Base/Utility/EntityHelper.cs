@@ -7,11 +7,12 @@ namespace HotUpdate.Base.Utility
     public class EntityHelper
     {
         private static long s_idCounter;
-        private static readonly ComponentService s_service;
+        
+        public static ComponentService Service { get; }
 
         static EntityHelper()
         {
-            s_service = DIContainer.Create<ComponentService>();
+            Service = DIContainer.Create<ComponentService>();
         }
         
         /// <summary>
@@ -22,7 +23,7 @@ namespace HotUpdate.Base.Utility
         /// <returns></returns>
         public static void InitEntity<T>(T entityObject) where T : IEntityObject
         {
-            entityObject.InitBase(s_idCounter++, s_service);
+            entityObject.InitBase(s_idCounter++, Service);
         }
     }
 }

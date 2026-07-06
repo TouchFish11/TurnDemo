@@ -5,8 +5,7 @@ using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Serialize.Binary;
 using Core.UI;
-using HotUpdate.Common.Config.ExcelInfo.Container;
-using HotUpdate.Common.Config.ExcelInfo.Info;
+
 using UnityEngine.UI;
 
 namespace HotUpdate.UI.Dialogue

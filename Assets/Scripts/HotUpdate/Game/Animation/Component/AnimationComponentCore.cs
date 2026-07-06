@@ -13,9 +13,9 @@ namespace HotUpdate.Game.Animation.Component
         public AnimatorComponent AnimatorComponent {get; private set;}
 
         /// <summary>
-        /// 当前动画类型
+        /// 当前播放的动画状态名称
         /// </summary>
-        public abstract EAnimationType AnimationType { get; set; }
+        public abstract string AnimationState { get; protected set; }
 
         /// <summary>
         /// 动画参数
@@ -25,19 +25,29 @@ namespace HotUpdate.Game.Animation.Component
         protected override void OnInit()
         {
             AnimationParameter = new AnimationParameter();
-            AnimatorComponent = Component.EntityObject.GetComponentInChildren<AnimatorComponent>();
+            AnimatorComponent = Component.EntityObject.GetComponent<AnimatorComponent>();
         }
 
         /// <summary>
         /// 设置动画类型
         /// </summary>
         /// <param name="type"></param>
-        public virtual void SetAnimationState(int type)
+        public void SetCommonState(EAnimationType type)
         {
-            var animationType = (EAnimationType)type;
-            AnimatorComponent.Play(animationType);
+            AnimatorComponent.PlayCommon(type);
             // 更新当前动画类型
-            AnimationType = animationType;
+            AnimationState = type.ToString();
+        }
+
+        /// <summary>
+        /// 设置指定动画类型
+        /// </summary>
+        /// <param name="stateName"></param>
+        public void SetState(string stateName)
+        {
+            AnimatorComponent.Play(stateName);
+            // 更新当前动画类型
+            AnimationState = stateName;
         }
 
         /// <summary>

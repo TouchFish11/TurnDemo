@@ -4,8 +4,7 @@ using Core.Log;
 using Core.Serialize.Binary;
 using Core.Utility;
 using HotUpdate.Base.UI;
-using HotUpdate.Common.Config.ExcelInfo.Container;
-using HotUpdate.Common.Config.ExcelInfo.Info;
+
 using HotUpdate.Game.Battle.Command;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Object;

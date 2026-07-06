@@ -1,7 +1,7 @@
 using System;
 using Core.UI;
 using Core.Utility;
-using HotUpdate.Common.Config.ExcelInfo.Info;
+
 using TMPro;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;

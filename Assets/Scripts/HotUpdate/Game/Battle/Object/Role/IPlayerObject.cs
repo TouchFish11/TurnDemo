@@ -1,4 +1,4 @@
-using HotUpdate.Common.Config.ExcelInfo.Info;
+
 
 namespace HotUpdate.Game.Battle.Object.Role
 {
@@ -25,5 +25,11 @@ namespace HotUpdate.Game.Battle.Object.Role
         /// </summary>
         /// <param name="value"></param>
         void RecoverUltimate(int value);
+
+        /// <summary>
+        /// 设置角色信息
+        /// </summary>
+        /// <param name="roleInfo"></param>
+        void SetRoleInfo(RoleInfo roleInfo);
     }
 }

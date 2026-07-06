@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Core.Log;
-using HotUpdate.Common.Config.ExcelInfo.Info;
+
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Object;

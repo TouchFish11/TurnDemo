@@ -1,7 +1,7 @@
 using Core.DI;
 using Core.UI;
 using HotUpdate.Base.Manager;
-using HotUpdate.Common.Config.ExcelInfo.Info;
+
 
 namespace HotUpdate.UI.Activity.Base
 {

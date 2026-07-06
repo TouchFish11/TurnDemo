@@ -15,7 +15,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Ultimate
             var animationComponent = caster.GetComponent<BattleAnimationComponent>();
             
             // 等待动画播放到90%（确保特效播放完成）
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).normalizedTime >= 0.9f);
+            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationLayer.Skill_Layer_Name).normalizedTime >= 0.9f);
             
             // 重置角色位置到战斗初始点位
             caster.GameObject.transform.position = battleCoordinator.GetRoleTransByIndex(caster.EntityPosIndex);

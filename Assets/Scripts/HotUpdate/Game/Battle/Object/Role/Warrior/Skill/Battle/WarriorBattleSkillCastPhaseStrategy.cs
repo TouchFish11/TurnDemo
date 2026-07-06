@@ -17,9 +17,9 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Battle
             // 获取施法者的动画组件
             var animationComponent = SkillContext.Caster.GetComponent<BattleAnimationComponent>();
             // 切换到技能配置的动画状态
-            animationComponent.SetAnimationState(SkillContext.SkillInfo.f_animationType);
+            animationComponent.SetSkillState(SkillContext.SkillInfo.f_animName);
             // 等待动画切换到战斗攻击状态
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).IsName(BattleAttackState));
+            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationLayer.Skill_Layer_Name).IsName(BattleAttackState));
             // 创建战技特效
             var task = vfxManager.CreateVFX(AssetKeys.VFX_WarriorBattleSkill, SkillContext.ProjectileTrans, SkillContext.ProjectileData, SkillContext.VFXInfo);
             yield return SkillHelper.WaitForCreateVFX(SkillContext, task);

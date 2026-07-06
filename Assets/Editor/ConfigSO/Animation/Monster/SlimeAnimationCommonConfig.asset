@@ -18,7 +18,7 @@ MonoBehaviour:
     - layer: 2
       animationStateName: Attack
       animationHash: -1927849195
-      animationType: 12
+      animationType: 0
       loop: 0
       transitionInTime: 0.1
       ignores: []

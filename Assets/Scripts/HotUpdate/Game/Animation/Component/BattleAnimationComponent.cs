@@ -1,6 +1,5 @@
 using HotUpdate.Base.Animation;
 using HotUpdate.Base.Component;
-using HotUpdate.Base.Enums;
 using HotUpdate.Game.Battle.Core;
 using UnityEngine;
 
@@ -29,27 +28,22 @@ namespace HotUpdate.Game.Animation.Component
         }
         
         /// <summary>
-        /// 设置动画播放状态
-        /// 根据指定的动画类型触发对应的Animator Trigger参数
+        /// 设置通用动画播放状态
         /// </summary>
         /// <param name="type">要切换的动画类型</param>
-        public void SetAnimationState(int type)
+        public void SetCommonState(EAnimationType type)
         {
-            _battleAnimationComponentCore.SetAnimationState(type);
+            _battleAnimationComponentCore.SetCommonState(type);
+        }
+
+        public void SetSkillState(string stateName)
+        {
+            _battleAnimationComponentCore.SetState(stateName);
         }
 
         public AnimatorStateInfo GetCurrentAnimatorStateInfo(string layerName)
         {
             return _battleAnimationComponentCore.GetCurrentAnimatorStateInfo(layerName);
-        }
-
-        /// <summary>
-        /// 设置必杀技姿态（触发预必杀技攻击动画）
-        /// 提供给外部调用的快捷方法
-        /// </summary>
-        public void SetUltimatePose()
-        {
-            SetAnimationState((int)E_AnimationType.PreUltimateAttack);
         }
 
         /// <summary>

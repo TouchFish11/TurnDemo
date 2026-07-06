@@ -10,8 +10,6 @@ using HotUpdate.Base.Attributes;
 using HotUpdate.Base.Collection;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Settings;
-using HotUpdate.Common.Config.ExcelInfo.Container;
-using HotUpdate.Common.Config.ExcelInfo.Info;
 using HotUpdate.Common.Config.Settings;
 
 using UnityEngine;

@@ -15,13 +15,6 @@ MonoBehaviour:
   commonCollectionSO: {fileID: 0}
   animationConfigCollection:
     animationConfigs:
-    - layer: 0
-      animationStateName: IdleBattle
-      animationHash: 1238505925
-      animationType: 1
-      loop: 1
-      transitionInTime: 0.1
-      ignores: []
     - layer: 1
       animationStateName: IdleBattle
       animationHash: 2110659171

@@ -15,7 +15,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.TurtleShell.Skill.Normal
         /// </summary>
         public static string Attack => "Attack";
         
-        private const string _layerName = AnimationUtility.Skill_Layer_Name;
+        private const string _layerName = AnimationLayer.Skill_Layer_Name;
         private readonly string _stateName = Attack;
         private const float _targetEndProgress = 0.5f;
         
@@ -24,7 +24,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.TurtleShell.Skill.Normal
             // 获取施法者的动画组件
             var animationComponent = SkillContext.Caster.GetComponent<BattleAnimationComponent>();
             // 根据配置表设置技能对应的动画状态
-            animationComponent.SetAnimationState(SkillContext.SkillInfo.f_animationType);
+            animationComponent.SetSkillState(SkillContext.SkillInfo.f_animName);
             // 等待动画播放到普攻状态（Attack）
             yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(_layerName).IsName(_stateName));
             // 等待动画播放至90%且特效已结束，确保技能流程完整

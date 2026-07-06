@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae6ffb86f23ca12408f7fbe603604835, type: 3}
   m_Name: RoleAnimationCommonConfig
   m_EditorClassIdentifier: 
+  commonCollectionSO: {fileID: 0}
   animationConfigCollection:
     animationConfigs:
     - layer: 0
@@ -26,13 +27,6 @@ MonoBehaviour:
       animationHash: 1626845812
       animationType: 2
       loop: 1
-      transitionInTime: 0.1
-      ignores: []
-    - layer: 0
-      animationStateName: NormalAtk
-      animationHash: -1639787755
-      animationType: 4
-      loop: 0
       transitionInTime: 0.1
       ignores: []
     - layer: 1
@@ -66,7 +60,7 @@ MonoBehaviour:
     - layer: 1
       animationStateName: Death
       animationHash: 208565488
-      animationType: 9
+      animationType: 10
       loop: 0
       transitionInTime: 0.1
       ignores: []

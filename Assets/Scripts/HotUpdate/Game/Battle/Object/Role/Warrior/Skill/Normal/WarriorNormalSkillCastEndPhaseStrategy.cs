@@ -14,7 +14,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Normal
             var animationComponent = SkillContext.Caster.GetComponent<BattleAnimationComponent>();
             var animator = animationComponent.Animator;
             // 等待动画播放到90%且特效结束
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).normalizedTime >= 0.9f && !SkillContext.VFXInfo.IsAlive);
+            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationLayer.Skill_Layer_Name).normalizedTime >= 0.9f && !SkillContext.VFXInfo.IsAlive);
             // 重置角色本地位置（防止动画位移残留）
             animator.transform.localPosition = Vector3.zero;
             yield return SkillHelper.Delay(100);

@@ -4,7 +4,7 @@ using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Mono;
 using Core.Serialize.Binary;
-using HotUpdate.Common.Config.ExcelInfo.Container;
+
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.Skill;

@@ -1,6 +1,5 @@
 using Core.DI;
 using HotUpdate.Game.Battle.Object.Monster.Slime.Skill;
-using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Component;
 using HotUpdate.Game.Battle.Skill.Factory;
 using UnityEngine;

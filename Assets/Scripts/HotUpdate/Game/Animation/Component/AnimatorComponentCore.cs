@@ -1,14 +1,17 @@
+using System;
 using System.Collections.Generic;
-using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Mono;
 using Core.Serialize.Json;
 using Core.Utility;
 using HotUpdate.Base.Animation;
+using HotUpdate.Base.Component;
+using HotUpdate.Base.Utility;
+using HotUpdate.Game.Battle.Utility;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
-namespace HotUpdate.Base.Component
+namespace HotUpdate.Game.Animation.Component
 {
     /// <summary>
     /// 动画组件逻辑
@@ -19,10 +22,14 @@ namespace HotUpdate.Base.Component
         [Inject] private IMonoAdapter _monoAdapter;
 
         /// 默认的空占位配置
-        private static readonly AnimationConfig DefaultConfig = new();
+        private static readonly AnimationConfig DefaultConfig = new()
+        {
+            ignores = new List<AnimationIgnore>(),
+        };
         
-        // 动画配置缓存
-        private readonly Dictionary<EAnimationType, AnimationConfig> _animationConfigs = new();
+        // 动画配置转存缓存，key是层级+状态名的hash，value是状态配置
+        private readonly Dictionary<int, AnimationConfig> _animationConfigs = new();
+        private readonly Dictionary<EAnimationType, int> _commonTypeToConfigHashMap = new();
         
         // 当前使用的动画配置缓存
         private readonly Dictionary<int, AnimationConfig> _currentConfigs = new()
@@ -35,35 +42,78 @@ namespace HotUpdate.Base.Component
         protected override void OnInit()
         {
             // 读取动画配置
-            using var handle = GameAsset.LoadAsset<TextAsset>(AssetKeys.PlayerConfigCollection);
-            var collection = _jsonManager.FromJson<AnimationConfigCollection>(handle.Asset.text, settings: NewtonsoftJsonUtility.SerializerSettings);
+            var collectionJson = AnimationUtility.GetAnimConfigCollectionJsonByType(Component.EntityObject);
+            var collection = _jsonManager.FromJson<AnimationConfigCollection>(collectionJson, settings: NewtonsoftJsonUtility.SerializerSettings);
+            
+            foreach (var commonConfig in collection.commonCollection.animationConfigs)
+            {
+                var layerName = AnimationLayer.LayerEnumToName(commonConfig.layer);
+                var hash = Animator.StringToHash($"{layerName}.{commonConfig.animationStateName}");
+                _animationConfigs.Add(hash, commonConfig);
+                _commonTypeToConfigHashMap.Add(commonConfig.animationType, hash);
+            }
+            
             foreach (var config in collection.animationConfigs)
             {
-                _animationConfigs.Add(config.animationType, config);
+                var layerName = AnimationLayer.LayerEnumToName(config.layer);
+                var hash = Animator.StringToHash($"{layerName}.{config.animationStateName}");
+                _animationConfigs.Add(hash, config);
             }
             _monoAdapter.AddUpdateListener(Tick); 
         }
 
         /// <summary>
-        /// 播放动画
+        /// 播放通用动画，技能层动画使用Play方法
         /// </summary>
         /// <param name="type"></param>
-        /// <returns>播放成功返回true，反正false</returns>
-        public void Play(EAnimationType type)
+        /// <exception cref="NotSupportedException">当type为Attack时抛出</exception>
+        public void PlayCommon(EAnimationType type)
         {
+            if (type == EAnimationType.Attack)
+                throw new NotSupportedException($"The animation type {type} is not supported.");
+            
             // 是否忽略该类型动画
             if (IsIgnore(type))
             {
                 return;
             }
+            
+            // 找到对应的hash Key 
+            if(!_commonTypeToConfigHashMap.TryGetValue(type, out var hash))
+                return;
 
-            // 是否存在该类型动画
-            if (!_animationConfigs.TryGetValue(type, out var config))
+            // 是否存在该动画
+            if (!_animationConfigs.TryGetValue(hash, out var config))
                 return;
 
             // 检查当前层级是否存在
-            if (!_currentConfigs.TryGetValue((int)config.layer, out _)) 
+            if (!_currentConfigs.ContainsKey((int)config.layer)) 
                 return;
+            
+            // 切换动画
+            PlayInternal(hash, config.transitionInTime, (int)config.layer, 0); 
+            // 更新当前层级配置
+            _currentConfigs[(int)config.layer] = config;
+            RefreshIgnores(config);
+        }
+
+        /// <summary>
+        /// 播放指定层级指定状态名称的动画
+        /// </summary>
+        /// <param name="stateName">层级名.状态名</param>
+        public void Play(string stateName)
+        {
+            var animationHash = Animator.StringToHash(stateName);
+            // 是否存在该类型动画
+            if (!_animationConfigs.TryGetValue(animationHash, out var config))
+                return;
+
+            // 检查当前层级是否存在
+            if (_currentConfigs.TryGetValue((int)config.layer, out var currentLayerConfig))
+            {
+                if(currentLayerConfig.loop && currentLayerConfig.animationHash == animationHash)
+                    return;
+            }
             
             // 切换动画
             PlayInternal(config.animationHash, config.transitionInTime, (int)config.layer, 0); 
@@ -74,6 +124,7 @@ namespace HotUpdate.Base.Component
         
         internal void PlayInternal(int stateHashName, float normalizedTransitionDuration, int layer, float normalizedTimeOffset)
         {
+            //Component.Animator.Play(stateHashName, layer, normalizedTimeOffset);
             Component.Animator.CrossFade(stateHashName, normalizedTransitionDuration, layer, normalizedTimeOffset);
         }
 
@@ -127,6 +178,13 @@ namespace HotUpdate.Base.Component
         
         public void Tick()
         {
+            for (int i = 0; i < Component.Animator.layerCount; i++)
+            {
+                var state = Component.Animator.GetCurrentAnimatorStateInfo(i);
+
+                Debug.Log($"Layer{i} : {state.fullPathHash}");
+            }
+            
             UpdateIgnores();
             
             // 当前动画是否播放完毕
@@ -142,7 +200,9 @@ namespace HotUpdate.Base.Component
             {
                 // 获取当前层级播放的动画信息
                 var stateInfo = Component.Animator.GetCurrentAnimatorStateInfo(currentLayer);
-                if (currentConfig.loop || stateInfo.fullPathHash != currentConfig.animationHash || !(stateInfo.normalizedTime >= 1f)) continue;
+                if (currentConfig.loop || stateInfo.fullPathHash != currentConfig.animationHash || !(stateInfo.normalizedTime >= 1f)) 
+                    continue;
+                
                 Logger.Log($"当前动画：{currentConfig.animationStateName}：{stateInfo.fullPathHash}播放完成");
                 
                 // 是否存在下一个连携的动画
@@ -154,7 +214,7 @@ namespace HotUpdate.Base.Component
                 }
                 else
                 {
-                    Play(currentLayer == 0 ? EAnimationType.Idle : EAnimationType.None);
+                    PlayCommon(currentLayer == 0 ? EAnimationType.Idle : EAnimationType.None);
                 }
             }
         }

@@ -56,12 +56,13 @@ namespace HotUpdate.Game.Battle.Skill.Base
         /// <returns></returns>
         public static IEnumerator WaitForAnimationPlayTarget(SkillContext context, string layerName, string stateName, float targetEndProgress)
         {
+            var animHash = Animator.StringToHash(stateName);
             // 获取施法者的动画组件
             var animationComponent = context.Caster.GetComponent<BattleAnimationComponent>();
             // 根据配置表设置技能对应的动画状态
-            animationComponent.SetAnimationState(context.SkillInfo.f_animationType);
+            animationComponent.SetSkillState(stateName);
             // 等待动画播放到指定状态
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(layerName).IsName(stateName));
+            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(layerName).shortNameHash == animHash);
             // 等待动画播放至目标进度
             yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(layerName).normalizedTime >= targetEndProgress);
         }

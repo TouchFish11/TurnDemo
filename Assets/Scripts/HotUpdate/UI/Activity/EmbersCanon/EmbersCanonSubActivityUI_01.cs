@@ -5,7 +5,7 @@ using Core.AssetBundles.Management;
 using Core.DI;
 using Core.UI;
 using HotUpdate.Base.Service;
-using HotUpdate.Common.Config.ExcelInfo.Info;
+
 using UnityEngine.UI;
 
 namespace HotUpdate.UI.Activity.EmbersCanon

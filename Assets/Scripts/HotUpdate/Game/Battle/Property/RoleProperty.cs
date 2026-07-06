@@ -1,4 +1,4 @@
-using HotUpdate.Common.Config.ExcelInfo.Info;
+
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.Property

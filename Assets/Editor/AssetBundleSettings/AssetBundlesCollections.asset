@@ -83,9 +83,9 @@ MonoBehaviour:
       hash: 179133e7fa2ae977d9dbfc1a3559f2d6d5c198d0db69c8f609024c6b2c37e2f6
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Animator\Monster\AbyssalMageAnimator.controller
-      size: 17146
+      size: 17140
       name: AbyssalMageAnimator.controller
-      hash: cd06c595bff4a14d5eb61034a5b6609147c1e160122154a880d84b0aac156482
+      hash: 216476c134c3b3a97e64e2f6306865db171dae0695ec852b021cb4087d64d5c1
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Animator\Monster\BaseMonster.controller
       size: 13384
@@ -93,24 +93,19 @@ MonoBehaviour:
       hash: f47918c8dd1b37bde3884ff8e23a13004b7cfe89dd5befc61fbce688f7d8a589
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Animator\Monster\ChestAnimator.controller
-      size: 17050
+      size: 17044
       name: ChestAnimator.controller
-      hash: 450e7d8443dc44af61d6f1f68254a2f12618bb05a9282d6563c9454ca9b1aabd
+      hash: b217a5ba1570d49abbcb9e268654929777c069c36a693ce2ebd65ca236ad359a
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Animator\Monster\SlimeAnimtor.controller
-      size: 15641
+      size: 15635
       name: SlimeAnimtor.controller
-      hash: c0d1a3df3d9a5a4da0bdfc0ce04ef03f36683016ecfdb6909a303eb60c0f86af
+      hash: 7bb4a4fca6d3e00d4744711aabcd0897e8f377993563188f329c5d2c71afa8c6
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Animator\Monster\TurtleShellAnimtor.controller
-      size: 15654
+      size: 15648
       name: TurtleShellAnimtor.controller
-      hash: 4b38631be92b3c28c214d4ec3d2dba3791daeff927f53dd7ad74bd9d5fd78653
-      assetType: 0
-    - assetPath: Assets\Editor\ArtRes\Animator\Role\BaseRole.controller
-      size: 28762
-      name: BaseRole.controller
-      hash: 88a8b9e8e2dac26ecafc7c67e00ab56d1b677518ea1cc439d06618b9cc6d1713
+      hash: 27f7aa800cb0b19a8ecfe147517ee7aea7dec562557f280c033f0165c8b77628
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Animator\Role\GunmanAnimator.controller
       size: 33691
@@ -123,9 +118,9 @@ MonoBehaviour:
       hash: c85521b2edc80a8411e477f1494d4ee3fe13fce80c6ebee07f4c112d6ae5958e
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Animator\Role\WarriorAnimtor.controller
-      size: 35982
+      size: 32057
       name: WarriorAnimtor.controller
-      hash: 1b7b1e1c6d2fa2a233532540ff63ff8abdc1018bc55dfa13c53ae20d9504d7cb
+      hash: 573175b487b98aca9c0756357e38c66d741f0ed0d3e9f5cc46f49d61ffba8ca8
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Animator\Role\WizardAnimtor.controller
       size: 33887
@@ -241,9 +236,9 @@ MonoBehaviour:
       hash: a4f6ed67bcfb77a8ac3d9fda0f8155e9ff44ceec7a7541483a0dd5fc4506e7ed
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\MonsterInfo.bytes
-      size: 878
+      size: 972
       name: MonsterInfo.bytes
-      hash: 2cc03a5c4712e1bcf143b0931bc83a4ff7cec36dfee2dbc966a5ea7c8a7cce08
+      hash: f97da3902afa71d6da486c07847bf4af3e36c5a959190bfd58f3203aca4e249e
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\NpcInfo.bytes
       size: 150
@@ -251,14 +246,14 @@ MonoBehaviour:
       hash: 8f34a7ebdca8de87c411dcdf9a48af8fddab624ede33e79a86259df51dab53ee
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\RoleInfo.bytes
-      size: 767
+      size: 845
       name: RoleInfo.bytes
-      hash: 9b4fd89c3773b83ea1c88061290d890a5aed7edca27e8bc3c71552b0f6af46cf
+      hash: de342854b8d7840999c03da2986985246985add6bde6667b69430bbd073f3978
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\SkillInfo.bytes
-      size: 2138
+      size: 2326
       name: SkillInfo.bytes
-      hash: 7c21d0aac276d1b42957be7543f3364460f23e91c1f4b64fa3c1bf313adc56de
+      hash: e0b647da7e46dcb911d277c857326a0c2472a55bee3cddbd9cdbfc15dcc8ed5b
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\StatusInfo.bytes
       size: 1051
@@ -310,6 +305,46 @@ MonoBehaviour:
       name: SwordConfig.json
       hash: ba1ad5fcb837a8efbad8d84cbe91b7193b125cbcac24bd61ecdb3ec353bd56dd
       assetType: 0
+    - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\Animation\Common\MonsterAnimationCommonConfig.json
+      size: 2887
+      name: MonsterAnimationCommonConfig.json
+      hash: aff017f758717062ca2a2d097b1117ad031e3ee1c0b564003f2854f25aec8e3a
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\Animation\Common\RoleAnimationCommonConfig.json
+      size: 6587
+      name: RoleAnimationCommonConfig.json
+      hash: ee245f0164d61e7b73ba618570280ba6d0ce8dbb8e3e3794377448e98cb55401
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\Animation\Monster\AbyssalMageAnimationConfigCollection.json
+      size: 3824
+      name: AbyssalMageAnimationConfigCollection.json
+      hash: 24630a1993251a1a83b15e1e124ec4f4dae9dc6cf40ed7fe864b5566b7fea36a
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\Animation\Monster\SlimeAnimationCommonConfig.json
+      size: 3301
+      name: SlimeAnimationCommonConfig.json
+      hash: cac1226b23038341c12ac76b52fefdb841d6b8de6406248f354393f23bd71788
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\Animation\Monster\TurtleShellAnimationCommonConfig.json
+      size: 3301
+      name: TurtleShellAnimationCommonConfig.json
+      hash: cac1226b23038341c12ac76b52fefdb841d6b8de6406248f354393f23bd71788
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\Animation\Role\PriestAnimationConfigCollection.json
+      size: 6694
+      name: PriestAnimationConfigCollection.json
+      hash: 492afb75f16021134c84c0edad6cbae0895bcbf64939e13992ffea527e860db3
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\Animation\Role\WarriorAnimationConfigCollection.json
+      size: 6694
+      name: WarriorAnimationConfigCollection.json
+      hash: 492afb75f16021134c84c0edad6cbae0895bcbf64939e13992ffea527e860db3
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\Animation\Role\WizardAnimationConfigCollection.json
+      size: 6694
+      name: WizardAnimationConfigCollection.json
+      hash: 492afb75f16021134c84c0edad6cbae0895bcbf64939e13992ffea527e860db3
+      assetType: 0
   - assetBundleName: hotupdate
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Base.dll.bytes
@@ -358,60 +393,55 @@ MonoBehaviour:
       name: Prefab_Player.prefab
       hash: 7b9921066df45474efee9b0766024e44b0893104a73667565a4133b2e6350f66
       assetType: 0
-    - assetPath: Assets\Editor\ArtRes\Prefab\Main\Prefab_Main_Warrior.prefab
-      size: 92073
-      name: Prefab_Main_Warrior.prefab
-      hash: 7ffba5503b9430b9b0002c1e28fb8a1718d22544289c3d644841f16c5135b2d1
-      assetType: 0
     - assetPath: Assets\Editor\ArtRes\Prefab\Main\Prefab_Npc.prefab
       size: 4004
       name: Prefab_Npc.prefab
       hash: 4721972f7c7b253e0bfaaf4627f8c8cb687faac50dcd1560a178b79de1bb0b8a
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Prefab_AbyssalMage.prefab
-      size: 28781
+      size: 28359
       name: Prefab_AbyssalMage.prefab
-      hash: 11cb63059c30fd0af0538b862f42096459eeca14acfbef7f855f43495e0d34ed
+      hash: 1b5ec2d8fc0b32a88ba9d54d1c718df623b2b1d77f3b4d42aa670759e6804f53
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Prefab_Boss.prefab
-      size: 81157
+      size: 80735
       name: Prefab_Boss.prefab
-      hash: 2053373b3f918a24ec78af616e90feed1a965b91937a6ba9a4915123796be547
+      hash: 93ec0f234ebc53584b3c39261134b08a63674fda55074d8424e41cbc0fcd4cf7
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Prefab_Chest.prefab
-      size: 28511
+      size: 28094
       name: Prefab_Chest.prefab
-      hash: e625eb32c556f3b842bd4042b5001ce9652b2e72e91a660ea39597dbfbdfb096
+      hash: 1f37c6872b7b75db0f9d61dfa6c8548931045c64758f96522c641aedf602dad7
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Prefab_Slime.prefab
-      size: 17039
+      size: 16195
       name: Prefab_Slime.prefab
-      hash: f5a3d2bf828ede0c3382ea1b905909a06f5fd6e4b670a4522abe7850096b3383
+      hash: c7ad9e8bff8fc8622d19c361e2b5c67669638f69c5591e968b38bcb2d8ddeb38
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Prefab_TurtleShell.prefab
-      size: 37456
+      size: 36612
       name: Prefab_TurtleShell.prefab
-      hash: 70528111196d875ce97dc911edb66a7e90a8becf47d055927e9e29693b887fe2
+      hash: 19c2fbb079bd6bbd9880dcca9caf400fa0ce1db4609c19b869e2921a965e03e6
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Prefab\Role\Prefab_Gunman.prefab
-      size: 87144
+      size: 86723
       name: Prefab_Gunman.prefab
-      hash: b1b044b8977567b777828e83c14a9ceba995ed2e35e57c6c856b1867986a6733
+      hash: c562d80107fd7b5139d2b22d4c75e8aa8e521e0d4a145a420143b3ce26478ba9
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Prefab\Role\Prefab_Priest.prefab
-      size: 81530
+      size: 81108
       name: Prefab_Priest.prefab
-      hash: 2a0c09f3164f4421aa4b1c4ea0a3ef787c29292df6a9b6cc14aadecbdc1babee
+      hash: 249a13c03daa7f894b8ecf8a4929e917ef3a4a9383ac7e461be1fd509b1296e8
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Prefab\Role\Prefab_Warrior.prefab
-      size: 92911
+      size: 92067
       name: Prefab_Warrior.prefab
-      hash: 3435318450ac69747c7f2743fa87d86d8ddf1fe07652da86734c989cef0a803c
+      hash: 16d6a3fc0fba3adcda2e050771fb4485bd53ce2528df76966210909a6dc1db20
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Prefab\Role\Prefab_Wizard.prefab
-      size: 91844
+      size: 91000
       name: Prefab_Wizard.prefab
-      hash: ea47acd9a40383c7660e47140d2d19a6fd024260ff0ab5f09b2a3c5c285ae2b6
+      hash: 486954bd442cf08eafb0a8f1d48c40ecfeaca20277c0c93d80c5eb809b253661
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Prefab\UI\UI_3D_FloatingText.prefab
       size: 11096
@@ -421,9 +451,9 @@ MonoBehaviour:
   - assetBundleName: scene
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\Scene\BeginScene.unity
-      size: 17419
+      size: 17443
       name: BeginScene.unity
-      hash: b21a9120e77fd82da29ade6b328c3c934e99241c5b36ea00275f6efce5d65bcd
+      hash: a78feffbd7469801e1db62a090af0f61328f657a3fda188b6f9b244f1144193d
       assetType: 1
     - assetPath: Assets\Editor\ArtRes\Scene\LevelScene.unity
       size: 112279

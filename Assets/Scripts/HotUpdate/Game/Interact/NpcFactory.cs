@@ -3,7 +3,6 @@ using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Serialize.Binary;
 using HotUpdate.Base.Utility;
-using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Game.Main.FloatingText;
 using UnityEngine;
 

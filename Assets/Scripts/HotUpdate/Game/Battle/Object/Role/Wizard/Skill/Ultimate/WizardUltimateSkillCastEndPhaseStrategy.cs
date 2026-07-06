@@ -10,7 +10,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard.Skill.Ultimate
         public override IEnumerator Execute()
         {
             // 等待动画播放到90%且特效已结束，确保技能流程完成
-            yield return new WaitUntil(() => BattleAnimationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).normalizedTime >= 0.9f && !SkillContext.VFXInfo.IsAlive);
+            yield return new WaitUntil(() => BattleAnimationComponent.GetCurrentAnimatorStateInfo(AnimationLayer.Skill_Layer_Name).normalizedTime >= 0.9f && !SkillContext.VFXInfo.IsAlive);
         }
     }
 }

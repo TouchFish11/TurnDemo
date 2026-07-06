@@ -22,8 +22,8 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill.Ashfall
             var animationComponent = SkillContext.Caster.GetComponent<BattleAnimationComponent>();
             
             // 动画切换到第二段
-            animationComponent.SetAnimationState(SkillContext.SkillInfo.f_animationType);
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).IsName(Attack02));
+            animationComponent.SetSkillState(SkillContext.SkillInfo.f_animName);
+            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationLayer.Skill_Layer_Name).IsName(Attack02));
             // 切换相机视角
             yield return UpdateCamera();
             // 第二段VEX

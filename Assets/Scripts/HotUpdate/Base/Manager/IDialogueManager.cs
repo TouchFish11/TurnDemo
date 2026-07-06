@@ -1,5 +1,4 @@
 using System;
-using HotUpdate.Common.Config.ExcelInfo.Info;
 
 namespace HotUpdate.Base.Manager
 {

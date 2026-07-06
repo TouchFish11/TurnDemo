@@ -7,9 +7,10 @@ using Core.Utility;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Scene;
+using HotUpdate.Game.Animation.Component;
 using UnityEngine;
 
-namespace HotUpdate.Base
+namespace HotUpdate.Game
 {
     /// <summary>
     /// 玩家初始化器，统一初始化玩家相关内容

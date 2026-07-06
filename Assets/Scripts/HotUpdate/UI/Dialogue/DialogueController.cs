@@ -8,7 +8,7 @@ using Core.Mono;
 using Core.UI.ViewController;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.UI;
-using HotUpdate.Common.Config.ExcelInfo.Info;
+
 using UnityEngine;
 using Logger = Core.Log.Logger;
 

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Core.DI;
 using Core.Log;
 using HotUpdate.Base;
-using HotUpdate.Common.Config.ExcelInfo.Info;
+
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage.Strategys;
 using HotUpdate.Game.Battle.Event.General;

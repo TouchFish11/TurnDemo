@@ -24,11 +24,11 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Normal
             
             // 获取动画组件并切换到普攻动画
             var animationComponent = caster.GetComponent<BattleAnimationComponent>();
-            animationComponent.SetAnimationState(skillInfo.f_animationType);
+            animationComponent.SetSkillState(skillInfo.f_animName);
             var animator = animationComponent.Animator;
 
             // 等待动画切换到翻滚状态
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).IsName(RollState));
+            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationLayer.Skill_Layer_Name).IsName(RollState));
 
             // 初始化第一段普攻特效（波浪特效）
             var projectileTrans = new ProjectileTrans(caster.GameObject.transform.position, Quaternion.identity);
@@ -42,7 +42,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Normal
             animator.MatchTarget(matchPos, matchRot, AvatarTarget.Body, mask, 0.28f); // 0.28秒内完成匹配
 
             // 等待动画切换到攻击状态
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).IsName(AttackState));
+            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationLayer.Skill_Layer_Name).IsName(AttackState));
 
             // 初始化第二段普攻特效（核心攻击特效）
             SkillContext.ProjectileTrans = new ProjectileTrans(caster.SubGameObject.transform.position + Vector3.up, Quaternion.Euler(180, 180, 0));

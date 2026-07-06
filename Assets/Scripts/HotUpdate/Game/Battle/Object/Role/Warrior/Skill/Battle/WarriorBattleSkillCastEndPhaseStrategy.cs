@@ -13,7 +13,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Battle
         {
             var animationComponent = SkillContext.Caster.GetComponent<BattleAnimationComponent>();
             // 等待动画播放到90%且特效已结束
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).normalizedTime >= 0.9f && !SkillContext.VFXInfo.IsAlive);
+            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationLayer.Skill_Layer_Name).normalizedTime >= 0.9f && !SkillContext.VFXInfo.IsAlive);
             yield return SkillHelper.Delay(100);
         }
     }

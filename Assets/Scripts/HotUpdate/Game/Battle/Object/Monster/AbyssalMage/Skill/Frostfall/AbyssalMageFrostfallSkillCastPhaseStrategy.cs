@@ -21,8 +21,8 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill.Frostfall
             // 获取施法者的动画组件
             var animationComponent = SkillContext.Caster.GetComponent<BattleAnimationComponent>();
             // 动画切换到
-            animationComponent.SetAnimationState(SkillContext.SkillInfo.f_animationType);
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).IsName(Attack02));
+            animationComponent.SetSkillState(SkillContext.SkillInfo.f_animName);
+            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationLayer.Skill_Layer_Name).IsName(Attack02));
             // 切换相机视角
             yield return UpdateCamera();
             // VEX

@@ -22,14 +22,14 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill.Ultimate
             // 获取施法者的动画组件
             var animationComponent = SkillContext.Caster.GetComponent<BattleAnimationComponent>();
             // 设置技能对应的动画状态
-            animationComponent.SetAnimationState(SkillContext.SkillInfo.f_animationType);
+            animationComponent.SetSkillState(SkillContext.SkillInfo.f_animName);
             
             // 等待动画切换到第一段
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).IsName(Priest_Ultimate_01));
+            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationLayer.Skill_Layer_Name).IsName(Priest_Ultimate_01));
             yield return UpdateCamera_01();
             
             // 等待动画切换到第二段
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).IsName(Priest_Ultimate_02));
+            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationLayer.Skill_Layer_Name).IsName(Priest_Ultimate_02));
             yield return UpdateCamera_02();
 
             yield return CreateVFX();

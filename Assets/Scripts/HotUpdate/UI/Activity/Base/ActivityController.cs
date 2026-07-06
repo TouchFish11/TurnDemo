@@ -8,7 +8,6 @@ using Core.UI.ViewController;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Service;
 using HotUpdate.Base.UI;
-using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Game.Activity.Core;
 
 namespace HotUpdate.UI.Activity.Base

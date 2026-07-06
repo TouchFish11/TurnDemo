@@ -1,9 +1,8 @@
 using System;
 using Core.DI;
 using Core.Serialize.Binary;
-using HotUpdate.Base.Enums;
+using HotUpdate.Base.Animation;
 using HotUpdate.Base.UI;
-using HotUpdate.Common.Config.ExcelInfo.Container;
 using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;
@@ -160,14 +159,14 @@ namespace HotUpdate.Game.Battle.Event
                 var battleAnimationComponent = playerObject.GetComponent<BattleAnimationComponent>();
                 switch ((E_SkillType)skillInfo.f_SkillType)
                 {
-                    case E_SkillType.Monster: // 怪物技能 → 播放通用攻击动画
-                        battleAnimationComponent.SetAnimationState((int)E_AnimationType.Attack);
+                    case E_SkillType.Monster: // 怪物技能
+                        battleAnimationComponent.SetSkillState(skillInfo.f_animName);
                         break;
                     case E_SkillType.NormalAttack: // 普通攻击 → 播放预普通攻击动画
-                        battleAnimationComponent.SetAnimationState((int)E_AnimationType.PreNormalAttack);
+                        battleAnimationComponent.SetCommonState(EAnimationType.PreNormalAttack);
                         break;
                     case E_SkillType.CombatSkill: // 战斗技能 → 播放预战斗技能攻击动画
-                        battleAnimationComponent.SetAnimationState((int)E_AnimationType.PreBattleAttack);
+                        battleAnimationComponent.SetCommonState(EAnimationType.PreBattleAttack);
                         break;
                     case E_SkillType.EnhancedNormalAttack: // 强化普通攻击 → 暂未处理
                     case E_SkillType.EnhancedCombatSkill: // 强化战斗技能 → 暂未处理

@@ -1,7 +1,7 @@
 using Core.Inputs.ActionAsset;
+using HotUpdate.Base.Animation;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Dialogue;
-using HotUpdate.Base.Enums;
 using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Inputs;
 using HotUpdate.Game.Main.Move;
@@ -28,7 +28,7 @@ namespace HotUpdate.Game.Dialogue
             // 只允许交互输入
             EntityObject.GetComponent<InputComponent>().LimitInput(nameof(MainActionMapData.Interact));
             // 重置为待机动画
-            EntityObject.GetComponent<NormalAnimationComponent>().SetAnimationState((int)E_AnimationType.Idle);
+            EntityObject.GetComponent<NormalAnimationComponent>().SetCommonState(EAnimationType.Idle);
             // 停止并禁用移动
             EntityObject.GetComponent<MoveComponent>().Disable();
         }

@@ -12,7 +12,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard.Skill.Normal
         {
             var animationComponent = SkillContext.Caster.GetComponent<BattleAnimationComponent>();
             // 等待动画播放至90%且特效已结束，确保技能流程完整结束
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).normalizedTime >= 0.9f && !SkillContext.VFXInfo.IsAlive);
+            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationLayer.Skill_Layer_Name).normalizedTime >= 0.9f && !SkillContext.VFXInfo.IsAlive);
         }
     }
 }

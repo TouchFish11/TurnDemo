@@ -1,5 +1,6 @@
 using System.Collections;
 using Core.Utility;
+using HotUpdate.Base.Animation;
 using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
@@ -19,7 +20,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill.Ultimate
             var projectileData = new ProjectileData(SkillContext.Caster, SkillContext.MainTarget, SkillContext.AllTargets, SkillContext);
             var projectileTrans = new ProjectileTrans(SkillContext.Caster.GameObject.transform.position, Quaternion.identity);
             var vFXInfo = poolManager.GetData<VFXInfo>();
-            skill.SkillContext.Caster.GetComponent<BattleAnimationComponent>().SetUltimatePose();
+            skill.SkillContext.Caster.GetComponent<BattleAnimationComponent>().SetCommonState(EAnimationType.PreUltimateAttack);
             // 终结技Pose特效
             var task = vfxManager.CreateVFX(AssetKeys.VFX_Priest_UltimatePose, projectileTrans, projectileData, vFXInfo);
             yield return TaskUtility.WaitForTask(task);

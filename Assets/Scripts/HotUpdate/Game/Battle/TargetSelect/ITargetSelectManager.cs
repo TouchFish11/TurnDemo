@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using HotUpdate.Common.Config.ExcelInfo.Info;
+
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Object;
 

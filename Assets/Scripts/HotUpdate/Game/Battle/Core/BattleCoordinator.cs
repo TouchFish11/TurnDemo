@@ -6,7 +6,7 @@ using Core.DI;
 using Core.Serialize.Binary;
 using Core.Utility;
 using HotUpdate.Base.UI;
-using HotUpdate.Common.Config.ExcelInfo.Info;
+
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Event.UI;

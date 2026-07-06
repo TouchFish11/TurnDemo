@@ -18,14 +18,14 @@ MonoBehaviour:
     - layer: 2
       animationStateName: Attack01
       animationHash: 72206153
-      animationType: 12
+      animationType: 0
       loop: 0
       transitionInTime: 0.1
       ignores: []
     - layer: 2
       animationStateName: Attack02
       animationHash: -1656449293
-      animationType: 12
+      animationType: 0
       loop: 0
       transitionInTime: 0.1
       ignores: []

@@ -1,8 +1,7 @@
 using System.Collections;
-using HotUpdate.Base.Enums;
-using HotUpdate.Base.Utility;
+using HotUpdate.Base.Animation;
 using HotUpdate.Game.Animation.Component;
-using HotUpdate.Game.Battle.Utility;
+using AnimationUtility = HotUpdate.Game.Battle.Utility.AnimationUtility;
 
 namespace HotUpdate.Game.Battle.Object.Role
 {
@@ -15,7 +14,7 @@ namespace HotUpdate.Game.Battle.Object.Role
         {
             var animationComponent = battleEntityObject.GetComponent<BattleAnimationComponent>();
              // 等待死亡动画播放结束
-            yield return AnimationPlayUtility.WaitForAnimOver(animationComponent, AnimationUtility.Battle_Layer_Name, (int)E_AnimationType.Death);
+            yield return AnimationUtility.WaitForCommonAnimOver(animationComponent, Base.Utility.AnimationLayer.Battle_Layer_Name, EAnimationType.Death);
             // 角色留在场上
         }
     }

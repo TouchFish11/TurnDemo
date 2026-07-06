@@ -1,12 +1,11 @@
 using System.Collections;
 using Core.DI;
 using Core.Utility;
-using HotUpdate.Base.Enums;
-using HotUpdate.Base.Utility;
+using HotUpdate.Base.Animation;
 using HotUpdate.Game.Animation.Component;
-using HotUpdate.Game.Battle.Utility;
 using HotUpdate.Game.VFX;
 using UnityEngine;
+using AnimationUtility = HotUpdate.Game.Battle.Utility.AnimationUtility;
 
 namespace HotUpdate.Game.Battle.Object.Monster
 {
@@ -32,7 +31,7 @@ namespace HotUpdate.Game.Battle.Object.Monster
 
             var animationComponent =  battleEntityObject.GetComponent<BattleAnimationComponent>();
             // 播放怪物死亡动画，并等待动画播放完成
-            yield return AnimationPlayUtility.WaitForAnimOver(animationComponent, AnimationUtility.Battle_Layer_Name, (int)E_AnimationType.Death);
+            yield return AnimationUtility.WaitForCommonAnimOver(animationComponent, Base.Utility.AnimationLayer.Battle_Layer_Name, EAnimationType.Death);
             // 等待死亡特效播放完毕（协程阻塞，直到特效销毁）
             yield return new WaitUntil(() => !vFXInfo.IsAlive);
             // 死亡动画效果结束后才回收到对象池中

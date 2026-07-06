@@ -10,8 +10,7 @@ using Core.Utility;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Settings;
 using HotUpdate.Base.UI;
-using HotUpdate.Common.Config.ExcelInfo.Container;
-using HotUpdate.Common.Config.ExcelInfo.Info;
+
 using HotUpdate.Common.Events;
 using HotUpdate.UI.Dialogue;
 using UnityEngine;

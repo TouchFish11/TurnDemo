@@ -4,7 +4,6 @@ using HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill.AbyssGift;
 using HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill.AbyssLock;
 using HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill.Ashfall;
 using HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill.Frostfall;
-using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
 using HotUpdate.Game.Battle.Skill.Base.Phase;

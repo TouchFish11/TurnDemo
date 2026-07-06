@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using Core.UI;
-using HotUpdate.Common.Config.ExcelInfo.Info;
+
 using UnityEngine;
 
 namespace HotUpdate.UI.Activity.Base

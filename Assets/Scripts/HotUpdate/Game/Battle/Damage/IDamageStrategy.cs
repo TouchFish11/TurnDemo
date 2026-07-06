@@ -1,5 +1,5 @@
 using HotUpdate.Base;
-using HotUpdate.Common.Config.ExcelInfo.Info;
+
 using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.Damage

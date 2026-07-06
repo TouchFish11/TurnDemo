@@ -26,10 +26,10 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Ultimate
             
             // 切换终结技动画
             var animationComponent = caster.GetComponent<BattleAnimationComponent>(); 
-            animationComponent.SetAnimationState(SkillContext.SkillInfo.f_animationType);
+            animationComponent.SetSkillState(SkillContext.SkillInfo.f_animName);
             
             // 等待动画切换到终结技攻击状态
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationUtility.Skill_Layer_Name).IsName(UltimateAttackState));
+            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationLayer.Skill_Layer_Name).IsName(UltimateAttackState));
             
             // 初始化终结技核心特效数据（位置上移0.9米，避免穿模）
             SkillContext.ProjectileData = new ProjectileData(caster, mainTarget, SkillContext.AllTargets, SkillContext);

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Core.DI;
 using Core.Utility;
-using HotUpdate.Common.Config.ExcelInfo.Info;
+
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Object.StateMeachine;
 using HotUpdate.Game.Battle.Property;
@@ -39,8 +39,8 @@ namespace HotUpdate.Game.Battle.Object.Role
         public void RoleBattleInit(RoleBattleInitData initData)
         {
             BattleInit(initData);
-            
-            RoleInfo = initData.RoleInfo;
+
+            SetRoleInfo(initData.RoleInfo);
             CurrentActPhase = EActPhase.SettlementBuff;
             AddState(EActPhase.SettlementBuff);
             AddState(EActPhase.TurnStart);
@@ -56,6 +56,11 @@ namespace HotUpdate.Game.Battle.Object.Role
             
             // 添加组件
             AddComponents(TextUtility.Split(RoleInfo.f_comNames, 2));
+        }
+
+        public void SetRoleInfo(RoleInfo roleInfo)
+        {
+            RoleInfo = roleInfo;
         }
 
         protected abstract ISkillFactory GetSkillFactory();

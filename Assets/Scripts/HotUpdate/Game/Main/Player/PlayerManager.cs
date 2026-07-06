@@ -5,18 +5,20 @@ using Core.DI;
 using Core.GlobalEvent;
 using Core.GlobalEvent.Events;
 using Core.Mono;
-using HotUpdate.Base.Enums;
+using Core.Serialize.Binary;
+using HotUpdate.Base.Animation;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Object;
 using HotUpdate.Base.UI;
 using HotUpdate.Base.Utility;
 using HotUpdate.Game.Animation.Component;
-using HotUpdate.Game.Battle.Object.Role.Warrior;
+using HotUpdate.Game.Battle.Object.Role;
 using HotUpdate.Game.Cameras;
+using HotUpdate.Game.Dialogue;
 using HotUpdate.Game.Inputs;
+using HotUpdate.Game.Interact;
 using HotUpdate.Game.Main.FloatingText;
 using HotUpdate.Game.Main.Move;
-using UnityEngine;
 
 namespace HotUpdate.Game.Main.Player
 {
@@ -28,55 +30,103 @@ namespace HotUpdate.Game.Main.Player
     {
         [Inject] private IFloatingTextManager _floatingTextManager;
         [Inject] private ObjectSpawner _objectSpawner;
+        [Inject] private IBinaryDataManager _binaryDataManager;
         
+        // Key：实体的索引序号（自增），Value：对应的战斗实体对象ID；用于快速管理和访问挂载到玩家的多个战斗实体
+        private readonly Dictionary<int, int> indexToRoleIdMap = new();
+        // 字典：玩家UID映射到对应的实体对象，用于快速查找玩家
+        private readonly Dictionary<int, IPlayerObject> roleIdToEntityMap = new();
         // 环绕式第三人称相机控制器
         private OrbitCameraController _cameraController;
-
-        // 字典：玩家UID映射到对应的实体对象，用于快速查找玩家
-        private readonly Dictionary<uint, IEntityObject> uidToEntityMap = new();
-
-        /// <summary>
-        /// 默认玩家名称
-        /// </summary>
-        private const string DefaultPlayerName = "Player";
         
-        public IEntityObject MainPlayer => uidToEntityMap[1001];
+        /// <summary>
+        /// 当前控制的实体
+        /// </summary>
+        public IEntityObject CurrentEntity => roleIdToEntityMap[1001];
         
         public PlayerManager(IEventCenter eventCenter)
         {
             eventCenter.SubscribeEvent<OpenViewEvent>(OnOpenViewEvent, OpenViewEventFilter);
             eventCenter.SubscribeEvent<CloseViewEvent>(OnCloseViewEvent, CloseViewEventFilter);
         }
-        
-        public async Task CreatePlayer(uint uid)
+
+        public async Task CreatePlayer(int id)
         {
-            // 创建玩家根节点GameObject
-            var mainObj = new GameObject(DefaultPlayerName);
-            // 设置玩家初始位置和旋转角度
-            mainObj.transform.SetPositionAndRotation(new Vector3(0, 0, -5.6f), Quaternion.identity);
-
-            // 添加角色控制器组件
-            var characterController = mainObj.AddComponent<CharacterController>();
-            characterController.center = new Vector3(0, 1, 0); // 设置控制器中心偏移
-
-            // 添加主玩家核心逻辑组件
-            var main = mainObj.AddComponent<MainPlayer>();
+            // Test
+            const string roleKey = AssetKeys.Prefab_Warrior;
+            id = 1;
+            var roleInfo = _binaryDataManager.GetConfig<RoleInfoContainer>(EConfigLoadType.Excel).dataDic[id];
             // 从资源包加载战士预制体，并挂载到玩家节点下
-            var warriorObj = await _objectSpawner.SpawnAsync<GameObject>(AssetKeys.Prefab_Main_Warrior, main.transform);
-            // 给战士预制体添加战士逻辑组件，并关联到主玩家
-            warriorObj.AddComponent<Warrior>();
-            // 初始化主玩家基础数据
-            EntityHelper.InitEntity(main);
+            var roleObj = await _objectSpawner.SpawnAsync<PlayerObject>(roleKey);
+            roleObj.SetRoleInfo(roleInfo);
+            EntityHelper.InitEntity(roleObj);
+            AddWorldComponent(roleObj);
             // 初始化玩家相机
             await CreateMainCamera();
             // 设置跟随对象
-            _cameraController.SetTarget(main);
+            _cameraController.SetTarget(roleObj);
             // 设置相机
-            main.InitCamera(_cameraController);
+            roleObj.GetComponent<MoveComponent>().SetCamera(_cameraController);
             // 将玩家对象加入字典管理
-            uidToEntityMap.Add(uid, main);
-            _floatingTextManager.SetPlayer(main.transform);
+            roleIdToEntityMap.Add(id, roleObj);
+            _floatingTextManager.SetPlayer(roleObj.transform);
         }
+
+        private static void AddWorldComponent(EntityObject entityObject)
+        {
+            entityObject.AddComponent<AnimatorComponent>();
+            // 挂载动画控制器组件
+            entityObject.AddComponent<AnimatorComponent>();
+            // 挂载输入组件：处理玩家的输入事件
+            entityObject.AddComponent<InputComponent>();
+            // 挂载普通动画组件：处理玩家基础动画状态
+            entityObject.AddComponent<NormalAnimationComponent>();
+            // 挂载移动组件：处理玩家的位移逻辑（坐标更新、移动速度、碰撞检测等）
+            entityObject.AddComponent<MoveComponent>();
+            // 挂载交互组件：处理玩家与场景/其他实体的交互逻辑（拾取、对话触发等）
+            entityObject.AddComponent<InteractComponent>();
+            // 挂载对话组件：处理玩家的对话流程、剧情触发、文本展示等逻辑
+            entityObject.AddComponent<DialogueComponent>();
+        }
+        
+        /// <summary>
+        /// 设置玩家的默认战斗实体
+        /// 用于初始化玩家默认显示/控制的实体（如初始角色、默认武器等）
+        /// </summary>
+        private void SetDefault()
+        {
+            // 【注】当前逻辑注释待启用：获取索引为0的默认实体，绑定其动画控制器到玩家动画组件
+            //var defaultEntity = indexToEntityMap[0];
+            //GetComponent<NormalAnimationComponent>().SetAnimator(defaultEntity.GetComponentInChildren<AnimatorComponent>().Animator);
+        }
+        
+        // public async Task CreatePlayer(uint uid)
+        // {
+        //     // 创建玩家根节点GameObject
+        //     var mainObj = new GameObject(DefaultPlayerName);
+        //     // 设置玩家初始位置和旋转角度
+        //     mainObj.transform.SetPositionAndRotation(new Vector3(0, 0, -5.6f), Quaternion.identity);
+        //
+        //     // 添加角色控制器组件
+        //     var characterController = mainObj.AddComponent<CharacterController>();
+        //     characterController.center = new Vector3(0, 1, 0); // 设置控制器中心偏移
+        //
+        //     // 添加主玩家核心逻辑组件
+        //     var main = mainObj.AddComponent<MainPlayer>();
+        //     // 从资源包加载战士预制体，并挂载到玩家节点下
+        //     var warriorObj = await _objectSpawner.SpawnAsync<GameObject>(AssetKeys.Prefab_Main_Warrior, main.transform);
+        //     // 初始化主玩家基础数据
+        //     EntityHelper.InitEntity(main);
+        //     // 初始化玩家相机
+        //     await CreateMainCamera();
+        //     // 设置跟随对象
+        //     _cameraController.SetTarget(main);
+        //     // 设置相机
+        //     main.InitCamera(_cameraController);
+        //     // 将玩家对象加入字典管理
+        //     uidToEntityMap.Add(uid, main);
+        //     _floatingTextManager.SetPlayer(main.transform);
+        // }
 
         /// <summary>
         /// 清理所有玩家对象
@@ -84,14 +134,14 @@ namespace HotUpdate.Game.Main.Player
         public void Clear()
         {
             // 遍历所有玩家实体，执行销毁逻辑
-            foreach (var entity in uidToEntityMap.Values)
+            foreach (var entity in roleIdToEntityMap.Values)
             {
                 entity.Destroy(); // 执行实体内部销毁逻辑
                 EngineUtility.Destroy(entity.GameObject); // 销毁GameObject对象
             }
 
             // 清空字典，释放引用
-            uidToEntityMap.Clear();
+            roleIdToEntityMap.Clear();
             // 销毁主摄像机
             EngineUtility.Destroy(_cameraController.gameObject);
             _cameraController = null;
@@ -112,14 +162,14 @@ namespace HotUpdate.Game.Main.Player
         /// <param name="openViewEvent"></param>
         private void OnOpenViewEvent(OpenViewEvent openViewEvent)
         {
-            MainPlayer.GetComponent<InputComponent>().DisableInput();
-            MainPlayer.GetComponent<NormalAnimationComponent>().SetAnimationState((int)E_AnimationType.Idle);
-            MainPlayer.GetComponent<MoveComponent>().Disable();
+            CurrentEntity.GetComponent<InputComponent>().DisableInput();
+            CurrentEntity.GetComponent<NormalAnimationComponent>().SetCommonState(EAnimationType.Idle);
+            CurrentEntity.GetComponent<MoveComponent>().Disable();
         }
 
         private bool OpenViewEventFilter(OpenViewEvent openViewEvent)
         {
-            return openViewEvent.UIController is IBlockOperation blockOperation && blockOperation.BlockOperation && uidToEntityMap.ContainsKey(1001);
+            return openViewEvent.UIController is IBlockOperation blockOperation && blockOperation.BlockOperation && roleIdToEntityMap.ContainsKey(1001);
         }
         
         /// <summary>
@@ -128,13 +178,13 @@ namespace HotUpdate.Game.Main.Player
         /// <param name="closeViewEvent"></param>
         private void OnCloseViewEvent(CloseViewEvent closeViewEvent)
         {
-            MainPlayer.GetComponent<InputComponent>().EnableInput();
-            MainPlayer.GetComponent<MoveComponent>().Enable();
+            CurrentEntity.GetComponent<InputComponent>().EnableInput();
+            CurrentEntity.GetComponent<MoveComponent>().Enable();
         }
 
         private bool CloseViewEventFilter(CloseViewEvent closeViewEvent)
         {
-            return closeViewEvent.UIController is IBlockOperation blockOperation && blockOperation.BlockOperation && uidToEntityMap.ContainsKey(1001);
+            return closeViewEvent.UIController is IBlockOperation blockOperation && blockOperation.BlockOperation && roleIdToEntityMap.ContainsKey(1001);
         }
     }
 }

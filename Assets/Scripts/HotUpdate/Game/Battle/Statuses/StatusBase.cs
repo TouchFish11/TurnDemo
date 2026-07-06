@@ -3,7 +3,7 @@ using Core.DI;
 using Core.Pool;
 using Core.Serialize.Binary;
 using Core.Time;
-using HotUpdate.Common.Config.ExcelInfo.Container;
+
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.VFX;

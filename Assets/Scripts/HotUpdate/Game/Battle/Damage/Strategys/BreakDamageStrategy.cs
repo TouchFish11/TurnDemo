@@ -1,8 +1,7 @@
 using Core.DI;
 using Core.Serialize.Binary;
 using HotUpdate.Base;
-using HotUpdate.Common.Config.ExcelInfo.Container;
-using HotUpdate.Common.Config.ExcelInfo.Info;
+
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Utility;

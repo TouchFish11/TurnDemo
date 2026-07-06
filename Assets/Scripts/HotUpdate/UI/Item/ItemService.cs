@@ -6,7 +6,7 @@ using Core.DI;
 using Core.Serialize.Binary;
 using Core.Utility;
 using HotUpdate.Base.Service;
-using HotUpdate.Common.Config.ExcelInfo.Container;
+
 using UnityEngine;
 using Logger = Core.Log.Logger;
 

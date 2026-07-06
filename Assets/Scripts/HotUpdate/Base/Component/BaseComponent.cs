@@ -15,7 +15,7 @@ namespace HotUpdate.Base.Component
         /// 当前组件所属的实体对象
         /// 仅在 Awake 阶段初始化，外部只读，内部私有赋值
         /// </summary>
-        public IEntityObject EntityObject { get; private set; }
+        public IEntityObject EntityObject { get; protected set; }
 
         protected IComponentCore<IComponent> ComponentCore { get; private set; }
 

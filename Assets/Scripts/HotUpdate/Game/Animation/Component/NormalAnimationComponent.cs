@@ -1,6 +1,6 @@
 using HotUpdate.Base.Animation;
 using HotUpdate.Base.Component;
-using HotUpdate.Base.Enums;
+using HotUpdate.Base.Utility;
 using HotUpdate.Game.Inputs;
 using UnityEngine;
 
@@ -34,9 +34,9 @@ namespace HotUpdate.Game.Animation.Component
             animatorComponent.SetLayerWeight(EAnimationLayer.SkillLayer, 0);
         }
 
-        public void SetAnimationState(int type)
+        public void SetCommonState(EAnimationType type)
         {
-            _normalAnimationComponentCore.SetAnimationState(type);
+            _normalAnimationComponentCore.SetCommonState(type);
         }
         
         public AnimatorStateInfo GetCurrentAnimatorStateInfo(string layerName)
@@ -52,16 +52,16 @@ namespace HotUpdate.Game.Animation.Component
         private void OnMove(Vector3 inputDir)
         {
             // 输入方向非零则播放跑步动画，否则播放待机动画
-            _normalAnimationComponentCore.SetAnimationState((int)(inputDir != Vector3.zero ? E_AnimationType.Run : E_AnimationType.Idle));
+            _normalAnimationComponentCore.SetCommonState(inputDir != Vector3.zero ? EAnimationType.Run : EAnimationType.Idle);
         }
-
+    
         /// <summary>
         /// 普通攻击输入事件回调方法
         /// 触发普通攻击动画播放
         /// </summary>
         private void OnAttack()
         {
-            _normalAnimationComponentCore.SetAnimationState((int)E_AnimationType.NormalAttack);
+            _normalAnimationComponentCore.SetState($"{AnimationLayer.Skill_Layer_Name}.{nameof(EAnimationType.NormalAttack)}");
         }
         
         protected override void OnBaseDestroy()

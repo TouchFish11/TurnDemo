@@ -1,13 +1,14 @@
 using HotUpdate.Base.Animation;
+using HotUpdate.Base.Component;
 using UnityEngine;
 
-namespace HotUpdate.Base.Component
+namespace HotUpdate.Game.Animation.Component
 {
     /// <summary>
     /// 动画控制器组件
     /// </summary>
-    [RequireComponent(typeof(Animator))]
     [ComponentCore(typeof(AnimatorComponentCore))]
+    [ComponentId(typeof(AnimatorComponent))]
     public class AnimatorComponent : BaseComponent
     {
         private AnimatorComponentCore _animatorComponentCore;
@@ -20,7 +21,7 @@ namespace HotUpdate.Base.Component
         protected override void Awake()
         {
             base.Awake();
-            Animator = GetComponent<Animator>();
+            Animator = GetComponentInChildren<Animator>();
         }
 
         protected override void OnInit()
@@ -29,12 +30,21 @@ namespace HotUpdate.Base.Component
         }
 
         /// <summary>
-        /// 播放指定类型动画
+        /// 播放指定类型通用动画
         /// </summary>
         /// <param name="animationType"></param>
-        public void Play(EAnimationType animationType)
+        public void PlayCommon(EAnimationType animationType)
         {
-            _animatorComponentCore.Play(animationType);
+            _animatorComponentCore.PlayCommon(animationType);
+        }
+
+        /// <summary>
+        /// 播放指定类型动画
+        /// </summary>
+        /// <param name="stateName"></param>
+        public void Play(string stateName)
+        {
+            _animatorComponentCore.Play(stateName);
         }
 
         /// <summary>

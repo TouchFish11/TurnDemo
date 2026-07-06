@@ -1,7 +1,6 @@
 using System;
 using Core.DI;
 using Core.Serialize.Binary;
-using HotUpdate.Common.Config.ExcelInfo.Container;
 using Newtonsoft.Json;
 
 namespace HotUpdate.Base.Data

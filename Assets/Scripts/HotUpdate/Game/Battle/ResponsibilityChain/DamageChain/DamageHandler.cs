@@ -1,5 +1,5 @@
 using Core.Log;
-using HotUpdate.Base.Enums;
+using HotUpdate.Base.Animation;
 using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Event.General;
@@ -28,7 +28,7 @@ namespace HotUpdate.Game.Battle.ResponsibilityChain.DamageChain
             context.EventBus.TriggerEvent(new ApplyDamageEvent(context, request));
             
             // 播放受击动画
-            target.GetComponent<BattleAnimationComponent>().SetAnimationState((int)E_AnimationType.Hit);
+            target.GetComponent<BattleAnimationComponent>().SetCommonState(EAnimationType.Hit);
             // 获取属性组件，处理血量扣减
             var propertyComponent = target.GetComponent<PropertyComponent>();
             // 获取当前血量

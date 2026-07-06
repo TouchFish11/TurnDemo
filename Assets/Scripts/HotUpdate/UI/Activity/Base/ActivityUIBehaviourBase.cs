@@ -5,7 +5,7 @@ using Core.DI;
 using Core.UI;
 using Core.Utility;
 using HotUpdate.Base.Service;
-using HotUpdate.Common.Config.ExcelInfo.Info;
+
 using HotUpdate.UI.Item;
 using UnityEngine;
 

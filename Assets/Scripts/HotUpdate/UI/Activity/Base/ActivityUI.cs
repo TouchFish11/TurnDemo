@@ -1,6 +1,6 @@
 using System;
 using Core.UI;
-using HotUpdate.Common.Config.ExcelInfo.Info;
+
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
