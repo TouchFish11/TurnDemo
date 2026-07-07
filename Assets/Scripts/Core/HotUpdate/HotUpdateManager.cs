@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
-using Core.AssetBundles.Management;
-using Core.Serialize.Json;
 using HybridCLR;
 using UnityEngine;
 using Logger = Core.Log.Logger;
@@ -24,17 +22,13 @@ namespace Core.HotUpdate
         // 排序后的dll列表
         private readonly List<string> _sortDlls = new();
         // 记录所有已处理节点
-        private HashSet<string> _visited = new();
+        private readonly HashSet<string> _visited = new();
         // 记录当前递归路径，用于检测循环
-        private HashSet<string> _visiting = new();
+        private readonly HashSet<string> _visiting = new();
         
-        private readonly IAssetBundleManager _assetBundleManager;
-        private readonly IJsonManager _jsonManager;
-
-        private HotUpdateManager(IAssetBundleManager assetBundleManager,  IJsonManager jsonManager)
+        private HotUpdateManager()
         {
-            _assetBundleManager = assetBundleManager;
-            _jsonManager = jsonManager;
+
         }
         
         public void LoadMetadataForAOTAssemblies(IReadOnlyList<string> aotDlls)

@@ -157,7 +157,7 @@ namespace Core.AssetBundles.Management
                 var wrapper = _nameToWrapperMap[dependency];
                 wrapper.IsActive = true;
                 dependenciesTasks.Add(dependency, wrapper.LoadFromFileAsync(token));
-                Logger.Log($"{nameof(AssetBundleManager)}: '{abName}' assetBundle dependency '{dependency}' will be loaded");
+                //Logger.Log($"{nameof(AssetBundleManager)}: '{abName}' assetBundle dependency '{dependency}' will be loaded");
             }
 
             // 等待所有依赖加载完毕

@@ -17,29 +17,37 @@ MonoBehaviour:
     animationConfigs:
     - layer: 1
       animationStateName: IdleBattle
-      animationHash: 2110659171
+      animationHash: 1932744782
       animationType: 1
       loop: 1
+      isDefault: 1
       transitionInTime: 0.1
+      normalizedTimeOffset: 0
       ignores: []
     - layer: 1
       animationStateName: Hit
-      animationHash: -814593744
-      animationType: 9
+      animationHash: 799522206
+      animationType: 10
       loop: 0
+      isDefault: 0
       transitionInTime: 0.1
+      normalizedTimeOffset: 0
       ignores: []
     - layer: 1
       animationStateName: Death
-      animationHash: 208565488
-      animationType: 10
+      animationHash: -2043006137
+      animationType: 11
       loop: 0
+      isDefault: 0
       transitionInTime: 0.1
+      normalizedTimeOffset: 0
       ignores: []
     - layer: 1
       animationStateName: Rebirth
-      animationHash: -94673583
-      animationType: 11
+      animationHash: -1184431287
+      animationType: 12
       loop: 0
+      isDefault: 0
       transitionInTime: 0.1
+      normalizedTimeOffset: 0
       ignores: []

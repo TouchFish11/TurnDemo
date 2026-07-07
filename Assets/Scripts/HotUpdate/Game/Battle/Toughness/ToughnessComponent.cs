@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using HotUpdate.Base;
 using HotUpdate.Base.Component;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Object;
@@ -21,6 +20,7 @@ namespace HotUpdate.Game.Battle.Toughness
         protected override void OnBattleInit()
         {
             _toughnessComponentCore = (ToughnessComponentCore)ComponentCore;
+            _toughnessComponentCore.InitToughness();
         }
         
         /// <summary>

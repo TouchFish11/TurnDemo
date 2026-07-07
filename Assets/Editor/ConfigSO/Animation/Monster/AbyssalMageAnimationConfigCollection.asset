@@ -16,16 +16,29 @@ MonoBehaviour:
   animationConfigCollection:
     animationConfigs:
     - layer: 2
+      animationStateName: Null
+      animationHash: -1253096514
+      animationType: 0
+      loop: 1
+      isDefault: 1
+      transitionInTime: 0.1
+      normalizedTimeOffset: 0
+      ignores: []
+    - layer: 2
       animationStateName: Attack01
-      animationHash: 72206153
+      animationHash: -384510369
       animationType: 0
       loop: 0
+      isDefault: 0
       transitionInTime: 0.1
+      normalizedTimeOffset: 0
       ignores: []
     - layer: 2
       animationStateName: Attack02
-      animationHash: -1656449293
+      animationHash: 1880983525
       animationType: 0
       loop: 0
+      isDefault: 0
       transitionInTime: 0.1
+      normalizedTimeOffset: 0
       ignores: []

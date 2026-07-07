@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Core.AssetBundles.Management;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
@@ -17,30 +16,40 @@ namespace Core.HotUpdate
     {
         // 缓存热更程序集名称
         private readonly ConcurrentBag<string> _assemblyNames = new();
-        private readonly IAssetBundleManager _assetBundleManager;
 
-        private HotUpdateMockManager(IAssetBundleManager assetBundleManager)
+        private HotUpdateMockManager()
         {
-            _assetBundleManager = assetBundleManager;
+
         }
         
         public Task LoadAssembliesAsync(HotUpdateAssemblySettings settings, List<TextAsset> textAssets)
         {
-            foreach (var dllText in textAssets)
+            // Editor环境下，HotUpdate.dll.bytes已经被自动加载，不需要加载，直接查找获得HotUpdate程序集，重复加载反而会出问题。
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                if (_assemblyNames.Contains(dllText.name[..dllText.name.LastIndexOf('.')]))
-                    continue;
-                
-                // Editor环境下，HotUpdate.dll.bytes已经被自动加载，不需要加载，直接查找获得HotUpdate程序集，重复加载反而会出问题。
-                foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-                {
-                    if (assembly.GetName().Name != dllText.name[..dllText.name.LastIndexOf('.')])
-                        continue;
+                // if (assembly.GetName().Name != dllText.name[..dllText.name.LastIndexOf('.')])
+                //     continue;
                     
-                    _assemblyNames.Add(assembly.GetName().Name);
-                    Logger.Log($"{nameof(HotUpdateMockManager)}.{nameof(LoadAssembliesAsync)}: Editor found hotfix dll({dllText.name})");
-                }
+                _assemblyNames.Add(assembly.GetName().Name);
+                Logger.Log($"{nameof(HotUpdateMockManager)}: Editor found hotfix dll({assembly})");
             }
+            
+            
+            // foreach (var dllText in textAssets)
+            // {
+            //     if (_assemblyNames.Contains(dllText.name[..dllText.name.LastIndexOf('.')]))
+            //         continue;
+            //     
+            //     // Editor环境下，HotUpdate.dll.bytes已经被自动加载，不需要加载，直接查找获得HotUpdate程序集，重复加载反而会出问题。
+            //     foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            //     {
+            //         if (assembly.GetName().Name != dllText.name[..dllText.name.LastIndexOf('.')])
+            //             continue;
+            //         
+            //         _assemblyNames.Add(assembly.GetName().Name);
+            //         Logger.Log($"{nameof(HotUpdateMockManager)}.{nameof(LoadAssembliesAsync)}: Editor found hotfix dll({dllText.name})");
+            //     }
+            // }
             return Task.CompletedTask;
         }
 
@@ -85,7 +94,8 @@ namespace Core.HotUpdate
             var assemblies = new List<Assembly>();
             foreach (var assemblyName in _assemblyNames)
             {
-                assemblies.Add(Assembly.Load(assemblyName));
+                if(assemblyName.Contains("HotUpdate"))
+                    assemblies.Add(Assembly.Load(assemblyName));
             }
             return assemblies.ToArray();
         }

@@ -12,9 +12,8 @@ namespace HotUpdate.Base.Component
     {
         public PlayerInput PlayerInput { get; private set; }
 
-        protected override void Awake()
+        protected override void OnInit()
         {
-            base.Awake();
             PlayerInput = EntityObject?.GameObject.GetComponent<PlayerInput>();
         }
 

@@ -1,8 +1,8 @@
 using HotUpdate.Base.Animation;
 using HotUpdate.Base.Component;
-using HotUpdate.Base.Utility;
 using HotUpdate.Game.Inputs;
 using UnityEngine;
+using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.Animation.Component
 {
@@ -11,38 +11,44 @@ namespace HotUpdate.Game.Animation.Component
     /// 负责处理角色基础的移动、普通攻击等常规动画逻辑
     /// </summary>
     [ComponentId(typeof(NormalAnimationComponent))]
-    [ComponentCore(typeof(NormalAnimationComponentCore))]
     public class NormalAnimationComponent : BaseComponent, IAnimationComponent
     {
-        private NormalAnimationComponentCore _normalAnimationComponentCore;
+        private AnimatorComponent _animatorComponent;
 
-        public Animator Animator => _normalAnimationComponentCore.GetAnimator();
+        public Animator Animator => _animatorComponent.Animator;
         
-        public AnimationParameter Parameter => _normalAnimationComponentCore.GetParameter();
+        public string AnimationState { get; private set; }
         
         protected override void OnInit()
         {
-            _normalAnimationComponentCore = (NormalAnimationComponentCore)ComponentCore;
-            var animatorComponent = _normalAnimationComponentCore.AnimatorComponent;
+            _animatorComponent = EntityObject.GetComponent<AnimatorComponent>();
+            _animatorComponent.AddAnimationFinished(OnAttackFinished);
             
             // 注册输入组件的事件监听：移动输入变化、鼠标左键点击（普通攻击）
             EntityObject.GetComponent<InputComponent>().AddKeyInputChangedListener(OnMove);
             EntityObject.GetComponent<InputComponent>().AddMouseLeftClickListener(OnAttack);
-            
-            // 初始化时将战斗层、技能层动画权重设为0，优先使用基础动画层
-            animatorComponent.SetLayerWeight(EAnimationLayer.BattleLayer, 0);
-            animatorComponent.SetLayerWeight(EAnimationLayer.SkillLayer, 0);
         }
 
         public void SetCommonState(EAnimationType type)
         {
-            _normalAnimationComponentCore.SetCommonState(type);
+            // 更新当前动画类型
+            AnimationState = type.ToString();
+            _animatorComponent.PlayCommon(type);
         }
         
         public AnimatorStateInfo GetCurrentAnimatorStateInfo(string layerName)
         {
-            return _normalAnimationComponentCore.GetCurrentAnimatorStateInfo(layerName);
+            if (_animatorComponent)
+            {
+                var animator = _animatorComponent.Animator;
+                return animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex(layerName));
+            }
+            
+            Logger.LogError("动画控制器为null");
+            return new AnimatorStateInfo();
         }
+
+        private Vector3 lastInput;
 
         /// <summary>
         /// 移动输入事件回调方法
@@ -52,7 +58,16 @@ namespace HotUpdate.Game.Animation.Component
         private void OnMove(Vector3 inputDir)
         {
             // 输入方向非零则播放跑步动画，否则播放待机动画
-            _normalAnimationComponentCore.SetCommonState(inputDir != Vector3.zero ? EAnimationType.Run : EAnimationType.Idle);
+            if (inputDir == Vector3.zero && lastInput != Vector3.zero)
+            {
+                _animatorComponent.PlayCommon(EAnimationType.Idle);
+                lastInput = inputDir;
+            }
+            else if(inputDir != Vector3.zero && lastInput == Vector3.zero)
+            {
+                _animatorComponent.PlayCommon(EAnimationType.Run);
+                lastInput = inputDir;
+            }
         }
     
         /// <summary>
@@ -61,12 +76,15 @@ namespace HotUpdate.Game.Animation.Component
         /// </summary>
         private void OnAttack()
         {
-            _normalAnimationComponentCore.SetState($"{AnimationLayer.Skill_Layer_Name}.{nameof(EAnimationType.NormalAttack)}");
+            _animatorComponent.PlayCommon(EAnimationType.WorldAttack);
         }
-        
-        protected override void OnBaseDestroy()
+
+        private void OnAttackFinished(AnimationConfig config)
         {
-            _normalAnimationComponentCore = null;
+            if (lastInput != Vector3.zero)
+            {
+                _animatorComponent.PlayCommon(EAnimationType.Run);
+            }
         }
     }
 }

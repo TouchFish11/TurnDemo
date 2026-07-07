@@ -8,6 +8,10 @@ namespace HotUpdate.Base.Component
         
         private bool _isDisposed;
         
+        /// <summary>
+        /// 初始化组件逻辑类，逻辑类初始化先于组件初始化
+        /// </summary>
+        /// <param name="component"></param>
         public void Init(IComponent component)
         {
             Component = (T)component;

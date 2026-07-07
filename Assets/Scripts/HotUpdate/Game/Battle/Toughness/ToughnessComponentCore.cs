@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Core.DI;
 using Core.Utility;
-using HotUpdate.Base;
 using HotUpdate.Base.Component;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Object;
@@ -24,8 +23,8 @@ namespace HotUpdate.Game.Battle.Toughness
         private List<IToughnessReduceStrategy> _toughnessReduceStrategies = new();
         // 韧性计算策略集合（不同规则的韧性值计算逻辑，按优先级排序执行）
         private List<IToughnessCalcStrategy> _toughnessCalcStrategies = new();
-        
-        protected override void OnInit()
+
+        public void InitToughness()
         {
             // 获取怪物信息组件（当前仅适配怪物，若适配角色需扩展）
             var monsterInfo = ((MonsterObject)Component.BattleEntity).MonsterInfo;

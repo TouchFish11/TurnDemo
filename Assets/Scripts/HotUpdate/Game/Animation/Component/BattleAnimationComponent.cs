@@ -2,6 +2,7 @@ using HotUpdate.Base.Animation;
 using HotUpdate.Base.Component;
 using HotUpdate.Game.Battle.Core;
 using UnityEngine;
+using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.Animation.Component
 {
@@ -11,53 +12,50 @@ namespace HotUpdate.Game.Animation.Component
     /// 监听技能选择、技能释放等战斗事件，并根据事件触发对应动画
     /// </summary>
     [ComponentId(typeof(BattleAnimationComponent))]
-    [ComponentCore(typeof(BattleAnimationComponentCore))]
-    public class BattleAnimationComponent : BattleComponent, IAnimationComponent
+    public class BattleAnimationComponent : BattleComponent, IBattleAnimationComponent
     {
-        private BattleAnimationComponentCore _battleAnimationComponentCore;
+        private AnimatorComponent _animatorComponent;
+
+        public Animator Animator => _animatorComponent.Animator;
         
-        public Animator Animator => _battleAnimationComponentCore.GetAnimator();
-        
-        public AnimationParameter Parameter => _battleAnimationComponentCore.GetParameter();
+        public string AnimationState { get; private set; }
 
         protected override void OnBattleInit()
         {
-            _battleAnimationComponentCore = (BattleAnimationComponentCore)ComponentCore;
-            // // 初始化默认动画类型：玩家默认预普通攻击动画，其他实体（怪物）默认无动画
-            // _battleAnimationComponentCore.AnimationType = BattleEntity is IPlayerObject ? E_AnimationType.PreNormalAttack : E_AnimationType.None;
+            _animatorComponent = BattleEntity.GetComponent<AnimatorComponent>();
         }
-        
+
         /// <summary>
         /// 设置通用动画播放状态
         /// </summary>
         /// <param name="type">要切换的动画类型</param>
         public void SetCommonState(EAnimationType type)
         {
-            _battleAnimationComponentCore.SetCommonState(type);
+            _animatorComponent.PlayCommon(type);
         }
 
         public void SetSkillState(string stateName)
         {
-            _battleAnimationComponentCore.SetState(stateName);
+            // 更新当前动画类型
+            AnimationState = stateName;
+            _animatorComponent.Play(stateName);
         }
 
         public AnimatorStateInfo GetCurrentAnimatorStateInfo(string layerName)
         {
-            return _battleAnimationComponentCore.GetCurrentAnimatorStateInfo(layerName);
-        }
-
-        /// <summary>
-        /// 重置动画类型为初始状态
-        /// 玩家重置为预普通攻击，其他实体重置为无动画
-        /// </summary>
-        public void ResetAnimationType()
-        {
-            //_battleAnimationComponentCore.AnimationType = BattleEntity is IPlayerObject ? E_AnimationType.PreNormalAttack : E_AnimationType.None;
+            if (_animatorComponent)
+            {
+                var animator = _animatorComponent.Animator;
+                return animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex(layerName));
+            }
+            
+            Logger.LogError("动画控制器为null");
+            return new AnimatorStateInfo();
         }
         
         protected override void OnBattleDestroy()
         {
-            _battleAnimationComponentCore = null;
+            _animatorComponent = null;
         }
     }
 }

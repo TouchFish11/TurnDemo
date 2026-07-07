@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using HotUpdate.Base;
 using HotUpdate.Game.Battle.Property;
 
 namespace HotUpdate.Game.Battle.Toughness

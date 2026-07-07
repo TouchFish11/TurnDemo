@@ -22,7 +22,7 @@ namespace HotUpdate.Base.Component
         /// <summary>
         /// 自动获取挂载同一 GameObject 下的 <see cref="IEntityObject"/> 组件，完成实体关联
         /// </summary>
-        protected virtual void Awake()
+        private void Awake()
         {
             EntityObject = GetComponent<IEntityObject>();
         }

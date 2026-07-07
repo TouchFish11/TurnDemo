@@ -10,9 +10,8 @@ namespace HotUpdate.Base.Component
     {
         public CharacterController CharacterController { get; private set; }
 
-        protected override void Awake()
+        protected override void OnInit()
         {
-            base.Awake();
             CharacterController = EntityObject?.GameObject.GetComponent<CharacterController>();
         }
 

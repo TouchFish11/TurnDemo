@@ -17,78 +17,133 @@ MonoBehaviour:
     animationConfigs:
     - layer: 0
       animationStateName: Idle
-      animationHash: 270025622
+      animationHash: 1432961145
       animationType: 1
       loop: 1
+      isDefault: 1
       transitionInTime: 0.1
+      normalizedTimeOffset: 0
       ignores: []
     - layer: 0
       animationStateName: Run
-      animationHash: 1626845812
+      animationHash: -827840423
       animationType: 2
       loop: 1
+      isDefault: 0
+      transitionInTime: 0
+      normalizedTimeOffset: 0
+      ignores: []
+    - layer: 0
+      animationStateName: WorldAttack
+      animationHash: 1917836780
+      animationType: 3
+      loop: 0
+      isDefault: 0
+      transitionInTime: 0
+      normalizedTimeOffset: 0
+      ignores:
+      - ignoreType: 1
+        ignoreTime: 0.533
+      - ignoreType: 2
+        ignoreTime: 0.533
+      - ignoreType: 3
+        ignoreTime: 0.533
+    - layer: 1
+      animationStateName: Null
+      animationHash: 869418641
+      animationType: 0
+      loop: 1
+      isDefault: 1
       transitionInTime: 0.1
+      normalizedTimeOffset: 0
       ignores: []
     - layer: 1
       animationStateName: PreNormalAttack
-      animationHash: 2027708279
-      animationType: 3
-      loop: 1
+      animationHash: 1393551737
+      animationType: 4
+      loop: 0
+      isDefault: 0
       transitionInTime: 0.1
+      normalizedTimeOffset: 0
       ignores: []
     - layer: 1
       animationStateName: PreBattleAttack
-      animationHash: 742452639
-      animationType: 5
-      loop: 1
+      animationHash: 127097745
+      animationType: 6
+      loop: 0
+      isDefault: 0
       transitionInTime: 0.1
+      normalizedTimeOffset: 0
       ignores: []
     - layer: 1
       animationStateName: PreUltimateAttack
-      animationHash: 1585339720
-      animationType: 7
-      loop: 1
+      animationHash: -486584916
+      animationType: 8
+      loop: 0
+      isDefault: 0
       transitionInTime: 0.1
+      normalizedTimeOffset: 0
       ignores: []
     - layer: 1
       animationStateName: Hit
-      animationHash: -814593744
-      animationType: 9
+      animationHash: 799522206
+      animationType: 10
       loop: 0
+      isDefault: 0
       transitionInTime: 0.1
+      normalizedTimeOffset: 0
       ignores: []
     - layer: 1
       animationStateName: Death
-      animationHash: 208565488
-      animationType: 10
+      animationHash: -2043006137
+      animationType: 11
       loop: 0
+      isDefault: 0
       transitionInTime: 0.1
+      normalizedTimeOffset: 0
       ignores: []
     - layer: 1
       animationStateName: Rebirth
-      animationHash: -94673583
-      animationType: 11
+      animationHash: -1184431287
+      animationType: 12
       loop: 0
+      isDefault: 0
       transitionInTime: 0.1
+      normalizedTimeOffset: 0
+      ignores: []
+    - layer: 2
+      animationStateName: Null
+      animationHash: -1253096514
+      animationType: 0
+      loop: 1
+      isDefault: 1
+      transitionInTime: 0.1
+      normalizedTimeOffset: 0
       ignores: []
     - layer: 2
       animationStateName: NormalAttack
-      animationHash: -344144812
-      animationType: 4
+      animationHash: 908623240
+      animationType: 5
       loop: 0
+      isDefault: 0
       transitionInTime: 0.1
+      normalizedTimeOffset: 0
       ignores: []
     - layer: 2
       animationStateName: BattleAttack
-      animationHash: -1075808580
-      animationType: 6
+      animationHash: 1656016736
+      animationType: 7
       loop: 0
+      isDefault: 0
       transitionInTime: 0.1
+      normalizedTimeOffset: 0
       ignores: []
     - layer: 2
       animationStateName: UltimateAttack
-      animationHash: -2029325499
-      animationType: 8
+      animationHash: 406499114
+      animationType: 9
       loop: 0
+      isDefault: 0
       transitionInTime: 0.1
+      normalizedTimeOffset: 0
       ignores: []
