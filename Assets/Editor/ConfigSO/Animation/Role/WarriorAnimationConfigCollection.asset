@@ -14,4 +14,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   commonCollectionSO: {fileID: 11400000, guid: b6cbbd71db007d947a6fce006bf645ab, type: 2}
   animationConfigCollection:
-    animationConfigs: []
+    animationConfigs:
+    - layer: 2
+      subStateMachineNames:
+      - NormalAttack
+      animationStateName: Roll
+      animationHash: -1332665941
+      animationType: 0
+      loop: 0
+      isDefault: 0
+      transitionInTime: 0
+      normalizedTimeOffset: 0
+      ignores: []
+      isSwitchDefault: 0
+    - layer: 2
+      subStateMachineNames:
+      - NormalAttack
+      animationStateName: AttackAfterRoll
+      animationHash: 1307691118
+      animationType: 0
+      loop: 0
+      isDefault: 0
+      transitionInTime: 0
+      normalizedTimeOffset: 0
+      ignores: []
+      isSwitchDefault: 1

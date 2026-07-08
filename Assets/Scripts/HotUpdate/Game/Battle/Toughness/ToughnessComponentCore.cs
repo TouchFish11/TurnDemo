@@ -8,7 +8,6 @@ using HotUpdate.Game.Battle.Object.Monster;
 using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.Toughness.CalcStrategy;
 using HotUpdate.Game.Battle.Toughness.ReduceStrategy;
-using HotUpdate.Game.Battle.Utility;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.Toughness
@@ -34,7 +33,7 @@ namespace HotUpdate.Game.Battle.Toughness
             var weakPropertys = new List<E_ElementType>(elementTypes.Length);
             foreach (var type in elementTypes)
             {
-                weakPropertys.Add(type.ToElementType());
+                weakPropertys.Add((E_ElementType)type);
             }
 
             // 初始化韧性状态对象

@@ -14,4 +14,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   commonCollectionSO: {fileID: 11400000, guid: b6cbbd71db007d947a6fce006bf645ab, type: 2}
   animationConfigCollection:
-    animationConfigs: []
+    animationConfigs:
+    - layer: 2
+      subStateMachineNames:
+      - UltimateAttack
+      animationStateName: Priest_Ultimate_01
+      animationHash: -611059930
+      animationType: 9
+      loop: 0
+      isDefault: 0
+      transitionInTime: 0.05
+      normalizedTimeOffset: 0
+      ignores: []
+      isSwitchDefault: 0
+    - layer: 2
+      subStateMachineNames:
+      - UltimateAttack
+      animationStateName: Priest_Ultimate_02
+      animationHash: 1117431452
+      animationType: 9
+      loop: 0
+      isDefault: 0
+      transitionInTime: 0.05
+      normalizedTimeOffset: 0
+      ignores: []
+      isSwitchDefault: 1

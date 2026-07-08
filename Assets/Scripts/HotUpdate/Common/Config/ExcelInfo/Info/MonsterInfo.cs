@@ -15,4 +15,5 @@ public class MonsterInfo
 	public string f_weaknesses;
 	public float f_statesUiY0ffset;
 	public string f_animProfile;
+	public string f_controllerAssetKey;
 }

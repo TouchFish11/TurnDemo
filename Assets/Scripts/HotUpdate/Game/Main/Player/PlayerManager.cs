@@ -132,7 +132,7 @@ namespace HotUpdate.Game.Main.Player
         private void OnOpenViewEvent(OpenViewEvent openViewEvent)
         {
             CurrentEntity.GetComponent<InputComponent>().DisableInput();
-            CurrentEntity.GetComponent<NormalAnimationComponent>().SetCommonState(EAnimationType.Idle);
+            CurrentEntity.GetComponent<NormalAnimationComponent>().Play(EAnimationType.Idle);
             CurrentEntity.GetComponent<MoveComponent>().Disable();
         }
 

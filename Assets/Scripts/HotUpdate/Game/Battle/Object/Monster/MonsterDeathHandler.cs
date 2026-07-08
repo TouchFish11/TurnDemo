@@ -31,7 +31,7 @@ namespace HotUpdate.Game.Battle.Object.Monster
 
             var animationComponent =  battleEntityObject.GetComponent<BattleAnimationComponent>();
             // 播放怪物死亡动画，并等待动画播放完成
-            yield return AnimationUtility.WaitForCommonAnimOver(animationComponent, Base.Utility.AnimationLayer.Battle_Layer_Name, EAnimationType.Death);
+            yield return AnimationUtility.WaitForCommonAnimOver(animationComponent, EAnimationType.Death);
             // 等待死亡特效播放完毕（协程阻塞，直到特效销毁）
             yield return new WaitUntil(() => !vFXInfo.IsAlive);
             // 死亡动画效果结束后才回收到对象池中

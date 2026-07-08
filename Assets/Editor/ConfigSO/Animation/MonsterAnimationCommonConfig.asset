@@ -24,6 +24,8 @@ MonoBehaviour:
       transitionInTime: 0.1
       normalizedTimeOffset: 0
       ignores: []
+      nextAnimationHash: 0
+      isSwitchDefault: 0
     - layer: 1
       animationStateName: Hit
       animationHash: 799522206
@@ -33,6 +35,8 @@ MonoBehaviour:
       transitionInTime: 0.1
       normalizedTimeOffset: 0
       ignores: []
+      nextAnimationHash: 0
+      isSwitchDefault: 1
     - layer: 1
       animationStateName: Death
       animationHash: -2043006137
@@ -42,6 +46,8 @@ MonoBehaviour:
       transitionInTime: 0.1
       normalizedTimeOffset: 0
       ignores: []
+      nextAnimationHash: 0
+      isSwitchDefault: 0
     - layer: 1
       animationStateName: Rebirth
       animationHash: -1184431287
@@ -51,3 +57,5 @@ MonoBehaviour:
       transitionInTime: 0.1
       normalizedTimeOffset: 0
       ignores: []
+      nextAnimationHash: 0
+      isSwitchDefault: 1

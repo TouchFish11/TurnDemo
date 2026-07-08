@@ -1,6 +1,4 @@
 using HotUpdate.Base.Animation;
-using HotUpdate.Base.Utility;
-using UnityEngine;
 
 namespace HotUpdate.Game.Animation
 {
@@ -19,8 +17,7 @@ namespace HotUpdate.Game.Animation
         public AnimatorState(AnimationConfig config)
         {
             Config = config;
-            var layerName = AnimationLayer.LayerEnumToName(config.layer);
-            FullPathHash = Animator.StringToHash($"{layerName}.{config.animationStateName}");
+            FullPathHash = config.animationHash;
         }
     }
 }

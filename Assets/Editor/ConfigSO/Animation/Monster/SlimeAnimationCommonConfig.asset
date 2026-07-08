@@ -24,12 +24,16 @@ MonoBehaviour:
       transitionInTime: 0.1
       normalizedTimeOffset: 0
       ignores: []
+      nextAnimationHash: 0
+      isSwitchDefault: 0
     - layer: 2
       animationStateName: Attack
       animationHash: 297386846
       animationType: 0
       loop: 0
       isDefault: 0
-      transitionInTime: 0.1
+      transitionInTime: 0.05
       normalizedTimeOffset: 0
       ignores: []
+      nextAnimationHash: 0
+      isSwitchDefault: 1

@@ -20,7 +20,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Ultimate
             var projectileData = new ProjectileData(SkillContext.Caster, SkillContext.MainTarget, SkillContext.AllTargets, SkillContext);
             var projectileTrans = new ProjectileTrans(SkillContext.Caster.GameObject.transform.position, Quaternion.identity);
             var vFXInfo = poolManager.GetData<VFXInfo>();
-            skill.SkillContext.Caster.GetComponent<BattleAnimationComponent>().SetCommonState(EAnimationType.PreUltimateAttack);
+            skill.SkillContext.Caster.GetComponent<BattleAnimationComponent>().Play(EAnimationType.PreUltimateAttack);
             // 终结技Pose特效
             var task = vfxManager.CreateVFX(AssetKeys.VFX_WarriorUltimatePose, projectileTrans, projectileData, vFXInfo);
             yield return TaskUtility.WaitForTask(task);

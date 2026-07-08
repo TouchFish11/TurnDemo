@@ -16,6 +16,7 @@ MonoBehaviour:
   animationConfigCollection:
     animationConfigs:
     - layer: 2
+      subStateMachineNames: []
       animationStateName: Null
       animationHash: -1253096514
       animationType: 0
@@ -24,21 +25,26 @@ MonoBehaviour:
       transitionInTime: 0.1
       normalizedTimeOffset: 0
       ignores: []
+      isSwitchDefault: 1
     - layer: 2
+      subStateMachineNames: []
       animationStateName: Attack01
       animationHash: -384510369
       animationType: 0
       loop: 0
       isDefault: 0
-      transitionInTime: 0.1
+      transitionInTime: 0.05
       normalizedTimeOffset: 0
       ignores: []
+      isSwitchDefault: 1
     - layer: 2
+      subStateMachineNames: []
       animationStateName: Attack02
       animationHash: 1880983525
       animationType: 0
       loop: 0
       isDefault: 0
-      transitionInTime: 0.1
+      transitionInTime: 0.05
       normalizedTimeOffset: 0
       ignores: []
+      isSwitchDefault: 1

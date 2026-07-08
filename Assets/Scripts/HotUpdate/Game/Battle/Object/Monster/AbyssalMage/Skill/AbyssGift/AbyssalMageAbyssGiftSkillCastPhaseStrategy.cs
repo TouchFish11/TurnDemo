@@ -1,6 +1,5 @@
 using System.Collections;
 using Core.Utility;
-using HotUpdate.Base.Utility;
 using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Skill.Base;
@@ -11,20 +10,12 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill.AbyssGift
 {
     public class AbyssalMageAbyssGiftSkillCastPhaseStrategy : SkillCastPhaseStrategy
     {
-        /// <summary>
-        /// 动画01
-        /// </summary>
-        public static string Attack01 => "Attack01";
-        
         public override IEnumerator Execute()
         {
             // 获取施法者的动画组件
             var animationComponent = SkillContext.Caster.GetComponent<BattleAnimationComponent>();
             // 根据配置表设置技能对应的动画状态
-            animationComponent.SetSkillState(SkillContext.SkillInfo.f_animName);
-            // 动画切换到第一段
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationLayer.Skill_Layer_Name).IsName(Attack01));
-            
+            yield return animationComponent.PlayToTarget(AnimNames[0]);
             yield return UpdateCamera_01();
             // 第一段VEX
             yield return CreateVFX_01();

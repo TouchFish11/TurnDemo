@@ -1,8 +1,6 @@
-using HotUpdate.Base;
-
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Property;
-using HotUpdate.Game.Battle.Utility;
+using HotUpdate.Game.Battle.Skill;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
@@ -46,7 +44,7 @@ namespace HotUpdate.Game.Battle.Damage.Strategys
             var critValue = attacker.GetComponent<PropertyComponent>().GetPropertyValue(E_DynamicPropertyType.TotalCrit);
             var critRate = critValue / 100f;
             var isCrit = Random.Range(0, 1) < critRate;
-            damageResult = new DamageResult(attacker, defender, Random.Range(30, 70), skillInfo.f_elementType.ToElementType(), skillInfo.f_damageType.ToDamageType(), isCrit, skillInfo.f_id, skillInfo.f_toughenValue);
+            damageResult = new DamageResult(attacker, defender, Random.Range(30, 70), (E_ElementType)skillInfo.f_elementType, (E_DamageType)skillInfo.f_damageType, isCrit, skillInfo.f_id, skillInfo.f_toughenValue);
         }
 
         ///// <summary>

@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using System.Text;
 using Core.SO;
 using HotUpdate.Base.Utility;
 using UnityEngine;
@@ -18,12 +18,22 @@ namespace HotUpdate.Base.Animation
         
         private void OnValidate()
         {
+            var sb = new StringBuilder();
             foreach (var animationConfig in animationConfigCollection.animationConfigs)
             {
                 // 根据层级和状态名称自动计算hash
+                sb.Clear();
                 var layerName = AnimationLayer.LayerEnumToName(animationConfig.layer);
-                var nameWithLayer = $"{layerName}.{animationConfig.animationStateName}";
-                animationConfig.animationHash = Animator.StringToHash(nameWithLayer);
+                sb.Append(layerName);
+                foreach (var stateMachineName in animationConfig.subStateMachineNames)
+                {
+                    sb.Append(".");
+                    sb.Append(stateMachineName);
+                }
+                
+                sb.Append(".");
+                sb.Append(animationConfig.animationStateName);
+                animationConfig.animationHash = Animator.StringToHash(sb.ToString());
             }
 
             animationConfigCollection.commonCollection = commonCollectionSO?.animationConfigCollection;

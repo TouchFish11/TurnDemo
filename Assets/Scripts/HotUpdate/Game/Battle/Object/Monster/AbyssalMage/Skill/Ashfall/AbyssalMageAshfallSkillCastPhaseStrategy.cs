@@ -1,6 +1,5 @@
 using System.Collections;
 using Core.Utility;
-using HotUpdate.Base.Utility;
 using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Skill.Base;
@@ -11,19 +10,13 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill.Ashfall
 {
     public class AbyssalMageAshfallSkillCastPhaseStrategy : SkillCastPhaseStrategy
     {
-        /// <summary>
-        /// 普攻动画02
-        /// </summary>
-        public static string Attack02 => "Attack02";
-        
         public override IEnumerator Execute()
         {
             // 获取施法者的动画组件
             var animationComponent = SkillContext.Caster.GetComponent<BattleAnimationComponent>();
             
             // 动画切换到第二段
-            animationComponent.SetSkillState(SkillContext.SkillInfo.f_animName);
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationLayer.Skill_Layer_Name).IsName(Attack02));
+            yield return animationComponent.PlayToTarget(AnimNames[0]);
             // 切换相机视角
             yield return UpdateCamera();
             // 第二段VEX

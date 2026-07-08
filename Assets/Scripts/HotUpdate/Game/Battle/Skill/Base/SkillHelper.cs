@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Utility;
-using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.Skill;
 using HotUpdate.Game.Battle.Object;
@@ -44,27 +43,6 @@ namespace HotUpdate.Game.Battle.Skill.Base
             battleCoordinator.SetSelectSkillInfo(skillContext.SkillInfo);
             battleCoordinator.SelectTargets(skillContext.Caster, skillContext.TargetSelectStrategy);
             battleCoordinator.InitSkillTarget(skill);
-        }
-
-        /// <summary>
-        /// 等待动画播放到指定动画的目标进度
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="layerName"></param>
-        /// <param name="stateName"></param>
-        /// <param name="targetEndProgress"></param>
-        /// <returns></returns>
-        public static IEnumerator WaitForAnimationPlayTarget(SkillContext context, string layerName, string stateName, float targetEndProgress)
-        {
-            var animHash = Animator.StringToHash(stateName);
-            // 获取施法者的动画组件
-            var animationComponent = context.Caster.GetComponent<BattleAnimationComponent>();
-            // 根据配置表设置技能对应的动画状态
-            animationComponent.SetSkillState(stateName);
-            // 等待动画播放到指定状态
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(layerName).shortNameHash == animHash);
-            // 等待动画播放至目标进度
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(layerName).normalizedTime >= targetEndProgress);
         }
         
         /// <summary>

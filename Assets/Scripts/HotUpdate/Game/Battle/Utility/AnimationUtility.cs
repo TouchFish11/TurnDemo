@@ -3,6 +3,7 @@ using System.Collections;
 using Core.AssetBundles.Management;
 using HotUpdate.Base.Animation;
 using HotUpdate.Base.Object;
+using HotUpdate.Base.Utility;
 using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Battle.Object.Monster;
 using HotUpdate.Game.Battle.Object.Role;
@@ -19,15 +20,20 @@ namespace HotUpdate.Game.Battle.Utility
         /// 等待通用动画播放完成
         /// </summary>
         /// <param name="battleAnimationComponent"></param>
-        /// <param name="layerName"></param>
         /// <param name="type"></param>
-        /// <param name="playOver"></param>
+        /// <param name="playOver">播放结束回调，播放失败也会执行该回调</param>
         /// <returns></returns>
-        public static IEnumerator WaitForCommonAnimOver(BattleAnimationComponent battleAnimationComponent, string layerName, EAnimationType type, Action playOver = null)
+        public static IEnumerator WaitForCommonAnimOver(BattleAnimationComponent battleAnimationComponent, EAnimationType type, Action playOver = null)
         {
-            battleAnimationComponent.SetCommonState(type);
-            yield return new WaitUntil(() => battleAnimationComponent.GetCurrentAnimatorStateInfo(layerName).IsName(type.ToString()));
-            yield return new WaitUntil(() => battleAnimationComponent.GetCurrentAnimatorStateInfo(layerName).normalizedTime >= 1);
+            var state = battleAnimationComponent.Play(type);
+            if (state != null)
+            {
+                var config = state.Config;
+                var layerName = AnimationLayer.LayerEnumToName(config.layer);
+                yield return new WaitUntil(() => battleAnimationComponent.GetCurrentAnimatorStateInfo(layerName).fullPathHash == config.animationHash);
+                yield return new WaitUntil(() => battleAnimationComponent.GetCurrentAnimatorStateInfo(layerName).normalizedTime >= 1);
+            }
+            
             playOver?.Invoke();
         }
 

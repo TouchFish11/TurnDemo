@@ -28,7 +28,7 @@ namespace HotUpdate.Game.Dialogue
             // 只允许交互输入
             EntityObject.GetComponent<InputComponent>().LimitInput(nameof(MainActionMapData.Interact));
             // 重置为待机动画
-            EntityObject.GetComponent<NormalAnimationComponent>().SetCommonState(EAnimationType.Idle);
+            EntityObject.GetComponent<NormalAnimationComponent>().Play(EAnimationType.Idle);
             // 停止并禁用移动
             EntityObject.GetComponent<MoveComponent>().Disable();
         }

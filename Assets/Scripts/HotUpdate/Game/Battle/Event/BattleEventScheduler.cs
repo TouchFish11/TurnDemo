@@ -159,14 +159,11 @@ namespace HotUpdate.Game.Battle.Event
                 var battleAnimationComponent = playerObject.GetComponent<BattleAnimationComponent>();
                 switch ((E_SkillType)skillInfo.f_SkillType)
                 {
-                    case E_SkillType.Monster: // 怪物技能
-                        battleAnimationComponent.SetSkillState(skillInfo.f_animName);
-                        break;
                     case E_SkillType.NormalAttack: // 普通攻击 → 播放预普通攻击动画
-                        battleAnimationComponent.SetCommonState(EAnimationType.PreNormalAttack);
+                        battleAnimationComponent.Play(EAnimationType.PreNormalAttack);
                         break;
                     case E_SkillType.CombatSkill: // 战斗技能 → 播放预战斗技能攻击动画
-                        battleAnimationComponent.SetCommonState(EAnimationType.PreBattleAttack);
+                        battleAnimationComponent.Play(EAnimationType.PreBattleAttack);
                         break;
                     case E_SkillType.EnhancedNormalAttack: // 强化普通攻击 → 暂未处理
                     case E_SkillType.EnhancedCombatSkill: // 强化战斗技能 → 暂未处理

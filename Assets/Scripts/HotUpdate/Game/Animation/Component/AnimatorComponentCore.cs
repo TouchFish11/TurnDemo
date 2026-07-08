@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Mono;
 using Core.Serialize.Json;
 using Core.Utility;
 using HotUpdate.Base.Animation;
 using HotUpdate.Base.Component;
+using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Utility;
 using UnityEngine;
 
@@ -36,6 +38,10 @@ namespace HotUpdate.Game.Animation.Component
         /// </summary>
         public void InitConfigs()
         {
+            var assetKey = BattleUtility.GetAnimatorControllerAssetKeyByType((IBattleEntityObject)Component.EntityObject);
+            using var handle = GameAsset.LoadAsset<RuntimeAnimatorController>(assetKey);
+            Component.Animator.runtimeAnimatorController = handle.Asset;
+                
             // 读取动画配置
             var collectionJson = AnimationUtility.GetAnimConfigCollectionJsonByType(Component.EntityObject);
             var collection = _jsonManager.FromJson<AnimationConfigCollection>(collectionJson, settings: NewtonsoftJsonUtility.SerializerSettings);
@@ -82,7 +88,7 @@ namespace HotUpdate.Game.Animation.Component
         /// </summary>
         /// <param name="type"></param>
         /// <exception cref="NotSupportedException">当type为Attack时抛出</exception>
-        public bool PlayCommon(EAnimationType type)
+        public AnimatorState PlayCommon(EAnimationType type)
         {
             if (type == EAnimationType.Attack)
                 throw new NotSupportedException($"The animation type {type} is not supported.");
@@ -90,7 +96,7 @@ namespace HotUpdate.Game.Animation.Component
             // 是否忽略该类型动画
             if (IsIgnore(type))
             {
-                return false;
+                return null;
             }
             
             foreach (var animatorLayer in _layers)
@@ -98,21 +104,20 @@ namespace HotUpdate.Game.Animation.Component
                 if (!animatorLayer.TryGetState(type, out var state)) 
                     continue;
                 
-                var hash = state.FullPathHash;
-                // 更新当前播放的动画
-                animatorLayer.UpdateState(hash);
                 PlayInternal(state); 
-                return true;
+                // 更新当前播放的动画
+                animatorLayer.UpdateState(state.FullPathHash);
+                return state;
             }
 
-            return false;
+            return null;
         }
 
         /// <summary>
         /// 播放指定层级指定状态名称的动画
         /// </summary>
         /// <param name="stateName">层级名.状态名</param>
-        public bool Play(string stateName)
+        public AnimatorState Play(string stateName)
         {
             var animationHash = Animator.StringToHash(stateName);
             foreach (var animatorLayer in _layers)
@@ -123,16 +128,38 @@ namespace HotUpdate.Game.Animation.Component
                 // 更新当前播放的动画
                 animatorLayer.UpdateState(animationHash);
                 PlayInternal(state); 
-                return true;
+                return state;
             }
 
-            return false;
+            return null;
         }
         
         internal void PlayInternal(AnimatorState state)
         {
             var config = state.Config;
             Component.Animator.CrossFade(config.animationHash, config.transitionInTime, (int)config.layer, config.normalizedTimeOffset);
+        }
+
+        /// <summary>
+        /// 尝试获取指定动画
+        /// </summary>
+        /// <param name="stateName"></param>
+        /// <param name="state"></param>
+        /// <returns></returns>
+        public bool TryGetState(string stateName, out AnimatorState state)
+        {
+            var animationHash = Animator.StringToHash(stateName);
+            foreach (var animatorLayer in _layers)
+            {
+                if (!animatorLayer.TryGetState(animationHash, out var cacheState))
+                    continue;
+
+                state = cacheState;
+                return true;
+            }
+
+            state = null;
+            return false;
         }
 
         /// <summary>
@@ -190,8 +217,14 @@ namespace HotUpdate.Game.Animation.Component
                 if (config.loop || stateInfo.fullPathHash != config.animationHash || !(stateInfo.normalizedTime >= 1f)) 
                     continue;
                 
-                currentLayer.ResetToDefault();
-                PlayInternal(currentLayer.CurrentState);
+                // 再判断是否切换到当前层的默认动画状态
+                if(config.isSwitchDefault)
+                {
+                    currentLayer.ResetToDefault();
+                    PlayInternal(currentLayer.CurrentState);
+                }
+
+                // 否则不处理当前层的当前状态，使其停留在当前状态
                 OnAnimationFinished?.Invoke(config);
             }
         }

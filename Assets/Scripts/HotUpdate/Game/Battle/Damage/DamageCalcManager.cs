@@ -1,15 +1,12 @@
 using System.Collections.Generic;
 using Core.DI;
 using Core.Log;
-using HotUpdate.Base;
-
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage.Strategys;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Skill;
-using HotUpdate.Game.Battle.Utility;
 
 namespace HotUpdate.Game.Battle.Damage
 {
@@ -52,7 +49,7 @@ namespace HotUpdate.Game.Battle.Damage
         /// <param name="damageResult"></param>
         public void CalcSkillDamage(IBattleEntityObject source, IBattleEntityObject target,SkillInfo skillInfo, out DamageResult damageResult)
         {
-            var damageType = skillInfo.f_damageType.ToDamageType();
+            var damageType = (E_DamageType)skillInfo.f_damageType;
             if (_strategys.TryGetValue(damageType, out var strategy))
             {
                 strategy.CalcDamage(source, target, skillInfo, out damageResult);

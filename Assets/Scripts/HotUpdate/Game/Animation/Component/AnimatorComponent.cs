@@ -30,7 +30,7 @@ namespace HotUpdate.Game.Animation.Component
         /// 播放指定类型通用动画
         /// </summary>
         /// <param name="animationType"></param>
-        public bool PlayCommon(EAnimationType animationType)
+        public AnimatorState PlayCommon(EAnimationType animationType)
         {
             return _animatorComponentCore.PlayCommon(animationType);
         }
@@ -39,9 +39,20 @@ namespace HotUpdate.Game.Animation.Component
         /// 播放指定类型动画
         /// </summary>
         /// <param name="stateName"></param>
-        public void Play(string stateName)
+        public AnimatorState Play(string stateName)
         {
-            _animatorComponentCore.Play(stateName);
+            return _animatorComponentCore.Play(stateName);
+        }
+
+        /// <summary>
+        /// 尝试获取指定动画
+        /// </summary>
+        /// <param name="stateName"></param>
+        /// <param name="state"></param>
+        /// <returns></returns>
+        public bool TryGetState(string stateName, out AnimatorState state)
+        {
+            return _animatorComponentCore.TryGetState(stateName, out state);
         }
 
         /// <summary>

@@ -1,6 +1,4 @@
-
 using HotUpdate.Game.Battle.Object;
-using HotUpdate.Game.Battle.Utility;
 
 namespace HotUpdate.Game.Battle.Skill.Conditions
 {
@@ -11,7 +9,7 @@ namespace HotUpdate.Game.Battle.Skill.Conditions
     {
         public bool CanCast(IBattleEntityObject caster, SkillInfo skillInfo)
         {
-            return skillInfo.f_SkillType.ToSkillType() switch
+            return (E_SkillType)skillInfo.f_SkillType switch
             {
                 E_SkillType.Monster => true,
                 _ => false

@@ -17,8 +17,6 @@ namespace HotUpdate.Game.Animation.Component
 
         public Animator Animator => _animatorComponent.Animator;
         
-        public string AnimationState { get; private set; }
-        
         protected override void OnInit()
         {
             _animatorComponent = EntityObject.GetComponent<AnimatorComponent>();
@@ -29,11 +27,9 @@ namespace HotUpdate.Game.Animation.Component
             EntityObject.GetComponent<InputComponent>().AddMouseLeftClickListener(OnAttack);
         }
 
-        public void SetCommonState(EAnimationType type)
+        public AnimatorState Play(EAnimationType type)
         {
-            // 更新当前动画类型
-            AnimationState = type.ToString();
-            _animatorComponent.PlayCommon(type);
+            return _animatorComponent.PlayCommon(type);
         }
         
         public AnimatorStateInfo GetCurrentAnimatorStateInfo(string layerName)

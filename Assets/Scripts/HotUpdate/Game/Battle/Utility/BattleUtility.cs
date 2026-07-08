@@ -1,7 +1,10 @@
+using System;
 using System.Collections.Generic;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.Object.Monster;
+using HotUpdate.Game.Battle.Object.Role;
 using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.Skill;
 using UnityEngine;
@@ -178,7 +181,7 @@ namespace HotUpdate.Game.Battle.Utility
         /// <returns>中文描述</returns>
         public static string ToSkillRangeTypeText(this int i)
         {
-            E_SkillRangeType skillRangeType = (E_SkillRangeType)i;
+            var skillRangeType = (E_SkillRangeType)i;
             return skillRangeType switch
             {
                 E_SkillRangeType.Single => "单体",
@@ -186,16 +189,6 @@ namespace HotUpdate.Game.Battle.Utility
                 E_SkillRangeType.All => "全体",
                 _ => "None"
             };
-        }
-
-        /// <summary>
-        /// 将整型数值转换为技能类型枚举
-        /// </summary>
-        /// <param name="i">技能类型数值</param>
-        /// <returns>技能类型枚举</returns>
-        public static E_SkillType ToSkillType(this int i)
-        {
-            return (E_SkillType)i;
         }
         
         /// <summary>
@@ -205,7 +198,7 @@ namespace HotUpdate.Game.Battle.Utility
         /// <returns>颜色</returns>
         public static Color ToElementTypeColor(this int i)
         {
-            E_ElementType elementType = (E_ElementType)i;
+            var elementType = (E_ElementType)i;
             return elementType switch
             {
                 E_ElementType.Fire => Color.red,
@@ -216,25 +209,15 @@ namespace HotUpdate.Game.Battle.Utility
                 _ => Color.white
             };
         }
-        
-        /// <summary>
-        /// 将整型数值转换为元素类型枚举
-        /// </summary>
-        /// <param name="i">元素类型数值</param>
-        /// <returns>元素类型枚举</returns>
-        public static E_ElementType ToElementType(this int i)
+
+        public static string GetAnimatorControllerAssetKeyByType(IBattleEntityObject entityObject)
         {
-            return (E_ElementType)i;
-        }
-        
-        /// <summary>
-        /// 将整型数值转换为伤害类型枚举
-        /// </summary>
-        /// <param name="i">伤害类型数值</param>
-        /// <returns>伤害类型枚举</returns>
-        public static E_DamageType ToDamageType(this int i)
-        {
-            return (E_DamageType)i;
+            return entityObject switch
+            {
+                IPlayerObject playerObject => playerObject.RoleInfo.f_controllerAssetKey,
+                IMonsterObject monsterObject => monsterObject.MonsterInfo.f_controllerAssetKey,
+                _ => throw new ArgumentOutOfRangeException(nameof(entityObject), entityObject, null)
+            };
         }
     }
 }

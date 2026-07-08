@@ -17,11 +17,9 @@ using Core.Systems.Memorys;
 using Core.Time;
 using Core.UI;
 using Core.Video;
-using HotUpdate.Base.Component;
 using HotUpdate.Base.Utility;
 using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Battle.Object.Role.Warrior;
-using HotUpdate.Game.Inputs;
 using UnityEngine;
 
 namespace HotUpdate.Game.Animation

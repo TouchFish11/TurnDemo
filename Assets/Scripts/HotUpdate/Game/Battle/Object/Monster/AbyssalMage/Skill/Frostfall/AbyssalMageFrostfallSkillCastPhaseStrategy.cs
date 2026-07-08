@@ -11,18 +11,16 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill.Frostfall
 {
     public class AbyssalMageFrostfallSkillCastPhaseStrategy : SkillCastPhaseStrategy
     {
-        /// <summary>
-        /// 普攻动画02
-        /// </summary>
-        public static string Attack02 => "Attack02";
-        
         public override IEnumerator Execute()
         {
             // 获取施法者的动画组件
             var animationComponent = SkillContext.Caster.GetComponent<BattleAnimationComponent>();
             // 动画切换到
-            animationComponent.SetSkillState(SkillContext.SkillInfo.f_animName);
-            yield return new WaitUntil(() => animationComponent.GetCurrentAnimatorStateInfo(AnimationLayer.Skill_Layer_Name).IsName(Attack02));
+            var arr = TextUtility.Split(SkillContext.SkillInfo.f_animNames, 2);
+            animationComponent.PlayToTarget(arr[0]);
+            yield return new WaitUntil(() =>
+                animationComponent.GetCurrentAnimatorStateInfo(AnimationLayer.Skill_Layer_Name).shortNameHash ==
+                Animator.StringToHash(arr[0]));
             // 切换相机视角
             yield return UpdateCamera();
             // VEX

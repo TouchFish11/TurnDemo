@@ -28,7 +28,7 @@ namespace HotUpdate.Game.Battle.ResponsibilityChain.DamageChain
             context.EventBus.TriggerEvent(new ApplyDamageEvent(context, request));
             
             // 播放受击动画
-            target.GetComponent<BattleAnimationComponent>().SetCommonState(EAnimationType.Hit);
+            target.GetComponent<BattleAnimationComponent>().Play(EAnimationType.Hit);
             // 获取属性组件，处理血量扣减
             var propertyComponent = target.GetComponent<PropertyComponent>();
             // 获取当前血量
