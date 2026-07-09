@@ -28,7 +28,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Normal
             var matchPos = mainTarget.GameObject.transform.position - Vector3.forward * 1.5f;
             var matchRot = Quaternion.identity;
             var mask = new MatchTargetWeightMask(new Vector3(1, 0, 1), 0);
-            animationComponent.Animator.MatchTarget(matchPos, matchRot, AvatarTarget.Root, mask, 0.7f, 0.8f);
+            animationComponent.Animator.MatchTarget(matchPos, matchRot, AvatarTarget.LeftFoot, mask, 0.28f, 0.8f);
 
             // 等待翻滚动画播放完成
             yield return animationComponent.WaitForPlay(AnimNames[0]);

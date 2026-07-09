@@ -218,7 +218,7 @@ namespace HotUpdate.Base.Component
                     var coreAttribute = type.GetCustomAttribute<ComponentCoreAttribute>();
                     if (coreAttribute?.ComponentCore != null)
                     {
-                        core = (IComponentCore<IComponent>)DIContainer.Create(null, coreAttribute.ComponentCore);
+                        core = (IComponentCore<IComponent>)DIContainer.Create(coreAttribute.ComponentCore);
                         core.Init(componentToInit);
                     }
                     componentToInit.Init(core);

@@ -82,7 +82,7 @@ namespace HotUpdate.Base.Utility
                 {
                     if (typeof(TIValue).IsAssignableFrom(type) && !type.IsAbstract && !type.IsInterface)
                     {
-                        dic.Add(type, DIContainer.Create(null, type) as TIValue);
+                        dic.Add(type, DIContainer.Create(type) as TIValue);
                     }
                 }
             }

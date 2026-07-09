@@ -200,5 +200,12 @@ namespace HotUpdate.Game.Battle.Command
             // 当前持有回合的角色正在执行自己的命令，然后有其它逻辑插队，这时不需要插入自己
             return displayobjs;
         }
+
+        public void Reset()
+        {
+            _battleManager = null;
+            _context = null;
+            _isQuit = false;
+        }
     }
 }

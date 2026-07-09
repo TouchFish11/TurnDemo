@@ -57,5 +57,6 @@ namespace HotUpdate.Game.Battle.TargetSelect
         void SelectPreviousMainTarget();
 
         void Init(IBattleContext context);
+        void Reset();
     }
 }

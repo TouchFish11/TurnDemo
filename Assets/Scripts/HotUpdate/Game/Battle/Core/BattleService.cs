@@ -242,9 +242,6 @@ namespace HotUpdate.Game.Battle.Core
             controller.MonsterStateUIManager.InActiveMonsterUIs();
 
             yield return new WaitForSeconds(1f);
-
-            // 显示行动轴UI
-            // ...
         }
         
         /// <summary>

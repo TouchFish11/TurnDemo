@@ -39,7 +39,7 @@ namespace HotUpdate.Game.Battle.Statuses
             if (!idToTypeMap.TryGetValue(statusId, out var statusType)) 
                 return null;
             
-            var status = (IStatus)DIContainer.Create(null, statusType);
+            var status = (IStatus)DIContainer.Create(statusType);
             // 通过反射创建状态类实例，并转换为IStatus接口返回
             status.InitStatus(sorucer, owner, statusId);
             return status;

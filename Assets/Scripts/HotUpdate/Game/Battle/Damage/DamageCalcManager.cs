@@ -26,7 +26,6 @@ namespace HotUpdate.Game.Battle.Damage
 
         public void Init(IBattleContext context)
         {
-            context.EventBus.AddListener<QuitBattleEvent>(OnQuitBattleEvent);
             // 注册策略
             _strategys.Add(E_DamageType.Direct, DIContainer.Create<DirectDamageStrategy>());
             _strategys.Add(E_DamageType.Dot, DIContainer.Create<DotDamageStrategy>());
@@ -120,9 +119,8 @@ namespace HotUpdate.Game.Battle.Damage
             }
         }
 
-        private void OnQuitBattleEvent(QuitBattleEvent quitBattleEvent)
+        public void Reset()
         {
-            context.EventBus.RemoveListener<QuitBattleEvent>(OnQuitBattleEvent);
             _strategys.Clear();
             // 取消监听击破事件
             context.EventBus.RemoveListener<ToughnessBrokenEvent>(OnToughnessBrokenEvent);

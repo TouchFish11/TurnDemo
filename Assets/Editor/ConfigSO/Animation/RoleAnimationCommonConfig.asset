@@ -16,17 +16,18 @@ MonoBehaviour:
   animationConfigCollection:
     animationConfigs:
     - layer: 0
+      subStateMachineNames: []
       animationStateName: Idle
       animationHash: 1432961145
       animationType: 1
       loop: 1
       isDefault: 1
-      transitionInTime: 0.1
+      transitionInTime: 0.05
       normalizedTimeOffset: 0
       ignores: []
-      nextAnimationHash: 0
       isSwitchDefault: 0
     - layer: 0
+      subStateMachineNames: []
       animationStateName: Run
       animationHash: -827840423
       animationType: 2
@@ -35,9 +36,9 @@ MonoBehaviour:
       transitionInTime: 0
       normalizedTimeOffset: 0
       ignores: []
-      nextAnimationHash: 0
       isSwitchDefault: 0
     - layer: 0
+      subStateMachineNames: []
       animationStateName: WorldAttack
       animationHash: 1917836780
       animationType: 3
@@ -52,20 +53,20 @@ MonoBehaviour:
         ignoreTime: 0.533
       - ignoreType: 3
         ignoreTime: 0.533
-      nextAnimationHash: 0
       isSwitchDefault: 1
     - layer: 1
+      subStateMachineNames: []
       animationStateName: Null
       animationHash: 869418641
       animationType: 0
       loop: 1
       isDefault: 1
-      transitionInTime: 0.1
+      transitionInTime: 0
       normalizedTimeOffset: 0
       ignores: []
-      nextAnimationHash: 0
       isSwitchDefault: 0
     - layer: 1
+      subStateMachineNames: []
       animationStateName: PreNormalAttack
       animationHash: 1393551737
       animationType: 4
@@ -74,9 +75,9 @@ MonoBehaviour:
       transitionInTime: 0.05
       normalizedTimeOffset: 0
       ignores: []
-      nextAnimationHash: 0
       isSwitchDefault: 0
     - layer: 1
+      subStateMachineNames: []
       animationStateName: PreBattleAttack
       animationHash: 127097745
       animationType: 6
@@ -85,9 +86,9 @@ MonoBehaviour:
       transitionInTime: 0.05
       normalizedTimeOffset: 0
       ignores: []
-      nextAnimationHash: 0
       isSwitchDefault: 0
     - layer: 1
+      subStateMachineNames: []
       animationStateName: PreUltimateAttack
       animationHash: -486584916
       animationType: 8
@@ -96,9 +97,9 @@ MonoBehaviour:
       transitionInTime: 0.05
       normalizedTimeOffset: 0
       ignores: []
-      nextAnimationHash: 0
       isSwitchDefault: 0
     - layer: 1
+      subStateMachineNames: []
       animationStateName: Hit
       animationHash: 799522206
       animationType: 10
@@ -107,9 +108,9 @@ MonoBehaviour:
       transitionInTime: 0.05
       normalizedTimeOffset: 0
       ignores: []
-      nextAnimationHash: 0
       isSwitchDefault: 1
     - layer: 1
+      subStateMachineNames: []
       animationStateName: Death
       animationHash: -2043006137
       animationType: 11
@@ -118,9 +119,9 @@ MonoBehaviour:
       transitionInTime: 0.1
       normalizedTimeOffset: 0
       ignores: []
-      nextAnimationHash: 0
       isSwitchDefault: 0
     - layer: 1
+      subStateMachineNames: []
       animationStateName: Rebirth
       animationHash: -1184431287
       animationType: 12
@@ -129,49 +130,37 @@ MonoBehaviour:
       transitionInTime: 0.1
       normalizedTimeOffset: 0
       ignores: []
-      nextAnimationHash: 0
       isSwitchDefault: 1
-    - layer: 2
-      animationStateName: Null
-      animationHash: -1253096514
-      animationType: 0
-      loop: 1
-      isDefault: 1
-      transitionInTime: 0.1
-      normalizedTimeOffset: 0
-      ignores: []
-      nextAnimationHash: 0
-      isSwitchDefault: 0
-    - layer: 2
+    - layer: 1
+      subStateMachineNames: []
       animationStateName: NormalAttack
-      animationHash: 908623240
+      animationHash: -619158918
       animationType: 5
       loop: 0
       isDefault: 0
       transitionInTime: 0.05
       normalizedTimeOffset: 0
       ignores: []
-      nextAnimationHash: 0
       isSwitchDefault: 1
-    - layer: 2
+    - layer: 1
+      subStateMachineNames: []
       animationStateName: BattleAttack
-      animationHash: 1656016736
+      animationHash: -1887121262
       animationType: 7
       loop: 0
       isDefault: 0
       transitionInTime: 0.05
       normalizedTimeOffset: 0
       ignores: []
-      nextAnimationHash: 0
       isSwitchDefault: 1
-    - layer: 2
+    - layer: 1
+      subStateMachineNames: []
       animationStateName: UltimateAttack
-      animationHash: 406499114
+      animationHash: -1279734576
       animationType: 9
       loop: 0
       isDefault: 0
       transitionInTime: 0.05
       normalizedTimeOffset: 0
       ignores: []
-      nextAnimationHash: 0
       isSwitchDefault: 1

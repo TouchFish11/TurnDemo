@@ -32,8 +32,6 @@ namespace HotUpdate.Game.Battle.TargetSelect
 
         public void Init(IBattleContext context)
         {
-            // 监听战斗退出事件
-            context.EventBus.AddListener<QuitBattleEvent>(OnQuitBattleEvent);
             _context = context;
         }
         
@@ -203,9 +201,8 @@ namespace HotUpdate.Game.Battle.TargetSelect
             }
         }
 
-        private void OnQuitBattleEvent(QuitBattleEvent quitBattleEvent)
+        public void Reset()
         {
-            _context.EventBus.AddListener<QuitBattleEvent>(OnQuitBattleEvent);
             _filterEntitys.Clear();
             _selectedTargets.Clear();
             _mainTarget = null;

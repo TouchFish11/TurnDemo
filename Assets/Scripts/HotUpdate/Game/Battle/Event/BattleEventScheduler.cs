@@ -39,7 +39,6 @@ namespace HotUpdate.Game.Battle.Event
 
         public void Init(IBattleContext context)
         {
-            context.EventBus.AddListener<QuitBattleEvent>(OnQuitBattleEvent);
             // 监听回合开始事件
             context.EventBus.AddListener<TurnStartEvent>(OnTurnStartDispatch);
             // 监听角色技能选择事件
@@ -176,9 +175,8 @@ namespace HotUpdate.Game.Battle.Event
             }
         }
         
-        private void OnQuitBattleEvent(QuitBattleEvent quitBattleEvent)
+        public void Reset()
         {
-            _context.EventBus.RemoveListener<QuitBattleEvent>(OnQuitBattleEvent);
             _context.EventBus.RemoveListener<TurnStartEvent>(OnTurnStartDispatch);
             _context.EventBus.RemoveListener<SelectSkillEvent>(SelectSkillEventScheduler);
             _context.EventBus.RemoveListener<UltimateCastEvent>(OnUltimateCastDispatch);

@@ -9,5 +9,7 @@ namespace HotUpdate.Game.Battle.Core
         /// </summary>
         /// <param name="battleContext"></param>
         void Init(IBattleContext battleContext);
+
+        void Reset();
     }
 }

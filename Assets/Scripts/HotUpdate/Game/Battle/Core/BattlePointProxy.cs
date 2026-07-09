@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using HotUpdate.Game.Battle.Context;
-using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Role;
 using HotUpdate.Game.Point;
@@ -39,12 +38,10 @@ namespace HotUpdate.Game.Battle.Core
         /// <summary>
         /// 初始化战斗点对象
         /// </summary>
-        /// <param name="ctx"></param>
+        /// <param name="context"></param>
         /// <param name="players"></param>
-        public void InitProxy(IBattleContext ctx, List<IBattleEntityObject> players)
+        public void InitProxy(IBattleContext context, List<IBattleEntityObject> players)
         {
-            context = ctx;
-            context.EventBus.AddListener<QuitBattleEvent>(OnQuitBattleEvent);
             var index = 0;
             foreach (var roleTrans in BattlePoint.GetRoleTransforms())
             {
@@ -57,6 +54,7 @@ namespace HotUpdate.Game.Battle.Core
                 pointInfos.Add(pointInfo);
                 index++;
             }
+            this.context = context;
         }
 
         /// <summary>
@@ -158,9 +156,8 @@ namespace HotUpdate.Game.Battle.Core
             currentMonsterCount = newLiveCount;
         }
 
-        private void OnQuitBattleEvent(QuitBattleEvent quitBattleEvent)
+        public void Reset()
         {
-            context.EventBus.RemoveListener<QuitBattleEvent>(OnQuitBattleEvent);
             pointInfos.Clear();
             context = null;
             _battlePoint = null;

@@ -28,7 +28,8 @@ namespace HotUpdate.Base.Module
                     if (moduleExportAttribute == null)
                         continue;
                     
-                    var module = DIContainer.Create(moduleExportAttribute.ModuleType, type) as IModule;
+                    DIContainer.BindSingleton(moduleExportAttribute.ModuleType, type);
+                    var module = DIContainer.Resolve(type) as IModule;
                     _modules.Add(moduleExportAttribute.ModuleType, module);
                 }
             }

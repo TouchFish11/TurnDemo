@@ -15,25 +15,14 @@ MonoBehaviour:
   commonCollectionSO: {fileID: 11400000, guid: 516c195006b1f0d4681dcf5c2bad3698, type: 2}
   animationConfigCollection:
     animationConfigs:
-    - layer: 2
-      animationStateName: Null
-      animationHash: -1253096514
-      animationType: 0
-      loop: 1
-      isDefault: 1
-      transitionInTime: 0.1
-      normalizedTimeOffset: 0
-      ignores: []
-      nextAnimationHash: 0
-      isSwitchDefault: 0
-    - layer: 2
+    - layer: 1
+      subStateMachineNames: []
       animationStateName: Attack
-      animationHash: 297386846
+      animationHash: 1942980897
       animationType: 0
       loop: 0
       isDefault: 0
       transitionInTime: 0.05
       normalizedTimeOffset: 0
       ignores: []
-      nextAnimationHash: 0
       isSwitchDefault: 1

@@ -14,7 +14,7 @@ namespace HotUpdate.UI.Activity.Base
             if(attribute == null)
                 return null;
 
-            return DIContainer.Create(null, attribute.ActivityContentHandler) as IActivityContentHandler;
+            return DIContainer.Create(attribute.ActivityContentHandler) as IActivityContentHandler;
         }
     }
 }

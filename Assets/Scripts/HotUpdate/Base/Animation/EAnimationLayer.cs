@@ -14,10 +14,5 @@ namespace HotUpdate.Base.Animation
         /// 战斗层
         /// </summary>
         BattleLayer,
-        
-        /// <summary>
-        /// 技能层
-        /// </summary>
-        SkillLayer,
     }
 }

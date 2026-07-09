@@ -35,7 +35,7 @@ namespace HotUpdate.Game.Activity.Core
                         continue;
                     }
                     
-                    var data = DIContainer.Create(null, type) as ActivityData;
+                    var data = DIContainer.Create(type) as ActivityData;
                     _datas.Add(activityIdAttribute.ActivityId, data);
                 }
             }

@@ -38,5 +38,6 @@ namespace HotUpdate.Game.Battle.Core
         void UpdateBaseRotation();
         
         void Init(IBattleContext context);
+        void Reset();
     }
 }

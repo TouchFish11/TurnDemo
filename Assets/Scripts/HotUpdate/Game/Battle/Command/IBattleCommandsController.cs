@@ -35,5 +35,7 @@ namespace HotUpdate.Game.Battle.Command
         /// </summary>
         /// <returns></returns>
         List<IDisplayPendingExecution> BuildPendingDisplayList();
+
+        void Reset();
     }
 }

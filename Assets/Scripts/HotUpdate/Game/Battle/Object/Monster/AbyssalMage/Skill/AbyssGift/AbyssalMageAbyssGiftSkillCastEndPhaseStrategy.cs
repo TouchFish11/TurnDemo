@@ -9,6 +9,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill.AbyssGift
     {
         public override IEnumerator Execute()
         {
+            yield return BattleAnimationComponent.WaitForPlay(LastAnimationName);
             // 等待第一段VFX结束
             yield return new WaitUntil(() => !SkillContext.VFXInfo.IsAlive);
             // 技能结束前短暂延迟

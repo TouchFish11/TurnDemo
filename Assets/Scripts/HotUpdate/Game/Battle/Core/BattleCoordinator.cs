@@ -8,7 +8,6 @@ using Core.Utility;
 using HotUpdate.Base.UI;
 
 using HotUpdate.Game.Battle.Context;
-using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Inputs;
 using HotUpdate.Game.Battle.Layer;
@@ -81,8 +80,6 @@ namespace HotUpdate.Game.Battle.Core
         /// <param name="battleContext"></param>
         public void Init(IBattleContext battleContext)
         {
-            battleContext.EventBus.AddListener<QuitBattleEvent>(OnQuitBattleEvent);
-            
             BattleInputHandler.OnLeftDrag += OnLeftDrag;   // 左拖拽：切换上一个主目标
             BattleInputHandler.OnRightDrag += OnRightDrag;     // 右拖拽：切换下一个主目标
             BattleInputHandler.OnClick += OnClick;
@@ -417,13 +414,11 @@ namespace HotUpdate.Game.Battle.Core
             return true;
         }
 
-        private void OnQuitBattleEvent(QuitBattleEvent quitBattleEvent)
+        public void Reset()
         {
             BattleInputHandler.OnLeftDrag -= OnLeftDrag;
             BattleInputHandler.OnRightDrag -= OnRightDrag;
             BattleInputHandler.OnClick -= OnClick;
-            
-            Context.EventBus.RemoveListener<QuitBattleEvent>(OnQuitBattleEvent);
         }
     }
 }

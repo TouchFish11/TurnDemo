@@ -1,6 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Turn;
 
 namespace HotUpdate.Game.Battle.Core
@@ -19,13 +18,12 @@ namespace HotUpdate.Game.Battle.Core
         /// 战斗服务对象
         /// </summary>
         BattleService BattleService { get; }
+        
+        Task Init(IBattleContext context, BattleStartupParams startupParams);
 
         /// <summary>
-        /// 进入战斗唯一入口
+        /// 清理战斗数据缓存
         /// </summary>
-        /// <param name="waveData">战斗回合数据</param>
-        /// <param name="OnPreEnter">战斗进入回调</param>
-        /// <param name="onBattleOver">战斗结束回调</param>
-        Task EnterBattle(List<WaveData> waveData, Func<Task> OnPreEnter, Func<BattleResult, Task> onBattleOver);
+        void Reset();
     }
 }

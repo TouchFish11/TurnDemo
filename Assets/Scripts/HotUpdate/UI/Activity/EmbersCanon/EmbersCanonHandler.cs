@@ -21,7 +21,6 @@ namespace HotUpdate.UI.Activity.EmbersCanon
 {
     public class EmbersCanonHandler : ActivityContentHandler<EmbersCanonActivityUI>
     {
-        [Inject] private IBattleManager _battleManager;
         [Inject] private ISceneGenerator _sceneGenerator;
         [Inject] private IUIService _uiService;
         [Inject] private IPlayerManager _playerManager;
@@ -71,17 +70,19 @@ namespace HotUpdate.UI.Activity.EmbersCanon
             var waveDatas = new List<WaveData>
             {
                 // 测试数据
-                new WaveData(waveId: 1, victoryConditionType: EWaveVictoryConditionType.EliminateAllEnemies, monsterIds: configEntry.monsterIds),
+                new(waveId: 1, victoryConditionType: EWaveVictoryConditionType.EliminateAllEnemies, monsterIds: configEntry.monsterIds),
             };
 
-            await _battleManager.EnterBattle(waveDatas,
-                OnPreEnter: async () =>
+            var battleStartupParams= new BattleStartupParams
+            {
+                WaveDatas = waveDatas,
+                OnPreEnter = async () =>
                 {
                     _sceneGenerator.ClearMainScene();
                     await _uiService.CloseAsync(_uiService.GetPanel(EUIPanelId.ActivityPanel).PanelId, false);
                     await PreLoad();
                 },
-                onBattleOver: async result =>
+                OnBattleOver = async result =>
                 {
                     // TODO:待处理
                     await _sceneGenerator.InitMainScene(-1);
@@ -95,7 +96,10 @@ namespace HotUpdate.UI.Activity.EmbersCanon
                     }
                     
                     await _uiService.ShowAsync(_uiService.GetPanel(EUIPanelId.ActivityPanel).PanelId);
-                });
+                }
+            };
+
+            await BattleEntry.StartBattle(battleStartupParams);
         }
         
         /// <summary>

@@ -4,7 +4,6 @@ using Core.DI;
 using Core.Mono;
 using Core.Serialize.Binary;
 using HotUpdate.Game.Battle.Context;
-using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Inputs;
 using HotUpdate.Game.Battle.Object;
 using UnityEngine;
@@ -53,7 +52,6 @@ namespace HotUpdate.Game.Battle.Core
         public void Init(IBattleContext context)
         {
             _monoAdapter.AddUpdateListener(OnUpdate);
-            context.EventBus.AddListener<QuitBattleEvent>(OnBattleOverEvent);
             _context = context;
         }
 
@@ -194,13 +192,8 @@ namespace HotUpdate.Game.Battle.Core
             return null;
         }
 
-        /// <summary>
-        /// 战斗结束事件回调
-        /// </summary>
-        /// <param name="quitBattleEvent"></param>
-        private void OnBattleOverEvent(QuitBattleEvent quitBattleEvent)
+        public void Reset()
         {
-            _context.EventBus.RemoveListener<QuitBattleEvent>(OnBattleOverEvent);
             _monoAdapter.RemoveUpdateListener(OnUpdate);
             _objectSpawner.Release(CurrentActiveCamera);
             CurrentActiveCamera = null;

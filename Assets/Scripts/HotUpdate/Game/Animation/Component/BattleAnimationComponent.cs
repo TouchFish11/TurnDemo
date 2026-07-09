@@ -63,7 +63,7 @@ namespace HotUpdate.Game.Animation.Component
             var config = state.Config;
             var layerName = AnimationLayer.LayerEnumToName(config.layer);
             // 等待状态动画播放到指定进度
-            yield return new WaitUntil(() => GetCurrentAnimatorStateInfo(layerName).normalizedTime >= 1);
+            yield return new WaitUntil(() => GetCurrentAnimatorStateInfo(layerName).normalizedTime >= 0.9);
         }
 
         public AnimatorStateInfo GetCurrentAnimatorStateInfo(string layerName)

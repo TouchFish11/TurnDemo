@@ -1,4 +1,5 @@
 using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.Damage
@@ -18,5 +19,6 @@ namespace HotUpdate.Game.Battle.Damage
         void CalcSkillDamage(IBattleEntityObject source, IBattleEntityObject target, SkillInfo skillInfo, out DamageResult damageResult);
 
         void Init(IBattleContext context);
+        void Reset();
     }
 }

@@ -1,6 +1,5 @@
 using System.Collections;
 using Core.Utility;
-using HotUpdate.Base.Utility;
 using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Skill.Base;
@@ -13,14 +12,9 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill.Frostfall
     {
         public override IEnumerator Execute()
         {
-            // 获取施法者的动画组件
-            var animationComponent = SkillContext.Caster.GetComponent<BattleAnimationComponent>();
-            // 动画切换到
-            var arr = TextUtility.Split(SkillContext.SkillInfo.f_animNames, 2);
-            animationComponent.PlayToTarget(arr[0]);
-            yield return new WaitUntil(() =>
-                animationComponent.GetCurrentAnimatorStateInfo(AnimationLayer.Skill_Layer_Name).shortNameHash ==
-                Animator.StringToHash(arr[0]));
+            // 动画切换
+            var battleAnimationComponent = SkillContext.Caster.GetComponent<BattleAnimationComponent>();
+            yield return battleAnimationComponent.PlayToTarget(AnimNames[0]);
             // 切换相机视角
             yield return UpdateCamera();
             // VEX

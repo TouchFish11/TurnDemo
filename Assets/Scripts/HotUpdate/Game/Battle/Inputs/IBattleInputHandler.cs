@@ -36,5 +36,6 @@ namespace HotUpdate.Game.Battle.Inputs
         event Action OnClick;
         
         void Init(IBattleContext context);
+        void Reset();
     }
 }

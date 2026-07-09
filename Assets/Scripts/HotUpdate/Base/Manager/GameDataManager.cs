@@ -40,7 +40,8 @@ namespace HotUpdate.Base.Manager
                     if (dataManagerIdAttribute == null)
                         continue;
                     
-                    var dataManager = DIContainer.Create(dataManagerIdAttribute.DataManagerIdMapType, type, true) as IDataManager;
+                    DIContainer.BindSingleton(dataManagerIdAttribute.DataManagerIdMapType, type);
+                    var dataManager = DIContainer.Resolve(type) as IDataManager;
                     _dataManagers.Add(dataManager);
                 }
             }
