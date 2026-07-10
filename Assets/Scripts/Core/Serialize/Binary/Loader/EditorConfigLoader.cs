@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
-using Core.DI;
 using UnityEngine;
 
 namespace Core.Serialize.Binary.Loader
@@ -14,8 +13,6 @@ namespace Core.Serialize.Binary.Loader
     /// </summary>
     public class EditorConfigLoader : ConfigLoader
     {
-        [Inject] private IAssetBundleManager _assetBundleManager;
-        
         // 存储所有表数据的字典，键：容器名  值：容器
         private readonly Dictionary<string, object> _tableDic = new();
         

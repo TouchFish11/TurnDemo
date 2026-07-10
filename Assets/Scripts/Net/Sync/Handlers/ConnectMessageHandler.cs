@@ -15,7 +15,7 @@ namespace Net.Sync.Handlers
         {
             // 设置当前连接的会话ID
             DIContainer.GetInstance<INetGameProxy>().SetSessionToken(Message.SessionID);
-            Logger.Log($"[ConnectMessageHandler] 已处理连接消息");
+            Logger.LogDebug(TODO, $"[ConnectMessageHandler] 已处理连接消息");
         }
     }
 }

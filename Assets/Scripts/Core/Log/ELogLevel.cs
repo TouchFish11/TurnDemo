@@ -12,8 +12,9 @@ namespace Core.Log
         Assert = 1,
         Error = 2,
         Warning = 4,
-        Log = 8,
-        Exception = 16,
+        Debug = 8,
+        Info = 16,
+        Exception = 32,
     }
 }
 

@@ -32,7 +32,7 @@ namespace Core.Singleton
 
                             // 创建ScriptableObject实例
                             instance = CreateInstance<T>();
-                            Logger.Log($"{typeof(T).Name} was not found in {loadPath}. A new instance has been created.");
+                            Logger.LogDebug(TODO, $"{typeof(T).Name} was not found in {loadPath}. A new instance has been created.");
                         }
                     }
                 }

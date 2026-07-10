@@ -10,7 +10,7 @@ namespace HotUpdate.Game.Battle.Damage.Strategys
     {
         public void CalcDamage(IBattleEntityObject source, IBattleEntityObject target, SkillInfo skillInfo, out DamageResult damageResult)
         {
-            Logger.Log("真实伤害策略执行");
+            Logger.LogDebug(TODO, "真实伤害策略执行");
             damageResult = new DamageResult();
         }
     }

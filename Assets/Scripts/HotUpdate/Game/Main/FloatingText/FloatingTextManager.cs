@@ -98,7 +98,7 @@ namespace HotUpdate.Game.Main.FloatingText
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(FloatingTextManager)}.{nameof(OnFixedUpdate)}：{e.Message}，{e.StackTrace}");
+                Logger.LogError(TODO, $"{nameof(FloatingTextManager)}.{nameof(OnFixedUpdate)}：{e.Message}，{e.StackTrace}");
             }
         }
 

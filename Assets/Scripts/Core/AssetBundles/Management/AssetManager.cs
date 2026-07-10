@@ -79,7 +79,7 @@ namespace Core.AssetBundles.Management
             }
             catch (Exception e)
             {
-                Logger.LogError($"[{nameof(AssetManager)}]: ({key})Asset load fail, {e.Message}");
+                Logger.LogError(TODO, $"[{nameof(AssetManager)}]: ({key})Asset load fail, {e.Message}");
                 return null;
             }
         }

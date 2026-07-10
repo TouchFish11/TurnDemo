@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Core.Mono.MonoFunction;
+using Core.Log;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
@@ -12,21 +12,17 @@ namespace Core.Mono
     /// </summary>
     public class MonoAdapter : MonoBehaviour, IMonoAdapter
     {
-        private List<IAwakable> awakables = new();
-        private List<Action> _fixedUpdates = new();
-        private List<Action> _updates = new();
-        private List<Action> _lateUpdates = new();
+        private readonly List<Action> _fixedUpdates = new();
+        private readonly List<Action> _updates = new();
+        private readonly List<Action> _lateUpdates = new();
         
-        private List<IApplicationExitNotify> _applicationExits = new();
-        private List<IApplicationPauseNotify> _applicationPauses = new();
-        private List<IApplicationFocusNotify> _applicationFocus = new();
+        private readonly List<IApplicationExitNotify> _applicationExits = new();
+        private readonly List<IApplicationPauseNotify> _applicationPauses = new();
+        private readonly List<IApplicationFocusNotify> _applicationFocus = new();
         
         private void Awake()
         {
-            foreach (var awakable in awakables)
-            {
-                awakable.Awake();
-            }
+
         }
 
         private void OnEnable()
@@ -185,7 +181,7 @@ namespace Core.Mono
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(MonoAdapter)}: Application exit logic execution error,{e.Message}");
+                Logger.LogError(ELogTags.System, $"{nameof(MonoAdapter)}: Application exit logic execution error,{e.Message}");
             }
         }
 
@@ -200,7 +196,7 @@ namespace Core.Mono
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(MonoAdapter)}: Application logic when a suspend/resume mistake,{e.Message}");
+                Logger.LogError(ELogTags.System, $"{nameof(MonoAdapter)}: Application logic when a suspend/resume mistake,{e.Message}");
             }
         }
 
@@ -215,14 +211,12 @@ namespace Core.Mono
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(MonoAdapter)}: Application focus/out-of-focus logic error,{e.Message}");
+                Logger.LogError(ELogTags.System, $"{nameof(MonoAdapter)}: Application focus/out-of-focus logic error,{e.Message}");
             }
         }
 
         protected void OnDestroy()
         {
-            awakables.Clear();
-
             _fixedUpdates.Clear();
             _updates.Clear();
             _lateUpdates.Clear();

@@ -32,11 +32,18 @@ namespace Core.Global
         public string hotUpdateLoadPath;
 
         /// <summary>
-        /// 日志过滤级别
+        /// 日志过滤级别与日志标签共同作用
         /// </summary>
         [Header("日志过滤级别")]
         [Tooltip("没有选中的日志类型将不会被记录")]
         public ELogLevel filterLevel = ~ELogLevel.None;
+        
+        /// <summary>
+        /// 日志标签与日志过滤级别共同作用
+        /// </summary>
+        [Header("日志标签")]
+        [Tooltip("没有选中的日志标签将不会被记录")]
+        public ELogTags tag = ~ELogTags.None;
 
         /// <summary>
         /// 日志写入最大间隔时间（s）

@@ -35,7 +35,7 @@ namespace HotUpdate.Game.Activity.Core
                     PathUtility.GetUserDataLocalSavePath(FileUtility.LocalActivityDataFileName),
                     settings: NewtonsoftJsonUtility.SerializerSettings);
             
-            Logger.Log($"[{nameof(ActivityDataManager)}]: 活动数据 {FileUtility.LocalActivityDataFileName} 加载成功");
+            Logger.LogDebug(TODO, $"[{nameof(ActivityDataManager)}]: 活动数据 {FileUtility.LocalActivityDataFileName} 加载成功");
         }
 
         public void SaveData()
@@ -44,7 +44,7 @@ namespace HotUpdate.Game.Activity.Core
             {
                 // 活动数据
                 _jsonManager.SaveToJson(ActivityDataCollection, PathUtility.GetUserDataLocalSavePath(FileUtility.LocalActivityDataFileName), settings: NewtonsoftJsonUtility.SerializerSettings);
-                Logger.Log($"[{nameof(ActivityDataManager)}]:活动数据 {FileUtility.LocalActivityDataFileName} 保存成功"); 
+                Logger.LogDebug(TODO, $"[{nameof(ActivityDataManager)}]:活动数据 {FileUtility.LocalActivityDataFileName} 保存成功"); 
             }
         }
 
@@ -56,7 +56,7 @@ namespace HotUpdate.Game.Activity.Core
                 await _jsonManager.SaveToJsonAsync(ActivityDataCollection,
                     PathUtility.GetUserDataLocalSavePath(FileUtility.LocalActivityDataFileName),
                     settings: NewtonsoftJsonUtility.SerializerSettings);
-                Logger.Log($"[{nameof(ActivityDataManager)}]: 活动数据 {FileUtility.LocalActivityDataFileName} 保存成功");
+                Logger.LogDebug(TODO, $"[{nameof(ActivityDataManager)}]: 活动数据 {FileUtility.LocalActivityDataFileName} 保存成功");
             }
         }
     }

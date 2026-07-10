@@ -98,7 +98,7 @@ namespace HotUpdate.Game.Battle.Skill.Base
             // 拼接并打印所有目标信息（调试用）
             var sb = new StringBuilder();
             sb.AppendJoin('、', allTargets);
-            Logger.Log($"怪物选择目标: {sb}");
+            Logger.LogDebug(TODO, $"怪物选择目标: {sb}");
         }
     }
 }

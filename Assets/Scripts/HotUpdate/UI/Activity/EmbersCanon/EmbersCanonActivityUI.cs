@@ -68,13 +68,13 @@ namespace HotUpdate.UI.Activity.EmbersCanon
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(EmbersCanonActivityUI)}: Join activity error,{e.Message}");
+                Logger.LogError(TODO, $"{nameof(EmbersCanonActivityUI)}: Join activity error,{e.Message}");
             }
         }
 
         private void OnTriggerLimitTimeAward()
         {
-            Logger.Log($"限时奖励按钮点击");
+            Logger.LogDebug(TODO, $"限时奖励按钮点击");
         }
 
         private void OnSubViewClose()

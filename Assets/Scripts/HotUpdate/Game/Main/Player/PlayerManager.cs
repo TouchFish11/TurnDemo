@@ -153,7 +153,7 @@ namespace HotUpdate.Game.Main.Player
 
         private bool CloseViewEventFilter(CloseViewEvent closeViewEvent)
         {
-            return closeViewEvent.UIController is IBlockOperation blockOperation && blockOperation.BlockOperation && roleIdToEntityMap.ContainsKey(1001);
+            return closeViewEvent.UIController is IBlockOperation blockOperation && blockOperation.BlockOperation && roleIdToEntityMap.ContainsKey(1);
         }
     }
 }

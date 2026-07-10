@@ -174,7 +174,7 @@ namespace HotUpdate.Game.Battle.Core
                     break;
                 case E_SkillTargetType.None:
                 default:
-                    Logger.LogError($"{nameof(BattleCoordinator)}: Invalid target type,{skillTargetType}");
+                    Logger.LogError(TODO, $"{nameof(BattleCoordinator)}: Invalid target type,{skillTargetType}");
                     break;
             }
         }
@@ -351,7 +351,7 @@ namespace HotUpdate.Game.Battle.Core
                     break;
                 case E_SkillTargetType.None:
                 default:
-                    Logger.LogWarning($"未处理的技能目标类型：{targetType}");
+                    Logger.LogWarning(TODO, $"未处理的技能目标类型：{targetType}");
                     return;
             }
             

@@ -37,7 +37,7 @@ namespace Core.HotUpdate
             {
                 var assemblyBytes = GetAssemblyBytes(aotDllName);
                 var errorCode = RuntimeApi.LoadMetadataForAOTAssembly(assemblyBytes, HomologousImageMode.SuperSet);
-                Logger.Log($"{nameof(HotUpdateManager)}.{nameof(LoadMetadataForAOTAssemblies)}:已补充元数据{aotDllName}，错误码:{errorCode}");
+                Logger.LogDebug(TODO, $"{nameof(HotUpdateManager)}.{nameof(LoadMetadataForAOTAssemblies)}:已补充元数据{aotDllName}，错误码:{errorCode}");
             }
         }
 
@@ -191,12 +191,12 @@ namespace Core.HotUpdate
                 {
                     var assembly = Assembly.Load(bytes);
                     _assemblyNames.Add(assembly.GetName().Name);
-                    Logger.Log($"{nameof(HotUpdateManager)}.{nameof(LoadAssemblyAsyncInternal)}:已加载热更程序集{assembly.GetName().Name}");
+                    Logger.LogDebug(TODO, $"{nameof(HotUpdateManager)}.{nameof(LoadAssemblyAsyncInternal)}:已加载热更程序集{assembly.GetName().Name}");
                 }
                 catch (Exception e)
                 {
                     Debug.LogError($"{nameof(HotUpdateManager)}.{nameof(LoadAssemblyAsyncInternal)}:热更程序集加载错误{e.Message}");
-                    Logger.LogError($"{nameof(HotUpdateManager)}.{nameof(LoadAssemblyAsyncInternal)}:热更程序集加载错误{e.Message}");
+                    Logger.LogError(TODO, $"{nameof(HotUpdateManager)}.{nameof(LoadAssemblyAsyncInternal)}:热更程序集加载错误{e.Message}");
                 }
             });
         }

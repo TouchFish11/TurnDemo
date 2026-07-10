@@ -132,7 +132,7 @@ namespace Core.AssetBundles.Update.State
             }
             catch (IOException ex)
             {
-                Logger.LogError($"ReadAllTextAsync failed: {ex}");
+                Logger.LogError(TODO, $"ReadAllTextAsync failed: {ex}");
                 throw;
             }
         }

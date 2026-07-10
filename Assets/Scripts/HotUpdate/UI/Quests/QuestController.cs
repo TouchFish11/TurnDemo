@@ -285,7 +285,7 @@ namespace HotUpdate.UI.Quests
             }
             catch (Exception e)
             {
-                Logger.LogError($"[{nameof(QuestController)}]: Update quest detail error,{e.Message}");
+                Logger.LogError(TODO, $"[{nameof(QuestController)}]: Update quest detail error,{e.Message}");
             }
         }
 

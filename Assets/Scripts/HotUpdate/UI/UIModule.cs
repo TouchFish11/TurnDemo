@@ -17,6 +17,7 @@ namespace HotUpdate.UI
     public class UIModule : IUIModule
     {
         public int Priority => 8;
+        
         public void Register()
         {
             DIContainer.BindType<IMonsterStateUIManager, MonsterStateUIManager>();

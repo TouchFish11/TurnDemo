@@ -245,7 +245,7 @@ namespace Core.Tasks
                 }
                 catch (Exception e)
                 {
-                    Logger.LogException(e);
+                    Logger.LogException(TODO, e);
                 }
             }
         }

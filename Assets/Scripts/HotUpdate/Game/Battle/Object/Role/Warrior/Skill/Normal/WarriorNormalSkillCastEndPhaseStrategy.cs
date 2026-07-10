@@ -10,7 +10,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Normal
     {
         public override IEnumerator Execute()
         {
-            Logger.Log(LastAnimationName);
+            Logger.LogDebug(TODO, LastAnimationName);
             // 等待动画播放和特效结束
             yield return BattleAnimationComponent.WaitForPlay(LastAnimationName);
             yield return new WaitUntil(() => !SkillContext.VFXInfo.IsAlive);

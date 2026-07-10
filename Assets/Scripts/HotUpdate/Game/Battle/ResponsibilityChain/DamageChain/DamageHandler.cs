@@ -16,8 +16,8 @@ namespace HotUpdate.Game.Battle.ResponsibilityChain.DamageChain
         {
             if (request.Source == null || request.Target == null)
             {
-                Logger.LogError($"{nameof(DamageHandler)}.{nameof(HandleRequest)}：伤害处理异常。" +
-                                    $"Source:{request.Source},Target:{request.Target},技能ID:{request.SkillId}");
+                Logger.LogError(TODO, $"{nameof(DamageHandler)}.{nameof(HandleRequest)}：伤害处理异常。" +
+                                      $"Source:{request.Source},Target:{request.Target},技能ID:{request.SkillId}");
                 successor.HandleRequest(request);
                 return;
             }

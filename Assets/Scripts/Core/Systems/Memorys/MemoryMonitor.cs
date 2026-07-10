@@ -75,10 +75,10 @@ namespace Core.Systems.Memorys
         {
             if (this.currentOccupationLevel == currentOccupationLevel) return;
             
-            Logger.Log($"当前内存占用级别：{currentOccupationLevel}。" +
-                       $"当前内存占用：{TextUtility.ToByteUnit((ulong)currentMemory)}，" +
-                       $"系统内存：{TextUtility.ToByteUnit((ulong)currentSystemMemory)}，" +
-                       $"比值：{TextUtility.FloatToStr(currentRatio * 100, 2)}%");
+            Logger.LogDebug(TODO, $"当前内存占用级别：{currentOccupationLevel}。" +
+                             $"当前内存占用：{TextUtility.ToByteUnit((ulong)currentMemory)}，" +
+                             $"系统内存：{TextUtility.ToByteUnit((ulong)currentSystemMemory)}，" +
+                             $"比值：{TextUtility.FloatToStr(currentRatio * 100, 2)}%");
             
             this.currentOccupationLevel = currentOccupationLevel;
             // 通知所有监听者

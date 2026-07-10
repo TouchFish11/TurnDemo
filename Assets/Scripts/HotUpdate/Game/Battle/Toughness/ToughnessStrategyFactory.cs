@@ -35,7 +35,7 @@ namespace HotUpdate.Game.Battle.Toughness
                 }
             }
 
-            Logger.LogError($"未注册的韧性削减策略类型：{typeof(T)}");
+            Logger.LogError(TODO, $"未注册的韧性削减策略类型：{typeof(T)}");
             return null;
         }
 
@@ -54,7 +54,7 @@ namespace HotUpdate.Game.Battle.Toughness
                 }
             }
 
-            Logger.LogError($"未注册的韧性数值计算策略类型：{typeof(T)}");
+            Logger.LogError(TODO, $"未注册的韧性数值计算策略类型：{typeof(T)}");
             return null;
         }
 

@@ -214,12 +214,12 @@ namespace Core.Inputs.ActionAsset
             {
                 // 刷新现有PlayerInput的动作配置
                 _playerInput.actions = GetInputActionAsset();
-                Logger.Log($"[{nameof(InputSystem)}]: Input configuration update successful,{_playerInput.actions}");
+                Logger.LogDebug(TODO, $"[{nameof(InputSystem)}]: Input configuration update successful,{_playerInput.actions}");
             }
             else
             {
                 // 日志：PlayerInput为空，更新失败
-                Logger.LogError($"[{nameof(InputSystem)}]: Input configuration acquisition failed,{playerInput}");
+                Logger.LogError(TODO, $"[{nameof(InputSystem)}]: Input configuration acquisition failed,{playerInput}");
                 return;
             }
         }

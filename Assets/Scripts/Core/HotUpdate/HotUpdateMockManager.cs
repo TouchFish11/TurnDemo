@@ -24,32 +24,21 @@ namespace Core.HotUpdate
         
         public Task LoadAssembliesAsync(HotUpdateAssemblySettings settings, List<TextAsset> textAssets)
         {
-            // Editor环境下，HotUpdate.dll.bytes已经被自动加载，不需要加载，直接查找获得HotUpdate程序集，重复加载反而会出问题。
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            foreach (var dllText in textAssets)
             {
-                // if (assembly.GetName().Name != dllText.name[..dllText.name.LastIndexOf('.')])
-                //     continue;
+                if (_assemblyNames.Contains(dllText.name[..dllText.name.LastIndexOf('.')]))
+                    continue;
+                
+                // Editor环境下，HotUpdate.dll.bytes已经被自动加载，不需要加载，直接查找获得HotUpdate程序集，重复加载反而会出问题。
+                foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+                {
+                    if (assembly.GetName().Name != dllText.name[..dllText.name.LastIndexOf('.')])
+                        continue;
                     
-                _assemblyNames.Add(assembly.GetName().Name);
-                Logger.Log($"{nameof(HotUpdateMockManager)}: Editor found hotfix dll({assembly})");
+                    _assemblyNames.Add(assembly.GetName().Name);
+                    Logger.LogDebug(TODO, $"{nameof(HotUpdateMockManager)}.{nameof(LoadAssembliesAsync)}: Editor found hotfix dll({dllText.name})");
+                }
             }
-            
-            
-            // foreach (var dllText in textAssets)
-            // {
-            //     if (_assemblyNames.Contains(dllText.name[..dllText.name.LastIndexOf('.')]))
-            //         continue;
-            //     
-            //     // Editor环境下，HotUpdate.dll.bytes已经被自动加载，不需要加载，直接查找获得HotUpdate程序集，重复加载反而会出问题。
-            //     foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-            //     {
-            //         if (assembly.GetName().Name != dllText.name[..dllText.name.LastIndexOf('.')])
-            //             continue;
-            //         
-            //         _assemblyNames.Add(assembly.GetName().Name);
-            //         Logger.Log($"{nameof(HotUpdateMockManager)}.{nameof(LoadAssembliesAsync)}: Editor found hotfix dll({dllText.name})");
-            //     }
-            // }
             return Task.CompletedTask;
         }
 

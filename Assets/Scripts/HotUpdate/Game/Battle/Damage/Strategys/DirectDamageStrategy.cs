@@ -22,7 +22,7 @@ namespace HotUpdate.Game.Battle.Damage.Strategys
         {
             if (attacker == null || defender == null)
             {
-                Logger.LogError("直接伤害计算参数为null");
+                Logger.LogError(TODO, "直接伤害计算参数为null");
             }
 
             //this.attacker = attacker;

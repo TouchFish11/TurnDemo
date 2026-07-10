@@ -90,7 +90,7 @@ namespace Core.UI
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(UIManager)}.{nameof(CreateViewAsync)}: Create/Init panel error,{e.Message}");
+                Logger.LogError(TODO, $"{nameof(UIManager)}.{nameof(CreateViewAsync)}: Create/Init panel error,{e.Message}");
                 return controller;
             }
         }
@@ -132,7 +132,7 @@ namespace Core.UI
                     return controller;
                 }
             }
-            Logger.LogError($"{nameof(UIManager)}.{nameof(GetController)}: Controller({typeof(TController)}) is not found.");
+            Logger.LogError(TODO, $"{nameof(UIManager)}.{nameof(GetController)}: Controller({typeof(TController)}) is not found.");
             return default;
         }
         

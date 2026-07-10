@@ -93,7 +93,7 @@ namespace Core.AssetBundles.Management
                 wrapper.IsActive = true;
                 wrapper.LoadFromFile();
                 wrapper.Retain();
-                Logger.Log($"{nameof(AssetBundleManager)}: '{abName}' assetBundle dependency '{dependency}' will be loaded");
+                Logger.LogDebug(TODO, $"{nameof(AssetBundleManager)}: '{abName}' assetBundle dependency '{dependency}' will be loaded");
             }
 
             // 加载目标包
@@ -294,7 +294,7 @@ namespace Core.AssetBundles.Management
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(AssetBundleManager)}: Unload AssetBundle exception,{e.Message}");
+                Logger.LogError(TODO, $"{nameof(AssetBundleManager)}: Unload AssetBundle exception,{e.Message}");
             }
         }
     }

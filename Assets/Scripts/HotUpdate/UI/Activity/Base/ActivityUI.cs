@@ -54,7 +54,7 @@ namespace HotUpdate.UI.Activity.Base
             }
             catch (Exception exception)
             {
-                Logger.LogException(exception);
+                Logger.LogException(TODO, exception);
             }
         }
     }

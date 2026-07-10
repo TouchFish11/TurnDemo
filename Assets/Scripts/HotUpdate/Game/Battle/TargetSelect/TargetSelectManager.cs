@@ -61,11 +61,11 @@ namespace HotUpdate.Game.Battle.TargetSelect
             SelectMainTarget(_currentSelectStrategy.SelectMainTarget(_filterEntitys, caster, skillInfo));
             if (_mainTarget == null)
             {
-                Logger.LogError($"{nameof(TargetSelectManager)}：当前选择的主目标为null");
+                Logger.LogError(TODO, $"{nameof(TargetSelectManager)}：当前选择的主目标为null");
                 return;
             }
             
-            Logger.Log($"当前主目标：{_mainTarget}");
+            Logger.LogDebug(TODO, $"当前主目标：{_mainTarget}");
         }
         
         /// <summary>
@@ -134,7 +134,7 @@ namespace HotUpdate.Game.Battle.TargetSelect
                     break;
                 }
                 default:
-                    Logger.Log($"施法者不是：PlayerObject或MonsterObject");
+                    Logger.LogDebug(TODO, $"施法者不是：PlayerObject或MonsterObject");
                     break;
             }
         }
@@ -159,14 +159,14 @@ namespace HotUpdate.Game.Battle.TargetSelect
             {
                 mainIndex = _filterEntitys.Count / 2;
                 _mainTarget = _filterEntitys[mainIndex];
-                Logger.LogError($"{nameof(TargetSelectManager)}.{nameof(SelectNextMainTarget)}：找不到目标，重置到中间");
+                Logger.LogError(TODO, $"{nameof(TargetSelectManager)}.{nameof(SelectNextMainTarget)}：找不到目标，重置到中间");
             }
             
             // 索引未越界时，切换到下一个目标
             if (mainIndex + 1 < _filterEntitys.Count)
             {
                 _mainTarget = _filterEntitys[++mainIndex];
-                Logger.Log($"当前主目标：{_mainTarget}");
+                Logger.LogDebug(TODO, $"当前主目标：{_mainTarget}");
             }
         }
 
@@ -190,14 +190,14 @@ namespace HotUpdate.Game.Battle.TargetSelect
             {
                 mainIndex = _filterEntitys.Count / 2;
                 _mainTarget = _filterEntitys[mainIndex];
-                Logger.LogError($"{nameof(TargetSelectManager)}.{nameof(SelectNextMainTarget)}：找不到目标，重置到中间");
+                Logger.LogError(TODO, $"{nameof(TargetSelectManager)}.{nameof(SelectNextMainTarget)}：找不到目标，重置到中间");
             }
             
             // 索引未越界时，切换到上一个目标
             if (mainIndex - 1 >= 0)
             {
                 _mainTarget = _filterEntitys[--mainIndex];
-                Logger.Log($"当前主目标：{_mainTarget}");
+                Logger.LogDebug(TODO, $"当前主目标：{_mainTarget}");
             }
         }
 

@@ -57,7 +57,7 @@ namespace HotUpdate.Game.Inputs
             // 记录请求来源并更新鼠标状态
             mouseVisibleSources.Push(source);
             UpdateMouseState();
-            Logger.Log($"{source}请求显示鼠标，来源数：{mouseVisibleSources.Count}");
+            Logger.LogDebug(TODO, $"{source}请求显示鼠标，来源数：{mouseVisibleSources.Count}");
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace HotUpdate.Game.Inputs
             // 弹出栈顶来源并更新鼠标状态
             mouseVisibleSources.TryPop(out _);
             UpdateMouseState();
-            Logger.Log($"{source}释放鼠标显示，来源数：{mouseVisibleSources.Count}");
+            Logger.LogDebug(TODO, $"{source}释放鼠标显示，来源数：{mouseVisibleSources.Count}");
         }
 
         /// <summary>

@@ -56,7 +56,7 @@ namespace HotUpdate.Game.Battle.Damage
             else
             {
                 damageResult = default;
-                Logger.LogError($"{nameof(DamageCalcManager)}.{nameof(CalcBrokenDamage)}：未注册伤害策略，{damageType}");
+                Logger.LogError(TODO, $"{nameof(DamageCalcManager)}.{nameof(CalcBrokenDamage)}：未注册伤害策略，{damageType}");
             }
         }
 
@@ -97,7 +97,7 @@ namespace HotUpdate.Game.Battle.Damage
             }
             else
             {
-                Logger.LogError($"{nameof(DamageCalcManager)}.{nameof(CalcBrokenDamage)}：未注册击破伤害策略");
+                Logger.LogError(TODO, $"{nameof(DamageCalcManager)}.{nameof(CalcBrokenDamage)}：未注册击破伤害策略");
             }
         }
         
@@ -115,7 +115,7 @@ namespace HotUpdate.Game.Battle.Damage
             }
             else
             {
-                Logger.LogError($"{nameof(DamageCalcManager)}.{nameof(CalcBrokenDamage)}：未注册Dot伤害策略");
+                Logger.LogError(TODO, $"{nameof(DamageCalcManager)}.{nameof(CalcBrokenDamage)}：未注册Dot伤害策略");
             }
         }
 

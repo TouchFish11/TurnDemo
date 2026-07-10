@@ -36,7 +36,7 @@ namespace HotUpdate.UI.Main.Logic
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(QuestLogic)}: QuestLogic init error,{e.Message}");
+                Logger.LogError(TODO, $"{nameof(QuestLogic)}: QuestLogic init error,{e.Message}");
             }
         }
 

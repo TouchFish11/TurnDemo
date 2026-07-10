@@ -25,7 +25,7 @@ namespace Core.UI
             {
                 if (EqualityComparer<T>.Default.Equals(_value, value))
                 {
-                    Logger.Log($"[{nameof(ReactiveProperty<T>)}]: 相等性判断, {_value}");
+                    Logger.LogDebug(TODO, $"[{nameof(ReactiveProperty<T>)}]: 相等性判断, {_value}");
                     return;
                 }
                 
@@ -147,7 +147,7 @@ namespace Core.UI
             _notifyDepth++;
             if (_notifyDepth > 20)
             {
-                Logger.LogError($"检测到可能的无限递归，深度 {_notifyDepth}，请检查订阅逻辑！");
+                Logger.LogError(TODO, $"检测到可能的无限递归，深度 {_notifyDepth}，请检查订阅逻辑！");
                 _notifyDepth--;
                 return; // 熔断
             }
@@ -164,7 +164,7 @@ namespace Core.UI
                 }
                 catch (Exception e)
                 {
-                    Logger.LogError($"[{nameof(ReactiveProperty<T>)}]: callBack invoke error, {e.Message}");
+                    Logger.LogError(TODO, $"[{nameof(ReactiveProperty<T>)}]: callBack invoke error, {e.Message}");
                 }
             }
 

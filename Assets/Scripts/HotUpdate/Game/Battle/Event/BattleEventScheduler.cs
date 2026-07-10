@@ -85,7 +85,7 @@ namespace HotUpdate.Game.Battle.Event
             {
                 if (turnStartEvent.CurrentBattleEntity == null)
                 {
-                    Logger.LogError($"{nameof(BattleEventScheduler)}: CurrentBattleEntity is null");
+                    Logger.LogError(TODO, $"{nameof(BattleEventScheduler)}: CurrentBattleEntity is null");
                     return;
                 }
 
@@ -130,7 +130,7 @@ namespace HotUpdate.Game.Battle.Event
             }
             catch (Exception e)
             {
-                Logger.LogError($"[{nameof(BattleEventScheduler)}]: Round start event logic scheduling error,{e.Message}");
+                Logger.LogError(TODO, $"[{nameof(BattleEventScheduler)}]: Round start event logic scheduling error,{e.Message}");
             }
         }
 
@@ -171,7 +171,7 @@ namespace HotUpdate.Game.Battle.Event
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(BattleEventScheduler)}: Character skill selection event scheduling logic execution error,{e.Message}");
+                Logger.LogError(TODO, $"{nameof(BattleEventScheduler)}: Character skill selection event scheduling logic execution error,{e.Message}");
             }
         }
         

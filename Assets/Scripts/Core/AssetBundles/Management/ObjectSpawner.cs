@@ -94,7 +94,7 @@ namespace Core.AssetBundles.Management
                 GameAsset.Release(_keyToHandleMap[key]);
                 _assetKeys.Remove(key);
                 _keyToHandleMap.Remove(key);
-                Logger.LogError($"[{nameof(ObjectSpawner)}]: Create '{key}' obj error,{e.Message}");
+                Logger.LogError(TODO, $"[{nameof(ObjectSpawner)}]: Create '{key}' obj error,{e.Message}");
                 return null;
             }
             finally
@@ -248,7 +248,7 @@ namespace Core.AssetBundles.Management
                     }
                     else
                     {
-                        Logger.LogError($"[{nameof(ObjectSpawner)}]: Create obj({key}) error,{e.Message}");
+                        Logger.LogError(TODO, $"[{nameof(ObjectSpawner)}]: Create obj({key}) error,{e.Message}");
                     }
                 }
             }
@@ -353,13 +353,13 @@ namespace Core.AssetBundles.Management
         {
             if (!obj)
             {
-                Logger.LogWarning($"{nameof(ObjectSpawner)}: The object has been destroyed, Manually destroying object is not allowed");
+                Logger.LogWarning(TODO, $"{nameof(ObjectSpawner)}: The object has been destroyed, Manually destroying object is not allowed");
                 return false;
             }
             
             if (!_activeObjects.Contains(obj))
             {
-                Logger.LogWarning($"[{nameof(ObjectSpawner)}]: The object ‘{obj.name}’ has been released.");
+                Logger.LogWarning(TODO, $"[{nameof(ObjectSpawner)}]: The object ‘{obj.name}’ has been released.");
                 return false;
             }
 

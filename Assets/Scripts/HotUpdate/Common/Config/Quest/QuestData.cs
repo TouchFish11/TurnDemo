@@ -53,7 +53,7 @@ namespace HotUpdate.Common.Config.Quest
             set
             {
                 isTracking = value;
-                Logger.Log($"任务：{QuestId}，是否追踪：{isTracking}");
+                Logger.LogDebug(TODO, $"任务：{QuestId}，是否追踪：{isTracking}");
             }
         }
 

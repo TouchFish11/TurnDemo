@@ -52,7 +52,7 @@ namespace Core.Utility
 
             if (task.IsFaulted)
             {
-                Logger.LogError($"{nameof(TaskUtility)}.{nameof(WaitForTask)}: {task.Exception}，StackTrance：{task.Exception?.StackTrace}");
+                Logger.LogError(TODO, $"{nameof(TaskUtility)}.{nameof(WaitForTask)}: {task.Exception}，StackTrance：{task.Exception?.StackTrace}");
             }
         }
         
@@ -73,7 +73,7 @@ namespace Core.Utility
 
             if (task.IsFaulted)
             {
-                Logger.LogError($"{nameof(TaskUtility)}.{nameof(WaitForTask)}: {task.Exception}，StackTrance：{task.Exception?.StackTrace}");
+                Logger.LogError(TODO, $"{nameof(TaskUtility)}.{nameof(WaitForTask)}: {task.Exception}，StackTrance：{task.Exception?.StackTrace}");
             }
             else
             {

@@ -65,7 +65,7 @@ namespace HotUpdate.Base.Service
             }
             catch (Exception e)
             {
-                Logger.LogError($"[{nameof(IconService)}]: '{atlasKey}' asset load fail, {e.Message}");
+                Logger.LogError(TODO, $"[{nameof(IconService)}]: '{atlasKey}' asset load fail, {e.Message}");
                 return null;
             }
             finally
@@ -121,7 +121,7 @@ namespace HotUpdate.Base.Service
             }
             catch (Exception e)
             {
-                Logger.LogError($"[{nameof(IconService)}]: '{iconKey}' asset load fail, {e.Message}");
+                Logger.LogError(TODO, $"[{nameof(IconService)}]: '{iconKey}' asset load fail, {e.Message}");
                 return null;
             }
             finally

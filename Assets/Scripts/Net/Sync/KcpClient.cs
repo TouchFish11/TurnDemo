@@ -23,18 +23,18 @@ namespace Net.Sync
             _kcp2kClient = new kcp2k.KcpClient(
                 () =>
                 {
-                    Logger.Log($"[KcpClient] 连接成功!");
+                    Logger.LogDebug(TODO, $"[KcpClient] 连接成功!");
                     OnConnected?.Invoke();
                 },
                 (data, kcp2kChannel) =>
                 {
-                    Logger.Log($"[KcpClient] 收到数据包");
+                    Logger.LogDebug(TODO, $"[KcpClient] 收到数据包");
                     OnDataReceived?.Invoke(data.Array,
                         kcp2kChannel == KcpChannel.Reliable ? EProtocolChannel.Reliable : EProtocolChannel.Unreliable);
                 },
                 () =>
                 {
-                    Logger.Log($"[KcpClient] 断开连接");
+                    Logger.LogDebug(TODO, $"[KcpClient] 断开连接");
                     OnDisconnected?.Invoke();
                 },
                 (code, msg) => OnError?.Invoke($"{code}_{msg}"),

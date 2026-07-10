@@ -17,9 +17,11 @@ using Core.Scene;
 using Core.Serialize.Binary;
 using Core.Serialize.Json;
 using Core.Systems.Memorys;
+using Core.Tasks.Extensions;
 using Core.Time;
 using Core.UI;
 using Core.Video;
+using TaskFactory = Core.Tasks.TaskFactory;
 
 namespace Core.Registration
 {
@@ -57,6 +59,8 @@ namespace Core.Registration
 #else
             DIContainer.BindSingleton<IHotUpdateManager, HotUpdateManager>();
 #endif
+            // 配置实例
+            TaskAwaiterExtensions.Configure(DIContainer.Resolve<TaskFactory>());
             
             // 初始化AB包管理器
             var assetBundleManager = DIContainer.Create<AssetBundleManager>(parameterValues: new object[]

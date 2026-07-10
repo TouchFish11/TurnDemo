@@ -120,11 +120,11 @@ namespace Core.AssetBundles.Management
                 // 加载AB包
                 AssetBundle = AssetBundle.LoadFromFile(LoadPath);
                 IsActive = true;
-                Logger.Log($"[BundleWrapper]: '{BundleName}' assetBundle is load");
+                Logger.LogDebug(TODO, $"[BundleWrapper]: '{BundleName}' assetBundle is load");
             }
             catch (Exception e)
             {
-                Logger.LogError($"[BundleWrapper]: '{BundleName}' assetBundle Load fail, {e.Message}");
+                Logger.LogError(TODO, $"[BundleWrapper]: '{BundleName}' assetBundle Load fail, {e.Message}");
             }
         }
         
@@ -179,7 +179,7 @@ namespace Core.AssetBundles.Management
             {
                 AssetBundle = await assetBundleCreateRequestTaskHandle.Task;
                 IsActive = true;
-                Logger.Log($"[{nameof(BundleWrapper)}]: '{BundleName}' assetBundle is load");
+                //Logger.Log($"[{nameof(BundleWrapper)}]: '{BundleName}' assetBundle is load");
                 return true;
             }
             catch (Exception e) when(e is not OperationCanceledException)
@@ -343,7 +343,7 @@ namespace Core.AssetBundles.Management
                 return;
             }
 
-            Logger.LogWarning($"[{nameof(BundleWrapper)}]: '{BundleName}' assetBundle refCount repeated release");
+            Logger.LogWarning(TODO, $"[{nameof(BundleWrapper)}]: '{BundleName}' assetBundle refCount repeated release");
         }
 
         /// <summary>
@@ -375,7 +375,7 @@ namespace Core.AssetBundles.Management
                 await taskHandle.Task;
                 // 卸载完成后置空
                 AssetBundle = null;
-                Logger.Log($"[BundleWrapper]: '{BundleName}' is unload, final refCount is {RefCount}");
+                Logger.LogDebug(TODO, $"[BundleWrapper]: '{BundleName}' is unload, final refCount is {RefCount}");
             }
             catch (Exception e)
             {

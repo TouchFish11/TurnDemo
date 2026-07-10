@@ -33,7 +33,7 @@ namespace Core.EditorRes
             // 文件夹不存在
             if (!Directory.Exists(RootPath))
             {
-                Logger.Log($"路径不存在:{RootPath}");
+                Logger.LogDebug(TODO, $"路径不存在:{RootPath}");
                 return null;
             }
 
@@ -64,7 +64,7 @@ namespace Core.EditorRes
             var targetInfo = _fileInfoList.Find(fileInfo => fileInfo.Name == $"{assetName}{suffixName}");
             if (targetInfo == null)
             {
-                Logger.LogError($"未找到该资源:{assetName}{suffixName}");
+                Logger.LogError(TODO, $"未找到该资源:{assetName}{suffixName}");
                 return null;
             }
 
@@ -74,7 +74,7 @@ namespace Core.EditorRes
             {
                 return res is GameObject ? Object.Instantiate(res) : res;
             }
-            Logger.LogError($"不存在该文件路径:{targetInfo.FullName[targetInfo.FullName.IndexOf("Assets", StringComparison.Ordinal)..]}");
+            Logger.LogError(TODO, $"不存在该文件路径:{targetInfo.FullName[targetInfo.FullName.IndexOf("Assets", StringComparison.Ordinal)..]}");
             return null;
 #else
             return null;

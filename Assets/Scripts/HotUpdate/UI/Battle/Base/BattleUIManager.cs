@@ -232,7 +232,7 @@ namespace HotUpdate.UI.Battle.Base
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(BattleUIManager)}.{nameof(ShowShieldText)}：{e.Message}");
+                Logger.LogError(TODO, $"{nameof(BattleUIManager)}.{nameof(ShowShieldText)}：{e.Message}");
             }
         }
 
@@ -295,7 +295,7 @@ namespace HotUpdate.UI.Battle.Base
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(BattleUIManager)}:{e.Message}");
+                Logger.LogError(TODO, $"{nameof(BattleUIManager)}:{e.Message}");
             }
         }
 
@@ -385,7 +385,7 @@ namespace HotUpdate.UI.Battle.Base
             }
             catch (Exception e)
             {
-                Logger.LogError($"[{nameof(BattleUIManager)}]: {e.Message}");
+                Logger.LogError(TODO, $"[{nameof(BattleUIManager)}]: {e.Message}");
             }
         }
 
@@ -412,7 +412,7 @@ namespace HotUpdate.UI.Battle.Base
             }
             catch (Exception e)
             {
-                Logger.Log($"{nameof(BattleUIManager)}: {e.Message}");
+                Logger.LogDebug(TODO, $"{nameof(BattleUIManager)}: {e.Message}");
             }
         }
 
@@ -490,7 +490,7 @@ namespace HotUpdate.UI.Battle.Base
             }
             catch (Exception e)
             {
-                Logger.LogError($"{typeof(BattleUIManager)}: Update action axis ui error,{e.Message}");
+                Logger.LogError(TODO, $"{typeof(BattleUIManager)}: Update action axis ui error,{e.Message}");
             }
         }
 
@@ -748,7 +748,7 @@ namespace HotUpdate.UI.Battle.Base
                     break;
                 default:
                     // 未实现的实体类型：输出日志警告
-                    Logger.Log($"未实现该类型实体的图标获取逻辑：{battleEntity}");
+                    Logger.LogDebug(TODO, $"未实现该类型实体的图标获取逻辑：{battleEntity}");
                     break;
             }
             

@@ -80,7 +80,7 @@ namespace HotUpdate.Game.Battle.Core
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(BattleManager)}: Battle quit error,{e.Message}");
+                Logger.LogError(TODO, $"{nameof(BattleManager)}: Battle quit error,{e.Message}");
             }
         }
 

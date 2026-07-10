@@ -27,7 +27,7 @@ namespace Core.Time
         {
             stopwatch.Stop();
             double spendTime = stopwatch.Elapsed.TotalMilliseconds;
-            Logger.Log($"{testName}�����Դ�����{testCount}���ܺ�ʱ��{spendTime}ms��ƽ����ʱ��{spendTime / testCount}ms");
+            Logger.LogDebug(TODO, $"{testName}�����Դ�����{testCount}���ܺ�ʱ��{spendTime}ms��ƽ����ʱ��{spendTime / testCount}ms");
         }
     }
 }

@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 namespace Core.Serialize.Json
 {
     /// <summary>
-    /// Json�������ӿ�
+    /// Json管理器接口
     /// </summary>
     public interface IJsonManager
     {

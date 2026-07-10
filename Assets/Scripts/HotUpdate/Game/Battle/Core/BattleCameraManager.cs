@@ -183,10 +183,10 @@ namespace HotUpdate.Game.Battle.Core
                 var currentMainTarget = hitInfo.collider.GetComponent<BattleObject>();
                 if (currentMainTarget)
                 {
-                    global::Core.Log.Logger.Log($"选中技能目标：{currentMainTarget.name}");
+                    global::Core.Log.Logger.LogDebug(TODO, $"选中技能目标：{currentMainTarget.name}");
                     return currentMainTarget;
                 }
-                global::Core.Log.Logger.LogWarning("射线命中对象未挂载BattleObject组件");
+                global::Core.Log.Logger.LogWarning(TODO, "射线命中对象未挂载BattleObject组件");
             }
             
             return null;

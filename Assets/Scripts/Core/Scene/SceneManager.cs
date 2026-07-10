@@ -18,14 +18,12 @@ namespace Core.Scene
     public class SceneManager : ISceneManager
     {
         private readonly IMonoAdapter _monoAdapter;
-        private IAssetBundleManager _assetBundleManager;
         // 场景路径缓存
         private List<string> _scenePaths;
         
-        private SceneManager(IMonoAdapter monoAdapter, IAssetBundleManager assetBundleManager)
+        private SceneManager(IMonoAdapter monoAdapter)
         {
             _monoAdapter = monoAdapter;
-            _assetBundleManager = assetBundleManager;
             InitScenePaths();
         }
         
@@ -36,7 +34,7 @@ namespace Core.Scene
                 // 检查是否包含指定路径的场景
                 if (!ContainPath(scenePath))
                 {
-                    Logger.LogError($"不存在该场景路径：{scenePath}");
+                    Logger.LogError(TODO, $"不存在该场景路径：{scenePath}");
                     return;
                 }
                 
@@ -46,11 +44,11 @@ namespace Core.Scene
                 _monoAdapter.StartCoroutine(UpdateProgress_Cor(ao, onLoadProgress));
                 // 等待场景加载结束
                 await TaskUtility.WaitUntil(() => ao != null && ao.isDone);
-                Logger.Log($"{nameof(SceneManager)}.{nameof(LoadSceneAsync)}：场景({scenePath})加载结束");
+                Logger.LogDebug(TODO, $"{nameof(SceneManager)}.{nameof(LoadSceneAsync)}：场景({scenePath})加载结束");
             }
             catch (Exception exception)
             {
-                Logger.LogError($"{nameof(SceneManager)}.{nameof(LoadSceneAsync)}：{exception.Message}");
+                Logger.LogError(TODO, $"{nameof(SceneManager)}.{nameof(LoadSceneAsync)}：{exception.Message}");
             }
         }
 

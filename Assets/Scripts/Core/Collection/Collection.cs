@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Core.Log;
 using Newtonsoft.Json;
 using UnityEngine;
 using Logger = Core.Log.Logger;
@@ -64,7 +65,7 @@ namespace Core.Collection
                 return true;
             }
 
-            Logger.Log($"已存在键{key}，值为{value}，添加失败");
+            Logger.LogError(ELogTags.System, $"已存在键{key}，值为{value}，添加失败");
             return false;
         }
 

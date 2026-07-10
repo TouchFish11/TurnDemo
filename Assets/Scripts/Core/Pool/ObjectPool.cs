@@ -79,7 +79,7 @@ namespace Core.Pool
         {
             if (typeof(T) != _objectType && !typeof(T).IsAssignableFrom(_objectType))
             {
-                Logger.LogError($"[{nameof(ObjectPool)}]: Type mismatch: requested {typeof(T)}, pool stores {_objectType}");
+                Logger.LogError(TODO, $"[{nameof(ObjectPool)}]: Type mismatch: requested {typeof(T)}, pool stores {_objectType}");
                 return null;
             }
             

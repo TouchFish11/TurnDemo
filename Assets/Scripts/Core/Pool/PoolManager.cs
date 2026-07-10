@@ -71,7 +71,7 @@ namespace Core.Pool
         {
             if (!obj)
             {
-                Logger.LogError($"{nameof(PoolManager)}: The object to be cached is null.");
+                Logger.LogError(TODO, $"{nameof(PoolManager)}: The object to be cached is null.");
                 return;
             }
             

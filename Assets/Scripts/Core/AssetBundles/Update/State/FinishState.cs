@@ -24,7 +24,7 @@ namespace Core.AssetBundles.Update.State
             if (File.Exists(PathUtility.GetAbLoadPath(FileUtility.CacheDefaultName)))
             {
                 File.Delete(PathUtility.GetAbLoadPath(FileUtility.CacheDefaultName));
-                Logger.Log($"[{nameof(FinishState)}]: Cache files have been deleted({FileUtility.CacheDefaultName}).");
+                Logger.LogDebug(TODO, $"[{nameof(FinishState)}]: Cache files have been deleted({FileUtility.CacheDefaultName}).");
             }
             
             // 触发更新完成回调

@@ -14,7 +14,7 @@ namespace HotUpdate.Game.Interact.UI
 
         protected override void OnButtonClick(string btnName)
         {
-            Logger.Log("交互按钮点击");
+            Logger.LogDebug(TODO, "交互按钮点击");
         }
 
         public void Init(string text)

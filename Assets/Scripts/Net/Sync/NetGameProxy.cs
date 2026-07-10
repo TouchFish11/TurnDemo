@@ -57,7 +57,7 @@ namespace Net.Sync
 
         private void OnGameConnectedInternal()
         {
-            Logger.Log($"[Net Connected] 连接服务器成功!");
+            Logger.LogDebug(TODO, $"[Net Connected] 连接服务器成功!");
         }
 
         private void OnMessageReceive(Message message, EProtocolChannel channel)

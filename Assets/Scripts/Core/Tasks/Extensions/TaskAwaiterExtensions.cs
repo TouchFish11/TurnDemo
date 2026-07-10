@@ -11,6 +11,13 @@ namespace Core.Tasks.Extensions
     /// </summary>
     internal static class TaskAwaiterExtensions
     {
+        private static TaskFactory s_taskFactory;
+
+        internal static void Configure(TaskFactory effectFactory)
+        {
+            s_taskFactory = effectFactory;
+        }
+        
         /// <summary>
         /// 将AssetBundleCreateRequest异步请求封装为可等待的Task
         /// </summary>
@@ -19,7 +26,7 @@ namespace Core.Tasks.Extensions
         /// <returns>封装后的AssetBundleCreateRequestTask任务实例</returns>
         public static TaskHandle<AssetBundle> ToTask(this AssetBundleCreateRequest req, CancellationToken token = default)
         {
-            var task = TaskFactory.Create(req, token);
+            var task = s_taskFactory.Create(req, token);
             return new TaskHandle<AssetBundle>(task);
         }
         
@@ -32,7 +39,7 @@ namespace Core.Tasks.Extensions
         /// <returns>封装后的泛型AssetBundleRequestTask任务实例</returns>
         public static TaskHandle<T> ToTask<T>(this AssetBundleRequest req, CancellationToken token = default) where  T : class
         {
-            var task = TaskFactory.Create<T>(req, token);
+            var task = s_taskFactory.Create<T>(req, token);
             return new TaskHandle<T>(task);
         }
 
@@ -45,7 +52,7 @@ namespace Core.Tasks.Extensions
         /// <returns>封装后的泛型AssetBundleRequestTask任务实例</returns>
         public static TaskHandle<IReadOnlyList<T>> ToTasks<T>(this AssetBundleRequest req, CancellationToken token = default) where  T : class
         {
-            var task = TaskFactory.Creates<T>(req, token);
+            var task = s_taskFactory.Creates<T>(req, token);
             return new TaskHandle<IReadOnlyList<T>>(task);
         }
         
@@ -56,7 +63,7 @@ namespace Core.Tasks.Extensions
         /// <returns>封装后的AssetBundleUnloadOperationTask任务实例</returns>
         public static TaskHandle ToTask(this AssetBundleUnloadOperation req)
         {
-            var task = TaskFactory.Create(req);
+            var task = s_taskFactory.Create(req);
             return new TaskHandle(task);
         }
 
@@ -68,7 +75,7 @@ namespace Core.Tasks.Extensions
         /// <returns></returns>
         public static TaskHandle ToTask(this UnityWebRequestAsyncOperation req, CancellationToken token = default)
         {
-            var task = TaskFactory.Create(req, token);
+            var task = s_taskFactory.Create(req, token);
             return new TaskHandle(task);
         }
     }

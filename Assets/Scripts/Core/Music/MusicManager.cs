@@ -142,7 +142,7 @@ namespace Core.Music
         {
             if (!_backgroundMusic)
             {
-                Logger.LogError($"{nameof(MusicManager)}:The background music player is Null and cannot perform the pause operation.");
+                Logger.LogError(TODO, $"{nameof(MusicManager)}:The background music player is Null and cannot perform the pause operation.");
                 return;
             }
 
@@ -176,7 +176,7 @@ namespace Core.Music
         {
             if (!_backgroundMusic)
             {
-                Logger.LogError($"{nameof(MusicManager)}:The background music player is Null and cannot perform the pause operation.");
+                Logger.LogError(TODO, $"{nameof(MusicManager)}:The background music player is Null and cannot perform the pause operation.");
                 return;
             }
             _backgroundMusic.Stop();
@@ -189,7 +189,7 @@ namespace Core.Music
         {
             if (!_backgroundMusic)
             {
-                Logger.LogError($"{nameof(MusicManager)}:The background music player is Null and cannot perform the pause operation.");
+                Logger.LogError(TODO, $"{nameof(MusicManager)}:The background music player is Null and cannot perform the pause operation.");
                 return;
             }
             _backgroundMusic.Play();
@@ -203,7 +203,7 @@ namespace Core.Music
         {
             if (!_backgroundMusic)
             {
-                Logger.LogError($"{nameof(MusicManager)}:The background music player is Null and cannot perform the pause operation.");
+                Logger.LogError(TODO, $"{nameof(MusicManager)}:The background music player is Null and cannot perform the pause operation.");
                 return;
             }
             _backgroundMusic.volume = value;

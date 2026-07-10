@@ -35,7 +35,7 @@ namespace Net
 
         private static void OnOnGameConnected(int clientId)
         {
-            Logger.Log($"[Net Connect] 已初始化客户端ID:{clientId}");
+            Logger.LogDebug(TODO, $"[Net Connect] 已初始化客户端ID:{clientId}");
         }
 
         private void OnDisable()

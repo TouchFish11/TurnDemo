@@ -64,7 +64,7 @@ namespace Core.Time
                 return _dateTimeDic[key].CalcRemainTime(current);
             }
 
-            Logger.LogError($"δ�ҵ���ָ����ʱ�����KEY��{key}");
+            Logger.LogError(TODO, $"δ�ҵ���ָ����ʱ�����KEY��{key}");
             return 0;
         }
 
@@ -80,7 +80,7 @@ namespace Core.Time
                 return dateTime;
             }
 
-            Logger.LogError($"δ�ҵ���ָ����ʱ�����KEY��{key}");
+            Logger.LogError(TODO, $"δ�ҵ���ָ����ʱ�����KEY��{key}");
             return null;
         }
 

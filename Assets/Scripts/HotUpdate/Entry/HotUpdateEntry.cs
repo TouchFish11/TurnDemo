@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
+using Core.Log;
 using Core.Serialize.Json;
 using Core.UI;
 using Core.Utility;
@@ -21,19 +22,22 @@ namespace HotUpdate.Entry
     /// </summary>
     public class HotUpdateEntry : MonoBehaviour
     {
-        [Inject] private IUIService _uiService;
-        [Inject] private IUIManager _uiManager;
-        [Inject] private PlayerInitializer _playerInitializer;
-        [Inject] private IJsonManager _jsonManager;
-
+        private IUIService _uiService;
+        private IUIManager _uiManager;
+        private PlayerInitializer _playerInitializer;
+        private IJsonManager _jsonManager;
         private ModuleService _moduleService;
         
         private void Awake()
         {
-            _moduleService = DIContainer.Create<ModuleService>(true);
             // 注册模块相关内容
+            _moduleService = DIContainer.Resolve<ModuleService>();
             _moduleService.RegisterModules();
-            DIContainer.InjectIntoInstance(this);
+            
+            _uiService = DIContainer.Resolve<IUIService>();
+            _uiManager = DIContainer.Resolve<IUIManager>();
+            _playerInitializer = DIContainer.Resolve<PlayerInitializer>();
+            _jsonManager = DIContainer.Resolve<IJsonManager>();    
         }
 
         private async void OnEnable()
@@ -45,7 +49,7 @@ namespace HotUpdate.Entry
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(HotUpdateEntry)}: hotfix entry error,{e.Message}");
+                Logger.LogError(ELogTags.HotUpdate, $"{nameof(HotUpdateEntry)}: hotfix entry error,{e.Message}");
             }
         }
 
@@ -70,7 +74,7 @@ namespace HotUpdate.Entry
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(HotUpdateEntry)}: Error occurred while running the hot update entry,{e.Message}");
+                Logger.LogError(ELogTags.HotUpdate, $"{nameof(HotUpdateEntry)}: Error occurred while running the hot update entry,{e.Message}");
             }
         }
 
@@ -106,7 +110,7 @@ namespace HotUpdate.Entry
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(HotUpdateEntry)}:Entry game error, {e.Message}");
+                Logger.LogError(ELogTags.HotUpdate, $"{nameof(HotUpdateEntry)}:Entry game error, {e.Message}");
             }
         }
     }

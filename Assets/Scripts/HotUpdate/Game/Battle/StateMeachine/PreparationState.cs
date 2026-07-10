@@ -52,7 +52,7 @@ namespace HotUpdate.Game.Battle.StateMeachine
             }
             catch (Exception e)
             {
-                Logger.LogError($"{nameof(PreparationState)}: Battle readiness execution error,{e.Message}");
+                Logger.LogError(TODO, $"{nameof(PreparationState)}: Battle readiness execution error,{e.Message}");
             }
         }
 

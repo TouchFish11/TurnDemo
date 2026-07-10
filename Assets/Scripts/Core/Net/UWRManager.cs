@@ -104,7 +104,7 @@ namespace Core.Net
                 // 文件读取失败：打印错误并终止
                 if (!task.IsCompletedSuccessfully)
                 {
-                    Logger.LogError(task.Exception.Message);
+                    Logger.LogError(TODO, task.Exception.Message);
                     yield break;
                 }
 
@@ -136,7 +136,7 @@ namespace Core.Net
                 else
                 {
                     // 上传失败：打印错误信息
-                    Logger.LogError($"上传失败: {uwr.error}\nURL: {url}");
+                    Logger.LogError(TODO, $"上传失败: {uwr.error}\nURL: {url}");
                 }
             }
         }
