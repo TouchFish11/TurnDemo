@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Core.DI;
+using Core.Log;
 using Core.Mono;
 using UnityEngine;
 using UnityEngine.Events;
@@ -104,7 +105,7 @@ namespace Core.Net
                 // 文件读取失败：打印错误并终止
                 if (!task.IsCompletedSuccessfully)
                 {
-                    Logger.LogError(TODO, task.Exception.Message);
+                    Logger.LogError(ELogTags.Network, task.Exception.Message);
                     yield break;
                 }
 
@@ -136,7 +137,7 @@ namespace Core.Net
                 else
                 {
                     // 上传失败：打印错误信息
-                    Logger.LogError(TODO, $"上传失败: {uwr.error}\nURL: {url}");
+                    Logger.LogError(ELogTags.Network, $"上传失败: {uwr.error}\nURL: {url}");
                 }
             }
         }

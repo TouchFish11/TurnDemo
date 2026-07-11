@@ -1,5 +1,6 @@
 using Core.DI;
 using Core.Mono;
+using Core.Time;
 using Core.UI;
 using Core.Utility;
 using HotUpdate.Game.Battle.Object;

@@ -8,6 +8,7 @@ public static class AssetBundleKeys
     public const string Fonts = "fonts";
     public const string Gameconfig = "gameconfig";
     public const string Hotupdate = "hotupdate";
+    public const string Hotupdateaot = "hotupdateaot";
     public const string Material = "material";
     public const string Mesh = "mesh";
     public const string Prefab = "prefab";

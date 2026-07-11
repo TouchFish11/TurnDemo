@@ -265,7 +265,7 @@ namespace Core.AssetBundles.Management
             // 找不到定位对象，抛出异常，实际上不会找不到，因为都是复用的
             var location = _assetIdToLocationsMap.GetValueOrDefault(handleId);
             if(location == null)
-                throw new NullReferenceException($"[{nameof(GameAsset)}]: Location does not exist, handle(id {handleId}, version {version})");
+                throw new NullReferenceException($"Location does not exist, handle(id {handleId}, version {version})");
             
             // 若是图集图片资源的定位对象，则通过图集名和图片名访问对应的资源
             if (location.LocationType == AssetLocation.ELocationType.Sprite)

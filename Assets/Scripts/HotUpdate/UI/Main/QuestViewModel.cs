@@ -35,7 +35,7 @@ namespace HotUpdate.UI.Main
                         IsActiveQuestbar.Value = data.Phase == EQuestPhase.Processing;
                         var nodeConfig = _nodeConfigs[questData.QuestId][data.NodeId];
                         if (nodeConfig == null) 
-                            throw new NullReferenceException($"{nameof(QuestViewModel)}:{nameof(nodeConfig)} is null");
+                            throw new NullReferenceException($"{nameof(nodeConfig)} is null");
                         
                         QuestTitleName.Value = nodeConfig.name;
                         QuestTip.Value = nodeConfig.questTip;
@@ -65,7 +65,7 @@ namespace HotUpdate.UI.Main
             IsActiveQuestbar.Value = true;
             var nodeConfig = _nodeConfigs[questData.QuestId][questData.CurActiveNodeId];
             if (nodeConfig == null) 
-                throw new NullReferenceException($"{nameof(QuestViewModel)}:{nameof(nodeConfig)} is null");
+                throw new NullReferenceException($"{nameof(nodeConfig)} is null");
             
             QuestTitleName.Value = nodeConfig.name;
             QuestTip.Value = nodeConfig.questTip;

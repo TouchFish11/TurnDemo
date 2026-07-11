@@ -17,44 +17,23 @@ namespace HotUpdate.Game.Point
         [SerializeField] private List<Transform> roleCamerasTrans;
         
         /// <summary>
-        /// 
+        /// 角色场景根对象列表
         /// </summary>
-        /// <returns></returns>
-        public IEnumerable<Transform> GetRoleTransforms()
-        {
-            foreach (var playerTran in roleTrans)
-            {
-                yield return playerTran;
-            }
-        }
+        public List<Transform> RoleTrans => roleTrans;
         
         /// <summary>
-        /// 
+        /// 怪物场景根对象列表
         /// </summary>
-        /// <returns></returns>
-        public IEnumerable<Transform> GetMonsterTransforms()
-        {
-            foreach (var monsterTran in monsterTrans)
-            {
-                yield return monsterTran;
-            }
-        }
+        public List<Transform> MonsterTrans => monsterTrans;
 
-        public Transform GetRoleTransByIndex(int index)
-        {
-            return roleTrans[index];
-        }
-
-        public Transform GetMonsterTransByIndex(int index)
-        {
-            return monsterTrans[index];
-        }
-        
-        public Transform GetRoleCameraTransByIndex(int index)
-        {
-            return roleCamerasTrans[index];
-        }
-
+        /// <summary>
+        /// 场景怪物区域的中心点
+        /// </summary>
         public Transform MonsterCenter => monsterPointCenter;
+        
+        /// <summary>
+        /// 场景角色相机点
+        /// </summary>
+        public List<Transform> RoleCamerasTrans => roleCamerasTrans;
     }
 }

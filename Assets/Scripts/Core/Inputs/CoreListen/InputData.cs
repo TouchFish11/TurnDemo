@@ -2,7 +2,7 @@ using System;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 
-namespace Core.Input.CoreListen
+namespace Core.Inputs.CoreListen
 {
     /// <summary>
     /// ��������

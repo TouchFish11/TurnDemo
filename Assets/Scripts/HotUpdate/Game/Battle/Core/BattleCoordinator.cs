@@ -3,8 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.DI;
+using Core.Log;
 using Core.Serialize.Binary;
-using Core.Utility;
+using Core.Tasks;
 using HotUpdate.Base.UI;
 
 using HotUpdate.Game.Battle.Context;
@@ -168,13 +169,13 @@ namespace HotUpdate.Game.Battle.Core
                     // 激活所有怪物UI显示
                     ((IBattleController)_uiService.GetPanel(EUIPanelId.BattlePanel)).MonsterStateUIManager.ActiveMonsterUIs();
                     // 更新对应的玩家相机看向怪物
-                    var roleCameraParent = _battlePointProxy.BattlePoint.GetRoleCameraTransByIndex(playerObject.EntityPosIndex);
+                    var roleCameraParent = _battlePointProxy.BattlePoint.RoleCamerasTrans[playerObject.EntityPosIndex];
                     var mask2 = CalcRoleRenderMask(playerObject.EntityPosIndex);
                     await BattleCameraManager.CreateCamera(roleCameraParent, Vector3.zero, Quaternion.identity, mask2);
                     break;
                 case E_SkillTargetType.None:
                 default:
-                    Logger.LogError(TODO, $"{nameof(BattleCoordinator)}: Invalid target type,{skillTargetType}");
+                    Logger.LogError(ELogTags.Battle, $"{nameof(BattleCoordinator)}: Invalid target type,{skillTargetType}");
                     break;
             }
         }
@@ -351,7 +352,7 @@ namespace HotUpdate.Game.Battle.Core
                     break;
                 case E_SkillTargetType.None:
                 default:
-                    Logger.LogWarning(TODO, $"未处理的技能目标类型：{targetType}");
+                    Logger.LogWarning(ELogTags.Battle, $"未处理的技能目标类型：{targetType}");
                     return;
             }
             

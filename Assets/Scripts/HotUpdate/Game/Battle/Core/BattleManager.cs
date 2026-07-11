@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Core.DI;
+using Core.Log;
 using Core.Pool;
 using Core.UI;
 using HotUpdate.Base.Scene;
@@ -52,10 +53,10 @@ namespace HotUpdate.Game.Battle.Core
             
             // 创建战斗服务
             BattleService ??= DIContainer.Create<BattleService>();
-            BattleService.Init(this, _context);
+            BattleService.Init(this, context);
             // 创建WaveCreator并初始化
             WaveCreator ??= DIContainer.Create<WaveCreator>(parameterValues: this);
-            WaveCreator.Init(_context, startupParams.WaveDatas);
+            WaveCreator.Init(context, startupParams.WaveDatas);
             _context = context;
         }
         
@@ -80,7 +81,7 @@ namespace HotUpdate.Game.Battle.Core
             }
             catch (Exception e)
             {
-                Logger.LogError(TODO, $"{nameof(BattleManager)}: Battle quit error,{e.Message}");
+                Logger.LogError(ELogTags.Battle, $"{nameof(BattleManager)}: Battle quit error,{e.Message}");
             }
         }
 

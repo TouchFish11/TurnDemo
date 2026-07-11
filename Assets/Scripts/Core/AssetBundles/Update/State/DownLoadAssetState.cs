@@ -10,6 +10,7 @@ using Core.DI;
 using Core.Extensions;
 using Core.Global;
 using Core.Mono;
+using Core.Tasks;
 using Core.Utility;
 
 namespace Core.AssetBundles.Update.State

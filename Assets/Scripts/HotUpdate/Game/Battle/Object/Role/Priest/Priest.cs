@@ -1,6 +1,5 @@
 using Core.DI;
 using HotUpdate.Game.Battle.Object.Role.Priest.Skill;
-using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Factory;
 
 namespace HotUpdate.Game.Battle.Object.Role.Priest

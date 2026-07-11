@@ -2,8 +2,8 @@ using System;
 using Core.DI;
 using Core.Log;
 using Core.Mono;
+using Core.Tasks;
 using Core.UI;
-using Core.Utility;
 using HotUpdate.Base.UI;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;
@@ -52,7 +52,7 @@ namespace HotUpdate.Game.Battle.StateMeachine
             }
             catch (Exception e)
             {
-                Logger.LogError(TODO, $"{nameof(PreparationState)}: Battle readiness execution error,{e.Message}");
+                Logger.LogError(ELogTags.Battle, $"{nameof(PreparationState)}: Battle readiness execution error,{e.Message}");
             }
         }
 

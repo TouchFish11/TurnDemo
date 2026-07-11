@@ -3,7 +3,6 @@ using Core.DI;
 using HotUpdate.Game.Battle.Object.Role.Priest.Skill.Battle;
 using HotUpdate.Game.Battle.Object.Role.Priest.Skill.Normal;
 using HotUpdate.Game.Battle.Object.Role.Priest.Skill.Ultimate;
-using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
 using HotUpdate.Game.Battle.Skill.Base.Phase;

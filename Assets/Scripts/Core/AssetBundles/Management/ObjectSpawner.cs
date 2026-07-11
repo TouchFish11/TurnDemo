@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.DI;
+using Core.Log;
 using Core.Mono;
 using Core.Pool;
 using Core.PreLoad;
@@ -94,7 +95,7 @@ namespace Core.AssetBundles.Management
                 GameAsset.Release(_keyToHandleMap[key]);
                 _assetKeys.Remove(key);
                 _keyToHandleMap.Remove(key);
-                Logger.LogError(TODO, $"[{nameof(ObjectSpawner)}]: Create '{key}' obj error,{e.Message}");
+                Logger.LogError(ELogTags.Asset, $"[{nameof(ObjectSpawner)}]: Create '{key}' obj error,{e.Message}");
                 return null;
             }
             finally
@@ -248,7 +249,7 @@ namespace Core.AssetBundles.Management
                     }
                     else
                     {
-                        Logger.LogError(TODO, $"[{nameof(ObjectSpawner)}]: Create obj({key}) error,{e.Message}");
+                        Logger.LogError(ELogTags.Asset, $"[{nameof(ObjectSpawner)}]: Create obj({key}) error,{e.Message}");
                     }
                 }
             }
@@ -353,13 +354,13 @@ namespace Core.AssetBundles.Management
         {
             if (!obj)
             {
-                Logger.LogWarning(TODO, $"{nameof(ObjectSpawner)}: The object has been destroyed, Manually destroying object is not allowed");
+                Logger.LogWarning(ELogTags.Asset, $"The object has been destroyed, Manually destroying object is not allowed");
                 return false;
             }
             
             if (!_activeObjects.Contains(obj))
             {
-                Logger.LogWarning(TODO, $"[{nameof(ObjectSpawner)}]: The object ‘{obj.name}’ has been released.");
+                Logger.LogWarning(ELogTags.Asset, $"The object ‘{obj.name}’ has been released.");
                 return false;
             }
 

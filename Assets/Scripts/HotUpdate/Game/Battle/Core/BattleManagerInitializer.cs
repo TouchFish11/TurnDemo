@@ -23,8 +23,6 @@ namespace HotUpdate.Game.Battle.Core
         private readonly IBattlePointProxy _battlePointProxy;
         private readonly IBattleCommandsController _battleCommandsController;
         
-        public IBattleManager BattleManager => _battleManager;
-        
         private BattleManagerInitializer
         (
             ITargetSelectManager targetSelectManager,

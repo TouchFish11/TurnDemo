@@ -37,7 +37,7 @@ namespace Game
             }
             catch (Exception e)
             {
-                Logger.LogError(ELogTags.System, $"{nameof(GameLauncher)}: Game startup failed, {e.Message}");
+                Logger.LogError(ELogTags.GameLauncher, $"{nameof(GameLauncher)}: Game startup failed, {e.Message}");
             }
         }
         
@@ -48,24 +48,35 @@ namespace Game
         {
             if (bootConfig == null)
             {
-                Logger.LogError(ELogTags.System, $"{nameof(GameLauncher)}:无法加载启动配置，使用默认硬编码包名");
+                Logger.LogError(ELogTags.GameLauncher, $"{nameof(GameLauncher)}:无法加载启动配置，使用默认硬编码包名");
                 bootConfig = new BootConfig { hotfixDllBundleName = "hotupdate.assetbundle" };
             }
+
+            IHotUpdateManager hotUpdateManager;
+#if UNITY_EDITOR
+            hotUpdateManager = DIContainer.Resolve<HotUpdateMockManager>();
+#else
+            hotUpdateManager = DIContainer.Resolve<HotUpdateManager>();
+            // 补充元数据
+            using var aotDllHandle = await GameAsset.LoadAllAssetAsync<TextAsset>(bootConfig.aotDllBundleName);
+            var dllDic = new Dictionary<string, byte[]>();
+            foreach (var asset in aotDllHandle.Assets)
+            {
+                dllDic.Add(asset.name, asset.bytes);
+            }
+            hotUpdateManager.LoadMetadataForAOTAssemblies(dllDic); 
+#endif
             
-            // 加载所有dll资源
+            // 加载所有热更dll资源
             using var handle = await GameAsset.LoadAllAssetAsync<TextAsset>(bootConfig.hotfixDllBundleName);
             var list = new List<TextAsset>(handle.Assets);
             // 获取热更程序集依赖设置
             var settingsTextAsset = list.Find(text => text.name.Contains(nameof(HotUpdateAssemblySettings)));
             list.Remove(settingsTextAsset);
-            
             var settings = DIContainer.Resolve<JsonManager>().FromJson<HotUpdateAssemblySettings>(settingsTextAsset.text);
-            var hotUpdateManager = DIContainer.Resolve<HotUpdateMockManager>();
-            // 补充元数据
-            hotUpdateManager.LoadMetadataForAOTAssemblies(AOTGenericReferences.PatchedAOTAssemblyList);  
             // 加载所有热更程序集
             await hotUpdateManager.LoadAssembliesAsync(settings, list);
-            Logger.LogDebug(ELogTags.System, $"{nameof(GameLauncher)}: Load the hotfix assemblies complete!!!");
+            Logger.LogDebug(ELogTags.GameLauncher, $"Load the hotfix assemblies complete!!!");
         }
         
         /// <summary>

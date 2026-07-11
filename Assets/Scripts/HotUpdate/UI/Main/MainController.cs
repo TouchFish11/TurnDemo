@@ -102,7 +102,7 @@ namespace HotUpdate.UI.Main
             }
             catch (Exception e)
             {
-                Logger.LogError(TODO, $"{nameof(MainController)}: Navigation other panel error,{e.Message}");
+                Logger.LogError(ELogTags.Main, $"{nameof(MainController)}: Navigation other panel error,{e.Message}");
             }
         }
         

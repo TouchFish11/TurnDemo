@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Core.DI;
 using Core.HotUpdate;
+using Core.Log;
 using HotUpdate.Base.Object;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -104,13 +105,13 @@ namespace HotUpdate.Base.Component
                 }
                 else
                 {
-                    Logger.LogWarning(TODO, $"组件[{componentName}]未实现IComponent接口");
+                    Logger.LogWarning(ELogTags.Component, $"组件[{componentName}]未实现IComponent接口");
                 }
             }
             else
             {
                 // 组件名称未注册时记录错误日志，便于问题排查
-                Logger.LogError(TODO, $"{nameof(AddComponent)}<{componentName}>：未找到该类型的组件");
+                Logger.LogError(ELogTags.Component, $"{nameof(AddComponent)}<{componentName}>：未找到该类型的组件");
             }
         }
         
@@ -131,12 +132,12 @@ namespace HotUpdate.Base.Component
             var componentTypeName = typeof(T).Name;
             if (_nameToComponentTypeMap.TryGetValue(componentTypeName, out var type))
             {
-                Logger.LogDebug(TODO, $"{nameof(ComponentService)}.{nameof(AddComponent)}：对象：{entityObject.GameObject.name}开始添加组件：{type}");
+                Logger.LogDebug(ELogTags.Component, $"对象：{entityObject.GameObject.name}开始添加组件：{type}");
                 // 挂载组件到目标GameObject
                 var component = entityObject.GameObject.AddComponent(type);
-                Logger.LogDebug(TODO, $"{nameof(ComponentService)}.{nameof(AddComponent)}：对象：{entityObject.GameObject.name}添加组件：{type}" +
-                                 $"{(!component ? "失败" : "成功")}"+
-                                 $"component为null：{!component}");
+                Logger.LogDebug(ELogTags.Component, $"对象：{entityObject.GameObject.name}添加组件：{type}" +
+                                                    $"{(!component ? "失败" : "成功")}"+
+                                                    $"component为null：{!component}");
                 
                 // 类型转换并处理初始化
                 if (component is not IComponent ic)
@@ -152,7 +153,7 @@ namespace HotUpdate.Base.Component
             else
             {
                 // 类型未注册时记录详细错误日志
-                Logger.LogError(TODO, $"{nameof(ComponentService)}.{nameof(AddComponent)}：未找到该类型{typeof(T).Name}的组件");
+                Logger.LogError(ELogTags.Component, $"{nameof(ComponentService)}.{nameof(AddComponent)}：未找到该类型{typeof(T).Name}的组件");
             }
         }
 
@@ -191,21 +192,21 @@ namespace HotUpdate.Base.Component
                         var component = entityObject.GameObject.GetComponent(requireAttr.m_Type0);  // null
                         if (component is IComponent dependentComponent)
                         {
-                            Logger.LogDebug(TODO, $"{ic.GetType()}的依赖组件：已找到：{dependentComponent.GetType()}");
+                            Logger.LogDebug(ELogTags.Component, $"{ic.GetType()}的依赖组件：已找到：{dependentComponent.GetType()}");
                             ic = dependentComponent;
                             continue;
                         }
 
-                        Logger.LogDebug(TODO, component ? $"{ic.GetType()}的依赖类型：{requireAttr.m_Type0}，组件：{component.GetType().Name}不为IComponent" : $"{ic.GetType()}的依赖类型：{requireAttr.m_Type0}组件为null");
+                        Logger.LogDebug(ELogTags.Component, component ? $"{ic.GetType()}的依赖类型：{requireAttr.m_Type0}，组件：{component.GetType().Name}不为IComponent" : $"{ic.GetType()}的依赖类型：{requireAttr.m_Type0}组件为null");
                     }
                     else
                     {
-                        Logger.LogDebug(TODO, $"{ic.GetType()}的依赖类型{requireAttr.m_Type0}不从IComponent中派生");
+                        Logger.LogDebug(ELogTags.Component, $"{ic.GetType()}的依赖类型{requireAttr.m_Type0}不从IComponent中派生");
                     }
                 }
                 else
                 {
-                    Logger.LogDebug(TODO, $"{ic.GetType()}的RequireComponent特性为null");
+                    Logger.LogDebug(ELogTags.Component, $"{ic.GetType()}的RequireComponent特性为null");
                 }
                 
                 // 无依赖/依赖非IComponent/依赖未挂载时，开始从栈顶初始化组件

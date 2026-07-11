@@ -2,7 +2,7 @@ using System.Collections;
 using Core.DI;
 using Core.Log;
 using Core.Serialize.Binary;
-using Core.Utility;
+using Core.Tasks;
 using HotUpdate.Base.UI;
 
 using HotUpdate.Game.Battle.Command;
@@ -87,7 +87,7 @@ namespace HotUpdate.Game.Battle.Skill.Handler
                 }
             }
 
-            Logger.LogError(TODO, $"{nameof(BaseUltimateSkillCastPostHandler)}.{nameof(GetNormalSkillInfo)}：未找到普攻技能信息");
+            Logger.LogError(ELogTags.Battle, $"{nameof(BaseUltimateSkillCastPostHandler)}.{nameof(GetNormalSkillInfo)}：未找到普攻技能信息");
             return null;
         }
 

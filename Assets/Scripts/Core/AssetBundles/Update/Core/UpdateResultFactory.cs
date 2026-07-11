@@ -29,7 +29,7 @@ namespace Core.AssetBundles.Update.Core
             result.UpdateError = updateError;
             
             // 记录日志
-            Logger.LogError(TODO, $"{nameof(UpdateResultFactory)}: error type = '{updateError}',exception = {exception.Message}");
+            Logger.LogError(ELogTags.HotUpdate, $"{nameof(UpdateResultFactory)}: error type = '{updateError}',exception = {exception.Message}");
             return result;
         }
     }

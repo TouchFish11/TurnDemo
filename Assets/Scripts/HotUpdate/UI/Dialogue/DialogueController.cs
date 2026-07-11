@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
+using Core.Log;
 using Core.Mono;
 using Core.UI.ViewController;
 using HotUpdate.Base.Manager;
@@ -247,7 +248,7 @@ namespace HotUpdate.UI.Dialogue
             catch (Exception e)
             {
                 // 记录分支选项创建异常日志
-                Logger.LogError(TODO, $"{nameof(DialogueController)}: Dialog branch option created error,{e.Message}");
+                Logger.LogError(ELogTags.Dialogue, $"{nameof(DialogueController)}: Dialog branch option created error,{e.Message}");
             }
         }
 

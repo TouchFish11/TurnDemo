@@ -26,6 +26,7 @@ namespace Editor.AssetBundle.Core
         public const string AssetCatalogName = "AssetCatalog.json";
         public const string BootConfigName = "BootConfig.json";
         public const string hotfixDllBundleName = "hotupdate";
+        public const string aotDllBundleName = "hotupdateaot";
 
         public AssetBundleBuilder(Action<string> logAction = null, Action<string, float> progressAction = null)
         {
@@ -263,6 +264,7 @@ namespace Editor.AssetBundle.Core
             // 可以通过配置或约定获取这个名称，这里简化为常量或从 releaseCollection 推断
             var bootConfig = new BootConfig
             {
+                aotDllBundleName = aotDllBundleName,
                 hotfixDllBundleName = hotfixDllBundleName,
                 version = DateTime.Now.Ticks.ToString(),
                 hotfixObjKey = "HotUpdateEntry"

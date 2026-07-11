@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Core.Mono;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -245,6 +246,11 @@ namespace Core.DI
             {
                 var go = new GameObject(implType.Name);
                 var comp = go.AddComponent(implType);
+                // 单例mono，过场景不移除
+                if (_singletonMap.ContainsKey(implType))
+                {
+                    EngineUtility.DontDestroyOnLoad(go);
+                }
                 instance = comp;
             }
             else

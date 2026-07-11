@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Core.DI;
 using Core.Global;
+using Core.Log;
 using Core.Mono;
 using Core.Systems.Memorys;
 using UnityEngine;
@@ -71,7 +72,7 @@ namespace Core.Pool
         {
             if (!obj)
             {
-                Logger.LogError(TODO, $"{nameof(PoolManager)}: The object to be cached is null.");
+                Logger.LogError(ELogTags.Pool, $"{nameof(PoolManager)}: The object to be cached is null.");
                 return;
             }
             

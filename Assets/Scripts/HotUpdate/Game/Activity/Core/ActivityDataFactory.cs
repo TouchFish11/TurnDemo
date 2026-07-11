@@ -31,7 +31,7 @@ namespace HotUpdate.Game.Activity.Core
                     var activityIdAttribute = type.GetCustomAttribute<ActivityIdAttribute>();
                     if (activityIdAttribute == null)
                     {
-                        Logger.LogError(TODO, $"{nameof(ActivityDataFactory)}: {type} does not have a marking {nameof(ActivityIdAttribute)}.");
+                        Logger.LogError(ELogTags.Activity, $"{nameof(ActivityDataFactory)}: {type} does not have a marking {nameof(ActivityIdAttribute)}.");
                         continue;
                     }
                     

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Core.Log;
 using HotUpdate.Base.Component;
 using UnityEngine;
 using Logger = Core.Log.Logger;
@@ -96,7 +97,7 @@ namespace HotUpdate.Base.Object
             component = base.GetComponentInChildren<TComponent>();
             if (component == null)
             {
-                Logger.LogWarning(TODO, $"未从{gameObject}的子对象中找到组件：{typeof(TComponent)}");
+                Logger.LogWarning(ELogTags.Main, $"未从{gameObject}的子对象中找到组件：{typeof(TComponent)}");
             }
             
             // 将找到的组件存入缓存（即使为null也缓存，避免重复查找）

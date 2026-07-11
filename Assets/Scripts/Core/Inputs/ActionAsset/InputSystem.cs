@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using System.Text;
+using Core.Log;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
@@ -214,12 +215,12 @@ namespace Core.Inputs.ActionAsset
             {
                 // 刷新现有PlayerInput的动作配置
                 _playerInput.actions = GetInputActionAsset();
-                Logger.LogDebug(TODO, $"[{nameof(InputSystem)}]: Input configuration update successful,{_playerInput.actions}");
+                Logger.LogDebug(ELogTags.Input, $"Input configuration update successful,{_playerInput.actions}");
             }
             else
             {
                 // 日志：PlayerInput为空，更新失败
-                Logger.LogError(TODO, $"[{nameof(InputSystem)}]: Input configuration acquisition failed,{playerInput}");
+                Logger.LogError(ELogTags.Input, $"Input configuration acquisition failed,{playerInput}");
                 return;
             }
         }

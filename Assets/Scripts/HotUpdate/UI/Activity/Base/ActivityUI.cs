@@ -1,4 +1,5 @@
 using System;
+using Core.Log;
 using Core.UI;
 
 using TMPro;
@@ -54,7 +55,7 @@ namespace HotUpdate.UI.Activity.Base
             }
             catch (Exception exception)
             {
-                Logger.LogException(TODO, exception);
+                Logger.LogException(ELogTags.Activity, exception);
             }
         }
     }

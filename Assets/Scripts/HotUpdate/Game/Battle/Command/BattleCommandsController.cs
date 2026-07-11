@@ -192,7 +192,7 @@ namespace HotUpdate.Game.Battle.Command
             var displayobjs = new List<IDisplayPendingExecution>(_context.BattleCommands.ConvertAll(cmd => (IDisplayPendingExecution)cmd));
             // 当前角色回合被其它逻辑插队的情况，CurrentCommander为null说明没有指令执行
             var currentCommander = _context.CurrentCommand?.Sender;
-            if (currentCommander != _context.CurrentTurnOwner && _context.CurrentTurnOwner.CanAct)
+            if (_context.CurrentTurnOwner != null &&currentCommander != _context.CurrentTurnOwner && _context.CurrentTurnOwner.CanAct)
             {
                 // 显示持有当前回合被插队的角色的等待UI
                 displayobjs.Add((IDisplayPendingExecution)_context.CurrentTurnOwner);

@@ -5,6 +5,7 @@ using Core.AssetBundles.Update.Core;
 using Core.AssetBundles.Update.Exception;
 using Core.DI;
 using Core.Global;
+using Core.Log;
 using Core.Mono;
 using Core.Utility;
 using UnityEngine;
@@ -132,7 +133,7 @@ namespace Core.AssetBundles.Update.State
             }
             catch (IOException ex)
             {
-                Logger.LogError(TODO, $"ReadAllTextAsync failed: {ex}");
+                Logger.LogError(ELogTags.HotUpdate, $"ReadAllTextAsync failed: {ex}");
                 throw;
             }
         }

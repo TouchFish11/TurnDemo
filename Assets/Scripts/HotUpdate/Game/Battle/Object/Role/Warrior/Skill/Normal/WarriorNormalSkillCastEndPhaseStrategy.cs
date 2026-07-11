@@ -1,4 +1,5 @@
 using System.Collections;
+using Core.Log;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
 using UnityEngine;
@@ -10,7 +11,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Normal
     {
         public override IEnumerator Execute()
         {
-            Logger.LogDebug(TODO, LastAnimationName);
+            Logger.LogDebug(ELogTags.Battle, LastAnimationName);
             // 等待动画播放和特效结束
             yield return BattleAnimationComponent.WaitForPlay(LastAnimationName);
             yield return new WaitUntil(() => !SkillContext.VFXInfo.IsAlive);

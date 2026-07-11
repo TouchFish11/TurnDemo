@@ -1,9 +1,7 @@
 using System.Collections;
-using HotUpdate.Base;
 using HotUpdate.Base.Object;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage;
-using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Conditions;
 using HotUpdate.Game.Battle.Skill.Factory;
 using HotUpdate.Game.Battle.TargetSelect;
@@ -32,7 +30,7 @@ namespace HotUpdate.Game.Battle.Object
 
         /// <summary>
         /// 实体位置索引
-        /// 标识实体在战斗阵型的位置编号
+        /// 标识实体在战斗场景的位置顺序
         /// </summary>
         int EntityPosIndex { get; set; }
         

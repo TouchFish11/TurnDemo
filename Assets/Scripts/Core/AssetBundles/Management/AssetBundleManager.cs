@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Core.DI;
+using Core.Log;
 using Core.Serialize.Json;
 using Core.Systems.Memorys;
 using Core.Utility;
@@ -93,7 +94,7 @@ namespace Core.AssetBundles.Management
                 wrapper.IsActive = true;
                 wrapper.LoadFromFile();
                 wrapper.Retain();
-                Logger.LogDebug(TODO, $"{nameof(AssetBundleManager)}: '{abName}' assetBundle dependency '{dependency}' will be loaded");
+                Logger.LogDebug(ELogTags.Asset, $"'{abName}' assetBundle dependency '{dependency}' will be loaded");
             }
 
             // 加载目标包
@@ -157,7 +158,7 @@ namespace Core.AssetBundles.Management
                 var wrapper = _nameToWrapperMap[dependency];
                 wrapper.IsActive = true;
                 dependenciesTasks.Add(dependency, wrapper.LoadFromFileAsync(token));
-                //Logger.Log($"{nameof(AssetBundleManager)}: '{abName}' assetBundle dependency '{dependency}' will be loaded");
+                Logger.LogDebug(ELogTags.Asset, $"'{abName}' assetBundle dependency '{dependency}' will be loaded");
             }
 
             // 等待所有依赖加载完毕
@@ -294,7 +295,7 @@ namespace Core.AssetBundles.Management
             }
             catch (Exception e)
             {
-                Logger.LogError(TODO, $"{nameof(AssetBundleManager)}: Unload AssetBundle exception,{e.Message}");
+                Logger.LogError(ELogTags.Asset, $"{nameof(AssetBundleManager)}: Unload AssetBundle exception,{e.Message}");
             }
         }
     }

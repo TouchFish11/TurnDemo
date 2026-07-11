@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Core.Log;
 using Core.Mono;
+using Core.Time;
 using Core.Utility;
 using UnityEngine;
 using Logger = Core.Log.Logger;
@@ -75,10 +77,10 @@ namespace Core.Systems.Memorys
         {
             if (this.currentOccupationLevel == currentOccupationLevel) return;
             
-            Logger.LogDebug(TODO, $"当前内存占用级别：{currentOccupationLevel}。" +
-                             $"当前内存占用：{TextUtility.ToByteUnit((ulong)currentMemory)}，" +
-                             $"系统内存：{TextUtility.ToByteUnit((ulong)currentSystemMemory)}，" +
-                             $"比值：{TextUtility.FloatToStr(currentRatio * 100, 2)}%");
+            Logger.LogDebug(ELogTags.System, $"当前内存占用级别：{currentOccupationLevel}。" +
+                                             $"当前内存占用：{TextUtility.ToByteUnit((ulong)currentMemory)}，" +
+                                             $"系统内存：{TextUtility.ToByteUnit((ulong)currentSystemMemory)}，" +
+                                             $"比值：{TextUtility.FloatToStr(currentRatio * 100, 2)}%");
             
             this.currentOccupationLevel = currentOccupationLevel;
             // 通知所有监听者

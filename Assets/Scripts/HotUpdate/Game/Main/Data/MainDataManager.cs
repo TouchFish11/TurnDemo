@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Inputs.ActionAsset;
+using Core.Log;
 using Core.Music;
 using Core.Serialize.Binary;
 using Core.Serialize.Json;
@@ -59,15 +60,15 @@ namespace HotUpdate.Game.Main.Data
             
             // 加载二进制配置
             await _binaryDataManager.LoadConfigAsync(AssetBundleKeys.Gameconfig);
-            Logger.LogDebug(TODO, $"配置数据加载成功");
+            Logger.LogDebug(ELogTags.Main, $"配置数据加载成功");
             
             // 读取本地音乐数据
             var MusicData = await _binaryDataManager.LoadAsync<MusicData>(FileUtility.LocalMusicDataFileName);
-            Logger.LogDebug(TODO, $"本地音乐数据加载成功，{MusicData}");
+            Logger.LogDebug(ELogTags.Main, $"本地音乐数据加载成功，{MusicData}");
             
             // 读取本地输入数据
             var InputActionContainer = await _binaryDataManager.LoadAsync<MainActionMapDataContainer>(FileUtility.LocalInputDataFileName);
-            Logger.LogDebug(TODO, $"本地输入数据加载成功，{InputActionContainer}");
+            Logger.LogDebug(ELogTags.Main, $"本地输入数据加载成功，{InputActionContainer}");
 
             // 构造主数据集合
             MainDataCollection = new MainDataCollection
@@ -91,21 +92,21 @@ namespace HotUpdate.Game.Main.Data
             {
                 // 保存音乐数据
                 _binaryDataManager.Save(FileUtility.LocalMusicDataFileName, MainDataCollection.MusicData);
-                Logger.LogDebug(TODO, $"{nameof(MainDataManager)}: 音乐数据保存成功，{FileUtility.LocalMusicDataFileName}");
+                Logger.LogDebug(ELogTags.Main, $"音乐数据保存成功，{FileUtility.LocalMusicDataFileName}");
             }
             
             // 保存输入数据
             if (MainDataCollection != null)
             {
                 _binaryDataManager.Save(FileUtility.LocalInputDataFileName, MainDataCollection.InputActionContainer);
-                Logger.LogDebug(TODO, $"{nameof(MainDataManager)}: 输入数据保存成功，{FileUtility.LocalInputDataFileName}");
+                Logger.LogDebug(ELogTags.Main, $"输入数据保存成功，{FileUtility.LocalInputDataFileName}");
             }
 
             if (GameSettings != null)
             {
                 // 保存设置数据
                 _jsonManager.SaveToJson(GameSettings, $"{PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingFileName)}", settings:NewtonsoftJsonUtility.SerializerSettings);
-                Logger.LogDebug(TODO, $"{nameof(MainDataManager)}: 游戏设置数据保存成功，{GameSettings}");
+                Logger.LogDebug(ELogTags.Main, $"游戏设置数据保存成功，{GameSettings}");
             }
         }
 
@@ -115,21 +116,21 @@ namespace HotUpdate.Game.Main.Data
             {
                 // 保存音乐数据
                 await _binaryDataManager.SaveAsync(FileUtility.LocalMusicDataFileName, MainDataCollection.MusicData);
-                Logger.LogDebug(TODO, $"{nameof(MainDataManager)}: 音乐数据保存成功，{FileUtility.LocalMusicDataFileName}");
+                Logger.LogDebug(ELogTags.Main, $"音乐数据保存成功，{FileUtility.LocalMusicDataFileName}");
             }
             
             if (MainDataCollection != null)
             {
                 // 保存输入数据
                 await _binaryDataManager.SaveAsync(FileUtility.LocalInputDataFileName, MainDataCollection.InputActionContainer);
-                Logger.LogDebug(TODO, $"{nameof(MainDataManager)}: 输入数据保存成功，{FileUtility.LocalInputDataFileName}");
+                Logger.LogDebug(ELogTags.Main, $"输入数据保存成功，{FileUtility.LocalInputDataFileName}");
             }
 
             if (GameSettings != null)
             {
                 // 保存设置数据
                 await _jsonManager.SaveToJsonAsync(GameSettings, $"{PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingFileName)}", settings:NewtonsoftJsonUtility.SerializerSettings);
-                Logger.LogDebug(TODO, $"{nameof(MainDataManager)}: 游戏设置数据保存成功，{GameSettings}");
+                Logger.LogDebug(ELogTags.Main, $"游戏设置数据保存成功，{GameSettings}");
             }
         }
     }

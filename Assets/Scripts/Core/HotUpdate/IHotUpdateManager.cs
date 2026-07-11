@@ -51,7 +51,7 @@ namespace Core.HotUpdate
         /// 补充元数据
         /// </summary>
         /// <param name="aotDlls">补充程序集名称列表</param>
-        void LoadMetadataForAOTAssemblies(IReadOnlyList<string> aotDlls);
+        void LoadMetadataForAOTAssemblies(Dictionary<string, byte[]> aotDlls);
 
         Task LoadAssembliesAsync(HotUpdateAssemblySettings settings, List<TextAsset> textAssets);
     }

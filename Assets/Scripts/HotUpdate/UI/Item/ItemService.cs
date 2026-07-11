@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
+using Core.Log;
 using Core.Serialize.Binary;
 using Core.Utility;
 using HotUpdate.Base.Service;
@@ -56,7 +57,7 @@ namespace HotUpdate.UI.Item
             }
             catch (Exception e)
             {
-                Logger.LogError(TODO, $"{nameof(ItemService)}: ItemGrid create error,{e.Message}");
+                Logger.LogError(ELogTags.Item, $"{nameof(ItemService)}: ItemGrid create error,{e.Message}");
             }
         }
 
@@ -92,7 +93,7 @@ namespace HotUpdate.UI.Item
             }
             catch (Exception e)
             {
-                Logger.LogError(TODO, $"{nameof(ItemService)}: ItemGrid create error,{e.Message}");
+                Logger.LogError(ELogTags.Item, $"{nameof(ItemService)}: ItemGrid create error,{e.Message}");
                 return Array.Empty<ItemGrid>();
             }
         }

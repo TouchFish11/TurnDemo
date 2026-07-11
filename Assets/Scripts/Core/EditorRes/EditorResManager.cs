@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Core.Log;
 using Core.Singleton;
 using Core.Utility;
 using UnityEditor;
@@ -33,7 +34,7 @@ namespace Core.EditorRes
             // 文件夹不存在
             if (!Directory.Exists(RootPath))
             {
-                Logger.LogDebug(TODO, $"路径不存在:{RootPath}");
+                Logger.LogDebug(ELogTags.Asset, $"路径不存在:{RootPath}");
                 return null;
             }
 
@@ -64,7 +65,7 @@ namespace Core.EditorRes
             var targetInfo = _fileInfoList.Find(fileInfo => fileInfo.Name == $"{assetName}{suffixName}");
             if (targetInfo == null)
             {
-                Logger.LogError(TODO, $"未找到该资源:{assetName}{suffixName}");
+                Logger.LogError(ELogTags.Asset, $"未找到该资源:{assetName}{suffixName}");
                 return null;
             }
 
@@ -74,7 +75,7 @@ namespace Core.EditorRes
             {
                 return res is GameObject ? Object.Instantiate(res) : res;
             }
-            Logger.LogError(TODO, $"不存在该文件路径:{targetInfo.FullName[targetInfo.FullName.IndexOf("Assets", StringComparison.Ordinal)..]}");
+            Logger.LogError(ELogTags.Asset, $"不存在该文件路径:{targetInfo.FullName[targetInfo.FullName.IndexOf("Assets", StringComparison.Ordinal)..]}");
             return null;
 #else
             return null;

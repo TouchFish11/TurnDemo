@@ -1,8 +1,7 @@
 using System.Collections;
 using Core.DI;
 using Core.Mono;
-using Core.Utility;
-using HotUpdate.Base.Manager;
+using Core.Tasks;
 using HotUpdate.Base.UI;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;

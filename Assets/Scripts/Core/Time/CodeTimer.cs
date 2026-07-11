@@ -5,15 +5,15 @@ using Core.Log;
 namespace Core.Time
 {
     /// <summary>
-    /// �����ʱ��
+    /// 代码计时器
     /// </summary>
     public class CodeTimer : IDisposable
     {
-        // ��������
+        // 测试名称
         private readonly string testName;
-        // ���Դ���
+        // 测试数量
         private readonly uint testCount;
-        // �������
+        // 计时对象
         private readonly Stopwatch stopwatch;
 
         public CodeTimer(string testName, uint testCount)
@@ -26,8 +26,8 @@ namespace Core.Time
         public void Dispose()
         {
             stopwatch.Stop();
-            double spendTime = stopwatch.Elapsed.TotalMilliseconds;
-            Logger.LogDebug(TODO, $"{testName}�����Դ�����{testCount}���ܺ�ʱ��{spendTime}ms��ƽ����ʱ��{spendTime / testCount}ms");
+            var spendTime = stopwatch.Elapsed.TotalMilliseconds;
+            Logger.LogDebug(ELogTags.Time, $"测试名称'{testName}'；测试数量'{testCount}'；总时间'{spendTime}'ms；平均时间'{spendTime / testCount}'ms");
         }
     }
 }

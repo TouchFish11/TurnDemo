@@ -21,8 +21,8 @@ namespace HotUpdate.Game.Battle.Core
         private readonly List<PointInfo> pointInfos = new();
         // 战斗上下文
         private IBattleContext context;
-        // 当前怪物数量
-        private int currentMonsterCount;
+        // 上次场上存活怪物数量
+        private int _lastLiveMonesterCount;
 
         /// <summary>
         /// 场景上的战斗点
@@ -39,18 +39,18 @@ namespace HotUpdate.Game.Battle.Core
         /// 初始化战斗点对象
         /// </summary>
         /// <param name="context"></param>
-        /// <param name="players"></param>
-        public void InitProxy(IBattleContext context, List<IBattleEntityObject> players)
+        /// <param name="roles"></param>
+        public void InitProxy(IBattleContext context, List<IBattleEntityObject> roles)
         {
             var index = 0;
-            foreach (var roleTrans in BattlePoint.GetRoleTransforms())
+            foreach (var roleTrans in BattlePoint.RoleTrans)
             {
-                if (index >= players.Count)
+                if (index >= roles.Count)
                 {
                     break;
                 }
                 
-                var pointInfo = new PointInfo(roleTrans, players[index], monstetCenterXs[index]);
+                var pointInfo = new PointInfo(roleTrans, roles[index], monstetCenterXs[index]);
                 pointInfos.Add(pointInfo);
                 index++;
             }
@@ -71,16 +71,16 @@ namespace HotUpdate.Game.Battle.Core
 
         public Transform GetRoleCameraRoot(PlayerObject playerObject)
         {
-            return BattlePoint.GetRoleCameraTransByIndex(playerObject.EntityPosIndex);
+            return BattlePoint.RoleCamerasTrans[playerObject.EntityPosIndex];
         }
 
         public Transform GetRoleTransByIndex(int index)
         {
-            return BattlePoint.GetRoleTransByIndex(index);
+            return BattlePoint.RoleTrans[index];
         }
 
         /// <summary>
-        /// 更新怪物中心位置
+        /// 更新怪物中心位置，确保怪物整体能显示在角色的右方
         /// </summary>
         /// <param name="playerRole">释放技能的玩家角色对象</param>
         private void UpdateMonsterCenter(IBattleEntityObject playerRole)
@@ -92,16 +92,14 @@ namespace HotUpdate.Game.Battle.Core
         }
 
         /// <summary>
-        /// 排序怪物相对位置
+        /// 排序怪物相对位置，整体居中显示
         /// </summary>
         private void SortMonsterTrans()
         {
-            // 更新怪物之间的相对位置，居中显示
+            // 更新怪物之间的相对位置
             var newLiveCount = context.GetAliveMonsterEntitys().Count();
-            if (currentMonsterCount == newLiveCount)
-            {
+            if (_lastLiveMonesterCount == newLiveCount)
                 return;
-            }
 
             var monsters = context.SceneMonsterObjects;
             switch (newLiveCount)
@@ -112,8 +110,7 @@ namespace HotUpdate.Game.Battle.Core
                     // 更新位置索引
                     var monster = monsters[0];
                     monster.EntityPosIndex = 2;
-                    // 设置父对象
-                    monster.GameObject.transform.SetParent(BattlePoint.GetMonsterTransByIndex(2), false);
+                    monster.GameObject.transform.SetParent(BattlePoint.MonsterTrans[2], false);
                     break;
                 }
                 case 2:
@@ -123,8 +120,7 @@ namespace HotUpdate.Game.Battle.Core
                         var index = i + 2;
                         var monster = monsters[i];
                         monster.EntityPosIndex = index;
-                        // 设置父对象
-                        monster.GameObject.transform.SetParent(BattlePoint.GetMonsterTransByIndex(index), false);
+                        monster.GameObject.transform.SetParent(BattlePoint.MonsterTrans[index], false);
                     } 
                     break;
                 case 3:
@@ -134,8 +130,7 @@ namespace HotUpdate.Game.Battle.Core
                         var index = i + 1;
                         var monster = monsters[i];
                         monster.EntityPosIndex = index;
-                        // 设置父对象
-                        monster.GameObject.transform.SetParent(BattlePoint.GetMonsterTransByIndex(index), false);
+                        monster.GameObject.transform.SetParent(BattlePoint.MonsterTrans[index], false);
                     } 
                     break;
                 case 4:
@@ -147,13 +142,14 @@ namespace HotUpdate.Game.Battle.Core
                         var monster = monsters[i];
                         monster.EntityPosIndex = index;
                         // 设置父对象
-                        monster.GameObject.transform.SetParent(BattlePoint.GetMonsterTransByIndex(index), false);
+                        monster.GameObject.transform.SetParent(BattlePoint.MonsterTrans[index], false);
                     }
 
                     break;
                 }
             }
-            currentMonsterCount = newLiveCount;
+            
+            _lastLiveMonesterCount = newLiveCount;
         }
 
         public void Reset()
@@ -161,6 +157,7 @@ namespace HotUpdate.Game.Battle.Core
             pointInfos.Clear();
             context = null;
             _battlePoint = null;
+            _lastLiveMonesterCount = -1;
         }
     }
 }

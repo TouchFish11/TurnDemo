@@ -172,16 +172,17 @@ namespace Core.Mono
                     if (i1.QuitPriority < i2.QuitPriority) return -1;
                     return 0;
                 });
-                
+
+                var snapshot = new List<IApplicationExitNotify>(_applicationExits);
                 // 依次执行退出逻辑
-                foreach (var applicationExitNotify in _applicationExits)
+                foreach (var applicationExitNotify in snapshot)
                 {
                     applicationExitNotify?.OnAppQuit();
                 }
             }
             catch (Exception e)
             {
-                Logger.LogError(ELogTags.System, $"{nameof(MonoAdapter)}: Application exit logic execution error,{e.Message}");
+                Logger.LogError(ELogTags.MonoApdater, $"{nameof(MonoAdapter)}: Application exit logic execution error,{e.Message}");
             }
         }
 
@@ -189,14 +190,15 @@ namespace Core.Mono
         {
             try
             {
-                foreach (var applicationPauseNotify in _applicationPauses)
+                var snapshot = new List<IApplicationPauseNotify>(_applicationPauses);
+                foreach (var applicationPauseNotify in snapshot)
                 {
                     applicationPauseNotify?.OnAppPause(pauseStatus);
                 }
             }
             catch (Exception e)
             {
-                Logger.LogError(ELogTags.System, $"{nameof(MonoAdapter)}: Application logic when a suspend/resume mistake,{e.Message}");
+                Logger.LogError(ELogTags.MonoApdater, $"{nameof(MonoAdapter)}: Application logic when a suspend/resume mistake,{e.Message}");
             }
         }
 
@@ -204,14 +206,15 @@ namespace Core.Mono
         {
             try
             {
-                foreach (var applicationFocusNotify in _applicationFocus)
+                var snapshot = new List<IApplicationFocusNotify>(_applicationFocus);
+                foreach (var applicationFocusNotify in snapshot)
                 {
                     applicationFocusNotify.OnAppFocus(hasFocus);
                 }
             }
             catch (Exception e)
             {
-                Logger.LogError(ELogTags.System, $"{nameof(MonoAdapter)}: Application focus/out-of-focus logic error,{e.Message}");
+                Logger.LogError(ELogTags.MonoApdater, $"{nameof(MonoAdapter)}: Application focus/out-of-focus logic error,{e.Message}");
             }
         }
 

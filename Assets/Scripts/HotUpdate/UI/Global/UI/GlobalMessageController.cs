@@ -71,7 +71,7 @@ namespace HotUpdate.UI.Global.UI
             }
             catch (Exception e)
             {
-                Logger.LogError(TODO, $"{nameof(GlobalMessageController)}: Create message error,{e.Message}");
+                Logger.LogError(ELogTags.GameMassge, $"{nameof(GlobalMessageController)}: Create message error,{e.Message}");
             }
         }
     }

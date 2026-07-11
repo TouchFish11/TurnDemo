@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
+using Core.Pool;
 using Core.PreLoad;
 using Core.Serialize.Json;
-using Core.Utility;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Scene;
 using HotUpdate.Base.Service;
@@ -28,6 +28,7 @@ namespace HotUpdate.UI.Activity.EmbersCanon
         [Inject] private IActivityDataManager _activityDataManager;
         [Inject] private ObjectSpawner _objectSpawner;
         [Inject] private IIconService _iconService;
+        [Inject] private IPoolManager _poolManager;
         
         /// <summary>
         /// 初始化关卡
@@ -84,6 +85,8 @@ namespace HotUpdate.UI.Activity.EmbersCanon
                 },
                 OnBattleOver = async result =>
                 {
+                    BattleEntry.EndBattle();
+                    _poolManager.ClearAll();
                     // TODO:待处理
                     await _sceneGenerator.InitMainScene(-1);
                     await _playerManager.CreatePlayer(1001);

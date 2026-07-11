@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
+using Core.Log;
 using Core.UI.ViewController;
 using UnityEngine;
 using Logger = Core.Log.Logger;
@@ -90,7 +91,7 @@ namespace Core.UI
             }
             catch (Exception e)
             {
-                Logger.LogError(TODO, $"{nameof(UIManager)}.{nameof(CreateViewAsync)}: Create/Init panel error,{e.Message}");
+                Logger.LogError(ELogTags.UI, $"{nameof(UIManager)}.{nameof(CreateViewAsync)}: Create/Init panel error,{e.Message}");
                 return controller;
             }
         }
@@ -132,7 +133,7 @@ namespace Core.UI
                     return controller;
                 }
             }
-            Logger.LogError(TODO, $"{nameof(UIManager)}.{nameof(GetController)}: Controller({typeof(TController)}) is not found.");
+            Logger.LogError(ELogTags.UI, $"{nameof(UIManager)}.{nameof(GetController)}: Controller({typeof(TController)}) is not found.");
             return default;
         }
         

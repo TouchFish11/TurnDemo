@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
+using Core.Log;
 using Core.Mono;
+using Core.Tasks;
 using Core.Utility;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -34,7 +36,7 @@ namespace Core.Scene
                 // 检查是否包含指定路径的场景
                 if (!ContainPath(scenePath))
                 {
-                    Logger.LogError(TODO, $"不存在该场景路径：{scenePath}");
+                    Logger.LogError(ELogTags.Scene, $"不存在该场景路径：{scenePath}");
                     return;
                 }
                 
@@ -44,11 +46,11 @@ namespace Core.Scene
                 _monoAdapter.StartCoroutine(UpdateProgress_Cor(ao, onLoadProgress));
                 // 等待场景加载结束
                 await TaskUtility.WaitUntil(() => ao != null && ao.isDone);
-                Logger.LogDebug(TODO, $"{nameof(SceneManager)}.{nameof(LoadSceneAsync)}：场景({scenePath})加载结束");
+                Logger.LogDebug(ELogTags.Scene, $"场景({scenePath})加载结束");
             }
             catch (Exception exception)
             {
-                Logger.LogError(TODO, $"{nameof(SceneManager)}.{nameof(LoadSceneAsync)}：{exception.Message}");
+                Logger.LogError(ELogTags.Scene, $"{exception.Message}");
             }
         }
 

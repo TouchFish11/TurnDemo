@@ -31,19 +31,19 @@ namespace HotUpdate.Game.Battle.Core
         /// </summary>
         public static async Task StartBattle(BattleStartupParams battleStartupParams)
         {
-            // 创建战斗上下文
-            s_battleContext = DIContainer.Create<BattleContext>();
-            var battleEventBus = DIContainer.Create<BattleEventBus>();
-            var battleStateMachine = DIContainer.Create<BattleStateMachine>(parameterValues: s_battleContext);
-            s_battleContext.Init(battleEventBus, battleStateMachine);
-            
             // 首次构建（只会执行一次，因为 s_battleManagerInitializer 非空）
             if (s_battleManagerInitializer == null)
             {
                 BattleRegist();
                 s_battleManagerInitializer = DIContainer.Resolve<BattleManagerInitializer>();
             }
-
+            
+            // 创建战斗上下文
+            s_battleContext = DIContainer.Create<BattleContext>();
+            var battleEventBus = DIContainer.Create<BattleEventBus>();
+            var battleStateMachine = DIContainer.Create<BattleStateMachine>(parameterValues: s_battleContext);
+            s_battleContext.Init(battleEventBus, battleStateMachine);
+            
             // 同步初始化
             s_battleManagerInitializer.Init(s_battleContext);
             // 异步初始化

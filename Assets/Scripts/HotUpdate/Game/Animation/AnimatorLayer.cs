@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Core.Utility;
+using Core.Time;
 using HotUpdate.Base.Animation;
 
 namespace HotUpdate.Game.Animation

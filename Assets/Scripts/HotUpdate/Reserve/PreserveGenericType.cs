@@ -10,7 +10,7 @@ namespace HotUpdate.Reserve
     {
         public static void GenericFunc()
         {
-            List<PointInfo> points = new List<PointInfo>();
+            //List<PointInfo> points = new List<PointInfo>();
         }
     }
 }

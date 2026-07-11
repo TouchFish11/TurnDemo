@@ -61,7 +61,7 @@ namespace HotUpdate.UI.Main.Logic
             }
             catch (Exception e)
             {
-                Logger.LogError(TODO, $"{nameof(InteractLogic)}.{nameof(CreateInteract)}: {e.Message}");
+                Logger.LogError(ELogTags.Interact, $"{nameof(InteractLogic)}.{nameof(CreateInteract)}: {e.Message}");
             }
         }
 

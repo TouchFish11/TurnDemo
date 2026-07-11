@@ -4,15 +4,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
+using Core.Log;
 using Core.Mono;
 using Core.UI;
-using Core.Utility;
 using HotUpdate.Base.Service;
-
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Damage;
-using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Monster;
 using HotUpdate.Game.Battle.Object.Role;
@@ -29,7 +27,7 @@ using BattlePointUI = HotUpdate.UI.Battle.BattlePoint.BattlePointUI;
 using Logger = Core.Log.Logger;
 using Random = UnityEngine.Random;
 using SkillKeyUI = HotUpdate.UI.Battle.SkillKey.SkillKeyUI;
-using TaskUtility = Core.Utility.TaskUtility;
+using TaskUtility = Core.Tasks.TaskUtility;
 
 namespace HotUpdate.UI.Battle.Base
 {
@@ -44,6 +42,7 @@ namespace HotUpdate.UI.Battle.Base
         [Inject] private IUIManager _uiManager;
         [Inject] private IMonoAdapter _monoAdapter;
         [Inject] private IconService _iconService;
+        [Inject] private IBattleManager _battleManager;
         
         #region 私有字段
         // 战斗界面视图层引用
@@ -114,7 +113,7 @@ namespace HotUpdate.UI.Battle.Base
                 yield return s_waitForSeconds0_5;
 
                 // 触发退出战斗事件
-                context.EventBus.TriggerEvent(new QuitBattleEvent(context, _controller));
+                _battleManager.QuitBattle(_controller.PanelId);
             }
         }
 
@@ -232,7 +231,7 @@ namespace HotUpdate.UI.Battle.Base
             }
             catch (Exception e)
             {
-                Logger.LogError(TODO, $"{nameof(BattleUIManager)}.{nameof(ShowShieldText)}：{e.Message}");
+                Logger.LogError(ELogTags.Battle, $"{nameof(BattleUIManager)}.{nameof(ShowShieldText)}：{e.Message}");
             }
         }
 
@@ -295,7 +294,7 @@ namespace HotUpdate.UI.Battle.Base
             }
             catch (Exception e)
             {
-                Logger.LogError(TODO, $"{nameof(BattleUIManager)}:{e.Message}");
+                Logger.LogError(ELogTags.Battle, $"{nameof(BattleUIManager)}:{e.Message}");
             }
         }
 
@@ -385,7 +384,7 @@ namespace HotUpdate.UI.Battle.Base
             }
             catch (Exception e)
             {
-                Logger.LogError(TODO, $"[{nameof(BattleUIManager)}]: {e.Message}");
+                Logger.LogError(ELogTags.Battle, $"[{nameof(BattleUIManager)}]: {e.Message}");
             }
         }
 
@@ -412,7 +411,7 @@ namespace HotUpdate.UI.Battle.Base
             }
             catch (Exception e)
             {
-                Logger.LogDebug(TODO, $"{nameof(BattleUIManager)}: {e.Message}");
+                Logger.LogDebug(ELogTags.Battle, $"{e.Message}");
             }
         }
 
@@ -490,7 +489,7 @@ namespace HotUpdate.UI.Battle.Base
             }
             catch (Exception e)
             {
-                Logger.LogError(TODO, $"{typeof(BattleUIManager)}: Update action axis ui error,{e.Message}");
+                Logger.LogError(ELogTags.Battle, $"{typeof(BattleUIManager)}: Update action axis ui error,{e.Message}");
             }
         }
 
@@ -748,7 +747,7 @@ namespace HotUpdate.UI.Battle.Base
                     break;
                 default:
                     // 未实现的实体类型：输出日志警告
-                    Logger.LogDebug(TODO, $"未实现该类型实体的图标获取逻辑：{battleEntity}");
+                    Logger.LogDebug(ELogTags.Battle, $"未实现该类型实体的图标获取逻辑：{battleEntity}");
                     break;
             }
             

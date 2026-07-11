@@ -12,7 +12,7 @@ namespace HotUpdate.Game.Battle.ResponsibilityChain.DamageChain
         {
             if (!CanTakeDamage(request))
             {
-                Logger.LogDebug(TODO, $"{nameof(DamageJudgeHandler)}.{nameof(HandleRequest)}：不可受伤");
+                Logger.LogDebug(ELogTags.Battle, $"不可受伤");
                 return;
             }
             

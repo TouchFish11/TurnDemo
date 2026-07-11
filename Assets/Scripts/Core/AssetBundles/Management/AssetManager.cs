@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Core.Log;
 using UnityEngine;
 using UnityEngine.U2D;
 using Logger = Core.Log.Logger;
@@ -60,17 +61,17 @@ namespace Core.AssetBundles.Management
                 // 从资源目录中查找指定的资源路径
                 var mapEntry = _assetBundleManager.Catalog.GetEntry(key);
                 if (mapEntry == null)
-                    throw new NullReferenceException($"{nameof(GameAsset)}: key({key}) found entry is null");
+                    throw new NullReferenceException($"key({key}) found entry is null");
             
                 // 加载AB包
                 var bundleWrapper = _assetBundleManager.LoadBundle(mapEntry.bundleName);
                 if (bundleWrapper == null)
-                    throw new NullReferenceException($"{nameof(GameAsset)}: load {mapEntry.bundleName} AssetBundle failed");
+                    throw new NullReferenceException($"load {mapEntry.bundleName} AssetBundle failed");
             
                 // 加载资源
                 assetWrapper = bundleWrapper.LoadAsset<T>(key, mapEntry.assetName);
                 if (assetWrapper.IsNull)
-                    throw new NullReferenceException($"{nameof(GameAsset)}: load {mapEntry.assetName} failed, key({key})");
+                    throw new NullReferenceException($"load {mapEntry.assetName} failed, key({key})");
             
                 // 初始引用
                 assetWrapper.Retain();
@@ -79,7 +80,7 @@ namespace Core.AssetBundles.Management
             }
             catch (Exception e)
             {
-                Logger.LogError(TODO, $"[{nameof(AssetManager)}]: ({key})Asset load fail, {e.Message}");
+                Logger.LogError(ELogTags.Asset, $"[{nameof(AssetManager)}]: ({key})Asset load fail, {e.Message}");
                 return null;
             }
         }
@@ -135,7 +136,7 @@ namespace Core.AssetBundles.Management
             var entry = _assetBundleManager.Catalog.GetEntry(key);
             // 未找到抛出异常
             if (entry == null)
-                throw new NullReferenceException($"{nameof(GameAsset)}: '{key}' key found entry is null");
+                throw new NullReferenceException($"'{key}' key found entry is null");
             
             // 若条目是图片资源
             if (entry is SpriteAssetEntry spriteAssetEntry)

@@ -10,6 +10,11 @@ namespace Core.Mono
     /// </summary>
     public static class EngineUtility
     {
+        public static void DontDestroyOnLoad(Object target)
+        {
+            Object.DontDestroyOnLoad(target);
+        }
+        
         /// <summary>
         /// 创建Unity游戏对象
         /// </summary>

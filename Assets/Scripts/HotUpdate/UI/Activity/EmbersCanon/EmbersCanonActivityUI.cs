@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Core.Log;
 using Core.UI;
 using HotUpdate.UI.Activity.Base;
 using HotUpdate.UI.Activity.Common;
@@ -68,13 +69,13 @@ namespace HotUpdate.UI.Activity.EmbersCanon
             }
             catch (Exception e)
             {
-                Logger.LogError(TODO, $"{nameof(EmbersCanonActivityUI)}: Join activity error,{e.Message}");
+                Logger.LogError(ELogTags.Activity, $"{nameof(EmbersCanonActivityUI)}: Join activity error,{e.Message}");
             }
         }
 
         private void OnTriggerLimitTimeAward()
         {
-            Logger.LogDebug(TODO, $"限时奖励按钮点击");
+            Logger.LogDebug(ELogTags.Activity, $"限时奖励按钮点击");
         }
 
         private void OnSubViewClose()

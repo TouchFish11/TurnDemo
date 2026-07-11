@@ -1,3 +1,4 @@
+using Core.Log;
 using Core.Utility;
 using UnityEngine;
 using Logger = Core.Log.Logger;
@@ -32,7 +33,7 @@ namespace Core.Singleton
 
                             // 创建ScriptableObject实例
                             instance = CreateInstance<T>();
-                            Logger.LogDebug(TODO, $"{typeof(T).Name} was not found in {loadPath}. A new instance has been created.");
+                            Logger.LogDebug(ELogTags.SO, $"{typeof(T).Name} was not found in {loadPath}. A new instance has been created.");
                         }
                     }
                 }

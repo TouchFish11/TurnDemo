@@ -36,7 +36,7 @@ namespace HotUpdate.Game.Battle.TargetSelect.Strategys
             {
                 // 无有效目标：返回null，技能无法释放
                 case 0:
-                    Logger.LogError(TODO, $"无有效目标:{targetNum}，返回null。技能目标类型：{(E_SkillTargetType)skillInfo.f_SkillTargetType}，技能信息：{skillInfo.f_id}");
+                    Logger.LogError(ELogTags.Battle, $"无有效目标:{targetNum}，返回null。技能目标类型：{(E_SkillTargetType)skillInfo.f_SkillTargetType}，技能信息：{skillInfo.f_id}");
                     return null;
                 // 仅有1个有效目标：直接选中该目标
                 case 1:

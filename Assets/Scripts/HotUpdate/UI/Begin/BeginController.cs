@@ -234,7 +234,7 @@ namespace HotUpdate.UI.Begin
             }
             catch (Exception e)
             {
-                Logger.LogError(TODO, $"{nameof(BeginController)}.{nameof(OnUpdateOver)}：{e.Message}，{e.StackTrace}");
+                Logger.LogError(ELogTags.GameUpdate, $"{nameof(BeginController)}.{nameof(OnUpdateOver)}：{e.Message}，{e.StackTrace}");
             }
         }
 
@@ -279,7 +279,7 @@ namespace HotUpdate.UI.Begin
             }
             catch (Exception e)
             {
-                Logger.LogError(TODO, $"{nameof(BeginController)}.{nameof(EnterMain)}：{e.Message}，{e.StackTrace}");
+                Logger.LogError(ELogTags.GameUpdate, $"{nameof(BeginController)}.{nameof(EnterMain)}：{e.Message}，{e.StackTrace}");
             }
         }
         
@@ -298,7 +298,7 @@ namespace HotUpdate.UI.Begin
             }
             catch (Exception e)
             {
-                Logger.LogError(TODO, $"{nameof(BeginController)}.{nameof(OnButtonClick)}：{e.Message}，{e.StackTrace}");
+                Logger.LogError(ELogTags.GameUpdate, $"{nameof(BeginController)}.{nameof(OnButtonClick)}：{e.Message}，{e.StackTrace}");
             }
         }
     }

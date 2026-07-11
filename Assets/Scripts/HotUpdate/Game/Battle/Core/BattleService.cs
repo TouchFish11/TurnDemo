@@ -4,9 +4,8 @@ using System.Threading.Tasks;
 using Core.DI;
 using Core.Mono;
 using Core.Serialize.Binary;
-using Core.Utility;
+using Core.Tasks;
 using HotUpdate.Base.UI;
-
 using HotUpdate.Game.Battle.Command;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Event.UI;
@@ -65,15 +64,15 @@ namespace HotUpdate.Game.Battle.Core
         public async Task CreatePlayerRoles(params int[] roleIds)
         {
             var roles = new List<IBattleEntityObject>(roleIds.Length);
-            var playerTrans = new List<Transform>(_battlePointProxy.BattlePoint.GetRoleTransforms());
+            var playerTrans = new List<Transform>(_battlePointProxy.BattlePoint.RoleTrans);
             for (var i = 0; i < roleIds.Length; i++)
             {
                 var handler = DIContainer.Create<RoleDeathHandler>();
                 var roleId = roleIds[i];
                 var roleInfo = _binaryDataManager.GetConfig<RoleInfoContainer>(EConfigLoadType.Excel).dataDic[roleId];
-                var transform = playerTrans[i];
+                var root = playerTrans[i];
                 // 创建角色对象
-                var playerObject = await _roleFactory.CreateRole(roleId, transform);
+                var playerObject = await _roleFactory.CreateRole(roleId, root);
                 // 注入上下文，供角色内部组件使用
                 playerObject.RoleBattleInit(new RoleBattleInitData
                 {
@@ -85,7 +84,7 @@ namespace HotUpdate.Game.Battle.Core
                     TargetSelectStrategyFactory = _targetSelectStrategyFactory,
                     DeathHandler = handler
                 });
-                // 记录角色所在的位置索引
+                // 记录角色所在的场景位置索引
                 playerObject.EntityPosIndex = i;
                 // 设置角色层级
                 LayerUtility.SetLayerRecursively(playerObject.GameObject, LayerGeter.GetRoleLayerByIndex(i));
@@ -107,7 +106,7 @@ namespace HotUpdate.Game.Battle.Core
         public async Task<List<IBattleEntityObject>> CreateMonsters(int[] monsterIds)
         {
             var monsters = new List<IBattleEntityObject>(monsterIds.Length);
-            var monsterTrans = new List<Transform>(_battlePointProxy.BattlePoint.GetMonsterTransforms());
+            var monsterTrans = new List<Transform>(_battlePointProxy.BattlePoint.MonsterTrans);
             // 批量创建怪物
             if (monsterIds.Length == monsterTrans.Count)
             {

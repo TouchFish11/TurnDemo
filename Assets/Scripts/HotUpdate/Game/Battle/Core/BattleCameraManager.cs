@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
+using Core.Log;
 using Core.Mono;
 using Core.Serialize.Binary;
 using HotUpdate.Game.Battle.Context;
@@ -183,10 +184,10 @@ namespace HotUpdate.Game.Battle.Core
                 var currentMainTarget = hitInfo.collider.GetComponent<BattleObject>();
                 if (currentMainTarget)
                 {
-                    global::Core.Log.Logger.LogDebug(TODO, $"选中技能目标：{currentMainTarget.name}");
+                    global::Core.Log.Logger.LogDebug(ELogTags.Battle, $"选中技能目标：{currentMainTarget.name}");
                     return currentMainTarget;
                 }
-                global::Core.Log.Logger.LogWarning(TODO, "射线命中对象未挂载BattleObject组件");
+                global::Core.Log.Logger.LogWarning(ELogTags.Battle, "射线命中对象未挂载BattleObject组件");
             }
             
             return null;

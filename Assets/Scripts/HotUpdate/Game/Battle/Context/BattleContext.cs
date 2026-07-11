@@ -47,11 +47,12 @@ namespace HotUpdate.Game.Battle.Context
         /// <summary>
         /// 设置持有当前回合的行动实体
         /// </summary>
-        /// <param name="battleEntityObject"></param>
+        /// <param name="battleEntityObject">持有当前当前回合的实体对象，若死亡则为null</param>
         public void SetCurrentTurnOwner(IBattleEntityObject battleEntityObject)
         {
             CurrentTurnOwner = battleEntityObject;
-            EventBus.TriggerEvent(new SwitchEntityTurnEvent(this, battleEntityObject));
+            if(CurrentTurnOwner != null)
+                EventBus.TriggerEvent(new SwitchEntityTurnEvent(this, battleEntityObject));
         }
         
         public void ConsumeSkillPoint(int cost)

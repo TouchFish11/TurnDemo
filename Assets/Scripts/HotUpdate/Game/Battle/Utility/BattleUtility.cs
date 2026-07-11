@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Core.Log;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Object;
@@ -169,7 +170,7 @@ namespace HotUpdate.Game.Battle.Utility
                     finalTargets.AddRange(filterObjects);
                     break;
                 default:
-                    Logger.LogError(TODO, $"{nameof(rangeType)}, {rangeType}");
+                    Logger.LogError(ELogTags.Battle, $"{nameof(rangeType)}, {rangeType}");
                     break;
             }
         }

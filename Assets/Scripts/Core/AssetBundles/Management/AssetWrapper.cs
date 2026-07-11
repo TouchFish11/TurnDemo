@@ -84,7 +84,7 @@ namespace Core.AssetBundles.Management
                 return;
             }
 
-            Logger.LogWarning(TODO, $"[AssetWrapper]: '{AssetKey}' asset refCount repeated release");
+            Logger.LogWarning(ELogTags.Asset, $"'{AssetKey}' asset refCount repeated release");
         }
         
         /// <summary>

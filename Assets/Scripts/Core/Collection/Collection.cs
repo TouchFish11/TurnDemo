@@ -65,7 +65,7 @@ namespace Core.Collection
                 return true;
             }
 
-            Logger.LogError(ELogTags.System, $"已存在键{key}，值为{value}，添加失败");
+            Logger.LogError(ELogTags.Collection, $"已存在键{key}，值为{value}，添加失败");
             return false;
         }
 

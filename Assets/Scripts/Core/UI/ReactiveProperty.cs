@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using Core.Log;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
@@ -25,7 +26,7 @@ namespace Core.UI
             {
                 if (EqualityComparer<T>.Default.Equals(_value, value))
                 {
-                    Logger.LogDebug(TODO, $"[{nameof(ReactiveProperty<T>)}]: 相等性判断, {_value}");
+                    Logger.LogDebug(ELogTags.Reactive, $"相等性判断, {_value}");
                     return;
                 }
                 
@@ -147,7 +148,7 @@ namespace Core.UI
             _notifyDepth++;
             if (_notifyDepth > 20)
             {
-                Logger.LogError(TODO, $"检测到可能的无限递归，深度 {_notifyDepth}，请检查订阅逻辑！");
+                Logger.LogError(ELogTags.Reactive, $"检测到可能的无限递归，深度 {_notifyDepth}，请检查订阅逻辑！");
                 _notifyDepth--;
                 return; // 熔断
             }
@@ -164,7 +165,7 @@ namespace Core.UI
                 }
                 catch (Exception e)
                 {
-                    Logger.LogError(TODO, $"[{nameof(ReactiveProperty<T>)}]: callBack invoke error, {e.Message}");
+                    Logger.LogError(ELogTags.Reactive, $"[{nameof(ReactiveProperty<T>)}]: callBack invoke error, {e.Message}");
                 }
             }
 

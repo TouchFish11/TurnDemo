@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Core.DI;
+using Core.Log;
 using Core.Pool;
 using Core.Tasks.Awaiter;
 using UnityEngine;
@@ -245,7 +246,7 @@ namespace Core.Tasks
                 }
                 catch (Exception e)
                 {
-                    Logger.LogException(TODO, e);
+                    Logger.LogException(ELogTags.Task, e);
                 }
             }
         }

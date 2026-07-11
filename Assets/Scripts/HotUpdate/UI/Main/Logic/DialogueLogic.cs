@@ -36,7 +36,7 @@ namespace HotUpdate.UI.Main.Logic
             }
             catch (Exception e)
             {
-                Logger.LogError(TODO, $"{nameof(DialogueLogic)}.{nameof(Active)}：激活主界面错误，{e.Message}");
+                Logger.LogError(ELogTags.Dialogue, $"{nameof(DialogueLogic)}.{nameof(Active)}：激活主界面错误，{e.Message}");
             }
         }
 
@@ -52,7 +52,7 @@ namespace HotUpdate.UI.Main.Logic
             }
             catch (Exception e)
             {
-                Logger.LogError(TODO, $"{nameof(DialogueLogic)}.{nameof(InActive)}：隐藏主界面错误，{e.Message}");
+                Logger.LogError(ELogTags.Dialogue, $"{nameof(DialogueLogic)}.{nameof(InActive)}：隐藏主界面错误，{e.Message}");
             }
         }
 

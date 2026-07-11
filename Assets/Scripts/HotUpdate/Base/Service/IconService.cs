@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
+using Core.Log;
 using UnityEngine;
 using UnityEngine.U2D;
 using Logger = Core.Log.Logger;
@@ -65,7 +66,7 @@ namespace HotUpdate.Base.Service
             }
             catch (Exception e)
             {
-                Logger.LogError(TODO, $"[{nameof(IconService)}]: '{atlasKey}' asset load fail, {e.Message}");
+                Logger.LogError(ELogTags.Icon, $"[{nameof(IconService)}]: '{atlasKey}' asset load fail, {e.Message}");
                 return null;
             }
             finally
@@ -121,7 +122,7 @@ namespace HotUpdate.Base.Service
             }
             catch (Exception e)
             {
-                Logger.LogError(TODO, $"[{nameof(IconService)}]: '{iconKey}' asset load fail, {e.Message}");
+                Logger.LogError(ELogTags.Icon, $"[{nameof(IconService)}]: '{iconKey}' asset load fail, {e.Message}");
                 return null;
             }
             finally

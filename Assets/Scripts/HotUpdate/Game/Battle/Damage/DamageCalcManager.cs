@@ -4,7 +4,6 @@ using Core.Log;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage.Strategys;
 using HotUpdate.Game.Battle.Event.General;
-using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Skill;
 
@@ -56,7 +55,7 @@ namespace HotUpdate.Game.Battle.Damage
             else
             {
                 damageResult = default;
-                Logger.LogError(TODO, $"{nameof(DamageCalcManager)}.{nameof(CalcBrokenDamage)}：未注册伤害策略，{damageType}");
+                Logger.LogError(ELogTags.Battle, $"{nameof(DamageCalcManager)}.{nameof(CalcBrokenDamage)}：未注册伤害策略，{damageType}");
             }
         }
 
@@ -97,7 +96,7 @@ namespace HotUpdate.Game.Battle.Damage
             }
             else
             {
-                Logger.LogError(TODO, $"{nameof(DamageCalcManager)}.{nameof(CalcBrokenDamage)}：未注册击破伤害策略");
+                Logger.LogError(ELogTags.Battle, $"{nameof(DamageCalcManager)}.{nameof(CalcBrokenDamage)}：未注册击破伤害策略");
             }
         }
         
@@ -115,7 +114,7 @@ namespace HotUpdate.Game.Battle.Damage
             }
             else
             {
-                Logger.LogError(TODO, $"{nameof(DamageCalcManager)}.{nameof(CalcBrokenDamage)}：未注册Dot伤害策略");
+                Logger.LogError(ELogTags.Battle, $"{nameof(DamageCalcManager)}.{nameof(CalcBrokenDamage)}：未注册Dot伤害策略");
             }
         }
 

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Core.GlobalEvent;
 using Core.GlobalEvent.Events;
+using Core.Log;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
@@ -57,7 +58,7 @@ namespace HotUpdate.Game.Inputs
             // 记录请求来源并更新鼠标状态
             mouseVisibleSources.Push(source);
             UpdateMouseState();
-            Logger.LogDebug(TODO, $"{source}请求显示鼠标，来源数：{mouseVisibleSources.Count}");
+            Logger.LogDebug(ELogTags.Input, $"{source}请求显示鼠标，来源数：{mouseVisibleSources.Count}");
         }
 
         /// <summary>
@@ -76,7 +77,7 @@ namespace HotUpdate.Game.Inputs
             // 弹出栈顶来源并更新鼠标状态
             mouseVisibleSources.TryPop(out _);
             UpdateMouseState();
-            Logger.LogDebug(TODO, $"{source}释放鼠标显示，来源数：{mouseVisibleSources.Count}");
+            Logger.LogDebug(ELogTags.Input, $"{source}释放鼠标显示，来源数：{mouseVisibleSources.Count}");
         }
 
         /// <summary>

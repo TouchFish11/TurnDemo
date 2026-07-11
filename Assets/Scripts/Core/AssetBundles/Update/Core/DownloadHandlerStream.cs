@@ -51,9 +51,9 @@ namespace Core.AssetBundles.Update.Core
             }
             catch (System.Exception e)
             {
-                Logger.LogDebug(TODO, $"{nameof(DownloadHandlerStream)}.{nameof(CompleteContent)}：写入异常，文件流，{_fileStream.Name}：已被释放");
+                Logger.LogDebug(ELogTags.Network, $"写入异常，文件流，{_fileStream.Name}：已被释放");
                 CloseStream();
-                Logger.LogError(TODO, $"{nameof(DownloadHandlerStream)}.{nameof(ReceiveData)}: {e.Message}");
+                Logger.LogError(ELogTags.Network, $"{nameof(DownloadHandlerStream)}.{nameof(ReceiveData)}: {e.Message}");
                 return false;
             }
         }
@@ -64,11 +64,11 @@ namespace Core.AssetBundles.Update.Core
             try
             {
                 CloseStream();
-                Logger.LogDebug(TODO, $"{nameof(DownloadHandlerStream)}：下载完成，文件流'{path}'已被释放");
+                Logger.LogDebug(ELogTags.Network, $"下载完成，文件流'{path}'已被释放");
             }
             catch (System.Exception e)
             {
-                Logger.LogError(TODO, $"{nameof(DownloadHandlerStream)}：关闭流'{path}'失败, {e.Message}");
+                Logger.LogError(ELogTags.Network, $"{nameof(DownloadHandlerStream)}：关闭流'{path}'失败, {e.Message}");
                 _fileStream?.Dispose();
                 _fileStream = null;
             }
@@ -84,7 +84,7 @@ namespace Core.AssetBundles.Update.Core
             
             var path = _fileStream.Name;
             CloseStream();
-            Logger.LogDebug(TODO, $"{nameof(DownloadHandlerStream)}：已暂停文件流'{path}'");
+            Logger.LogDebug(ELogTags.Network, $"已暂停文件流'{path}'");
         }
         
         /// <summary>

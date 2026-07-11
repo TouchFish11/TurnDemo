@@ -1,6 +1,6 @@
 using System;
 
-namespace Core.Input.CoreListen
+namespace Core.Inputs.CoreListen
 {
     [Obsolete("ʹ��FrameworkInputSystem", true)]
     public class InputManager : IInputManager

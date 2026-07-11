@@ -1,3 +1,4 @@
+using Core.Log;
 using HotUpdate.Base.Animation;
 using HotUpdate.Base.Component;
 using HotUpdate.Game.Inputs;
@@ -40,7 +41,7 @@ namespace HotUpdate.Game.Animation.Component
                 return animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex(layerName));
             }
             
-            Logger.LogError(TODO, "动画控制器为null");
+            Logger.LogError(ELogTags.Main, "动画控制器为null");
             return new AnimatorStateInfo();
         }
 

@@ -1,4 +1,5 @@
 using System.Collections;
+using Core.Log;
 using HotUpdate.Base.Animation;
 using HotUpdate.Base.Component;
 using HotUpdate.Base.Utility;
@@ -56,7 +57,7 @@ namespace HotUpdate.Game.Animation.Component
         {
             if (!_animatorComponent.TryGetState(stateName, out var state))
             {
-                Logger.LogError(TODO, $"[{nameof(BattleAnimationComponent)}]: wait for {stateName} state fail, not found the state");
+                Logger.LogError(ELogTags.Battle, $"[{nameof(BattleAnimationComponent)}]: wait for {stateName} state fail, not found the state");
                 yield break;
             }
             
@@ -74,7 +75,7 @@ namespace HotUpdate.Game.Animation.Component
                 return animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex(layerName));
             }
             
-            Logger.LogError(TODO, "动画控制器为null");
+            Logger.LogError(ELogTags.Battle, "动画控制器为null");
             return new AnimatorStateInfo();
         }
         

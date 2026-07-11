@@ -1,6 +1,6 @@
 using System.Collections;
 using Core.DI;
-using Core.Utility;
+using Core.Tasks;
 using HotUpdate.Base.Animation;
 using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.VFX;

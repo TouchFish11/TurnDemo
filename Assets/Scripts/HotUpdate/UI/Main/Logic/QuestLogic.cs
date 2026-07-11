@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
+using Core.Log;
 using Core.Serialize.Json;
 using Core.Utility;
 using HotUpdate.Base.Manager;
@@ -36,7 +37,7 @@ namespace HotUpdate.UI.Main.Logic
             }
             catch (Exception e)
             {
-                Logger.LogError(TODO, $"{nameof(QuestLogic)}: QuestLogic init error,{e.Message}");
+                Logger.LogError(ELogTags.Quest, $"{nameof(QuestLogic)}: QuestLogic init error,{e.Message}");
             }
         }
 

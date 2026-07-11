@@ -25,5 +25,7 @@ namespace HotUpdate.Game.Battle.Core
         /// 清理战斗数据缓存
         /// </summary>
         void Reset();
+
+        void QuitBattle(int battlePanelId);
     }
 }

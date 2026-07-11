@@ -1,5 +1,6 @@
 using System;
 using Core.DI;
+using Core.Log;
 using Core.Serialize.Binary;
 using HotUpdate.Base.Animation;
 using HotUpdate.Base.UI;
@@ -85,7 +86,7 @@ namespace HotUpdate.Game.Battle.Event
             {
                 if (turnStartEvent.CurrentBattleEntity == null)
                 {
-                    Logger.LogError(TODO, $"{nameof(BattleEventScheduler)}: CurrentBattleEntity is null");
+                    Logger.LogError(ELogTags.Battle, $"{nameof(BattleEventScheduler)}: CurrentBattleEntity is null");
                     return;
                 }
 
@@ -130,7 +131,7 @@ namespace HotUpdate.Game.Battle.Event
             }
             catch (Exception e)
             {
-                Logger.LogError(TODO, $"[{nameof(BattleEventScheduler)}]: Round start event logic scheduling error,{e.Message}");
+                Logger.LogError(ELogTags.Battle, $"[{nameof(BattleEventScheduler)}]: Round start event logic scheduling error,{e.Message}");
             }
         }
 
@@ -171,7 +172,7 @@ namespace HotUpdate.Game.Battle.Event
             }
             catch (Exception e)
             {
-                Logger.LogError(TODO, $"{nameof(BattleEventScheduler)}: Character skill selection event scheduling logic execution error,{e.Message}");
+                Logger.LogError(ELogTags.Battle, $"{nameof(BattleEventScheduler)}: Character skill selection event scheduling logic execution error,{e.Message}");
             }
         }
         

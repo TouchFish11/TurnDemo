@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Core.Log;
 using Core.Mono;
+using Core.Time;
 using Core.Utility;
 using UnityEngine;
 using Logger = Core.Log.Logger;
@@ -79,7 +81,7 @@ namespace Core.Pool
         {
             if (typeof(T) != _objectType && !typeof(T).IsAssignableFrom(_objectType))
             {
-                Logger.LogError(TODO, $"[{nameof(ObjectPool)}]: Type mismatch: requested {typeof(T)}, pool stores {_objectType}");
+                Logger.LogError(ELogTags. Pool, $"[{nameof(ObjectPool)}]: Type mismatch: requested {typeof(T)}, pool stores {_objectType}");
                 return null;
             }
             

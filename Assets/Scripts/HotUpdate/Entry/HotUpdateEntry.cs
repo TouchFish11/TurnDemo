@@ -10,9 +10,10 @@ using HotUpdate.Base.Module;
 using HotUpdate.Base.Settings;
 using HotUpdate.Base.UI;
 using HotUpdate.Common.Config.Settings;
-using HotUpdate.Game;
+using HotUpdate.Game.Main;
 using HotUpdate.UI.Begin;
 using UnityEngine;
+using UnityEngine.Scripting;
 using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Entry
@@ -20,6 +21,7 @@ namespace HotUpdate.Entry
     /// <summary>
     /// 热更新入口
     /// </summary>
+    [Preserve]
     public class HotUpdateEntry : MonoBehaviour
     {
         private IUIService _uiService;
@@ -49,7 +51,7 @@ namespace HotUpdate.Entry
             }
             catch (Exception e)
             {
-                Logger.LogError(ELogTags.HotUpdate, $"{nameof(HotUpdateEntry)}: hotfix entry error,{e.Message}");
+                Logger.LogError(ELogTags.HotUpdateEntry, $"{nameof(HotUpdateEntry)}: hotfix entry error,{e.Message}");
             }
         }
 
@@ -74,7 +76,7 @@ namespace HotUpdate.Entry
             }
             catch (Exception e)
             {
-                Logger.LogError(ELogTags.HotUpdate, $"{nameof(HotUpdateEntry)}: Error occurred while running the hot update entry,{e.Message}");
+                Logger.LogError(ELogTags.HotUpdateEntry, $"{nameof(HotUpdateEntry)}: Error occurred while running the hot update entry,{e.Message}");
             }
         }
 
@@ -110,7 +112,7 @@ namespace HotUpdate.Entry
             }
             catch (Exception e)
             {
-                Logger.LogError(ELogTags.HotUpdate, $"{nameof(HotUpdateEntry)}:Entry game error, {e.Message}");
+                Logger.LogError(ELogTags.HotUpdateEntry, $"{nameof(HotUpdateEntry)}:Entry game error, {e.Message}");
             }
         }
     }

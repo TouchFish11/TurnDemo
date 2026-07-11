@@ -22,7 +22,7 @@ namespace HotUpdate.Game.Battle.Skill.Factory
                 return targetSelectStrategy;
             }
             
-            Logger.LogError(TODO, $"未找到释放技能条件，{typeof(TCondition)}");
+            Logger.LogError(ELogTags.Battle, $"未找到释放技能条件，{typeof(TCondition)}");
             return null;
         }
     }

@@ -1,6 +1,6 @@
 using System;
 
-namespace Core.Input.CoreListen
+namespace Core.Inputs.CoreListen
 {
     /// <summary>
     /// ��������������

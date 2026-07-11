@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Core.Log;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
@@ -36,7 +37,7 @@ namespace Core.HotUpdate
                         continue;
                     
                     _assemblyNames.Add(assembly.GetName().Name);
-                    Logger.LogDebug(TODO, $"{nameof(HotUpdateMockManager)}.{nameof(LoadAssembliesAsync)}: Editor found hotfix dll({dllText.name})");
+                    Logger.LogDebug(ELogTags.HotUpdate, $"Editor found hotfix dll({dllText.name})");
                 }
             }
             return Task.CompletedTask;
@@ -98,7 +99,7 @@ namespace Core.HotUpdate
             return assemblies.Count;
         }
         
-        public void LoadMetadataForAOTAssemblies(IReadOnlyList<string> aotDlls)
+        public void LoadMetadataForAOTAssemblies(Dictionary<string, byte[]> aotDlls)
         {
             // 编辑器下不需要补充元数据
         }

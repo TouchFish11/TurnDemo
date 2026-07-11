@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using HotUpdate.Game.Battle.Command;
 using HotUpdate.Game.Battle.Event;

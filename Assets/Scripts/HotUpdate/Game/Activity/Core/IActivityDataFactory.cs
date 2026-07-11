@@ -1,5 +1,4 @@
 using HotUpdate.Base.Data;
-using HotUpdate.Base.Factory;
 
 namespace HotUpdate.Game.Activity.Core
 {

@@ -4,9 +4,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Core.DI;
 using Core.Exceptions;
+using Core.Log;
 using Core.Tasks;
 using Core.Tasks.Extensions;
-using Core.Utility;
+using Core.Time;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 using Object = UnityEngine.Object;
@@ -120,11 +121,11 @@ namespace Core.AssetBundles.Management
                 // 加载AB包
                 AssetBundle = AssetBundle.LoadFromFile(LoadPath);
                 IsActive = true;
-                Logger.LogDebug(TODO, $"[BundleWrapper]: '{BundleName}' assetBundle is load");
+                Logger.LogDebug(ELogTags.Asset, $"'{BundleName}' assetBundle is load");
             }
             catch (Exception e)
             {
-                Logger.LogError(TODO, $"[BundleWrapper]: '{BundleName}' assetBundle Load fail, {e.Message}");
+                Logger.LogError(ELogTags.Asset, $"[BundleWrapper]: '{BundleName}' assetBundle Load fail, {e.Message}");
             }
         }
         
@@ -179,7 +180,7 @@ namespace Core.AssetBundles.Management
             {
                 AssetBundle = await assetBundleCreateRequestTaskHandle.Task;
                 IsActive = true;
-                //Logger.Log($"[{nameof(BundleWrapper)}]: '{BundleName}' assetBundle is load");
+                Logger.LogDebug(ELogTags.Asset, $"'{BundleName}' assetBundle is load");
                 return true;
             }
             catch (Exception e) when(e is not OperationCanceledException)
@@ -320,7 +321,7 @@ namespace Core.AssetBundles.Management
         public void Retain()
         {
             ++RefCount;
-            //Logger.Log($"[{nameof(BundleWrapper)}]: '{BundleName}' assetBundle is referenced, refCount updated to {RefCount}");
+            Logger.LogDebug(ELogTags.Asset, $"'{BundleName}' assetBundle is referenced, refCount updated to {RefCount}");
         }
 
         /// <summary>
@@ -332,7 +333,7 @@ namespace Core.AssetBundles.Management
             if (RefCount > 0)
             {
                 --RefCount;
-                //Logger.Log($"[BundleWrapper]: '{BundleName}' assetBundle is released, refCount updated to {RefCount}");
+                Logger.LogDebug(ELogTags.Asset, $"'{BundleName}' assetBundle is released, refCount updated to {RefCount}");
                 
                 if (RefCount != 0) 
                     return;
@@ -343,7 +344,7 @@ namespace Core.AssetBundles.Management
                 return;
             }
 
-            Logger.LogWarning(TODO, $"[{nameof(BundleWrapper)}]: '{BundleName}' assetBundle refCount repeated release");
+            Logger.LogWarning(ELogTags.Asset, $"'{BundleName}' assetBundle refCount repeated release");
         }
 
         /// <summary>
@@ -375,7 +376,7 @@ namespace Core.AssetBundles.Management
                 await taskHandle.Task;
                 // 卸载完成后置空
                 AssetBundle = null;
-                Logger.LogDebug(TODO, $"[BundleWrapper]: '{BundleName}' is unload, final refCount is {RefCount}");
+                Logger.LogDebug(ELogTags.Asset, $"'{BundleName}' is unload, final refCount is {RefCount}");
             }
             catch (Exception e)
             {

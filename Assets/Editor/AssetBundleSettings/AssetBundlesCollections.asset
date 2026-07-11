@@ -137,9 +137,9 @@ MonoBehaviour:
       hash: 97a5ed68862d9d45cdedaffb145b38c2ff28bbca743a52a5e5a8ecedfd4576a4
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Default\Entry\HotUpdateEntry.prefab
-      size: 1333
+      size: 1335
       name: HotUpdateEntry.prefab
-      hash: 5bc03d17d19d58f0a3319bbebecedad7f1930c572c0b6f383e625c8ed2124b7c
+      hash: 5f84377fb23b98779ae3095ff4d02ec2f398df6fdfc8df4ba768aa5f87b1bc0c
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Default\Material\StarSkybox.mat
       size: 3061
@@ -338,29 +338,66 @@ MonoBehaviour:
   - assetBundleName: hotupdate
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Base.dll.bytes
-      size: 37888
+      size: 55296
       name: HotUpdate.Base.dll.bytes
-      hash: 38ce8d8f93e86ffd0f344e94aa1b0a4b8b62e0a6ccd3d372eeb8c56159a88965
+      hash: deac10a332a193948281475d0bb17196b297fbbcc148ce090100191b99d5e7fb
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Common.dll.bytes
-      size: 35328
+      size: 36352
       name: HotUpdate.Common.dll.bytes
-      hash: b01e550ae3e47b348f0730c2e235a45cbdb69b086052c3514e642d56faa21d2a
+      hash: ddda01a30e523d09b0ed2c8cf38232bcdf10d0925b5a9a0b8eef03006bf65ba8
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Game.dll.bytes
-      size: 342016
+      size: 401920
       name: HotUpdate.Game.dll.bytes
-      hash: f9dd7637349b343105fc61e968b90f6781728e0f4b2a1c63ce47d2d75a03c1db
+      hash: dfaf9d3b92ae0542288a0a5189720ed6a9204b0f887adb33bdaa19fa35734384
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.UI.dll.bytes
-      size: 158208
+      size: 202752
       name: HotUpdate.UI.dll.bytes
-      hash: cb6b1d9bc562b148fd478b539949233103a90a51530fe8e2e82980fdaada7ac2
+      hash: 10bd7d38e6306608ff0ce1728249647ccceb9f702a750a7d7fdc795e9d79fa9c
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdateAssemblySettings.json
       size: 311
       name: HotUpdateAssemblySettings.json
       hash: bb9400189a9a86eb71270767bf2c9ae8cf7bba690430b2caf09e3b06471eecbc
+      assetType: 0
+  - assetBundleName: hotupdateaot
+    assetInfos:
+    - assetPath: Assets\Editor\ArtRes\HotUpdateAOT\CoreModule.dll.bytes
+      size: 327680
+      name: CoreModule.dll.bytes
+      hash: 1da1fb064c10aca232f79e3a472c9ee6406c34aab1f1d2dd7f4708535036f9ad
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\HotUpdateAOT\mscorlib.dll.bytes
+      size: 2390016
+      name: mscorlib.dll.bytes
+      hash: 7b3ece2c36b2e95c67db88b4fc2248eb58d36ff7dc3be714162bda20b8a386e7
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\HotUpdateAOT\System.Core.dll.bytes
+      size: 471552
+      name: System.Core.dll.bytes
+      hash: ee39909b2c3c78f661af038b21753f8e531c3b76e3d4fb0f9ba31d518217a6bc
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\HotUpdateAOT\Unity.InputSystem.dll.bytes
+      size: 1244672
+      name: Unity.InputSystem.dll.bytes
+      hash: 551045f03cacb0c6e815dbbef180b20e7f4667e342d4894a2af918b3be7db20e
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\HotUpdateAOT\Unity.VisualScripting.Core.dll.bytes
+      size: 654848
+      name: Unity.VisualScripting.Core.dll.bytes
+      hash: d370ea7f4b6aa6bc8bcacdf35d48a8a2acc993eb3f2706b19f8bc8c37f7c847f
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\HotUpdateAOT\UnityEngine.AssetBundleModule.dll.bytes
+      size: 13312
+      name: UnityEngine.AssetBundleModule.dll.bytes
+      hash: f1a8c4ab13cdfe47b3954ecc21b2d35454e3092ce9bb835defd9c9bae8d6f76d
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\HotUpdateAOT\UnityEngine.CoreModule.dll.bytes
+      size: 666624
+      name: UnityEngine.CoreModule.dll.bytes
+      hash: 8edcb0b4b149052cf7f1b53ab0a6591f0e79740552dbbe608878f0ec2cf36cfc
       assetType: 0
   - assetBundleName: material
     assetInfos:
@@ -520,9 +557,9 @@ MonoBehaviour:
   - assetBundleName: tmp_asset
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\TMP_Asset\MSYH_SDF.asset
-      size: 8508661
+      size: 7553
       name: MSYH_SDF.asset
-      hash: 387ab796b26f79ad517f989b5c25cfbb98cf7932c92dfd5c46bde52f151a1aa8
+      hash: 57a27797ae562a715d1bf52947b7cf9b1364fa1c318ded59c460e390f0fbcbbb
       assetType: 0
   - assetBundleName: ui
     assetInfos:

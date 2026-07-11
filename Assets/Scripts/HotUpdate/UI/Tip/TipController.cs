@@ -42,7 +42,7 @@ namespace HotUpdate.UI.Tip
             }
             catch (Exception e)
             {
-                Logger.LogError(TODO, $"[{nameof(TipController)}] create tip content prefab error, {e.Message}");
+                Logger.LogError(ELogTags.Tip, $"[{nameof(TipController)}] create tip content prefab error, {e.Message}");
             }
         }
     }

@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Core.Utility;
+using Core.Log;
+using Core.Tasks;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.Skill;
 using HotUpdate.Game.Battle.Object;
@@ -98,7 +99,7 @@ namespace HotUpdate.Game.Battle.Skill.Base
             // 拼接并打印所有目标信息（调试用）
             var sb = new StringBuilder();
             sb.AppendJoin('、', allTargets);
-            Logger.LogDebug(TODO, $"怪物选择目标: {sb}");
+            Logger.LogDebug(ELogTags.Battle, $"怪物选择目标: {sb}");
         }
     }
 }

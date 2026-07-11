@@ -3,6 +3,7 @@ using System.Collections;
 using System.Text;
 using Core.DI;
 using Core.GlobalEvent;
+using Core.Log;
 using Core.Mono;
 using Core.Serialize.Binary;
 using Core.UI;
@@ -85,7 +86,7 @@ namespace HotUpdate.Game.Dialogue
             }
             catch (Exception e)
             {
-                Logger.LogError(TODO, $"{nameof(DialogueManager)}: Start dialogue error,{e.Message}");
+                Logger.LogError(ELogTags.Dialogue, $"{nameof(DialogueManager)}: Start dialogue error,{e.Message}");
             }
         }
 

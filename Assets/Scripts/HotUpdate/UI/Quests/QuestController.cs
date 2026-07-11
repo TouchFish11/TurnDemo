@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
+using Core.Log;
 using Core.Serialize.Json;
 using Core.UI.ViewController;
 using Core.Utility;
@@ -285,7 +286,7 @@ namespace HotUpdate.UI.Quests
             }
             catch (Exception e)
             {
-                Logger.LogError(TODO, $"[{nameof(QuestController)}]: Update quest detail error,{e.Message}");
+                Logger.LogError(ELogTags.Quest, $"[{nameof(QuestController)}]: Update quest detail error,{e.Message}");
             }
         }
 

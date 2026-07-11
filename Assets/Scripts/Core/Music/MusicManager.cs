@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
+using Core.Log;
 using Core.Mono;
 using Core.Pool;
+using Core.Time;
 using Core.Utility;
 using UnityEngine;
 using Logger = Core.Log.Logger;
@@ -142,7 +144,7 @@ namespace Core.Music
         {
             if (!_backgroundMusic)
             {
-                Logger.LogError(TODO, $"{nameof(MusicManager)}:The background music player is Null and cannot perform the pause operation.");
+                Logger.LogError(ELogTags.Music, $"{nameof(MusicManager)}:The background music player is Null and cannot perform the pause operation.");
                 return;
             }
 
@@ -176,7 +178,7 @@ namespace Core.Music
         {
             if (!_backgroundMusic)
             {
-                Logger.LogError(TODO, $"{nameof(MusicManager)}:The background music player is Null and cannot perform the pause operation.");
+                Logger.LogError(ELogTags.Music, $"{nameof(MusicManager)}:The background music player is Null and cannot perform the pause operation.");
                 return;
             }
             _backgroundMusic.Stop();
@@ -189,7 +191,7 @@ namespace Core.Music
         {
             if (!_backgroundMusic)
             {
-                Logger.LogError(TODO, $"{nameof(MusicManager)}:The background music player is Null and cannot perform the pause operation.");
+                Logger.LogError(ELogTags.Music, $"{nameof(MusicManager)}:The background music player is Null and cannot perform the pause operation.");
                 return;
             }
             _backgroundMusic.Play();
@@ -203,7 +205,7 @@ namespace Core.Music
         {
             if (!_backgroundMusic)
             {
-                Logger.LogError(TODO, $"{nameof(MusicManager)}:The background music player is Null and cannot perform the pause operation.");
+                Logger.LogError(ELogTags.Music, $"{nameof(MusicManager)}:The background music player is Null and cannot perform the pause operation.");
                 return;
             }
             _backgroundMusic.volume = value;

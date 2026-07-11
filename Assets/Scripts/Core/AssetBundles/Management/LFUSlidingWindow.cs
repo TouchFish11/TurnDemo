@@ -1,4 +1,4 @@
-using Core.Utility;
+using Core.Time;
 
 namespace Core.AssetBundles.Management
 {

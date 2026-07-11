@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
+using Core.Log;
 using HybridCLR;
 using UnityEngine;
 using Logger = Core.Log.Logger;
@@ -31,13 +31,12 @@ namespace Core.HotUpdate
 
         }
         
-        public void LoadMetadataForAOTAssemblies(IReadOnlyList<string> aotDlls)
+        public void LoadMetadataForAOTAssemblies(Dictionary<string, byte[]> aotDlls)
         {
-            foreach (var aotDllName in aotDlls)
+            foreach (var (dllName, aotBytes) in aotDlls)
             {
-                var assemblyBytes = GetAssemblyBytes(aotDllName);
-                var errorCode = RuntimeApi.LoadMetadataForAOTAssembly(assemblyBytes, HomologousImageMode.SuperSet);
-                Logger.LogDebug(TODO, $"{nameof(HotUpdateManager)}.{nameof(LoadMetadataForAOTAssemblies)}:已补充元数据{aotDllName}，错误码:{errorCode}");
+                var errorCode = RuntimeApi.LoadMetadataForAOTAssembly(aotBytes, HomologousImageMode.SuperSet);
+                Logger.LogDebug(ELogTags.HotUpdate, $"已补充元数据{dllName}，错误码:{errorCode}");
             }
         }
 
@@ -191,25 +190,14 @@ namespace Core.HotUpdate
                 {
                     var assembly = Assembly.Load(bytes);
                     _assemblyNames.Add(assembly.GetName().Name);
-                    Logger.LogDebug(TODO, $"{nameof(HotUpdateManager)}.{nameof(LoadAssemblyAsyncInternal)}:已加载热更程序集{assembly.GetName().Name}");
+                    Logger.LogDebug(ELogTags.HotUpdate, $"已加载热更程序集{assembly.GetName().Name}");
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError($"{nameof(HotUpdateManager)}.{nameof(LoadAssemblyAsyncInternal)}:热更程序集加载错误{e.Message}");
-                    Logger.LogError(TODO, $"{nameof(HotUpdateManager)}.{nameof(LoadAssemblyAsyncInternal)}:热更程序集加载错误{e.Message}");
+                    Debug.LogError($"热更程序集加载错误{e.Message}");
+                    Logger.LogError(ELogTags.HotUpdate, $"{nameof(HotUpdateManager)}.{nameof(LoadAssemblyAsyncInternal)}:热更程序集加载错误{e.Message}");
                 }
             });
-        }
-        
-        /// <summary>
-        /// TODO：补充的程序集单独打包AB包加载
-        /// 获取程序集字节数组
-        /// </summary>
-        /// <param name="assemblyNameWithExtension">包含拓展名的程序集名称</param>
-        /// <returns></returns>
-        private static byte[] GetAssemblyBytes(string assemblyNameWithExtension)
-        {
-            return File.ReadAllBytes(Path.Combine(Application.streamingAssetsPath, $"{assemblyNameWithExtension}.bytes"));
         }
     }
 }

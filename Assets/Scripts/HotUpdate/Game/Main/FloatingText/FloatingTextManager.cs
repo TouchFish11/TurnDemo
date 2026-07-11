@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Core.AssetBundles.Management;
 using Core.DI;
+using Core.Log;
 using Core.Mono;
 using HotUpdate.Game.Interact;
 using UnityEngine;
@@ -98,7 +99,7 @@ namespace HotUpdate.Game.Main.FloatingText
             }
             catch (Exception e)
             {
-                Logger.LogError(TODO, $"{nameof(FloatingTextManager)}.{nameof(OnFixedUpdate)}：{e.Message}，{e.StackTrace}");
+                Logger.LogError(ELogTags.Main, $"{nameof(FloatingTextManager)}.{nameof(OnFixedUpdate)}：{e.Message}，{e.StackTrace}");
             }
         }
 

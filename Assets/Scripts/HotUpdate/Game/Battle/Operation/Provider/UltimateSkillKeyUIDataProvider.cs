@@ -7,7 +7,6 @@ using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Component;
-using HotUpdate.Game.Battle.UI;
 
 namespace HotUpdate.Game.Battle.Operation.Provider
 {
