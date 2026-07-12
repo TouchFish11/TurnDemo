@@ -340,34 +340,39 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Base.dll.bytes
       size: 55296
       name: HotUpdate.Base.dll.bytes
-      hash: deac10a332a193948281475d0bb17196b297fbbcc148ce090100191b99d5e7fb
+      hash: 85e74bf77221575077966f97e71e65a7d04291cf78735ae0b61aa3ac708b2994
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Common.dll.bytes
       size: 36352
       name: HotUpdate.Common.dll.bytes
-      hash: ddda01a30e523d09b0ed2c8cf38232bcdf10d0925b5a9a0b8eef03006bf65ba8
+      hash: f2f4aac4e0ab9d4b4b9002d92e87f9d80d720f99481066df51783b4d9b6102ee
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Entry.dll.bytes
+      size: 11776
+      name: HotUpdate.Entry.dll.bytes
+      hash: 4b06e292defde71cc54261e08ea4bccef1929f16ce32afbdb77ca3df6ee85d07
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Game.dll.bytes
       size: 401920
       name: HotUpdate.Game.dll.bytes
-      hash: dfaf9d3b92ae0542288a0a5189720ed6a9204b0f887adb33bdaa19fa35734384
+      hash: 09fcb35707d2e37e19bf6a1d75ba3f509cd206debc412d52156bb1dbee459118
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.UI.dll.bytes
       size: 202752
       name: HotUpdate.UI.dll.bytes
-      hash: 10bd7d38e6306608ff0ce1728249647ccceb9f702a750a7d7fdc795e9d79fa9c
+      hash: 6b5a80ec3390e04a26368d0db3144cee38e6d589a098ee2b6f639ff947f0d8a3
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdateAssemblySettings.json
-      size: 311
+      size: 504
       name: HotUpdateAssemblySettings.json
-      hash: bb9400189a9a86eb71270767bf2c9ae8cf7bba690430b2caf09e3b06471eecbc
+      hash: 98cd013ac5a798e3c4836455d20fb8775cf1166a98e18a7fd43ca282f481efd4
       assetType: 0
   - assetBundleName: hotupdateaot
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\HotUpdateAOT\CoreModule.dll.bytes
       size: 327680
       name: CoreModule.dll.bytes
-      hash: 1da1fb064c10aca232f79e3a472c9ee6406c34aab1f1d2dd7f4708535036f9ad
+      hash: b5c173fb591b45d07bda9dbefec5df5da45866ef146fbe63f8dac8c3aae6e856
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdateAOT\mscorlib.dll.bytes
       size: 2390016

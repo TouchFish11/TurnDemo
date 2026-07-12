@@ -6,7 +6,7 @@ namespace Core.AssetBundles.Update.Core
     /// 更新状态配置特性
     /// </summary>
     [AttributeUsage(AttributeTargets.Field)]
-    public class StateConfigAttribute : Attribute
+    public class UpdateStateConfigAttribute : Attribute
     {
         /// <summary>
         /// 执行顺序

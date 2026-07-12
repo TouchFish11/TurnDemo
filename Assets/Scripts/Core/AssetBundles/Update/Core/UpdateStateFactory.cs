@@ -43,7 +43,7 @@ namespace Core.AssetBundles.Update.Core
                 // 获取该枚举字段的FieldInfo
                 var fieldInfo = phaseEnum.GetType().GetField(phaseEnum.ToString());
                 // 从FieldInfo上获取特性
-                var stateConfigAttribute = fieldInfo.GetCustomAttribute<StateConfigAttribute>();
+                var stateConfigAttribute = fieldInfo.GetCustomAttribute<UpdateStateConfigAttribute>();
                 // 判断特性是否存在且启用
                 if (stateConfigAttribute != null && stateConfigAttribute.IsEnabled)
                 {
@@ -53,8 +53,8 @@ namespace Core.AssetBundles.Update.Core
             
             list.Sort((p1, p2) =>
             {
-                var stateConfigAttribute1 = p1.GetType().GetField(p1.ToString()).GetCustomAttribute<StateConfigAttribute>();
-                var stateConfigAttribute2 = p2.GetType().GetField(p2.ToString()).GetCustomAttribute<StateConfigAttribute>();
+                var stateConfigAttribute1 = p1.GetType().GetField(p1.ToString()).GetCustomAttribute<UpdateStateConfigAttribute>();
+                var stateConfigAttribute2 = p2.GetType().GetField(p2.ToString()).GetCustomAttribute<UpdateStateConfigAttribute>();
                 
                 if (stateConfigAttribute1.Order < stateConfigAttribute2.Order)
                 {

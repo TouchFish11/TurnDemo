@@ -1,5 +1,3 @@
-using System.IO;
-
 namespace Core.AssetBundles.Update.Exception
 {
     /// <summary>
@@ -7,11 +5,11 @@ namespace Core.AssetBundles.Update.Exception
     /// </summary>
     public class DriveShortageInsufficientException : UpdateException
     {
-        private DriveInfo _driveInfo;
+        private long RequireSize { get; }
         
-        public DriveShortageInsufficientException(DriveInfo driveInfo, string message) : base(message)
+        public DriveShortageInsufficientException(long requireSize, string message) : base(message)
         {
-            _driveInfo = driveInfo;
+            RequireSize = requireSize;
         }
     }
 }

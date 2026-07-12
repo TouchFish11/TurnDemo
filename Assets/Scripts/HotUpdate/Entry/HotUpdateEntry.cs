@@ -13,7 +13,6 @@ using HotUpdate.Common.Config.Settings;
 using HotUpdate.Game.Main;
 using HotUpdate.UI.Begin;
 using UnityEngine;
-using UnityEngine.Scripting;
 using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Entry
@@ -21,7 +20,6 @@ namespace HotUpdate.Entry
     /// <summary>
     /// 热更新入口
     /// </summary>
-    [Preserve]
     public class HotUpdateEntry : MonoBehaviour
     {
         private IUIService _uiService;
@@ -51,7 +49,7 @@ namespace HotUpdate.Entry
             }
             catch (Exception e)
             {
-                Logger.LogError(ELogTags.HotUpdateEntry, $"{nameof(HotUpdateEntry)}: hotfix entry error,{e.Message}");
+                Logger.LogException(ELogTags.HotUpdateEntry, e);
             }
         }
 
@@ -60,24 +58,17 @@ namespace HotUpdate.Entry
         /// </summary>
         private async Task Run()
         {
-            try
-            {
-                await _moduleService.InitModulesAsync();
-                // 初始化游戏设置
-                await InitSettings();
-                // 初始化UI管理器，创建画布和UI相机
-                await _uiManager.InitUIManagerAsync(AssetKeys.UIRoot);
-                // 显示开始界面
-                var controller = await _uiService.OpenAsync(EUIPanelId.BeginPanel, E_UILayer.Mid) as BeginController;
-                // 进入游戏
-                controller.OnClickEnterGame += EnterGame;
-                // 检查更新
-                controller.CheckUpdate();
-            }
-            catch (Exception e)
-            {
-                Logger.LogError(ELogTags.HotUpdateEntry, $"{nameof(HotUpdateEntry)}: Error occurred while running the hot update entry,{e.Message}");
-            }
+            await _moduleService.InitModulesAsync();
+            // 初始化游戏设置
+            await InitSettings();
+            // 初始化UI管理器，创建画布和UI相机
+            await _uiManager.InitUIManagerAsync(AssetKeys.UIRoot);
+            // 显示开始界面
+            var controller = await _uiService.OpenAsync(EUIPanelId.BeginPanel, E_UILayer.Mid) as BeginController;
+            // 进入游戏
+            controller.OnClickEnterGame += EnterGame;
+            // 检查更新
+            controller.CheckUpdate();
         }
 
         /// <summary>
@@ -112,7 +103,7 @@ namespace HotUpdate.Entry
             }
             catch (Exception e)
             {
-                Logger.LogError(ELogTags.HotUpdateEntry, $"{nameof(HotUpdateEntry)}:Entry game error, {e.Message}");
+                Logger.LogError(ELogTags.HotUpdateEntry, $"Entry game error, {e.Message}");
             }
         }
     }

@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: GlobalSettings
   m_EditorClassIdentifier: 
   hotUpdateLoadPath: 
-  filterLevel: 255
-  tag: -1
+  filterLevel: 59
+  tag: -8193
   writeLogMaxIntervalTime: 5
   isOpenLayout: 1
   uploadServerIp: 

@@ -51,7 +51,12 @@ namespace Core.HotUpdate
             {
                 foreach (var dllText in textAssets)
                 {
-                    if (nameWithExtension != dllText.name) continue;
+                    if (nameWithExtension != dllText.name)
+                    {
+                        Logger.LogWarning(ELogTags.HotUpdate, $"skip dll {dllText.name}");
+                        continue;
+                    }
+                    
                     // 多线程加载程序集
                     await LoadAssemblyAsyncInternal(dllText.bytes);
                 }
@@ -74,8 +79,7 @@ namespace Core.HotUpdate
                 DFS(dllName, dllDependencies);
             }
             
-            // 将依赖项提前，先加载依赖项
-            _sortDlls.Reverse();
+            Logger.LogDebug(ELogTags.HotUpdate, $"程序集依赖：{string.Join(',', _sortDlls)}");
             return;
 
             void DFS(string dllName, Dictionary<string, List<string>> dllDependencies)
@@ -194,8 +198,8 @@ namespace Core.HotUpdate
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError($"热更程序集加载错误{e.Message}");
-                    Logger.LogError(ELogTags.HotUpdate, $"{nameof(HotUpdateManager)}.{nameof(LoadAssemblyAsyncInternal)}:热更程序集加载错误{e.Message}");
+                    Logger.LogException(ELogTags.HotUpdate, e);
+                    throw;
                 }
             });
         }

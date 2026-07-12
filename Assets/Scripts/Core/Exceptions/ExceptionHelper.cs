@@ -41,5 +41,11 @@ namespace Core.Exceptions
             var exceptionMsg = $"[{Prefix} {ExceptionCode.InvalidHandleAccessErrorCode}]: Asset handle(id = {handleId}, version = {version} ) not valid";
             return new InvalidHandleAccessException(handleId, version, ExceptionCode.InvalidHandleAccessErrorCode, exceptionMsg, innerException);
         }
+
+        public static UICreateException ThrowUICreateException(Type uiType, Exception innerException)
+        {
+            var exceptionMsg = $"[{Prefix} {ExceptionCode.UIInitializeErrorCode}]: {uiType} Create/Init panel error";
+            return new UICreateException(uiType, ExceptionCode.UIInitializeErrorCode, exceptionMsg, innerException);
+        }
     }
 }

@@ -179,6 +179,7 @@ public static class AssetKeys
     public const string HotUpdateAssemblySettings = "HotUpdateAssemblySettings";
     public const string HotUpdate_UI = "HotUpdate.UI.dll";
     public const string HotUpdate_Game = "HotUpdate.Game.dll";
+    public const string HotUpdate_Entry = "HotUpdate.Entry.dll";
     public const string HotUpdate_Common = "HotUpdate.Common.dll";
     public const string HotUpdate_Base = "HotUpdate.Base.dll";
     public const string WizardAnimationConfigCollection = "WizardAnimationConfigCollection";

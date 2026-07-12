@@ -34,5 +34,10 @@ namespace Core.Exceptions
         /// 网络错误码
         /// </summary>
         public const int NetworkErrorCode = 1006;
+        
+        /// <summary>
+        /// UI初始化错误
+        /// </summary>
+        public const int UIInitializeErrorCode = 1007;
     }
 }

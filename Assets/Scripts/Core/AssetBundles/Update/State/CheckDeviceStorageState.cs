@@ -1,10 +1,8 @@
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using Core.AssetBundles.Collection;
 using Core.AssetBundles.Update.Core;
 using Core.AssetBundles.Update.Exception;
-using Core.Utility;
 
 namespace Core.AssetBundles.Update.State
 {
@@ -15,14 +13,6 @@ namespace Core.AssetBundles.Update.State
     {
         // 预留因子
         private const float ResidualFactor = 1.1f;
-        // 用户设备信息
-        private readonly DriveInfo _driveInfo;
-        
-        public CheckDeviceStorageState()
-        {
-            // 获取路径所在的驱动器（比如C:/、D:/）
-            _driveInfo = new DriveInfo(Path.GetPathRoot(PathUtility.LoadAbPath));
-        }
 
         public override Task<UpdateResult> Execute()
         {
@@ -52,32 +42,14 @@ namespace Core.AssetBundles.Update.State
                 assetBundleUpdater.GetContext().RemotePackageCollection,
                 assetBundleUpdater.GetContext().WaitDownloadCollection
             );
-            
-            // 检查驱动器是否就绪（减少不必要的异常）
-            if (!_driveInfo.IsReady)
-            {
-                throw new IOException($"驱动器未就绪：{_driveInfo.Name}");
-            }
-            
-            var requireStorageSize = downLoadTotalBytes * ResidualFactor;
+
+            var availableFreeSpace = StorageHelper.GetAvailableSpace();
+            var requireStorageSize = (long)(downLoadTotalBytes * ResidualFactor);
             // 可用空间小于要求大小
-            if (_driveInfo.AvailableFreeSpace < requireStorageSize)
+            if (availableFreeSpace < requireStorageSize)
             {
-                throw new DriveShortageInsufficientException(_driveInfo, GetDriveShortageInsufficientExceptionMessage());
+                throw new DriveShortageInsufficientException(requireStorageSize, "该路径存储空间不足");
             }
-        }
-
-        private string GetDriveShortageInsufficientExceptionMessage()
-        {
-            var sb = new StringBuilder();
-
-            sb.AppendLine($"用户设备类型：{_driveInfo.DriveType}，" +
-                          $"总空间：{TextUtility.ToByteUnit((ulong)_driveInfo.TotalSize)}，" +
-                          $"空闲空间：{TextUtility.ToByteUnit((ulong)_driveInfo.TotalFreeSpace)}，" +
-                          $"可用空闲空间：{TextUtility.ToByteUnit((ulong)_driveInfo.TotalFreeSpace)}，" +
-                          $"盘符：{_driveInfo.Name}");
-            
-            return sb.ToString();
         }
 
         public override EUpdatePhase UpdatePhase => EUpdatePhase.CheckDeviceStorage;

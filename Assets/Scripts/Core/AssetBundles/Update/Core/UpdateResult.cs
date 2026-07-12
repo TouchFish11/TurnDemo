@@ -1,5 +1,3 @@
-using Core.DI;
-using Core.Log;
 using Core.Pool;
 
 namespace Core.AssetBundles.Update.Core

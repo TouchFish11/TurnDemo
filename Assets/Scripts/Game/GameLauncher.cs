@@ -37,7 +37,7 @@ namespace Game
             }
             catch (Exception e)
             {
-                Logger.LogError(ELogTags.GameLauncher, $"{nameof(GameLauncher)}: Game startup failed, {e.Message}");
+                Logger.LogError(ELogTags.GameLauncher, $"Game startup failed, {e}");
             }
         }
         
@@ -48,8 +48,12 @@ namespace Game
         {
             if (bootConfig == null)
             {
-                Logger.LogError(ELogTags.GameLauncher, $"{nameof(GameLauncher)}:无法加载启动配置，使用默认硬编码包名");
-                bootConfig = new BootConfig { hotfixDllBundleName = "hotupdate.assetbundle" };
+                Logger.LogError(ELogTags.GameLauncher, $"无法加载启动配置，使用默认硬编码包名");
+                bootConfig = new BootConfig
+                {
+                    aotDllBundleName = "hotupdateaot.assetbundle",
+                    hotfixDllBundleName = "hotupdate.assetbundle"
+                };
             }
 
             IHotUpdateManager hotUpdateManager;
@@ -76,7 +80,7 @@ namespace Game
             var settings = DIContainer.Resolve<JsonManager>().FromJson<HotUpdateAssemblySettings>(settingsTextAsset.text);
             // 加载所有热更程序集
             await hotUpdateManager.LoadAssembliesAsync(settings, list);
-            Logger.LogDebug(ELogTags.GameLauncher, $"Load the hotfix assemblies complete!!!");
+            Logger.LogDebug(ELogTags.GameLauncher, $"Load the hotfix assemblies complete");
         }
         
         /// <summary>

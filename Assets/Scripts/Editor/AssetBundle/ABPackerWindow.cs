@@ -85,12 +85,8 @@ namespace Editor.AssetBundle
 
             hotUpdateAssemblies = new[]
             {
-                "HotUpdate.Common", "HotUpdate.Base","HotUpdate.Game","HotUpdate.UI","HotUpdate.Update",
+                "HotUpdate.Common", "HotUpdate.Base","HotUpdate.Game","HotUpdate.UI","HotUpdate.Entry",
             };
-            // baseHotUpdateAssemblies = new[]
-            // {
-            //     "HotUpdate.Common", "HotUpdate.Base","HotUpdate.Game","HotUpdate.UI","HotUpdate.Update",
-            // };
 
             minSize = new Vector2(1389, 725);
 
@@ -479,11 +475,11 @@ namespace Editor.AssetBundle
 
                 // 获取直接引用，并过滤掉引擎程序集
                 var deps = assembly.assemblyReferences
-                    .Select(d => d.name)
-                    .Where(d => !ignorePrefixes.Any(d.StartsWith))
+                    .Select(d => d.name + ".dll")   // 直接加后缀
+                    .Where(d => !ignorePrefixes.Any(d.StartsWith)) // 注意 lambda 别遮蔽
                     .ToList();
 
-                settings.dllDependencies[name] = deps;
+                settings.dllDependencies[$"{name}.dll"] = deps;
                 AppendToLog($"{name} -> 依赖: {string.Join(',', deps)}");
                 
                 // 因为手动将所有可能用到的程序集都添加为了直接引用，所以这个foreach可以不要，但是这并非通用做法，所以保留自动计算传递依赖

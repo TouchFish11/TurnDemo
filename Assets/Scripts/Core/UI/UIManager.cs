@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
+using Core.Exceptions;
 using Core.Log;
 using Core.UI.ViewController;
 using UnityEngine;
@@ -89,10 +90,9 @@ namespace Core.UI
                 _panels.Add(id, newInfo);
                 return controller;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Logger.LogError(ELogTags.UI, $"{nameof(UIManager)}.{nameof(CreateViewAsync)}: Create/Init panel error,{e.Message}");
-                return controller;
+                throw ExceptionHelper.ThrowUICreateException(typeof(TController), ex);
             }
         }
         

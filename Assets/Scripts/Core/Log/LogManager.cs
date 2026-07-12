@@ -100,7 +100,7 @@ namespace Core.Log
             if (_extraStaceStacks.Contains((logLevel, tag)))
             {
                 _logBuilder.Append($"[{condition}] ");
-                _logBuilder.Append($"stackTrace:{GetStackTrace(2)}");
+                _logBuilder.Append($"StackTrace:{GetStackTrace(2)}.");
             }
             _logBuilder.Append(Environment.NewLine);
             
@@ -137,8 +137,7 @@ namespace Core.Log
             _logBuilder.Append($"[{ELogLevel.Exception}] ");
             _logBuilder.Append($"[{tag}] ");
             _logBuilder.Append($"{Path.GetFileName(filePath)}:{lineNumber} ({memberName}) ");
-            _logBuilder.Append($":{exception.Message}.");
-            _logBuilder.Append($"stackTrace:{exception.StackTrace}");
+            _logBuilder.Append($":{exception}");
             _logBuilder.Append(Environment.NewLine);
             
 #if UNITY_EDITOR
@@ -163,7 +162,7 @@ namespace Core.Log
             }
             
             // 不同时满足条件，不记录该日志
-            if (((int)GlobalSettings.Instance.filterLevel & (int)logLevel) == 0 || 
+            if (((int)GlobalSettings.Instance.filterLevel & (int)logLevel) == 0 && 
                 ((int)GlobalSettings.Instance.tag & (int)tag) == 0)
             {
                 return false;

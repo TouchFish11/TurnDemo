@@ -20,7 +20,7 @@ namespace HotUpdate.UI.Begin
     /// </summary>
     public class BeginController : UIController<BeginView>
     {
-        [Inject] private readonly IAssetBundleUpdater _assetBundleUpdater;
+        [Inject] private IAssetBundleUpdater _assetBundleUpdater;
         [Inject] private IUIService _uiService;
         private string _speed;
 

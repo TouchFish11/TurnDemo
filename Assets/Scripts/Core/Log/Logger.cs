@@ -53,7 +53,7 @@ namespace Core.Log
         /// <param name="lineNumber"></param>
         public static void LogWarning(ELogTags tag, object msgWarning, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
         {
-            s_logManager.GenerateFormatLog(ELogLevel.Debug, tag, msgWarning.ToString(), memberName, filePath, lineNumber);
+            s_logManager.GenerateFormatLog(ELogLevel.Warning, tag, msgWarning.ToString(), memberName, filePath, lineNumber);
         }
 
         /// <summary>
