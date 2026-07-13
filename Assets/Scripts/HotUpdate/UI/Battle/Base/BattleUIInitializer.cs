@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
+using Core.Log;
 using Core.Mono;
 using Core.Serialize.Binary;
 
@@ -88,6 +89,8 @@ namespace HotUpdate.UI.Battle.Base
                 // 将初始化后的角色状态UI缓存到数据模型中
                 _view.RoleStateUIs.Add(roleStateUI);
             }
+            
+            Logger.LogDebug(ELogTags.Battle, $"Init player role ui finished");
         }
 
         /// <summary>
@@ -102,6 +105,8 @@ namespace HotUpdate.UI.Battle.Base
                 // 将初始化后的怪物UI缓存
                 await _battleController.MonsterStateUIManager.CreateNormalMonsterStateUI(battleEntity, _view.MonsterStateArea);
             }
+            
+            Logger.LogDebug(ELogTags.Battle, $"Init monster ui finished");
         }
 
         public void Dispose()

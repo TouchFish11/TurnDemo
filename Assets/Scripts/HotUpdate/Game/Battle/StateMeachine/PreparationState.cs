@@ -52,13 +52,13 @@ namespace HotUpdate.Game.Battle.StateMeachine
             }
             catch (Exception e)
             {
-                Logger.LogError(ELogTags.Battle, $"{nameof(PreparationState)}: Battle readiness execution error,{e.Message}");
+                Logger.LogException(ELogTags.Battle, e);
             }
         }
 
         public override void Exit()
         {
-            
+
         }
 
         protected override void OnDispose()

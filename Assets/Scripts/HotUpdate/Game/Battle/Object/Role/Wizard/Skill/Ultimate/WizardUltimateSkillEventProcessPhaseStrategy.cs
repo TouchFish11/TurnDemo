@@ -12,14 +12,17 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard.Skill.Ultimate
         protected override async Task OnTrigger(HitResult hitResult)
         {
             var projectileData = SkillContext.ProjectileData;
-            foreach (var target in projectileData.targets)
+            if (hitResult.IsFirstHit)
             {
-                foreach (var statusId in SkillContext.StatusIds)
+                foreach (var target in projectileData.targets)
                 {
-                    // 获取状态实例
-                    var status = statusFactory.GetStatus(projectileData.caster, target, statusId);
-                    // 添加状态
-                    target.GetComponent<StatusComponent>().AddStatus(status);
+                    foreach (var statusId in SkillContext.StatusIds)
+                    {
+                        // 获取状态实例
+                        var status = statusFactory.GetStatus(projectileData.caster, target, statusId);
+                        // 添加状态
+                        target.GetComponent<StatusComponent>().AddStatus(status);
+                    }
                 }
             }
             

@@ -54,7 +54,7 @@ namespace HotUpdate.Game.Battle.Core
             _battleInputHandler.Init(context);
             _battleEventScheduler.Init(context);
             _battleCameraManager.Init(context);
-            _battleCommandsController.Init(context, _battleManager);
+            _battleCommandsController.Init(context);
         }
         
         public async Task InitAsync(IBattleContext context, BattleStartupParams startupParams)

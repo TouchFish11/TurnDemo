@@ -52,7 +52,7 @@ namespace HotUpdate.Game.Battle.Projectile
         /// </summary>
         /// <param name="projectileData">抛射物配置数据</param>
         /// <param name="vFXInfo">特效配置信息</param>
-        public void Init(ProjectileData projectileData, VFXInfo vFXInfo)
+        public IEnumerator InitToStart(ProjectileData projectileData, VFXInfo vFXInfo)
         {
             // 赋值特效配置
             this.vFXInfo = vFXInfo;
@@ -61,10 +61,9 @@ namespace HotUpdate.Game.Battle.Projectile
             if(projectileData.SkillContext != null)
                 triggerTimes = TextUtility.SplitTofloatArr(projectileData.SkillContext.SkillInfo.f_dmgTimes, 2);
             // 播放VFX
-            StartCoroutine(ExecuteVFX());
+            yield return ExecuteVFX();
         }
         
-
         protected void InvokeOnTrigger(HitResult hitResult)
         {
             OnTrigger?.Invoke(hitResult);

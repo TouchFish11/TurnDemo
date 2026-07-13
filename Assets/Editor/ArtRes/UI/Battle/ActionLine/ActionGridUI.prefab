@@ -85,7 +85,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3029750556725743803}
   - component: {fileID: 890339993854061349}
-  - component: {fileID: 4942224530233239590}
+  - component: {fileID: -9058564451445455540}
   m_Layer: 5
   m_Name: ActionGridUI
   m_TagString: Untagged
@@ -123,7 +123,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2617262108100588149}
   m_CullTransparentMesh: 1
---- !u!114 &4942224530233239590
+--- !u!114 &-9058564451445455540
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

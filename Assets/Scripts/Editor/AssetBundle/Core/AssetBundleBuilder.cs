@@ -242,15 +242,6 @@ namespace Editor.AssetBundle.Core
             var finalJson = jsonManager.ToJson(finalCatalog, settings: NewtonsoftJsonUtility.SerializerSettings);
             File.WriteAllText(dstCatalogPath, finalJson);
             Log($"{AssetCatalogName} 已合并更新。");
-            
-            var scriptPath = Path.Combine(Application.dataPath, "Scripts", "HotUpdate", "Common", "Generated", "AssetKeys.cs");
-            AssetKeyGenerator.Generate(finalCatalog, scriptPath);
-            Log($"资源键常量已生成：{scriptPath}");
-            
-            // 生成 AB 包名常量
-            var bundleKeyScriptPath = Path.Combine(Application.dataPath, "Scripts", "HotUpdate", "Common", "Generated", "AssetBundleKeys.cs");
-            AssetBundleKeyGenerator.Generate(finalCatalog, bundleKeyScriptPath);
-            Log($"AssetBundleKeys 已生成：{bundleKeyScriptPath}");
 
             GenerateBootConfigAndCopyStreamingAssets(serverDataPath);
             

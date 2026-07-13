@@ -447,6 +447,8 @@ namespace HotUpdate.UI.Battle.Base
                 actionGridUI.SetActionValue(CalcRemainActionValue(context, battleEntity.ActionValue));
                 _view.ActionGridUis.Add(actionGridUI);
             }
+            
+            Logger.LogDebug(ELogTags.Battle, $"Init actionbar finished");
         }
         
         public async void InsertActionGridToTarget(IBattleContext context)
@@ -676,6 +678,8 @@ namespace HotUpdate.UI.Battle.Base
             _view.BattlePointUIs.AddRange(battlePointUIs);
             // 刷新文本数显示
             _view.UpdateBattlePointCount(current);
+            
+            Logger.LogDebug(ELogTags.Battle, $"Init battlePoint ui finished");
         }
 
         /// <summary>

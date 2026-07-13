@@ -75,10 +75,10 @@ namespace Core.UI
             string panelName, E_UILayer layer, Vector2 pos = default, Quaternion quaternion = default)
             where TView : UIView, IuiView where TController : class, IuiController
         {
-            // 初始化控制器
-            var controller = DIContainer.Create<TController>();
             try
             {
+                // 初始化控制器
+                var controller = DIContainer.Create<TController>();
                 // 获取面板
                 var viewObj = await _objectSpawner.SpawnAsync<TView>(panelName,GetLayer(layer), pos, quaternion);
                 // 生成该界面的唯一ID
@@ -88,6 +88,7 @@ namespace Core.UI
                 var newInfo = new PanelInfo<TView>(id, viewObj, controller);
                 // 存储面板信息
                 _panels.Add(id, newInfo);
+                Logger.LogDebug(ELogTags.UI, $"{panelName} created and init successfully");
                 return controller;
             }
             catch (Exception ex)
@@ -135,6 +136,11 @@ namespace Core.UI
             }
             Logger.LogError(ELogTags.UI, $"{nameof(UIManager)}.{nameof(GetController)}: Controller({typeof(TController)}) is not found.");
             return default;
+        }
+
+        public string GetPanelTypeName(int panelId)
+        {
+            return _panels.TryGetValue(panelId, out var panel) ? panel.Controller.GetType().Name : string.Empty;
         }
         
         public Task Clear()

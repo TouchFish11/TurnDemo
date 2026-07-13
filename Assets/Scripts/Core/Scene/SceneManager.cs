@@ -6,7 +6,6 @@ using Core.AssetBundles.Management;
 using Core.Log;
 using Core.Mono;
 using Core.Tasks;
-using Core.Utility;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -20,50 +19,58 @@ namespace Core.Scene
     public class SceneManager : ISceneManager
     {
         private readonly IMonoAdapter _monoAdapter;
-        // 场景路径缓存
-        private List<string> _scenePaths;
+        // 场景Key缓存
+        private List<string> _sceneKeys;
+        // 是否加载过场景数据
+        private bool _isLoadScene;
         
         private SceneManager(IMonoAdapter monoAdapter)
         {
             _monoAdapter = monoAdapter;
-            InitScenePaths();
+            InitSceneKeys();
         }
         
-        public async Task LoadSceneAsync(string scenePath, LoadSceneMode mode, [CanBeNull] Action<float> onLoadProgress)
+        public async Task LoadSceneAsync(string sceneKey, LoadSceneMode mode, [CanBeNull] Action<float> onLoadProgress)
         {
             try
             {
-                // 检查是否包含指定路径的场景
-                if (!ContainPath(scenePath))
+                if (!_isLoadScene)
                 {
-                    Logger.LogError(ELogTags.Scene, $"不存在该场景路径：{scenePath}");
+                    _isLoadScene = true;
+                    await GameAsset.LoadSceneAsync(sceneKey);
+                }
+                
+                // 检查是否包含指定路径的场景
+                if (!ContainPath(sceneKey))
+                {
+                    Logger.LogError(ELogTags.Scene, $"不存在该场景Key：{sceneKey}");
                     return;
                 }
                 
                 // 异步加载场景
-                var ao = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(scenePath, mode);
+                var ao = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneKey, mode);
                 // 开启更新进度协程
                 _monoAdapter.StartCoroutine(UpdateProgress_Cor(ao, onLoadProgress));
                 // 等待场景加载结束
                 await TaskUtility.WaitUntil(() => ao != null && ao.isDone);
-                Logger.LogDebug(ELogTags.Scene, $"场景({scenePath})加载结束");
+                Logger.LogDebug(ELogTags.Scene, $"场景({sceneKey})加载结束");
             }
             catch (Exception exception)
             {
-                Logger.LogError(ELogTags.Scene, $"{exception.Message}");
+                Logger.LogException(ELogTags.Scene, exception);
             }
         }
 
         /// <summary>
-        /// 初始化场景路径
+        /// 初始化场景Key
         /// </summary>
-        private void InitScenePaths()
+        private void InitSceneKeys()
         {
-            if(_scenePaths != null)
+            if(_sceneKeys != null)
                 return;
-            
+
             // 缓存所有场景名称
-            _scenePaths = new List<string>(GameAsset.GetAllScenePath());
+            _sceneKeys = new List<string>(GameAsset.GetAllSceneKey());
         }
 
         /// <summary>
@@ -73,7 +80,7 @@ namespace Core.Scene
         /// <returns></returns>
         private bool ContainPath(string sceneName)
         {
-            return _scenePaths.Contains(sceneName);
+            return _sceneKeys.Contains(sceneName);
         }
         
         /// <summary>

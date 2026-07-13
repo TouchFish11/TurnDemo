@@ -75,7 +75,13 @@ namespace Core.UI
         /// <typeparam name="TView"></typeparam>
         /// <typeparam name="TController"></typeparam>
         /// <returns></returns>
-        Task<TController> CreateViewAsync<TView, TController>(string panelName, E_UILayer layer, Vector2 pos = default, Quaternion quaternion = default)
-            where TView : UIView, IuiView where TController : class, IuiController;
+        Task<TController> CreateViewAsync<TView, TController>(string panelName, E_UILayer layer, Vector2 pos = default, Quaternion quaternion = default) where TView : UIView, IuiView where TController : class, IuiController;
+
+        /// <summary>
+        /// 通过界面ID获取界面类型名称
+        /// </summary>
+        /// <param name="panelId"></param>
+        /// <returns></returns>
+        string GetPanelTypeName(int panelId);
     }
 }

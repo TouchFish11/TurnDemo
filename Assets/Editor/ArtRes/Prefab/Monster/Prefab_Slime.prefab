@@ -393,7 +393,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3909633431463551550}
   - component: {fileID: 6255624501681295193}
-  - component: {fileID: 5004635464754127201}
+  - component: {fileID: -6443964192308618405}
   m_Layer: 0
   m_Name: Prefab_Slime
   m_TagString: MonsterObject
@@ -438,7 +438,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0.5, z: 0}
---- !u!114 &5004635464754127201
+--- !u!114 &-6443964192308618405
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

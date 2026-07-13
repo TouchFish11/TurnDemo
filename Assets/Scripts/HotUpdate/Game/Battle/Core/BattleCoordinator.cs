@@ -88,6 +88,8 @@ namespace HotUpdate.Game.Battle.Core
             // 初始化角色战斗点，依赖玩家战斗实体对象创建完成
             _battlePointProxy.InitProxy(battleContext, new List<IBattleEntityObject>(battleContext.GetAlivePlayerEntitys()));
             Context = battleContext;
+            
+            Logger.LogDebug(ELogTags.Battle, $"Init finished");
         }
         
         /// <summary>

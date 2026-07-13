@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Core.Log;
 using HotUpdate.Game.Battle.Skill.Base;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
 using HotUpdate.Game.Battle.Statuses;
@@ -18,6 +19,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill.Battle
                     var status = statusFactory.GetStatus(projectileData.caster, target, statusId);
                     // 添加状态
                     target.GetComponent<StatusComponent>().AddStatus(status);
+                    Logger.LogInfo(ELogTags.Battle, $"Priest add status to {target}: {status}");
                 } 
             }
             
@@ -29,13 +31,10 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill.Battle
             // 恢复终结技能量
             ((PlayerObject)projectileData.caster).RecoverUltimate(SkillContext.SkillInfo.f_recoveryEnergy);
 
-            if (hitResult.IsFirstHit)
+            timerManager.CreateTimer(false, 500, () =>
             {
-                timerManager.CreateTimer(false, 500, () =>
-                {
-                    SkillContext.VFXInfo.IsStop = true;
-                });
-            }
+                SkillContext.VFXInfo.IsStop = true;
+            });
             
             return Task.CompletedTask;
         }

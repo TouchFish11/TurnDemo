@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Core.DI;
+using Core.Log;
 using Core.UI;
 using Core.UI.ViewController;
 using HotUpdate.Base.UI;
@@ -17,6 +18,7 @@ using HotUpdate.UI.Quests;
 using HotUpdate.UI.Settings.UI;
 using HotUpdate.UI.Tip;
 using UnityEngine;
+using Logger = Core.Log.Logger;
 using Task = System.Threading.Tasks.Task;
 
 namespace HotUpdate.UI
@@ -82,6 +84,7 @@ namespace HotUpdate.UI
         
         public Task CloseAsync(int panelId, bool isDestroy)
         {
+            Logger.LogDebug(ELogTags.UI, $"Close {_uiManager.GetPanelTypeName(panelId)} panel id={panelId}, isDestroy={isDestroy}");
             return isDestroy ? _uiManager.DestroyView(panelId) : _uiManager.SetViewActive(panelId, false);
         }
 
@@ -105,6 +108,14 @@ namespace HotUpdate.UI
                     return _uiManager.GetController<BattleLoadingController>();
                 case EUIPanelId.BlackBackPanel:
                     return _uiManager.GetController<BackController>();
+                case EUIPanelId.BeginPanel:
+                    return _uiManager.GetController<BeginController>();
+                case EUIPanelId.TipPanel:
+                    return _uiManager.GetController<TipController>();
+                case EUIPanelId.GlobalPanel:
+                    return _uiManager.GetController<GlobalMessageController>();
+                case EUIPanelId.SettingPanel:
+                    return _uiManager.GetController<SettingsController>();
                 default:
                     throw new ArgumentOutOfRangeException(nameof(panelId), panelId, null);
             }

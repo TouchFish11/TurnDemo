@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Core.DI;
+using Core.Log;
 using Core.Mono;
 using HotUpdate.Game.Battle.Command;
 using HotUpdate.Game.Battle.Context;
@@ -51,6 +52,7 @@ namespace HotUpdate.Game.Battle.Core
             
             // 开始战斗
             s_battleContext.BattleMachine.StartBattle();
+            Logger.LogDebug(ELogTags.Battle, "Battle Started");
         }
 
         /// <summary>

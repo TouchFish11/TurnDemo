@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Log;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Role;
@@ -31,7 +33,7 @@ namespace HotUpdate.Game.Battle.Core
         {
             get
             {
-                return _battlePoint ??= UnityEngine.Object.FindFirstObjectByType<BattlePoint>();
+                return _battlePoint ??= UnityEngine.Object.FindFirstObjectByType<BattlePoint>() ?? throw new NullReferenceException("Battle Point not found in scene");
             }
         }
         
@@ -55,6 +57,7 @@ namespace HotUpdate.Game.Battle.Core
                 index++;
             }
             this.context = context;
+            global::Core.Log.Logger.LogDebug(ELogTags.Battle, $"Init finished");
         }
 
         /// <summary>

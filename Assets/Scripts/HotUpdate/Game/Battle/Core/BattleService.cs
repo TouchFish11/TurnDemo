@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.DI;
+using Core.Log;
 using Core.Mono;
 using Core.Serialize.Binary;
 using Core.Tasks;
@@ -18,6 +19,7 @@ using HotUpdate.Game.Battle.TargetSelect;
 using HotUpdate.Game.Battle.UI;
 using HotUpdate.Game.Battle.Utility;
 using UnityEngine;
+using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.Battle.Core
 {
@@ -54,6 +56,7 @@ namespace HotUpdate.Game.Battle.Core
         {
             _battleManager = battleManager;
             _context = context;
+            Logger.LogDebug(ELogTags.Battle, $"BattleService init successfully");
         }
 
         /// <summary>
@@ -97,6 +100,8 @@ namespace HotUpdate.Game.Battle.Core
                 _context.AllBattleEntity.Add(battleEntityObject);
                 _context.SceneRoleObjects.Add(battleEntityObject);
             }
+            
+            Logger.LogDebug(ELogTags.Battle, $"Role created successfully");
         }
         
         /// <summary>
@@ -205,6 +210,8 @@ namespace HotUpdate.Game.Battle.Core
                 _context.SceneMonsterObjects.Add(battleEntityObject);
             }
             
+            Logger.LogDebug(ELogTags.Battle, $"Monster created successfully");
+            
             return monsters;
         }
         
@@ -248,10 +255,13 @@ namespace HotUpdate.Game.Battle.Core
         /// </summary>
         public IEnumerator HandleDeadEntity()
         {
+            var deadSnapshot = _context.AllBattleEntity.FindAll(battleEntity => battleEntity.IsDead);
+            if(deadSnapshot.Count == 0)
+                yield break;
+            
             var cTask = new List<Task>();
-            var deadEntities = new List<IBattleEntityObject>(_context.AllBattleEntity.FindAll(battleEntity => battleEntity.IsDead));
             // 播放死亡动画
-            foreach (var battleEntity in deadEntities)
+            foreach (var battleEntity in deadSnapshot)
             {
                 // 从上下文中移除死亡实体
                 _context.AllBattleEntity.Remove(battleEntity);
@@ -272,13 +282,14 @@ namespace HotUpdate.Game.Battle.Core
                 {
                     _context.SetCurrentTurnOwner(null);
                 }
+                
+                Logger.LogDebug(ELogTags.Battle, $"entity dead: {battleEntity}, playing death animation");
             }
 
-            if (deadEntities.Count > 0)
+            if (deadSnapshot.Count > 0)
             {
                 // 触发实体死亡事件
-                _context.EventBus.TriggerEvent(new EntityDeadEvent(_context, deadEntities));
-
+                _context.EventBus.TriggerEvent(new EntityDeadEvent(_context, deadSnapshot));
                 // 等待所有死亡动画处理完成
                 yield return TaskUtility.WaitForTask(Task.WhenAll(cTask));
             }
@@ -293,16 +304,22 @@ namespace HotUpdate.Game.Battle.Core
             // 每次执行完命令后，检查战斗是否结束
             return _battleManager.WaveCreator.CheckOver();
         }
+
+        /// <summary>
+        /// 是否有剩余波次
+        /// </summary>
+        /// <returns></returns>
+        public bool HasRemainWave()
+        {
+            return _battleManager.WaveCreator.TryMoveWave();
+        }
         
         /// <summary>
-        /// 推进到下一波
+        /// 推进到下一波，需要先判断是否有剩余波次
         /// </summary>
-        public void MoveWave()
+        public IEnumerator MoveWave()
         {
-            if (_battleManager.WaveCreator.TryMoveWave())
-            {
-                _monoAdapter.StartCoroutine(_battleManager.BattleService.UpdateWave());
-            }
+            yield return _battleManager.BattleService.UpdateWave();
         }
     }
 }

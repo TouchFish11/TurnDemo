@@ -284,7 +284,7 @@ GameObject:
   m_Component:
   - component: {fileID: 382260523495218620}
   - component: {fileID: 5235251181272156804}
-  - component: {fileID: -2350864461186251102}
+  - component: {fileID: 3610506156790070627}
   m_Layer: 5
   m_Name: GlobalMessageView
   m_TagString: Untagged
@@ -324,7 +324,7 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
---- !u!114 &-2350864461186251102
+--- !u!114 &3610506156790070627
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

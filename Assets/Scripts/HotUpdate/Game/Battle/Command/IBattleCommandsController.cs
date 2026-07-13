@@ -1,14 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using HotUpdate.Game.Battle.Context;
-using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.UI;
 
 namespace HotUpdate.Game.Battle.Command
 {
     internal interface IBattleCommandsController
     {
-        void Init(IBattleContext context, IBattleManager battleManager);
+        void Init(IBattleContext context);
 
         /// <summary>
         /// 插入新的战斗指令到执行列表
@@ -37,5 +36,18 @@ namespace HotUpdate.Game.Battle.Command
         List<IDisplayPendingExecution> BuildPendingDisplayList();
 
         void Reset();
+
+        /// <summary>
+        /// 过滤指令列表中的无效指令
+        /// 反向遍历列表，移除IsValid为false的指令
+        /// </summary>
+        void FilterInvalidCommand();
+
+        IEnumerator ExcutePostProcess();
+
+        /// <summary>
+        /// 是否处理了指令
+        /// </summary>
+        bool ProcessCommond { get; }
     }
 }

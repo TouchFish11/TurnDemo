@@ -103,7 +103,7 @@ namespace HotUpdate.Entry
             }
             catch (Exception e)
             {
-                Logger.LogError(ELogTags.HotUpdateEntry, $"Entry game error, {e.Message}");
+                Logger.LogException(ELogTags.HotUpdateEntry, e);
             }
         }
     }

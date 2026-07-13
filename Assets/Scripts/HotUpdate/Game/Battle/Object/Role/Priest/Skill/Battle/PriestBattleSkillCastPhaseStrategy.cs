@@ -7,7 +7,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill.Battle
 {
     public class PriestBattleSkillCastPhaseStrategy : SkillCastPhaseStrategy
     {
-        private const float _targetEndProgress = 0.5f;
+        private const float _targetEndProgress = 0.3f;
 
         public override IEnumerator Execute()
         {

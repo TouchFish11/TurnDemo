@@ -294,10 +294,23 @@ namespace Core.AssetBundles.Management
         }
 
         /// <summary>
+        /// 异步加载场景包
+        /// </summary>
+        /// <param name="sceneKey"></param>
+        /// <returns></returns>
+        public Task LoadSceneBundleAsync(string sceneKey)
+        {
+            // 从资源目录中查找指定的资源路径
+            var entry = _assetBundleManager.Catalog.GetEntry(sceneKey);
+            // 未找到抛出异常
+            return entry == null ? throw new NullReferenceException($"'{sceneKey}' key found entry is null") : _assetBundleManager.LoadBundleAsync(entry.bundleName);
+        }
+        
+        /// <summary>
         /// 获取所有场景路径，返回场景名列表
         /// </summary>
         /// <returns></returns>
-        public List<string> GetAllScenePath()
+        public List<string> GetAllSceneKey()
         {
             var list = new List<string>();
             foreach (var entry in _assetBundleManager.Catalog.Assets)

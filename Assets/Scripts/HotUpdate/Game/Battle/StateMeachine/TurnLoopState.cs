@@ -20,6 +20,8 @@ namespace HotUpdate.Game.Battle.StateMeachine
         [Inject] private IBattleManager _battleManager;
         [Inject] private IMonsterFactory _monsterFactory;
         [Inject] private IBattleCommandsController _commandsController;
+
+        private bool _isOver;
         
         public TurnLoopState(IBattleStateMachine battleStateMachine, IBattleContext context) : base(battleStateMachine, context)
         {
@@ -41,15 +43,40 @@ namespace HotUpdate.Game.Battle.StateMeachine
         {
             while (true)
             {
-                // 执行指令
-                yield return _commandsController.ExcuteCommand();
-                
-                // 执行完一次指令都要检查战斗是否结束
-                if (_battleManager.BattleService.CheckWaveOver())
+                while (Context.CurrentCommand != null || Context.BattleCommands.Count > 0)
                 {
-                    break;
+                    // 执行指令
+                    yield return _commandsController.ExcuteCommand();
+                    
+                    var battleService = _battleManager.BattleService;
+                    // 处理存在的死亡的实体
+                    yield return battleService.HandleDeadEntity();
+                    // 过滤无效指令
+                    _commandsController.FilterInvalidCommand();
+                    // 执行完一次指令都要检查当前波次战斗是否结束
+                    if (battleService.CheckWaveOver())
+                    {
+                        if (battleService.HasRemainWave())
+                        {
+                            // 切换到下一波
+                            yield return battleService.MoveWave();
+                        }
+                        else
+                        {
+                            _isOver = true;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        // 指令执行后处理逻辑
+                        yield return _commandsController.ExcutePostProcess();
+                    }
                 }
-
+                
+                if(_isOver)
+                    break;
+                
                 // 当前实体正在行动，等待其行动结束
                 if (Context.CurrentTurnOwner == null || !Context.CurrentTurnOwner.CanAct && !Context.CurrentTurnOwner.Acting)
                 {
@@ -77,7 +104,7 @@ namespace HotUpdate.Game.Battle.StateMeachine
 
         public override void Exit()
         {
-
+            _isOver = false;
         }
 
         protected override void OnDispose()

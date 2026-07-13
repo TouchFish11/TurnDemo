@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using HotUpdate.Game.Battle.Context;
-using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.UI;
@@ -14,22 +13,22 @@ namespace HotUpdate.Game.Battle.Command
     /// </summary>
     public class BattleCommandsController : IBattleCommandsController
     {
-        // 战斗管理器
-        private IBattleManager _battleManager;
         // 战斗上下文
         private IBattleContext _context;
-        // 是否退出战斗：标记战斗是否结束，用于终止指令执行循环
-        private bool _isQuit;
-
+        
+        /// <summary>
+        /// 是否处理了指令
+        /// </summary>
+        public bool ProcessCommond { get; private set; }
+        
         private BattleCommandsController()
         {
 
         }
 
-        public void Init(IBattleContext context, IBattleManager battleManager)
+        public void Init(IBattleContext context)
         {
             _context = context;
-            _battleManager = battleManager;
         }
         
         /// <summary>
@@ -61,26 +60,26 @@ namespace HotUpdate.Game.Battle.Command
         /// 执行战斗指令的核心协程
         /// 循环执行指令列表中的指令，直到列表为空或战斗结束
         /// </summary>
-        /// <returns>协程迭代器</returns>
+        /// <returns></returns>
         public IEnumerator ExcuteCommand()
         {
-            // 循环条件：有正在执行的指令 或 待执行列表有指令 且 未退出战斗
-            while ((_context.CurrentCommand != null || _context.BattleCommands.Count > 0) && !_isQuit)
+            ProcessCommond = false;
+            if (_context.CurrentCommand != null || _context.BattleCommands.Count > 0)
             {
                 // 获取列表首个指令作为当前执行命令
                 TakeFirst();
                 yield return ExecuteInternal();
-                // 执行完指令后的处理逻辑
-                yield return ExcuteCommandEnd();
-                // 判断是否退出战斗
-                if (_isQuit) 
-                    yield break;
-                
-                // 命令执行完后逻辑
-                yield return _context.CurrentCommand.ExcutePostProcess(_context);
-                // 执行完成后清空当前命令
-                _context.CurrentCommand = null;
+                ProcessCommond = true;
             }
+            
+            // // 循环条件：有正在执行的指令 或 待执行列表有指令 且 未退出战斗
+            // while (_context.CurrentCommand != null || _context.BattleCommands.Count > 0)
+            // {
+            //     // 获取列表首个指令作为当前执行命令
+            //     TakeFirst();
+            //     yield return ExecuteInternal();
+            //     ProcessCommond = true;
+            // }
         }
 
         private IEnumerator ExecuteInternal()
@@ -92,31 +91,10 @@ namespace HotUpdate.Game.Battle.Command
         }
 
         /// <summary>
-        /// 指令执行后的后置处理逻辑
-        /// 清理死亡怪物、检查战斗结束状态、过滤无效指令
-        /// </summary>
-        /// <returns></returns>
-        private IEnumerator ExcuteCommandEnd()
-        {
-            var battleService  = _battleManager.BattleService;
-            // 移除战斗中死亡的怪物
-            yield return battleService.HandleDeadEntity();
-            // 检查当前波次是否结束，并更新退出标记
-            _isQuit = battleService.CheckWaveOver();
-            if (_isQuit)
-            {
-                // 过滤列表中无效的指令
-                FilterInvalidCommand();
-                // 切换到下一波
-                battleService.MoveWave();
-            }
-        }
-
-        /// <summary>
         /// 过滤指令列表中的无效指令
         /// 反向遍历列表，移除IsValid为false的指令
         /// </summary>
-        private void FilterInvalidCommand()
+        public void FilterInvalidCommand()
         {
             // 反向遍历：避免移除元素导致的索引错乱
             for (var i = _context.BattleCommands.Count - 1; i >= 0; i--)
@@ -130,6 +108,14 @@ namespace HotUpdate.Game.Battle.Command
             
             // 更新UI：刷新等待指令的显示列表
             UpdateWaitContent();
+        }
+
+        public IEnumerator ExcutePostProcess()
+        {
+            // 命令执行完后逻辑
+            yield return _context.CurrentCommand.ExcutePostProcess(_context);
+            // 执行完成后清空当前命令
+            _context.CurrentCommand = null;
         }
 
         /// <summary>
@@ -203,9 +189,7 @@ namespace HotUpdate.Game.Battle.Command
 
         public void Reset()
         {
-            _battleManager = null;
             _context = null;
-            _isQuit = false;
         }
     }
 }

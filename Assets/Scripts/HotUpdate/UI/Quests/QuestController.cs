@@ -5,7 +5,6 @@ using Core.DI;
 using Core.Log;
 using Core.Serialize.Json;
 using Core.UI.ViewController;
-using Core.Utility;
 using HotUpdate.Base.Collection;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.UI;
@@ -64,8 +63,8 @@ namespace HotUpdate.UI.Quests
             // 初始化所有任务数据和UI展示
             await InitTasks();
             // 判断是否存在任务数据
-            var hasTask = view.HasTask();
-            view.HasTasks(hasTask);
+            var hasTask = view.HasTask;
+            view.SwitchTaskDisplay(hasTask);
             if (hasTask)
             {
                 // 检查是否有正在追踪的任务
@@ -253,11 +252,12 @@ namespace HotUpdate.UI.Quests
                 // 从配置中获取任务配置信息
                 var selectConfig = QuestConfig.questItems.Find(item => item.id == id);
                 // 相等不用处理
-                if (CurrentQuestItemInfo != null && selectConfig == CurrentQuestItemInfo) return;
+                if (CurrentQuestItemInfo != null && selectConfig == CurrentQuestItemInfo) 
+                    return;
 
                 // 更新当前任务信息为选中的任务信息
                 CurrentQuestItemInfo = selectConfig;
-                view.ClearItemGrid(_objectSpawner);
+                _objectSpawner.Release(view.RewardItems);
 
                 var questCollection = _questDataManager.QuestCollection;
                 if (!questCollection.TryGetValue(id, out var questData))

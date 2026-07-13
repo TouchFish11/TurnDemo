@@ -21,7 +21,7 @@ namespace HotUpdate.Game.Battle.Context
         public List<IBattleEntityObject> SceneMonsterObjects { get; }  = new();
         
         public List<IBattleEntityObject> SceneRoleObjects { get; }  = new();
-        
+
         public List<ICommand> BattleCommands { get; } = new();
         
         public BattleEventBus EventBus { get; private set; }

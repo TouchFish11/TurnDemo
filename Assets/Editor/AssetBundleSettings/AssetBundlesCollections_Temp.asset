@@ -340,27 +340,27 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Base.dll.bytes
       size: 55296
       name: HotUpdate.Base.dll.bytes
-      hash: 85e74bf77221575077966f97e71e65a7d04291cf78735ae0b61aa3ac708b2994
+      hash: d639b82dbb95a79f9ca15fbcdc321cb5549d301c06919159e2b8f85c47d720e6
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Common.dll.bytes
       size: 36352
       name: HotUpdate.Common.dll.bytes
-      hash: f2f4aac4e0ab9d4b4b9002d92e87f9d80d720f99481066df51783b4d9b6102ee
+      hash: 7d70717ef62ca4df8174c07f1bf98adf4e777ec2d1ac9ff43ac20c9cf60cdc24
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Entry.dll.bytes
-      size: 11776
+      size: 11264
       name: HotUpdate.Entry.dll.bytes
-      hash: 4b06e292defde71cc54261e08ea4bccef1929f16ce32afbdb77ca3df6ee85d07
+      hash: e8b3bf6a77532e373d666b577240d2d90627d905a1cd039a2b3657b88e324ff7
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Game.dll.bytes
-      size: 401920
+      size: 404480
       name: HotUpdate.Game.dll.bytes
-      hash: 09fcb35707d2e37e19bf6a1d75ba3f509cd206debc412d52156bb1dbee459118
+      hash: 23e91726a1a5badb1b339810488a6c957b7fc101c7f989773df0be9cb0ae90db
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.UI.dll.bytes
-      size: 202752
+      size: 204288
       name: HotUpdate.UI.dll.bytes
-      hash: 6b5a80ec3390e04a26368d0db3144cee38e6d589a098ee2b6f639ff947f0d8a3
+      hash: 9cd1362e5fd8df687a34b4e368fa9e847b6b467f1dade71ef3a325196962f49a
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdateAssemblySettings.json
       size: 504
@@ -370,14 +370,14 @@ MonoBehaviour:
   - assetBundleName: hotupdateaot
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\HotUpdateAOT\CoreModule.dll.bytes
-      size: 327680
+      size: 328704
       name: CoreModule.dll.bytes
-      hash: b5c173fb591b45d07bda9dbefec5df5da45866ef146fbe63f8dac8c3aae6e856
+      hash: 115ce0e397e07f31438e115b231c88c2bfed1237ec0b83d2e1915e0a37bf3bdf
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdateAOT\mscorlib.dll.bytes
-      size: 2390016
+      size: 2387456
       name: mscorlib.dll.bytes
-      hash: 7b3ece2c36b2e95c67db88b4fc2248eb58d36ff7dc3be714162bda20b8a386e7
+      hash: 5b1652e2fe2570f359262d23daeb82f0352b0fa8166fdefc47b82b2229012b7e
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdateAOT\System.Core.dll.bytes
       size: 471552
@@ -433,7 +433,7 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Prefab_AbyssalMage.prefab
       size: 28304
       name: Prefab_AbyssalMage.prefab
-      hash: 0d0bb442070bcab94f0f7376a6a6e87b8651d8ee588cfd83eaf928ed4959fb45
+      hash: 42e5857c8bcec2f6a3d063df3d6b7553a297b19eac61167a69e51228a208db21
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Prefab_Boss.prefab
       size: 80735
@@ -446,14 +446,14 @@ MonoBehaviour:
       hash: 0c91274296a822cb29ba85de94c7c9bfa026a4ebbe30fb689691ad2743628f52
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Prefab_Slime.prefab
-      size: 16140
+      size: 16142
       name: Prefab_Slime.prefab
-      hash: 800a230e07ad3255c86c718f64c513c0feaa4ff88fabc83fc26c8aea48e1aa84
+      hash: 727d5b0af6ec79d18c5e0a9365d7143dfdbbc07f33b134c6a8fa650adc59902f
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Prefab_TurtleShell.prefab
-      size: 36557
+      size: 36561
       name: Prefab_TurtleShell.prefab
-      hash: 4469b40e6c6e009df63e08d04fa421c25cbd0db1b25482cee0dbfda4c2985cc1
+      hash: 105bc889d9845f9ccf9df2f7b2478502bba7ff1eae79464230bd6476779cbb8d
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Prefab\Role\Prefab_Gunman.prefab
       size: 86668
@@ -463,17 +463,17 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\Prefab\Role\Prefab_Priest.prefab
       size: 81053
       name: Prefab_Priest.prefab
-      hash: 24b71e578779b25189cd1568d3f5468e9688567055fc27873986dfeaad4ce36c
+      hash: 7bc348032be99ddf751029ece98feda4f3da6ae39d4e39bc18b0639c6184c501
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Prefab\Role\Prefab_Warrior.prefab
-      size: 92012
+      size: 92010
       name: Prefab_Warrior.prefab
-      hash: 105fdd36e558d736519c5d1a4500143f7c4d28e66ddeb0931bc7db422fbbe189
+      hash: d4f8e49c3df77b1e49f0c7229955adaf134c65f86389120a40368f39ce5e4285
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Prefab\Role\Prefab_Wizard.prefab
-      size: 90945
+      size: 90943
       name: Prefab_Wizard.prefab
-      hash: 5a844fe44f2c03024989ee9cc28e0f6cd0f6fa6e868aa061ebfe2142effb94a3
+      hash: 526f20ffb65ce439aa01c769cfb26cb39f70b231b17c8570ba9d1e456d567dd5
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Prefab\UI\UI_3D_FloatingText.prefab
       size: 11096
@@ -483,14 +483,14 @@ MonoBehaviour:
   - assetBundleName: scene
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\Scene\BeginScene.unity
-      size: 17443
+      size: 9157
       name: BeginScene.unity
-      hash: a78feffbd7469801e1db62a090af0f61328f657a3fda188b6f9b244f1144193d
+      hash: f731c013faa96cfb616896df4f0d786fae38d5554ee52e1eb239af01cd1e16e3
       assetType: 1
     - assetPath: Assets\Editor\ArtRes\Scene\LevelScene.unity
-      size: 112279
+      size: 117066
       name: LevelScene.unity
-      hash: 5ac0f4a97169c79e9374d35fdd3739809414370fe509561479ccda48f422cdd8
+      hash: 493cbea5a2acdfb8116fb52156bfd012ca55d5df335c139315427d687e82373d
       assetType: 1
     - assetPath: Assets\Editor\ArtRes\Scene\MainScene.unity
       size: 32902
@@ -659,9 +659,9 @@ MonoBehaviour:
       hash: 40fb01220ac4ae1212a5c0764d740e2ceb7770909b38b934f90a39754e7f2c07
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Battle\ActionLine\ActionGridUI.prefab
-      size: 24520
+      size: 24522
       name: ActionGridUI.prefab
-      hash: 25d75a08f23d54f705ec15165fa96b4bd54836221f43371dbfe409643d7dd6bb
+      hash: 6b6e42a2a225e1d89b8d622215ffdf08eab83b279763a65691084a0b89229eb2
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Battle\ActionLine\WaitingActUI.prefab
       size: 4839
@@ -739,9 +739,9 @@ MonoBehaviour:
       hash: e2bf23b14ce1ea3a91ecc4fa8473bd49b5aeb4318933af38049c3c7be892a8b5
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Global\GlobalMessageView.prefab
-      size: 9870
+      size: 9868
       name: GlobalMessageView.prefab
-      hash: c3cac4c0d6a7b6454f06bcde5a045d9adfe3041566606308ae9abd38a522e08c
+      hash: 8b4a47c170cb7bb492f8b194be4f7de871853abcf8d7e6a9db0f2269bfdecf48
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Global\MessageUI.prefab
       size: 7286
@@ -773,6 +773,21 @@ MonoBehaviour:
       name: MainView.prefab
       hash: 0e46d255fc99efa1029175449a883e4d1bd54af0d06182db5b8dd9a25db58629
       assetType: 0
+    - assetPath: Assets\Editor\ArtRes\UI\Quest\QuestItem.prefab
+      size: 13633
+      name: QuestItem.prefab
+      hash: a39ef95094e5762c185ea39ec785ec187bbf2d23951f220281c44e812c4cf344
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\UI\Quest\QuestTypeContainer.prefab
+      size: 12044
+      name: QuestTypeContainer.prefab
+      hash: 646511650c2425e44cca5bb4aa23beb6cfdc425978efd023f44b1da993be5475
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\UI\Quest\QuestView.prefab
+      size: 57010
+      name: QuestView.prefab
+      hash: 4c696ade0eb795569e0fa0d9b84c5b9aa18f364f04aaeb7e06b1e02081f3689a
+      assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Setting\SettingDrowdownEntry.prefab
       size: 36827
       name: SettingDrowdownEntry.prefab
@@ -792,21 +807,6 @@ MonoBehaviour:
       size: 40014
       name: SettingsView.prefab
       hash: f9a1ce7b52667f82b2aec40c6b37d91a5dc2ecd59df0c67fa83bf369d8375ed6
-      assetType: 0
-    - assetPath: Assets\Editor\ArtRes\UI\Task\QuestItem.prefab
-      size: 13633
-      name: QuestItem.prefab
-      hash: a39ef95094e5762c185ea39ec785ec187bbf2d23951f220281c44e812c4cf344
-      assetType: 0
-    - assetPath: Assets\Editor\ArtRes\UI\Task\QuestTypeContainer.prefab
-      size: 12044
-      name: QuestTypeContainer.prefab
-      hash: 646511650c2425e44cca5bb4aa23beb6cfdc425978efd023f44b1da993be5475
-      assetType: 0
-    - assetPath: Assets\Editor\ArtRes\UI\Task\QuestView.prefab
-      size: 57008
-      name: QuestView.prefab
-      hash: bb326c794838be6b0093a1100b1b55d5cf868e1142954e201c38dab86d64c830
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Tip\AssetUpdateConfirmContent.prefab
       size: 20443

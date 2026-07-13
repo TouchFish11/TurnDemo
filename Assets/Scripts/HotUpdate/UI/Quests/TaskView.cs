@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Core.AssetBundles.Management;
 using Core.UI;
 using Core.UI.ViewController;
 using HotUpdate.Common.Config.Quest;
@@ -69,13 +68,18 @@ namespace HotUpdate.UI.Quests
         /// </summary>
         [InjectUI(1)] private RectTransform noTaskView;
         #endregion
-
-        // 任务类型与对应任务容器的映射字典，Key：任务类型ID  Value：该类型下的任务容器
-        private readonly Dictionary<EQuestType, QuestTypeContainer> taskTypeToContainerMap = new();
-        // 当前选中任务的奖励物品格子列表
-        private readonly List<ItemGrid> rewardItems = new();
         
-        #region 公共属性
+        /// <summary>
+        /// 任务类型与对应任务容器的映射字典，Key：任务类型ID  Value：该类型下的任务容器
+        /// </summary>
+        private readonly Dictionary<EQuestType, QuestTypeContainer> _taskTypeToContainerMap = new();
+        private readonly List<EQuestType> _questTypeIndexs = new();
+        
+        /// <summary>
+        /// 当前选中任务的奖励物品格子列表
+        /// </summary>
+        public List<ItemGrid> RewardItems { get; } = new();
+        
         /// <summary>
         /// 任务列表滚动视图的内容容器（用于挂载任务项预制体）
         /// </summary>
@@ -90,7 +94,11 @@ namespace HotUpdate.UI.Quests
         /// 奖励框
         /// </summary>
         public RectTransform RewardBox => rewardBox;
-        #endregion
+        
+        /// <summary>
+        /// 任务栏是否存在任务
+        /// </summary>
+        public bool HasTask => _questTypeIndexs.Count > 0 && _taskTypeToContainerMap.Count > 0;
         
         #region 公共方法
 
@@ -109,7 +117,7 @@ namespace HotUpdate.UI.Quests
         /// 切换有无任务的显示面板
         /// </summary>
         /// <param name="hasTasks">是否有可显示的任务</param>
-        public void HasTasks(bool hasTasks)
+        public void SwitchTaskDisplay(bool hasTasks)
         {
             hasTaskView.gameObject.SetActive(hasTasks);
             noTaskView.gameObject.SetActive(!hasTasks);
@@ -130,19 +138,10 @@ namespace HotUpdate.UI.Quests
         /// <returns>所有任务类型容器的可枚举序列</returns>
         public IEnumerable<QuestTypeContainer> GetContainers()
         {
-            foreach (var taskTypeContainer in taskTypeToContainerMap.Values)
+            foreach (var taskTypeContainer in _taskTypeToContainerMap.Values)
             {
                 yield return taskTypeContainer;
             }
-        }
-
-        /// <summary>
-        /// 检查是否存在任何任务容器
-        /// </summary>
-        /// <returns>存在任务容器返回true，否则返回false</returns>
-        public bool HasTask()
-        {
-            return taskTypeToContainerMap.Count > 0;
         }
 
         /// <summary>
@@ -152,7 +151,7 @@ namespace HotUpdate.UI.Quests
         /// <returns>存在返回true，否则返回false</returns>
         public bool ContainContainer(EQuestType questType)
         {
-            return taskTypeToContainerMap.ContainsKey(questType);
+            return _taskTypeToContainerMap.ContainsKey(questType);
         }
 
         /// <summary>
@@ -162,7 +161,10 @@ namespace HotUpdate.UI.Quests
         /// <param name="questTypeContainer">该类型对应的任务容器实例</param>
         public void AddTaskTypeContainers(EQuestType taskType, QuestTypeContainer questTypeContainer)
         {
-            taskTypeToContainerMap.Add(taskType, questTypeContainer);
+            if (_taskTypeToContainerMap.TryAdd(taskType, questTypeContainer))
+            {
+                _questTypeIndexs.Add(taskType);
+            }
         }
 
         /// <summary>
@@ -173,7 +175,7 @@ namespace HotUpdate.UI.Quests
         /// <exception cref="KeyNotFoundException">当指定任务类型不存在时抛出</exception>
         public QuestTypeContainer GetContainer(EQuestType taskType)
         {
-            return taskTypeToContainerMap[taskType];
+            return _taskTypeToContainerMap[taskType];
         }
 
         /// <summary>
@@ -183,23 +185,9 @@ namespace HotUpdate.UI.Quests
         /// <returns>第一个ITaskTypeContainer实例，无容器时返回null</returns>
         public QuestTypeContainer GetFirstContainer()
         {
-            foreach (var container in taskTypeToContainerMap.Values)
-            {
-                return container;
-            }
-
-            return null;
+            return HasTask ? _taskTypeToContainerMap[_questTypeIndexs[0]] : null;
         }
-
-        public void ClearItemGrid(ObjectSpawner spawner)
-        {
-            foreach (var itemGrid in rewardItems)
-            {
-                spawner.Release(itemGrid, false);
-            }
-            rewardItems.Clear();
-        }
-
+        
         #endregion
     }
 }

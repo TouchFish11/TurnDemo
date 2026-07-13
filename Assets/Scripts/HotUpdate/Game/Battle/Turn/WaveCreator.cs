@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.DI;
+using Core.Log;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Object;
@@ -25,6 +26,7 @@ namespace HotUpdate.Game.Battle.Turn
             _waveHandler = DIContainer.Create<WaveHandler>(parameterValues: _battleContext);
             _waveDatas = waveDatas;
             _waveIndex = 0;
+            Logger.LogDebug(ELogTags.Battle, $"WaveCreator init successfully");
         }
 
         /// <summary>

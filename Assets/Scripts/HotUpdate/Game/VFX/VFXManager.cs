@@ -14,6 +14,7 @@ namespace HotUpdate.Game.VFX
     public class VFXManager : IVFXManager
     {
         [Inject] private ObjectSpawner _objectSpawner;
+        private readonly IMonoAdapter _monoAdapter;
         // 存储当前活跃的VFX信息
         private readonly Dictionary<VFXInfo, GameObject> _activeVfxInfos = new();
         // 待移除的vfx信息缓存
@@ -23,6 +24,7 @@ namespace HotUpdate.Game.VFX
         {
             // 注册帧更新监听，用于检测VFX状态
             monoAdapter.AddUpdateListener(OnUpdate);
+            _monoAdapter = monoAdapter;
         }
 
         /// <summary>
@@ -75,7 +77,7 @@ namespace HotUpdate.Game.VFX
             // 如果VFX挂载了投射物组件，初始化投射物数据
             if (vfxObj.TryGetComponent<IProjectile>(out var projectile))
             {
-                projectile.Init(data, vFXInfo);
+                _monoAdapter.StartCoroutine(projectile.InitToStart(data, vFXInfo));
             }
 
             // 如果包含粒子系统，记录到活跃列表

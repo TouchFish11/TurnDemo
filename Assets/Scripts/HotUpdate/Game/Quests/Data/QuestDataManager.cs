@@ -32,7 +32,7 @@ namespace HotUpdate.Game.Quests.Data
             {
                 // 保存任务数据
                 _jsonManager.SaveToJson(QuestCollection, PathUtility.GetUserDataLocalSavePath(FileUtility.LocalTaskDataFileName));
-                Logger.LogDebug(ELogTags.Quest, $"{FileUtility.LocalTaskDataFileName}");
+                Logger.LogDebug(ELogTags.Quest, $"任务数据保存成功，{FileUtility.LocalTaskDataFileName}");
             }
         }
 
@@ -42,7 +42,7 @@ namespace HotUpdate.Game.Quests.Data
             {
                 // 保存任务数据
                 await _jsonManager.SaveToJsonAsync(QuestCollection, PathUtility.GetUserDataLocalSavePath(FileUtility.LocalTaskDataFileName));
-                Logger.LogDebug(ELogTags.Quest, $"{FileUtility.LocalTaskDataFileName}");
+                Logger.LogDebug(ELogTags.Quest, $"任务数据保存成功，{FileUtility.LocalTaskDataFileName}");
             }
         }
     }

@@ -128,6 +128,16 @@ namespace Core.AssetBundles.Management
         }
 
         /// <summary>
+        /// 异步加载场景资源
+        /// </summary>
+        /// <param name="sceneKey"></param>
+        /// <returns></returns>
+        public static Task LoadSceneAsync(string sceneKey)
+        {
+            return _assetManager.LoadSceneBundleAsync(sceneKey);
+        }
+
+        /// <summary>
         /// 创建简单句柄，非组合句柄对象
         /// </summary>
         /// <param name="key"></param>
@@ -212,9 +222,9 @@ namespace Core.AssetBundles.Management
         /// 获取所有的场景路径（key）
         /// </summary>
         /// <returns></returns>
-        public static List<string> GetAllScenePath()
+        public static List<string> GetAllSceneKey()
         {
-            return _assetManager.GetAllScenePath();
+            return _assetManager.GetAllSceneKey();
         }
 
         /// <summary>

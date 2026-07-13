@@ -1,4 +1,5 @@
 using Core.DI;
+using Core.Log;
 using Core.UI.ViewController;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.UI;
@@ -58,6 +59,8 @@ namespace HotUpdate.UI.Battle.Base
         {
             // 注册战斗相关事件
             EventProcessor.RegisterBattleEvents(battleContext.EventBus);
+            
+            Logger.LogDebug(ELogTags.Battle, $"Battle init controller finished");
         }
     }
 }
