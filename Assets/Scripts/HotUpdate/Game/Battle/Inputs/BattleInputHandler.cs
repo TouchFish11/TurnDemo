@@ -11,7 +11,6 @@ namespace HotUpdate.Game.Battle.Inputs
     /// <summary>
     /// 战斗场景输入处理器
     /// 负责处理战斗中的鼠标拖拽、点击选择目标、技能释放目标选择等核心输入逻辑
-    /// 继承自单例自动挂载 MonoBehaviour 基类，保证全局唯一且自动初始化
     /// </summary>
     public class BattleInputHandler : IBattleInputHandler
     {

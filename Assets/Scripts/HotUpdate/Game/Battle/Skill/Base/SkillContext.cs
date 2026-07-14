@@ -50,7 +50,7 @@ namespace HotUpdate.Game.Battle.Skill.Base
         public ProjectileData ProjectileData {get; set;}
         
         /// <summary>
-        /// 投射物变换组件（控制投射物的位置/旋转等）
+        /// 投射物变换数据（控制投射物的位置/旋转等）
         /// </summary>
         public ProjectileTrans ProjectileTrans {get; set;}
         

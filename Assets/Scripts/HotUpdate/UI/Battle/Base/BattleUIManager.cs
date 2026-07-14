@@ -112,7 +112,7 @@ namespace HotUpdate.UI.Battle.Base
 
                 yield return s_waitForSeconds0_5;
 
-                // 触发退出战斗事件
+                // 调用退出战斗逻辑
                 _battleManager.QuitBattle(_controller.PanelId);
             }
         }

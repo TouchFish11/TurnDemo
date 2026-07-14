@@ -12,8 +12,8 @@ using Logger = Core.Log.Logger;
 namespace HotUpdate.Base.Component
 {
     /// <summary>
-    /// 组件工厂核心类
-    /// 实现IFactory接口，提供组件的统一创建、注册、初始化能力
+    /// 组件服务类
+    /// 提供组件的统一创建、注册、初始化能力
     /// 核心职责：
     /// 1. 初始化时扫描并注册所有IComponent实现类到类型映射字典，避免重复反射提升性能
     /// 2. 支持按名称/泛型类型为实体对象添加组件，自动处理组件依赖并保证初始化顺序

@@ -27,11 +27,10 @@ namespace HotUpdate.Game.Battle.TargetSelect
         private readonly List<IBattleEntityObject> _selectedTargets = new();
         // 当前生效的目标选择策略（不同技能有不同的目标选择规则）
         private ITargetSelectStrategy _currentSelectStrategy;
-        private IBattleContext _context;
 
         public void Init(IBattleContext context)
         {
-            _context = context;
+            
         }
         
         /// <summary>
@@ -206,7 +205,6 @@ namespace HotUpdate.Game.Battle.TargetSelect
             _selectedTargets.Clear();
             _mainTarget = null;
             _currentSelectStrategy = null;
-            _context = null;
         }
     }
 }

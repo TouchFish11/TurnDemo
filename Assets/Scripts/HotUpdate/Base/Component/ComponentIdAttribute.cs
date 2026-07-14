@@ -10,7 +10,7 @@ namespace HotUpdate.Base.Component
     public class ComponentIdAttribute : Attribute
     {
         /// <summary>
-        /// 组件的唯一名称/ID（Unique component identifier）
+        /// 组件的唯一名称/ID
         /// 该值作为组件的唯一标识，确保不同组件的标识不重复
         /// </summary>
         public Type ComponentType { get; private set; }

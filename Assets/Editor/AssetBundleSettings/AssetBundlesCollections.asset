@@ -350,17 +350,17 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Entry.dll.bytes
       size: 11264
       name: HotUpdate.Entry.dll.bytes
-      hash: e8b3bf6a77532e373d666b577240d2d90627d905a1cd039a2b3657b88e324ff7
+      hash: 458598494124298fc46443bb49c5976214d91a4584890278d006c323406f0fcc
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Game.dll.bytes
-      size: 404480
+      size: 404992
       name: HotUpdate.Game.dll.bytes
-      hash: 23e91726a1a5badb1b339810488a6c957b7fc101c7f989773df0be9cb0ae90db
+      hash: 721ed78a3f922dc69f073fe178925173720d650cc8597071420f66b9985b259e
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.UI.dll.bytes
       size: 204288
       name: HotUpdate.UI.dll.bytes
-      hash: 9cd1362e5fd8df687a34b4e368fa9e847b6b467f1dade71ef3a325196962f49a
+      hash: c8c509fa4d0f7aa1b03522953f0cce5f1d6effad4d1ec1fadcc3631c0c4e9e6f
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdateAssemblySettings.json
       size: 504
@@ -562,9 +562,9 @@ MonoBehaviour:
   - assetBundleName: tmp_asset
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\TMP_Asset\MSYH_SDF.asset
-      size: 7553
+      size: 8404080
       name: MSYH_SDF.asset
-      hash: 57a27797ae562a715d1bf52947b7cf9b1364fa1c318ded59c460e390f0fbcbbb
+      hash: d8505671de6d3c1995ffae723fd5edc73684725cee50a114b960ccb6eb74b807
       assetType: 0
   - assetBundleName: ui
     assetInfos:

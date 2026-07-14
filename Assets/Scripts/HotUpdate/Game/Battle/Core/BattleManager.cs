@@ -24,8 +24,6 @@ namespace HotUpdate.Game.Battle.Core
         [Inject] private IPoolManager _poolManager;
         [Inject] private IUIService _uiService;
         
-        private IBattleContext _context;
-        
         public WaveCreator WaveCreator { get; private set; }
         
         public BattleService BattleService { get; private set; }
@@ -57,7 +55,6 @@ namespace HotUpdate.Game.Battle.Core
             // 创建WaveCreator并初始化
             WaveCreator ??= DIContainer.Create<WaveCreator>(parameterValues: this);
             WaveCreator.Init(context, startupParams.WaveDatas);
-            _context = context;
         }
         
         public async void QuitBattle(int battlePanelId)
@@ -73,6 +70,8 @@ namespace HotUpdate.Game.Battle.Core
                 // 执行战斗结束回调，在背景界面销毁前执行
                 if (OnBattleOver != null)
                 {
+                    BattleEntry.EndBattle();
+                    _poolManager.ClearAll();
                     await OnBattleOver(new BattleResult { IsWin = false });
                     OnBattleOver = null;
                     // 销毁黑背景界面

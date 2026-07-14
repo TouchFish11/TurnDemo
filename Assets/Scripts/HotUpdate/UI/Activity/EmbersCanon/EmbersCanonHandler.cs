@@ -85,8 +85,6 @@ namespace HotUpdate.UI.Activity.EmbersCanon
                 },
                 OnBattleOver = async result =>
                 {
-                    BattleEntry.EndBattle();
-                    _poolManager.ClearAll();
                     // TODO:待处理
                     await _sceneGenerator.InitMainScene(-1);
                     await _playerManager.CreatePlayer(1001);

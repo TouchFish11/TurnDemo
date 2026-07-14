@@ -16,11 +16,6 @@ namespace HotUpdate.Game.Battle.Command
         // 战斗上下文
         private IBattleContext _context;
         
-        /// <summary>
-        /// 是否处理了指令
-        /// </summary>
-        public bool ProcessCommond { get; private set; }
-        
         private BattleCommandsController()
         {
 
@@ -63,23 +58,12 @@ namespace HotUpdate.Game.Battle.Command
         /// <returns></returns>
         public IEnumerator ExcuteCommand()
         {
-            ProcessCommond = false;
             if (_context.CurrentCommand != null || _context.BattleCommands.Count > 0)
             {
                 // 获取列表首个指令作为当前执行命令
                 TakeFirst();
                 yield return ExecuteInternal();
-                ProcessCommond = true;
             }
-            
-            // // 循环条件：有正在执行的指令 或 待执行列表有指令 且 未退出战斗
-            // while (_context.CurrentCommand != null || _context.BattleCommands.Count > 0)
-            // {
-            //     // 获取列表首个指令作为当前执行命令
-            //     TakeFirst();
-            //     yield return ExecuteInternal();
-            //     ProcessCommond = true;
-            // }
         }
 
         private IEnumerator ExecuteInternal()
@@ -175,10 +159,10 @@ namespace HotUpdate.Game.Battle.Command
         public List<IDisplayPendingExecution> BuildPendingDisplayList()
         {
             // 转存显示待执行逻辑对象，包含排序后的所有等待指令
-            var displayobjs = new List<IDisplayPendingExecution>(_context.BattleCommands.ConvertAll(cmd => (IDisplayPendingExecution)cmd));
+            var displayobjs = _context.BattleCommands.ConvertAll(cmd => (IDisplayPendingExecution)cmd);
             // 当前角色回合被其它逻辑插队的情况，CurrentCommander为null说明没有指令执行
             var currentCommander = _context.CurrentCommand?.Sender;
-            if (_context.CurrentTurnOwner != null &&currentCommander != _context.CurrentTurnOwner && _context.CurrentTurnOwner.CanAct)
+            if (_context.CurrentTurnOwner != null && currentCommander != _context.CurrentTurnOwner && _context.CurrentTurnOwner.CanAct)
             {
                 // 显示持有当前回合被插队的角色的等待UI
                 displayobjs.Add((IDisplayPendingExecution)_context.CurrentTurnOwner);

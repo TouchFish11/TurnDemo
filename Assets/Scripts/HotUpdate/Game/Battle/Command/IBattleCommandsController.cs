@@ -44,10 +44,5 @@ namespace HotUpdate.Game.Battle.Command
         void FilterInvalidCommand();
 
         IEnumerator ExcutePostProcess();
-
-        /// <summary>
-        /// 是否处理了指令
-        /// </summary>
-        bool ProcessCommond { get; }
     }
 }

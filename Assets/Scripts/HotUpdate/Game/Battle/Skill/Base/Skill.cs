@@ -30,41 +30,6 @@ namespace HotUpdate.Game.Battle.Skill.Base
         protected Skill(SkillContext skillContext)
         {
             SkillContext = skillContext;
-            
-            // // TODO：Test
-            // // 怪物效果流程：
-            // _effects.Add(new MonsterPreNode(this));   // 通用逻辑
-            // _effects.Add(new TargetSelectNode(this));     // 目标选择
-            // _effects.Add(new ProjectileInitNode(this));   // 初始化弹射物
-            // _effects.Add(new SkillExecuteNode(this));     // 执行技能（角色动画、伤害、buff、特效）
-            //
-            // // 玩家角色效果流程：
-            // if (非终结技能)
-            // {
-            //     _effects.Add(new TargetSelectNode(this));     // 目标选择
-            //     _effects.Add(new SkillPointCastNode(this));     // 消耗战技点
-            //     _effects.Add(new ProjectileInitNode(this));   // 初始化弹射物
-            //     _effects.Add(new NonUltimateSkillExecuteNode(this));     // 非终结技触发事件可以写在这里
-            // }
-            // else // 终结技
-            // {
-            //     _effects.Add(new UltimateDisplayIllustrationNode(this));  // 显示立绘
-            //     // 再“展示Pose 或 播放动画”
-            //     if (展示pose)
-            //     {
-            //         _effects.Add(new UltimateWaitTriggerNode(this));   // 等待触发也暂时抽成效果，此时玩家可以滑动选择目标，只有pose才有这个效果
-            //         // 等到确认触发后在固定目标
-            //         _effects.Add(new TargetSelectNode(this));     // 目标选择，这个只会执行一次
-            //         _effects.Add(new ProjectileInitNode(this));   // 初始化弹射物
-            //     }
-            //     else  // 播放动画
-            //     {
-            //         // 然后一般都是进入一个强化状态
-            //         // ...
-            //     }
-            //     
-            //     _effects.Add(new UltimateSkillExecuteNode(this));
-            // }
         }
 
         /// <summary>

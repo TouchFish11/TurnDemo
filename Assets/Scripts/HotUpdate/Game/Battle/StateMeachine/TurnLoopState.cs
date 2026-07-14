@@ -41,14 +41,13 @@ namespace HotUpdate.Game.Battle.StateMeachine
         /// </summary>
         private IEnumerator TurnLoop_Cor()
         {
+            var battleService = _battleManager.BattleService;
             while (true)
             {
                 while (Context.CurrentCommand != null || Context.BattleCommands.Count > 0)
                 {
                     // 执行指令
                     yield return _commandsController.ExcuteCommand();
-                    
-                    var battleService = _battleManager.BattleService;
                     // 处理存在的死亡的实体
                     yield return battleService.HandleDeadEntity();
                     // 过滤无效指令
@@ -86,6 +85,9 @@ namespace HotUpdate.Game.Battle.StateMeachine
                     // 启用当前实体行动
                     Context.CurrentTurnOwner.ExecuteAction();
                 }
+                
+                // 处理存在的死亡的实体
+                yield return battleService.HandleDeadEntity();
 
                 yield return null;
             }
