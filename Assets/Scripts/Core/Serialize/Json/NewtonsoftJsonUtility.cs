@@ -12,7 +12,7 @@ namespace Core.Serialize.Json
         /// <summary>
         /// 处理类型名称、格式化设置、枚举字符串
         /// </summary>
-        public static readonly JsonSerializerSettings SerializerSettings = new()
+        public static readonly JsonSerializerSettings DefaultSerializerSettings = new()
         {
             TypeNameHandling = TypeNameHandling.All,
             Formatting = Formatting.Indented,
@@ -20,6 +20,17 @@ namespace Core.Serialize.Json
             {
                 new StringEnumConverter()
             }
+        };
+
+        public static readonly JsonSerializerSettings CatalogSerializerSettings = new()
+        {
+            TypeNameHandling = TypeNameHandling.All,
+            Formatting = Formatting.Indented,
+            Converters = new List<JsonConverter>
+            {
+                new StringEnumConverter()
+            },
+            SerializationBinder = new CatalogSerializationBinder()
         };
     }
 }

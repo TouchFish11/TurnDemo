@@ -6,6 +6,7 @@ using Core.DI;
 using Core.Pool;
 using Core.PreLoad;
 using Core.Serialize.Json;
+using HotUpdate.Base.Data;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Scene;
 using HotUpdate.Base.Service;
@@ -25,7 +26,7 @@ namespace HotUpdate.UI.Activity.EmbersCanon
         [Inject] private IUIService _uiService;
         [Inject] private IPlayerManager _playerManager;
         [Inject] private IJsonManager _jsonManager;
-        [Inject] private IActivityDataManager _activityDataManager;
+        [Inject] private IActivityDataProvider activityDataProvider;
         [Inject] private ObjectSpawner _objectSpawner;
         [Inject] private IIconService _iconService;
         [Inject] private IPoolManager _poolManager;
@@ -38,12 +39,12 @@ namespace HotUpdate.UI.Activity.EmbersCanon
         public async Task<(BattleConfigEntryColletion battleConfigEntryColletion, EmbersCanonData embersCanonData)> InitLevels(int activityId)
         {
             // 根据读取用户活动数据
-            var activityDataCollection = _activityDataManager.ActivityDataCollection as ActivityDataCollection;
+            var activityDataCollection = activityDataProvider.ActivityDataCollection as ActivityDataCollection;
             // 获取该活动数据
             var embersCanonData = activityDataCollection[activityId] as EmbersCanonData;
             // 解析该活动的关卡配置
             using var handle = await GameAsset.LoadAssetAsync<TextAsset>(AssetKeys.BattleActivityConfig);
-            var battleConfigEntryColletion = _jsonManager.FromJson<BattleConfigEntryColletion>(handle.Asset.text, settings: NewtonsoftJsonUtility.SerializerSettings);
+            var battleConfigEntryColletion = _jsonManager.FromJson<BattleConfigEntryColletion>(handle.Asset.text, settings: NewtonsoftJsonUtility.DefaultSerializerSettings);
 
             foreach (var battleConfigEntry in battleConfigEntryColletion.battleConfigs)
             {
@@ -92,7 +93,7 @@ namespace HotUpdate.UI.Activity.EmbersCanon
                     if (result.IsWin)
                     {
                         onLevelComplete?.Invoke();
-                        if(_activityDataManager.TryGetData(activityId, out var activityData))
+                        if(activityDataProvider.TryGetData(activityId, out var activityData))
                             activityData.CurrentPro += 1;
                     }
                     

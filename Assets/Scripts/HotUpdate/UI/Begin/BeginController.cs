@@ -10,6 +10,7 @@ using HotUpdate.Base.Data;
 using HotUpdate.Base.Enums;
 using HotUpdate.Base.UI;
 using HotUpdate.UI.Tip;
+using static Core.AssetBundles.Update.Core.UpdateResult.EUpdateError;
 
 namespace HotUpdate.UI.Begin
 {
@@ -217,17 +218,36 @@ namespace HotUpdate.UI.Begin
                     confirmData.ConfirmContent = EConfirmContent.AssetUpdate;
                     confirmData.ContentData = "点击确认后将重新下载";
                     confirmData.ConfirmMessage = GetErrorMessage(updateResult.UpdateError);
-                    confirmData.OnConfirm = () =>
+
+                    confirmData.OnConfirm = updateResult.UpdateError switch
                     {
-                        uiManager.DestroyView(controller.panelId);
-                    
-                        ResetState();
-                        _assetBundleUpdater.Init();
-                        RegisterUpdateEvent();
-                        _assetBundleUpdater.CheckUpdate();
+                        AssetBunleBroken or 
+                        AssetBunleIncomplete => () =>
+                        {
+                            // 关闭提示界面
+                            _uiService.CloseAsync(controller.panelId, true);
+                            // 回到对比差异阶段
+                            _assetBundleUpdater.ChangePhase(EUpdatePhase.CompareContrast);
+                        },
+                        DownloadFailure or 
+                        LocalListFile or 
+                        AnalyzeAssetBundle or 
+                        DriveStorage or 
+                        AssetBundDownloadCancelled or 
+                        Unknown => () =>
+                        {
+                            // 关闭提示界面
+                            _uiService.CloseAsync(controller.panelId, true);
+                            ResetState();
+                            _assetBundleUpdater.Init();
+                            RegisterUpdateEvent();
+                            _assetBundleUpdater.CheckUpdate();
+                        },
+                        
+                        None or _ => throw new ArgumentOutOfRangeException()
                     };
-                    confirmData.OnCancel = null;
                     
+                    confirmData.OnCancel = null;
                     // 设置提示界面
                     controller.SetTip(confirmData);
                 }
@@ -248,14 +268,14 @@ namespace HotUpdate.UI.Begin
         {
             return updateError switch
             {
-                UpdateResult.EUpdateError.DownloadFailure => "下载错误",
-                UpdateResult.EUpdateError.AssetBunleBroken => "资源异常",
-                UpdateResult.EUpdateError.LocalListFile => "读取资源文件异常",
-                UpdateResult.EUpdateError.AnalyzeAssetBundle => "分析资源差异异常",
-                UpdateResult.EUpdateError.DriveStorage => "设备空间不足，请清理后重试",
-                UpdateResult.EUpdateError.AssetBunleIncomplete => "资源下载不完整",
-                UpdateResult.EUpdateError.Unknown => "未知错误",
-                UpdateResult.EUpdateError.None or _ => string.Empty
+                DownloadFailure => "下载错误",
+                AssetBunleBroken => "资源异常",
+                LocalListFile => "读取资源文件异常",
+                AnalyzeAssetBundle => "分析资源差异异常",
+                DriveStorage => "设备空间不足，请清理后重试",
+                AssetBunleIncomplete => "资源下载不完整",
+                Unknown => "未知错误",
+                None or _ => string.Empty
             };
         }
         

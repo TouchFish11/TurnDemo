@@ -1,4 +1,4 @@
-using HotUpdate.Base.Component;
+using HotUpdate.Base.ECModule;
 using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.Core

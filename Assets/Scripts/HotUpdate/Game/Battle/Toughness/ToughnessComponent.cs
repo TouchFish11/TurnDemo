@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using HotUpdate.Base.Component;
+using HotUpdate.Base.ECModule;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Property;
@@ -11,7 +11,7 @@ namespace HotUpdate.Game.Battle.Toughness
     /// 功能：管理战斗实体（怪物/角色）的韧性系统核心逻辑，包括韧性初始化、韧性值计算/扣除、破韧判断、策略管理等
     /// 依赖：BattleComponent（战斗组件基类）、IToughnessComponent（韧性组件接口）、策略模式（扣除/计算策略）、事件总线（状态变更通知）
     /// </summary>
-    [ComponentId(typeof(ToughnessComponent))] // 标记组件唯一标识，用于组件注册和获取
+    [ComponentId]
     [ComponentCore(typeof(ToughnessComponentCore))]
     public class ToughnessComponent : BattleComponent
     {

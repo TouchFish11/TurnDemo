@@ -5,6 +5,7 @@ using Core.DI;
 using Core.Scene;
 using Core.Serialize.Binary;
 using Core.UI.ViewController;
+using HotUpdate.Base.Data;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Service;
 using HotUpdate.Base.UI;
@@ -18,7 +19,7 @@ namespace HotUpdate.UI.Activity.Base
     public class ActivityController : UIController<ActivityView>, IBlockOperation
     {
         [Inject] private ObjectSpawner _objectSpawner;
-        [Inject] private IActivityDataManager _activityDataManager;
+        [Inject] private IActivityDataProvider activityDataProvider;
         [Inject] private ISceneManager _sceneManager;
         [Inject] private IActivityDataFactory _activityDataFactory;
         [Inject] private IUIService _uiService;
@@ -96,7 +97,7 @@ namespace HotUpdate.UI.Activity.Base
             // 获取活动配置
             var activityInfo = _binaryDataManager.GetConfig<ActivityInfoContainer>(EConfigLoadType.Excel).dataDic[selectId];
             // 活动本地活动数据
-            var activityDataCollection = _activityDataManager.ActivityDataCollection as ActivityDataCollection;
+            var activityDataCollection = activityDataProvider.ActivityDataCollection as ActivityDataCollection;
             var activityUIBehaviourBase = await _objectSpawner.SpawnAsync<ActivityUIBehaviourBase>(activityInfo.f_detailUI_res, view.ActivityDetailArea);
             // 初始化详细界面
             if (!activityDataCollection.TryGetValue(activityInfo.f_id, out var activityData))

@@ -1,4 +1,3 @@
-using Core.Log;
 using HotUpdate.Base.Animation;
 using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Battle.Damage;
@@ -14,13 +13,6 @@ namespace HotUpdate.Game.Battle.ResponsibilityChain.DamageChain
     {
         public override void HandleRequest(DamageResult request)
         {
-            if (request.Source == null || request.Target == null)
-            {
-                Logger.LogError(ELogTags.Battle, $"伤害处理异常," + $"Source:{request.Source},Target:{request.Target},技能ID:{request.SkillId}");
-                successor.HandleRequest(request);
-                return;
-            }
-            
             var target = request.Target;
             var context = request.Target.Context;
             // 执行应用伤害事件，显示伤害文本，显示护盾处理后的最终伤害

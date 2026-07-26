@@ -1,4 +1,4 @@
-using HotUpdate.Base.Component;
+using HotUpdate.Base.ECModule;
 using HotUpdate.Game.Battle.Object.Role;
 
 namespace HotUpdate.Game.Battle.Skill.Component
@@ -6,7 +6,7 @@ namespace HotUpdate.Game.Battle.Skill.Component
     /// <summary>
     /// 玩家技能组件
     /// </summary>
-    [ComponentId(typeof(PlayerSkillComponent))]
+    [ComponentId]
     public class PlayerSkillComponent : SkillComponent
     {
         /// <summary>

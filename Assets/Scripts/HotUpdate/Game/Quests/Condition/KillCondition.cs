@@ -1,3 +1,4 @@
+using HotUpdate.Common.Config.Quest;
 using HotUpdate.Common.Config.Quest.Config;
 
 namespace HotUpdate.Game.Quests.Condition
@@ -5,9 +6,10 @@ namespace HotUpdate.Game.Quests.Condition
     /// <summary>
     /// 任务击杀条件
     /// </summary>
+    [ConditionTypeId(EQuestConditionType.Kill)]
     public class KillCondition : QuestCondition<KillConditionConfig>
     {
-        public KillCondition(KillConditionConfig questConditionConfig) : base(questConditionConfig)
+        public KillCondition(QuestConditionConfig questConditionConfig) : base(questConditionConfig as KillConditionConfig)
         {
             
         }

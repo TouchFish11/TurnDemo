@@ -35,7 +35,7 @@ namespace HotUpdate.Game.Animation
         public void AddState(int hash, AnimatorState state)
         {
             if (_defaultState != null && state.Config.isDefault)
-                throw new Exception($"[{nameof(AnimatorLayer)}]: Only one default state is allowed for each layer.");
+                throw new Exception("Only one default state is allowed for each layer.");
 
             _defaultState ??= state.Config.isDefault ? state : null;
             _hashToStateMap.Add(hash, state);

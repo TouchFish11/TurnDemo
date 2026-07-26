@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Core.DI;
 using Core.Utility;
-using HotUpdate.Base.Component;
+using HotUpdate.Base.ECModule;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Monster;
@@ -255,11 +255,11 @@ namespace HotUpdate.Game.Battle.Toughness
         /// <returns>最终要扣除的韧性值</returns>
         private int CalcToughness(IBattleEntityObject reducer, E_ElementType propertyType, int value)
         {
-            var totalValue = 0;
+            var totalValue = value;
             // 遍历所有计算策略，累加每个策略的计算结果
             foreach (var calcStrategy in _toughnessCalcStrategies)
             {
-                totalValue += calcStrategy.CalcReduceToughness(reducer, Component.BattleEntity, propertyType, value);
+                totalValue = calcStrategy.CalcReduceToughness(reducer, Component.BattleEntity, propertyType, totalValue);
             }
 
             return totalValue;

@@ -1,4 +1,4 @@
-using HotUpdate.Base.Component;
+using HotUpdate.Base.ECModule;
 using HotUpdate.Game.Battle.Object.Monster;
 
 namespace HotUpdate.Game.Battle.Property
@@ -6,7 +6,7 @@ namespace HotUpdate.Game.Battle.Property
     /// <summary>
     /// 怪物属性组件
     /// </summary>
-    [ComponentId(typeof(MonsterPropertyComponent))]
+    [ComponentId]
     public class MonsterPropertyComponent : PropertyComponent
     {
         

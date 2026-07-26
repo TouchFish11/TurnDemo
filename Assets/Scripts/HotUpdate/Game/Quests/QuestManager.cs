@@ -1,10 +1,10 @@
 using System.Collections.Generic;
+using Core.DI;
 using HotUpdate.Base.Collection;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Quest;
 using HotUpdate.Common.Config.Quest;
 using HotUpdate.Common.Config.Quest.Config;
-using HotUpdate.Game.Quests.Condition;
 
 namespace HotUpdate.Game.Quests
 {
@@ -20,10 +20,9 @@ namespace HotUpdate.Game.Quests
         // 可拓展为支持多任务接取
         //private Dictionary<int, IQuest> _activeQuests = new();
 
-        public QuestManager()
+        private QuestManager()
         {
-            // 初始化任务条件工厂
-            QuestConditionFactoryInitializer.Initialize();
+
         }
         
         /// <summary>
@@ -43,7 +42,7 @@ namespace HotUpdate.Game.Quests
                     if (questData.IsComplete) continue;
 
                     // 有且未完成，仍要创建对象
-                    quest = new Quest(questConfigQuestItem, questData);
+                    quest = DIContainer.Create<Quest>(questConfigQuestItem, questData);
                     quest.OnQuestComplete += OnQuestComplete;
                     _quests.Add(questConfigQuestItem.id, quest);
                     continue;
@@ -59,7 +58,7 @@ namespace HotUpdate.Game.Quests
                 var newQuestData = new QuestData(questConfigQuestItem.id, nodeDatas);
                 // 保存到数据
                 questCollection.AddQuestData(newQuestData);
-                quest = new Quest(questConfigQuestItem, newQuestData);
+                quest = DIContainer.Create<Quest>(questConfigQuestItem, newQuestData);
                 quest.OnQuestComplete += OnQuestComplete;
                 _quests.Add(questConfigQuestItem.id, quest);
             }

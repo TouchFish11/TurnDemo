@@ -11,7 +11,7 @@ namespace Core.AssetBundles.Management
         // 代表单个包的其中一个资源
         private readonly object _asset;
         // 该资源所在的AB包
-        private readonly BundleWrapper _bundleWrapper;
+        private BundleWrapper _bundleWrapper;
         
         /// <summary>
         /// 资源Key
@@ -79,6 +79,7 @@ namespace Core.AssetBundles.Management
             
                 // 释放包引用计数
                 _bundleWrapper.Release();
+                _bundleWrapper = null;
                 OnUnload?.Invoke();
                 OnUnload = null;
                 return;

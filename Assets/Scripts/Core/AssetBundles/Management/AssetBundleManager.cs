@@ -51,7 +51,7 @@ namespace Core.AssetBundles.Management
             // 读取本地清单文件
             Catalog = await _jsonManager.FromJsonAsync<AssetCatalog>(
                 PathUtility.GetAbLoadPath(FileUtility.CatalogDefaultName),
-                settings: NewtonsoftJsonUtility.SerializerSettings);
+                settings: NewtonsoftJsonUtility.CatalogSerializerSettings);
             // 构建全部AB包信息
             foreach (var abPackageInfo in Catalog.ABPackageCollection.Values)
             {
@@ -288,7 +288,7 @@ namespace Core.AssetBundles.Management
                 // 卸载包
                 if (unUseBundleWrapper != null)
                 {
-                    await unUseBundleWrapper.TryUnloadAsync(true);
+                    await unUseBundleWrapper.TryUnloadAsync(false);
                     // 从列表中移除
                     bundles.Remove(unUseBundleWrapper);
                 }

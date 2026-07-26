@@ -1,4 +1,4 @@
-public class DialogueInfo
+public partial class DialogueInfo
 {
 	public int f_id;
 	public int f_speakerId;

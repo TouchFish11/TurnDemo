@@ -8,15 +8,11 @@ namespace Core.AssetBundles.Update.State
 {
     /// <summary>
     /// 更新完成状态类
-    /// 处理更新完成后的收尾逻辑，标记更新结束并切换到空状态
+    /// 处理更新完成后的收尾逻辑，标记更新结束
     /// </summary>
     public class FinishState : UpdateState
     {
-        /// <summary>
-        /// 执行更新完成收尾逻辑
-        /// </summary>
-        /// <returns>是否执行成功（固定返回true）</returns>
-        public override async Task<UpdateResult> Execute()
+        protected override async void OnEnter()
         {
             await Task.Delay(1000);
             
@@ -30,7 +26,11 @@ namespace Core.AssetBundles.Update.State
             // 触发更新完成回调
             var result = updateResultFactory.CreateSuccess();
             assetBundleUpdater.GetContext().UpdateOver(result);
-            return result;
+        }
+
+        protected override void OnExit()
+        {
+
         }
 
         /// <summary>

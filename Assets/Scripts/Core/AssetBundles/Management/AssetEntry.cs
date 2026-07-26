@@ -10,7 +10,7 @@ namespace Core.AssetBundles.Management
     [JsonObject(MemberSerialization.OptIn)]
     public class AssetEntry
     {
-        /// 用户使用的资源标识
+        /// 用户使用的资源标识，对于非SpriteAssetEntry来说就是物理资源名，
         [JsonProperty] public string key;     
         /// 资源所在的AB包名
         [JsonProperty] public string bundleName;     

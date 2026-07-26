@@ -117,7 +117,7 @@ namespace Core.Pool
             return data;
         }
 
-        public void PushData<T>(T data) where T : class, IPoolData, new()
+        public void PushData<T>(T data) where T : class, IPoolData
         {
             // 自定义缓存名称，与获取名称一致
             var dataName = $"{typeof(T).FullName}";

@@ -1,7 +1,7 @@
 using Core.Inputs.ActionAsset;
 using HotUpdate.Base.Animation;
-using HotUpdate.Base.Component;
 using HotUpdate.Base.Dialogue;
+using HotUpdate.Base.ECModule;
 using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Inputs;
 using HotUpdate.Game.Main.Move;
@@ -11,18 +11,10 @@ namespace HotUpdate.Game.Dialogue
     /// <summary>
     /// 对话组件
     /// </summary>
-    [ComponentId(typeof(DialogueComponent))]
+    [ComponentId]
     [ComponentCore(typeof(DialogueComponentCore))]
     public class DialogueComponent : BaseComponent, IDialable
     {
-        private DialogueComponentCore _dialogueComponentCore;
-
-        protected override void OnInit()
-        {
-            base.OnInit();
-            _dialogueComponentCore = (DialogueComponentCore)ComponentCore;
-        }
-        
         void IDialable.OnDialogueStart()
         {
             // 只允许交互输入
@@ -39,11 +31,6 @@ namespace HotUpdate.Game.Dialogue
             EntityObject.GetComponent<InputComponent>().CancelLimitInput(nameof(MainActionMapData.Interact));
             // 允许移动
             EntityObject.GetComponent<MoveComponent>().Enable();
-        }
-
-        protected override void OnBaseDestroy()
-        {
-            _dialogueComponentCore = null;
         }
     }
 }

@@ -126,7 +126,7 @@ namespace HotUpdate.Game.Battle.Command
         {
             _context.BattleCommands.Sort((c1, c2) =>
             {
-                if (c1.Priority < c2.Priority)
+                if (c1.Priority <= c2.Priority)
                 {
                     // c1优先级更高，排在前面（返回-1表示c1在c2前）
                     return -1;

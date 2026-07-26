@@ -107,6 +107,12 @@ namespace Core.Utility
         /// ActivityData.json
         /// </value>
         public static string LocalActivityDataFileName => "ActivityData.json";
+        
+        /// <summary>
+        /// 玩家物品数据文件名称
+        /// </summary>
+        public const string PlayerItemDataFileName = "ItemData.json";
+
 
         /// <summary>
         /// 获取所有文件

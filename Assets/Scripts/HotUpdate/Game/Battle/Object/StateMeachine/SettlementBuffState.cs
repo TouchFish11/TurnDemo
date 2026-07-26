@@ -65,6 +65,10 @@ namespace HotUpdate.Game.Battle.Object.StateMeachine
             {
                 PlayerObject.ChangeState(EActPhase.TurnStart);
             }
+            else
+            {
+                PlayerObject.ChangeState(EActPhase.TurnEnd);
+            }
         }
 
         public override void Exit()

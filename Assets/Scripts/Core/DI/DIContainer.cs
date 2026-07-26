@@ -466,14 +466,5 @@ namespace Core.DI
             _transientMap.Remove(interfaceType);
             _transientMap.Remove(implType);
         }
-
-        public static void Clear()
-        {
-            _singletonMap.Clear();
-            _transientMap.Clear();
-            _constructorCache.Clear();
-            _injectMemberCache.Clear();
-            _resolveStack.Clear();
-        }
     }
 }

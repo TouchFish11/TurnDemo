@@ -296,8 +296,7 @@ namespace Core.AssetBundles.Management
                 var assetWrappers = new List<AssetWrapper>(readOnlyAssets.Count);
                 foreach (var asset in readOnlyAssets)
                 {
-                    assetWrappers.Add(
-                        DIContainer.Create<AssetWrapper>(parameterValues: new object[] { asset, asset.name, this }));
+                    assetWrappers.Add(DIContainer.Create<AssetWrapper>(parameterValues: new object[] { asset, asset.name, this }));
                     Retain();
                 }
 

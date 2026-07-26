@@ -1,4 +1,4 @@
-using HotUpdate.Base.Component;
+using HotUpdate.Base.ECModule;
 using HotUpdate.Game.Cameras;
 using UnityEngine;
 
@@ -8,7 +8,7 @@ namespace HotUpdate.Game.Main.Move
     /// 移动组件
     /// 负责控制游戏实体的移动、旋转逻辑，响应输入指令并结合相机视角计算移动方向
     /// </summary>
-    [ComponentId(typeof(MoveComponent))]
+    [ComponentId]
     [ComponentCore(typeof(MoveComponentCore))]
     [RequireComponent(typeof(CharacterControllerComponent))]
     public class MoveComponent : BaseComponent

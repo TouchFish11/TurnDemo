@@ -8,16 +8,15 @@ using Core.Mono;
 using Core.Serialize.Binary;
 using Core.UI;
 using Core.Utility;
+using HotUpdate.Base.Data;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Settings;
 using HotUpdate.Base.UI;
-
 using HotUpdate.Common.Events;
-using HotUpdate.UI.Dialogue;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
-namespace HotUpdate.Game.Dialogue
+namespace HotUpdate.UI.Dialogue
 {
     /// <summary>
     /// 对话管理器
@@ -29,7 +28,7 @@ namespace HotUpdate.Game.Dialogue
         [Inject] private IEventCenter _eventCenter;
         [Inject] private IBinaryDataManager _binaryDataManager;
         [Inject] private IMonoAdapter _monoAdapter;
-        [Inject] private IMainDataManager _mainDataManger;
+        [Inject] private IMainDataProvider _mainDataManger;
         
         // 当前单条对话是否播放完成（打字机/直接显示）
         private bool dialogueOver;

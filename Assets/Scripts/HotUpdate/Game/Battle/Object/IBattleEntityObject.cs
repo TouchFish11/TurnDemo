@@ -1,5 +1,5 @@
 using System.Collections;
-using HotUpdate.Base.Object;
+using HotUpdate.Base.ECModule;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Skill.Conditions;

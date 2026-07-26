@@ -15,29 +15,26 @@ namespace Core.AssetBundles.Update.State
     /// </summary>
     public class LoadLocalCatalogFileState : UpdateState
     {
-        /// <summary>
-        /// 执行获取本地清单文件核心逻辑
-        /// </summary>
-        /// <returns>是否获取成功</returns>
-        public override async Task<UpdateResult> Execute()
+        protected override async void OnEnter()
         {
             try
             {
                 // 加载本地对比文件
                 await GetLocalCompareFileInfo();
+                assetBundleUpdater.ChangePhase(EUpdatePhase.CompareContrast);
             }
             catch (LocalListFileHandleException localListFileHandleException)
             {
-                return updateResultFactory.CreateFailure(UpdateResult.EUpdateError.LocalListFile, localListFileHandleException);
+                var result = updateResultFactory.CreateFailure(UpdateResult.EUpdateError.LocalListFile, localListFileHandleException);
+                assetBundleUpdater.GetContext().UpdateOver(result);
             }
             catch (System.Exception exception)
             {
-                return updateResultFactory.CreateFailure(UpdateResult.EUpdateError.Unknown, exception);
+                var result = updateResultFactory.CreateFailure(UpdateResult.EUpdateError.Unknown, exception);
+                assetBundleUpdater.GetContext().UpdateOver(result);
             }
-            
-            return updateResultFactory.CreateSuccess();
         }
-
+        
         /// <summary>
         /// 获取本地AssetBundle对比文件（清单文件）
         /// 优先级：持久化路径 > StreamingAssets路径
@@ -92,6 +89,11 @@ namespace Core.AssetBundles.Update.State
             // 解析清单内容到本地包集合
             AnalyzeCatalog(req.downloadHandler.text, EFileAnalyzeType.Local);
             return;
+        }
+
+        protected override void OnExit()
+        {
+
         }
 
         /// <summary>

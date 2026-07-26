@@ -1,5 +1,4 @@
-using HotUpdate.Base.Component;
-using HotUpdate.Base.Object;
+using HotUpdate.Base.ECModule;
 using UnityEngine;
 
 namespace HotUpdate.Game.Interact
@@ -7,7 +6,7 @@ namespace HotUpdate.Game.Interact
     /// <summary>
     /// 交互触发器
     /// </summary>
-    [ComponentId(typeof(InteractTrigger))]
+    [ComponentId]
     [RequireComponent(typeof(Collider))]
     public class InteractTrigger : BaseComponent
     {

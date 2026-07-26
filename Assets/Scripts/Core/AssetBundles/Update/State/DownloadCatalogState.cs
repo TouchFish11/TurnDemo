@@ -23,11 +23,7 @@ namespace Core.AssetBundles.Update.State
         private ABWebRequester _abWebRequester;
         private Coroutine _coroutine;
 
-        /// <summary>
-        /// 执行下载远程清单文件核心逻辑
-        /// </summary>
-        /// <returns>是否执行成功</returns>
-        public override async Task<UpdateResult> Execute()
+        protected override async void OnEnter()
         {
             try
             {
@@ -35,21 +31,23 @@ namespace Core.AssetBundles.Update.State
                 await DownloadCatalogFile();
                 // 解析远程清单文件内容
                 await AnalyzeRemoteCatalog();
+                assetBundleUpdater.ChangePhase(EUpdatePhase.LoadLocalCatalogFile);
             }
             catch (DownloadFailureException downloadFailureException)
             {
-                return updateResultFactory.CreateFailure(UpdateResult.EUpdateError.DownloadFailure, downloadFailureException);
+                var result = updateResultFactory.CreateFailure(UpdateResult.EUpdateError.DownloadFailure, downloadFailureException);
+                assetBundleUpdater.GetContext().UpdateOver(result);
             }
             catch (FileNotFoundException fileNotFoundException)
             {
-                return updateResultFactory.CreateFailure(UpdateResult.EUpdateError.LocalListFile, fileNotFoundException);
+                var result =  updateResultFactory.CreateFailure(UpdateResult.EUpdateError.LocalListFile, fileNotFoundException);
+                assetBundleUpdater.GetContext().UpdateOver(result);
             }
             catch (System.Exception exception)
             {
-                return updateResultFactory.CreateFailure(UpdateResult.EUpdateError.Unknown, exception);
+                var result =  updateResultFactory.CreateFailure(UpdateResult.EUpdateError.Unknown, exception);
+                assetBundleUpdater.GetContext().UpdateOver(result);
             }
-            
-            return updateResultFactory.CreateSuccess();
         }
 
         /// <summary>
@@ -136,6 +134,11 @@ namespace Core.AssetBundles.Update.State
                 Logger.LogError(ELogTags.HotUpdate, $"ReadAllTextAsync failed: {ex}");
                 throw;
             }
+        }
+
+        protected override void OnExit()
+        {
+
         }
 
         /// <summary>

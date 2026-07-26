@@ -3,7 +3,7 @@ using Core.UI;
 using Core.UI.ViewController;
 using HotUpdate.Common.Config.Quest;
 using HotUpdate.Common.Config.Quest.Config;
-using HotUpdate.UI.Item;
+using HotUpdate.UI.Items;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

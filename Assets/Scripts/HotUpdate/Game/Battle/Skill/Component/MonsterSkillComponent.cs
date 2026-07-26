@@ -1,4 +1,4 @@
-using HotUpdate.Base.Component;
+using HotUpdate.Base.ECModule;
 using HotUpdate.Game.Battle.Object.Monster;
 
 namespace HotUpdate.Game.Battle.Skill.Component
@@ -6,7 +6,7 @@ namespace HotUpdate.Game.Battle.Skill.Component
     /// <summary>
     /// 怪物技能组件
     /// </summary>
-    [ComponentId(typeof(MonsterSkillComponent))]
+    [ComponentId]
     public class MonsterSkillComponent : SkillComponent
     {
         protected override void OnBattleInit()

@@ -1,5 +1,4 @@
 using System.IO;
-using System.Threading.Tasks;
 using Core.AssetBundles.Collection;
 using Core.AssetBundles.Update.Core;
 using Core.AssetBundles.Update.Exception;
@@ -13,25 +12,28 @@ namespace Core.AssetBundles.Update.State
     {
         // 预留因子
         private const float ResidualFactor = 1.1f;
-
-        public override Task<UpdateResult> Execute()
+        
+        protected override void OnEnter()
         {
             try
             {
                 CheckCanDownload();
-                return Task.FromResult(updateResultFactory.CreateSuccess());
+                assetBundleUpdater.ChangePhase(EUpdatePhase.DownLoadAssets);
             }
             catch (DriveShortageInsufficientException driveShortageInsufficientException)
             {
-                return Task.FromResult(updateResultFactory.CreateFailure(UpdateResult.EUpdateError.DriveStorage, driveShortageInsufficientException));
+                var result = updateResultFactory.CreateFailure(UpdateResult.EUpdateError.DriveStorage, driveShortageInsufficientException);
+                assetBundleUpdater.GetContext().UpdateOver(result);
             }
             catch (IOException ioException)
             {
-                return Task.FromResult(updateResultFactory.CreateFailure(UpdateResult.EUpdateError.Unknown, ioException));
+                var result = updateResultFactory.CreateFailure(UpdateResult.EUpdateError.Unknown, ioException);
+                assetBundleUpdater.GetContext().UpdateOver(result);
             }
             catch (System.Exception e)
             {
-                return Task.FromResult(updateResultFactory.CreateFailure(UpdateResult.EUpdateError.Unknown, e));
+                var result = updateResultFactory.CreateFailure(UpdateResult.EUpdateError.Unknown, e);
+                assetBundleUpdater.GetContext().UpdateOver(result);
             }
         }
 
@@ -44,12 +46,20 @@ namespace Core.AssetBundles.Update.State
             );
 
             var availableFreeSpace = StorageHelper.GetAvailableSpace();
-            var requireStorageSize = (long)(downLoadTotalBytes * ResidualFactor);
-            // 可用空间小于要求大小
-            if (availableFreeSpace < requireStorageSize)
+            if (availableFreeSpace > 0)
             {
-                throw new DriveShortageInsufficientException(requireStorageSize, "该路径存储空间不足");
+                var requireStorageSize = (long)(downLoadTotalBytes * ResidualFactor);
+                // 可用空间小于要求大小
+                if (availableFreeSpace < requireStorageSize)
+                {
+                    throw new DriveShortageInsufficientException(requireStorageSize, "该路径存储空间不足");
+                }
             }
+        }
+        
+        protected override void OnExit()
+        {
+
         }
 
         public override EUpdatePhase UpdatePhase => EUpdatePhase.CheckDeviceStorage;

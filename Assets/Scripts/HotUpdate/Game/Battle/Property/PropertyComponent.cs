@@ -38,8 +38,10 @@ namespace HotUpdate.Game.Battle.Property
                     Context.EventBus.TriggerEvent(new HpChangedEvent(Context, battleProperty.CurrentHp, battleProperty.MaxHp, BattleEntity));
                     break;
                 case E_DynamicPropertyType.MaxHp:
+                    var buildHp = _bonusToValueMap[E_PropertyBonusType.BuildHp];
+                    var percentHp = _bonusToValueMap[E_PropertyBonusType.PercentHp];
                     // 更新最大血量
-                    battleProperty.MaxHp = newValue;
+                    battleProperty.MaxHp = (int)((buildHp + battleProperty.BaseHp) * (1 + CalcPercent(percentHp)));
                     // 触发血量变更事件（当前血量、新最大血量）
                     Context.EventBus.TriggerEvent(new HpChangedEvent(Context, battleProperty.CurrentHp, newValue, BattleEntity));
                     break;
@@ -106,6 +108,11 @@ namespace HotUpdate.Game.Battle.Property
             }
         }
 
+        private float CalcPercent(int percent)
+        {
+            return percent / 100f;
+        }
+        
         /// <summary>
         /// 泛型方法：获取当前战斗属性的强类型实例
         /// </summary>

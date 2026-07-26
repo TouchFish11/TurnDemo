@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using HotUpdate.Base.Component;
+using HotUpdate.Base.ECModule;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.UI;
 
@@ -10,7 +10,7 @@ namespace HotUpdate.Game.Battle.Statuses
     /// 状态组件 - 管理实体的所有状态效果（Buff/Debuff）
     /// 负责状态的添加、移除、回合结算和数值加成计算
     /// </summary>
-    [ComponentId(typeof(StatusComponent))]
+    [ComponentId]
     public class StatusComponent : BattleComponent
     {
         // 当前生效的状态列表

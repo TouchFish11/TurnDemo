@@ -1,4 +1,4 @@
-using HotUpdate.Base.Object;
+using HotUpdate.Base.ECModule;
 using HotUpdate.Game.Main.Move;
 using UnityEngine;
 

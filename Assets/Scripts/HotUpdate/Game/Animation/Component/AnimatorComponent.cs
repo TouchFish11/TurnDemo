@@ -1,6 +1,6 @@
 using System;
 using HotUpdate.Base.Animation;
-using HotUpdate.Base.Component;
+using HotUpdate.Base.ECModule;
 using UnityEngine;
 
 namespace HotUpdate.Game.Animation.Component
@@ -9,7 +9,7 @@ namespace HotUpdate.Game.Animation.Component
     /// 动画控制器组件
     /// </summary>
     [ComponentCore(typeof(AnimatorComponentCore))]
-    [ComponentId(typeof(AnimatorComponent))]
+    [ComponentId]
     public class AnimatorComponent : BaseComponent
     {
         private AnimatorComponentCore _animatorComponentCore;

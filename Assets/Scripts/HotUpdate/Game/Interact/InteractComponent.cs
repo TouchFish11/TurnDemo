@@ -1,4 +1,4 @@
-using HotUpdate.Base.Component;
+using HotUpdate.Base.ECModule;
 
 namespace HotUpdate.Game.Interact
 {
@@ -6,7 +6,7 @@ namespace HotUpdate.Game.Interact
     /// 交互组件
     /// 负责管理实体的交互逻辑，包括交互对象的添加/移除、交互触发、对话结束后退出交互等核心逻辑
     /// </summary>
-    [ComponentId(typeof(InteractComponent))]
+    [ComponentId]
     [ComponentCore(typeof(InteractComponentCore))]
     public class InteractComponent : BaseComponent
     {

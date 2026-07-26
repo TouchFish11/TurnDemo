@@ -4,10 +4,12 @@ using Core.DI;
 using Core.Inputs.ActionAsset;
 using Core.Mono;
 using Core.Utility;
-using HotUpdate.Base.Component;
+using HotUpdate.Base.Data;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Scene;
 using HotUpdate.Game.Animation.Component;
+using HotUpdate.Game.Inputs;
+using HotUpdate.Game.Main.Move;
 using UnityEngine;
 
 namespace HotUpdate.Game.Main
@@ -34,8 +36,7 @@ namespace HotUpdate.Game.Main
             }
             
             // 初始化游戏数据
-            // TODO：先加载配置
-            //await _gameDataManager.LoadDataAsync();
+            await _gameDataManager.LoadConfigAsync();
             // 再加载数据，数据依赖配置
             await _gameDataManager.LoadDataAsync();
             

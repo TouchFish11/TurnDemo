@@ -1,6 +1,6 @@
 using Core.Log;
 using HotUpdate.Base.Animation;
-using HotUpdate.Base.Component;
+using HotUpdate.Base.ECModule;
 using HotUpdate.Game.Inputs;
 using UnityEngine;
 using Logger = Core.Log.Logger;
@@ -11,7 +11,7 @@ namespace HotUpdate.Game.Animation.Component
     /// 常规动画组件
     /// 负责处理角色基础的移动、普通攻击等常规动画逻辑
     /// </summary>
-    [ComponentId(typeof(NormalAnimationComponent))]
+    [ComponentId]
     public class NormalAnimationComponent : BaseComponent, IAnimationComponent
     {
         private AnimatorComponent _animatorComponent;
@@ -78,6 +78,9 @@ namespace HotUpdate.Game.Animation.Component
 
         private void OnAttackFinished(AnimationConfig config)
         {
+            if(config.animationType != EAnimationType.WorldAttack)
+                return;
+            
             if (lastInput != Vector3.zero)
             {
                 _animatorComponent.PlayCommon(EAnimationType.Run);

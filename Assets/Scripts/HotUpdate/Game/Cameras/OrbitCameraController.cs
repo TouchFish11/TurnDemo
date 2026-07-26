@@ -1,6 +1,6 @@
 using Core.DI;
 using Core.Mono;
-using HotUpdate.Base.Object;
+using HotUpdate.Base.ECModule;
 using HotUpdate.Game.Inputs;
 using UnityEngine;
 

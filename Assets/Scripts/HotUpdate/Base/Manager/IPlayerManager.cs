@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using HotUpdate.Base.Object;
+using HotUpdate.Base.ECModule;
 
 namespace HotUpdate.Base.Manager
 {

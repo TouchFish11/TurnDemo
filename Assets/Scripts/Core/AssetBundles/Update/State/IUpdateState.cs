@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Core.AssetBundles.Update.Core;
 
 namespace Core.AssetBundles.Update.State
@@ -20,13 +19,6 @@ namespace Core.AssetBundles.Update.State
         /// 状态激活时的初始化逻辑，如资源初始化、参数重置等
         /// </summary>
         void Enter();
-
-        /// <summary>
-        /// 执行状态核心逻辑
-        /// 包含该更新阶段的主要业务逻辑（异步执行）
-        /// </summary>
-        /// <returns>异步执行结果，true表示执行完成且无异常，false表示执行异常</returns>
-        Task<UpdateResult> Execute();
 
         /// <summary>
         /// 退出状态

@@ -1,6 +1,5 @@
 using Core.DI;
-using HotUpdate.Base.Component;
-using HotUpdate.Base.Object;
+using HotUpdate.Base.ECModule;
 
 namespace HotUpdate.Base.Utility
 {
@@ -8,11 +7,11 @@ namespace HotUpdate.Base.Utility
     {
         private static long s_idCounter;
         
-        public static ComponentService Service { get; }
+        private static ComponentService s_service { get; }
 
         static EntityHelper()
         {
-            Service = DIContainer.Create<ComponentService>();
+            s_service = DIContainer.Create<ComponentService>();
         }
         
         /// <summary>
@@ -23,7 +22,7 @@ namespace HotUpdate.Base.Utility
         /// <returns></returns>
         public static void InitEntity<T>(T entityObject) where T : IEntityObject
         {
-            entityObject.InitBase(s_idCounter++, Service);
+            entityObject.InitBase(s_idCounter++, s_service);
         }
     }
 }

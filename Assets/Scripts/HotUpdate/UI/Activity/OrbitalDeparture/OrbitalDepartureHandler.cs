@@ -1,4 +1,5 @@
 using Core.DI;
+using HotUpdate.Base.Data;
 using HotUpdate.Base.Manager;
 using HotUpdate.UI.Activity.Base;
 
@@ -6,11 +7,11 @@ namespace HotUpdate.UI.Activity.OrbitalDeparture
 {
     public class OrbitalDepartureHandler : ActivityContentHandler<OrbitalDepartureActivityUI>
     {
-        [Inject] private IActivityDataManager _activityDataManager;
+        [Inject] private IActivityDataProvider activityDataProvider;
         
         public void ReceiveReward()
         {
-            if (!_activityDataManager.TryGetData(activity.ActivityId, out var activityData))
+            if (!activityDataProvider.TryGetData(activity.ActivityId, out var activityData))
                 return;
             
             if (!activityData.IsComplete)
@@ -23,7 +24,7 @@ namespace HotUpdate.UI.Activity.OrbitalDeparture
 
         public void UpdateShow()
         {
-            if (!_activityDataManager.TryGetData(activity.ActivityId, out var activityData))
+            if (!activityDataProvider.TryGetData(activity.ActivityId, out var activityData))
                 return;
             
             activity.activityJoinComponent.SetTitle(out var txtJoin);

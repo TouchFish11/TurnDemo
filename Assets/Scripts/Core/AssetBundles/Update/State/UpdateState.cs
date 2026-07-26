@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.AssetBundles.Update.Core;
 using Core.DI;
@@ -16,35 +15,34 @@ namespace Core.AssetBundles.Update.State
         // 更新结果工厂
         [Inject] protected UpdateResultFactory updateResultFactory;
         // 持有AssetBundle更新器实例
-        [Inject] protected readonly IAssetBundleUpdater assetBundleUpdater;
+        [Inject] protected IAssetBundleUpdater assetBundleUpdater;
         // 对象池管理器接口
-        [Inject] protected readonly IPoolManager poolManager;
+        [Inject] protected IPoolManager poolManager;
         // Json管理器接口
-        [Inject] protected readonly IJsonManager jsonManager;
+        [Inject] protected IJsonManager jsonManager;
         // 更新服务
-        [Inject] protected readonly UpdateService updateService;
-
+        [Inject] protected UpdateService updateService;
+        
         /// <summary>
-        /// 进入状态时的回调
+        /// 进入状态
         /// </summary>
-        public virtual void Enter()
+        public void Enter()
         {
             assetBundleUpdater.GetContext().UpdatePhase(UpdatePhase);
+            OnEnter();
         }
+        
+        protected abstract void OnEnter();
 
         /// <summary>
-        /// 执行状态核心逻辑
+        /// 退出状态时
         /// </summary>
-        /// <returns>是否执行成功</returns>
-        public abstract Task<UpdateResult> Execute();
-
-        /// <summary>
-        /// 退出状态时的回调
-        /// </summary>
-        public virtual void Exit()
+        public void Exit()
         {
-
+            OnExit();
         }
+        
+        protected abstract void OnExit();
 
         /// <summary>
         /// 解析AssetBundle对比文件（本地/远程清单）

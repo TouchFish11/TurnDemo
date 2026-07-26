@@ -17,24 +17,14 @@ namespace Core.AssetBundles.Update.State
     {
         // 损坏的AB包信息列表
         private readonly List<(string abName, long downloadedBytes, bool hashSame, string badHash)> _abBrokenInfos = new();
-        
-        public override void Enter()
-        {
-            _abBrokenInfos.Clear();
-            base.Enter();
-        }
 
-        /// <summary>
-        /// 执行资源完整性校验核心逻辑
-        /// </summary>
-        /// <returns>是否校验通过</returns>
-        public override async Task<UpdateResult> Execute()
+        protected override async void OnEnter()
         {
             try
             {
+                _abBrokenInfos.Clear();
                 // 执行完整性校验，传入进度回调
-                await CheckAssetsIntegrity((cureent, total) =>
-                    assetBundleUpdater.GetContext().UpdateCheckProgress(cureent, total));
+                await CheckAssetsIntegrity((cureent, total) => assetBundleUpdater.GetContext().UpdateCheckProgress(cureent, total));
 
                 // 替换正式清单文件
                 var tempListPath = PathUtility.GetAbLoadPath(FileUtility.TempCatalogDefaultName);
@@ -46,19 +36,21 @@ namespace Core.AssetBundles.Update.State
 
                 // 持久化缓存文件（记录已下载的AssetBundle信息）
                 await updateService.WriteCacheFileAsync(assetBundleUpdater.GetContext().CachePackageCollection);
+                
+                assetBundleUpdater.ChangePhase(EUpdatePhase.Finished);
             }
             catch (AssetBunleBrokenException assetBunleBrokenException)
             {
-                return updateResultFactory.CreateFailure(UpdateResult.EUpdateError.AssetBunleBroken, assetBunleBrokenException);
+                var result = updateResultFactory.CreateFailure(UpdateResult.EUpdateError.AssetBunleBroken, assetBunleBrokenException);
+                assetBundleUpdater.GetContext().UpdateOver(result);
             }
             catch (System.Exception exception)
             {
-                return updateResultFactory.CreateFailure(UpdateResult.EUpdateError.Unknown, exception);
+                var result = updateResultFactory.CreateFailure(UpdateResult.EUpdateError.Unknown, exception);
+                assetBundleUpdater.GetContext().UpdateOver(result);
             }
-            
-            return updateResultFactory.CreateSuccess();
         }
-
+        
         /// <summary>
         /// 校验AssetBundle资源完整性
         /// 对比已下载资源的大小、Hash与远程清单是否一致，标记不完整资源
@@ -112,12 +104,16 @@ namespace Core.AssetBundles.Update.State
             var sb = new StringBuilder();
             foreach (var abBrokenInfo in _abBrokenInfos)
             {
-                sb.AppendLine($"包名：{abBrokenInfo.abName}，已下载字节数：{abBrokenInfo.downloadedBytes}，Hash是否相等{abBrokenInfo.hashSame}，" +
-                              $"损坏包hash：{abBrokenInfo.badHash}");
+                sb.AppendLine($"包名：{abBrokenInfo.abName}，已下载字节数：{abBrokenInfo.downloadedBytes}，Hash是否相等{abBrokenInfo.hashSame}，" + $"损坏包hash：{abBrokenInfo.badHash}");
             }
             return sb.ToString();
         }
-        
+
+        protected override void OnExit()
+        {
+            
+        }
+
         /// <summary>
         /// 当前更新阶段标识
         /// </summary>

@@ -23,6 +23,8 @@ namespace Core.AssetBundles.Update.Core
         private ABUpdateContext _updateContext;
         // 更新状态列表
         private readonly List<IUpdateState> _updateStates = new();
+
+        private readonly Dictionary<EUpdatePhase, IUpdateState> _updateStateMap = new();
         // 当前更新状态
         private IUpdateState _currentUpdateState;
         // 当前更新状态索引
@@ -64,42 +66,52 @@ namespace Core.AssetBundles.Update.Core
         /// <summary>
         /// 执行AssetBundle更新检查及下载流程
         /// </summary>
-        public async void CheckUpdate()
+        public void CheckUpdate()
         {
-            try
-            {
-                _currentUpdateState = _updateStates[_stateIndex];
-                // 循环执行当前状态的逻辑，直到满足退出条件：
-                // 暂停下载（外部主动暂停） 当前状态为空（异常/终止） 状态执行失败
-                while (!_updateContext.IsPauseDownload && _currentUpdateState != null)
-                {
-                    // 执行当前状态的核心逻辑
-                    _currentUpdateState.Enter();
-                    var result = await _currentUpdateState.Execute();
-                    if (result.Success)
-                    {
-                        _currentUpdateState.Exit();
+            // try
+            // {
+            //     _currentUpdateState = _updateStates[_stateIndex];
+            //     // 循环执行当前状态的逻辑，直到满足退出条件：
+            //     // 暂停下载（外部主动暂停） 当前状态为空（异常/终止） 状态执行失败
+            //     while (!_updateContext.IsPauseDownload && _currentUpdateState != null)
+            //     {
+            //         // 执行当前状态的核心逻辑
+            //         var result = await _currentUpdateState.Enter();
+            //         if (result.Success)
+            //         {
+            //             _currentUpdateState.Exit();
+            //             if (_stateIndex == _updateStates.Count - 1)
+            //             {
+            //                 return;
+            //             }
+            //
+            //             _currentUpdateState = _updateStates[++_stateIndex];
+            //             continue;
+            //         }
+            //
+            //         _updateContext.UpdateOver(result);
+            //         return;
+            //     }
+            // }
+            // catch (System.Exception e)
+            // {
+            //     Logger.LogError(ELogTags.HotUpdate, $"下载异常,{e.Message}");
+            //     _updateContext.UpdateOver(_updateResultFactory.CreateFailure(UpdateResult.EUpdateError.Unknown, e));
+            // }
 
-                        if (_stateIndex == _updateStates.Count - 1)
-                        {
-                            return;
-                        }
-
-                        _currentUpdateState = _updateStates[++_stateIndex];
-                        continue;
-                    }
-
-                    _updateContext.UpdateOver(result);
-                    return;
-                }
-            }
-            catch (System.Exception e)
-            {
-                Logger.LogError(ELogTags.HotUpdate, $"{nameof(AssetBundleUpdater)}: 下载异常,{e.Message}");
-                _updateContext.UpdateOver(_updateResultFactory.CreateFailure(UpdateResult.EUpdateError.Unknown, e));
-            }
+            ChangePhase(EUpdatePhase.DownLoadRemoteCatalogFile);
         }
-
+        
+        public void ChangePhase(EUpdatePhase updatePhase)
+        {
+            if (_updateContext.IsPauseDownload)
+                return;
+                
+            _currentUpdateState?.Exit();
+            _currentUpdateState = _updateStateMap[updatePhase];
+            _currentUpdateState.Enter();
+        }
+        
         /// <summary>
         /// 初始化AssetBundle本地加载/缓存路径
         /// </summary>

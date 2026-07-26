@@ -93,7 +93,7 @@ namespace Core.AssetBundles.Management
         /// <returns></returns>
         public async Task<AssetWrapper> LoadAssetAsync<T>(string key) where T : Object
         {
-            // 存在该资源缓存，直接返回
+            // 存在该资源缓存，增加引用计数后直接返回
             if (_assetWrappers.TryGetValue(key, out var assetWrapper))
             {
                 assetWrapper.Retain();
@@ -173,7 +173,7 @@ namespace Core.AssetBundles.Management
             // 创建新的加载任务，异步加载指定资源AB包
             var bundleWrapper = await _assetBundleManager.LoadBundleAsync(spriteAssetEntry.bundleName);
             // 加载图集资源
-            var assetWrapper = await bundleWrapper.LoadAssetAsync<SpriteAtlas>(atlasKey, spriteAssetEntry.spriteAssetName);
+            var assetWrapper = await bundleWrapper.LoadAssetAsync<SpriteAtlas>(atlasKey, spriteAssetEntry.atlasAssetPath);
             // 相同图集的不同图片，不允许重复添加图集
             _assetWrappers.TryAdd(atlasKey, assetWrapper);
             // 初始引用

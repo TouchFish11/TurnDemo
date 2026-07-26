@@ -1,7 +1,7 @@
 using System.Collections;
 using Core.Log;
 using HotUpdate.Base.Animation;
-using HotUpdate.Base.Component;
+using HotUpdate.Base.ECModule;
 using HotUpdate.Base.Utility;
 using HotUpdate.Game.Battle.Core;
 using UnityEngine;
@@ -14,7 +14,7 @@ namespace HotUpdate.Game.Animation.Component
     /// 负责处理战斗实体（玩家/怪物）的各类战斗相关动画状态切换，
     /// 监听技能选择、技能释放等战斗事件，并根据事件触发对应动画
     /// </summary>
-    [ComponentId(typeof(BattleAnimationComponent))]
+    [ComponentId]
     public class BattleAnimationComponent : BattleComponent, IBattleAnimationComponent
     {
         private AnimatorComponent _animatorComponent;

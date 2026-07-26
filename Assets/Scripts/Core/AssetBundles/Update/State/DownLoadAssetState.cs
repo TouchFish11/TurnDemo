@@ -27,50 +27,43 @@ namespace Core.AssetBundles.Update.State
         // 上次更新下载速度的时间戳
         private float _lastSpeedUpdateTime;
         // 下载速度更新间隔（秒）
-        private readonly float _speedUpdateInterval;
+        private readonly float _speedUpdateInterval = GlobalSettings.Instance.speedUpdateInterval;
         // 是否正在下载中
         private bool _isDownloading;
-        
-        public DownLoadAssetState()
-        {
-            _speedUpdateInterval = GlobalSettings.Instance.speedUpdateInterval;
-        }
 
-        /// <summary>
-        /// 执行资源下载核心逻辑
-        /// </summary>
-        /// <returns>是否下载成功</returns>
-        public override async Task<UpdateResult> Execute()
+        protected override async void OnEnter()
         {
             try
             {
                 // 获取需要下载的总字节数
-                var downLoadTotalBytes = (ulong)ABPackageCollection.GetTotalDownLoadBytes(
-                    assetBundleUpdater.GetContext().RemotePackageCollection,
-                    assetBundleUpdater.GetContext().WaitDownloadCollection
-                );
+                var downLoadTotalBytes = (ulong)ABPackageCollection.GetTotalDownLoadBytes(assetBundleUpdater.GetContext().RemotePackageCollection, assetBundleUpdater.GetContext().WaitDownloadCollection);
                 // 初始化下载速度更新
                 _monoAdapter.StartCoroutine(UpdateSpeed());
 
                 // 异步下载资源，传入进度回调，更新下载进度
-                await DownLoadAssetsAsync(bytesPerFrame =>
-                    assetBundleUpdater.GetContext().UpdateProgress(bytesPerFrame, downLoadTotalBytes));
+                await DownLoadAssetsAsync(bytesPerFrame => assetBundleUpdater.GetContext().UpdateProgress(bytesPerFrame, downLoadTotalBytes));
 
                 // 标记下载结束
                 _isDownloading = false;
+                assetBundleUpdater.ChangePhase(EUpdatePhase.CheckAssetsIntegrity);
             }
             catch (AssetBunleIncompleteException assetBunleIncompleteException)
             {
-                return updateResultFactory.CreateFailure(UpdateResult.EUpdateError.AssetBunleIncomplete, assetBunleIncompleteException);
+                var result = updateResultFactory.CreateFailure(UpdateResult.EUpdateError.AssetBunleIncomplete, assetBunleIncompleteException);
+                assetBundleUpdater.GetContext().UpdateOver(result);
+            }
+            catch (AssetBundDownloadCancelled assetBundDownloadCancelled)
+            {
+                var result = updateResultFactory.CreateFailure(UpdateResult.EUpdateError.AssetBundDownloadCancelled, assetBundDownloadCancelled);
+                assetBundleUpdater.GetContext().UpdateOver(result);
             }
             catch (System.Exception exception)
             {
-                return updateResultFactory.CreateFailure(UpdateResult.EUpdateError.Unknown, exception);
+                var result = updateResultFactory.CreateFailure(UpdateResult.EUpdateError.Unknown, exception);
+                assetBundleUpdater.GetContext().UpdateOver(result);
             }
-            
-            return updateResultFactory.CreateSuccess();
         }
-
+        
         /// <summary>
         /// 异步下载AssetBundle资源
         /// 支持并发下载、断点续传、失败重试、进度回调
@@ -108,9 +101,13 @@ namespace Core.AssetBundles.Update.State
              * 控制并发数，待下载队列有请求且并发数未达上限时，启动新下载
              * 处理下载失败的请求，更新失败队列
              */
-            while (!context.IsPauseDownload && 
-                   (context.RequesterWaitList.Count > 0 || context.RequesterLoadingList.Count > 0 || !(context.RequesterWaitList.Count == 0 && context.RequesterLoadingList.Count == 0 && context.RequesterFailList.Count >= 0)))
+            while (!context.IsPauseDownload && (context.RequesterWaitList.Count > 0 || context.RequesterLoadingList.Count > 0 || !(context.RequesterWaitList.Count == 0 && context.RequesterLoadingList.Count == 0 && context.RequesterFailList.Count >= 0)))
             {
+                if (context.IsPauseDownload)
+                {
+                    throw new AssetBundDownloadCancelled("下载取消");
+                }
+                
                 // 启动新的下载请求（控制并发数）
                 while (context.RequesterLoadingList.Count < maxConcurrencyNum && context.RequesterWaitList.Count > 0)
                 {
@@ -226,6 +223,11 @@ namespace Core.AssetBundles.Update.State
             
             sb.AppendLine($"当前下载数：{currentCount}，总下载数：{assetBundleUpdater.GetContext().CachePackageCollection.Count}");
             return sb.ToString();
+        }
+
+        protected override void OnExit()
+        {
+
         }
 
         /// <summary>

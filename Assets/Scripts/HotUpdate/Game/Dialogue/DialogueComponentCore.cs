@@ -1,6 +1,6 @@
 using Core.DI;
-using HotUpdate.Base.Component;
 using HotUpdate.Base.Dialogue;
+using HotUpdate.Base.ECModule;
 using HotUpdate.Base.Manager;
 
 namespace HotUpdate.Game.Dialogue
@@ -14,7 +14,6 @@ namespace HotUpdate.Game.Dialogue
 
         protected override void OnInit()
         {
-            base.OnInit();
             // 监听对话结束事件
             _dialogueManager.OnDialogueEnd += ((IDialable)Component).OnDialogueEnd;
             // 监听对话开始事件

@@ -16,7 +16,7 @@ namespace HotUpdate.Base.Animation
         [FormerlySerializedAs("subStateMachineName")] public List<string> subStateMachineNames;
         /// 动画状态名称，不包含层级和子状态机
         public string animationStateName;
-        /// 动画hash，由状态名获取
+        /// 动画hash，由状态名自动计算获取
         public int animationHash;
         /// 动画类型
         public EAnimationType animationType;
@@ -24,7 +24,7 @@ namespace HotUpdate.Base.Animation
         public bool loop;
         /// 是否作为当前层的默认状态，每层只能有一个默认状态
         public bool isDefault;
-        /// 上一个动画过渡到当前配置的动画的时间，传入到CrossFadeAPI
+        /// 上一个动画过渡到当前配置的动画的绝对时间，传入到CrossFadeAPI
         public float transitionInTime = 0.1f;
         /// 当前状态动画的起始播放偏移
         public float normalizedTimeOffset;

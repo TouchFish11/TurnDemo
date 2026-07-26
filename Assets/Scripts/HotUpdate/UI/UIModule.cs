@@ -7,6 +7,7 @@ using HotUpdate.Base.UI;
 using HotUpdate.Game.Battle.UI;
 using HotUpdate.Game.Dialogue;
 using HotUpdate.UI.Battle.MonsterStateUI;
+using HotUpdate.UI.Dialogue;
 
 namespace HotUpdate.UI
 {

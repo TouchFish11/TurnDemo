@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Core.DI;
 using Core.GlobalEvent;
-using HotUpdate.Base.Component;
+using HotUpdate.Base.ECModule;
 using HotUpdate.Base.Manager;
 using HotUpdate.Game.Inputs;
 

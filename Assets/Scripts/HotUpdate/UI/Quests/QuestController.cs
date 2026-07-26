@@ -6,12 +6,12 @@ using Core.Log;
 using Core.Serialize.Json;
 using Core.UI.ViewController;
 using HotUpdate.Base.Collection;
+using HotUpdate.Base.Data;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.UI;
 using HotUpdate.Common.Config.Quest;
 using HotUpdate.Common.Config.Quest.Config;
-
-using HotUpdate.UI.Item;
+using HotUpdate.UI.Items;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
@@ -26,7 +26,7 @@ namespace HotUpdate.UI.Quests
         [Inject] private IJsonManager _jsonManager;
         [Inject] private ObjectSpawner _objectSpawner;
         [Inject] private ItemService _itemService;
-        [Inject] private IQuestDataManager _questDataManager;
+        [Inject] private IQuestDataProvider questDataProvider;
         [Inject] private IUIService _uiservice;
         [Inject] private IQuestManager _questManager;
         
@@ -152,14 +152,14 @@ namespace HotUpdate.UI.Quests
             // 临时设置任务分组允许取消选中，避免初始化过程中Toggle无法响应事件
             view.TaskItemGroup.allowSwitchOff = true;
             // 获取任务数据集合
-            _questCollection = _questDataManager.QuestCollection;
+            _questCollection = questDataProvider.QuestCollection;
             if (_questCollection == null)
                 throw new NullReferenceException($"{nameof(_questCollection)} is null");
             
             // 加载资源
             using var handle = await GameAsset.LoadAssetAsync<TextAsset>(AssetKeys.QuestConfig);
             // 解析Json
-            QuestConfig = _jsonManager.FromJson<QuestConfig>(handle.Asset.text, settings:NewtonsoftJsonUtility.SerializerSettings);
+            QuestConfig = _jsonManager.FromJson<QuestConfig>(handle.Asset.text, settings:NewtonsoftJsonUtility.DefaultSerializerSettings);
             
             foreach (var quest in _questManager.GetQuests())
             {
@@ -259,7 +259,7 @@ namespace HotUpdate.UI.Quests
                 CurrentQuestItemInfo = selectConfig;
                 _objectSpawner.Release(view.RewardItems);
 
-                var questCollection = _questDataManager.QuestCollection;
+                var questCollection = questDataProvider.QuestCollection;
                 if (!questCollection.TryGetValue(id, out var questData))
                     throw new NullReferenceException($"{nameof(questData)} is null");
 

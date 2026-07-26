@@ -1,6 +1,7 @@
 using System;
 using Core.DI;
 using Core.UI;
+using HotUpdate.Base.Data;
 using HotUpdate.Base.Manager;
 using HotUpdate.UI.Activity.Base;
 using HotUpdate.UI.Activity.Common;
@@ -16,7 +17,7 @@ namespace HotUpdate.UI.Activity.OrbitalDeparture
     /// </summary>
     public class OrbitalDepartureActivityUI : ActivityUIBehaviourBase
     {
-        [Inject] private IActivityDataManager _activityDataManager;
+        [Inject] private IActivityDataProvider activityDataProvider;
 
         [InjectUI] private Image imgActivityBackground;
         [InjectUI] private TextMeshProUGUI txtActivityDescrition;

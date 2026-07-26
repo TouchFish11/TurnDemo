@@ -49,6 +49,11 @@ namespace Core.AssetBundles.Update.Core
             AssetBunleIncomplete,
             
             /// <summary>
+            /// 下载取消
+            /// </summary>
+            AssetBundDownloadCancelled,
+            
+            /// <summary>
             /// 未知
             /// 非继承UpdateException的异常归类为该类型
             /// </summary>

@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Core.DI;
 using Game.Module;
+using HotUpdate.Base.Data;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Module;
 using HotUpdate.Base.Scene;

@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using Core.AssetBundles.Management;
 using HotUpdate.Base.Animation;
-using HotUpdate.Base.Object;
+using HotUpdate.Base.ECModule;
 using HotUpdate.Base.Utility;
 using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Battle.Object.Monster;

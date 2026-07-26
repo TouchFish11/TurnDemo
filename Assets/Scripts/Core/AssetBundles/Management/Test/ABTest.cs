@@ -162,7 +162,7 @@ namespace Core.AssetBundles.Management.Test
             
             foreach (var assetHandle in handles)
             {
-                Debug.Log(assetHandle.Assets.Count);
+                Debug.Log(assetHandle.Assets.Length);
                 GameAsset.Release(assetHandle);
             }
         }

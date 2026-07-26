@@ -1,6 +1,6 @@
 using Core.UI;
 using HotUpdate.UI.Activity.Base;
-using HotUpdate.UI.Item;
+using HotUpdate.UI.Items;
 using UnityEngine.UI;
 
 namespace HotUpdate.UI.Activity.Common
@@ -24,7 +24,7 @@ namespace HotUpdate.UI.Activity.Common
         public void SetAwards(params ItemGrid[] awards)
         {
             foreach (var award in awards)
-            {
+            {     
                 SetAward(award);
             }
         }

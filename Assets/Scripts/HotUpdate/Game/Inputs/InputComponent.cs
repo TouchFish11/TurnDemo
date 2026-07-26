@@ -1,5 +1,5 @@
 using System;
-using HotUpdate.Base.Component;
+using HotUpdate.Base.ECModule;
 using UnityEngine;
 
 namespace HotUpdate.Game.Inputs
@@ -7,7 +7,7 @@ namespace HotUpdate.Game.Inputs
     /// <summary>
     /// 输入组件，负责处理玩家的各类输入事件（键鼠、摇杆等），并对外暴露输入相关的事件回调
     /// </summary>
-    [ComponentId(typeof(InputComponent))]
+    [ComponentId]
     [ComponentCore(typeof(InputComponentCore))]
     [RequireComponent(typeof(PlayerInputComponent))]
     public class InputComponent : BaseComponent

@@ -20,7 +20,7 @@ namespace Editor.Json
             }
             
             // 序列化数据
-            var json = DIContainer.Create<JsonManager>().ToJson(soBase.target, settings: NewtonsoftJsonUtility.SerializerSettings);
+            var json = DIContainer.Create<JsonManager>().ToJson(soBase.target, settings: NewtonsoftJsonUtility.DefaultSerializerSettings);
             
             // 保存到文件
             var path = EditorUtility.SaveFilePanel(

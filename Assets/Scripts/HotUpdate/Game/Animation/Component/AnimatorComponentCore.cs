@@ -5,7 +5,7 @@ using Core.DI;
 using Core.Mono;
 using Core.Serialize.Json;
 using HotUpdate.Base.Animation;
-using HotUpdate.Base.Component;
+using HotUpdate.Base.ECModule;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Utility;
 using UnityEngine;
@@ -43,7 +43,7 @@ namespace HotUpdate.Game.Animation.Component
                 
             // 读取动画配置
             var collectionJson = AnimationUtility.GetAnimConfigCollectionJsonByType(Component.EntityObject);
-            var collection = _jsonManager.FromJson<AnimationConfigCollection>(collectionJson, settings: NewtonsoftJsonUtility.SerializerSettings);
+            var collection = _jsonManager.FromJson<AnimationConfigCollection>(collectionJson, settings: NewtonsoftJsonUtility.DefaultSerializerSettings);
 
             var allConfigs = new List<AnimationConfig>();
             allConfigs.AddRange(collection.commonCollection.animationConfigs);
@@ -136,7 +136,7 @@ namespace HotUpdate.Game.Animation.Component
         internal void PlayInternal(AnimatorState state)
         {
             var config = state.Config;
-            Component.Animator.CrossFade(config.animationHash, config.transitionInTime, (int)config.layer, config.normalizedTimeOffset);
+            Component.Animator.CrossFadeInFixedTime(config.animationHash, config.transitionInTime, (int)config.layer, config.normalizedTimeOffset);
         }
 
         /// <summary>

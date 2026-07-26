@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using Core.DI;
+using Core.HotUpdate;
 using HotUpdate.Base.Quest;
 using HotUpdate.Common.Config.Quest;
 using HotUpdate.Common.Config.Quest.Config;
@@ -11,16 +14,24 @@ namespace HotUpdate.Game.Quests.Condition
     /// </summary>
     public class QuestConditionFactory
     {
-        private static readonly Dictionary<EQuestConditionType, Func<QuestConditionConfig, IQuestCondition>> _conditions = new();
+        private readonly Dictionary<EQuestConditionType, Func<QuestConditionConfig, IQuestCondition>> _conditions = new();
 
-        /// <summary>
-        /// 注册任务条件类型
-        /// </summary>
-        /// <param name="conditionType"></param>
-        /// <param name="condition"></param>
-        public static void Register(EQuestConditionType conditionType, Func<QuestConditionConfig, IQuestCondition> condition)
+        private QuestConditionFactory(IHotUpdateManager hotUpdateManager)
         {
-            _conditions.Add(conditionType, condition);
+            foreach (var hotAssembly in hotUpdateManager.GetHotAssemblies())
+            {
+                foreach (var type in hotAssembly.GetTypes())
+                {
+                    if(!typeof(IQuestCondition).IsAssignableFrom(type) || type.IsAbstract || type.IsInterface)
+                        continue;
+
+                    var conditionTypeIdAttribute = type.GetCustomAttribute<ConditionTypeIdAttribute>();
+                    if (conditionTypeIdAttribute != null)
+                    {
+                        _conditions.Add(conditionTypeIdAttribute.ConditionType, config => (IQuestCondition)DIContainer.Create(type, config));
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -29,7 +40,7 @@ namespace HotUpdate.Game.Quests.Condition
         /// <param name="conditionType"></param>
         /// <param name="conditionConfig"></param>
         /// <returns></returns>
-        public static IQuestCondition CreateCondition(EQuestConditionType conditionType, QuestConditionConfig conditionConfig)
+        public IQuestCondition CreateCondition(EQuestConditionType conditionType, QuestConditionConfig conditionConfig)
         {
             return _conditions.TryGetValue(conditionType, out var condition) ? condition(conditionConfig) : null;
         }

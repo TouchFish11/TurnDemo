@@ -22,5 +22,7 @@ namespace Core.AssetBundles.Update.Core
         /// 执行更新前先调用该方法
         /// </summary>
         void Init();
+
+        void ChangePhase(EUpdatePhase updatePhase);
     }
 }

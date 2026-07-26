@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
 using Core.UI.ViewController;
+using HotUpdate.Base.Data;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Settings;
 using HotUpdate.Base.UI;
@@ -17,7 +18,7 @@ namespace HotUpdate.UI.Settings.UI
     /// </summary>
     public class SettingsController : UIController<SettingsView>, IBlockOperation
     {
-        [Inject] private IMainDataManager _mainDataManager;
+        [Inject] private IMainDataProvider mainDataProvider;
         [Inject] private ObjectSpawner _objectSpawner;
         [Inject] private IUIService _uiService;
         private GameSettings _gameSettings;
@@ -55,9 +56,9 @@ namespace HotUpdate.UI.Settings.UI
         private async Task ShowSettings()
         {
             // 加载游戏设置配置
-            var settingsConfig = _mainDataManager.GameSettingsConfig;
+            var settingsConfig = mainDataProvider.GameSettingsConfig;
             // 获取用户游戏设置数据
-            var settings = _mainDataManager.GameSettings;
+            var settings = mainDataProvider.GameSettings;
             // 创建侧边栏
             var settingOpt = await _objectSpawner.SpawnAsync<SettingOpt>(AssetKeys.SettingOpt, view.Opts);
             
@@ -100,14 +101,14 @@ namespace HotUpdate.UI.Settings.UI
                     settingSliderViewModel.Progress.Subscribe(value =>
                     {
                         var progress = value / SettingsUtil.SLIDER_MULTIPLIER;
-                        _mainDataManager.GameSettings[settingType] = progress;
+                        mainDataProvider.GameSettings[settingType] = progress;
                         ((ISliderSettingHandler)_settingHandlers[settingType]).Excute(progress);
                     });
                     break;
                 case SettingDropdownViewModel settingDropdownViewModel:
                     settingDropdownViewModel.OptionIndex.Subscribe(optionIndex =>
                     {
-                        _mainDataManager.GameSettings[settingType] = optionIndex; 
+                        mainDataProvider.GameSettings[settingType] = optionIndex; 
                         ((IDropdownSettingHandler)_settingHandlers[settingType]).Execute(optionIndex);
                     });
                     break;

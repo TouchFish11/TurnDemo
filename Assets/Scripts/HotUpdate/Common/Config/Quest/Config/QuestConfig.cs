@@ -5,13 +5,13 @@ using Newtonsoft.Json;
 namespace HotUpdate.Common.Config.Quest.Config
 {
     /// <summary>
-    /// 任务配置，任务项集合
+    /// 任务配置，所有任务的集合，任务项集合
     /// </summary>
     [Serializable]
     public class QuestConfig
     {
         /// <summary>
-        /// 任务项
+        /// 任务项，单个具体任务
         /// </summary>
         [Serializable]
         [JsonObject(MemberSerialization.OptIn)]

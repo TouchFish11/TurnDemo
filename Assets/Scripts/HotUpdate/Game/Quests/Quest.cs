@@ -24,14 +24,14 @@ namespace HotUpdate.Game.Quests
         
         public event Action<int> OnQuestComplete;
 
-        public Quest(QuestConfig.QuestItem questItem, QuestData questData)
+        public Quest(QuestConfig.QuestItem questItem, QuestData questData, QuestConditionFactory questConditionFactory)
         {
             _questItem = questItem;
             _questData = questData;
             foreach (var questDataNodeData in questData.GetNodeDatas())
             {
                 var nodeConfig = _questItem.nodeConfigs.Find(config => config.nodeId == questDataNodeData.NodeId);
-                var condition = QuestConditionFactory.CreateCondition(nodeConfig.conditionType, nodeConfig.conditionConfig);
+                var condition = questConditionFactory.CreateCondition(nodeConfig.conditionType, nodeConfig.conditionConfig);
                 var questNode = new QuestNode(nodeConfig, questDataNodeData, condition);
                 questNode.OnComplete += SwitchNext;
                 _questNodes.Add(questDataNodeData.NodeId, questNode);

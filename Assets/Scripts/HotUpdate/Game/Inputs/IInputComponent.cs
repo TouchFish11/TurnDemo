@@ -1,5 +1,5 @@
 using System;
-using HotUpdate.Base.Component;
+using HotUpdate.Base.ECModule;
 using UnityEngine;
 
 namespace HotUpdate.Game.Inputs

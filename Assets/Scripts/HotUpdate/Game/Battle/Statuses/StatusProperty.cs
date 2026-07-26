@@ -3,7 +3,7 @@
 namespace HotUpdate.Game.Battle.Statuses
 {
     /// <summary>
-    /// 状态熟悉
+    /// 状态属性
     /// </summary>
     public class StatusProperty
     {

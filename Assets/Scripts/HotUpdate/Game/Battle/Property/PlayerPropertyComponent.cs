@@ -1,4 +1,4 @@
-using HotUpdate.Base.Component;
+using HotUpdate.Base.ECModule;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Object.Role;
 
@@ -7,7 +7,7 @@ namespace HotUpdate.Game.Battle.Property
     /// <summary>
     /// 角色属性组件
     /// </summary>
-    [ComponentId(typeof(PlayerPropertyComponent))]
+    [ComponentId]
     public class PlayerPropertyComponent : PropertyComponent
     {
         protected RoleProperty RoleProperty => battleProperty as RoleProperty;

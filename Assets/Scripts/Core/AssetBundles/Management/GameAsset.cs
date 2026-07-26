@@ -155,8 +155,8 @@ namespace Core.AssetBundles.Management
             AssetLocation.ELocationType locationType;
             if (entry is SpriteAssetEntry spriteAssetEntry)
             {
-                assetKey = spriteAssetEntry.atlasKey;
-                spriteKey = spriteAssetEntry.key;
+                assetKey = spriteAssetEntry.atlasKey;   // 不是entry.key，此时entry.key是图片名
+                spriteKey = spriteAssetEntry.key;   // 图片名
                 locationType = AssetLocation.ELocationType.Sprite;
             }
             else

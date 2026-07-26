@@ -5,8 +5,7 @@ using Core.DI;
 using Core.UI;
 using Core.Utility;
 using HotUpdate.Base.Service;
-
-using HotUpdate.UI.Item;
+using HotUpdate.UI.Items;
 using UnityEngine;
 
 namespace HotUpdate.UI.Activity.Base

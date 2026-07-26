@@ -5,7 +5,8 @@ using Core.GlobalEvent;
 using Core.GlobalEvent.Events;
 using Core.Inputs.ActionAsset;
 using Core.Mono;
-using HotUpdate.Base.Component;
+using HotUpdate.Base.Data;
+using HotUpdate.Base.ECModule;
 using HotUpdate.Base.Manager;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -20,7 +21,7 @@ namespace HotUpdate.Game.Inputs
     {
         [Inject] private IEventCenter _eventCenter;
         [Inject] private IInputSystem _inputSystem;
-        [Inject] private IMainDataManager _mainDataManager;
+        [Inject] private IMainDataProvider mainDataProvider;
         [Inject] private IMouseManager _mouseManager;
         [Inject] private IMonoAdapter _monoAdapter;
         
@@ -62,7 +63,7 @@ namespace HotUpdate.Game.Inputs
         protected override void OnInit()
         {
             // 初始化玩家输入，并注册输入动作触发回调
-            var container = _mainDataManager.MainDataCollection.InputActionContainer;
+            var container = mainDataProvider.MainDataCollection.InputActionContainer;
             var playerInputComponent = Component.EntityObject.GetComponent<PlayerInputComponent>();
             var playerInput = playerInputComponent.PlayerInput;
             _inputSystem.InitPlayerInput(playerInput, container, OnActionTrigger);

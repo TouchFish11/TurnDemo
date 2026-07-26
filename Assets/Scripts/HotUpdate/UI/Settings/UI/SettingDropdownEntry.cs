@@ -7,7 +7,7 @@ namespace HotUpdate.UI.Settings.UI
     /// <summary>
     /// 下拉列表设置
     /// </summary>
-    public class SettingDropdownEntry : UIBehaviourBase, ISettingsEntry
+    public class SettingDropdownEntry : UIBehaviourBase, ISettingsEntry 
     {
         [InjectUI] public TextMeshProUGUI txtName;
         [InjectUI] public TMP_Dropdown dpSettings;

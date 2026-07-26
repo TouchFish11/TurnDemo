@@ -18,6 +18,9 @@ namespace Core.AssetBundles.Management
         /// </summary>
         internal int Version { get; set; }
         
+        /// <summary>
+        /// 是否是组合句柄
+        /// </summary>
         internal bool IsCombine { get; set; }
 
         internal List<AssetHandle> CombineHandles { get; set; }
@@ -71,9 +74,9 @@ namespace Core.AssetBundles.Management
         public T Asset => _innerHandle.IsCombine ? null : GameAsset.GetAsset<T>(_innerHandle.HandleId, _innerHandle.Version);
 
         /// <summary>
-        /// 资源列表，若是非组合类型的句柄，返回空列表
+        /// 资源数组，若是非组合类型的句柄，返回空数组
         /// </summary>
-        public List<T> Assets => !_innerHandle.IsCombine ? new List<T>() : _innerHandle.CombineHandles.ConvertAll(handle => handle.ConvertTo<T>().Asset);
+        public T[] Assets => !_innerHandle.IsCombine ? Array.Empty<T>() : _innerHandle.CombineHandles.ConvertAll(handle => handle.ConvertTo<T>().Asset).ToArray();
 
         void IDisposable.Dispose()
         {

@@ -1,3 +1,4 @@
+using HotUpdate.Common.Config.Quest;
 using HotUpdate.Common.Config.Quest.Config;
 using HotUpdate.Common.Events;
 
@@ -6,9 +7,10 @@ namespace HotUpdate.Game.Quests.Condition
     /// <summary>
     /// 对话条件
     /// </summary>
+    [ConditionTypeId(EQuestConditionType.Talk)]
     public sealed class TalkCondition : QuestCondition<DialogueConditionConfig>
     {
-        public TalkCondition(DialogueConditionConfig questConditionConfig) : base(questConditionConfig)
+        public TalkCondition(QuestConditionConfig questConditionConfig) : base(questConditionConfig as DialogueConditionConfig)
         {
             
         }

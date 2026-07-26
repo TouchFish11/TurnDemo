@@ -121,12 +121,12 @@ namespace Editor.AssetBundle.Core
 
             // 读取本次生成的资源目录
             var newCatalogJson = File.ReadAllText(srcCatalogPath);
-            var newCatalog = jsonManager.FromJson<AssetCatalog>(newCatalogJson, settings: NewtonsoftJsonUtility.SerializerSettings);
+            var newCatalog = jsonManager.FromJson<AssetCatalog>(newCatalogJson, settings: NewtonsoftJsonUtility.DefaultSerializerSettings);
 
             AssetCatalog serverCatalog = null;
             if (File.Exists(dstCatalogPath))
             {
-                serverCatalog = jsonManager.FromJson<AssetCatalog>(File.ReadAllText(dstCatalogPath), settings: NewtonsoftJsonUtility.SerializerSettings);
+                serverCatalog = jsonManager.FromJson<AssetCatalog>(File.ReadAllText(dstCatalogPath), settings: NewtonsoftJsonUtility.DefaultSerializerSettings);
             }
 
             // 拷贝所有 .assetBundle 文件（只拷贝变化的）
@@ -239,7 +239,7 @@ namespace Editor.AssetBundle.Core
             }
             
             // 保存合并后的清单到服务器目录
-            var finalJson = jsonManager.ToJson(finalCatalog, settings: NewtonsoftJsonUtility.SerializerSettings);
+            var finalJson = jsonManager.ToJson(finalCatalog, settings: NewtonsoftJsonUtility.DefaultSerializerSettings);
             File.WriteAllText(dstCatalogPath, finalJson);
             Log($"{AssetCatalogName} 已合并更新。");
 
@@ -533,7 +533,7 @@ namespace Editor.AssetBundle.Core
                     mainBundle.Unload(false);
                 
                 // 保存 JSON
-                var json = jsonManager.ToJson(catalog, settings: NewtonsoftJsonUtility.SerializerSettings);
+                var json = jsonManager.ToJson(catalog, settings: NewtonsoftJsonUtility.DefaultSerializerSettings);
                 var savePath = Path.Combine(outputPath, AssetCatalogName);
                 File.WriteAllText(savePath, json);
                 Log($"资源目录已生成：{savePath}\n");

@@ -10,7 +10,6 @@ namespace HotUpdate.Game.Interact
     {
         [Inject] private IDialogueManager _dialogueManager;
         
-
         public void Interact(IInteractable interactObject)
         {
             if (interactObject is not NpcObject npcObject) 

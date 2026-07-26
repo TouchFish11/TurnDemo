@@ -1,5 +1,6 @@
 using Core.DI;
 using Core.UI;
+using HotUpdate.Base.Data;
 using HotUpdate.Base.Manager;
 
 
@@ -10,7 +11,7 @@ namespace HotUpdate.UI.Activity.Base
     /// </summary>
     public abstract class ActivityUIComponent : UIBehaviourBase
     {
-        [Inject] protected IActivityDataManager activityDataManager;
+        [Inject] protected IActivityDataProvider ActivityDataProvider;
         
         protected ActivityUIBehaviourBase ActivityUIBehaviourBase { get; private set; }
         protected ActivityInfo ActivityInfo { get; private set; }
@@ -37,7 +38,7 @@ namespace HotUpdate.UI.Activity.Base
         {
             ActivityUIBehaviourBase = null;
             ActivityInfo = null;
-            activityDataManager = null;
+            ActivityDataProvider = null;
         }
     }
 }
