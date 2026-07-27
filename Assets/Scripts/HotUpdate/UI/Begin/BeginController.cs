@@ -189,7 +189,7 @@ namespace HotUpdate.UI.Begin
                 {
                     if (_assetBundleUpdater.GetContext().IsHasUpdate)
                     {
-                        var controller = await _uiService.OpenAsync(EUIPanelId.TipPanel, E_UILayer.Mid) as TipController;
+                        var controller = await _uiService.OpenAsync(EUIPanelId.TipPanel, E_UILayer.Bot) as TipController;
                         // 初始化确认数据
                         var confirmData = DIContainer.Create<ConfirmData>();
                         confirmData.ConfirmTitle = "更新提示";
@@ -211,7 +211,7 @@ namespace HotUpdate.UI.Begin
                 else
                 {
                     // 更新失败
-                    var controller = await _uiService.OpenAsync(EUIPanelId.TipPanel, E_UILayer.Mid) as TipController;
+                    var controller = await _uiService.OpenAsync(EUIPanelId.TipPanel, E_UILayer.Bot) as TipController;
                     // 初始化确认数据
                     var confirmData = DIContainer.Create<ConfirmData>();
                     confirmData.ConfirmTitle = "更新提示";

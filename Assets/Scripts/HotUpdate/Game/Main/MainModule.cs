@@ -9,6 +9,7 @@ using HotUpdate.Base.Service;
 using HotUpdate.Game.Activity.Core;
 using HotUpdate.Game.Inputs;
 using HotUpdate.Game.Interact;
+using HotUpdate.Game.InventoryModule.Items;
 using HotUpdate.Game.Main.FloatingText;
 using HotUpdate.Game.Main.Player;
 using HotUpdate.Game.Quests;
@@ -41,6 +42,8 @@ namespace HotUpdate.Game.Main
             DIContainer.BindSingleton<IMouseManager, MouseManager>();
             // 注册鼠标管理器
             DIContainer.BindSingleton<IQuestManager, QuestManager>();
+            // 注册背包管理器
+            DIContainer.BindSingleton<IInventoryManager, InventoryManager>();
             // 注册图标服务
             DIContainer.BindType<IIconService, IconService>();
             BindFactorys();

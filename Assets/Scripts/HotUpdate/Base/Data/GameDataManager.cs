@@ -38,7 +38,7 @@ namespace HotUpdate.Base.Data
                     if (!typeof(IDataProvider).IsAssignableFrom(type) && type.IsClass)
                         continue;
 
-                    var dataManagerIdAttribute = type.GetCustomAttribute<DataManagerIdAttribute>();
+                    var dataManagerIdAttribute = type.GetCustomAttribute<DataProviderIdAttribute>();
                     if (dataManagerIdAttribute == null)
                         continue;
                     

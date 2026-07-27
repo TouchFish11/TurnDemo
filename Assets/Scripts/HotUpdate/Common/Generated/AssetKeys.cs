@@ -94,7 +94,6 @@ public static class AssetKeys
     public const string BeginScene = "BeginScene";
     public const string LevelScene = "LevelScene";
     public const string MainScene = "MainScene";
-    public const string OcclusionCullingData = "OcclusionCullingData";
     public const string AnimSceneTest = "AnimSceneTest";
     public const string OtherTest = "OtherTest";
     public const string QuestTest = "QuestTest";
@@ -222,6 +221,7 @@ public static class AssetKeys
     public const string SettingSliderEntry = "SettingSliderEntry";
     public const string SettingsView = "SettingsView";
     public const string AssetUpdateConfirmContent = "AssetUpdateConfirmContent";
+    public const string DeleteItemConfirmContent = "DeleteItemConfirmContent";
     public const string TipView = "TipView";
     public const string VFX_Environment_Rain = "VFX_Environment_Rain";
     public const string VFX_SupportSkill_01 = "VFX_SupportSkill_01";

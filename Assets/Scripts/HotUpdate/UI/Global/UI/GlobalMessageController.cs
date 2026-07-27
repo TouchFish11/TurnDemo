@@ -23,12 +23,7 @@ namespace HotUpdate.UI.Global.UI
         // 显示时间
         private const float Duration = 2.5f;
 
-        public bool BlockOperation { get; private set; }
-        
-        public void SetBlock(bool isBlock)
-        {
-            BlockOperation = isBlock;
-        }
+        public bool BlockOperation => false;
         
         protected override Task OnInit()
         {

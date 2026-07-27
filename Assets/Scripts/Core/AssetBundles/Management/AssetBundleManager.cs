@@ -249,7 +249,7 @@ namespace Core.AssetBundles.Management
             GC.Collect();
         }
         
-        public async void OnReport()
+        public async void OnReport(MemoryData memoryData)
         {
             try
             {

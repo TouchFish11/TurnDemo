@@ -12,6 +12,7 @@ using HotUpdate.UI.Battle.Base;
 using HotUpdate.UI.Begin;
 using HotUpdate.UI.Dialogue;
 using HotUpdate.UI.Global.UI;
+using HotUpdate.UI.Inventory;
 using HotUpdate.UI.Loading.Battle;
 using HotUpdate.UI.Main;
 using HotUpdate.UI.Quests;
@@ -70,6 +71,9 @@ namespace HotUpdate.UI
                 case EUIPanelId.SettingPanel:
                     controller = await _uiManager.CreateViewAsync<SettingsView, SettingsController>(AssetKeys.SettingsView, layer);
                     break;
+                case EUIPanelId.InventoryPanel:
+                    controller = await _uiManager.CreateViewAsync<InventoryPanel, InventoryController>(AssetKeys.InventoryPanel, layer);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(panelId), panelId, null);
             }
@@ -116,6 +120,8 @@ namespace HotUpdate.UI
                     return _uiManager.GetController<GlobalMessageController>();
                 case EUIPanelId.SettingPanel:
                     return _uiManager.GetController<SettingsController>();
+                case EUIPanelId.InventoryPanel:
+                    return _uiManager.GetController<InventoryController>();
                 default:
                     throw new ArgumentOutOfRangeException(nameof(panelId), panelId, null);
             }

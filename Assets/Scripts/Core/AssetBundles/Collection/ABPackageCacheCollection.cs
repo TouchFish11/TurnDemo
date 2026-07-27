@@ -7,6 +7,14 @@ namespace Core.AssetBundles.Collection
     /// </summary>
     public class AbPackageCacheCollection : Collection<string, AbPackageCacheInfo>
     {
-
+        public AbPackageCacheCollection()
+        {
+            
+        }
+        
+        public AbPackageCacheCollection(AbPackageCacheCollection abPackageCacheCollection)
+        {
+            
+        }
     }
 }

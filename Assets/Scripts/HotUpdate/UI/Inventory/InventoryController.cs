@@ -8,6 +8,7 @@ using Core.Mono;
 using Core.Pool;
 using Core.Tasks;
 using Core.UI.ViewController;
+using HotUpdate.Base.UI;
 using HotUpdate.Common.Config.Inventory;
 using HotUpdate.Game.InventoryModule.Items;
 using HotUpdate.Game.InventoryModule.Sorts;
@@ -22,19 +23,25 @@ namespace HotUpdate.UI.Inventory
     /// <summary>
     /// 背包界面控制器
     /// </summary>
-    public class InventoryController : UIController<InventoryPanel>
+    public class InventoryController : UIController<InventoryPanel>, IBlockOperation
     {
         [Inject] private IPoolManager _poolManager;
         [Inject] protected IInventoryManager _inventoryManager;
         [Inject] protected ObjectSpawner _objectSpawner;
         [Inject] protected IMonoAdapter monoAdapter;
+        [Inject] private IUIService _uiService;
         
+        private InventoryDeleteViewModel _inventoryDeleteViewModel;
         private readonly Dictionary<Type, IInventoryState> _inventoryStates = new();
         // 当前背包界面所处的状态
         private IInventoryState _currentInventoryState;
         // 物品排序委托
         public Comparison<Item> sortComparison = InventorySorter.Default(1);
-        
+
+        protected override bool IsCursorVisible => true;
+
+        public bool BlockOperation => true;
+
         /// <summary>
         /// 当前显示的物品类型
         /// </summary>
@@ -51,10 +58,10 @@ namespace HotUpdate.UI.Inventory
         public InventoryDetailViewCreateFactory DetailPanelFactory { get; set; }
         
         public event Action<string> OnButtonClickEvent;
+        
         public event Action<string, string> OnInputFieldValueChangedEvent;
+        
         public event Action<string, float> OnSliderValueChangedEvent;
-
-        private InventoryDeleteViewModel _inventoryDeleteViewModel;
         
         protected override async Task OnInit()
         {
@@ -79,12 +86,14 @@ namespace HotUpdate.UI.Inventory
         protected override Task OnActive()
         {
             _currentInventoryState = null; // 默认就是普通模式
-            return Task.FromResult(Task.CompletedTask);
+            return Task.CompletedTask;
         }
 
         protected override async Task OnInactivate()
         {
             await TransitionTo(null);
+            // 显示主界面
+            await _uiService.ShowAsync(_uiService.GetPanel(EUIPanelId.MainPanel).PanelId);
         }
         
         public void InitGridGenerator()
@@ -156,7 +165,7 @@ namespace HotUpdate.UI.Inventory
             }
             catch (Exception e)
             {
-                Logger.LogError(ELogTags.Item, $"[{nameof(InventoryController)}]: item update fail, {e.Message}");
+                Logger.LogError(ELogTags.Item, $"item update fail, {e.Message}");
             }
         }
         
@@ -179,7 +188,7 @@ namespace HotUpdate.UI.Inventory
             }
             catch (Exception e)
             {
-                Logger.LogError(ELogTags.Item, $"[{nameof(InventoryController)}]: item update fail, {e.Message}");
+                Logger.LogError(ELogTags.Item, $"item update fail, {e.Message}");
             }
         }
         
@@ -200,7 +209,7 @@ namespace HotUpdate.UI.Inventory
                 if (!view.DetailPanel || CurrentItemType != itemConfig.itemType)
                 {
                     if (view.DetailPanel)
-                        _objectSpawner.Release(view.DetailPanel);
+                        DetailPanelFactory.Release(view.DetailPanel);
                     // 工厂创建详细界面
                     inventoryDetailPanel = await DetailPanelFactory.CreateDetailPanel(itemConfig.itemType, view.DetailArea);
                     view.DetailPanel = (InventoryDetailPanel)inventoryDetailPanel;
@@ -317,7 +326,7 @@ namespace HotUpdate.UI.Inventory
                     await ExitDeleteState();
                     // 关闭背包界面
                     await uiManager.DestroyView(panelId);
-                    Logger.LogDebug(ELogTags.Item, $"[{nameof(InventoryController)}]: {view.name} closed");
+                    Logger.LogDebug(ELogTags.Item, $"{view.name} closed");
                 }
                 else if (btnName == nameof(view.btnRequestDelete))
                 {
@@ -330,7 +339,7 @@ namespace HotUpdate.UI.Inventory
             }
             catch (Exception e)
             {
-                Logger.LogError(ELogTags.Item, $"[{nameof(InventoryController)}]: button click logic execute error, {e.Message}");
+                Logger.LogException(ELogTags.Item, new Exception("button click logic execute error", e));
             }
         }
         
@@ -386,7 +395,6 @@ namespace HotUpdate.UI.Inventory
             _currentInventoryState = null;
             
             // 清理详细界面UI
-            _objectSpawner.Release(view.DetailPanel);
             _poolManager.PushData(DetailPanelFactory);
             DetailPanelFactory = null;
             

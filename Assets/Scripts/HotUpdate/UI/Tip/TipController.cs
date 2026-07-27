@@ -4,11 +4,13 @@ using Core.DI;
 using Core.Log;
 using Core.UI.ViewController;
 using HotUpdate.Base.Data;
+using HotUpdate.Base.UI;
 
 namespace HotUpdate.UI.Tip
 {
     public class TipController : UIController<TipView>
     {
+        [Inject] private IUIService _uiService;
         [Inject] private ConfirmContentFactory _confirmContentFactory;
         
         protected override Task OnInit()
@@ -37,6 +39,8 @@ namespace HotUpdate.UI.Tip
             try
             {
                 view.txtTitle.text = confirmData.ConfirmTitle;
+                confirmData.OnConfirm += CloseTip;
+                confirmData.OnCancel += CloseTip;
                 var contentUI = await _confirmContentFactory.CreateContent(confirmData.ConfirmContent, view.ContentRoot);
                 contentUI.DrawContent(confirmData);
             }
@@ -44,6 +48,11 @@ namespace HotUpdate.UI.Tip
             {
                 Logger.LogError(ELogTags.Tip, $"[{nameof(TipController)}] create tip content prefab error, {e.Message}");
             }
+        }
+
+        private void CloseTip()
+        {
+            _uiService.CloseAsync(panelId, false);
         }
     }
 }

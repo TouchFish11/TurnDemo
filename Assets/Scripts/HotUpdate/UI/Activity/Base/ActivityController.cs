@@ -6,7 +6,6 @@ using Core.Scene;
 using Core.Serialize.Binary;
 using Core.UI.ViewController;
 using HotUpdate.Base.Data;
-using HotUpdate.Base.Manager;
 using HotUpdate.Base.Service;
 using HotUpdate.Base.UI;
 using HotUpdate.Game.Activity.Core;

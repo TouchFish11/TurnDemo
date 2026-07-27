@@ -122,7 +122,7 @@ namespace HotUpdate.Base.Service
             }
             catch (Exception e)
             {
-                Logger.LogError(ELogTags.Icon, $"[{nameof(IconService)}]: '{iconKey}' asset load fail, {e.Message}");
+                Logger.LogError(ELogTags.Icon, $"{iconKey}' asset load fail, {e.Message}");
                 return null;
             }
             finally

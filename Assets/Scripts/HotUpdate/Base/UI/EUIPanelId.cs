@@ -17,5 +17,6 @@ namespace HotUpdate.Base.UI
         TipPanel,
         GlobalPanel,
         SettingPanel,
+        InventoryPanel,
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using HotUpdate.Base.Service;
 using HotUpdate.Common.Config.Inventory;
 using HotUpdate.Common.Config.Inventory.Data;
 
@@ -54,5 +55,7 @@ namespace HotUpdate.Game.InventoryModule.Items
         /// </summary>
         /// <returns></returns>
         IEnumerable<Item> GetAllItems();
+
+        IIconService IconService { get; }
     }
 }

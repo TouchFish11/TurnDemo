@@ -1,7 +1,6 @@
 using Core.DI;
 using Core.UI;
 using HotUpdate.Base.Data;
-using HotUpdate.Base.Manager;
 
 
 namespace HotUpdate.UI.Activity.Base

@@ -28,7 +28,7 @@ namespace Core.AssetBundles.Management
         // 缓存加载过的资源Key
         private HashSet<string> _assetKeys = new();
         // 缓存使用的实例
-        private HashSet<Object> _activeObjects = new();
+        private List<Object> _activeObjects = new();
         // 释放时的快照
         private List<Object> _releaseSnapshot = new();
         
@@ -124,10 +124,13 @@ namespace Core.AssetBundles.Management
                 return poolObj;
             }
 
+            T newObj;
             // 复用句柄资源实例化
             if (_keyToHandleMap.TryGetValue(key, out var handle))
             {
-                return Instantiate<T>(handle, key, parent, pos, rot, worldSpace);
+                newObj = Instantiate<T>(handle, key, parent, pos, rot, worldSpace);
+                _activeObjects.Add(newObj);
+                return newObj;
             }
             
             // 加载资源
@@ -137,7 +140,7 @@ namespace Core.AssetBundles.Management
             // 缓存句柄
             _keyToHandleMap.Add(key, handle);
             // 实例化
-            var newObj = Instantiate<T>(handle, key, parent, pos, rot, worldSpace);
+            newObj = Instantiate<T>(handle, key, parent, pos, rot, worldSpace);
             _activeObjects.Add(newObj);
             return newObj;
         }
@@ -158,10 +161,10 @@ namespace Core.AssetBundles.Management
             }
             
             // 等待所有加载任务结束
-            var poolObjects = await Task.WhenAll(loadTasks);
+            var objArr = await Task.WhenAll(loadTasks);
             var objs = new List<T>();
             // 存储结果
-            objs.AddRange(poolObjects);
+            objs.AddRange(objArr);
             return objs;
         }
         
@@ -344,13 +347,11 @@ namespace Core.AssetBundles.Management
             newObj.name = key;
             return newObj;
         }
-        
+
         /// <summary>
         /// 统一的回收入口
         /// </summary>
-        /// <param name="obj">释放的对象</param>
-        /// <param name="destroy">是否销毁不放入对象池，默认放入对象池</param>
-        public bool Release(Object obj, bool destroy = false)
+        public bool Release<T>(T obj, bool destroy = false) where T : Object
         {
             if (!obj)
             {
@@ -367,16 +368,13 @@ namespace Core.AssetBundles.Management
             _activeObjects.Remove(obj);
             if (destroy)
             {
-                EngineUtility.Destroy(obj as GameObject ?? ((Component)obj).gameObject);
+                EngineUtility.Destroy(obj as GameObject ?? (obj as Component)?.gameObject);
             }
             else
             {
                 _poolManager.PushObj(obj);
             }
-
-#if UNITY_EDITOR
-            //Logger.Log($"[{nameof(ObjectSpawner)}]: The object ‘{obj.name}’ released.");      
-#endif
+            
             return true;
         }
 
@@ -387,7 +385,7 @@ namespace Core.AssetBundles.Management
         /// <param name="destroy">是否销毁不放入对象池</param>
         /// <returns>已释放的对象数量</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public int Release(IEnumerable<Object> objs, bool destroy = false)
+        public int Release<T>(IEnumerable<T> objs, bool destroy = false) where T : Object
         {
             if(objs == null)
                 throw new ArgumentNullException(nameof(objs));
@@ -409,13 +407,10 @@ namespace Core.AssetBundles.Management
         }
 
         /// <summary>
-        /// 清理所有缓存，调用后可以继续使用该生成器
+        /// 清理所有句柄缓存，调用后可以继续使用该生成器，这个方法不会调用Release
         /// </summary>
         public void Clear()
         {
-            Release(_activeObjects);
-            _activeObjects.Clear();
-            
             // 为了避免引用泄露，需要在不使用该生成器时统一释放剩余的句柄
             foreach (var handle in _keyToHandleMap.Values)
             {
@@ -426,7 +421,7 @@ namespace Core.AssetBundles.Management
             // 清空对象池的这些资源Key的缓存对象
             foreach (var assetKey in _assetKeys)
             {
-                _poolManager.ClearCache(assetKey);
+                _poolManager.ReleaseCache(assetKey);
             }
             _assetKeys.Clear();
             
@@ -435,9 +430,8 @@ namespace Core.AssetBundles.Management
         }
         
         /// <summary>
-        /// 销毁生成器，当不在使用该生成器时调用此方法，释放缓存的剩余句柄
-        /// 要先确保生成器创建出的对象都执行回收后才能调用此方法安全销毁
-        /// 否则使用的对象会被意外释放（默认放入对象池）
+        /// 销毁生成器，当不在使用该生成器时调用此方法，会间接调用Clear
+        /// 需确保所有对象release，否则使用的对象会残留
         /// </summary>
         public void Dispose()
         {

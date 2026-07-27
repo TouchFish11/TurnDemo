@@ -78,9 +78,9 @@ MonoBehaviour:
   - assetBundleName: animator
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\Animator\Monster\AbyssalMageController.controller
-      size: 9152
+      size: 12035
       name: AbyssalMageController.controller
-      hash: 75f734fa91ec844c917c1dae76f4550df75fbc101b289579a4510c0f6e6b9a24
+      hash: 2df196f7325237901f8b83f835279ef709e5a0abf8bd03009251b9ae09519d77
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Animator\Monster\ChestController.controller
       size: 8352
@@ -335,32 +335,37 @@ MonoBehaviour:
       name: WizardAnimationConfigCollection.json
       hash: af894c523cdb343c0e38cf2277b2701005933245e8b76e0ab30df72a5b7620d9
       assetType: 0
+    - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\Item\ItemConfigs.json
+      size: 2325
+      name: ItemConfigs.json
+      hash: 0a9f7c08f5e472ee0ded1fc41e1d5e02b1ab7c75d884ab270270947829c73125
+      assetType: 0
   - assetBundleName: hotupdate
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Base.dll.bytes
-      size: 55296
+      size: 54784
       name: HotUpdate.Base.dll.bytes
-      hash: d639b82dbb95a79f9ca15fbcdc321cb5549d301c06919159e2b8f85c47d720e6
+      hash: 37e76c677fc55878b028df31d397eca629a7746939b6ceac64b8f2764b46618c
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Common.dll.bytes
-      size: 36352
+      size: 41472
       name: HotUpdate.Common.dll.bytes
-      hash: 7d70717ef62ca4df8174c07f1bf98adf4e777ec2d1ac9ff43ac20c9cf60cdc24
+      hash: cb1a63dc96fd546c2363f0bfbb36fc6ca4ee98364e3bc3142c77c543e0479ae3
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Entry.dll.bytes
-      size: 11264
+      size: 13312
       name: HotUpdate.Entry.dll.bytes
-      hash: 458598494124298fc46443bb49c5976214d91a4584890278d006c323406f0fcc
+      hash: d872d2fb6cf88a035f5220c417af77cea8c0813aefba0bed2b05d3c54de0ee50
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Game.dll.bytes
-      size: 404992
+      size: 433664
       name: HotUpdate.Game.dll.bytes
-      hash: 721ed78a3f922dc69f073fe178925173720d650cc8597071420f66b9985b259e
+      hash: bbf1f006ec2ed83d11630504320e16a77c675bfff6cbe829a2ad316179fcbb9f
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.UI.dll.bytes
-      size: 204288
+      size: 238080
       name: HotUpdate.UI.dll.bytes
-      hash: c8c509fa4d0f7aa1b03522953f0cce5f1d6effad4d1ec1fadcc3631c0c4e9e6f
+      hash: 0b848df4702395fd2da8de57a522e60f2eb37513405a90848bbf4970d98da2f8
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdateAssemblySettings.json
       size: 504
@@ -483,9 +488,9 @@ MonoBehaviour:
   - assetBundleName: scene
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\Scene\BeginScene.unity
-      size: 9157
+      size: 56694
       name: BeginScene.unity
-      hash: f731c013faa96cfb616896df4f0d786fae38d5554ee52e1eb239af01cd1e16e3
+      hash: 28bc2786e3e1954c8ebf60df18865c4376923d4491eca4c4758a3ce85144aa67
       assetType: 1
     - assetPath: Assets\Editor\ArtRes\Scene\LevelScene.unity
       size: 117066
@@ -544,6 +549,11 @@ MonoBehaviour:
       name: Atlas_SelTarget.spriteatlasv2
       hash: 297d158df3fdce551fa64bf53b7253ec05064491b3665e3e5b01e275a683220a
       assetType: 3
+    - assetPath: Assets\Editor\ArtRes\SpriteAtlas\Build Trigger_1.png
+      size: 1423792
+      name: Build Trigger_1.png
+      hash: d7e46a0402ec4b742a86da28b3dd6a8b895ee4b0c047f93b587396fcc7396fa0
+      assetType: 0
     - assetPath: Assets\Editor\ArtRes\SpriteAtlas\Icon\Atlas_Icon_BattleEntity.spriteatlasv2
       size: 469
       name: Atlas_Icon_BattleEntity.spriteatlasv2
@@ -562,9 +572,9 @@ MonoBehaviour:
   - assetBundleName: tmp_asset
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\TMP_Asset\MSYH_SDF.asset
-      size: 8404080
+      size: 8472021
       name: MSYH_SDF.asset
-      hash: d8505671de6d3c1995ffae723fd5edc73684725cee50a114b960ccb6eb74b807
+      hash: 3487192417328adf0650a65cfc8b2d3d772f6bdf1993dab93748e97b127eea17
       assetType: 0
   - assetBundleName: ui
     assetInfos:
@@ -753,6 +763,36 @@ MonoBehaviour:
       name: InteractUI.prefab
       hash: bf5680bfbde04e366ea1fa43e57a9201db6b5df2b2c5763d232301fca7d39cb7
       assetType: 0
+    - assetPath: Assets\Editor\ArtRes\UI\Inventory\InventoryPanel.prefab
+      size: 159079
+      name: InventoryPanel.prefab
+      hash: 9e02553abdbd0028c8c8f7cf671f3c2a02e5e31c28c85ade66efa07749189fbb
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\UI\Inventory\ItemCell.prefab
+      size: 31320
+      name: ItemCell.prefab
+      hash: 14bc12d8ea85f6937f5a7b7a7f2bd9d147dcaf79f19c5ddcd8c480696bcdcc6c
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\UI\Inventory\ItemDetailPanelBase.prefab
+      size: 3225
+      name: ItemDetailPanelBase.prefab
+      hash: 7f1f10c39c319af4c6734a8873d0f70a16a99b70df9eb46fba50c702f8baf3b6
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\UI\Inventory\ItemTypeOpt.prefab
+      size: 7745
+      name: ItemTypeOpt.prefab
+      hash: d8fb489315d00d10db01dc35c0c2d9d11fa28d7581e46d23c7a0003183d11b26
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\UI\Inventory\DetailPanel\MaterialDetailPanel.prefab
+      size: 13491
+      name: MaterialDetailPanel.prefab
+      hash: f380fe5b3ce26f7b0515f51d97d9c51d28d7ca510bd424410c4c3a437eadea67
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\UI\Inventory\DetailPanel\WeaponDetailPanel.prefab
+      size: 21821
+      name: WeaponDetailPanel.prefab
+      hash: 278b3a813fc47c27f471da3783a88c195bff1613f70150c369d932725369ef30
+      assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Item\ItemGrid.prefab
       size: 11898
       name: ItemGrid.prefab
@@ -812,6 +852,11 @@ MonoBehaviour:
       size: 20443
       name: AssetUpdateConfirmContent.prefab
       hash: b7d3a1b502c5a03e39206d412b0acb0c4130b7b98f2ac9fb55a1f699bd7972ff
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\UI\Tip\DeleteItemConfirmContent.prefab
+      size: 35087
+      name: DeleteItemConfirmContent.prefab
+      hash: 09bd4963c495309e8bb59e0b6f755bd6cade5c3e64e44a9b7113b965f4a742a0
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Tip\TipView.prefab
       size: 12511

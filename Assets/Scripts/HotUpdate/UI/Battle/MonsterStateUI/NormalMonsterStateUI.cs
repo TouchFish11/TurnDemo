@@ -4,7 +4,6 @@ using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Mono;
 using Core.UI;
-using Core.Utility;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Object;

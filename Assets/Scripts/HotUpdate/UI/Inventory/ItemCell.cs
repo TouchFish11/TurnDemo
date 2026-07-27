@@ -1,6 +1,6 @@
 using System;
 using Core.UI;
-using HotUpdate.Base.Icon;
+using HotUpdate.Base.Service;
 using HotUpdate.Common.Config.Inventory;
 using HotUpdate.Game.InventoryModule.Items;
 using HotUpdate.Game.Slot;
@@ -47,11 +47,11 @@ namespace HotUpdate.UI.Inventory
         /// 初始化物品格子
         /// </summary>
         /// <param name="item"></param>
-        /// <param name="iconProvider"></param>
-        public void InitGrid(Item item, IIconProvider iconProvider)
+        /// <param name="iconService"></param>
+        public void InitGrid(Item item, IIconService iconService)
         {
             imgBkQuality.color = ItemFormatter.GetBkQualityColor(item);
-            imgIcon.sprite = iconProvider.TryGetIcon(item.itemConfig.icon, out var icon) ? icon : null;
+            imgIcon.sprite = iconService.TryGetIcon(item.itemConfig.icon, out var icon) ? icon : null;
             // 根据物品的类型返回不同的数值格式化内容
             txtNumOrLv.text = ItemFormatter.GetItemNumOrLevel(item);
             _item = item;

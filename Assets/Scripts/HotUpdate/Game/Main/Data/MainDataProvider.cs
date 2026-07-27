@@ -10,7 +10,6 @@ using Core.Utility;
 using HotUpdate.Base.Attributes;
 using HotUpdate.Base.Collection;
 using HotUpdate.Base.Data;
-using HotUpdate.Base.Manager;
 using HotUpdate.Base.Settings;
 using HotUpdate.Common.Config.Settings;
 
@@ -19,7 +18,10 @@ using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.Main.Data
 {
-    [DataManagerId(typeof(IMainDataProvider))]
+    /// <summary>
+    /// 主数据提供器
+    /// </summary>
+    [DataProviderId(typeof(IMainDataProvider))]
     public class MainDataProvider : IMainDataProvider
     {
         [Inject] private IBinaryDataManager _binaryDataManager;

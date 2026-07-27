@@ -21,14 +21,10 @@ namespace Core.AssetBundles.Update.Core
         private readonly IPoolManager _poolManager;
         // 更新上下文
         private ABUpdateContext _updateContext;
-        // 更新状态列表
-        private readonly List<IUpdateState> _updateStates = new();
-
+        // 更新状态映射
         private readonly Dictionary<EUpdatePhase, IUpdateState> _updateStateMap = new();
         // 当前更新状态
         private IUpdateState _currentUpdateState;
-        // 当前更新状态索引
-        private int _stateIndex;
         
         /// <summary>
         /// 更新服务
@@ -59,7 +55,7 @@ namespace Core.AssetBundles.Update.Core
             _updateContext = _poolManager.GetData<ABUpdateContext>();
             foreach (var updateState in UpdateStateFactory.GetStates())
             {
-                _updateStates.Add(updateState);
+                _updateStateMap.Add(updateState.UpdatePhase, updateState);
             }
         }
 
@@ -108,8 +104,17 @@ namespace Core.AssetBundles.Update.Core
                 return;
                 
             _currentUpdateState?.Exit();
-            _currentUpdateState = _updateStateMap[updatePhase];
-            _currentUpdateState.Enter();
+            if (_updateStateMap.TryGetValue(updatePhase, out var updateState))
+            {
+                _currentUpdateState = updateState;
+                _currentUpdateState.Enter();
+            }
+            else
+            {
+                // 该状态没有启用
+                _currentUpdateState = _updateStateMap[++updatePhase];
+                _currentUpdateState.Enter();
+            }
         }
         
         /// <summary>
@@ -143,8 +148,7 @@ namespace Core.AssetBundles.Update.Core
             }
             
             _poolManager.PushData(_updateContext);
-            _stateIndex = 0;
-            _updateStates.Clear();
+            _updateStateMap.Clear();
         }
         
         public void OnAppQuit()

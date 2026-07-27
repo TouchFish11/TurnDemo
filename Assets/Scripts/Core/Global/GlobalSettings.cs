@@ -60,6 +60,27 @@ namespace Core.Global
         public bool isOpenLayout = true;
 
         /// <summary>
+        /// 活跃时间阈值
+        /// </summary>
+        [Header("活跃时间阈值")]
+        [Tooltip("大于该数值为惰性，小于为活跃")]
+        public float activeTimeThreshold;
+
+        /// <summary>
+        /// 池子统一最小阈值
+        /// </summary>
+        [Header("池子统一最小阈值")] 
+        [Tooltip("对于修改释放策略，保留的缓存对象数")]
+        public int poolMinSize = 10;
+
+        /// <summary>
+        /// 池子统一最大阈值
+        /// </summary>
+        [Header("池子统一最大阈值")] 
+        [Tooltip("池子最大对象缓存数，大于则扩容")]
+        public int poolMaxSize = 50;
+
+        /// <summary>
         /// 上传地址
         /// </summary>
         [Header("上传地址")]
@@ -141,7 +162,7 @@ namespace Core.Global
         /// </summary>
         [Header("AB包访问活跃阈值")] 
         [Tooltip("AB包访问活跃阈值，高于该数值则放入热包列表，小于则放入冷包列表")]
-        public int criticalActiveThreshold = 2;
+        public int criticalActiveThreshold = 8;
         
         /// <summary>
         /// 单个AB包滑动窗口最大数

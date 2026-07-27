@@ -6,14 +6,13 @@ using Core.Utility;
 using HotUpdate.Base.Attributes;
 using HotUpdate.Base.Collection;
 using HotUpdate.Base.Data;
-using HotUpdate.Base.Manager;
 
 namespace HotUpdate.Game.Quests.Data
 {
     /// <summary>
-    /// 任务管理器
+    /// 任务数据提供器
     /// </summary>
-    [DataManagerId(typeof(IQuestDataProvider))]
+    [DataProviderId(typeof(IQuestDataProvider))]
     public class QuestDataProvider : IQuestDataProvider
     {
         [Inject] private IJsonManager _jsonManager;

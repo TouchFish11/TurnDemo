@@ -127,6 +127,8 @@ namespace Core.AssetBundles.Update.State
                             // 更新缓存信息
                             var cacheInfo = new AbPackageCacheInfo(requester.AbName, requester.Hash, fileInfo.Length);
                             updateService.UpdateCacheFile(context, cacheInfo);
+                            // 下载成功，回收到对象池
+                            poolManager.PushData(requester);
                         }
                         // 下载失败，加入失败队列
                         else
@@ -153,7 +155,7 @@ namespace Core.AssetBundles.Update.State
             // 检查下载是否完整
             await CheckDownloadComplete();
         }
-
+        
         /// <summary>
         /// 检查下载是否完整
         /// </summary>
@@ -161,7 +163,11 @@ namespace Core.AssetBundles.Update.State
         /// <exception cref="Exception"></exception>
         private async Task CheckDownloadComplete()
         {
-            if (assetBundleUpdater.GetContext().RequesterFailList.Count != 0)
+            var failCount = assetBundleUpdater.GetContext().RequesterFailList.Count;
+
+            CollectRequester();
+            
+            if (failCount != 0)
             {
                 throw new AssetBunleIncompleteException(GetAssetBunleIncompleteExceptionMessage());
             }
@@ -180,6 +186,17 @@ namespace Core.AssetBundles.Update.State
             }
         }
 
+        /// <summary>
+        /// 回收下载失败的链表的所有请求
+        /// </summary>
+        private void CollectRequester()
+        {
+            foreach (var abWebRequester in assetBundleUpdater.GetContext().RequesterFailList)
+            {
+                poolManager.PushData(abWebRequester);
+            }
+        }
+        
         /// <summary>
         /// 循环更新下载速度
         /// 按配置的间隔时间，持续更新当前下载速度到上下文

@@ -6,6 +6,7 @@ using Core.Pool;
 using Core.UI;
 using Core.UI.ViewController;
 using HotUpdate.Base.UI;
+using HotUpdate.Game.InventoryModule.Items;
 using HotUpdate.UI.Main.Logic;
 
 namespace HotUpdate.UI.Main
@@ -21,6 +22,7 @@ namespace HotUpdate.UI.Main
     {
         [Inject] private IPoolManager _poolManager;
         [Inject] private IUIService _uiService;
+        [Inject] private ItemDataProvider _itemDataProvider;
 
         /// <summary>
         /// 主界面逻辑对象字典
@@ -83,7 +85,14 @@ namespace HotUpdate.UI.Main
                         
                         break;
                     case "btnBag":
+                        // Test
+                        _itemDataProvider.AddData(10001, 1);
+                        _itemDataProvider.AddData(10002, 2);
+                        _itemDataProvider.AddData(10003, 3);
+                        _itemDataProvider.AddData(20001, 1);
+                        _itemDataProvider.AddData(20002, 1);
                         
+                        await _uiService.OpenAsync(EUIPanelId.InventoryPanel, E_UILayer.Bot);
                         break;
                     // 任务按钮点击：打开任务界面
                     case "btnTask":
@@ -102,7 +111,7 @@ namespace HotUpdate.UI.Main
             }
             catch (Exception e)
             {
-                Logger.LogError(ELogTags.Main, $"{nameof(MainController)}: Navigation other panel error,{e.Message}");
+                Logger.LogException(ELogTags.Main, e);
             }
         }
         

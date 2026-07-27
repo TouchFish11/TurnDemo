@@ -62,7 +62,7 @@ MonoBehaviour:
         itemId: 20001
         name: "\u65E0\u950B\u5251"
         description: "\u6B64\u5251\u4F24\u4E0D\u4E86\u4EBA\u3002\u4F46\u63E1\u7740\u5B83\u6562\u5411\u524D\u8D70\u7684\u4EBA\uFF0C\u6BD4\u4EFB\u4F55\u5229\u5203\u90FD\u81F4\u547D\u3002"
-        icon: 
+        icon: sword_basic4_blue
         isPile: 0
         itemQuality: 3
         itemType: 1

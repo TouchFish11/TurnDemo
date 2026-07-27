@@ -35,6 +35,11 @@ namespace HotUpdate.UI.Inventory
                     return null;
             }
         }
+
+        public void Release(InventoryDetailPanel panel)
+        {
+            _objectSpawner.Release(panel);
+        }
         
         void IPoolData.ResetData()
         {

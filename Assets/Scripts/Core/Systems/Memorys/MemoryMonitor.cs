@@ -23,12 +23,13 @@ namespace Core.Systems.Memorys
         // 占系统内存80%
         private const float criticalThresholdRatio = 0.8f;
         // 检查间隔
-        private const float checkIntervalSeconds = 30f;
+        private const float checkIntervalSeconds = 60f;
         // 当前时间
         private float nowTime;
         
         // 当前内存相关
         private long currentMemory;
+        private long lastMemory;
         private long currentSystemMemory;
         private float currentRatio;
 
@@ -55,6 +56,7 @@ namespace Core.Systems.Memorys
         {
             // 使用 GC 获取托管内存
             currentMemory = GC.GetTotalMemory(false);
+            lastMemory = currentMemory;
             currentSystemMemory = SystemInfo.systemMemorySize * 1024L * 1024L;
             currentRatio = (float)currentMemory / currentSystemMemory;
 
@@ -75,7 +77,8 @@ namespace Core.Systems.Memorys
 
         private void SetCurrentOccupationLevel(EMemoryOccupationLevel currentOccupationLevel)
         {
-            if (this.currentOccupationLevel == currentOccupationLevel) return;
+            if (this.currentOccupationLevel == currentOccupationLevel) 
+                return;
             
             Logger.LogDebug(ELogTags.System, $"当前内存占用级别：{currentOccupationLevel}。" +
                                              $"当前内存占用：{TextUtility.ToByteUnit((ulong)currentMemory)}，" +
@@ -91,7 +94,7 @@ namespace Core.Systems.Memorys
         {
             foreach (var listener in _listeners)
             {
-                listener.OnReport();
+                listener.OnReport(new MemoryData(currentOccupationLevel));
             }
         }
 

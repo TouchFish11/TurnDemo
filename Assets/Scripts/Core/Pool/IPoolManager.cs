@@ -18,7 +18,7 @@ namespace Core.Pool
         /// 缓存游戏对象
         /// </summary>
         /// <param name="obj">游戏对象</param>
-        void PushObj(Object obj);
+        void PushObj<T>(T obj) where T : Object;
 
         /// <summary>
         /// 缓存纯C#的对象
@@ -28,18 +28,18 @@ namespace Core.Pool
         void PushData<T>(T data) where T : class, IPoolData;
 
         /// <summary>
-        /// 获取纯C#的对象，自动注入[Inject]依赖，由于复用对象不会触发构造函数，所以无法通过构造注入
+        /// 获取纯C#的对象，自动注入[Inject]依赖，复用对象不会触发构造函数，所以无法通过构造注入
         /// </summary>
-        /// <typeparam name="T">类名</typeparam>
+        /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         T GetData<T>() where T : class, IPoolData;
         
         /// <summary>
-        /// 清除指定资源缓存
+        /// 释放指定资源缓存
         /// </summary>
         /// <param name="assetName">资源名称</param>
         /// <returns>销毁的对象数量</returns>
-        int ClearCache(string assetName);
+        int ReleaseCache(string assetName);
         
         /// <summary>
         /// 清空缓存池
@@ -58,6 +58,6 @@ namespace Core.Pool
         /// </summary>
         /// <param name="disposalStrategy"></param>
         /// <param name="executeCount">执行次数，即释放的池子数量</param>
-        void ReleaseCache(PoolManager.EDisposalStrategy disposalStrategy = PoolManager.EDisposalStrategy.Priority, ushort executeCount = 1);
+        void ReleaseCache(PoolManager.EReleaseStrategy disposalStrategy = PoolManager.EReleaseStrategy.Trim, ushort executeCount = 1);
     }
 }

@@ -30,8 +30,12 @@ namespace HotUpdate.UI.Inventory
         
         [InjectUI] private TextMeshProUGUI txtDelTip;
         [InjectUI] private ScrollRect svDel;
+        [InjectUI] private Button btnOk;
+        [InjectUI] private Button btnCancel;
         
         private GridGenerator<Item, ItemCell> _generator;
+        
+        private ConfirmData _confirmData;
         
         public async void DrawContent(ConfirmData confirmData)
         {
@@ -55,6 +59,8 @@ namespace HotUpdate.UI.Inventory
                 _generator.SetDatas(await CreateItems(deleteItems));
                 // 手动更新一次，将协程转换为Task等待
                 await TaskUtility.WaitForCoroutine(_generator.FadeUpdateGrid(), _monoAdapter);
+
+                _confirmData = confirmData;
             }
             catch (Exception e)
             {
@@ -90,6 +96,18 @@ namespace HotUpdate.UI.Inventory
             _poolManager.PushData(_generator);
             _poolManager.PushData(_itemCreateFactory);
             _generator = null;
+        }
+
+        protected override void OnButtonClick(string btnName)
+        {
+            if (btnName == nameof(btnOk))
+            {
+                _confirmData.OnConfirm?.Invoke();
+            }
+            else if (btnName == nameof(btnCancel))
+            {
+                _confirmData.OnCancel?.Invoke();
+            }
         }
 
         protected override void OnScrollRectValueChanged(string svName, Vector2 pos)

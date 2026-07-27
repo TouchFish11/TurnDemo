@@ -96,7 +96,7 @@ namespace Core.AssetBundles.Update.Core
             }
             catch (System.Exception e)
             {
-                Logger.LogError(ELogTags.Network, $"[{nameof(ABWebRequester)}]: Download error, {e.Message}");
+                Logger.LogError(ELogTags.Network, $"Download error, {e.Message}");
                 success = false;
             }
             finally

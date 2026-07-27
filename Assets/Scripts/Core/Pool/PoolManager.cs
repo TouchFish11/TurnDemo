@@ -17,58 +17,57 @@ namespace Core.Pool
     public class PoolManager : IPoolManager, IMemoryListener
     {
         /// <summary>
-        /// 销毁策略
+        /// 释放策略
         /// </summary>
-        public enum EDisposalStrategy
+        public enum EReleaseStrategy
         {
             /// <summary>
-            /// 按优先级销毁，根据EObjectType优先级，低的先释放
+            /// 裁剪所有池子
             /// </summary>
-            Priority,
+            Trim,
             /// <summary>
             /// 最不常用的先释放，根据使用时间来决定，越早使用越先释放
             /// </summary>
             LRU,
         }
         
-        // 存储继承Mono对象，便于查找
-        private readonly Dictionary<string, ObjectPool> _objectPools = new();
-        // 活跃列表
-        private readonly List<ObjectPool> _actives = new();
-        // 惰性列表
-        private readonly List<ObjectPool> _lazies = new();
-        // 存储不继承Mono对象
-        private readonly Dictionary<string, BasePoolData> _poolDataDic = new();
+        private readonly Dictionary<string, IPool> _pools = new();
+        
+        private readonly LinkedList<string> _lruPoolIds = new();
+
         // 缓存池根对象
         private GameObject _poolRootObj;
         // 是否开启对象池布局
         private readonly bool _isOpenLayout;
-        /// 临界活跃数，高于该数值则放入活跃队列，小于则放入惰性队列
-        private const int CriticalActiveCount = 2;
-        /// 默认释放次数
-        private const byte DefaultReleaseCount = 5;
+        // 活跃时间阈值，大于该数值为惰性，小于为活跃
+        private readonly float activeTimeThreshold;
+        // 池子统一最小阈值
+        private readonly int poolMinSize;
+        // 池子统一最大阈值
+        private readonly int poolMaxSize;
         
         private PoolManager()
         {
             _isOpenLayout = GlobalSettings.Instance.isOpenLayout;
+            activeTimeThreshold = GlobalSettings.Instance.activeTimeThreshold;
+            poolMinSize = GlobalSettings.Instance.poolMinSize;
+            poolMaxSize = GlobalSettings.Instance.poolMaxSize;
         }
 
         public T Get<T>(string key) where T : Object
         {
             // 存在该对象就取出来使用
-            if (_objectPools.ContainsKey(key) && _objectPools[key].UnUsedCount > 0)
+            if (_pools.ContainsKey(key) && _pools[key].InactiveCount > 0)
             {
-                var pool = _objectPools[key];
-                var cacheObj = pool?.Get<T>();
-                // 只有取出的对象不为空，才去更新子池状态
-                if (cacheObj)
-                    UpdatePoolState(pool);
+                var pool = _pools[key];
+                InsertFirst(pool.PoolId);
+                var cacheObj = ((IPool<T>)pool).Get();
                 return cacheObj;
             }
             return null;
         }
 
-        public void PushObj(Object obj)
+        public void PushObj<T>(T obj) where T : Object
         {
             if (!obj)
             {
@@ -84,33 +83,46 @@ namespace Core.Pool
             }
             
             // 已经存储过了就可以直接往容器中存储对象
-            if (_objectPools.TryGetValue(obj.name, out var objectPool))
+            if (_pools.TryGetValue(obj.name, out var monoPool))
             {
-                objectPool.Push(obj);
-                // 更新该对象子池状态
-                UpdatePoolState(objectPool);
+                InsertFirst(monoPool.PoolId);
+                ((IPool<T>)monoPool).Push(obj);
             }
             else
             {
                 // 第一次存储要创建存储容器
-                objectPool = new ObjectPool(_poolRootObj, obj.name, obj.GetType(), _isOpenLayout, PoolUtil.ConvertFrom(obj));
-                objectPool.Push(obj);
+                var newObjectPool = new ObjectPool<T>(_poolRootObj, obj.name, _isOpenLayout, activeTimeThreshold, poolMinSize, poolMaxSize);
+                InsertFirst(newObjectPool.PoolId);
+                newObjectPool.Push(obj);
                 // 缓存字典
-                _objectPools.Add(obj.name, objectPool);
-                // 默认放入惰性队列
-                _lazies.Add(objectPool);
+                _pools.Add(obj.name, newObjectPool);
             }
+        }
+
+        /// <summary>
+        /// 移动到链表头
+        /// </summary>
+        /// <param name="poolId"></param>
+        private void InsertFirst(string poolId)
+        {
+            if (_lruPoolIds.Contains(poolId))
+            {
+                _lruPoolIds.Remove(poolId);
+            }
+
+            _lruPoolIds.AddFirst(poolId);
         }
         
         public T GetData<T>() where T : class, IPoolData
         {
             // 自定义获取名称，与存储名称一致
             var dataName = $"{typeof(T).FullName}";
-            if (!_poolDataDic.TryGetValue(dataName, out var basePoolData) || basePoolData is not PoolData<T> poolData || poolData.UnUsedCount <= 0)
+            InsertFirst(dataName);
+            if (!_pools.TryGetValue(dataName, out var dataPool) || dataPool is not DataPool<T> poolData || poolData.InactiveCount <= 0)
             {
                 return DIContainer.Create<T>();
             }
-
+            
             var data = poolData.Get();
             // 注入内容
             DIContainer.InjectIntoInstance(data);
@@ -121,16 +133,18 @@ namespace Core.Pool
         {
             // 自定义缓存名称，与获取名称一致
             var dataName = $"{typeof(T).FullName}";
-            if (_poolDataDic.TryGetValue(dataName, out var basePoolData))
+            if (_pools.TryGetValue(dataName, out var basePoolData))
             {
-                (basePoolData as PoolData<T>)?.Push(data);
+                (basePoolData as DataPool<T>)?.Push(data);
             }
             else
             {
-                var poolData = new PoolData<T>();
+                var poolData = new DataPool<T>(activeTimeThreshold, poolMinSize, poolMaxSize);
                 poolData.Push(data);
-                _poolDataDic.Add(dataName, poolData);
+                _pools.Add(dataName, poolData);
             }
+            
+            InsertFirst(dataName);
         }
 
         /// <summary>
@@ -140,35 +154,30 @@ namespace Core.Pool
         /// <returns></returns>
         public int GetUnUsedCount(string assetName)
         {
-            return _objectPools.TryGetValue(assetName, out var obj) ? obj.UnUsedCount : 0;
+            return _pools.TryGetValue(assetName, out var obj) ? obj.InactiveCount : 0;
         }
         
-        public int ClearCache(string key)
+        public int ReleaseCache(string key)
         {
-            if (!_objectPools.TryGetValue(key, out var poolObj))
+            if (!_pools.TryGetValue(key, out var poolObj))
             {
                 return 0;
             }
 
-            var count = poolObj.UnUsedCount;
-            poolObj.Clear();
-            _objectPools.Remove(key);
-            _lazies.Remove(poolObj);
-            _actives.Remove(poolObj);
+            var count = poolObj.InactiveCount;
+            poolObj.ClearAll();
+            _pools.Remove(key);
             return count;
         }
         
         public void ClearAll()
         {
-            foreach (var poolObj in _objectPools.Values)
+            foreach (var poolObj in _pools.Values)
             {
-                poolObj.Clear();
+                poolObj.ClearAll();
             }
             
-            _objectPools.Clear();
-            _poolDataDic.Clear();
-            _actives.Clear();
-            _lazies.Clear();
+            _pools.Clear();
             EngineUtility.Destroy(_poolRootObj);
             _poolRootObj = null;
             GC.Collect();
@@ -178,103 +187,74 @@ namespace Core.Pool
         /// 强制释放内存，可指定释放的选择策略
         /// </summary>
         /// <param name="disposalStrategy"></param>
-        /// <param name="executeCount">执行次数，即释放的池子数量</param>
-        public void ReleaseCache(EDisposalStrategy disposalStrategy = EDisposalStrategy.Priority, ushort executeCount = 1)
+        /// <param name="executeCount">执行次数，即释放的池子数量，仅当EReleaseStrategy为LRU时使用</param>
+        public void ReleaseCache(EReleaseStrategy disposalStrategy = EReleaseStrategy.Trim, ushort executeCount = 5)
         {
-            while (executeCount > 0 && _objectPools.Count > 0)
-            {
-                ObjectPool destroyPool = null;
-                switch (disposalStrategy)
-                {
-                    case EDisposalStrategy.Priority:
-                    {
-                        // 先从惰性列表中释放
-                        // 默认升序
-                        _lazies.Sort((x, y) => x.ObjectType.CompareTo(y.ObjectType));
-                        if (_lazies.Count > 0)
-                        {
-                            destroyPool = _lazies[0];
-                            _lazies.RemoveAt(0);
-                        }
-                        
-                        if(destroyPool != null) break;
-                        // 再考虑从活跃列表中释放
-                        _actives.Sort((x, y) => x.ObjectType.CompareTo(y.ObjectType));
-                        if (_actives.Count > 0)
-                        {
-                            destroyPool = _actives[0];
-                            _actives.RemoveAt(0);
-                        }
-                        break;
-                    }
-                    case EDisposalStrategy.LRU:
-                    {
-                        // 先从惰性列表中释放
-                        // 根据LRU策略，释放部分内存
-                        foreach (var objectPool in _lazies)
-                        {
-                            // 在惰性列表中寻找最不常用的池子
-                            if (destroyPool == null || destroyPool.LastUsedTime > objectPool.LastUsedTime)
-                            {
-                                destroyPool = objectPool;
-                            }
-                        }
-                        // 从列表中移除
-                        _lazies.Remove(destroyPool);
-                        if (destroyPool != null) break;
-                        
-                        // 再考虑从活跃列表中释放
-                        foreach (var objectPool in _actives)
-                        {
-                            // 在活跃列表中寻找最不常用的池子
-                            if (destroyPool == null || destroyPool.LastUsedTime > objectPool.LastUsedTime)
-                            {
-                                destroyPool = objectPool;
-                            }
-                        }
-                        // 从列表中移除
-                        _actives.Remove(destroyPool);
-                        break;
-                    }
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(disposalStrategy), disposalStrategy, null);
-                }
+            if(_pools.Count == 0)
+                return;
 
-                // 清空池子缓存
-                destroyPool?.Clear();
-                // 从缓存中移除
-                _objectPools.Remove(destroyPool?.PoolId);
-                --executeCount;
+            switch (disposalStrategy)
+            {
+                case EReleaseStrategy.Trim:
+                    // 裁剪所有池子缓存
+                    foreach (var pool in _pools.Values)
+                    {
+                        pool.Trim();
+                    }
+                    break;
+                case EReleaseStrategy.LRU:
+                    var cur = _lruPoolIds.Last;
+                    while (cur != null && executeCount > 0)
+                    {
+                        var pre = cur.Previous;
+                        var releaseId = cur.Value;
+                        var releasePool = _pools[releaseId];
+                        if (releasePool.IsLazy)
+                        {
+                            _lruPoolIds.RemoveLast();
+                            releasePool.ClearAll();
+                            _pools.Remove(releaseId);
+                            --executeCount;
+                        }
+
+                        cur = pre;
+                    }
+
+                    var dels = new List<string>(_pools.Count);
+                    foreach (var (id, pool) in _pools)
+                    {
+                        if (pool.ActiveCount == 0)
+                        {
+                            dels.Add(id);
+                        }
+                    }
+                    
+                    foreach (var del in dels)
+                    {
+                        _pools.Remove(del);
+                        _lruPoolIds.Remove(del);
+                    }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(disposalStrategy), disposalStrategy, null);
             }
         }
 
-        /// <summary>
-        /// 更新当前池子活跃状态
-        /// </summary>
-        /// <param name="pool"></param>
-        private void UpdatePoolState(ObjectPool pool)
+        public void OnReport(MemoryData memoryData)
         {
-            // 处理已经在活跃列表中的池子
-            if (_actives.Contains(pool) && pool.UsedCount < CriticalActiveCount)
+            switch (memoryData.level)
             {
-                // 先从活跃列表中移除
-                _actives.Remove(pool);
-                // 放入在惰性列表
-                _lazies.Add(pool);
+                case EMemoryOccupationLevel.Normal:
+                    return;
+                case EMemoryOccupationLevel.Warning:
+                    ReleaseCache();
+                    break;
+                case EMemoryOccupationLevel.Critical:
+                    ReleaseCache(EReleaseStrategy.LRU);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
-            // 处理已经在惰性列表中的池子
-            else if(_lazies.Contains(pool) && pool.UsedCount >= CriticalActiveCount)
-            {
-                // 先从惰性列表中移除
-                _lazies.Remove(pool);
-                // 放入活跃列表
-                _actives.Add(pool);
-            }
-        }
-
-        public void OnReport()
-        {
-            ReleaseCache(executeCount: DefaultReleaseCount);
         }
     }
 }

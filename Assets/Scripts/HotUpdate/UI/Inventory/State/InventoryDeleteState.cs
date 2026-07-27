@@ -6,6 +6,7 @@ using Core.Log;
 using Core.UI;
 using HotUpdate.Base.Data;
 using HotUpdate.Base.Enums;
+using HotUpdate.Base.UI;
 using HotUpdate.Common.Config.Inventory;
 using HotUpdate.Game.InventoryModule.Items;
 using HotUpdate.UI.Inventory.ViewModel;
@@ -21,7 +22,7 @@ namespace HotUpdate.UI.Inventory.State
     public class InventoryDeleteState : IInventoryState
     {
         [Inject] private IInventoryManager _inventoryManager;
-        [Inject] private IUIManager _uiManager;
+        [Inject] private IUIService _uiService;
         
         private readonly InventoryController _inventoryController;
         private readonly InventoryDeleteViewModel _inventoryDeleteViewModel;
@@ -134,7 +135,7 @@ namespace HotUpdate.UI.Inventory.State
         private async Task RequestDelete()
         {
             // 打开删除确认界面
-            var tipController = await _uiManager.CreateViewAsync<TipView, TipController>(AssetKeys.TipView, E_UILayer.Mid);
+            var tipController = await _uiService.OpenAsync(EUIPanelId.TipPanel, E_UILayer.Bot) as TipController;
             // 初始化确认数据
             var confirmData = DIContainer.Create<ConfirmData>();
             confirmData.ConfirmTitle = "删除提示";
@@ -142,6 +143,7 @@ namespace HotUpdate.UI.Inventory.State
             confirmData.ContentData = new Dictionary<Item,int>(_deletedItems);
             confirmData.ConfirmMessage = "以下物品将被销毁";
             confirmData.OnConfirm = ExecuteDelete;
+            confirmData.OnCancel = ExucuteCancel;
             // 设置提示界面
             tipController.SetTip(confirmData);
         }
@@ -162,8 +164,14 @@ namespace HotUpdate.UI.Inventory.State
             }
             catch (Exception e)
             {
-                Logger.LogError(ELogTags.Item, $"{e.Message}");
+                Logger.LogException(ELogTags.Item, e);
             }
+        }
+
+        private async void ExucuteCancel()
+        {
+            // 退出删除状态
+            await _inventoryController.ExitDeleteState();
         }
         
         /// <summary>

@@ -1,4 +1,4 @@
-using HotUpdate.Base.Icon;
+using HotUpdate.Base.Service;
 
 namespace HotUpdate.Game.Slot
 {
@@ -13,7 +13,7 @@ namespace HotUpdate.Game.Slot
         /// 初始化格子数据
         /// </summary>
         /// <param name="data">数据类型</param>
-        /// <param name="iconProvider"></param>
-        void InitGrid(T data, IIconProvider iconProvider);
+        /// <param name="iconService"></param>
+        void InitGrid(T data, IIconService iconService);
     }
 }

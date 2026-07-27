@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Core.DI;
 using Core.Pool;
 using HotUpdate.Base.Data;
-using HotUpdate.Base.Icon;
+using HotUpdate.Base.Service;
 using HotUpdate.Common.Config.Inventory;
 using HotUpdate.Common.Config.Inventory.Config;
 using HotUpdate.Common.Config.Inventory.Data;
@@ -19,20 +19,20 @@ namespace HotUpdate.Game.InventoryModule.Items
         [Inject] private IItemDataProvider _itemDataProvider;
         
         private readonly IPoolManager _poolManager;
-        private readonly IIconProvider _iconProvider;
         
         // 当前显示的不可堆叠物品持久化ID到物品对象的映射
         private readonly Dictionary<long, Item> _instanceIdToItemMap =  new();
         // 当前显示的可堆叠物品物品ID到物品对象的映射
         private readonly Dictionary<int, Item> _itemIdToItemMap =  new();
-        
         // 当前已经加载过的图标Key
         private readonly HashSet<string> _iconKeys = new();
         
-        public InventoryManager(IPoolManager poolManager, IIconProvider iconProvider)
+        public IIconService IconService { get; }
+        
+        public InventoryManager(IPoolManager poolManager, IIconService iconProvider)
         {
             _poolManager = poolManager;
-            _iconProvider = iconProvider;
+            IconService = iconProvider;
         }
 
         public IEnumerable<Item> GetAllItems()
@@ -100,7 +100,7 @@ namespace HotUpdate.Game.InventoryModule.Items
             foreach (var iconKey in _iconKeys)
             {
                 // 释放显示的图标的句柄
-                _iconProvider.Release(iconKey);
+                IconService.Release(iconKey);
             }
             _iconKeys.Clear();
             _instanceIdToItemMap.Clear();
@@ -131,7 +131,7 @@ namespace HotUpdate.Game.InventoryModule.Items
             else
                 _itemIdToItemMap.Add(itemConfig.itemId, item);
             // 加载该物品的图标
-            var sprite = await _iconProvider.LoadIconAsync(itemConfig.icon);
+            var sprite = await IconService.LoadIconAsync(itemConfig.icon);
             // 缓存加载成功物品图标Key
             if (sprite)
                 _iconKeys.Add(itemConfig.icon);

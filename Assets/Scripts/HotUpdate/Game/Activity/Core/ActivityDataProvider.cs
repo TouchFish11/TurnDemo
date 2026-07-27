@@ -6,14 +6,13 @@ using Core.Utility;
 using HotUpdate.Base.Attributes;
 using HotUpdate.Base.Collection;
 using HotUpdate.Base.Data;
-using HotUpdate.Base.Manager;
 
 namespace HotUpdate.Game.Activity.Core
 {
     /// <summary>
-    /// 活动数据管理器
+    /// 活动数据提供器
     /// </summary>
-    [DataManagerId(typeof(IActivityDataProvider))]
+    [DataProviderId(typeof(IActivityDataProvider))]
     public class ActivityDataProvider : IActivityDataProvider
     {
         [Inject] private IJsonManager _jsonManager;
