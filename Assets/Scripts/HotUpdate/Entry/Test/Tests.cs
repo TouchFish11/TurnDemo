@@ -1,13 +1,24 @@
+using System;
 using UnityEngine;
 
 public class Tests : MonoBehaviour
 {
+    public class A
+    {
+        
+    }
+    
     private Animator animator;
     private CharacterController characterController;
 
     public Transform leftHandTarget; // 场景中代表左手目标位置的物体（可放在梯子横杆上）
     public Transform rightHandTarget; // 同上
 
+    public Tests(Lazy<A> lazy)
+    {
+        
+    }
+    
     void Awake()
     {
         animator = GetComponent<Animator>();

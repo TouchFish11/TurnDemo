@@ -47,5 +47,11 @@ namespace Core.Exceptions
             var exceptionMsg = $"[{Prefix} {ExceptionCode.UIInitializeErrorCode}]: {uiType} Create/Init panel error";
             return new UICreateException(uiType, ExceptionCode.UIInitializeErrorCode, exceptionMsg, innerException);
         }
+
+        public static EventTriggerException ThrowEventTriggerException(Type eventType, Exception innerException)
+        {
+            var exceptionMsg = $"[{Prefix} {ExceptionCode.EventTriggerErrorCode}]: event type: {eventType}";
+            return new EventTriggerException(ExceptionCode.EventTriggerErrorCode, exceptionMsg, innerException);
+        }
     }
 }

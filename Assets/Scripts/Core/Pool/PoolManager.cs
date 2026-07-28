@@ -31,10 +31,10 @@ namespace Core.Pool
             LRU,
         }
         
+        // 对象名称到池子的缓存映射
         private readonly Dictionary<string, IPool> _pools = new();
-        
+        // 对象池的LRU链表
         private readonly LinkedList<string> _lruPoolIds = new();
-
         // 缓存池根对象
         private GameObject _poolRootObj;
         // 是否开启对象池布局
@@ -131,6 +131,9 @@ namespace Core.Pool
 
         public void PushData<T>(T data) where T : class, IPoolData
         {
+            if(data == null)
+                return;
+            
             // 自定义缓存名称，与获取名称一致
             var dataName = $"{typeof(T).FullName}";
             if (_pools.TryGetValue(dataName, out var basePoolData))
@@ -203,37 +206,63 @@ namespace Core.Pool
                     }
                     break;
                 case EReleaseStrategy.LRU:
+                    var releaseCount = executeCount;
                     var cur = _lruPoolIds.Last;
-                    while (cur != null && executeCount > 0)
+                    while (cur != null && releaseCount > 0)
                     {
                         var pre = cur.Previous;
                         var releaseId = cur.Value;
                         var releasePool = _pools[releaseId];
-                        if (releasePool.IsLazy)
+                        if (releasePool.IsLazy && releasePool.ActiveCount == 0)
                         {
                             _lruPoolIds.RemoveLast();
                             releasePool.ClearAll();
                             _pools.Remove(releaseId);
-                            --executeCount;
+                            --releaseCount;
                         }
 
                         cur = pre;
                     }
 
-                    var dels = new List<string>(_pools.Count);
-                    foreach (var (id, pool) in _pools)
+                    if (releaseCount > 0)
                     {
-                        if (pool.ActiveCount == 0)
+                        var dels = new List<string>(_pools.Count);
+                        foreach (var (id, pool) in _pools)
                         {
-                            dels.Add(id);
+                            if (pool.ActiveCount == 0)
+                            {
+                                dels.Add(id);
+                                --releaseCount;
+                            }
+                            
+                            if(releaseCount == 0)
+                                return;
+                        }
+                    
+                        foreach (var del in dels)
+                        {
+                            _pools.Remove(del);
+                            _lruPoolIds.Remove(del);
                         }
                     }
-                    
-                    foreach (var del in dels)
+
+                    if (releaseCount > 0)
                     {
-                        _pools.Remove(del);
-                        _lruPoolIds.Remove(del);
+                        cur = _lruPoolIds.Last;
+                        while (cur != null && releaseCount > 0)
+                        {
+                            var pre = cur.Previous;
+                            var releaseId = cur.Value;
+                            var releasePool = _pools[releaseId];
+                            _lruPoolIds.RemoveLast();
+                            releasePool.ClearAll();
+                            _pools.Remove(releaseId);
+                            --releaseCount;
+                            cur = pre;
+                        }
                     }
+
+                    ReleaseCache();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(disposalStrategy), disposalStrategy, null);

@@ -1,7 +1,11 @@
+using System.Collections;
 using System.Collections.Generic;
+using Core.DI;
+using Core.Log;
 using Core.Mono;
 using Core.Time;
 using UnityEngine;
+using Logger = Core.Log.Logger;
 using Object = UnityEngine.Object;
 
 namespace Core.Pool
@@ -9,12 +13,12 @@ namespace Core.Pool
     /// <summary>
     /// 继承Mono的对象池管理类
     /// 用于管理游戏对象的复用，减少频繁创建/销毁对象的性能开销
-    /// 注意：不要问“一个对象多个组件怎么存池”，而要问“为什么这些组件没有统一收口到一个主组件里”。遵循单一主组件模式，对象池直接存储该主组件类型
     /// 对象池存储主逻辑组件（如 Bullet），主组件内部缓存其他依赖组件（Rigidbody、Collider 等），外部只与主组件交互。
-    /// 如果某个对象没有明确的主逻辑组件（例如一个纯视觉特效，只有 ParticleSystem 和 Light），此时可以直接用 GameObject 作为池存储类型，或者选择最常被访问的那个组件作为主组件（如 ParticleSystem）。但在实际项目中，这类对象通常也会挂一个 PooledEffect 脚本来统一管理重置逻辑。
+    /// 如果某个对象没有明确的主逻辑组件（例如一个纯视觉特效，只有 ParticleSystem 和 Light），此时可以直接用 GameObject 作为池存储类型，或者选择最常被访问的那个组件作为主组件（如 ParticleSystem）。
     /// </summary>
     internal class ObjectPool<T> : IPool<T> where T : Object
     {
+        [Inject] private IMonoAdapter _monoAdapter;
         // 存储未使用对象的栈结构（栈结构适合后进先出的复用逻辑）
         private readonly Stack<T> _unUsedMonos = new();
         // 对象池的父物体（用于统一管理池内对象的层级）
@@ -24,9 +28,11 @@ namespace Core.Pool
         // 活跃时间阈值，大于等于该数值活跃，小于则惰性
         private readonly float _activeTimeThreshold;
         // 最小缓存数量
-        private int _minSize;
+        private readonly int _minSize;
         // 最大缓存容量
-        private int _maxSize;
+        private readonly int _maxSize;
+        // 每帧销毁数
+        private const int _destroyCountPerFrame = 30;
 
         public int ActiveCount { get; private set; }
 
@@ -98,10 +104,12 @@ namespace Core.Pool
 
         public void Push(T obj)
         {
+            // 超出上限直接销毁
             if (InactiveCount >= _maxSize)
             {
-                // 扩容
-                
+                ReleaseInternal(obj);
+                Logger.LogWarning(ELogTags.Pool, $"Pool '{PoolId}' is full(MaxCapacity: {_maxSize}), make obj destroyed");
+                return;
             }
             
             switch (obj)
@@ -133,10 +141,33 @@ namespace Core.Pool
         
         public void Trim()
         {
-            while (_unUsedMonos.TryPop(out var obj) && _unUsedMonos.Count > _minSize)
+            var count = _unUsedMonos.Count;
+            if(count <= _minSize)
+                return;
+
+            _monoAdapter.StartCoroutine(Trim_Cor(count - _minSize));
+        }
+
+        /// <summary>
+        /// 分帧释放，避免卡顿
+        /// </summary>
+        /// <param name="releaseCount">释放数</param>
+        /// <returns></returns>
+        private IEnumerator Trim_Cor(int releaseCount)
+        {
+            var releases = new List<T>(releaseCount);
+            for (var i = 0; i < releaseCount; i++)
             {
-                ReleaseInternal(obj);
+                releases.Add(_unUsedMonos.Pop());
             }
+
+            for (var i = 0; i < releases.Count; i++)
+            {
+                ReleaseInternal(releases[i]);
+                if (i >= _destroyCountPerFrame - 1)
+                    yield return null;
+            }
+            releases.Clear();
         }
         
         /// <summary>

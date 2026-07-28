@@ -9,10 +9,13 @@ using Object = UnityEngine.Object;
 
 namespace Core.DI
 {
+    /// <summary>
+    /// DI容器
+    /// </summary>
     public static class DIContainer
     {
         private const BindingFlags _bindingFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy;
-
+        
         // 瞬态映射：服务类型->实现类型
         private static readonly Dictionary<Type, Type> _transientMap = new();
 
@@ -176,7 +179,7 @@ namespace Core.DI
 
             if (_resolveStack.Contains(serviceType))
                 throw new InvalidOperationException($"Circular dependency: {string.Join(" -> ", _resolveStack.Reverse())} -> {serviceType}");
-
+            
             // 检查单例
             if (_singletonMap.TryGetValue(serviceType, out var bindingInfo))
             {

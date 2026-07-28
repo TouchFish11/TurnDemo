@@ -5,7 +5,7 @@ namespace HotUpdate.Common.Events
     /// <summary>
     /// 对话事件
     /// </summary>
-    public class DialogueEvent : IEvent
+    public class DialogueEvent : Event
     {
         /// <summary>
         /// 对话实体ID
@@ -15,11 +15,6 @@ namespace HotUpdate.Common.Events
         public DialogueEvent(int entityID)
         {
             EntityID = entityID;
-        }
-
-        void IEvent.ResetEvent()
-        {
-            
         }
     }
 }

@@ -11,10 +11,14 @@ namespace Core.GlobalEvent
     {
         [Inject] private IPoolManager _poolManager; 
         
-
         public TEvent GetEvent<TEvent>() where TEvent : Event
         {
-            return _poolManager.GetData<TEvent>();;
+            return _poolManager.GetData<TEvent>();
+        }
+
+        public void Collect<TEvent>(TEvent evt) where TEvent : class, IEvent
+        {
+            _poolManager.PushData(evt);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Core.GlobalEvent
     /// 该抽象类实现了 <see cref="IEvent"/> 接口，为所有事件提供统一的基类定义，
     /// 确保事件体系的一致性和可扩展性。
     /// </remarks>
-    public abstract class Event : IEvent, IPoolData
+    public abstract class Event : IEvent
     {
         /// <summary>
         /// 重置事件对象的状态，用于事件对象池复用场景

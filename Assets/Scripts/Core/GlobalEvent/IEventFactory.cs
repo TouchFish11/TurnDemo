@@ -10,5 +10,7 @@ namespace Core.GlobalEvent
         /// 返回重置后的事件实例
         /// </returns>
         TEvent GetEvent<TEvent>() where TEvent : Event;
+
+        void Collect<TEvent>(TEvent evt) where TEvent : class, IEvent;
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Core.Log;
 using Core.Time;
 
 namespace Core.Pool
@@ -13,9 +14,9 @@ namespace Core.Pool
         // 活跃时间阈值，大于等于该数值活跃，小于则惰性
         private readonly float _activeTimeThreshold;
         // 最小缓存数量
-        private int _minSize;
+        private readonly int _minSize;
         // 最大缓存容量
-        private int _maxSize;
+        private readonly int _maxSize;
 
         public string PoolId { get; }
         
@@ -53,6 +54,13 @@ namespace Core.Pool
         /// <param name="data">不使用的数据对象</param>
         public void Push(T data)
         {
+            // 超出上限不缓存
+            if (InactiveCount >= _maxSize)
+            {
+                Logger.LogWarning(ELogTags.Pool, $"Pool '{PoolId}' is full(MaxCapacity: {_maxSize}), make obj destroyed");
+                return;
+            }
+            
             ++ActiveCount;
             LastUsedTime = TimeUtil.RealtimeSinceStartup;
             //重置数据

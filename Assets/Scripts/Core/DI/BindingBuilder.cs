@@ -3,6 +3,10 @@ using System.Collections.Generic;
 
 namespace Core.DI
 {
+    /// <summary>
+    /// 绑定构建器
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class BindingBuilder<T> where T : class
     {
         private readonly List<Type> _serviceTypes = new() { typeof(T) };
@@ -40,7 +44,7 @@ namespace Core.DI
         {
             var info = new BindingInfo { ImplementationType = _implementationType };
             // 注册时使用临时列表 _serviceTypes，但 info 本身不存储它
-            global::Core.DI.DIContainer.RegisterSingleton(info, _serviceTypes);
+            DIContainer.RegisterSingleton(info, _serviceTypes);
         }
 
         /// <summary>
@@ -49,7 +53,9 @@ namespace Core.DI
         public void AsTransient()
         {
             foreach (var st in _serviceTypes)
-                global::Core.DI.DIContainer.RegisterTransient(st, _implementationType);
+            {
+                DIContainer.RegisterTransient(st, _implementationType);
+            }
         }
     }
 }

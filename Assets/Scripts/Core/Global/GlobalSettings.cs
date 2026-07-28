@@ -51,6 +51,13 @@ namespace Core.Global
         [Header("日志写入最大间隔时间")]
         [Tooltip("到达时间将写入一次日志到本地")]
         public ushort writeLogMaxIntervalTime = 30;
+        
+        /// <summary>
+        /// 每帧允许触发的最大延迟事件数量
+        /// </summary>
+        [Header("每帧允许触发的最大延迟事件数量")]
+        [Tooltip("限制阈值，防止单帧处理过多事件导致帧率下降")]
+        public int eventTriggerMaxNumPerFrame = 10;
 
         /// <summary>
         /// 是否启用缓存池布局――开发阶段使用

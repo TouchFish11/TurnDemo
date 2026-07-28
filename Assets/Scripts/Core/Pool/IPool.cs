@@ -5,6 +5,9 @@ namespace Core.Pool
     /// </summary>
     internal interface IPool
     {
+        /// <summary>
+        /// 池子ID——对象名称
+        /// </summary>
         string PoolId { get; }
         
         /// <summary>
@@ -27,7 +30,14 @@ namespace Core.Pool
         /// </summary>
         int InactiveCount { get; }
         
+        /// <summary>
+        /// 清理池子所有缓存
+        /// </summary>
         void ClearAll();
+        
+        /// <summary>
+        /// 修剪池子——清理对象到最小容量
+        /// </summary>
         void Trim();
     }
     
@@ -36,8 +46,16 @@ namespace Core.Pool
     /// </summary>
     internal interface IPool<T> : IPool
     {
+        /// <summary>
+        /// 获取
+        /// </summary>
+        /// <returns></returns>
         T Get();
         
+        /// <summary>
+        /// 放入
+        /// </summary>
+        /// <param name="obj"></param>
         void Push(T obj);
     }
 }
