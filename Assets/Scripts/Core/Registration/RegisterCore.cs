@@ -6,7 +6,7 @@ using Core.EditorRes;
 using Core.Global;
 using Core.GlobalEvent;
 using Core.HotUpdate;
-using Core.Inputs.ActionAsset;
+using Core.Inputs;
 using Core.Mono;
 using Core.Music;
 using Core.Net;

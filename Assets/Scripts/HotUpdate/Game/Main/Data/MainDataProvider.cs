@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
-using Core.Inputs.ActionAsset;
+using Core.Inputs;
 using Core.Log;
 using Core.Music;
 using Core.Serialize.Binary;

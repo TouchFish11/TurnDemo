@@ -66,7 +66,7 @@ namespace Core.UI.ViewController
         }
         
         /// <summary>
-        /// 失活，若界面被Destroy，则在Destroy前执行
+        /// 失活，若界面被Dispose，则在Dispose前执行
         /// </summary>
         /// <returns></returns>
         public async Task InActivate()
@@ -85,10 +85,10 @@ namespace Core.UI.ViewController
             view.GetBinder().OnScrollRectValueChanged -= ScrollRectValueChanged;
             view.GetBinder().OnDropdownValueChanged -= DropdownValueChanged;
             
-            // 处理失活逻辑
-            await OnInactivate();
             // 改变界面状态标识
             _controllerState = EControllerState.InActivating;
+            // 处理失活逻辑
+            await OnInactivate();
             // 此时失活中，不允许执行任何修改父子对象的操作
             view.ViewObj.SetActive(false);
         }
@@ -226,7 +226,7 @@ namespace Core.UI.ViewController
             await InActivate();
             // 界面被销毁
             _controllerState = EControllerState.Destroyed;
-            view.Destroy();
+            await view.Destroy();
             await OnDispose();
         }
         

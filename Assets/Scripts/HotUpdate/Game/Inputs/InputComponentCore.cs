@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Core.DI;
 using Core.GlobalEvent;
 using Core.GlobalEvent.Events;
-using Core.Inputs.ActionAsset;
+using Core.Inputs;
 using Core.Mono;
 using HotUpdate.Base.Data;
 using HotUpdate.Base.ECModule;

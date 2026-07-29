@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Video;
 
 public class Tests : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class Tests : MonoBehaviour
 
     public Tests(Lazy<A> lazy)
     {
-        
+
     }
     
     void Awake()
@@ -71,5 +72,10 @@ public class Tests : MonoBehaviour
                 animator.SetIKRotation(AvatarIKGoal.RightHand, rightHandTarget.rotation);
             }
         }
+    }
+
+    private async void Test()
+    {
+        AsyncOperation a0 = null;
     }
 }

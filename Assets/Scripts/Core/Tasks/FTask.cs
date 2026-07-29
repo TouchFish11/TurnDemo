@@ -50,6 +50,10 @@ namespace Core.Tasks
         /// <param name="token"></param>
         public void Init(AsyncOperation operation,  CancellationToken token = default)
         {
+            // 强约束，若当前上下文为null，抛出异常，自定义任务创建应该规范在主线程
+            if(SynchronizationContext.Current == null)
+                throw new InvalidOperationException("FTask must be created on main thread");
+                
             _operation = operation;
             // 注册原生请求完成的回调
             _operation.completed += RequestCompleted;
@@ -77,11 +81,16 @@ namespace Core.Tasks
         private static void OnCancelRequested(object state)
         {
             var task = (FTask)state;
-            // 强约束，若当前上下文为null，抛出异常，自定义任务创建应该规范在主线程
-            if(task._synchronizationContext == null)
-                throw new InvalidOperationException("FTask must be created on main thread");
             // 若取消调用在多线程，则延续回调应该被放入主线程处理
-            task._synchronizationContext.Post(_cancelPostCallback, task);
+            if (SynchronizationContext.Current != task._synchronizationContext)
+            {
+                task._synchronizationContext.Post(_cancelPostCallback, task);
+            }
+            else
+            {
+                // 否则直接执行
+                _cancelPostCallback(state);
+            }
         }
         
         /// <summary>
@@ -274,6 +283,7 @@ namespace Core.Tasks
         
         void IPoolData.ResetData()
         {
+            OnResetData();
             _operation = null;
             _continuations.Clear();
             _exception = null;
@@ -281,7 +291,6 @@ namespace Core.Tasks
             _synchronizationContext = null;
             _cancellationTokenRegistration = default;
             _cancellationToken = CancellationToken.None;
-            OnResetData();
         }
 
         /// <summary>

@@ -7,7 +7,7 @@ namespace Core.Tasks
     /// </summary>
     public struct TaskHandle : IDisposable
     {
-        // 句柄ID
+        // 句柄ID，调试用
         private readonly int _id;
         // 任务的引用计数
         private uint _refCount; 
@@ -22,9 +22,6 @@ namespace Core.Tasks
             get
             {
                 ++_refCount;
-#if UNITY_EDITOR && DEBUG_TEST
-                Logger.Log($"[TaskHandle]: id({_id}) Task 引用数增加到: {_refCount}");
-#endif
                 return _task;
             }
         }
@@ -50,10 +47,7 @@ namespace Core.Tasks
             {
                 --_refCount;
             }
-
-#if UNITY_EDITOR && DEBUG_TEST
-            Logger.Log($"[TaskHandle]: id({_id}) Task 引用数释放到: {_refCount}");
-#endif
+            
             if (_refCount == 0)
             {
                 _task?.Release();
@@ -82,9 +76,6 @@ namespace Core.Tasks
             get
             {
                 ++_refCount;
-#if UNITY_EDITOR && DEBUG_TEST
-                Logger.Log($"[TaskHandle]: id({_id}) Task 引用数增加到: {_refCount}");
-#endif
                 return _task;
             }
         }
@@ -111,9 +102,6 @@ namespace Core.Tasks
                 --_refCount;
             }
 
-#if UNITY_EDITOR && DEBUG_TEST
-            Logger.Log($"[TaskHandle]: id({_id}) Task 引用数释放到: {_refCount}");
-#endif
             if (_refCount == 0)
             {
                 _task?.Release();

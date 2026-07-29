@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
-using Core.Inputs.ActionAsset;
+using Core.Inputs;
 using Core.Mono;
 using Core.Utility;
 using HotUpdate.Base.Data;

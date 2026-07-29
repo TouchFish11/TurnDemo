@@ -1,4 +1,5 @@
-using System;
+using System.Threading.Tasks;
+using Core.Tasks;
 using UnityEngine;
 
 namespace Core.UI.ViewController
@@ -12,8 +13,6 @@ namespace Core.UI.ViewController
         protected const float alphaSpeed = 1f;
         // 是否隐藏
         private bool _isHide;
-        // 隐藏回调
-        private Action _hideCallBack;
         
         public GameObject ViewObj { get; private set; }
 
@@ -22,6 +21,7 @@ namespace Core.UI.ViewController
             base.Awake();
             canvasGroup = GetComponent<CanvasGroup>();
             ViewObj = gameObject;
+            _isHide = false;
         }
 
         protected virtual void Update()
@@ -35,8 +35,7 @@ namespace Core.UI.ViewController
                     if (canvasGroup.alpha < 0)
                     {
                         canvasGroup.alpha = 0;
-                        _hideCallBack?.Invoke();
-                        _hideCallBack = null;
+                        _isHide = true;
                     }
 
                     break;
@@ -48,13 +47,14 @@ namespace Core.UI.ViewController
                     if (canvasGroup.alpha > 1)
                     {
                         canvasGroup.alpha = 1;
+                        _isHide = false;
                     }
 
                     break;
                 }
             }
         }
-
+        
         /// <summary>
         /// 获取绑定器
         /// </summary>
@@ -66,16 +66,15 @@ namespace Core.UI.ViewController
 
         protected sealed override void OnDestroy()
         {
-            Destroy();
-            base.OnDestroy();
+
         }
 
         /// <summary>
         /// 控制器失活后销毁前执行
         /// </summary>
-        public virtual void Destroy()
+        public virtual Task Destroy()
         {
-            
+            return TaskUtility.WaitUntil(() => _isHide);
         }
     }
 }

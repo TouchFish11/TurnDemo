@@ -31,7 +31,7 @@ namespace Core.UI
         private Transform _systemLayer;
         // 对象生成器
         private readonly ObjectSpawner _objectSpawner;
-        // canvas缓存对象
+        // canvas和UI相机的复合缓存对象
         private GameObject _uiRoot;
         
         private UIManager(ObjectSpawner spawner)

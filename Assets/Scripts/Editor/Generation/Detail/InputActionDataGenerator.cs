@@ -4,7 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using Core.Extensions;
-using Core.Inputs.ActionAsset;
+using Core.Inputs;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -13,30 +13,30 @@ using UnityEngine.InputSystem.LowLevel;
 namespace Editor.Generation.Detail
 {
     /// <summary>
-    /// ��������������
-    /// �������ݽṹ�����ݽṹ���������붯��ö��
+    /// 输入动作数据生成器
+    /// 生成数据结构、数据容器和输入动作枚举
     /// </summary>
     internal class InputActionDataGenerator : ClassGenerator
     {
-        protected override string NameSpace => "Core.Input.ActionAsset";
+        protected override string NameSpace => "Core.Inputs";
         protected override string Note { get; set; }
         protected readonly E_AccessModifier accessModifier = E_AccessModifier.Public;
-        // ��������
+        // 变量类型
         private readonly string variableType = "string";
-        // ��̬���η�
+        // 静态修饰符
         private readonly string staticModifier = "static";
-        // ���ݽṹ�����������ݵ�ӳ��
-        private readonly Dictionary<string, string> dataNameToStringMap = new Dictionary<string, string>();
+        // 数据结构名称到生成数据的映射
+        private readonly Dictionary<string, string> dataNameToStringMap = new();
 
-        // ���붯����Դ
+        // 输入动作资源
         private InputActionAsset inputActions;
 
         private readonly string filePath = $"{Application.dataPath}/Scripts/Core/Input/ActionAsset/";
 
         public override void GenerateScript()
         {
-            // �������붯����Դ
-            inputActions = Resources.Load<InputActionAsset>("PlayerinputAction");
+            // 加载输入动作资源
+            inputActions = Resources.Load<InputActionAsset>("PlayerInputAction");
 
             GenerateInputActionMapEnum();
 
@@ -48,22 +48,22 @@ namespace Editor.Generation.Detail
         }
 
         /// <summary>
-        /// �������붯��ӳ��ö��
+        /// 生成输入动作映射枚举
         /// </summary>
         private void GenerateInputActionMapEnum()
         {
-            Dictionary<string, List<string>> mapToActionsMap = new Dictionary<string, List<string>>();
+            var mapToActionsMap = new Dictionary<string, List<string>>();
 
-            // �������е�ӳ��
-            foreach (InputActionMap map in inputActions.actionMaps)
+            // 遍历所有的映射
+            foreach (var map in inputActions.actionMaps)
             {
                 mapToActionsMap.Add(map.name, new List<string>());
-                // ����ÿ������
-                foreach (InputAction action in map.actions)
+                // 遍历每个动作
+                foreach (var action in map.actions)
                 {
-                    // �Ƿ�����ϰ�
-                    bool isComposite = false;
-                    // ����ÿ����
+                    // 是否是组合绑定
+                    var isComposite = false;
+                    // 遍历每个绑定
                     foreach (var binding in action.bindings)
                     {
                         if (binding.isComposite)
@@ -81,7 +81,7 @@ namespace Editor.Generation.Detail
                         }
                     }
 
-                    // �ö���������ϰ󶨣��������Ӷ�����
+                    // 该动作没有组合绑定，直接添加动作名称
                     if (!isComposite)
                     {
                         mapToActionsMap[map.name].Add(action.name);
@@ -91,26 +91,26 @@ namespace Editor.Generation.Detail
 
             foreach (var pair in mapToActionsMap)
             {
-                string enumFilePath = $"{filePath}E_{pair.Key}.cs";
-                IScriptGenerator scriptGenerator = new InputActionEnumGenerator(pair.Value, new string[] { "None" }, enumFilePath, NameSpace);
+                var enumFilePath = $"{filePath}E_{pair.Key}.cs";
+                IScriptGenerator scriptGenerator = new InputActionEnumGenerator(pair.Value, new[] { "None" }, enumFilePath, NameSpace);
                 scriptGenerator.GenerateScript();
                 Debug.Log($"E_{pair.Key} 生成成功，路径：{enumFilePath}");
             }
         }
 
         /// <summary>
-        /// �������ݽṹ��
+        /// 生成数据结构类
         /// </summary>
         private void GenerateInputActionDataClass()
         {
-            Dictionary<string, List<InputAction>> mapToActionsMap = new Dictionary<string, List<InputAction>>();
+            var mapToActionsMap = new Dictionary<string, List<InputAction>>();
 
-            // �������е�ӳ��
-            foreach (InputActionMap map in inputActions.actionMaps)
+            // 遍历所有的映射
+            foreach (var map in inputActions.actionMaps)
             {
                 mapToActionsMap.Add(map.name, new List<InputAction>());
-                // ����ӳ������ж���
-                foreach (InputAction action in map.actions)
+                // 遍历映射中所有动作
+                foreach (var action in map.actions)
                 {
                     mapToActionsMap[map.name].Add(action);
                 }
@@ -118,12 +118,12 @@ namespace Editor.Generation.Detail
 
             foreach (var pair in mapToActionsMap)
             {
-                // ���ݽṹ����
-                string className = $"{pair.Key}Data";
-                List<InputAction> actions = pair.Value;
-                Note = $"{className}���붯������";
+                // 数据结构类名
+                var className = $"{pair.Key}Data";
+                var actions = pair.Value;
+                Note = $"{className}输入动作数据";
 
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 sb.AppendLine($"using UnityEngine.InputSystem;");
                 sb.AppendLine($"using UnityEngine.InputSystem.LowLevel;");
                 sb.AppendLine();
@@ -135,9 +135,9 @@ namespace Editor.Generation.Detail
                 sb.AppendLine($"\tpublic class {className}");
                 sb.AppendLine("\t{");
 
-                foreach (InputAction action in actions)
+                foreach (var action in actions)
                 {
-                    bool isComposite = false;
+                    var isComposite = false;
                     foreach (var inputBinding in action.bindings)
                     {
                         if (inputBinding.isComposite)
@@ -151,20 +151,20 @@ namespace Editor.Generation.Detail
                                 break;
                             }
 
-                            // �������ԣ����ݼ���/��겻ͬʹ�ò�ͬ�Ĺ��캯��
+                            // 添加属性，根据键盘/鼠标不同使用不同的构造函数
                             if (inputBinding.path.Contains("Keyboard"))
                             {
-                                string keyStr = inputBinding.path.Split('/')[1];
-                                Key key = (Key)Enum.Parse(typeof(Key), keyStr, true);
+                                var keyStr = inputBinding.path.Split('/')[1];
+                                var key = (Key)Enum.Parse(typeof(Key), keyStr, true);
                                 sb.AppendLine($"\t\t[{nameof(ActionKeyMapAttribute)}({nameof(Key)}.{key})]");
                             }
                             else if(inputBinding.path.Contains("Mouse"))
                             {
-                                string btnStr = inputBinding.path.Split('/')[1];
-                                // ������ͷ�Ϊ��ť��ֵ
+                                var btnStr = inputBinding.path.Split('/')[1];
+                                // 将鼠标输入分为按键和数值
                                 if (btnStr.Contains("button", StringComparison.OrdinalIgnoreCase))
                                 {
-                                    string newBtnStr = btnStr.Replace("button", "", StringComparison.OrdinalIgnoreCase);
+                                    var newBtnStr = btnStr.Replace("button", "", StringComparison.OrdinalIgnoreCase);
                                     if (Enum.TryParse<MouseButton>(newBtnStr, true, out var mb))
                                     {
                                         sb.AppendLine($"\t\t[{nameof(ActionKeyMapAttribute)}({nameof(MouseButton)}.{mb})]");
@@ -183,24 +183,24 @@ namespace Editor.Generation.Detail
                         }
                     }
 
-                    // �ö�����������ϰ󶨣����Ӷ�����
+                    // 该动作没有组合绑定，直接添加动作
                     if (!isComposite)
                     {
-                        InputBinding inputBinding = action.bindings[0];
-                        // �������ԣ����ݼ���/��겻ͬʹ�ò�ͬ�Ĺ��캯��
+                        var inputBinding = action.bindings[0];
+                        // 添加属性，根据键盘/鼠标不同使用不同的构造函数
                         if (inputBinding.path.Contains("Keyboard"))
                         {
-                            string keyStr = inputBinding.path.Split('/')[1];
-                            Key key = (Key)Enum.Parse(typeof(Key), keyStr, true);
+                            var keyStr = inputBinding.path.Split('/')[1];
+                            var key = (Key)Enum.Parse(typeof(Key), keyStr, true);
                             sb.AppendLine($"\t\t[{nameof(ActionKeyMapAttribute)}({nameof(Key)}.{key})]");
                         }
                         else if (inputBinding.path.Contains("Mouse"))
                         {
-                            string btnStr = inputBinding.path.Split('/')[1];
-                            // ������ͷ�Ϊ��ť��ֵ
+                            var btnStr = inputBinding.path.Split('/')[1];
+                            // 将鼠标输入分为按键和数值
                             if (btnStr.Contains("button", StringComparison.OrdinalIgnoreCase))
                             {
-                                string newBtnStr = btnStr.Replace("button", "", StringComparison.OrdinalIgnoreCase);
+                                var newBtnStr = btnStr.Replace("button", "", StringComparison.OrdinalIgnoreCase);
                                 if (Enum.TryParse<MouseButton>(newBtnStr, true, out var mb))
                                 {
                                     sb.AppendLine($"\t\t[{nameof(ActionKeyMapAttribute)}({nameof(MouseButton)}.{mb})]");
@@ -222,15 +222,15 @@ namespace Editor.Generation.Detail
                 sb.AppendLine("\t}");
                 sb.AppendLine("}");
 
-                // ����
+                // 收集
                 dataNameToStringMap.Add(className, sb.ToString());
             }
 
-            // ���ɽű�
+            // 生成脚本
             foreach (var pair in dataNameToStringMap)
             {
-                string dataFilePath = $"{filePath}{pair.Key}.cs";
-                // ��ɾ��������
+                var dataFilePath = $"{filePath}{pair.Key}.cs";
+                // 先删除已存在的文件
                 if (File.Exists(dataFilePath))
                 {
                     File.Delete(dataFilePath);
@@ -239,24 +239,24 @@ namespace Editor.Generation.Detail
                 Debug.Log($"{pair.Key} 生成成功，路径：{dataFilePath}");
             }
 
-            // ˢ��
+            // 刷新
             AssetDatabase.Refresh();
         }
 
         /// <summary>
-        /// �������ݽṹ������
+        /// 生成数据结构容器类
         /// </summary>
         private void GenerateInputActionContainerClass()
         {
-            Dictionary<string, string> maps = new Dictionary<string, string>();
-            foreach (InputActionMap map in inputActions.actionMaps)
+            var maps = new Dictionary<string, string>();
+            foreach (var map in inputActions.actionMaps)
             {
-                // �ֵ������
-                string keyType = $"E_{map.name}";
-                // ��������
-                string className = $"{map.name}DataContainer";
+                // 键类型（枚举）
+                var keyType = $"E_{map.name}";
+                // 类名
+                var className = $"{map.name}DataContainer";
 
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 sb.AppendLine("using System;");
                 sb.AppendLine($"using System.Collections.Generic;");
                 sb.AppendLine();
@@ -279,18 +279,18 @@ namespace Editor.Generation.Detail
                 sb.AppendLine("\t}");
                 sb.AppendLine("}");
 
-                // ���붯��map��ӳ���������ַ���
+                // 输入动作map的映射容器和生成字符串
                 maps.Add($"{map.name}", sb.ToString());
             }
         
             foreach (var pair in maps)
             {
-                foreach (string dataName in dataNameToStringMap.Keys)
+                foreach (var dataName in dataNameToStringMap.Keys)
                 {
-                    // ���ݽṹ����������Ӧ�����붯��ӳ��map���ƣ���Ϊ��Ӧ������
+                    // 数据结构名称包含对应的输入动作映射map名称，即为对应容器
                     if (dataName.Contains(pair.Key))
                     {
-                        string containerFilePath = $"{filePath}{dataName}Container.cs";
+                        var containerFilePath = $"{filePath}{dataName}Container.cs";
                         File.WriteAllText(containerFilePath, pair.Value);
                         Debug.Log($"{dataName}Container 生成成功，路径：{containerFilePath}");
                     }
@@ -301,21 +301,21 @@ namespace Editor.Generation.Detail
         }
 
         /// <summary>
-        /// ����PlayerActionAssets.Json�ļ�
+        /// 生成PlayerActionAssets.Json文件
         /// </summary>
         private void GeneratePlayerActionAssetsJson()
         {
-            Dictionary<string, string> nameToJsonMap = new Dictionary<string, string>();
-            InputActionAsset inputActions = Resources.Load<InputActionAsset>("PlayerinputAction");
-            string json = inputActions.ToJson();
-            StringBuilder sb = new StringBuilder(json);
+            var nameToJsonMap = new Dictionary<string, string>();
+            var inputActions = Resources.Load<InputActionAsset>("PlayerInputAction");
+            var json = inputActions.ToJson();
+            var sb = new StringBuilder(json);
 
-            foreach (InputActionMap map in inputActions.actionMaps)
+            foreach (var map in inputActions.actionMaps)
             {
-                string className = $"Core.Input.ActionAsset.{map.name}Data";
-                Type inputActionDataType = Type.GetType($"{className}, Assembly-CSharp-Core");
-                PropertyInfo[] properties = inputActionDataType.GetProperties(BindingFlags.Public | BindingFlags.Static);
-                foreach (PropertyInfo propertyInfo in properties)
+                var className = $"Core.Input.ActionAsset.{map.name}Data";
+                var inputActionDataType = Type.GetType($"{className}, Assembly-CSharp-Core");
+                var properties = inputActionDataType.GetProperties(BindingFlags.Public | BindingFlags.Static);
+                foreach (var propertyInfo in properties)
                 {
                     sb.Replace(propertyInfo.GetValue(null).ToString(), $"<{propertyInfo.Name}>");
                 }
@@ -324,7 +324,7 @@ namespace Editor.Generation.Detail
 
             foreach (var item in nameToJsonMap)
             {
-                string filePath = $"{Application.dataPath}/Editor/ArtRes/GameConfig/InputConfig/{item.Key}.json";
+                var filePath = $"{Application.dataPath}/Editor/ArtRes/GameConfig/InputConfig/{item.Key}.json";
                 File.WriteAllText(filePath, item.Value);
             }
 
@@ -332,22 +332,22 @@ namespace Editor.Generation.Detail
         }
 
         /// <summary>
-        /// ��ȡ2DVector·��
+        /// 获取2DVector路径
         /// </summary>
         /// <param name="sb"></param>
         /// <param name="action"></param>
         /// <returns></returns>
         private int Get2DVectorPath(StringBuilder sb, InputAction action)
         {
-            string[] dirs = new string[] { "Up", "Down", "Left", "Right" };
+            var dirs = new[] { "Up", "Down", "Left", "Right" };
 
-            for (int i = 0; i < action.bindings.Count; i++)
+            for (var i = 0; i < action.bindings.Count; i++)
             {
-                // ��������
+                // 遍历绑定
                 if (action.bindings[i].path.Contains("Keyboard"))
                 {
-                    string keyStr = action.bindings[i].path.Split('/')[1];
-                    Key key = (Key)Enum.Parse(typeof(Key), keyStr, true);
+                    var keyStr = action.bindings[i].path.Split('/')[1];
+                    var key = (Key)Enum.Parse(typeof(Key), keyStr, true);
                     sb.AppendLine($"\t\t[{nameof(ActionKeyMapAttribute)}({nameof(Key)}.{key})]");
                     sb.AppendLine($"\t\t{accessModifier.ToEnumString()} {staticModifier} {variableType} {dirs[i - 1]} => \"{action.bindings[i].path}\";");
                     sb.AppendLine();
