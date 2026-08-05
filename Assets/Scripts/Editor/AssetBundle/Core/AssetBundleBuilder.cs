@@ -466,7 +466,7 @@ namespace Editor.AssetBundle.Core
                             key = fallbackKey;
                         }
                         
-                        var entry = new AssetEntry(key, bundleName, assetInfo.assetPath, assetType);
+                        var entry = new AssetEntry(key, bundleName, assetInfo.assetPath, assetType, assetInfo.size);
                         catalog.AddOrUpdateEntry(key, entry);
                         
                         // 若是图集，将其子图片也要添加进资源目录，因为收集资源信息不会收集图片
@@ -486,7 +486,7 @@ namespace Editor.AssetBundle.Core
                                {
                                    catalog.AddOrUpdateEntry(packable.name,
                                        new SpriteAssetEntry(packable.name, bundleName, path, EAssetType.Texture, assetInfo.assetPath,
-                                           assetInfo.name));
+                                           assetInfo.name, assetInfo.size));
                                    continue;
                                }
                                
@@ -508,7 +508,7 @@ namespace Editor.AssetBundle.Core
                                                var sprite = AssetDatabase.LoadAssetAtPath<Sprite>(assetPath);
                                                catalog.AddOrUpdateEntry(sprite.name,
                                                    new SpriteAssetEntry(sprite.name, bundleName, assetPath, EAssetType.Texture, assetInfo.assetPath,
-                                                        assetInfo.name));
+                                                        assetInfo.name, assetInfo.size));
                                            }
                                            else
                                            {
@@ -516,7 +516,7 @@ namespace Editor.AssetBundle.Core
                                                var texture2D = AssetDatabase.LoadAssetAtPath<Texture2D>(assetPath);
                                                catalog.AddOrUpdateEntry(texture2D.name,
                                                    new SpriteAssetEntry(texture2D.name, bundleName, assetPath, EAssetType.Texture, assetInfo.assetPath,
-                                                       assetInfo.name));
+                                                       assetInfo.name, assetInfo.size));
                                            }
                                        }
                                    }

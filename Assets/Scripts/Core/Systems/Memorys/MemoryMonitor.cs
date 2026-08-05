@@ -94,7 +94,7 @@ namespace Core.Systems.Memorys
         {
             foreach (var listener in _listeners)
             {
-                listener.OnReport(new MemoryData(currentOccupationLevel));
+                listener.OnReport(new MemoryReportData(currentOccupationLevel));
             }
         }
 

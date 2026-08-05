@@ -1,10 +1,28 @@
 using System;
+using Core.DI;
+using Unity.Collections;
 using UnityEngine;
+using UnityEngine.Scripting;
 using UnityEngine.Video;
 
 public class Tests : MonoBehaviour
 {
-    public class A
+    public interface IA
+    {
+        
+    }
+    
+    public class A : IA
+    {
+        
+    }
+    
+    public class B : A
+    {
+        
+    }
+    
+    public class C : B
     {
         
     }
@@ -17,7 +35,12 @@ public class Tests : MonoBehaviour
 
     public Tests(Lazy<A> lazy)
     {
-
+        DIContainer.Bind<C>().As<B>().As<A>().AsSingleton();
+    }
+    
+    public Tests(int i, int  j, int k)
+    {
+        DIContainer.Bind<C>().As<B>().As<A>().AsSingleton();
     }
     
     void Awake()
@@ -74,6 +97,7 @@ public class Tests : MonoBehaviour
         }
     }
 
+    [Preserve]
     private async void Test()
     {
         AsyncOperation a0 = null;

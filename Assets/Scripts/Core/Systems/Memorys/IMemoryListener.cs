@@ -8,7 +8,7 @@ namespace Core.Systems.Memorys
         /// <summary>
         /// 报告时执行
         /// </summary>
-        /// <param name="memoryData"></param>
-        void OnReport(MemoryData memoryData);
+        /// <param name="memoryReportData"></param>
+        void OnReport(MemoryReportData memoryReportData);
     }
 }

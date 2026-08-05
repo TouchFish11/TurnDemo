@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Core.Exceptions;
 using Core.Log;
 using UnityEngine;
 using UnityEngine.U2D;
@@ -12,7 +13,7 @@ namespace Core.AssetBundles.Management
     /// <summary>
     /// 资源管理器
     /// </summary>
-    internal class AssetManager
+    internal partial class AssetManager
     {
         private readonly IAssetBundleManager _assetBundleManager;
         // 物理资源key到物理资源的缓存映射
@@ -80,7 +81,7 @@ namespace Core.AssetBundles.Management
             }
             catch (Exception e)
             {
-                Logger.LogError(ELogTags.Asset, $"[{nameof(AssetManager)}]: ({key})Asset load fail, {e.Message}");
+                Logger.LogException(ELogTags.Asset, ExceptionHelper.Throw($"({key})Asset load fail", e));
                 return null;
             }
         }

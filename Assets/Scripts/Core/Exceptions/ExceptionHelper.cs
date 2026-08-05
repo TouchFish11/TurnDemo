@@ -11,6 +11,17 @@ namespace Core.Exceptions
         /// 前缀
         /// </summary>
         public const string Prefix = "系统错误";
+
+        /// <summary>
+        /// 封装未定义异常的通用抛出逻辑
+        /// </summary>
+        /// <param name="msg">额外的携带消息</param>
+        /// <param name="inner">内部异常，若有</param>
+        /// <returns></returns>
+        public static Exception Throw(string msg, Exception inner = null)
+        {
+            return new Exception(msg, inner);
+        }
         
         public static AssetBundleLoadException ThrowAssetBundleLoadException(string bundleName, Exception innerException)
         {

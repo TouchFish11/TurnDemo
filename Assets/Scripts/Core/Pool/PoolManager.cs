@@ -269,9 +269,9 @@ namespace Core.Pool
             }
         }
 
-        public void OnReport(MemoryData memoryData)
+        public void OnReport(MemoryReportData memoryReportData)
         {
-            switch (memoryData.level)
+            switch (memoryReportData.level)
             {
                 case EMemoryOccupationLevel.Normal:
                     return;

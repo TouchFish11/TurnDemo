@@ -9,6 +9,11 @@ namespace Core.AssetBundles.Update.Core
     public class UpdateStateConfigAttribute : Attribute
     {
         /// <summary>
+        /// 状态类型
+        /// </summary>
+        public Type StateType { get; set; }
+        
+        /// <summary>
         /// 执行顺序
         /// 越小越靠前
         /// </summary>

@@ -9,8 +9,8 @@ namespace Core.DI
     /// <typeparam name="T"></typeparam>
     public class BindingBuilder<T> where T : class
     {
-        private readonly List<Type> _serviceTypes = new() { typeof(T) };
-        private Type _implementationType = typeof(T);
+        private readonly List<Type> _bindTypes = new() { typeof(T) };
+        private readonly Type _implementationType = typeof(T);
 
         /// <summary>
         /// 添加一个可解析的服务类型（接口或基类）
@@ -20,31 +20,19 @@ namespace Core.DI
             if (!typeof(TService).IsAssignableFrom(_implementationType))
                 throw new Exception($"{_implementationType.Name} does not implement {typeof(TService).Name}");
             
-            if (!_serviceTypes.Contains(typeof(TService)))
-                _serviceTypes.Add(typeof(TService));
+            if (!_bindTypes.Contains(typeof(TService)))
+                _bindTypes.Add(typeof(TService));
             return this;
         }
-
-        /// <summary>
-        /// 指定具体实现（当 T 为接口时使用）
-        /// </summary>
-        public BindingBuilder<T> To<TImpl>() where TImpl : class, T
-        {
-            _implementationType = typeof(TImpl);
-            // 更新服务类型列表（保持包含原 T）
-            if (!_serviceTypes.Contains(typeof(T)))
-                _serviceTypes.Add(typeof(T));
-            return this;
-        }
-
+        
         /// <summary>
         /// 注册为单例（自动合并重复实现）
         /// </summary>
         public void AsSingleton()
         {
             var info = new BindingInfo { ImplementationType = _implementationType };
-            // 注册时使用临时列表 _serviceTypes，但 info 本身不存储它
-            DIContainer.RegisterSingleton(info, _serviceTypes);
+            // 注册时使用临时列表 _bindTypes，但 info 本身不存储它
+            DIContainer.RegisterSingleton(info, _bindTypes);
         }
 
         /// <summary>
@@ -52,9 +40,9 @@ namespace Core.DI
         /// </summary>
         public void AsTransient()
         {
-            foreach (var st in _serviceTypes)
+            foreach (var type in _bindTypes)
             {
-                DIContainer.RegisterTransient(st, _implementationType);
+                DIContainer.RegisterTransient(type, _implementationType);
             }
         }
     }

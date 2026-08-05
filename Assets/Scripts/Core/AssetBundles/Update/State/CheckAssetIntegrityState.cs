@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Core.AssetBundles.Collection;
 using Core.AssetBundles.Update.Core;
 using Core.AssetBundles.Update.Exception;
 using Core.Utility;
@@ -17,7 +18,33 @@ namespace Core.AssetBundles.Update.State
     {
         // 损坏的AB包信息列表
         private readonly List<(string abName, long downloadedBytes, bool hashSame, string badHash)> _abBrokenInfos = new();
+        // 当前进度
+        private int currentProgress = 0;
+        
+        /// <summary>
+        /// 远端包集合
+        /// </summary>
+        private ABPackageCollection RemoteCollection
+        {
+            get => assetBundleUpdater.GetContext().RemotePackageCollection;
+            set
+            {
+                
+            }
+        }
 
+        /// <summary>
+        /// 缓存文件集合
+        /// </summary>
+        private AbPackageCacheCollection CacheCollection
+        {
+            get => assetBundleUpdater.GetContext().CachePackageCollection;
+            set
+            {
+                
+            }
+        }
+        
         protected override async void OnEnter()
         {
             try
@@ -59,38 +86,40 @@ namespace Core.AssetBundles.Update.State
         /// <returns>是否所有资源都完整</returns>
         public async Task CheckAssetsIntegrity(Action<int, int> onCheckProgress)
         {
-            var context = assetBundleUpdater.GetContext();
-            
-            // 获取远程包集合和缓存包集合
-            var remoteCollection = context.RemotePackageCollection;
-            var cacheCollection = context.CachePackageCollection;
-
-            var currentProgress = 0;
+            var hashTasks = new List<Task>(CacheCollection.Count);
             // 遍历所有缓存包，校验完整性
-            foreach (var cachePair in cacheCollection)
+            foreach (var cachePair in CacheCollection)
             {
-                var hash = await HashUtility.GenerateFileSHA256HashAsync(PathUtility.GetAbLoadPath(cachePair.Value.AbName.WithAbSuffix()));
-                var hashSame = remoteCollection[cachePair.Key].Hash == hash;
-                // 校验条件：已下载字节数 == 远程包大小 且 Hash一致
-                if (remoteCollection[cachePair.Key].Size != cachePair.Value.DownloadedBytes || !hashSame)
-                {
-                    // 校验失败，标记为损坏包
-                    AddBrokenInfo(cachePair.Key,  cachePair.Value.DownloadedBytes, hashSame, hash);
-                }
-                
-                // 更新缓存hash信息
-                cachePair.Value.Hash = hash;
-                
-                // 触发校验进度回调
-                ++currentProgress;
-                onCheckProgress?.Invoke(currentProgress, cacheCollection.Count);
+                var path = PathUtility.GetAbLoadPath(cachePair.Value.AbName.WithAbSuffix());
+                hashTasks.Add(ComputeHashAsync(path, cachePair, onCheckProgress));
             }
+            
+            await Task.WhenAll(hashTasks);
 
             // 抛出AB包损坏异常
             if (_abBrokenInfos.Count != 0)
             {
                 throw new AssetBunleBrokenException(GetAssetBunleBrokenExceptionMessage());
             }
+        }
+
+        private async Task ComputeHashAsync(string path, KeyValuePair<string,AbPackageCacheInfo> cachePair, Action<int, int> onCheckProgress)
+        {
+            var hash = await HashUtility.GenerateFileSHA256HashAsync(path);
+            var hashSame = RemoteCollection[cachePair.Key].Hash == hash;
+            // 校验条件：已下载字节数 == 远程包大小 且 Hash一致
+            if (RemoteCollection[cachePair.Key].Size != cachePair.Value.DownloadedBytes || !hashSame)
+            {
+                // 校验失败，标记为损坏包
+                AddBrokenInfo(cachePair.Key,  cachePair.Value.DownloadedBytes, hashSame, hash);
+            }
+                
+            // 更新缓存hash信息
+            cachePair.Value.Hash = hash;
+                
+            // 触发校验进度回调
+            ++currentProgress;
+            onCheckProgress?.Invoke(currentProgress, CacheCollection.Count);
         }
 
         private void AddBrokenInfo(string abName, long downloadedBytes, bool hashSame, string badHash)
@@ -111,7 +140,9 @@ namespace Core.AssetBundles.Update.State
 
         protected override void OnExit()
         {
-            
+            currentProgress = 0;
+            RemoteCollection = null;
+            CacheCollection = null;
         }
 
         /// <summary>

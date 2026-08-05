@@ -56,6 +56,8 @@ namespace Core.Inputs
         /// <returns>异步任务</returns>
         public void InitPlayerInput(PlayerInput playerInput, MainActionMapDataContainer container, Action<InputAction.CallbackContext> onActionTrigger)
         {
+            // 字典补齐
+            InitContainer<MainActionMapData>(container);
             // 缓存玩家输入组件引用
             _playerInput = playerInput;
             // 缓存数据容器
@@ -175,6 +177,7 @@ namespace Core.Inputs
                     sb.Replace(attribute.ReplaceKey, keyPathMap.path);
                 }
             }
+            
             // 从修改后的JSON生成InputActionAsset
             return InputActionAsset.FromJson(sb.ToString());
         }
@@ -320,10 +323,14 @@ namespace Core.Inputs
             {
                 // 属性名对应动作映射枚举名
                 var name = property.Name;
-                var actionEnumName = (E_MainActionMap)Enum.Parse(typeof(E_MainActionMap), name);
+                var actionEnum = (E_MainActionMap)Enum.Parse(typeof(E_MainActionMap), name);
+                
+                // 若存在这个映射，则跳过
+                if(container.actionMap.ContainsKey(actionEnum))
+                    continue;
+                
                 // 属性值对应按键路径
                 var value = property.GetValue(null).ToString();
-
                 // 获取属性上的按键映射特性
                 var memberInfo = type.GetMember(name)[0];
                 var attribute = memberInfo.GetCustomAttribute<ActionKeyMapAttribute>();
@@ -335,15 +342,15 @@ namespace Core.Inputs
                 // 根据特性类型初始化按键映射（键盘按键/鼠标值/鼠标按钮）
                 if (attribute.Key != Key.None)
                 {
-                    container.actionMap.Add(actionEnumName, new KeyPathMap(attribute.Key, value));
+                    container.actionMap.Add(actionEnum, new KeyPathMap(attribute.Key, value));
                 }
                 else if (attribute.MouseValue != E_MouseValue.None)
                 {
-                    container.actionMap.Add(actionEnumName, new KeyPathMap(attribute.MouseValue, value));
+                    container.actionMap.Add(actionEnum, new KeyPathMap(attribute.MouseValue, value));
                 }
                 else
                 {
-                    container.actionMap.Add(actionEnumName, new KeyPathMap(attribute.MouseButton, value));
+                    container.actionMap.Add(actionEnum, new KeyPathMap(attribute.MouseButton, value));
                 }
             }
         }

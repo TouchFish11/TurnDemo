@@ -15,17 +15,17 @@ namespace Core.AssetBundles.Management
     /// <summary>
     /// AB包管理器
     /// </summary>
-    internal class AssetBundleManager : IAssetBundleManager
+    internal partial class AssetBundleManager : IAssetBundleManager
     {
         private readonly IJsonManager _jsonManager;
         // 缓存包包装器，便于查找
         private readonly Dictionary<string, BundleWrapper> _nameToWrapperMap = new();
+        // 热包链表
+        private readonly LinkedList<string> _hotBundles = new();
+        // 冷包链表
+        private readonly LinkedList<string> _coldBundles = new();
         // 加载任务缓存，防并发
         private readonly Dictionary<string, Task<BundleWrapper>> _bundleLoadingTasks = new();
-        // 热包列表
-        private readonly List<BundleWrapper> _hotBundles = new();
-        // 冷包列表
-        private readonly List<BundleWrapper> _coldBundles = new();
         // 临界活跃数，高于该数值则放入热包列表，小于则放入冷包列表
         private readonly int _criticalActiveCount;
         // 单个AB包滑动窗口最大数
@@ -49,17 +49,16 @@ namespace Core.AssetBundles.Management
         public async Task Init()
         {
             // 读取本地清单文件
-            Catalog = await _jsonManager.FromJsonAsync<AssetCatalog>(
-                PathUtility.GetAbLoadPath(FileUtility.CatalogDefaultName),
-                settings: NewtonsoftJsonUtility.CatalogSerializerSettings);
+            Catalog = await _jsonManager.FromJsonAsync<AssetCatalog>(PathUtility.GetAbLoadPath(FileUtility.CatalogDefaultName), settings: NewtonsoftJsonUtility.CatalogSerializerSettings);
             // 构建全部AB包信息
             foreach (var abPackageInfo in Catalog.ABPackageCollection.Values)
             {
                 var abName = abPackageInfo.Name;
                 var loadPath = PathUtility.GetAbLoadPath(abPackageInfo.Name.WithAbSuffix());
+                var bundleSize = abPackageInfo.Size;
                 // 初始化包装器
                 var window = DIContainer.Create<LFUSlidingWindow>(parameterValues: new object[] { _bundleSlidingWindowMaxCount, _maxDurationPerWindow });
-                var bundleWrapper = DIContainer.Create<BundleWrapper>(parameterValues: new object[] { abName, loadPath, this, window });
+                var bundleWrapper = DIContainer.Create<BundleWrapper>(parameterValues: new object[] { abName, loadPath, bundleSize, this, window });
                 bundleWrapper.OnAccessAsset += UpdateBundleCacheState;
                 _nameToWrapperMap.TryAdd(abName, bundleWrapper);
             }
@@ -69,7 +68,7 @@ namespace Core.AssetBundles.Management
         {
             if (!_nameToWrapperMap.TryGetValue(abName, out var wrapper))
             {
-                throw new KeyNotFoundException($"{nameof(AssetBundleManager)}: {abName} key is not found");
+                throw new KeyNotFoundException($"{abName} key is not found");
             }
 
             // 加载依赖和目标AB包
@@ -91,7 +90,6 @@ namespace Core.AssetBundles.Management
             foreach (var dependency in dependencies)
             {
                 var wrapper = _nameToWrapperMap[dependency];
-                wrapper.IsActive = true;
                 wrapper.LoadFromFile();
                 wrapper.Retain();
                 Logger.LogDebug(ELogTags.Asset, $"'{abName}' assetBundle dependency '{dependency}' will be loaded");
@@ -111,7 +109,7 @@ namespace Core.AssetBundles.Management
                 return await existingTask;
             
             // 异步加载AB包及其依赖
-            var task = LoadBundleInternalAsync(abName, token);
+            var task = LoadBundleAsyncInternal(abName, token);
             // 缓存当前正在加载的任务
             if (!_bundleLoadingTasks.TryAdd(abName, task))
             {
@@ -135,7 +133,7 @@ namespace Core.AssetBundles.Management
         /// <param name="abName"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        private async Task<BundleWrapper> LoadBundleInternalAsync(string abName, CancellationToken token)
+        private async Task<BundleWrapper> LoadBundleAsyncInternal(string abName, CancellationToken token)
         {
             await LoadDependenciesAndTargetAsync(abName, token);
             return _nameToWrapperMap[abName];
@@ -156,7 +154,6 @@ namespace Core.AssetBundles.Management
             foreach (var dependency in dependencies)
             {
                 var wrapper = _nameToWrapperMap[dependency];
-                wrapper.IsActive = true;
                 dependenciesTasks.Add(dependency, wrapper.LoadFromFileAsync(token));
                 Logger.LogDebug(ELogTags.Asset, $"'{abName}' assetBundle dependency '{dependency}' will be loaded");
             }
@@ -201,20 +198,21 @@ namespace Core.AssetBundles.Management
         /// </summary>
         private void UpdateBundleCacheState(BundleWrapper bundleWrapper)
         {
-            if (_hotBundles.Contains(bundleWrapper) && bundleWrapper.AccessCount < _criticalActiveCount)
+            var bundleName = bundleWrapper.BundleName;
+            if (_hotBundles.Contains(bundleName) && bundleWrapper.AccessCount < _criticalActiveCount)
             {
-                _hotBundles.Remove(bundleWrapper);
-                _coldBundles.Add(bundleWrapper);
+                _hotBundles.Remove(bundleName);
+                _coldBundles.AddLast(bundleName);
             }
-            else if (_coldBundles.Contains(bundleWrapper) && bundleWrapper.AccessCount >= _criticalActiveCount)
+            else if (_coldBundles.Contains(bundleName) && bundleWrapper.AccessCount >= _criticalActiveCount)
             {
-                _coldBundles.Remove(bundleWrapper);
-                _hotBundles.Add(bundleWrapper);
+                _coldBundles.Remove(bundleName);
+                _hotBundles.AddLast(bundleName);
             }
             // 第一次加载该包，默认放入冷列表
-            else if(!_coldBundles.Contains(bundleWrapper))
+            else if(!_coldBundles.Contains(bundleName))
             {
-                _coldBundles.Add(bundleWrapper);
+                _coldBundles.AddLast(bundleName);
             }
         }
 
@@ -224,7 +222,7 @@ namespace Core.AssetBundles.Management
             foreach (var dependency in dependencies)
             {
                 var wrapper = _nameToWrapperMap[dependency];
-                if (wrapper.IsActive)
+                if (wrapper.RefCount > 0)
                 {
                     wrapper.Release();
                 }
@@ -249,7 +247,7 @@ namespace Core.AssetBundles.Management
             GC.Collect();
         }
         
-        public async void OnReport(MemoryData memoryData)
+        public async void OnReport(MemoryReportData memoryReportData)
         {
             try
             {
@@ -259,30 +257,23 @@ namespace Core.AssetBundles.Management
                     return;
                 
                 BundleWrapper unUseBundleWrapper = null;
-                foreach (var bundleWrapper in bundles)
+                foreach (var name in bundles)
                 {
+                    var bundleWapper = _nameToWrapperMap[name];
                     // 跳过活跃包（正在被使用的）
-                    if (bundleWrapper.IsActive)
+                    if (bundleWapper.RefCount > 0)
                         continue;
                     
                     // 最久没使用
-                    if (unUseBundleWrapper == null || unUseBundleWrapper.LastAccessTime > bundleWrapper.LastAccessTime)
-                    {
-                        unUseBundleWrapper = bundleWrapper;
-                    }
+                    CheckLRU(ref unUseBundleWrapper, bundleWapper);
                 }
 
+                // 降级处理
                 if (unUseBundleWrapper == null)
                 {
-                    // 降级处理
-                    // 选最久未访问的活跃包
-                    foreach (var bundleWrapper in bundles)
-                    {
-                        if (unUseBundleWrapper == null || unUseBundleWrapper.LastAccessTime > bundleWrapper.LastAccessTime)
-                        {
-                            unUseBundleWrapper = bundleWrapper;
-                        }
-                    }
+                    // 选最久未访问的链表头的包
+                    var bundlesFirst = bundles.First.Value;
+                    unUseBundleWrapper = _nameToWrapperMap[bundlesFirst];
                 }
                 
                 // 卸载包
@@ -290,13 +281,29 @@ namespace Core.AssetBundles.Management
                 {
                     await unUseBundleWrapper.TryUnloadAsync(false);
                     // 从列表中移除
-                    bundles.Remove(unUseBundleWrapper);
+                    bundles.Remove(unUseBundleWrapper.BundleName);
                 }
             }
             catch (Exception e)
             {
-                Logger.LogError(ELogTags.Asset, $"{nameof(AssetBundleManager)}: Unload AssetBundle exception,{e.Message}");
+                Logger.LogException(ELogTags.Asset, new Exception("Unload AssetBundle fail", e));
             }
+        }
+
+        /// <summary>
+        /// LRU检测
+        /// </summary>
+        /// <param name="unUseBundleWrapper"></param>
+        /// <param name="currentBundleWrapper"></param>
+        /// <returns></returns>
+        private static bool CheckLRU(ref BundleWrapper unUseBundleWrapper, BundleWrapper currentBundleWrapper)
+        {
+            var canChange = unUseBundleWrapper == null || unUseBundleWrapper.LastAccessTime > currentBundleWrapper.LastAccessTime;
+            if (canChange)
+            {
+                unUseBundleWrapper = currentBundleWrapper;
+            }
+            return canChange;
         }
     }
 }

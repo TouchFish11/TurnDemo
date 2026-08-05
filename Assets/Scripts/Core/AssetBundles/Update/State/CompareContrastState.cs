@@ -103,7 +103,7 @@ namespace Core.AssetBundles.Update.State
             // 遍历待下载集合，对比缓存集合，过滤无需重复下载的包
             foreach (var waitPair in waitDownloadCollection)
             {
-                // 缓存中无该包信息，跳过（需要新下载）
+                // 缓存中无该包信息
                 if (!cachePackageCollection.ContainsKey(waitPair.Key))
                 {
                     var path = PathUtility.GetAbLoadPath(waitPair.Key.WithAbSuffix());

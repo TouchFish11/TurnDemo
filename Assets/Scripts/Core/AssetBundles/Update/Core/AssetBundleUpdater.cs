@@ -64,37 +64,6 @@ namespace Core.AssetBundles.Update.Core
         /// </summary>
         public void CheckUpdate()
         {
-            // try
-            // {
-            //     _currentUpdateState = _updateStates[_stateIndex];
-            //     // 循环执行当前状态的逻辑，直到满足退出条件：
-            //     // 暂停下载（外部主动暂停） 当前状态为空（异常/终止） 状态执行失败
-            //     while (!_updateContext.IsPauseDownload && _currentUpdateState != null)
-            //     {
-            //         // 执行当前状态的核心逻辑
-            //         var result = await _currentUpdateState.Enter();
-            //         if (result.Success)
-            //         {
-            //             _currentUpdateState.Exit();
-            //             if (_stateIndex == _updateStates.Count - 1)
-            //             {
-            //                 return;
-            //             }
-            //
-            //             _currentUpdateState = _updateStates[++_stateIndex];
-            //             continue;
-            //         }
-            //
-            //         _updateContext.UpdateOver(result);
-            //         return;
-            //     }
-            // }
-            // catch (System.Exception e)
-            // {
-            //     Logger.LogError(ELogTags.HotUpdate, $"下载异常,{e.Message}");
-            //     _updateContext.UpdateOver(_updateResultFactory.CreateFailure(UpdateResult.EUpdateError.Unknown, e));
-            // }
-
             ChangePhase(EUpdatePhase.DownLoadRemoteCatalogFile);
         }
         

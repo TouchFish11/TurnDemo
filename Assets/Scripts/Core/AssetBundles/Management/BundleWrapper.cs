@@ -18,7 +18,7 @@ namespace Core.AssetBundles.Management
     /// <summary>
     /// 包包装器
     /// </summary>
-    internal class BundleWrapper
+    public class BundleWrapper
     {
         // AB包管理器
         private readonly IAssetBundleManager _assetBundleManager;
@@ -41,54 +41,51 @@ namespace Core.AssetBundles.Management
         /// <summary>
         /// 包名称
         /// </summary>
-        public string BundleName { get; }
+        internal string BundleName { get; }
 
         /// <summary>
         /// 包加载路径
         /// </summary>
-        public string LoadPath { get; }
+        internal string LoadPath { get; }
+        
+        /// <summary>
+        /// 包大小（字节）
+        /// </summary>
+        internal long BundleSize { get; }
         
         /// <summary>
         /// 包引用数，当前存活的资源引用数
         /// </summary>
-        public uint RefCount { get; private set; }
+        internal uint RefCount { get; private set; }
         
         /// <summary>
         /// 上次访问的时间
         /// </summary>
-        public double LastAccessTime { get; private set; }
-        
-        /// <summary>
-        /// 是否有效
-        /// </summary>
-        public bool IsActive { get; set; }
+        internal double LastAccessTime { get; private set; }
 
         /// <summary>
         /// 获取当前包 LFU 热度值
         /// </summary>
-        public int AccessCount => _window.GetCurrentHotness();
+        internal int AccessCount => _window.GetCurrentHotness();
         
         /// <summary>
         /// 在访问资源时触发回调
         /// </summary>
-        public Action<BundleWrapper> OnAccessAsset;
-        
-        /// <summary>
-        /// AB包是否为null
-        /// </summary>
-        public bool IsNull => !AssetBundle;
-        
+        internal Action<BundleWrapper> OnAccessAsset;
+
         /// <summary>
         /// 包装载器
         /// </summary>
         /// <param name="abName"></param>
         /// <param name="path"></param>
+        /// <param name="size"></param>
         /// <param name="assetBundleManager"></param>
         /// <param name="window"></param>
-        public BundleWrapper(string abName, string path, IAssetBundleManager assetBundleManager, LFUSlidingWindow window)
+        internal BundleWrapper(string abName, string path, long size, IAssetBundleManager assetBundleManager, LFUSlidingWindow window)
         {
             BundleName = abName;
             LoadPath = path;
+            BundleSize = size;
             _assetBundleManager = assetBundleManager;
             _window = window;
         }
@@ -96,7 +93,7 @@ namespace Core.AssetBundles.Management
         /// <summary>
         /// 记录访问次数（热度）
         /// </summary>
-        public void RecordAccess()
+        internal void RecordAccess()
         {
             LastAccessTime =  TimeUtil.RealtimeSinceStartupAsDouble;
             _window.RecordAccess();
@@ -107,20 +104,18 @@ namespace Core.AssetBundles.Management
         /// 从文件加载AssetBundle
         /// </summary>
         /// <returns></returns>
-        public void LoadFromFile()
+        internal void LoadFromFile()
         {
             try
             {
                 // 已加载完成，直接返回，避免重复加载
                 if (AssetBundle)
                 {
-                    IsActive = true;
                     return;
                 }
                 
                 // 加载AB包
                 AssetBundle = AssetBundle.LoadFromFile(LoadPath);
-                IsActive = true;
                 Logger.LogDebug(ELogTags.Asset, $"'{BundleName}' assetBundle is load");
             }
             catch (Exception e)
@@ -136,7 +131,7 @@ namespace Core.AssetBundles.Management
         /// <param name="assetName"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public AssetWrapper LoadAsset<T>(string assetKey, string assetName) where T : Object
+        internal AssetWrapper LoadAsset<T>(string assetKey, string assetName) where T : Object
         {
             var asset = AssetBundle.LoadAsset<T>(assetName);
             Retain();
@@ -148,12 +143,11 @@ namespace Core.AssetBundles.Management
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public Task<bool> LoadFromFileAsync(CancellationToken token = default)
+        internal Task<bool> LoadFromFileAsync(CancellationToken token = default)
         {
             // 已加载完成，直接返回，避免重复加载
             if (AssetBundle)
             {
-                IsActive = true;
                 return Task.FromResult(true);
             }
             
@@ -179,7 +173,6 @@ namespace Core.AssetBundles.Management
             try
             {
                 AssetBundle = await assetBundleCreateRequestTaskHandle.Task;
-                IsActive = true;
                 Logger.LogDebug(ELogTags.Asset, $"'{BundleName}' assetBundle is load");
                 return true;
             }
@@ -202,7 +195,7 @@ namespace Core.AssetBundles.Management
         /// <param name="token"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public async Task<AssetWrapper> LoadAssetAsync<T>(string assetKey, string assetName, CancellationToken token = default) where T : class
+        internal async Task<AssetWrapper> LoadAssetAsync<T>(string assetKey, string assetName, CancellationToken token = default) where T : class
         {
             // 正在加载资源，存在缓存任务，返回同一个任务
             if (_assetLoadingTasks.TryGetValue(assetKey, out var cacheTask))
@@ -263,7 +256,7 @@ namespace Core.AssetBundles.Management
         /// <param name="token"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public Task<AssetWrapper[]> LoadAllAssetAsync<T>(CancellationToken token = default) where T : Object
+        internal Task<AssetWrapper[]> LoadAllAssetAsync<T>(CancellationToken token = default) where T : Object
         {
             // 当前包存在该类型的批量加载任务，返回任务
             if (_assetsLoadingTasks.TryGetValue(typeof(T), out var cacheTask))
@@ -317,7 +310,7 @@ namespace Core.AssetBundles.Management
         /// <summary>
         /// 增加包引用计数
         /// </summary>
-        public void Retain()
+        internal void Retain()
         {
             ++RefCount;
             Logger.LogDebug(ELogTags.Asset, $"'{BundleName}' assetBundle is referenced, refCount updated to {RefCount}");
@@ -327,7 +320,7 @@ namespace Core.AssetBundles.Management
         /// 释放指定AssetBundle，仅减少引用计数
         /// </summary>
         /// <returns></returns>
-        public void Release()
+        internal void Release()
         {
             if (RefCount > 0)
             {
@@ -338,7 +331,6 @@ namespace Core.AssetBundles.Management
                     return;
             
                 // 释放包引用计数
-                IsActive = false;
                 _assetBundleManager.ReleaseDependencies(BundleName);
                 return;
             }
@@ -350,7 +342,7 @@ namespace Core.AssetBundles.Management
         /// 尝试异步卸载AB包
         /// </summary>
         /// <param name="unloadAllLoadedObjects"></param>
-        public Task TryUnloadAsync(bool unloadAllLoadedObjects)
+        internal Task TryUnloadAsync(bool unloadAllLoadedObjects)
         {
             // 卸载完成返回
             if (!AssetBundle)

@@ -5,7 +5,7 @@ namespace Core.DI
     /// <summary>
     /// 构造参数封装
     /// </summary>
-    public struct Parameter
+    internal struct Parameter
     {
         /// <summary>
         /// 参数类型

@@ -34,6 +34,5 @@ namespace Core.Inputs
 
 		[ActionKeyMap(Key.LeftAlt)]
 		public static string MouseVisible => "<Keyboard>/leftAlt";
-
 	}
 }

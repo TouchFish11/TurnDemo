@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Core.Exceptions;
 using Core.Mono;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -14,20 +15,41 @@ namespace Core.DI
     /// </summary>
     public static class DIContainer
     {
+        // 默认获取所有成员
         private const BindingFlags _bindingFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy;
-        
-        // 瞬态映射：服务类型->实现类型
+        // 瞬态映射，服务类型->实现类型
         private static readonly Dictionary<Type, Type> _transientMap = new();
-
-        // 单例映射：服务类型->BindingInfo，包含实现类型与缓存实例
+        // 单例映射，服务类型->BindingInfo
         private static readonly Dictionary<Type, BindingInfo> _singletonMap = new();
-
         // 构造缓存
-        private static readonly ConcurrentDictionary<Type, List<ConstructorInfo>> _constructorCache = new();
+        private static readonly ConcurrentDictionary<Type, TypeConstructorInfo> _constructorCache = new();
+        // 成员缓存
         private static readonly ConcurrentDictionary<Type, List<MemberInfo>> _injectMemberCache = new();
         // 解析栈
         private static readonly Stack<Type> _resolveStack = new();
-    
+
+        public static void AssignCtor(Type type, params Type[] argTypes)
+        {
+            if (_constructorCache.TryGetValue(type, out var typeConstructorInfo))
+            {
+                typeConstructorInfo.SetFirstInfo(argTypes);
+            }
+            else
+            {
+                typeConstructorInfo = new TypeConstructorInfo();
+                typeConstructorInfo.SetFirstInfo(argTypes);
+                _constructorCache.TryAdd(type, typeConstructorInfo);
+            }
+        }
+
+        public static void UnAssignCtor(Type type)
+        {
+            if (_constructorCache.TryGetValue(type, out var typeConstructorInfo))
+            {
+                typeConstructorInfo.SetFirstInfo(null);
+            }
+        }
+        
         /// <summary>
         /// 绑定单例，支持多接口分开调用自动合并
         /// </summary>
@@ -130,12 +152,14 @@ namespace Core.DI
         /// <summary>
         /// 流式绑定入口，支持一次性绑定多个接口
         /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static BindingBuilder<T> Bind<T>() where T : class
         {
             return new BindingBuilder<T>();
         }
     
-        internal static void RegisterSingleton(BindingInfo info, List<Type> serviceTypes)
+        internal static void RegisterSingleton(BindingInfo info, List<Type> bindTypes)
         {
             BindingInfo existing = null; 
             foreach (var bindingInfo in _singletonMap.Values)
@@ -149,22 +173,22 @@ namespace Core.DI
         
             if (existing != null)
             {
-                foreach (var st in serviceTypes)
+                foreach (var st in bindTypes)
                 {
                     _singletonMap.TryAdd(st, existing);
                 }
                 return;
             }
 
-            foreach (var st in serviceTypes)
+            foreach (var type in bindTypes)
             {
-                _singletonMap.Add(st, info);
+                _singletonMap.Add(type, info);
             }
         }
 
         internal static void RegisterTransient(Type serviceType, Type implType)
         {            
-            _transientMap.Add(serviceType, implType);
+            _transientMap.TryAdd(serviceType, implType);
         }
 
         public static T GetInstance<T>() where T : class
@@ -178,9 +202,9 @@ namespace Core.DI
                 return null;
 
             if (_resolveStack.Contains(serviceType))
-                throw new InvalidOperationException($"Circular dependency: {string.Join(" -> ", _resolveStack.Reverse())} -> {serviceType}");
+                throw ExceptionHelper.Throw($"Circular dependency: {string.Join(" -> ", _resolveStack.Reverse())} -> {serviceType}");
             
-            // 检查单例
+            // 优先解析单例
             if (_singletonMap.TryGetValue(serviceType, out var bindingInfo))
             {
                 // Unity 对象销毁检测
@@ -233,7 +257,7 @@ namespace Core.DI
                 }
             }
 
-            throw new Exception($"Type {serviceType.Name} is not registered and cannot be implicitly created.");
+            throw ExceptionHelper.Throw($"Type '{serviceType.Name}' is not registered and cannot be implicitly created");
         }
     
         /// <summary>
@@ -247,14 +271,13 @@ namespace Core.DI
             object instance;
             if (typeof(Component).IsAssignableFrom(implType))
             {
-                var go = new GameObject(implType.Name);
-                var comp = go.AddComponent(implType);
+                var go = new GameObject(implType.Name, implType);
                 // 单例mono，过场景不移除
                 if (_singletonMap.ContainsKey(implType))
                 {
                     EngineUtility.DontDestroyOnLoad(go);
                 }
-                instance = comp;
+                instance = go.GetComponent(implType);
             }
             else
             {
@@ -272,37 +295,39 @@ namespace Core.DI
         /// <param name="type"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        /// <exception cref="Exception"></exception>
         private static object CreateInstanceWithConstructorInjection(Type type, params Parameter[] parameters)
         {
-            if (_constructorCache.TryGetValue(type, out var constructors))
+            if (!_constructorCache.TryGetValue(type, out var typeConstructorInfo))
             {
-                foreach (var ctor in constructors)
-                {
-                    var (ok, result) = MatchCtorArg(ctor, parameters);
-                    if (ok)
-                    {
-                        return result;
-                    }
-                }
+                typeConstructorInfo = new TypeConstructorInfo();
+                _constructorCache.TryAdd(type, typeConstructorInfo);
             }
-            else
+
+            if (typeConstructorInfo.ConstructorInfos.Count == 0)
             {
                 var ctors = type.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
                 // 降序
                 Array.Sort(ctors, (a, b) => b.GetParameters().Length.CompareTo(a.GetParameters().Length));
-                _constructorCache.TryAdd(type, new List<ConstructorInfo>(ctors));
-                foreach (var ctor in ctors)
+                typeConstructorInfo.ConstructorInfos.AddRange(ctors);
+            }
+
+            // 指定构造创建失败，不降级处理
+            if (typeConstructorInfo.FirstInfo != null)
+            {
+                var (ok, result) = MatchCtorArg(typeConstructorInfo.FirstInfo, parameters);
+                return ok ? result : throw ExceptionHelper.Throw($"Assign ctor Type '{typeConstructorInfo.FirstInfo.Name}' create instance fail");
+            }
+
+            foreach (var ctor in typeConstructorInfo.ConstructorInfos)
+            {
+                var (ok, result) = MatchCtorArg(ctor, parameters);
+                if (ok)
                 {
-                    var (ok, result) = MatchCtorArg(ctor, parameters);
-                    if (ok)
-                    {
-                        return result;
-                    }
+                    return result;
                 }
             }
 
-            throw new Exception($"[{nameof(DIContainer)}]: Cannot create instance of {type.Name}, no suitable constructor.");
+            throw ExceptionHelper.Throw($"Cannot create instance of {type.Name}, no suitable constructor");
         }
 
         /// <summary>
@@ -319,7 +344,6 @@ namespace Core.DI
             for (var i = 0; i < parameters.Length; i++)
             {
                 var paramType = parameters[i].ParameterType;
-
                 if (values != null && i < values.Length && (values[i].ArgType == paramType || paramType.IsAssignableFrom(values[i].ArgType)))
                 {
                     args[i] = values[i].ArgValue;
@@ -355,21 +379,28 @@ namespace Core.DI
             if (!_injectMemberCache.TryGetValue(type, out var members))
             {
                 members = new List<MemberInfo>();
+                // 获取所有可用字段
                 foreach (var field in type.GetFields(_bindingFlags))
                 {
-                    if (field.IsDefined(typeof(ObsoleteAttribute), true)) continue;
+                    if (field.IsDefined(typeof(ObsoleteAttribute), true))
+                        continue;
                     if (Attribute.IsDefined(field, typeof(InjectAttribute)))
                         members.Add(field);
                 }
+                
+                // 获取所有可用属性
                 foreach (var prop in type.GetProperties(_bindingFlags))
                 {
-                    if (prop.IsDefined(typeof(ObsoleteAttribute), true)) continue;
+                    if (prop.IsDefined(typeof(ObsoleteAttribute), true)) 
+                        continue;
                     if (Attribute.IsDefined(prop, typeof(InjectAttribute)) && prop.CanWrite)
                         members.Add(prop);
                 }
+                
                 _injectMemberCache[type] = members;
             }
 
+            // 遍历注入，只有没有值才会被注入
             foreach (var member in members)
             {
                 switch (member)
@@ -378,14 +409,16 @@ namespace Core.DI
                         if (field.GetValue(instance) == null)
                         {
                             var val = ResolveInternal(field.FieldType);
-                            if (val != null) field.SetValue(instance, val);
+                            if (val != null) 
+                                field.SetValue(instance, val);
                         }
                         break;
                     case PropertyInfo prop:
                         if (prop.GetValue(instance) == null)
                         {
                             var val = ResolveInternal(prop.PropertyType);
-                            if (val != null) prop.SetValue(instance, val);
+                            if (val != null) 
+                                prop.SetValue(instance, val);
                         }
                         break;
                 }
@@ -401,7 +434,7 @@ namespace Core.DI
             var type = typeof(T);
             // 如果是接口或抽象类，无法 new，直接抛出明确错误
             if (type.IsInterface || type.IsAbstract)
-                throw new ArgumentException($"Cannot create instance of {type.Name} because it is an interface or abstract class. Use GetInstance<T>() for resolved instances.");
+                throw ExceptionHelper.Throw($"Cannot create instance of {type.Name} because it is an interface or abstract. Use GetInstance<T>() for resolved instances");
     
             // 构造参数包装
             var parameters = new Parameter[parameterValues.Length];
@@ -421,16 +454,16 @@ namespace Core.DI
         /// <param name="type"></param>
         /// <param name="parameterValues"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentException">可选：手动指定的构造参数（按顺序）</exception>
+        /// <exception cref="Exception"><see cref="Type"/>为接口或抽象类时抛出</exception>
         public static object Create(Type type, params object[] parameterValues)
         {
             // 如果是接口或抽象类，无法 new，直接抛出明确错误
             if (type.IsInterface || type.IsAbstract)
-                throw new ArgumentException($"Cannot create instance of {type.Name} because it is an interface or abstract class. Use GetInstance<T>() for resolved instances.");
+                throw ExceptionHelper.Throw($"Cannot create instance of {type.Name} because it is an interface or abstract. Use GetInstance<T>() for resolved instances");
     
             // 构造参数包装
             var parameters = new Parameter[parameterValues.Length];
-            for (int i = 0; i < parameterValues.Length; i++)
+            for (var i = 0; i < parameterValues.Length; i++)
             {
                 parameters[i] = new Parameter { ArgType = parameterValues[i].GetType(), ArgValue = parameterValues[i] };
             }
@@ -451,20 +484,8 @@ namespace Core.DI
             var interfaceType = typeof(TInterface);
 
             // 移除单例
-            var keysToRemove = new List<Type>();
-            foreach (var singletonMapKey in _singletonMap.Keys)
-            {
-                if (singletonMapKey == interfaceType || singletonMapKey == implType)
-                {
-                    keysToRemove.Add(singletonMapKey);
-                }
-            }
-
-            foreach (var key in keysToRemove)
-            {
-                _singletonMap.Remove(key);
-            }
-
+            _singletonMap.Remove(implType);
+            _singletonMap.Remove(interfaceType);
             // 移除瞬态
             _transientMap.Remove(interfaceType);
             _transientMap.Remove(implType);

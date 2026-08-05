@@ -10,21 +10,24 @@ namespace Core.AssetBundles.Management
     [JsonObject(MemberSerialization.OptIn)]
     public class AssetEntry
     {
-        /// 用户使用的资源标识，对于非SpriteAssetEntry来说就是物理资源名，
+        /// 用户使用的资源标识，对于非SpriteAssetEntry来说就是物理资源名，就是资源的名字；对于SpriteAssetEntry图片来说就是图片名
         [JsonProperty] public string key;     
         /// 资源所在的AB包名
         [JsonProperty] public string bundleName;     
-        /// 资源在AB包内的名称
+        /// 资源在AB包内的名称，资源所在项目的路径
         [JsonProperty] public string assetName;
         /// 资源类型
         [JsonProperty] public EAssetType assetType;
+        /// 资源大小（字节），对于图片资源，表示所在图集的大小
+        [JsonProperty] public long assetSize;
         
-        public AssetEntry(string key, string bundleName, string assetName, EAssetType assetType)
+        public AssetEntry(string key, string bundleName, string assetName, EAssetType assetType, long assetSize)
         {
             this.key = key;
             this.bundleName = bundleName;
             this.assetName = assetName;
             this.assetType = assetType;
+            this.assetSize = assetSize;
         }
     }
 }

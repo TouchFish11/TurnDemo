@@ -5,7 +5,7 @@ namespace Core.AssetBundles.Management
     [JsonObject(MemberSerialization.OptIn)]
     public class SpriteAssetEntry : AssetEntry
     {
-        /// 图集资源名称，该图片所在的图集，图集的资源路径，用于加载图集资源
+        /// 图集资源名称，该图片所在的图集，图集的资源路径，用于加载AB包中的图集资源
         [JsonProperty] public string atlasAssetPath;
         /// 图集资源key，就是图集名
         [JsonProperty] public string atlasKey;
@@ -17,10 +17,11 @@ namespace Core.AssetBundles.Management
         /// <param name="bundleName">图片所在的图集包名，即图集包的名称</param>
         /// <param name="assetName">图片资源本身的资源路径，不会去用这个路径加载图片，除非不打图集</param>
         /// <param name="assetType">资源的类型，是Texture</param>
-        /// <param name="atlasAssetPath">图集资源名称，该图片所在的图集，图集的资源路径，用于加载图集资源</param>
-        /// <param name="atlasKey">图集资源key</param>
+        /// <param name="atlasAssetPath">图集资源名称，该图片所在的图集，图集的资源路径，用于AB包加载图集资源</param>
+        /// <param name="atlasKey">图集资源key，图集名</param>
+        /// <param name="assetSzie">资源大小（字节）</param>
         public SpriteAssetEntry(string key, string bundleName, string assetName, EAssetType assetType
-        , string atlasAssetPath, string atlasKey) : base(key, bundleName, assetName, assetType)
+        , string atlasAssetPath, string atlasKey, long assetSzie) : base(key, bundleName, assetName, assetType, assetSzie)
         {
             this.atlasAssetPath = atlasAssetPath;
             this.atlasKey = atlasKey;

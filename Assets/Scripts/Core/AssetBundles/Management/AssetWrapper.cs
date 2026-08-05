@@ -18,6 +18,8 @@ namespace Core.AssetBundles.Management
         /// </summary>
         public string AssetKey { get; }
         
+        public string BundleName => _bundleWrapper.BundleName;
+        
         public AssetWrapper(object asset, string assetKey, BundleWrapper bundleWrapper)
         {
             _asset = asset;
@@ -61,7 +63,6 @@ namespace Core.AssetBundles.Management
         public void Retain()
         {
             ++RefCount;
-            //Logger.Log($"[AssetWrapper]: '{AssetKey}' asset refCount Add to: {RefCount}");
         }
 
         /// <summary>
@@ -72,8 +73,6 @@ namespace Core.AssetBundles.Management
             if (RefCount > 0)
             {
                 --RefCount;
-                //Logger.Log($"[AssetWrapper]: '{AssetKey}' asset refCount Reduce to: {RefCount}");
-                
                 if (RefCount != 0) 
                     return;
             

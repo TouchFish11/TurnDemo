@@ -11,7 +11,7 @@ namespace Core.Inputs
     public class ActionKeyMapAttribute : Attribute
     {
         public Key Key { get; }
-s
+
         public MouseButton MouseButton { get; }
 
         public E_MouseValue MouseValue { get; }

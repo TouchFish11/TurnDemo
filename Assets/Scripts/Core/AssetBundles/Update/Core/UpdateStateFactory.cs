@@ -11,30 +11,9 @@ namespace Core.AssetBundles.Update.Core
     /// </summary>
     public class UpdateStateFactory
     {
-        /// <summary>
-        /// 根据枚举创建状态实例
-        /// </summary>
-        /// <param name="updatePhase"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private static IUpdateState CreateState(EUpdatePhase updatePhase)
-        {
-            return updatePhase switch
-            {
-                EUpdatePhase.DownLoadRemoteCatalogFile => DIContainer.Create<DownloadCatalogState>(),
-                EUpdatePhase.LoadLocalCatalogFile => DIContainer.Create<LoadLocalCatalogFileState>(),
-                EUpdatePhase.CompareContrast => DIContainer.Create<CompareContrastState>(),
-                EUpdatePhase.CheckDeviceStorage => DIContainer.Create<CheckDeviceStorageState>(),
-                EUpdatePhase.DownLoadAssets => DIContainer.Create<DownLoadAssetState>(),
-                EUpdatePhase.CheckAssetsIntegrity => DIContainer.Create<CheckAssetIntegrityState>(),
-                EUpdatePhase.Finished => DIContainer.Create<FinishState>(),
-                EUpdatePhase.None or _ => throw new ArgumentOutOfRangeException(nameof(updatePhase), "未知的更新状态")
-            };
-        }
-
         public static IEnumerable<IUpdateState> GetStates()
         {
-            var list = new List<EUpdatePhase>();
+            var list = new List<UpdateStateConfigAttribute>();
             var values = Enum.GetValues(typeof(EUpdatePhase));
             foreach (var phase in values)
             {
@@ -47,16 +26,13 @@ namespace Core.AssetBundles.Update.Core
                 // 判断特性是否存在且启用
                 if (stateConfigAttribute != null && stateConfigAttribute.IsEnabled)
                 {
-                    list.Add(phaseEnum);
+                    list.Add(stateConfigAttribute);
                 }
             }
             
             list.Sort((p1, p2) =>
             {
-                var stateConfigAttribute1 = p1.GetType().GetField(p1.ToString()).GetCustomAttribute<UpdateStateConfigAttribute>();
-                var stateConfigAttribute2 = p2.GetType().GetField(p2.ToString()).GetCustomAttribute<UpdateStateConfigAttribute>();
-                
-                if (stateConfigAttribute1.Order < stateConfigAttribute2.Order)
+                if (p1.Order < p2.Order)
                 {
                     return -1;
                 }
@@ -64,9 +40,9 @@ namespace Core.AssetBundles.Update.Core
                 return 1;
             });
             
-            foreach (var updatePhase in list)
+            foreach (var updateStateConfigAttribute in list)
             {
-                yield return CreateState(updatePhase);
+                yield return (IUpdateState)DIContainer.Create(updateStateConfigAttribute.StateType);
             }
         }
     }
