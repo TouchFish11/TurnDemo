@@ -83,8 +83,8 @@ namespace Core.AssetBundles.Update.Core
                 // 更新进度协程
                 _monoAdapter.StartCoroutine(UpdateDownloadProgress(asyncOperation));
                 // 发送网络请求
-                using var handle = asyncOperation.ToTask(_cancellationTokenSource.Token);
-                await handle.Task;
+                using var unityWebRequestAsyncOperationTask = asyncOperation.ToTask(_cancellationTokenSource.Token);
+                await unityWebRequestAsyncOperationTask;
 
                 // 下载结束后处理
                 success = _request.result == UnityWebRequest.Result.Success;

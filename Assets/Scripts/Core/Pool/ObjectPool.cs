@@ -19,7 +19,7 @@ namespace Core.Pool
     internal class ObjectPool<T> : IPool<T> where T : Object
     {
         [Inject] private IMonoAdapter _monoAdapter;
-        // 存储未使用对象的栈结构（栈结构适合后进先出的复用逻辑）
+        // 存储未使用对象
         private readonly Stack<T> _unUsedMonos = new();
         // 对象池的父物体（用于统一管理池内对象的层级）
         private GameObject _parentObj;
@@ -50,11 +50,10 @@ namespace Core.Pool
         /// <param name="rootObj">对象池根节点（所有池对象的顶级父物体）</param>
         /// <param name="poolObjName">当前对象池的名称（用于命名父物体）</param>
         /// <param name="isOpenLayout">是否采用对象池布局</param>
-        /// <param name="activeTimeThreshold"></param>
-        /// <param name="minSize"></param>
-        /// <param name="maxSize"></param>
-        public ObjectPool(GameObject rootObj, string poolObjName, bool isOpenLayout, float activeTimeThreshold,
-            int minSize, int maxSize)
+        /// <param name="activeTimeThreshold">活跃时间阈值</param>
+        /// <param name="minSize">最小缓存数量</param>
+        /// <param name="maxSize">最大缓存容量</param>
+        public ObjectPool(GameObject rootObj, string poolObjName, bool isOpenLayout, float activeTimeThreshold, int minSize, int maxSize)
         {
             // 若父物体未创建且开启布局管理，创建池的父物体并设置层级
             if (isOpenLayout)
@@ -126,7 +125,7 @@ namespace Core.Pool
                 case Component component:
                     if (_isOpenLayout)
                     {
-                        component.transform.SetParent(_parentObj.transform, false);
+                        component.gameObject.transform.SetParent(_parentObj.transform, false);
                     }
                     // 禁用对象使其不可见/不可用
                     component.gameObject.SetActive(false);
@@ -145,29 +144,23 @@ namespace Core.Pool
             if(count <= _minSize)
                 return;
 
-            _monoAdapter.StartCoroutine(Trim_Cor(count - _minSize));
+            _monoAdapter.StartCoroutine(Trim_Cor());
         }
 
         /// <summary>
         /// 分帧释放，避免卡顿
         /// </summary>
-        /// <param name="releaseCount">释放数</param>
         /// <returns></returns>
-        private IEnumerator Trim_Cor(int releaseCount)
+        private IEnumerator Trim_Cor()
         {
-            var releases = new List<T>(releaseCount);
-            for (var i = 0; i < releaseCount; i++)
+            var releaseCountPerFrame = 0;
+            while (_unUsedMonos.Count > _minSize)
             {
-                releases.Add(_unUsedMonos.Pop());
-            }
-
-            for (var i = 0; i < releases.Count; i++)
-            {
-                ReleaseInternal(releases[i]);
-                if (i >= _destroyCountPerFrame - 1)
+                ReleaseInternal(_unUsedMonos.Pop());
+                ++releaseCountPerFrame;
+                if (releaseCountPerFrame >= _destroyCountPerFrame - 1)
                     yield return null;
             }
-            releases.Clear();
         }
         
         /// <summary>

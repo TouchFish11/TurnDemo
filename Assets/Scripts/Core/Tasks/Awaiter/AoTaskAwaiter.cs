@@ -6,15 +6,15 @@ namespace Core.Tasks.Awaiter
     /// <summary>
     /// 自定义Task无返回值等待器
     /// </summary>
-    public readonly struct FTaskAwaiter : ICriticalNotifyCompletion
+    internal readonly struct AoTaskAwaiter : ICriticalNotifyCompletion
     {
-        private readonly FTask _fTask;
+        private readonly AoTask aoTask;
 
-        public bool IsCompleted => _fTask.IsCompleted;
+        public bool IsCompleted => aoTask.IsCompleted;
         
-        public FTaskAwaiter(FTask fTask)
+        public AoTaskAwaiter(AoTask aoTask)
         {
-            _fTask = fTask;
+            this.aoTask = aoTask;
         }
         
         public void OnCompleted(Action continuation)
@@ -24,12 +24,12 @@ namespace Core.Tasks.Awaiter
 
         public void UnsafeOnCompleted(Action continuation)
         {
-            _fTask.SetContinuation(continuation);
+            aoTask.SetContinuation(continuation);
         }
 
         public void GetResult()
         {
-            _fTask.GetResult();
+            aoTask.GetResult();
         }
     }
     
@@ -37,15 +37,15 @@ namespace Core.Tasks.Awaiter
     /// 自定义Task有返回值等待器
     /// </summary>
     /// <typeparam name="TResult">返回类型</typeparam>
-    public readonly struct FTaskAwaiter<TResult> : ICriticalNotifyCompletion
+    internal readonly struct AoTaskAwaiter<TResult> : ICriticalNotifyCompletion
     {
-        private readonly FTask<TResult> _fTask;
+        private readonly AoTask<TResult> aoTask;
 
-        public bool IsCompleted => _fTask.IsCompleted;
+        public bool IsCompleted => aoTask.IsCompleted;
         
-        public FTaskAwaiter(FTask<TResult> fTask)
+        public AoTaskAwaiter(AoTask<TResult> aoTask)
         {
-            _fTask = fTask;
+            this.aoTask = aoTask;
         }
         
         public void OnCompleted(Action continuation)
@@ -55,12 +55,12 @@ namespace Core.Tasks.Awaiter
 
         public void UnsafeOnCompleted(Action continuation)
         {
-            _fTask.SetContinuation(continuation);
+            aoTask.SetContinuation(continuation);
         }
 
         public TResult GetResult()
         {
-            return _fTask.GetResult();
+            return aoTask.GetResult();
         }
     }
 }

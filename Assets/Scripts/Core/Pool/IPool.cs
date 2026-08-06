@@ -1,7 +1,7 @@
 namespace Core.Pool
 {
     /// <summary>
-    /// 对象池接口
+    /// 对象池对象接口
     /// </summary>
     internal interface IPool
     {
@@ -42,7 +42,7 @@ namespace Core.Pool
     }
     
     /// <summary>
-    /// 对象池泛型接口
+    /// 对象池对象泛型接口
     /// </summary>
     internal interface IPool<T> : IPool
     {

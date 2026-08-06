@@ -10,7 +10,7 @@ namespace Core.Pool
     public sealed class DataPool<T> : IPool<T> where T : class, IPoolData
     {
         // 存储未使用的数据对象队列
-        private readonly Queue<T> _unUsedDatas = new();
+        private readonly Stack<T> _unUsedDatas = new();
         // 活跃时间阈值，大于等于该数值活跃，小于则惰性
         private readonly float _activeTimeThreshold;
         // 最小缓存数量
@@ -43,9 +43,13 @@ namespace Core.Pool
         /// <returns></returns>
         public T Get()
         {
-            --ActiveCount;
+            // 检查栈中是否有未使用的对象
+            if (_unUsedDatas.Count <= 0) 
+                return null;
+            
+            ++ActiveCount;
             LastUsedTime = TimeUtil.RealtimeSinceStartup;
-            return _unUsedDatas.Dequeue();
+            return _unUsedDatas.Pop();
         }
         
         /// <summary>
@@ -61,16 +65,16 @@ namespace Core.Pool
                 return;
             }
             
-            ++ActiveCount;
+            --ActiveCount;
             LastUsedTime = TimeUtil.RealtimeSinceStartup;
             //重置数据
             data.ResetData();
-            _unUsedDatas.Enqueue(data);
+            _unUsedDatas.Push(data);
         }
         
         public void Trim()
         {
-            while (_unUsedDatas.TryDequeue(out _) && _unUsedDatas.Count > _minSize)
+            while (_unUsedDatas.TryPop(out _) && _unUsedDatas.Count > _minSize)
             {
                 
             }

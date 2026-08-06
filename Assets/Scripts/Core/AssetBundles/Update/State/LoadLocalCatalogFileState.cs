@@ -77,13 +77,13 @@ namespace Core.AssetBundles.Update.State
         {
             // 创建UnityWebRequest请求读取文件
             var req = UnityWebRequest.Get(localFilePath);
-            using var handle = req.SendWebRequest().ToTask();
+            using var unityWebRequestAsyncOperationTask = req.SendWebRequest().ToTask();
             // 等待请求完成
-            await handle.Task;
+            await unityWebRequestAsyncOperationTask;
             // 请求失败，抛出异常
             if (req.result != UnityWebRequest.Result.Success)
             {
-                throw new LocalListFileHandleException($"读取本地目录文件失败，{req.result}，{req.error}，{req.responseCode}");
+                throw new LocalListFileHandleException($"Failed to read files in the local directory，{req.result}，{req.error}，{req.responseCode}");
             }
             
             // 解析清单内容到本地包集合

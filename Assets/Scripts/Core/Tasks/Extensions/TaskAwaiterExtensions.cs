@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -24,10 +23,9 @@ namespace Core.Tasks.Extensions
         /// <param name="req">AssetBundle创建请求实例</param>
         /// <param name="token">取消令牌，可选参数，用于取消异步操作</param>
         /// <returns>封装后的AssetBundleCreateRequestTask任务实例</returns>
-        public static TaskHandle<AssetBundle> ToTask(this AssetBundleCreateRequest req, CancellationToken token = default)
+        public static AssetBundleCreateRequestTask ToTask(this AssetBundleCreateRequest req, CancellationToken token = default)
         {
-            var task = s_taskFactory.Create(req, token);
-            return new TaskHandle<AssetBundle>(task);
+            return s_taskFactory.Create(req, token);
         }
         
         /// <summary>
@@ -37,10 +35,9 @@ namespace Core.Tasks.Extensions
         /// <param name="req">AssetBundle资源请求实例</param>
         /// <param name="token">取消令牌，可选参数，用于取消异步操作</param>
         /// <returns>封装后的泛型AssetBundleRequestTask任务实例</returns>
-        public static TaskHandle<T> ToTask<T>(this AssetBundleRequest req, CancellationToken token = default) where  T : class
+        public static AssetBundleRequestTask<T> ToTask<T>(this AssetBundleRequest req, CancellationToken token = default) where  T : class
         {
-            var task = s_taskFactory.Create<T>(req, token);
-            return new TaskHandle<T>(task);
+            return s_taskFactory.Create<T>(req, token);
         }
 
         /// <summary>
@@ -50,10 +47,9 @@ namespace Core.Tasks.Extensions
         /// <param name="req">AssetBundle资源请求实例</param>
         /// <param name="token">取消令牌，可选参数，用于取消异步操作</param>
         /// <returns>封装后的泛型AssetBundleRequestTask任务实例</returns>
-        public static TaskHandle<IReadOnlyList<T>> ToTasks<T>(this AssetBundleRequest req, CancellationToken token = default) where  T : class
+        public static AssetBundleRequestsTask<T> ToTasks<T>(this AssetBundleRequest req, CancellationToken token = default) where  T : class
         {
-            var task = s_taskFactory.Creates<T>(req, token);
-            return new TaskHandle<IReadOnlyList<T>>(task);
+            return s_taskFactory.Creates<T>(req, token);
         }
         
         /// <summary>
@@ -61,10 +57,9 @@ namespace Core.Tasks.Extensions
         /// </summary>
         /// <param name="req">AssetBundle卸载操作实例</param>
         /// <returns>封装后的AssetBundleUnloadOperationTask任务实例</returns>
-        public static TaskHandle ToTask(this AssetBundleUnloadOperation req)
+        public static AssetBundleUnloadOperationTask ToTask(this AssetBundleUnloadOperation req)
         {
-            var task = s_taskFactory.Create(req);
-            return new TaskHandle(task);
+            return s_taskFactory.Create(req);
         }
 
         /// <summary>
@@ -73,10 +68,9 @@ namespace Core.Tasks.Extensions
         /// <param name="req"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public static TaskHandle ToTask(this UnityWebRequestAsyncOperation req, CancellationToken token = default)
+        public static UnityWebRequestAsyncOperationTask ToTask(this UnityWebRequestAsyncOperation req, CancellationToken token = default)
         {
-            var task = s_taskFactory.Create(req, token);
-            return new TaskHandle(task);
+            return s_taskFactory.Create(req, token);
         }
     }
 }

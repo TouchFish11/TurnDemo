@@ -1,105 +1,109 @@
 using System;
 using Core.DI;
-using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Scripting;
-using UnityEngine.Video;
 
-public class Tests : MonoBehaviour
+namespace HotUpdate.Entry.Test
 {
-    public interface IA
+    public class Tests : MonoBehaviour
     {
-        
-    }
-    
-    public class A : IA
-    {
-        
-    }
-    
-    public class B : A
-    {
-        
-    }
-    
-    public class C : B
-    {
-        
-    }
-    
-    private Animator animator;
-    private CharacterController characterController;
-
-    public Transform leftHandTarget; // 场景中代表左手目标位置的物体（可放在梯子横杆上）
-    public Transform rightHandTarget; // 同上
-
-    public Tests(Lazy<A> lazy)
-    {
-        DIContainer.Bind<C>().As<B>().As<A>().AsSingleton();
-    }
-    
-    public Tests(int i, int  j, int k)
-    {
-        DIContainer.Bind<C>().As<B>().As<A>().AsSingleton();
-    }
-    
-    void Awake()
-    {
-        animator = GetComponent<Animator>();
-        characterController = GetComponent<CharacterController>();
-    }
-
-    // 通常需要先关闭 Apply Root Motion，避免 Transform 被自动移动
-    void Start()
-    {
-        animator.applyRootMotion = false; // 我们手动控制位移
-    }
-
-    private void OnAnimatorMove()
-    {
-        // 读取根运动增量
-        Vector3 deltaPosition = animator.deltaPosition;
-        Quaternion deltaRotation = animator.deltaRotation;
-
-        // 使用 CharacterController.Move 移动角色，使其受碰撞检测约束
-        if (characterController.enabled)
+        public interface IA
         {
-            characterController.Move(deltaPosition); // 忽略旋转的简化情况
+        
         }
-        else
+    
+        public class A : IA
         {
-            // 如果不用 CharacterController，直接应用 Transform
-            transform.position += deltaPosition;
-        }
-    }
-
-    private void OnAnimatorIK(int layerIndex)
-    {
-        if (animator)
-        {
-            // 设置左手 IK 位置和旋转
-            if (leftHandTarget != null)
+            public void TestA()
             {
-                animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1.0f);
-                animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1.0f);
-                animator.SetIKPosition(AvatarIKGoal.LeftHand, leftHandTarget.position);
-                animator.SetIKRotation(AvatarIKGoal.LeftHand, leftHandTarget.rotation);
-            }
 
-            // 右手同理
-            if (rightHandTarget != null)
-            {
-                animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1.0f);
-                animator.SetIKRotationWeight(AvatarIKGoal.RightHand, 1.0f);
-                animator.SetIKPosition(AvatarIKGoal.RightHand, rightHandTarget.position);
-                animator.SetIKRotation(AvatarIKGoal.RightHand, rightHandTarget.rotation);
             }
         }
-    }
+    
+        public class B : A
+        {
+        
+        }
+    
+        public class C : B
+        {
+        
+        }
+    
+        private Animator animator;
+        private CharacterController characterController;
 
-    [Preserve]
-    private async void Test()
-    {
-        AsyncOperation a0 = null;
+        public Transform leftHandTarget; // 场景中代表左手目标位置的物体（可放在梯子横杆上）
+        public Transform rightHandTarget; // 同上
+
+        public Tests(Lazy<A> lazy)
+        {
+            DIContainer.Bind<C>().As<B>().As<A>().AsSingleton();
+        }
+    
+        public Tests(int i, int  j, int k)
+        {
+            DIContainer.Bind<C>().As<B>().As<A>().AsSingleton();
+        }
+    
+        void Awake()
+        {
+            animator = GetComponent<Animator>();
+            characterController = GetComponent<CharacterController>();
+        }
+
+        // 通常需要先关闭 Apply Root Motion，避免 Transform 被自动移动
+        void Start()
+        {
+            animator.applyRootMotion = false; // 我们手动控制位移
+        }
+
+        private void OnAnimatorMove()
+        {
+            // 读取根运动增量
+            Vector3 deltaPosition = animator.deltaPosition;
+            Quaternion deltaRotation = animator.deltaRotation;
+
+            // 使用 CharacterController.Move 移动角色，使其受碰撞检测约束
+            if (characterController.enabled)
+            {
+                characterController.Move(deltaPosition); // 忽略旋转的简化情况
+            }
+            else
+            {
+                // 如果不用 CharacterController，直接应用 Transform
+                transform.position += deltaPosition;
+            }
+        }
+
+        private void OnAnimatorIK(int layerIndex)
+        {
+            if (animator)
+            {
+                // 设置左手 IK 位置和旋转
+                if (leftHandTarget != null)
+                {
+                    animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1.0f);
+                    animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1.0f);
+                    animator.SetIKPosition(AvatarIKGoal.LeftHand, leftHandTarget.position);
+                    animator.SetIKRotation(AvatarIKGoal.LeftHand, leftHandTarget.rotation);
+                }
+
+                // 右手同理
+                if (rightHandTarget != null)
+                {
+                    animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1.0f);
+                    animator.SetIKRotationWeight(AvatarIKGoal.RightHand, 1.0f);
+                    animator.SetIKPosition(AvatarIKGoal.RightHand, rightHandTarget.position);
+                    animator.SetIKRotation(AvatarIKGoal.RightHand, rightHandTarget.rotation);
+                }
+            }
+        }
+
+        [Preserve]
+        private async void Test()
+        {
+            AsyncOperation a0 = null;
+        }
     }
 }

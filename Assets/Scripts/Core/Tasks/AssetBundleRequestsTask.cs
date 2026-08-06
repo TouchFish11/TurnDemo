@@ -7,7 +7,7 @@ namespace Core.Tasks
     /// AB包批量请求资源任务
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    internal class AssetBundleRequestsTask<T> : FTask<IReadOnlyList<T>> where T : class
+    internal class AssetBundleRequestsTask<T> : AoTask<IReadOnlyList<T>> where T : class
     {
         // 加载成功后的资源结果
         private readonly List<T> _assets = new();
@@ -15,7 +15,6 @@ namespace Core.Tasks
         protected override void OnRequestCompleted()
         {
             var _abr = (AssetBundleRequest)_operation;
-            // 成功优先级大于取消
             foreach (var asset in _abr.allAssets)
             {
                 _assets.Add(asset as T);
@@ -25,8 +24,8 @@ namespace Core.Tasks
         
         protected override void OnResetData()
         {
-            base.OnResetData();
             _assets.Clear();
+            base.OnResetData();
         }
     }
 }

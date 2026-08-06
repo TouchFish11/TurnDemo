@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using Core.DI;
 using Core.Mono;
-using Core.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -216,32 +215,32 @@ namespace Core.AssetBundles.Management.Editor
             GameAsset.Release(handle);
         }
 
-        private async void Test14()
-        {
-            // 1
-            using (var handle1 = new TaskHandle())
-            {
-                await handle1.Task;
-            }
-            
-            // 2
-            using var handle2 = new TaskHandle();
-            await handle2.Task;
-
-            // 3
-            var handle3 = new TaskHandle();
-            try
-            {
-                await handle3.Task;
-            }
-            catch (Exception e)
-            {
-                Debug.LogException(e);
-            }
-            finally
-            {
-                handle3.Dispose();
-            }
-        }
+        // private async void Test14()
+        // {
+        //     // 1
+        //     using (var handle1 = new TaskHandle())
+        //     {
+        //         await handle1.Task;
+        //     }
+        //     
+        //     // 2
+        //     using var handle2 = new TaskHandle();
+        //     await handle2.Task;
+        //
+        //     // 3
+        //     var handle3 = new TaskHandle();
+        //     try
+        //     {
+        //         await handle3.Task;
+        //     }
+        //     catch (Exception e)
+        //     {
+        //         Debug.LogException(e);
+        //     }
+        //     finally
+        //     {
+        //         handle3.Dispose();
+        //     }
+        // }
     }
 }

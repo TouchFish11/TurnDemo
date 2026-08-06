@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Threading.Tasks;
+using Core.Exceptions;
 using Core.Log;
 using Core.Mono;
 using UnityEngine;
@@ -23,7 +24,7 @@ namespace Core.Tasks
         {
             if (condition == null)
             {
-                throw new ArgumentNullException(nameof(condition));
+                throw ExceptionHelper.Throw($"Argument is null({nameof(condition)})");
             }
 
             while (!condition())
@@ -43,7 +44,7 @@ namespace Core.Tasks
         {
             if (task == null)
             {
-                throw new ArgumentNullException(nameof(task));
+                throw ExceptionHelper.Throw($"Argument is null({nameof(task)})");
             }
             
             while (!task.IsCompleted)
@@ -53,7 +54,7 @@ namespace Core.Tasks
 
             if (task.IsFaulted)
             {
-                Logger.LogError(ELogTags.Task, $"{nameof(TaskUtility)}.{nameof(WaitForTask)}: {task.Exception}，StackTrance：{task.Exception?.StackTrace}");
+                Logger.LogException(ELogTags.Task, task.Exception);
             }
         }
         
