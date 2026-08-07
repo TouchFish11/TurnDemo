@@ -34,7 +34,9 @@ namespace HotUpdate.Game.Interact
         {
             interactables.Add(interactable);
             // 触发交互事件，通知外部交互对象列表已更新
-            _eventCenter.TriggerEvent(new InteractEvent { Interactables = interactables });
+            var interactEvent = EventSource.Get<InteractEvent>();
+            interactEvent.Interactables = interactables;
+            _eventCenter.TriggerEvent(interactEvent);
         }
         
         /// <summary>
@@ -46,7 +48,9 @@ namespace HotUpdate.Game.Interact
         {
             interactables.Remove(interactable);
             // 触发交互事件，通知外部交互对象列表已更新
-            _eventCenter.TriggerEvent(new InteractEvent { Interactables = interactables });
+            var interactEvent = EventSource.Get<InteractEvent>();
+            interactEvent.Interactables = interactables;
+            _eventCenter.TriggerEvent(interactEvent);
         }
         
         /// <summary>

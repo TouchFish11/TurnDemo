@@ -50,7 +50,9 @@ namespace HotUpdate.UI.Activity.EmbersCanon
             }
             else
             {
-                _eventCenter.TriggerEvent(new GlobalMessageEvent { Message = "该关卡已完成" });
+                var globalMessageEvent = EventSource.Get<GlobalMessageEvent>();
+                globalMessageEvent.Message = "该关卡已完成";
+                _eventCenter.TriggerEvent(globalMessageEvent);
             }
         }
 

@@ -41,7 +41,7 @@ namespace HotUpdate.Game.Animation
             DIContainer.BindSingleton<IBinaryDataManager, BinaryDataManager>();
             DIContainer.BindSingleton<IEditorResManager, EditorResManager>();
             DIContainer.BindSingleton<IEventCenter, EventCenter>();
-            DIContainer.BindSingleton<IEventFactory, EventFactory>();
+            //DIContainer.BindSingleton<IEventFactory, EventFactory>();
             DIContainer.BindSingleton<IInputSystem, InputSystem>();
             DIContainer.BindSingleton<IJsonManager, JsonManager>();
             DIContainer.BindSingleton<IMusicManager, MusicManager>();

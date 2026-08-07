@@ -1,7 +1,9 @@
+using System;
 using Core.UI.ViewController;
 
 namespace Core.UI
 {
+    [Obsolete("Legacy", true)]
     public interface IPanelInfo
     {
         /// <summary>

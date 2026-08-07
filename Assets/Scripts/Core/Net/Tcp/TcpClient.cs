@@ -33,15 +33,15 @@ namespace Core.Net.Tcp
         // ������Ϣ����
         private readonly C2S_HeartMessage _c2S_HeartMessage = new C2S_HeartMessage() { ClientID = NetManager.Instance.ClientID };
         // ��Ϣ������
-        private readonly byte[] _cacheBuffer = new byte[GlobalSettings.Instance.tcpReceiveBufferSize];
+        private readonly byte[] _cacheBuffer = new byte[GlobalSettings.Instance.netModuleConfig.tcpReceiveBufferSize];
         // ��ʱ������
-        private readonly byte[] _tempCacheBuffer = new byte[GlobalSettings.Instance.tcpReceiveTempBufferSize];
+        private readonly byte[] _tempCacheBuffer = new byte[GlobalSettings.Instance.netModuleConfig.tcpReceiveTempBufferSize];
         // ����������
         private int _cacheLength = 0;
         // ����������
         private int nowIndex = 0;
         // ������Ϣ���ͼ����ms��
-        private readonly int HeartMsgSendIntervalTime = GlobalSettings.Instance.heartMsgSendIntervalTime;
+        private readonly int HeartMsgSendIntervalTime = GlobalSettings.Instance.netModuleConfig.heartMsgSendIntervalTime;
         // �Ƿ����ڷ���
         private bool _isSending;
         // ����������Ϣʱ��

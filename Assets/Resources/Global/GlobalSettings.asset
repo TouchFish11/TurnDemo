@@ -12,26 +12,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ea9e8f3715bb5a4fbd80d03411434d0, type: 3}
   m_Name: GlobalSettings
   m_EditorClassIdentifier: 
-  hotUpdateLoadPath: 
-  filterLevel: 59
-  tag: -8193
-  writeLogMaxIntervalTime: 5
-  isOpenLayout: 1
-  uploadServerIp: 
-  resServerIp: http://192.168.0.6:8080/Http_Server/
-  reDownloadCompareFileMaxNum: 2
-  reDownloadAbMaxNum: 5
-  maxConcurrencyNum: 5
-  connectTimeout: 0
-  maxRetryCount: 5
-  maxRetryWaitSeconds: 5
-  speedUpdateInterval: 1
-  abLoadPath: 1
-  userDataPath: 0
-  criticalActiveThreshold: 2
-  bundleSlidingWindowMaxCount: 10
-  maxDurationPerWindow: 30
-  udpReceiveBufferSize: 8192
-  tcpReceiveTempBufferSize: 1024
-  tcpReceiveBufferSize: 1024
-  heartMsgSendIntervalTime: 3000
+  logModuleConfig:
+    tag: -1
+    writeLogMaxIntervalTime: 30
+    filterLevel: 255
+  eventModuleConfig:
+    eventTriggerMaxNumPerFrame: 10
+  poolModuleConfig:
+    isOpenLayout: 1
+    activeTimeThreshold: 60
+    poolMinSize: 10
+    poolMaxSize: 50
+  resourcesModuleConfig:
+    abLoadPath: 1
+    criticalActiveThreshold: 8
+    bundleSlidingWindowMaxCount: 10
+    maxDurationPerWindow: 30
+  uploadModuleConfig:
+    uploadServerIp: http://ip:port/...
+  updateModuleConfig:
+    resServerIp: http://ip:port/...
+    reDownloadCompareFileMaxNum: 5
+    reDownloadAbMaxNum: 5
+    maxConcurrencyNum: 8
+    connectTimeout: 60
+    maxRetryCount: 5
+    maxRetryWaitSeconds: 5
+    speedUpdateInterval: 1
+  netModuleConfig:
+    udpReceiveBufferSize: 8192
+    tcpReceiveTempBufferSize: 1024
+    tcpReceiveBufferSize: 1024
+    heartMsgSendIntervalTime: 3000
+  userModuleConfig:
+    userDataPath: 0

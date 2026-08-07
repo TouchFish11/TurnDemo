@@ -27,7 +27,7 @@ namespace Core.AssetBundles.Update.State
         // 上次更新下载速度的时间戳
         private float _lastSpeedUpdateTime;
         // 下载速度更新间隔（秒）
-        private readonly float _speedUpdateInterval = GlobalSettings.Instance.speedUpdateInterval;
+        private readonly float _speedUpdateInterval = GlobalSettings.Instance.updateModuleConfig.speedUpdateInterval;
         // 是否正在下载中
         private bool _isDownloading;
 
@@ -73,7 +73,7 @@ namespace Core.AssetBundles.Update.State
         public async Task DownLoadAssetsAsync(Action<ulong> proCallBack)
         {
             // 获取资源服务器IP
-            var serverIp = GlobalSettings.Instance.resServerIp;
+            var serverIp = GlobalSettings.Instance.updateModuleConfig.resServerIp;
             // 获取待下载的AssetBundle集合
             var waitDownloadCollection = assetBundleUpdater.GetContext().WaitDownloadCollection;
             // 初始化所有待下载资源的请求器
@@ -92,7 +92,7 @@ namespace Core.AssetBundles.Update.State
             }
 
             // 获取最大并发下载数
-            var maxConcurrencyNum = GlobalSettings.Instance.maxConcurrencyNum;
+            var maxConcurrencyNum = GlobalSettings.Instance.updateModuleConfig.maxConcurrencyNum;
             var context = assetBundleUpdater.GetContext();
 
             /*
@@ -135,7 +135,7 @@ namespace Core.AssetBundles.Update.State
                         {
                             context.AddRequesterToFail(requester);
                         }
-                    }, GlobalSettings.Instance.connectTimeout);
+                    }, GlobalSettings.Instance.updateModuleConfig.connectTimeout);
                     
                     await Task.Yield(); // 帧间等待，避免阻塞主线程
                 }

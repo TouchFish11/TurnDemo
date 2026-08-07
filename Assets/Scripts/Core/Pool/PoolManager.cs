@@ -48,10 +48,10 @@ namespace Core.Pool
         
         private PoolManager()
         {
-            _isOpenLayout = GlobalSettings.Instance.isOpenLayout;
-            activeTimeThreshold = GlobalSettings.Instance.activeTimeThreshold;
-            poolMinSize = GlobalSettings.Instance.poolMinSize;
-            poolMaxSize = GlobalSettings.Instance.poolMaxSize;
+            _isOpenLayout = GlobalSettings.Instance.poolModuleConfig.isOpenLayout;
+            activeTimeThreshold = GlobalSettings.Instance.poolModuleConfig.activeTimeThreshold;
+            poolMinSize = GlobalSettings.Instance.poolModuleConfig.poolMinSize;
+            poolMaxSize = GlobalSettings.Instance.poolModuleConfig.poolMaxSize;
         }
 
         public T Get<T>(string key) where T : Object

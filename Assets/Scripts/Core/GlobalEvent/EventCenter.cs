@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Core.DI;
 using Core.Exceptions;
 using Core.Global;
 using Core.Log;
@@ -16,27 +15,29 @@ namespace Core.GlobalEvent
     /// </summary>
     public class EventCenter : IEventCenter
     {
-        [Inject] private IEventFactory _eventFactory;
-        [Inject] private IPoolManager _poolManager;
-        
+        private IPoolManager _poolManager;
         // 存储事件类型与对应事件信息列表的映射表。Key：事件类型（TEvent），Value：该类型下所有订阅的事件信息
         private readonly Dictionary<Type, List<IEventInfo>> _typeToEventInfoMap = new();
         // 延迟触发的事件队列，用于异步/分帧处理事件
-        private readonly Queue<IEvent> _delayEventQueue = new();
+        private readonly Queue<IEvent> _delayEvents = new();
+        // 每帧允许触发的最大延迟事件数量
         private readonly int _eventTriggerMaxNumPerFrame;
         // 当前帧已触发的延迟事件数量，用于控制单帧触发上限
         private byte _currentTriggeredEventCount;
         // 事件触发最大递归深度
-        private int _eventTriggerMaxRecursionDepth = 10;
-        
+        private const byte _eventTriggerMaxRecursionDepth = 15;
+        // 事件列表触发快照
+        private readonly List<IEventInfo> _eventInfoSnapshots = new();
+
         /// <summary>
         /// 私有构造函数（单例模式）
         /// 初始化：注册Update监听，用于每帧处理延迟事件队列
         /// </summary>
-        private EventCenter(IMonoAdapter monoAdapter)
+        private EventCenter(IMonoAdapter monoAdapter, IPoolManager poolManager)
         {
+            EventSource.Init(poolManager);
             monoAdapter.AddUpdateListener(OnUpdate);
-            _eventTriggerMaxNumPerFrame = GlobalSettings.Instance.eventTriggerMaxNumPerFrame;
+            _eventTriggerMaxNumPerFrame = GlobalSettings.Instance.eventModuleConfig.eventTriggerMaxNumPerFrame;
         }
 
         /// <summary>
@@ -44,27 +45,32 @@ namespace Core.GlobalEvent
         /// </summary>
         /// <typeparam name="TEvent">事件类型，需实现IEvent接口</typeparam>
         /// <param name="evt">事件实例，携带事件相关数据</param>
-        public void TriggerEvent<TEvent>(TEvent evt) where TEvent : class, IEvent
+        public void TriggerEvent<TEvent>(TEvent evt) where TEvent : class ,IEvent
         {
             // 查找该事件类型下所有订阅的事件信息
             if (_typeToEventInfoMap.TryGetValue(typeof(TEvent), out var eventInfos))
             {
+                _eventInfoSnapshots.Clear();
+                _eventInfoSnapshots.AddRange(eventInfos);
+                
                 // 遍历触发所有匹配的事件回调
-                for (var i = eventInfos.Count - 1; i >= 0; i--)
+                foreach (var eventInfoSnapshot in _eventInfoSnapshots)
                 {
                     try
                     {
-                        var eventInfo =  (EventInfo<TEvent>)eventInfos[i];
-                        if(eventInfo.RecursionDepth > _eventTriggerMaxRecursionDepth)
+                        if (eventInfoSnapshot.RecursionDepth > _eventTriggerMaxRecursionDepth)
                             throw new InvalidOperationException($"Recursion depth {_eventTriggerMaxRecursionDepth} is exceeded");
+                        
+                        var eventInfo = (EventInfo<TEvent>)eventInfoSnapshot;
                         eventInfo.Invoke(evt);
-                        _eventFactory.Collect(evt);
                     }
                     catch (Exception e)
                     {
                         Logger.LogException(ELogTags.System, ExceptionHelper.ThrowEventTriggerException(typeof(TEvent), e));
                     }
                 }
+                
+                EventSource.Collect(evt);
             }
         }
 
@@ -76,7 +82,7 @@ namespace Core.GlobalEvent
         public void TriggerEventAsync<TEvent>(TEvent evt) where TEvent : class, IEvent
         {
             // 放入延迟队列
-            _delayEventQueue.Enqueue(evt);
+            _delayEvents.Enqueue(evt);
         }
 
         /// <summary>
@@ -113,19 +119,15 @@ namespace Core.GlobalEvent
         {
             // 查找该事件类型下的所有订阅信息
             if (!_typeToEventInfoMap.TryGetValue(typeof(TEvent), out var eventInfos))
-            {
                 return;
-            }
             
             // 倒序遍历：避免删除元素导致索引错乱
             for (var i = eventInfos.Count - 1; i >= 0; i--)
             {
-                var eventInfo =  eventInfos[i] as EventInfo<TEvent>;
+                var eventInfo = (EventInfo<TEvent>)eventInfos[i];
                 // 匹配到目标回调则移除，并终止遍历
                 if (eventInfo?.CallBack != callBack || eventInfo?.Filter != filter)
-                {
                     continue;
-                }
                 
                 _poolManager.PushData(eventInfo);
                 eventInfos.RemoveAt(i);
@@ -145,7 +147,7 @@ namespace Core.GlobalEvent
             {
                 foreach (var baseEventInfo in eventInfos)
                 {
-                    _poolManager.PushData(baseEventInfo as EventInfo<TEvent>);
+                    _poolManager.PushData((EventInfo<TEvent>)baseEventInfo);
                 }
                 _typeToEventInfoMap.Remove(eventType);
             }
@@ -158,7 +160,7 @@ namespace Core.GlobalEvent
         private void OnUpdate()
         {
             // 队列无事件时直接返回
-            while(_delayEventQueue.Count > 0)
+            while(_delayEvents.Count > 0)
             {
                 // 达到单帧触发上限：重置计数并退出，剩余事件留到下一帧处理
                 if (_currentTriggeredEventCount >= _eventTriggerMaxNumPerFrame)
@@ -168,7 +170,7 @@ namespace Core.GlobalEvent
                 }
                 
                 // 出队并执行延迟事件
-                TriggerEvent(_delayEventQueue.Dequeue());
+                TriggerEvent(_delayEvents.Dequeue());
                 // 累计当前帧触发数量
                 ++_currentTriggeredEventCount;
             }

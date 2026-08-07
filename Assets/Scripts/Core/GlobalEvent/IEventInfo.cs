@@ -6,7 +6,7 @@ namespace Core.GlobalEvent
     internal interface IEventInfo
     {
         /// <summary>
-        /// 递归深度
+        /// 当前递归深度
         /// </summary>
         int RecursionDepth { get; }
     }

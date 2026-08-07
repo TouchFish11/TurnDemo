@@ -7,7 +7,6 @@ using Core.Inputs;
 using Core.Mono;
 using HotUpdate.Base.Data;
 using HotUpdate.Base.ECModule;
-using HotUpdate.Base.Manager;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -165,11 +164,17 @@ namespace HotUpdate.Game.Inputs
                     {
                         case InputActionPhase.Started:
                             // 开始按压：触发鼠标显示事件
-                            _eventCenter.TriggerEvent(new MouseVisibleChangedEvent { SourceName = nameof(Keyboard.current.leftAltKey), IsVisible = true});
+                            var mouseVisibleChangedEvent = EventSource.Get<MouseVisibleChangedEvent>();
+                            mouseVisibleChangedEvent.IsVisible = true;
+                            mouseVisibleChangedEvent.SourceName = nameof(Keyboard.current.leftAltKey);
+                            _eventCenter.TriggerEvent(mouseVisibleChangedEvent);
                             break;
                         case InputActionPhase.Canceled:
                             // 取消按压：触发鼠标隐藏事件
-                            _eventCenter.TriggerEvent(new MouseVisibleChangedEvent { SourceName = nameof(Keyboard.current.leftAltKey), IsVisible = false });
+                            mouseVisibleChangedEvent = EventSource.Get<MouseVisibleChangedEvent>();
+                            mouseVisibleChangedEvent.IsVisible = false;
+                            mouseVisibleChangedEvent.SourceName = nameof(Keyboard.current.leftAltKey);
+                            _eventCenter.TriggerEvent(mouseVisibleChangedEvent);
                             break;
                     }
                     break;
@@ -199,11 +204,10 @@ namespace HotUpdate.Game.Inputs
                 // 只在抬起时检测是否在UI上，来判断是否释放因为Alt键请求的显示
                 if (EventSystem.current && EventSystem.current.IsPointerOverGameObject())
                 {
-                    _eventCenter.TriggerEvent(new MouseVisibleChangedEvent
-                    {
-                        SourceName = nameof(Keyboard.current.leftAltKey), 
-                        IsVisible = false 
-                    });
+                    var mouseVisibleChangedEvent = EventSource.Get<MouseVisibleChangedEvent>();
+                    mouseVisibleChangedEvent.IsVisible = false;
+                    mouseVisibleChangedEvent.SourceName = nameof(Keyboard.current.leftAltKey);
+                    _eventCenter.TriggerEvent(mouseVisibleChangedEvent);
                 }
             }
         }

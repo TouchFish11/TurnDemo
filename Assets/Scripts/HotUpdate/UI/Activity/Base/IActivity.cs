@@ -8,7 +8,7 @@ namespace HotUpdate.UI.Activity.Base
     /// <summary>
     /// 活动接口
     /// </summary>
-    public interface IActivity : IUiBehaviour
+    public interface IActivity
     {
         /// <summary>
         /// 活动游戏对象

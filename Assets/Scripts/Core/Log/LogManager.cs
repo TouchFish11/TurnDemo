@@ -50,7 +50,7 @@ namespace Core.Log
         {
             monoAdapter.AddApplicationExitNotify(this);
             s_logSavePath = PathUtility.GetLogLocalSavePath(FileUtility.LocalLogFileName);
-            s_writeLogMaxIntervalTime = GlobalSettings.Instance.writeLogMaxIntervalTime;
+            s_writeLogMaxIntervalTime = GlobalSettings.Instance.logModuleConfig.writeLogMaxIntervalTime;
             InitLogFile();
             StartLogWrite();
             
@@ -64,7 +64,7 @@ namespace Core.Log
         /// <param name="progressCallBack"></param>
         public void UploadLog(UploadProgressCallBack progressCallBack)
         {
-            _uWRManager.UploadAssetAsync(GlobalSettings.Instance.uploadServerIp, s_logSavePath, progressCallBack: progressCallBack);
+            _uWRManager.UploadAssetAsync(GlobalSettings.Instance.uploadModuleConfig.uploadServerIp, s_logSavePath, progressCallBack: progressCallBack);
         }
 
         public void AddExtraStaceStackForCombinedType(ELogLevel level, ELogTags tag)
@@ -162,8 +162,8 @@ namespace Core.Log
             }
             
             // 不同时满足条件，不记录该日志
-            if (((int)GlobalSettings.Instance.filterLevel & (int)logLevel) == 0 && 
-                ((int)GlobalSettings.Instance.tag & (int)tag) == 0)
+            if (((int)GlobalSettings.Instance.logModuleConfig.filterLevel & (int)logLevel) == 0 && 
+                ((int)GlobalSettings.Instance.logModuleConfig.tag & (int)tag) == 0)
             {
                 return false;
             }

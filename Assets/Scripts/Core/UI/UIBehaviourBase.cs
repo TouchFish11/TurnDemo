@@ -10,8 +10,7 @@ namespace Core.UI
     /// UIBehaviour基类
     /// 对原生UIBehaviour的封装
     /// </summary>
-    public abstract class UIBehaviourBase : UIBehaviour, IUiBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler, IPointerMoveHandler,
-        IPointerDownHandler, IPointerUpHandler
+    public abstract class UIBehaviourBase : UIBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler, IPointerMoveHandler, IPointerDownHandler, IPointerUpHandler
     {
         // UI组件绑定器
         protected UIComponentBinder binder;

@@ -45,7 +45,6 @@ namespace Core.Registration
             DIContainer.BindSingleton<IBinaryDataManager, BinaryDataManager>();
             DIContainer.BindSingleton<IEditorResManager, EditorResManager>();
             DIContainer.BindSingleton<IEventCenter, EventCenter>();
-            DIContainer.BindSingleton<IEventFactory, EventFactory>();
             DIContainer.BindSingleton<IInputSystem, InputSystem>();
             DIContainer.BindSingleton<IJsonManager, JsonManager>();
             DIContainer.BindSingleton<IMusicManager, MusicManager>();
@@ -65,9 +64,9 @@ namespace Core.Registration
             // 初始化AB包管理器
             var assetBundleManager = DIContainer.Create<AssetBundleManager>(parameterValues: new object[]
             {
-                GlobalSettings.Instance.criticalActiveThreshold,
-                GlobalSettings.Instance.bundleSlidingWindowMaxCount,
-                GlobalSettings.Instance.maxDurationPerWindow
+                GlobalSettings.Instance.resourcesModuleConfig.criticalActiveThreshold,
+                GlobalSettings.Instance.resourcesModuleConfig.bundleSlidingWindowMaxCount,
+                GlobalSettings.Instance.resourcesModuleConfig.maxDurationPerWindow
             });
             await assetBundleManager.Init();
             // 初始化

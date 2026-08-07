@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -15,9 +14,9 @@ namespace Core.UI
     {
         private readonly UIBehaviour _componentBehaviour;
         // 存储所有找到的满足条件的UI控件
-        private Dictionary<string, List<UIBehaviour>> controlDic = new();
+        private Dictionary<string, List<UIBehaviour>> _controls = new();
         // 存储默认的控件名列表
-        private readonly List<string> _defaultControlNameList = new()
+        private readonly List<string> _defaultControlNames = new()
         {
             "Image", "Text (TMP)", "RawImage", "View", "Toggle", "Slider", "Scrollbar",
             "Scroll View", "Button", "Dropdown", "InputField (TMP)", "Background", "Checkmark",
@@ -27,34 +26,34 @@ namespace Core.UI
         /// <summary>
         /// 按钮点击事件
         /// </summary>
-        public event UnityAction<string> OnButtonClick;
+        internal event Action<string> OnButtonClick;
 
         /// <summary>
         /// 滑动条拖动事件
         /// </summary>
-        public event UnityAction<string, float> OnSliderValueChanged;
+        internal event Action<string, float> OnSliderValueChanged;
 
         /// <summary>
         /// 开关值变化事件
         /// </summary>
-        public event UnityAction<string, bool> OnToggleValueChanged;
+        internal event Action<string, bool> OnToggleValueChanged;
 
         /// <summary>
         /// 输入值变化事件
         /// </summary>
-        public event UnityAction<string, string> OnInputFieldValueChanged;
+        internal event Action<string, string> OnInputFieldValueChanged;
         
         /// <summary>
         /// 滚动列表滚动事件
         /// </summary>
-        public event UnityAction<string, Vector2> OnScrollRectValueChanged;
+        internal event Action<string, Vector2> OnScrollRectValueChanged;
         
         /// <summary>
         /// 下拉菜单选择事件
         /// </summary>
-        public event UnityAction<string, int> OnDropdownValueChanged; 
+        internal event Action<string, int> OnDropdownValueChanged; 
 
-        public UIComponentBinder(UIBehaviour uIBehaviour)
+        internal UIComponentBinder(UIBehaviour uIBehaviour)
         {
             _componentBehaviour = uIBehaviour;
 
@@ -83,7 +82,7 @@ namespace Core.UI
         /// <returns></returns>
         public T GetControl<T>(string controlName) where T : UIBehaviour
         {
-            if (!controlDic.TryGetValue(controlName, out var uiList))
+            if (!_controls.TryGetValue(controlName, out var uiList))
             {
                 return null;
             }
@@ -106,7 +105,7 @@ namespace Core.UI
         /// <returns></returns>
         public object GetControl(string controlName, Type type)
         {
-            if (!controlDic.TryGetValue(controlName, out var uiList))
+            if (!_controls.TryGetValue(controlName, out var uiList))
             {
                 return null;
             }
@@ -134,21 +133,21 @@ namespace Core.UI
                 // 用临时变量记录控件名，防止闭包影响
                 var controlName = control.name;
                 // 跳过不需要存储的控件、跳过存储过的控件、跳过面板
-                if (_defaultControlNameList.Contains(controlName))
+                if (_defaultControlNames.Contains(controlName))
                     continue;
 
                 // 之前存储过该名称的控件
-                if (controlDic.ContainsKey(controlName))
+                if (_controls.ContainsKey(controlName))
                 {
                     // 若之前存储的控件和当前不一样，才去存储
-                    if (!controlDic[controlName].Contains(control))
-                        controlDic[controlName].Add(control);
+                    if (!_controls[controlName].Contains(control))
+                        _controls[controlName].Add(control);
                 }
                 // 第一次存储该名称的控件
                 else
                 {
                     // 存储控件
-                    controlDic.Add(controlName, new List<UIBehaviour>() { control });
+                    _controls.Add(controlName, new List<UIBehaviour> { control });
                 }
 
                 switch (control)
@@ -179,10 +178,10 @@ namespace Core.UI
         /// <summary>
         /// 清空
         /// </summary>
-        public void Clear()
+        internal void Clear()
         {
-            controlDic.Clear();
-            controlDic = null;
+            _controls.Clear();
+            _controls = null;
         }
     }
 }

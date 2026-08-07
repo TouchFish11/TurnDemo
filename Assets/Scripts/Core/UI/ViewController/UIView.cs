@@ -70,7 +70,7 @@ namespace Core.UI.ViewController
         }
 
         /// <summary>
-        /// 控制器失活后销毁前执行
+        /// 控制器销毁后执行，用于自身的清理逻辑，不依赖控制器
         /// </summary>
         public virtual Task Destroy()
         {

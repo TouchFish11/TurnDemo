@@ -347,7 +347,7 @@ namespace Editor.AssetBundle
             GUILayout.BeginHorizontal();
             serverIP = EditorGUILayout.TextField("Server Path", serverIP);
             if (GUILayout.Button("Load From Global Settings", GUILayout.Width(250)))
-                serverIP = GlobalSettings.Instance.resServerIp;
+                serverIP = GlobalSettings.Instance.updateModuleConfig.resServerIp;
             GUILayout.EndHorizontal();
             EditorGUILayout.Space();
             uploadUseUser = GUILayout.Toggle(uploadUseUser, "Verify Identity");

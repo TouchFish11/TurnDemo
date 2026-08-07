@@ -20,7 +20,7 @@ namespace Core.UI
         // 界面唯一ID
         private static int _panelId;
         // 存储打开的界面
-        private readonly Dictionary<int, IPanelInfo> _panels = new();
+        private readonly Dictionary<int, PanelInfo> _panels = new();
         // 上层
         private Transform _topLayer;
         // 中层
@@ -71,9 +71,7 @@ namespace Core.UI
             };
         }
         
-        public async Task<TController> CreateViewAsync<TView, TController>(
-            string panelName, E_UILayer layer, Vector2 pos = default, Quaternion quaternion = default)
-            where TView : UIView, IuiView where TController : class, IuiController
+        public async Task<TController> CreateViewAsync<TView, TController>(string panelName, E_UILayer layer, Vector2 pos = default, Quaternion quaternion = default) where TView : UIView, IuiView where TController : class, IuiController
         {
             try
             {
@@ -83,7 +81,10 @@ namespace Core.UI
                 var viewObj = await _objectSpawner.SpawnAsync<TView>(panelName,GetLayer(layer), pos, quaternion);
                 // 生成该界面的唯一ID
                 var id = GenerateId();
+                // 界面初始化
                 await controller.Init(id, viewObj);
+                // 界面激活
+                await controller.Activate();
                 // 初始化面板信息
                 var newInfo = new PanelInfo<TView>(id, viewObj, controller);
                 // 存储面板信息
@@ -134,7 +135,8 @@ namespace Core.UI
                     return controller;
                 }
             }
-            Logger.LogError(ELogTags.UI, $"{nameof(UIManager)}.{nameof(GetController)}: Controller({typeof(TController)}) is not found.");
+            
+            Logger.LogError(ELogTags.UI, $"Controller({typeof(TController)}) is not found.");
             return default;
         }
 
@@ -169,8 +171,6 @@ namespace Core.UI
         {
             return ++_panelId;
         }
-        
-        public Dictionary<int, IPanelInfo>.ValueCollection Panels => _panels.Values;
 
         public Canvas Canvas { get; private set; }
 

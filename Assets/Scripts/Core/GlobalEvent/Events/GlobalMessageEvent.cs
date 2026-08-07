@@ -5,6 +5,9 @@ namespace Core.GlobalEvent.Events
     /// </summary>
     public class GlobalMessageEvent : Event
     {
+        /// <summary>
+        /// 消息文本
+        /// </summary>
         public string Message { get; set; }
     }
 }

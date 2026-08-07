@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.UI.ViewController;
 using UnityEngine;
@@ -19,11 +18,6 @@ namespace Core.UI
         /// UI摄像机
         /// </summary>
         Camera UICamera { get; }
-
-        /// <summary>
-        /// 所有显示的界面
-        /// </summary>
-        Dictionary<int, IPanelInfo>.ValueCollection Panels { get; }
 
         /// <summary>
         /// 获取指定层级对象

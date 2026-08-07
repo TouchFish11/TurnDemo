@@ -58,12 +58,12 @@ namespace Core.AssetBundles.Update.State
         public async Task DownloadCatalogFile()
         {
             // 创建清单文件下载请求器（无需Hash校验，清单文件本身由服务器保证正确性）
-            _abWebRequester = poolManager.GetData<ABWebRequester>().Init(GlobalSettings.Instance.resServerIp, FileUtility.CatalogDefaultName, false, string.Empty, string.Empty, 0);
+            _abWebRequester = poolManager.GetData<ABWebRequester>().Init(GlobalSettings.Instance.updateModuleConfig.resServerIp, FileUtility.CatalogDefaultName, false, string.Empty, string.Empty, 0);
 
             _coroutine = _monoAdapter.StartCoroutine(CheckCancel_Cor());
             
             // 按配置的最大重试次数执行下载
-            var maxRetry = GlobalSettings.Instance.reDownloadCompareFileMaxNum;
+            var maxRetry = GlobalSettings.Instance.updateModuleConfig.reDownloadCompareFileMaxNum;
             for (var i = 0; i < maxRetry; i++)
             {
                 var isSuccess = await DownloadCatalogFileInternal();
@@ -90,7 +90,7 @@ namespace Core.AssetBundles.Update.State
         {
             var source = new TaskCompletionSource<bool>();
             // 异步下载到临时清单文件路径
-            _abWebRequester.DownLoadAsync(PathUtility.GetAbLoadPath(FileUtility.TempCatalogDefaultName), source.SetResult, GlobalSettings.Instance.connectTimeout);
+            _abWebRequester.DownLoadAsync(PathUtility.GetAbLoadPath(FileUtility.TempCatalogDefaultName), source.SetResult, GlobalSettings.Instance.updateModuleConfig.connectTimeout);
             return source.Task;
         }
 

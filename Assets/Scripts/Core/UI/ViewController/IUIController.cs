@@ -4,6 +4,9 @@ namespace Core.UI.ViewController
 {
     public interface IuiController
     {
+        /// <summary>
+        /// 界面ID
+        /// </summary>
         int PanelId { get; }
         
         /// <summary>

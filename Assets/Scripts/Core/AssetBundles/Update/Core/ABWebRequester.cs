@@ -51,7 +51,7 @@ namespace Core.AssetBundles.Update.Core
             FileName = fileName;
             IsAppend = isAppend;
             // 初始化重试次数为全局配置的最大重试次数
-            CurrentRetryCount = GlobalSettings.Instance.maxRetryCount;
+            CurrentRetryCount = GlobalSettings.Instance.updateModuleConfig.maxRetryCount;
             AbName = abName;
             Hash = hash;
             DownloadedBytes = downloadedBytes;

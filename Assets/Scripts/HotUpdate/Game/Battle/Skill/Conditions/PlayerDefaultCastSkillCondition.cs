@@ -16,6 +16,7 @@ namespace HotUpdate.Game.Battle.Skill.Conditions
         
         public bool CanCast(IBattleEntityObject caster, SkillInfo skillInfo)
         {
+            var globalMessageEvent = EventSource.Get<GlobalMessageEvent>();
             switch ((E_SkillType)skillInfo.f_SkillType)
             {
                 case E_SkillType.NormalAttack:
@@ -29,7 +30,8 @@ namespace HotUpdate.Game.Battle.Skill.Conditions
                     }
 
                     // 全局提示
-                    _eventCenter.TriggerEvent(new GlobalMessageEvent{Message = "战技点不足无法释放"});
+                    globalMessageEvent.Message = "战技点不足无法释放";
+                    _eventCenter.TriggerEvent(globalMessageEvent);
                     return false;
                 case E_SkillType.UltimateSkill:
                     // 判断能量释放足够
@@ -41,7 +43,8 @@ namespace HotUpdate.Game.Battle.Skill.Conditions
                     }
 
                     // 全局提示
-                    _eventCenter.TriggerEvent(new GlobalMessageEvent{Message = "能量不足无法释放"});
+                    globalMessageEvent.Message = "能量不足无法释放";
+                    _eventCenter.TriggerEvent(globalMessageEvent);
                     return false;
                 case E_SkillType.EnhancedNormalAttack:
                 case E_SkillType.EnhancedCombatSkill:

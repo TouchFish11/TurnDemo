@@ -25,7 +25,7 @@ namespace Core.Net.FrameSync.Udp
         // ����ָ�����
         private readonly Queue<FrameCommand> _sendToQueue = new Queue<FrameCommand>();
         // ������
-        private readonly byte[] _cacheBuffer = new byte[GlobalSettings.Instance.udpReceiveBufferSize];
+        private readonly byte[] _cacheBuffer = new byte[GlobalSettings.Instance.netModuleConfig.udpReceiveBufferSize];
         // �Ƿ���������
         private bool _isConnected;
         // �Ƿ����ڷ���

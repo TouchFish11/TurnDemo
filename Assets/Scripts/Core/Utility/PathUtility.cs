@@ -1,7 +1,6 @@
 using System.IO;
 using Core.Global;
 using UnityEngine;
-using static Core.Global.GlobalSettings;
 
 namespace Core.Utility
 {
@@ -35,7 +34,7 @@ namespace Core.Utility
         /// 用户数据本地存储根路径
         /// 根据全局配置决定使用StreamingAssets或PersistentPath
         /// </summary>
-        public static string UserDataLocalSavePath => GlobalSettings.Instance.userDataPath == EDataLoadPath.Streaming ? Path.Combine(_streamingAssetsPath, "UserData") : Path.Combine(_persistentPath, "UserData");
+        public static string UserDataLocalSavePath => GlobalSettings.Instance.userModuleConfig.userDataPath == EDataLoadPath.Streaming ? Path.Combine(_streamingAssetsPath, "UserData") : Path.Combine(_persistentPath, "UserData");
 
         /// <summary>
         /// 日志文件本地存储根路径
@@ -53,7 +52,7 @@ namespace Core.Utility
         /// AssetBundle资源加载根路径
         /// 根据全局配置决定使用StreamingAssets或PersistentPath
         /// </summary>
-        public static string LoadAbPath => GlobalSettings.Instance.abLoadPath == EDataLoadPath.Streaming ? Path.Combine(_streamingAssetsPath, "AssetBundles") : Path.Combine(_persistentPath, "AssetBundles");
+        public static string LoadAbPath => GlobalSettings.Instance.resourcesModuleConfig.abLoadPath == EDataLoadPath.Streaming ? Path.Combine(_streamingAssetsPath, "AssetBundles") : Path.Combine(_persistentPath, "AssetBundles");
         
         /// <summary>
         /// Json文件运行时加载路径
