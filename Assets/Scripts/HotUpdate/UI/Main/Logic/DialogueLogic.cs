@@ -4,6 +4,7 @@ using Core.DI;
 using Core.Log;
 using Core.UI;
 using HotUpdate.Base.Manager;
+using HotUpdate.Game.Dialogue;
 
 namespace HotUpdate.UI.Main.Logic
 {

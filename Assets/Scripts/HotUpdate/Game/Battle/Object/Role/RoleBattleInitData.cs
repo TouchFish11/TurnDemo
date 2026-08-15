@@ -1,5 +1,3 @@
-
-
 namespace HotUpdate.Game.Battle.Object.Role
 {
     public class RoleBattleInitData : BattleObjectInitData

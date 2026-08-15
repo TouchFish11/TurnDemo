@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-
 using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.TargetSelect

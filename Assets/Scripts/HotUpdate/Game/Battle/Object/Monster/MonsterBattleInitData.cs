@@ -1,5 +1,3 @@
-
-
 namespace HotUpdate.Game.Battle.Object.Monster
 {
     public class MonsterBattleInitData : BattleObjectInitData

@@ -4,7 +4,6 @@ using Core.Log;
 using Core.Serialize.Binary;
 using Core.Tasks;
 using HotUpdate.Base.UI;
-
 using HotUpdate.Game.Battle.Command;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Object;

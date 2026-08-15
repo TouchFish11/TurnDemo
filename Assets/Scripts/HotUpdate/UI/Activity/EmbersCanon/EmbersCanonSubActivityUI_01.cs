@@ -5,7 +5,6 @@ using Core.AssetBundles.Management;
 using Core.DI;
 using Core.UI;
 using HotUpdate.Base.Service;
-
 using UnityEngine.UI;
 
 namespace HotUpdate.UI.Activity.EmbersCanon

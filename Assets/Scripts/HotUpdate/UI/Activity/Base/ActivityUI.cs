@@ -1,7 +1,6 @@
 using System;
 using Core.Log;
 using Core.UI;
-
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

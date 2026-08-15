@@ -1,6 +1,4 @@
 using System.Threading.Tasks;
-using Core.UI;
-
 using UnityEngine;
 
 namespace HotUpdate.UI.Activity.Base

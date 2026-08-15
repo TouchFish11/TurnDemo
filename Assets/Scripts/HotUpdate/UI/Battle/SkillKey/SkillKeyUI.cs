@@ -1,7 +1,5 @@
 using Core.DI;
 using Core.UI;
-using Core.Utility;
-
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Object;

@@ -1,6 +1,8 @@
 using System;
+using HotUpdate.Game.Dialogue.Datas;
+using HotUpdate.Game.Dialogue.Sources;
 
-namespace HotUpdate.Base.Manager
+namespace HotUpdate.Game.Dialogue
 {
     /// <summary>
     /// 对话管理器接口
@@ -21,11 +23,6 @@ namespace HotUpdate.Base.Manager
         /// 对话结束
         /// </summary>
         event Action OnDialogueEnd;
-
-        /// <summary>
-        /// 分支选择
-        /// </summary>
-        event Action OnBranchSelected;
 
         /// <summary>
         /// 单句对话开始事件
@@ -51,12 +48,34 @@ namespace HotUpdate.Base.Manager
         /// <summary>
         /// 选择选项
         /// </summary>
-        /// <param name="dialogueId"></param>
-        void OnSelectOpt(int dialogueId);
+        /// <param name="branchData"></param>
+        void OnSelectOpt(BranchData branchData);
 
         /// <summary>
         /// 结束对话
         /// </summary>
         void EndDialogue();
+
+        /// <summary>
+        /// 添加新分支来源，重复添加会失败
+        /// </summary>
+        /// <param name="branchDataSource"></param>
+        /// <returns>是否添加成功</returns>
+        bool AddBranchSource(IBranchDataSource branchDataSource);
+        
+        /// <summary>
+        /// 移除指定的分支来源
+        /// </summary>
+        /// <param name="branchDataSource"></param>
+        /// <returns>是否移除成功</returns>
+        bool RemoveBranchSource(IBranchDataSource branchDataSource);
+
+        /// <summary>
+        /// 显示指定ID的对话内容
+        /// </summary>
+        /// <param name="startDialogueId">要显示的对话ID</param>
+        void ShowCurrentDialogue(int startDialogueId);
+
+        event Action<BranchInfo> OnSelectDialogueBranch;
     }
 }

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Core.DI;
 using Core.Utility;
-
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Object.StateMeachine;
 using HotUpdate.Game.Battle.Property;

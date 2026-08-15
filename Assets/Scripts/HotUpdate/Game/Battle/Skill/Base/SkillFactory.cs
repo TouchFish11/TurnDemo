@@ -1,6 +1,5 @@
 using Core.DI;
 using Core.Serialize.Binary;
-
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.Skill.Base.Flow;

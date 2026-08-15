@@ -1,5 +1,3 @@
-
-
 namespace HotUpdate.Game.Battle.Property
 {
     /// <summary>

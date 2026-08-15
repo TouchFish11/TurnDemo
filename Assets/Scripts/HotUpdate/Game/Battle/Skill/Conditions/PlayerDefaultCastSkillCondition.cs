@@ -1,7 +1,6 @@
 using Core.DI;
 using Core.GlobalEvent;
 using Core.GlobalEvent.Events;
-
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Property;
 

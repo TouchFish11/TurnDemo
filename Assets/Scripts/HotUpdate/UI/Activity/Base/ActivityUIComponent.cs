@@ -2,7 +2,6 @@ using Core.DI;
 using Core.UI;
 using HotUpdate.Base.Data;
 
-
 namespace HotUpdate.UI.Activity.Base
 {
     /// <summary>

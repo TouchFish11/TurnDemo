@@ -7,7 +7,6 @@ using Core.Log;
 using Core.Serialize.Binary;
 using Core.Tasks;
 using HotUpdate.Base.UI;
-
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Inputs;

@@ -5,7 +5,7 @@ using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Serialize.Binary;
 using Core.UI;
-
+using HotUpdate.Common.Config;
 using UnityEngine.UI;
 
 namespace HotUpdate.UI.Dialogue
@@ -26,10 +26,9 @@ namespace HotUpdate.UI.Dialogue
         [InjectUI] private ScrollRect svReview;
         
         /// <summary>
-        /// 对话回顾UI对象的缓存集合
-        /// 用于管理已实例化的对话UI，方便后续回收
+        /// 对话回顾UI对象的缓存
         /// </summary>
-        private readonly List<DialogueReviewUI> dialogueReviewUIs = new();
+        private readonly List<UIBehaviourBase> _reviewUIs = new();
 
         /// <summary>
         /// 子视图关闭时的事件回调
@@ -58,19 +57,33 @@ namespace HotUpdate.UI.Dialogue
         /// 供外部调用，将新的对话数据加入待展示列表
         /// </summary>
         /// <param name="historicalInfos"></param>
-        public async Task ShowDialogues(List<DialogueInfo> historicalInfos)
+        public async Task Review(List<IReviewInfo> historicalInfos)
         {
             // 遍历所有历史对话信息
-            foreach (var dialogueInfo in historicalInfos)
+            foreach (var reviewInfo in historicalInfos)
             {
-                // 从资源包异步加载对话回顾UI预制体，并挂载到滚动容器的内容节点下
-                var dialogueReviewUI = await _objectSpawner.SpawnAsync<DialogueReviewUI>(AssetKeys.DialogueReviewUI, svReview.content);
-                // 从二进制数据管理器中获取NPC配置容器，根据说话者ID查询NPC信息
-                var npcInfo = _binaryDataManager.GetConfig<NpcInfoContainer>(EConfigLoadType.Excel).dataDic[dialogueInfo.f_speakerId];
-                // 初始化对话UI的显示内容（说话者名称 + 对话文本）
-                dialogueReviewUI.Init(npcInfo.f_speakerName, dialogueInfo.f_dialgueText);
-                // 将实例化的UI对象加入缓存集合，便于后续回收
-                dialogueReviewUIs.Add(dialogueReviewUI);
+                switch (reviewInfo.ReviewType)
+                {
+                    case IReviewInfo.EReviewType.Dialogue:
+                        // 从资源包异步加载对话回顾UI预制体，并挂载到滚动容器的内容节点下
+                        var dialogueReviewUI = await _objectSpawner.SpawnAsync<DialogueReviewUI>(AssetKeys.DialogueReviewUI, svReview.content);
+                        // 从二进制数据管理器中获取NPC配置容器，根据说话者ID查询NPC信息
+                        var npcInfo = _binaryDataManager.GetConfig<NpcInfoContainer>(EConfigLoadType.Excel).dataDic[((DialogueInfo)reviewInfo).f_speakerId];
+                        // 初始化对话UI的显示内容（说话者名称 + 对话文本）
+                        dialogueReviewUI.Init(npcInfo.f_speakerName, reviewInfo.GetViewText());
+                        // 将实例化的UI对象加入缓存集合，便于后续回收
+                        _reviewUIs.Add(dialogueReviewUI);
+                        break;
+                    case IReviewInfo.EReviewType.Branch:
+                        // 从资源包异步加载对话回顾UI预制体，并挂载到滚动容器的内容节点下
+                        var branchReviewUI = await _objectSpawner.SpawnAsync<BranchReviewUI>(AssetKeys.DialogueReviewUI, svReview.content);
+                        // 初始化对话UI的显示内容（说话者名称 + 对话文本）
+                        branchReviewUI.Init(reviewInfo.GetViewText());
+                        _reviewUIs.Add(branchReviewUI);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
         }
 
@@ -81,12 +94,20 @@ namespace HotUpdate.UI.Dialogue
         private void ClearReviewUI()
         {
             // 遍历所有已实例化的对话UI，归还到对象池
-            foreach (var dialogueReviewUI in dialogueReviewUIs)
+            foreach (var reviewUI in _reviewUIs)
             {
-                _objectSpawner.Release(dialogueReviewUI);
+                switch (reviewUI)
+                {
+                    case DialogueReviewUI dialogueReviewUI:
+                        _objectSpawner.Release(dialogueReviewUI);
+                        break;
+                    case BranchReviewUI branchReviewUI:
+                        _objectSpawner.Release(branchReviewUI);
+                        break;
+                }
             }
             // 清空UI缓存集合，避免内存泄漏
-            dialogueReviewUIs.Clear();
+            _reviewUIs.Clear();
         }
 
         /// <summary>

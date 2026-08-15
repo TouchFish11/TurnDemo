@@ -1,5 +1,4 @@
 using Core.Utility;
-
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.ResponsibilityChain.DamageChain;
 using HotUpdate.Game.Battle.Skill.Component;

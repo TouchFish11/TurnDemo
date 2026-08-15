@@ -3,6 +3,7 @@ using Core.DI;
 using Core.GlobalEvent;
 using HotUpdate.Base.ECModule;
 using HotUpdate.Base.Manager;
+using HotUpdate.Game.Dialogue;
 using HotUpdate.Game.Inputs;
 
 namespace HotUpdate.Game.Interact

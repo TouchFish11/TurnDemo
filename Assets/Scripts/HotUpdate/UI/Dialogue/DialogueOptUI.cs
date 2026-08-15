@@ -1,7 +1,6 @@
 using System;
 using Core.UI;
-using Core.Utility;
-
+using HotUpdate.Game.Dialogue.Datas;
 using TMPro;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -15,14 +14,14 @@ namespace HotUpdate.UI.Dialogue
     {
         [InjectUI] private Image imgHightlight;
         [InjectUI] private TextMeshProUGUI txtOptText;
-
-        // 当前分支选择后的对话ID
-        private int _dialogueId;
+        
+        // 当前分支数据
+        private BranchData _currentBranchData;
         
         /// <summary>
         /// 选项选择事件
         /// </summary>
-        public event Action<int> OnSelectOpt;
+        public event Action<BranchData> OnSelectOpt;
 
         protected override void Awake()
         {
@@ -34,21 +33,20 @@ namespace HotUpdate.UI.Dialogue
         /// <summary>
         /// 初始化
         /// </summary>
-        /// <param name="branchInfo"></param>
-        public void Init(BranchInfo branchInfo)
+        /// <param name="branchData"></param>
+        public void Init(BranchData branchData)
         {
-            this._dialogueId = branchInfo.f_dialogueId;
-            txtOptText.text = branchInfo.f_optText;
+            _currentBranchData = branchData;
+            txtOptText.text = branchData.BranchInfo.f_optText;
             imgHightlight.gameObject.SetActive(false);
         }
 
         protected override void OnButtonClick(string btnName)
         {
             // 选择该分支选项
-            OnSelectOpt?.Invoke(_dialogueId);
+            OnSelectOpt?.Invoke(_currentBranchData);
         }
         
-
         private void OnPointEnter(BaseEventData data)
         {
             imgHightlight.gameObject.SetActive(true);

@@ -12,7 +12,6 @@ using HotUpdate.Base.Collection;
 using HotUpdate.Base.Data;
 using HotUpdate.Base.Settings;
 using HotUpdate.Common.Config.Settings;
-
 using UnityEngine;
 using Logger = Core.Log.Logger;
 

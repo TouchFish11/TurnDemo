@@ -1,5 +1,6 @@
 using Core.DI;
 using HotUpdate.Base.Manager;
+using HotUpdate.Game.Dialogue;
 
 namespace HotUpdate.Game.Interact
 {

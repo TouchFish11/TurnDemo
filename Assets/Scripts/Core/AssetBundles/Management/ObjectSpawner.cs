@@ -95,6 +95,7 @@ namespace Core.AssetBundles.Management
                 GameAsset.Release(_keyToHandleMap[key]);
                 _assetKeys.Remove(key);
                 _keyToHandleMap.Remove(key);
+                // TODO：抛异常
                 Logger.LogError(ELogTags.Asset, $"[{nameof(ObjectSpawner)}]: Create '{key}' obj error,{e.Message}");
                 return null;
             }

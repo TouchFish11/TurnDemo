@@ -1,9 +1,11 @@
-using Core.Pool;
+using HotUpdate.Common.Config;
 
-public partial class DialogueInfo : IPoolData
+public partial class DialogueInfo : IReviewInfo
 {
-    public void ResetData()
+    public IReviewInfo.EReviewType ReviewType => IReviewInfo.EReviewType.Dialogue;
+        
+    public string GetViewText()
     {
-        throw new System.NotImplementedException();
+        return f_dialgueText;
     }
 }
