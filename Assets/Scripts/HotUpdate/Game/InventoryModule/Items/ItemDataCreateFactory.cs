@@ -19,7 +19,7 @@ namespace HotUpdate.Game.InventoryModule.Items
         /// <param name="persistentId"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static ItemData CreateData(ItemConfig itemConfig, int originNum, long persistentId)
+        public static ItemData CreateData(ItemConfig itemConfig, int originNum, long? persistentId)
         {
             // 创建数据
             ItemData newItemData = itemConfig.itemType switch

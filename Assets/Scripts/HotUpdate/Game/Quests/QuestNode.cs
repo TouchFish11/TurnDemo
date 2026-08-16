@@ -60,7 +60,8 @@ namespace HotUpdate.Game.Quests
         {
             // 更新进度
             _questNodeData.Progress += delta;
-            if (_questNodeData.Progress != _questNodeConfig.maxProgress) return;
+            if (_questNodeData.Progress != _questNodeConfig.maxProgress)
+                return;
             
             // 更新阶段
             _questNodeData.Phase = EQuestPhase.Complete;

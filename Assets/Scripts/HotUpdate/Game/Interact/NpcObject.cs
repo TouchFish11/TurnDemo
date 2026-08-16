@@ -5,11 +5,8 @@ namespace HotUpdate.Game.Interact
     /// <summary>
     /// NPC对象
     /// </summary>
-    public class NpcObject : EntityObject, IInteractable
+    public class NpcObject : InteractObject
     {
-        // 对象交互策略
-        private IInteractStrategy _interactStrategy;
-        
         /// <summary>
         /// 是否显示对象头顶浮动文本
         /// </summary>
@@ -27,22 +24,6 @@ namespace HotUpdate.Game.Interact
         public void InitNpc(NpcInfo npcInfo)
         {
             NpcInfo = npcInfo;
-        }
-        
-        protected override void OnInit()
-        {
-            var interactTrigger = AddComponent<InteractTrigger>();
-            interactTrigger.Init(this);
-        }
-
-        public void SetInteractStrategy(IInteractStrategy strategy)
-        {
-            _interactStrategy = strategy;
-        }
-
-        public void Interact(IEntityObject entityObject)
-        {
-            _interactStrategy?.Interact(this);
         }
     }
 }

@@ -66,7 +66,8 @@ namespace HotUpdate.Game.Quests
             // 主动判断当前是否有接取的任务，用于逻辑状态恢复
             foreach (var quests in _quests.Values)
             {
-                if (!quests.IsTracking) continue;
+                if (!quests.IsTracking) 
+                    continue;
                 _currentQuest = quests;
                 break;
             }

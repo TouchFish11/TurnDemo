@@ -58,7 +58,8 @@ namespace HotUpdate.Game.Quests
             {
                 foreach (var questNode in _questNodes.Values)
                 {
-                    if(questNode.QuestNodeData.Phase == EQuestPhase.Complete) continue;
+                    if(questNode.QuestNodeData.Phase == EQuestPhase.Complete) 
+                        continue;
                     currentNode = questNode;
                     break;
                 }
@@ -75,7 +76,9 @@ namespace HotUpdate.Game.Quests
 
         public void CancelAccept()
         {
-            if (_currentNode == null) return;
+            if (_currentNode == null) 
+                return;
+            
             _currentNode.Inactive();
             _questData.IsTracking = false;
             _questData.CurActiveNodeId = QuestUtil.QUEST_INACTIVE_NODE_ID;
@@ -88,10 +91,11 @@ namespace HotUpdate.Game.Quests
         private void CheckTrack()
         {
             // 没有正在追踪的任务
-            if(!_questData.IsTracking) return;
+            if(!_questData.IsTracking) 
+                return;
 
             if (!_questNodes.TryGetValue(_questData.CurActiveNodeId, out var questNode))
-                throw new KeyNotFoundException($"{nameof(Quest)}.{nameof(CheckTrack)}: {_questData.CurActiveNodeId} is not found.)");
+                throw new KeyNotFoundException($"{_questData.CurActiveNodeId} is not found.");
             
             questNode.Active();
             _currentNode = questNode;
@@ -117,7 +121,7 @@ namespace HotUpdate.Game.Quests
             }
 
             if (!_questNodes.TryGetValue(nextNodeId, out var questNode))
-                throw new KeyNotFoundException($"{nameof(Quest)}.{nameof(SwitchNext)}: {nextNodeId} is not found.");
+                throw new KeyNotFoundException($"{nextNodeId} quest node is not found.");
             
             _questData.CurActiveNodeId = nextNodeId;
             // 默认选择下一个节点，可拓展为根据玩家选择的分支记录对应的ID

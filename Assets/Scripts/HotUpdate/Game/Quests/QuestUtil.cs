@@ -16,7 +16,7 @@ namespace HotUpdate.Game.Quests
         /// <summary>
         /// 任务节点未接取默认ID
         /// </summary>
-        public const int QUEST_INACTIVE_NODE_ID = -1;
+        public const int QUEST_INACTIVE_NODE_ID = -2;
 
         /// <summary>
         /// 转换任务类型为文本

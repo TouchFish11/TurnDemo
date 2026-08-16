@@ -16,10 +16,9 @@ namespace HotUpdate.Game.Dialogue.Handler
         public void Execute(BranchData branchData)
         {
             var itemBranchData = (ItemBranchData)branchData;
-            foreach (var (id, num) in itemBranchData.Items)
+            foreach (var (id, num, persistentId) in itemBranchData.Items)
             {
-                var config = _itemDataProvider.ConfigMap[id];
-                _itemDataProvider.RemoveData(id, num, config.isPile);
+                _itemDataProvider.RemoveData(id, num, persistentId);
             }
         }
     }

@@ -9,7 +9,7 @@ namespace HotUpdate.Common.Config.Inventory
     public class Item : IPoolData
     {
         // 物品持久化ID
-        public long persistentId;
+        public long? persistentId;
         
         // 配置数据
         public ItemConfig itemConfig;

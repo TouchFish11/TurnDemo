@@ -10,7 +10,7 @@ namespace Core.Serialize.Json
     public static class NewtonsoftJsonUtility
     {
         /// <summary>
-        /// 处理类型名称、格式化设置、枚举字符串
+        /// 处理类型名称、格式化设置、枚举字符串、处理可空类型等
         /// </summary>
         public static readonly JsonSerializerSettings DefaultSerializerSettings = new()
         {
@@ -22,6 +22,9 @@ namespace Core.Serialize.Json
             }
         };
 
+        /// <summary>
+        /// 仅用于资源更新目录
+        /// </summary>
         public static readonly JsonSerializerSettings CatalogSerializerSettings = new()
         {
             TypeNameHandling = TypeNameHandling.All,

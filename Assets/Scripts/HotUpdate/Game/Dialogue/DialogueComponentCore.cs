@@ -2,7 +2,6 @@ using Core.DI;
 using Core.Inputs;
 using HotUpdate.Base.Animation;
 using HotUpdate.Base.ECModule;
-using HotUpdate.Base.Manager;
 using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Inputs;
 using HotUpdate.Game.Main.Move;

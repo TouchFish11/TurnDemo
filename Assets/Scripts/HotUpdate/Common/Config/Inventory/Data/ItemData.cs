@@ -12,8 +12,8 @@ namespace HotUpdate.Common.Config.Inventory.Data
     {
         /// 物品ID
         [JsonProperty] public int itemId;
-        /// 物品实例ID，可堆叠物品默认为-1；不可堆叠物品通过ID池获取唯一ID
-        [JsonProperty] public long persistentId;
+        /// 物品实例ID，可堆叠物品默认null；不可堆叠物品通过ID池获取唯一ID
+        [JsonProperty] public long? persistentId;
         /// 物品数量
         [JsonProperty] public int itemNum;
         /// 是否是新获取

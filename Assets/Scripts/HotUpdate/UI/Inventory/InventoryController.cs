@@ -279,10 +279,7 @@ namespace HotUpdate.UI.Inventory
         {
             foreach (var (item, num) in deletedItems)
             {
-                if (item.itemConfig.isPile)
-                    _inventoryManager.DeleteItem(item.itemConfig.itemId, num);
-                else
-                    _inventoryManager.DeleteItem(item.persistentId);
+                _inventoryManager.DeleteItem(item.itemConfig.itemId, num, item.itemConfig.isPile ? null : item.persistentId);
             }
         }
 

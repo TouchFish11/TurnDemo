@@ -41,13 +41,8 @@ namespace HotUpdate.Game.InventoryModule.Items
         /// </summary>
         /// <param name="itemId"></param>
         /// <param name="deleteNum"></param>
-        void DeleteItem(int itemId, int deleteNum);
-        
-        /// <summary>
-        /// 删除不可堆叠物品
-        /// </summary>
         /// <param name="persistentId"></param>
-        void DeleteItem(long persistentId);
+        void DeleteItem(int itemId, int deleteNum, long? persistentId);
         
         /// <summary>
         /// 获取当前类型显示的所有物品对象，只能获取所有可堆叠/不可堆叠的物品对象

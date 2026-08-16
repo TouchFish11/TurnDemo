@@ -35,7 +35,7 @@ namespace HotUpdate.Game.Quests.Condition
         }
 
         /// <summary>
-        /// 根据枚举创建对应任务条件类，新增类型需要Register新实例，未找到类型返回null
+        /// 根据枚举创建对应任务条件类，新增类型需要标记新实例，未找到类型返回null
         /// </summary>
         /// <param name="conditionType"></param>
         /// <param name="conditionConfig"></param>

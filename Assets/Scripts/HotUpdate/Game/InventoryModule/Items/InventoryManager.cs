@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Core.DI;
 using Core.Pool;
@@ -44,22 +45,22 @@ namespace HotUpdate.Game.InventoryModule.Items
             return _itemIdToItemMap.Values;
         }
         
-        public void DeleteItem(int itemId, int deleteNum)
+        public void DeleteItem(int itemId, int deleteNum, long? persistentId = null)
         {
-            _itemDataProvider.RemoveData(itemId, deleteNum, true);
-        }
-        
-        public void DeleteItem(long persistentId)
-        {
-            _itemDataProvider.RemoveData(persistentId, 1, false);
+            if (persistentId.HasValue)
+            {
+                _itemDataProvider.RemoveData(itemId, 1, persistentId);
+            }
+            else
+            {
+                _itemDataProvider.RemoveData(itemId, deleteNum, null);
+            }
         }
         
         public ItemData GetData(Item item)
         {
             // 根据是否可堆叠查找不同的物品数据
-            if (item.itemConfig.isPile)
-                return _itemDataProvider.TryGetData(item.itemConfig.itemId,  out var itemData) ? itemData : null;
-            return _itemDataProvider.TryGetInstanceData(item.persistentId, out var data) ? data : null;
+            return _itemDataProvider.TryGetData(item.itemConfig.itemId, out var data, item.persistentId) ? data : null;
         }
 
         public void UpdateGridNewState(Item item)
@@ -113,7 +114,7 @@ namespace HotUpdate.Game.InventoryModule.Items
         /// <param name="itemConfig"></param>
         /// <param name="itemData"></param>
         /// <returns></returns>
-        private async Task<Item> CreateItem(long persistentId, ItemConfig itemConfig, ItemData itemData)
+        private async Task<Item> CreateItem(long? persistentId, ItemConfig itemConfig, ItemData itemData)
         {
             // 对象池复用对象
             var item = _itemCreateFactory.CreateItem();
@@ -127,7 +128,10 @@ namespace HotUpdate.Game.InventoryModule.Items
             item.isNew = itemData.isNew;
             // 缓存对象，按是否可堆叠分别缓存
             if(persistentId != ItemPersistentIdGenerator.DefaultNotStackableId)
-                _instanceIdToItemMap.Add(persistentId, item);
+            {
+                Debug.Assert(persistentId != null, $"{nameof(persistentId)} != null");
+                _instanceIdToItemMap.Add(persistentId.Value, item);
+            }
             else
                 _itemIdToItemMap.Add(itemConfig.itemId, item);
             // 加载该物品的图标

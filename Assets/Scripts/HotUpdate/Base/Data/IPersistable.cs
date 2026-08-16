@@ -13,7 +13,7 @@ namespace HotUpdate.Base.Data
         void LoadData();
         
         /// <summary>
-        /// 保存数据
+        /// 同步保存数据，应用程序退出回调使用同步
         /// </summary>
         void SaveData();
         
@@ -24,7 +24,7 @@ namespace HotUpdate.Base.Data
         Task LoadDataAsync();
         
         /// <summary>
-        /// 异步保存数据
+        /// 异步保存数据，主动使用的保存
         /// </summary>
         /// <returns></returns>
         Task SaveDataAsync();

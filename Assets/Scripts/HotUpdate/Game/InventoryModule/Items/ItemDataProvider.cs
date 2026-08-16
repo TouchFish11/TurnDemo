@@ -30,19 +30,10 @@ namespace HotUpdate.Game.InventoryModule.Items
         // 用于可堆叠物品：itemId -> list索引
         private readonly Dictionary<int, int> _stackIndexByItemId =  new();
         // 用于不可堆叠物品：instanceId -> list索引
-        private readonly Dictionary<long, int> _indexByInstanceId =  new();
+        private readonly Dictionary<long?, int> _indexByInstanceId =  new();
         
-        /// <summary>
-        /// 物品配置全局缓存
-        /// </summary>
         public Dictionary<int, ItemConfig> ConfigMap { get; } = new();
         
-        /// <summary>
-        /// 添加数据
-        /// </summary>
-        /// <param name="itemId">物品ID</param>
-        /// <param name="deltaNum">可堆叠则为初始数量；不可堆叠则为创建数量</param>
-        /// <exception cref="KeyNotFoundException"></exception>
         public void AddData(int itemId, int deltaNum)
         {
             // 获取该ID的物品配置
@@ -53,7 +44,7 @@ namespace HotUpdate.Game.InventoryModule.Items
             if (itemConfig.isPile)
             {
                 // 可堆叠：查找已有数据
-                if (TryGetData(itemId, out var exist))
+                if (TryGetStackableData(itemId, out var exist))
                 {
                     exist.itemNum += deltaNum;
                     // 注意：如果超出最大堆叠数，需要处理，这里先简化为直接加
@@ -83,20 +74,14 @@ namespace HotUpdate.Game.InventoryModule.Items
                 Logger.LogDebug(ELogTags.Item, $"{nameof(ItemDataCollection)}: Item(id = {itemId}, num = {deltaNum}) added");
             }
         }
-
-        /// <summary>
-        /// 移除物品数据
-        /// </summary>
-        /// <param name="id">可堆叠物品则为物品ID，不可堆叠物品则为实例ID</param>
-        /// <param name="deltaNum">移除数量，不可堆叠的物品忽略该参数，默认移除当前实例</param>
-        /// <param name="isPile">是否可堆叠</param>
-        public void RemoveData(long id, int deltaNum, bool isPile)
+        
+        public void RemoveData(int id, int deltaNum, long? persistentId)
         {
             // 可堆叠物品的删除逻辑
-            if (isPile)
+            if (!persistentId.HasValue)
             {
                 // 找到要移除的物品数据在字典中的索引
-                if(!_stackIndexByItemId.TryGetValue((int)id, out var index))
+                if(!_stackIndexByItemId.TryGetValue(id, out var index))
                     return;
                 
                 // 找到要删除的数据
@@ -126,7 +111,7 @@ namespace HotUpdate.Game.InventoryModule.Items
             else
             {
                 // 找到要移除的物品数据在字典中的索引
-                if(!_indexByInstanceId.TryGetValue(id, out var index))
+                if(!_indexByInstanceId.TryGetValue(persistentId.Value, out var index))
                     return;
                 
                 // 找到要删除的数据
@@ -150,13 +135,7 @@ namespace HotUpdate.Game.InventoryModule.Items
             }
         }
         
-        /// <summary>
-        /// 尝试获取可堆叠物品数据
-        /// </summary>
-        /// <param name="itemId"></param>
-        /// <param name="itemData"></param>
-        /// <returns></returns>
-        public bool TryGetData(int itemId, out ItemData itemData)
+        private bool TryGetStackableData(int itemId, out ItemData itemData)
         {
             if (_stackIndexByItemId.TryGetValue(itemId, out var index))
             {
@@ -169,14 +148,8 @@ namespace HotUpdate.Game.InventoryModule.Items
             itemData = null;
             return false;
         }
-                
-        /// <summary>
-        /// 尝试获取不可堆叠物品数据
-        /// </summary>
-        /// <param name="persistentId"></param>
-        /// <param name="itemData"></param>
-        /// <returns></returns>
-        public bool TryGetInstanceData(long persistentId, out ItemData itemData)
+        
+        private bool TryGetInstanceData(long persistentId, out ItemData itemData)
         {
             if (_indexByInstanceId.TryGetValue(persistentId, out var index))
             {
@@ -188,6 +161,12 @@ namespace HotUpdate.Game.InventoryModule.Items
             }
             itemData = null;
             return false;
+        }
+        
+        public bool TryGetData(int itemId, out ItemData itemData, long? PersistentId = null)
+        {
+            // 先查找不可堆叠物品，再查找可堆叠物品
+            return PersistentId.HasValue ? TryGetInstanceData(PersistentId.Value, out itemData) : TryGetStackableData(itemId, out itemData);
         }
 
         /// <summary>

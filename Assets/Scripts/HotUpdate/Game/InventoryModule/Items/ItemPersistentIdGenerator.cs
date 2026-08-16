@@ -11,7 +11,7 @@ namespace HotUpdate.Game.InventoryModule.Items
         /// <summary>
         /// 默认不可堆叠的物品持久化ID
         /// </summary>
-        public const long DefaultNotStackableId = -1;
+        public static readonly long? DefaultNotStackableId = null;
         
         public ItemPersistentIdGenerator(long initialValue)
         {

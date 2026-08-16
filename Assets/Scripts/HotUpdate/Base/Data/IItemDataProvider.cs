@@ -25,30 +25,23 @@ namespace HotUpdate.Base.Data
         /// </summary>
         /// <param name="id">可堆叠物品则为物品ID，不可堆叠物品则为实例ID</param>
         /// <param name="deltaNum">移除数量，不可堆叠的物品忽略该参数，默认移除当前实例</param>
-        /// <param name="isPile">是否可堆叠</param>
-        void RemoveData(long id, int deltaNum, bool isPile);
-
-        /// <summary>
-        /// 尝试获取可堆叠物品数据
-        /// </summary>
-        /// <param name="itemId"></param>
-        /// <param name="itemData"></param>
-        /// <returns></returns>
-        bool TryGetData(int itemId, out ItemData itemData);
-
-        /// <summary>
-        /// 尝试获取不可堆叠物品数据
-        /// </summary>
-        /// <param name="persistentId"></param>
-        /// <param name="itemData"></param>
-        /// <returns></returns>
-        bool TryGetInstanceData(long persistentId, out ItemData itemData);
-
+        /// <param name="persistentId">若有值，则查找不可堆叠物品；否则查找可堆叠物品</param>
+        void RemoveData(int id, int deltaNum, long? persistentId);
+        
         /// <summary>
         /// 通过物品类型获取所有的物品数据
         /// </summary>
         /// <param name="itemType"></param>
         /// <returns></returns>
         IEnumerable<ItemData> GetItemsByType(EItemType itemType);
+
+        /// <summary>
+        /// 尝试获取物品数据，根据<see cref="PersistentId"/>的状态，进行条件查找。若<see cref="PersistentId"/>有值，则查找不可堆叠物品；否则查找可堆叠物品
+        /// </summary>
+        /// <param name="itemId"></param>
+        /// <param name="itemData">物品数据</param>
+        /// <param name="PersistentId"></param>
+        /// <returns></returns>
+        bool TryGetData(int itemId, out ItemData itemData, long? PersistentId = null);
     }
 }
