@@ -144,7 +144,7 @@ namespace HotUpdate.UI.Battle.Base
         /// <summary>
         /// 当前执行指令格子对象
         /// </summary>
-        public ActionExecuteGrid ActionExecuteGrid { get; private set; }
+        public ActionExecuteGridUI ActionExecuteGridUI { get; private set; }
 
         protected override void Awake()
         {
@@ -155,7 +155,8 @@ namespace HotUpdate.UI.Battle.Base
             PaintingDisplayArea.gameObject.SetActive(false);
 
             ActingTipUI = ActingTipArea.gameObject.AddComponent<ActingTipUI>();
-            ActionExecuteGrid = ActionBarContent.GetComponentInChildren<ActionExecuteGrid>(true);
+            ActionExecuteGridUI = ActionBarContent.GetComponentInChildren<ActionExecuteGridUI>(true);
+            ActionExecuteGridUI.Init(new ActionExecuteGridLogic());
         }
 
         protected override void Start()

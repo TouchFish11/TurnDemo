@@ -6,6 +6,7 @@ using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Log;
 using Core.Mono;
+using Core.Pool;
 using Core.UI;
 using HotUpdate.Base.Service;
 using HotUpdate.Game.Battle.Context;
@@ -43,6 +44,7 @@ namespace HotUpdate.UI.Battle.Base
         [Inject] private IMonoAdapter _monoAdapter;
         [Inject] private IconService _iconService;
         [Inject] private IBattleManager _battleManager;
+        [Inject] private IPoolManager _poolManager;
         
         #region 私有字段
         // 战斗界面视图层引用
@@ -374,13 +376,13 @@ namespace HotUpdate.UI.Battle.Base
                 // 不显示当前执行指令的对象图标
                 if (battleEntity == null)
                 {
-                    _view.ActionExecuteGrid.UpdateGrid(null, null);
+                    _view.ActionExecuteGridUI.UpdateGrid(null, null);
                     return;
                 }
                 
                 // 获取实体对应的图标名称
                 var icon = await GetIconByEntity(battleEntity);
-                _view.ActionExecuteGrid.UpdateGrid(icon, battleEntity);
+                _view.ActionExecuteGridUI.UpdateGrid(icon, battleEntity);
             }
             catch (Exception e)
             {
@@ -404,7 +406,9 @@ namespace HotUpdate.UI.Battle.Base
                     // 加载图标精灵并初始化UI
                     var icon = await GetIconByEntity(displayPendingExecution.BattleEntity);
                     // 初始化UI
-                    waitingActUI.Init(icon, displayPendingExecution.BattleEntity.BattleEntityId);
+                    var logic = _poolManager.GetData<WaitingActLogic>();
+                    logic.Init(waitingActUI, icon, displayPendingExecution.BattleEntity.BattleEntityId);
+                    waitingActUI.Init(logic);
                     // 缓存UI
                     _view.WaitingActUIs.Add(waitingActUI);
                 }
@@ -431,8 +435,8 @@ namespace HotUpdate.UI.Battle.Base
         public async Task InitActionbarContent(IBattleContext context)
         {
             // 特殊格子高度 + 间隙
-            var startY = _view.ActionExecuteGrid.RectTransform.anchoredPosition.y - _view.ActionExecuteGrid.RectTransform.rect.height - 10;
-            var startX = _view.ActionExecuteGrid.RectTransform.anchoredPosition.x;
+            var startY = _view.ActionExecuteGridUI.RectTransform.anchoredPosition.y - _view.ActionExecuteGridUI.RectTransform.rect.height - 10;
+            var startX = _view.ActionExecuteGridUI.RectTransform.anchoredPosition.x;
             
             for (var i = 0; i < context.AllBattleEntity.Count; i++)
             {
@@ -442,7 +446,9 @@ namespace HotUpdate.UI.Battle.Base
                 // 加载图标精灵
                 var icon = await GetIconByEntity(battleEntity);
                 // 初始化行动格子UI：计算差值作为剩余行动值
-                actionGridUI.Init(icon, startX, startY, i, battleEntity);
+                var logic = _poolManager.GetData<ActionGridLogic>();
+                logic.Init(actionGridUI, icon, startX, startY, i, battleEntity);
+                actionGridUI.Init(logic);
                 // 设置行动值
                 actionGridUI.SetActionValue(CalcRemainActionValue(context, battleEntity.ActionValue));
                 _view.ActionGridUis.Add(actionGridUI);
@@ -458,8 +464,8 @@ namespace HotUpdate.UI.Battle.Base
                 var displayEntities = new List<IBattleEntityObject>(context.AllBattleEntity);
                 
                 // 特殊格子高度 + 间隙
-                var startY = _view.ActionExecuteGrid.RectTransform.anchoredPosition.y - _view.ActionExecuteGrid.RectTransform.rect.height - 10;
-                var startX = _view.ActionExecuteGrid.RectTransform.anchoredPosition.x;
+                var startY = _view.ActionExecuteGridUI.RectTransform.anchoredPosition.y - _view.ActionExecuteGridUI.RectTransform.rect.height - 10;
+                var startX = _view.ActionExecuteGridUI.RectTransform.anchoredPosition.x;
                 var girds = _view.ActionGridUis;
                 
                 for (var i = displayEntities.Count - 1; i >= 0; i--)
@@ -482,7 +488,9 @@ namespace HotUpdate.UI.Battle.Base
                         // 加载图标精灵
                         var icon = await GetIconByEntity(battleEntityObject);
                         // 初始化行动格子UI：计算差值作为剩余行动值
-                        actionGridUI.Init(icon, startX, startY, i, battleEntityObject);
+                        var logic = _poolManager.GetData<ActionGridLogic>();
+                        logic.Init(actionGridUI, icon, startX, startY, i, battleEntityObject);
+                        actionGridUI.Init(logic);
                         // 设置行动值
                         actionGridUI.SetActionValue(CalcRemainActionValue(context, battleEntityObject.ActionValue));
                         girds.Add(actionGridUI);
@@ -534,7 +542,7 @@ namespace HotUpdate.UI.Battle.Base
                         if (!actionGrid.IsSelect)
                         {
                             actionGrid.CheckSelect(battleEntity);
-                            _view.ActionExecuteGrid.CheckSelect(battleEntity);
+                            _view.ActionExecuteGridUI.CheckSelect(battleEntity);
                         }
                     }
                 }
@@ -542,7 +550,7 @@ namespace HotUpdate.UI.Battle.Base
             // 单目标选中：高亮匹配的格子
             else if (selectedTargets.Count == 1)
             {
-                if (_view.ActionExecuteGrid.CheckSelect(selectedTargets[0]))
+                if (_view.ActionExecuteGridUI.CheckSelect(selectedTargets[0]))
                 {
                     return;
                 }

@@ -1,64 +1,40 @@
 using Core.DI;
 using Core.Mono;
+using Core.Pool;
+using Core.Time;
 using Core.UI;
 using HotUpdate.Game.Battle.Object;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace HotUpdate.UI.Battle.ActionLine
 {
-    /// <summary>
-    /// 行动执行格子
-    /// </summary>
-    public class ActionExecuteGrid : UIBehaviourBase
+    public class ActionExecuteGridLogic : IUILogic<ActionExecuteGridUI, ActionExecuteGridLogic>, IPoolData
     {
-        // 行动格子的图标图片
-        [InjectUI] private Image imgIcon;
+        [Inject] private IMonoAdapter _monoAdapter;
+        [Inject] private IPoolManager _poolManager;
         
-        // 闪烁动画的速度
-        [SerializeField] private float falshSpeed = 1.5f;
-        
-        // 闪烁特效的根节点
-        [InjectUI(1)] private RectTransform Flashing { get; set; }
-        
-        // 闪烁特效下的所有图片组件
-        private Image[] images;
         // 闪烁图片当前的透明度
-        private float currentAlpha = 1f;
+        public float currentAlpha = 1f;
         // 闪烁动画的计时变量
-        private float time;
+        public float time;
+        
+        public ActionExecuteGridUI View { get; private set; }
+        
+        /// <summary>
+        /// 当前格子是否处于选中状态
+        /// </summary>
+        public bool IsSelect { get; private set; }
         
         /// <summary>
         /// 绑定的战斗实体对象
         /// </summary>
         public IBattleEntityObject BattleEntity { get; private set; }
         
-        /// <summary>
-        /// 只读属性：当前格子是否处于选中状态
-        /// </summary>
-        public bool IsSelect { get; private set; }
-        
-        public RectTransform RectTransform => transform as RectTransform;
-        
-        protected override void Awake()
+        public void OnEnable()
         {
-            base.Awake();
-            
-            // 初始状态隐藏闪烁特效
-            images = Flashing.GetComponentsInChildren<Image>();
-            Flashing.gameObject.SetActive(false);
-            imgIcon.color = new Color(imgIcon.color.r, imgIcon.color.g, imgIcon.color.b, 0);
+            _monoAdapter.AddUpdateListener(OnUpdate);
         }
         
-        /// <summary>
-        /// 组件启用时调用（生命周期）
-        /// 注册帧更新监听，用于处理动画逻辑
-        /// </summary>
-        protected override void OnEnable()
-        {
-            DIContainer.GetInstance<IMonoAdapter>().AddUpdateListener(OnUpdate);
-        }
-
         /// <summary>
         /// 初始化UI数据
         /// </summary>
@@ -67,9 +43,9 @@ namespace HotUpdate.UI.Battle.ActionLine
         public void UpdateGrid(Sprite icon, IBattleEntityObject battleEntity)
         {
             BattleEntity = battleEntity;
-            imgIcon.sprite = icon;
+            View.imgIcon.sprite = icon;
             var alpha = icon ? 1f : 0f;
-            imgIcon.color = new Color(imgIcon.color.r, imgIcon.color.g, imgIcon.color.b, alpha);
+            View.imgIcon.color = new Color(View.imgIcon.color.r, View.imgIcon.color.g, View.imgIcon.color.b, alpha);
         }
         
         /// <summary>
@@ -92,9 +68,9 @@ namespace HotUpdate.UI.Battle.ActionLine
         private void SetFlashing()
         {
             time = 0;
-            Flashing.gameObject.SetActive(IsSelect);
+            View.Flashing.gameObject.SetActive(IsSelect);
             // 重置所有闪烁图片的颜色为白色（初始状态）
-            foreach (var image in images)
+            foreach (var image in View.Images)
             {
                 image.color = Color.white;
             }
@@ -111,12 +87,12 @@ namespace HotUpdate.UI.Battle.ActionLine
             }
             
             // 闪烁特效透明度计算（PingPong实现0-1之间的往复变化）
-            time += Time.deltaTime * falshSpeed;
+            time += TimeUtil.DeltaTime * View.falshSpeed;
             currentAlpha = 1 - Mathf.PingPong(time, 1f);
 
             // 应用透明度到所有闪烁图片
             var color = new Color(1, 1, 1, currentAlpha);
-            foreach (var image in images)
+            foreach (var image in View.Images)
             {
                 image.color = color;
             }
@@ -131,13 +107,19 @@ namespace HotUpdate.UI.Battle.ActionLine
             FlashAnim();
         }
         
-        /// <summary>
-        /// 组件禁用时调用（生命周期）
-        /// 移除帧更新监听，避免无效计算
-        /// </summary>
-        protected override void OnDisable()
+        public void OnDisable()
         {
-            DIContainer.GetInstance<IMonoAdapter>().RemoveUpdateListener(OnUpdate);
+            _monoAdapter.RemoveUpdateListener(OnUpdate);
+        }
+        
+        public void Dispose()
+        {
+            _poolManager.PushData(this);
+        }
+
+        void IPoolData.ResetData()
+        {
+            
         }
     }
 }
