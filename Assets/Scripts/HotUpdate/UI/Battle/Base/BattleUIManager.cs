@@ -185,11 +185,11 @@ namespace HotUpdate.UI.Battle.Base
                     damageResult.Target.GameObject.transform.position + dmgTextOffset))
             {
                 // 初始化伤害文本（元素颜色、伤害类型文本、最终伤害值）
-                damageTextUI.InitDamageText(((int)damageResult.ElementType).ToElementTypeColor(), 
+                var logic = _poolManager.GetData<DamageTextLogic>();
+                logic.OnDurationOver += dmgUI => _objectSpawner.Release(dmgUI);
+                logic.InitDamageText(((int)damageResult.ElementType).ToElementTypeColor(), 
                     GetDamgeTypeText(damageResult), 
-                    damageResult.FinalDamage, _monoAdapter);
-                
-                damageTextUI.OnDurationOver += dmgUI => _objectSpawner.Release(dmgUI);
+                    damageResult.FinalDamage);
             }
             
             // 更新累计伤害UI
@@ -227,8 +227,9 @@ namespace HotUpdate.UI.Battle.Base
                         target.SubGameObject.transform.position + dmgTextOffset))
                 {
                     // 初始化护盾文本
-                    shieldTextUI.InitshieldText(sheilAmount, _monoAdapter);
-                    shieldTextUI.OnDurationOver += shieldTextUI => _objectSpawner.Release(shieldTextUI);
+                    var logic = _poolManager.GetData<ShieldTextLogic>();
+                    logic.OnDurationOver += shieldTextUI => _objectSpawner.Release(shieldTextUI);
+                    logic.InitshieldText(sheilAmount);
                 }
             }
             catch (Exception e)
@@ -266,8 +267,9 @@ namespace HotUpdate.UI.Battle.Base
                     target.GameObject.transform.position + dmgTextOffset))
             {
                 // 初始化治疗文本
-                healTextUI.InitHealText(healAmount, _monoAdapter);
-                healTextUI.OnDurationOver += healUI => _objectSpawner.Release(healUI);
+                var logic = _poolManager.GetData<HealTextLogic>();
+                logic.OnDurationOver += healUI => _objectSpawner.Release(healUI);
+                logic.InitHealText(healAmount);
             }
         }
         
