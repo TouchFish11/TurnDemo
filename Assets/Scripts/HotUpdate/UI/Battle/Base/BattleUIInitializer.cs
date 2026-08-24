@@ -4,6 +4,7 @@ using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Log;
 using Core.Mono;
+using Core.Pool;
 using Core.Serialize.Binary;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Property;
@@ -23,6 +24,7 @@ namespace HotUpdate.UI.Battle.Base
         [Inject] private ObjectSpawner _objectSpawner;
         [Inject] private IBinaryDataManager _binaryDataManager;
         [Inject] private IMonoAdapter _monoAdapter;
+        [Inject] private IPoolManager _poolManager;
         
         // 战斗视图接口，用于获取UI挂载节点等视图相关信息
         private BattleView _view;
@@ -52,7 +54,7 @@ namespace HotUpdate.UI.Battle.Base
             foreach (var battleEntity in battleEntities)
             {
                 // 从资源包加载角色状态UI预制体，并挂载到玩家UI区域
-                var roleStateUI = await _objectSpawner.SpawnAsync<RoleStateUI>(AssetKeys.RoleStateUI, _view.PlayerArea);
+                var roleStateUI = await _objectSpawner.SpawnAsync<RoleStateBar>(AssetKeys.RoleStateUI, _view.PlayerArea);
 
                 // 获取当前实体的技能组件，用于查找必杀技
                 var skillComponent = battleEntity.GetComponent<ISkillComponent>();
@@ -82,9 +84,9 @@ namespace HotUpdate.UI.Battle.Base
                 var playerPropertyComponent = battleEntity.GetComponent<PlayerPropertyComponent>();
                 // 获取角色核心属性数据
                 var roleProperty = playerPropertyComponent.GetProperty<RoleProperty>();
-                
-                // 初始化角色状态UI（传入属性、图标、必杀技ID、战斗实体）
-                roleStateUI.Init(roleProperty, icon, targetSkillId, battleEntity, _monoAdapter);
+                var logic = _poolManager.GetData<RoleStateBarLogic>();
+                logic.Init(roleStateUI, roleProperty, icon, targetSkillId, battleEntity);
+                roleStateUI.Init(logic);
                 // 将初始化后的角色状态UI缓存到数据模型中
                 _view.RoleStateUIs.Add(roleStateUI);
             }

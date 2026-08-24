@@ -1,8 +1,8 @@
-using System.Collections.Generic;
 using System.Linq;
 using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Mono;
+using Core.Pool;
 using Core.Serialize.Binary;
 using Core.UI;
 using HotUpdate.Game.Battle.Context;
@@ -15,98 +15,78 @@ using HotUpdate.Game.Battle.Skill.Component;
 using HotUpdate.Game.Battle.Statuses;
 using HotUpdate.Game.Battle.Utility;
 using HotUpdate.UI.Battle.Status;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace HotUpdate.UI.Battle.Role
 {
-    /// <summary>
-    /// 角色状态UI组件
-    /// 负责显示单个角色的血量、能量、护盾、状态图标等信息
-    /// </summary>
-    public class RoleStateUI : UIBehaviourBase
+    public class RoleStateBarLogic : IUILogic<RoleStateBar, RoleStateBarLogic>, IPoolData
     {
         [Inject] private ObjectSpawner _objectSpawner;
+        [Inject] private IMonoAdapter _monoAdapter;
+        [Inject] private IPoolManager _poolManager;
         
-        // UI控件引用
-        [InjectUI] private Image imgIcon;              // 角色图标
-        [InjectUI] private Image imgFade;              // 血量渐变填充条（用于血量减少时的延迟效果）
-        [InjectUI] private Image imgHp;                // 当前血量填充条
-        [InjectUI] private Image imgEnergy;            // 能量填充条
-        [InjectUI] private Image imgShield;            // 护盾填充条
-        [InjectUI] private ScrollRect svBuffBox;       // 状态图标的滚动容器
-        [InjectUI] private TextMeshProUGUI txtBlood;   // 血量数值文本
-
-        private IMonoAdapter _monoAdapter;
-        // 血量渐变速度
-        private const float fadeSpeed = 1f;
-        // 护盾相关变量
-        private int currentShield;  // 当前护盾值
-        // 能量条透明度
-        private const float nonFullAhpha = 0.35f;  // 能量未满时的透明度
         // 终极技能ID
         private int ultimateSkillId;    
         // 角色相关
         private IBattleContext battleContext;  // 战斗上下文接口
         private IBattleEntityObject battleEntity;  // 战斗实体对象
-        // 状态UI列表
-        private readonly List<StatusGridUI> statusGridUIs = new();
-
+        // 护盾相关变量
+        public int currentShield;  // 当前护盾值
+        
+        public RoleStateBar View { get; private set; }
+        
         /// <summary>
         /// 当前UI绑定的角色ID
         /// </summary>
         public int RoleId { get; private set; }
+    
+        public void OnEnable()
+        {
+
+        }
+
 
         /// <summary>
         /// 初始化角色状态UI
         /// </summary>
+        /// <param name="roleStateBar"></param>
         /// <param name="playerProperty">角色属性</param>
         /// <param name="icon">角色图标</param>
         /// <param name="ultimateSkillId">终极技能ID</param>
         /// <param name="battleEntity">战斗实体对象</param>
-        /// <param name="monoAdapter"></param>
-        public void Init(RoleProperty playerProperty, Sprite icon, int ultimateSkillId, IBattleEntityObject battleEntity, 
-            IMonoAdapter monoAdapter)
+        public void Init(RoleStateBar roleStateBar, RoleProperty playerProperty, Sprite icon, int ultimateSkillId, IBattleEntityObject battleEntity)
         {
-            _monoAdapter = monoAdapter;
+            View = roleStateBar;
             this.battleEntity = battleEntity;
             // 记录终极技能ID
             this.ultimateSkillId = ultimateSkillId;
             // 记录角色ID
             RoleId = playerProperty.BattleId;
-
             // 获取角色配置信息
             var roleInfo = DIContainer.GetInstance<IBinaryDataManager>().GetConfig<RoleInfoContainer>(EConfigLoadType.Excel).dataDic[playerProperty.BattleId];
-            
             // 设置角色图标
-            imgIcon.sprite = icon;
-            
+            View.imgIcon.sprite = icon;
             // 获取属性组件
             var propertyComponent = this.battleEntity.GetComponent<PropertyComponent>();
 
             // 初始化血量显示
-            imgHp.fillAmount = imgFade.fillAmount = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentHp) / (float)propertyComponent.GetPropertyValue(E_DynamicPropertyType.MaxHp);
-            txtBlood.text = $"{propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentHp)}/{(float)propertyComponent.GetPropertyValue(E_DynamicPropertyType.MaxHp)}";
+            View.imgHp.fillAmount = View.imgFade.fillAmount = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentHp) / (float)propertyComponent.GetPropertyValue(E_DynamicPropertyType.MaxHp);
+            View.txtBlood.text = $"{propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentHp)}/{(float)propertyComponent.GetPropertyValue(E_DynamicPropertyType.MaxHp)}";
 
             // 初始化能量显示
-            imgEnergy.color = roleInfo.f_elementType.ToElementTypeColor();  // 根据元素类型设置颜色
+            View.imgEnergy.color = roleInfo.f_elementType.ToElementTypeColor();  // 根据元素类型设置颜色
             var currentEnergy = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentEnergy);
             var baseEnergy = propertyComponent.GetPropertyValue(E_DynamicPropertyType.BaseEnergy);
-            imgEnergy.fillAmount = currentEnergy / (float)baseEnergy;
+            View.imgEnergy.fillAmount = currentEnergy / (float)baseEnergy;
             // 根据能量是否已满设置透明度
-            imgEnergy.color = new Color(imgEnergy.color.r, imgEnergy.color.g, imgEnergy.color.b, currentEnergy == baseEnergy ? 1 : nonFullAhpha);
-
+            View.imgEnergy.color = new Color(View.imgEnergy.color.r, View.imgEnergy.color.g, View.imgEnergy.color.b, currentEnergy == baseEnergy ? 1 : View.nonFullAhpha);
             // 更新状态图标列表
             UpdateStatus();
-
             // 初始化护盾显示
             currentShield = 0;
             UpdateShield(currentShield);
-            
             // 注册Update监听，用于每帧更新渐变效果
             _monoAdapter.AddUpdateListener(OnUpdate);
-            
             // 获取战斗上下文并注册事件监听
             battleContext = battleEntity.Context;
             battleContext.EventBus.AddListener<HpChangedEvent>(OnHpChanged);
@@ -128,8 +108,8 @@ namespace HotUpdate.UI.Battle.Role
             }
             
             // 更新血量显示
-            imgHp.fillAmount = onHpChangedEvent.CurrentHp / (float)onHpChangedEvent.MaxHp;
-            txtBlood.text = $"{onHpChangedEvent.CurrentHp}/{onHpChangedEvent.MaxHp}";
+            View.imgHp.fillAmount = onHpChangedEvent.CurrentHp / (float)onHpChangedEvent.MaxHp;
+            View.txtBlood.text = $"{onHpChangedEvent.CurrentHp}/{onHpChangedEvent.MaxHp}";
         }
 
         /// <summary>
@@ -145,9 +125,9 @@ namespace HotUpdate.UI.Battle.Role
             }
             
             // 更新能量显示
-            imgEnergy.fillAmount = energyChangedEvent.CurrentEnergy / (float)energyChangedEvent.MaxEnergy;
+            View.imgEnergy.fillAmount = energyChangedEvent.CurrentEnergy / (float)energyChangedEvent.MaxEnergy;
             // 根据能量是否已满设置透明度
-            imgEnergy.color = new Color(imgEnergy.color.r, imgEnergy.color.g, imgEnergy.color.b, energyChangedEvent.CurrentEnergy == energyChangedEvent.MaxEnergy ? 1 : nonFullAhpha);
+            View.imgEnergy.color = new Color(View.imgEnergy.color.r, View.imgEnergy.color.g, View.imgEnergy.color.b, energyChangedEvent.CurrentEnergy == energyChangedEvent.MaxEnergy ? 1 : View.nonFullAhpha);
             
             // 能量满时重置终极技能触发标志
             if (energyChangedEvent.CurrentEnergy == energyChangedEvent.MaxEnergy)
@@ -181,7 +161,7 @@ namespace HotUpdate.UI.Battle.Role
             // 已当前角色最大生命作为护盾的基准值
             var referenceShield = battleEntity.GetComponent<PropertyComponent>()
                 .GetPropertyValue(E_DynamicPropertyType.MaxHp);
-            imgShield.fillAmount = currentShield / (float)referenceShield;
+            View.imgShield.fillAmount = currentShield / (float)referenceShield;
         }
 
         /// <summary>
@@ -220,13 +200,13 @@ namespace HotUpdate.UI.Battle.Role
         private async void OnConflict_Add(IStatus status)
         {
             // 判断是否已存在相同ID的状态
-            var hasStatus = statusGridUIs.Any(s => s.GetStatusId() == status.StatusProperty.StatusInfo.f_id);
+            var hasStatus = View.StatusGrids.Any(s => s.GetStatusId() == status.StatusProperty.StatusInfo.f_id);
             if (!hasStatus)
             {
                 // 创建新的状态图标
-                var statusGridUI = await _objectSpawner.SpawnAsync<StatusGridUI>(AssetKeys.StatusGridUI, svBuffBox.content);
+                var statusGridUI = await _objectSpawner.SpawnAsync<StatusGridUI>(AssetKeys.StatusGridUI, View.svBuffBox.content);
                 statusGridUI.Init(status, _monoAdapter);
-                statusGridUIs.Add(statusGridUI);
+                View.StatusGrids.Add(statusGridUI);
             }
         }
 
@@ -237,9 +217,9 @@ namespace HotUpdate.UI.Battle.Role
         private async void OnConflict_Lonel(IStatus newStatus)
         {
             // 直接创建新的状态图标（独占类型总是创建新的）
-            var statusGridUI = await _objectSpawner.SpawnAsync<StatusGridUI>(AssetKeys.StatusGridUI, svBuffBox.content);
+            var statusGridUI = await _objectSpawner.SpawnAsync<StatusGridUI>(AssetKeys.StatusGridUI, View.svBuffBox.content);
             statusGridUI.Init(newStatus, _monoAdapter);
-            statusGridUIs.Add(statusGridUI);
+            View.StatusGrids.Add(statusGridUI);
         }
 
         /// <summary>
@@ -249,19 +229,19 @@ namespace HotUpdate.UI.Battle.Role
         private async void OnConflict_Cover(IStatus newStatus)
         {
             // 查找已存在的相同ID状态
-            var index = statusGridUIs.FindIndex(s => s.GetStatusId() == newStatus.StatusProperty.StatusInfo.f_id);
+            var index = View.StatusGrids.FindIndex(s => s.GetStatusId() == newStatus.StatusProperty.StatusInfo.f_id);
             if (index != -1)
             {
-                var statusGrid = statusGridUIs[index];
+                var statusGrid = View.StatusGrids[index];
                 // 将旧状态图标回收到对象池
                 _objectSpawner.Release(statusGrid);
-                statusGridUIs.RemoveAt(index);
+                View.StatusGrids.RemoveAt(index);
             }
             
             // 创建新的状态图标
-            var statusGridUI = await _objectSpawner.SpawnAsync<StatusGridUI>(AssetKeys.StatusGridUI, svBuffBox.content);
+            var statusGridUI = await _objectSpawner.SpawnAsync<StatusGridUI>(AssetKeys.StatusGridUI, View.svBuffBox.content);
             statusGridUI.Init(newStatus, _monoAdapter);
-            statusGridUIs.Add(statusGridUI);
+            View.StatusGrids.Add(statusGridUI);
         }
 
         /// <summary>
@@ -271,30 +251,21 @@ namespace HotUpdate.UI.Battle.Role
         public void UpdateStatus()
         {
             // 从后向前遍历，避免删除时索引问题
-            for (var i = statusGridUIs.Count - 1; i >= 0; i--)
+            for (var i = View.StatusGrids.Count - 1; i >= 0; i--)
             {
-                if (statusGridUIs[i].IsValid) 
+                if (View.StatusGrids[i].IsValid) 
                     continue;
                 // 移除已失效的状态图标
-                _objectSpawner.Release(statusGridUIs[i]);
-                statusGridUIs.RemoveAt(i);
+                _objectSpawner.Release(View.StatusGrids[i]);
+                View.StatusGrids.RemoveAt(i);
             }
         }
 
-        /// <summary>
-        /// 按钮点击事件处理
-        /// </summary>
-        /// <param name="btnName">按钮名称</param>
-        protected override void OnButtonClick(string btnName)
+        public void TriggerUltimate()
         {
-            switch (btnName)
+            if (!battleEntity.GetComponent<PlayerSkillComponent>().IsTrigger)
             {
-                case "btnSkill":
-                    if (!battleEntity.GetComponent<PlayerSkillComponent>().IsTrigger)
-                    {
-                        battleContext.EventBus.TriggerEvent(new RoleTriggerSkillEvent(battleContext, ultimateSkillId, battleEntity));
-                    }
-                    break;
+                battleContext.EventBus.TriggerEvent(new RoleTriggerSkillEvent(battleContext, ultimateSkillId, battleEntity));
             }
         }
 
@@ -312,19 +283,20 @@ namespace HotUpdate.UI.Battle.Role
         /// </summary>
         private void FadeBlood()
         {
-            if (imgFade.fillAmount > imgHp.fillAmount)
+            if (View.imgFade.fillAmount > View.imgHp.fillAmount)
             {
                 // 渐变减少
-                imgFade.fillAmount -= Time.deltaTime * fadeSpeed;
+                View.imgFade.fillAmount -= Time.deltaTime * View.fadeSpeed;
                 // 防止过度减少
-                if (imgFade.fillAmount < imgHp.fillAmount)
+                if (View.imgFade.fillAmount < View.imgHp.fillAmount)
                 {
-                    imgFade.fillAmount = imgHp.fillAmount;
+                    View.imgFade.fillAmount = View.imgHp.fillAmount;
                 }
             }
         }
 
-        protected override void OnDisable()
+        
+        public void OnDisable()
         {
             // 移除Update监听
             _monoAdapter.RemoveUpdateListener(OnUpdate);
@@ -332,6 +304,16 @@ namespace HotUpdate.UI.Battle.Role
             battleContext.EventBus.RemoveListener<ShieldChangedEvent>(OnShieldChanged);
             battleContext.EventBus.RemoveListener<EnergyChangedEvent>(OnEnergyChangedEvent);
             battleContext.EventBus.RemoveListener<StatusAddedEvent>(OnStatusAddedEvent);
+        }
+    
+        public void Dispose()
+        {
+            _poolManager.PushData(this);
+        }
+
+        public void ResetData()
+        {
+            
         }
     }
 }

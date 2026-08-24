@@ -11,11 +11,5 @@ namespace Core.Tasks
         {
             result = ((AssetBundleCreateRequest)_operation).assetBundle;
         }
-
-        protected override void OnResetData()
-        {
-            result.Unload(true);
-            base.OnResetData();
-        }
     }
 }

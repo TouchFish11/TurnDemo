@@ -91,7 +91,7 @@ namespace HotUpdate.UI.Battle.Base
         /// <summary>
         /// 角色状态UI列表
         /// </summary>
-        public List<RoleStateUI> RoleStateUIs { get; } = new();
+        public List<RoleStateBar> RoleStateUIs { get; } = new();
         
         /// <summary>
         /// 战技点UI列表

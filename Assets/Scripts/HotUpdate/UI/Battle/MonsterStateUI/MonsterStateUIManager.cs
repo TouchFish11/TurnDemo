@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Mono;
+using Core.Pool;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.UI;
 using UnityEngine;
@@ -17,9 +18,10 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
     {
         [Inject] private ObjectSpawner _objectSpawner;
         [Inject] private IMonoAdapter _monoAdapter;
+        [Inject] private IPoolManager _poolManager;
         
         // 怪物实体到怪物血量UI的映射
-        private readonly Dictionary<IBattleEntityObject, NormalMonsterStateUI> normalMonsterStateUIs = new();
+        private readonly Dictionary<IBattleEntityObject, MonsterStatusBar> normalMonsterStateUIs = new();
 
         /// <summary>
         /// 缓存怪物UI
@@ -29,10 +31,12 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
         public async Task CreateNormalMonsterStateUI(IBattleEntityObject monsterObject, RectTransform monsterStateArea)
         {
             // 从资源包加载怪物状态UI预制体，并挂载到怪物UI区域
-            var monsterStateUI = await _objectSpawner.SpawnAsync<NormalMonsterStateUI>(AssetKeys.MonsterStateUI, monsterStateArea);
-            // 初始化怪物状态UI（传入战斗实体、UI挂载区域）
-            await monsterStateUI.Init(monsterObject, monsterStateArea, _monoAdapter);
-            normalMonsterStateUIs.Add(monsterObject, monsterStateUI);
+            var monsterStatusBar = await _objectSpawner.SpawnAsync<MonsterStatusBar>(AssetKeys.MonsterStateUI, monsterStateArea);
+            var logic = _poolManager.GetData<MonsterStatusBarLogic>();
+            await logic.Init(monsterStatusBar, monsterObject, monsterStateArea);
+            // 初始化怪物状态UI
+            monsterStatusBar.Init(logic);
+            normalMonsterStateUIs.Add(monsterObject, monsterStatusBar);
         }
 
         /// <summary>
