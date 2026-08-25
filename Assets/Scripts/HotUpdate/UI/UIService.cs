@@ -31,8 +31,14 @@ namespace HotUpdate.UI
     {
         [Inject] private IUIManager _uiManager;
         
-        public async Task<IuiController> OpenAsync(EUIPanelId panelId, E_UILayer layer, Vector2 pos = default, Quaternion quaternion = default)
+        public async Task<IuiController> OpenAsync(EUIPanelId panelId, E_UILayer layer, Vector2 pos = default,
+            Quaternion quaternion = default, bool hideMain = false)
         {
+            if (hideMain)
+            {
+                await CloseAsync(GetPanel(EUIPanelId.MainPanel).PanelId, false);
+            }
+            
             IuiController controller = null;
             switch (panelId)
             {
@@ -48,7 +54,7 @@ namespace HotUpdate.UI
                     controller = await _uiManager.CreateViewAsync<ActivityView, ActivityController>(AssetKeys.ActivityView, layer);
                     break;
                 case EUIPanelId.QuestPanel:
-                    controller = await _uiManager.CreateViewAsync<TaskView, QuestController>(AssetKeys.QuestView, layer);
+                    controller = await _uiManager.CreateViewAsync<QuestView, QuestController>(AssetKeys.QuestView, layer);
                     break;
                 case EUIPanelId.DialoguePanel:
                     controller = await _uiManager.CreateViewAsync<DialogueView, DialogueController>(AssetKeys.DialogueView, layer);
@@ -85,11 +91,16 @@ namespace HotUpdate.UI
         {
             await _uiManager.SetViewActive(panelId, true);
         }
-        
-        public Task CloseAsync(int panelId, bool isDestroy)
+
+        public async Task CloseAsync(int panelId, bool isDestroy, bool backMain = false)
         {
             Logger.LogDebug(ELogTags.UI, $"Close {_uiManager.GetPanelTypeName(panelId)} panel id={panelId}, isDestroy={isDestroy}");
-            return isDestroy ? _uiManager.DestroyView(panelId) : _uiManager.SetViewActive(panelId, false);
+            await (isDestroy ? _uiManager.DestroyView(panelId) : _uiManager.SetViewActive(panelId, false));
+            
+            if (backMain)
+            {
+                await ShowAsync(GetPanel(EUIPanelId.MainPanel).PanelId);
+            }
         }
 
         public IuiController GetPanel(EUIPanelId panelId)

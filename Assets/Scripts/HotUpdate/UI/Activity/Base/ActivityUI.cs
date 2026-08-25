@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Core.Log;
 using Core.UI;
 using TMPro;
@@ -19,7 +20,7 @@ namespace HotUpdate.UI.Activity.Base
         
         private int _activityId;
         
-        public event Action<int> OnSelect;
+        public event Func<int, Task> OnSelect;
 
         /// <summary>
         /// 初始化
@@ -38,18 +39,24 @@ namespace HotUpdate.UI.Activity.Base
         /// <summary>
         /// 选中活动
         /// </summary>
-        public void SelectActivity()
+        public async Task SelectActivity()
         {
+            await TriggerSelectEvent();
             togActivity.isOn = true;
         }
 
-        protected override void OnToggleValueChanged(string togName, bool isOn)
+        private Task TriggerSelectEvent()
+        {
+            return OnSelect != null ? OnSelect?.Invoke(_activityId) : Task.CompletedTask;
+        }
+
+        protected override async void OnToggleValueChanged(string togName, bool isOn)
         {
             try
             {
                 if (isOn)
                 {
-                    OnSelect?.Invoke(_activityId);
+                    await TriggerSelectEvent();
                 }
             }
             catch (Exception exception)

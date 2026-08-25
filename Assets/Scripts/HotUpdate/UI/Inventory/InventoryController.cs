@@ -92,8 +92,6 @@ namespace HotUpdate.UI.Inventory
         protected override async Task OnInactivate()
         {
             await TransitionTo(null);
-            // 显示主界面
-            await _uiService.ShowAsync(_uiService.GetPanel(EUIPanelId.MainPanel).PanelId);
         }
         
         public void InitGridGenerator()
@@ -322,7 +320,7 @@ namespace HotUpdate.UI.Inventory
                 {
                     await ExitDeleteState();
                     // 关闭背包界面
-                    await uiManager.DestroyView(panelId);
+                    await _uiService.CloseAsync(panelId, true, true);
                     Logger.LogDebug(ELogTags.Item, $"{view.name} closed");
                 }
                 else if (btnName == nameof(view.btnRequestDelete))

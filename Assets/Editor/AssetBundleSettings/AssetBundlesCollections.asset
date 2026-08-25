@@ -182,9 +182,9 @@ MonoBehaviour:
       hash: dc0b20db005d6c93f6bea3632549448c5d4c58b97f4eaf3b8131f9f6b37a9bf2
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Default\UI\BeginView.prefab
-      size: 45134
+      size: 45136
       name: BeginView.prefab
-      hash: ba4f8135c702af0280cd3f46d9d8302d477f0c52e7d0dcc09a1dbdfb084008c1
+      hash: 3686eb8393422d0facbdf63579135d58090c3c5a22933e1f524e92582cda6033
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Default\UI\UIRoot.prefab
       size: 13379
@@ -488,9 +488,9 @@ MonoBehaviour:
   - assetBundleName: scene
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\Scene\BeginScene.unity
-      size: 56694
+      size: 27297
       name: BeginScene.unity
-      hash: 28bc2786e3e1954c8ebf60df18865c4376923d4491eca4c4758a3ce85144aa67
+      hash: 7bfb819cf4ef4dfb2ec31268657fe548b9c0e8cb47e5a5b88673b4e1f122f5b2
       assetType: 1
     - assetPath: Assets\Editor\ArtRes\Scene\LevelScene.unity
       size: 117066
@@ -572,9 +572,9 @@ MonoBehaviour:
   - assetBundleName: tmp_asset
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\TMP_Asset\MSYH_SDF.asset
-      size: 8472021
+      size: 8512302
       name: MSYH_SDF.asset
-      hash: 3487192417328adf0650a65cfc8b2d3d772f6bdf1993dab93748e97b127eea17
+      hash: aee77a5aef90a1510be5870137dd325627096956dbfbefa607f87f4147777669
       assetType: 0
   - assetBundleName: ui
     assetInfos:
@@ -728,15 +728,20 @@ MonoBehaviour:
       name: SkillKeyUI.prefab
       hash: 62744b8485890b6c51524e30675a2dae8f0920a261fa2305746c86c0ff716c08
       assetType: 0
+    - assetPath: Assets\Editor\ArtRes\UI\Dialogue\BranchReviewUI.prefab
+      size: 6187
+      name: BranchReviewUI.prefab
+      hash: 2eb4f06c0a2ff40523424d5ca8e8fc9427fe8013e8ae17eae0943bfbd536431d
+      assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Dialogue\DialogueOptUI.prefab
       size: 17107
       name: DialogueOptUI.prefab
       hash: 6e2bd625e796a1f6595f0160065d7c97cc8ffc2866c357ff5d0fdef96a766c8f
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Dialogue\DialogueReviewUI.prefab
-      size: 5770
+      size: 14061
       name: DialogueReviewUI.prefab
-      hash: 3453203f2d6a2bd2d2f5110b0703e259808395fd5ee5b920c8402004947cd585
+      hash: bf4dd6fb2a85635e9363cb0c9e68214514f473c01f9b77a8eb95f01e83db0c16
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Dialogue\DialogueView.prefab
       size: 71264
@@ -744,9 +749,9 @@ MonoBehaviour:
       hash: 3ef9adb11fdaa36645db24354615acb363f3eef1570316562d7c96d67c31514a
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Dialogue\StoryReviewSubView.prefab
-      size: 29487
+      size: 29488
       name: StoryReviewSubView.prefab
-      hash: e2bf23b14ce1ea3a91ecc4fa8473bd49b5aeb4318933af38049c3c7be892a8b5
+      hash: 6146efe4e14df5e5fdb7253a2219cc90ddd131d2a39d637d7e64ff5267b90fbd
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Global\GlobalMessageView.prefab
       size: 9868
@@ -814,9 +819,9 @@ MonoBehaviour:
       hash: 0e46d255fc99efa1029175449a883e4d1bd54af0d06182db5b8dd9a25db58629
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Quest\QuestItem.prefab
-      size: 13633
+      size: 13631
       name: QuestItem.prefab
-      hash: a39ef95094e5762c185ea39ec785ec187bbf2d23951f220281c44e812c4cf344
+      hash: 3d644d6a9621f27c3bb62706af46a16d10017237504b7307c6d037114480afae
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Quest\QuestTypeContainer.prefab
       size: 12044

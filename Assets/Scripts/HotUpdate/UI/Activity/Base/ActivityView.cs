@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Core.AssetBundles.Management;
 using Core.UI;
 using Core.UI.ViewController;
 using UnityEngine;
@@ -18,14 +17,15 @@ namespace HotUpdate.UI.Activity.Base
         
         [InjectUI(1)] public RectTransform ActivityDetailArea { get; private set; }
         
-        // 活动UI选项缓存
-        private readonly List<ActivityUI> _actvityUis = new();
-        private ActivityUIBehaviourBase _activity;
+        /// <summary>
+        /// 活动UI选项缓存
+        /// </summary>
+        public List<ActivityUI> ActvityUis { get; } = new();
         
         /// <summary>
         /// 当前显示的活动内容
         /// </summary>
-        public IActivity CurrentActivity => _activity;
+        public IActivity CurrentActivity { get; set; }
         
         /// <summary>
         /// 活动选项容器
@@ -36,25 +36,10 @@ namespace HotUpdate.UI.Activity.Base
         /// 活动选项ToggleGroup
         /// </summary>
         public ToggleGroup ActivityGroup => ActivityContent;
-        
-        public void CacheActivityUI(ActivityUI actvityUi)
-        {
-            _actvityUis.Add(actvityUi);
-        }
 
         public ActivityUI GetFirstActivityUI()
         {
-            return _actvityUis.Count > 0 ? _actvityUis[0] : null;
-        }
-
-        public void UpdateActivityDetailUI(ActivityUIBehaviourBase actvity, ObjectSpawner spawner)
-        {
-            if (_activity)
-            {
-                spawner.Release(_activity);
-            }
-            
-            _activity = actvity;
+            return ActvityUis.Count > 0 ? ActvityUis[0] : null;
         }
     }
 }

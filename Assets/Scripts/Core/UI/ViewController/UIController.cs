@@ -11,7 +11,6 @@ namespace Core.UI.ViewController
     /// </summary>
     public abstract class UIController<TView> : IuiController where TView : UIView
     {
-        [Inject] protected IUIManager uiManager;
         [Inject] protected IEventCenter eventCenter;
 
         // 控制器界面状态
@@ -44,7 +43,8 @@ namespace Core.UI.ViewController
         {
             // 激活中，不允许执行任何修改父子关系的操作
             view.ViewObj.SetActive(true);
-            
+            // 正在执行激活逻辑
+            _controllerState = EControllerState.Activating;
             // 监听鼠标显隐事件
             if (IsCursorVisible)
             {
@@ -66,10 +66,10 @@ namespace Core.UI.ViewController
             view.GetBinder().OnInputFieldValueChanged += InputFieldValueChanged;
             view.GetBinder().OnScrollRectValueChanged += ScrollRectValueChanged;
             view.GetBinder().OnDropdownValueChanged += DropdownValueChanged;
-            // 正在激活
-            _controllerState = EControllerState.Activating;
-            // 激活完成界面显示时执行
+            // 执行子类的激活逻辑
             await OnActive();
+            // 淡入
+            await view.FadeIn();
             // 先执行显示逻辑，再改变界面状态标识，激活完成可用
             _controllerState = EControllerState.Ready;
         }
@@ -80,6 +80,8 @@ namespace Core.UI.ViewController
         /// <returns></returns>
         public async Task InActivate()
         {
+            // 改变界面状态标识——正在失活
+            _controllerState = EControllerState.InActivating;
             // 注销监听鼠标显隐事件
             if (IsCursorVisible)
             {
@@ -102,11 +104,10 @@ namespace Core.UI.ViewController
             view.GetBinder().OnScrollRectValueChanged -= ScrollRectValueChanged;
             view.GetBinder().OnDropdownValueChanged -= DropdownValueChanged;
             
-            // 改变界面状态标识
-            _controllerState = EControllerState.InActivating;
-            // 处理失活逻辑
+            // 处理子界面失活逻辑
             await OnInactivate();
-            // 此时失活中，不允许执行任何修改父子对象的操作
+            // 淡出
+            await view.FadeOut();
             view.ViewObj.SetActive(false);
         }
 
@@ -241,10 +242,10 @@ namespace Core.UI.ViewController
         public async Task Dispose()
         {
             await InActivate();
-            // 界面被销毁
+            // 更新界面界面状态为销毁
             _controllerState = EControllerState.Destroyed;
             await OnDispose();
-            await view.Destroy();
+            view.Destroy();
         }
         
         /// <summary>

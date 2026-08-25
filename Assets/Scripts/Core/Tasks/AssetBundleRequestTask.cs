@@ -10,7 +10,12 @@ namespace Core.Tasks
     {
         protected override void OnRequestCompleted()
         {
-            result = ((AssetBundleRequest)_operation).asset as TResult;
+            result = ((AssetBundleRequest)operation).asset as TResult;
+        }
+        
+        public override void Dispose()
+        {
+            poolManager.PushData(this);
         }
     }
 }

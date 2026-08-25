@@ -21,82 +21,61 @@ namespace HotUpdate.UI.Items
         [Inject] private ObjectSpawner _objectSpawner;
         [Inject] private IIconService _iconService;
         
-        // 当前选中任务的奖励物品格子列表
-        private readonly List<ItemGrid> _items = new();
+        // 当前加载的物品格子缓存
+        private readonly Stack<ItemGrid> _items = new();
+
+        /// <summary>
+        /// 预加载格子对象
+        /// </summary>
+        /// <param name="count">加载数量</param>
+        /// <param name="spriteNames">加载的图片资源</param>
+        public async Task PreloadAsync(int count, params string[] spriteNames)
+        {
+            var caches = new ItemGrid[count];
+            for (var i = 0; i < count; i++)
+            {
+                caches[i] = await _objectSpawner.SpawnAsync<ItemGrid>(AssetKeys.ItemGrid);
+            }
+            _objectSpawner.Release(caches);
+            
+            await _iconService.PreLoadSpriteAsync(spriteNames);
+        }
         
         /// <summary>
         /// 获取物品格子UI
-        /// 内部已初始化UI，异常时回调返回null
+        /// 内部已初始化UI，异常时回调返回空数组
         /// </summary>
         /// <param name="awardIds"></param>
         /// <param name="parent"></param>
-        /// <param name="callback"></param>
-        public async Task CreateItemGrid(string awardIds, Transform parent, Action<ItemGrid> callback)
+        /// <param name="worldSpace"></param>
+        public async Task<ItemGrid[]> CreateItemGrids(string awardIds, Transform parent = null, bool worldSpace = false)
         {
             try
             {
                 var itemInfos = new Dictionary<int, int>();
                 // 解析奖励ID数组
                 TextUtility.SplitMultiple(awardIds, 1, 2, itemInfos.Add);
-
                 foreach (var pair in itemInfos)
                 {
-                    // 获取UI
-                    var itemGrid = await _objectSpawner.SpawnAsync<ItemGrid>(AssetKeys.ItemGrid, parent);
                     // 读取配置
                     var itemInfo = _binaryDataManager.GetConfig<ItemInfoContainer>(EConfigLoadType.Excel).dataDic[pair.Key];
                     // 加载图标
                     var sprite = await _iconService.LoadIconAsync(itemInfo.f_icon);
-                    // 初始化
-                    itemGrid.Init(sprite, pair.Value, itemInfo.f_quality);
-                    // 缓存池化对象
-                    _items.Add(itemGrid);
-                    callback?.Invoke(itemGrid);
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.LogError(ELogTags.Item, $"{nameof(ItemService)}: ItemGrid create error,{e.Message}");
-            }
-        }
-
-        /// <summary>
-        /// 获取物品格子UI
-        /// 内部已初始化UI，异常时回调返回null
-        /// </summary>
-        /// <param name="awardIds"></param>
-        public async Task<ItemGrid[]> CreateItemGrid(string awardIds)
-        {
-            try
-            {
-                var itemInfos = new Dictionary<int, int>();
-                // 解析奖励ID数组
-                TextUtility.SplitMultiple(awardIds, 1, 2, itemInfos.Add);
-                
-                var list = new List<ItemGrid>(itemInfos.Count);
-                foreach (var pair in itemInfos)
-                {
                     // 获取UI
-                    var itemGrid = await _objectSpawner.SpawnAsync<ItemGrid>(AssetKeys.ItemGrid);
-                    // 读取配置
-                    var itemInfo = _binaryDataManager.GetConfig<ItemInfoContainer>(EConfigLoadType.Excel).dataDic[pair.Key];
-                    // 加载图标
-                    var sprite = await _iconService.LoadIconAsync(itemInfo.f_icon);
+                    var itemGrid = await _objectSpawner.SpawnAsync<ItemGrid>(AssetKeys.ItemGrid, parent, worldSpace: worldSpace);
                     // 初始化
                     itemGrid.Init(sprite, pair.Value, itemInfo.f_quality);
-                    list.Add(itemGrid);
+                    _items.Push(itemGrid);
                 }
-                
-                _items.AddRange(list);
-                return list.ToArray();
+                return _items.ToArray();
             }
             catch (Exception e)
             {
-                Logger.LogError(ELogTags.Item, $"{nameof(ItemService)}: ItemGrid create error,{e.Message}");
+                Logger.LogException(ELogTags.Item, e);
                 return Array.Empty<ItemGrid>();
             }
         }
-
+        
         public void Clear()
         {
             foreach (var itemGrid in _items)

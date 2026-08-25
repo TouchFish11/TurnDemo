@@ -1,7 +1,9 @@
 using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
+using Core.Exceptions;
 using Core.Scene;
 using Core.Serialize.Binary;
 using Core.UI.ViewController;
@@ -25,8 +27,8 @@ namespace HotUpdate.UI.Activity.Base
         [Inject] private IBinaryDataManager _binaryDataManager;
         [Inject] private IIconService _iconService;
 
-        public bool BlockOperation { get; } = true;
-        
+        public bool BlockOperation => true;
+
         protected override bool IsCursorVisible { get; set; } = true;
 
         protected override async Task OnInit()
@@ -43,20 +45,14 @@ namespace HotUpdate.UI.Activity.Base
                 activityUI.Init(sprite, activityInfo, view.ActivityGroup);
                 activityUI.OnSelect += UpdateDetailActivity;
                 // 缓存UI
-                view.CacheActivityUI(activityUI);
+                view.ActvityUis.Add(activityUI);
             }
-            
-            // 默认选中第一个UI
-            view.GetFirstActivityUI().SelectActivity();
         }
 
         protected override async Task OnActive()
         {
-            // 执行子界面的激活逻辑
-            if (view.CurrentActivity != null)
-            {
-                await view.CurrentActivity.Show();
-            }
+            // 默认选中第一个UI
+            await view.GetFirstActivityUI().SelectActivity();
         }
 
         protected override async Task OnInactivate()
@@ -66,8 +62,6 @@ namespace HotUpdate.UI.Activity.Base
             {
                 await view.CurrentActivity.Hide();
             }
-            // 显示主界面
-            await _uiService.ShowAsync(_uiService.GetPanel(EUIPanelId.MainPanel).PanelId);
         }
         
         protected override void OnButtonClick(string btnName)
@@ -75,7 +69,7 @@ namespace HotUpdate.UI.Activity.Base
             switch (btnName)
             {
                 case nameof(view.btnClose):
-                    uiManager.DestroyView(panelId);
+                    _uiService.CloseAsync(panelId, true, true);
                     break;
             }
         }
@@ -85,11 +79,13 @@ namespace HotUpdate.UI.Activity.Base
         /// </summary>
         /// <param name="selectId"></param>
         /// <exception cref="NullReferenceException"></exception>
-        public async void UpdateDetailActivity(int selectId)
+        public async Task UpdateDetailActivity(int selectId)
         {
+            // 重复触发不重复执行
             if (view.CurrentActivity != null && selectId == view.CurrentActivity.ActivityId)
                 return;
             
+            // 先隐藏当前显示活动界面
             if(view.CurrentActivity != null)
                 await view.CurrentActivity.Hide();
             
@@ -104,7 +100,7 @@ namespace HotUpdate.UI.Activity.Base
                 // 新增活动数据
                 activityData = _activityDataFactory.tryGetData(activityInfo.f_id, out var data) ? data : null;
                 if (activityData == null)
-                    throw new NullReferenceException($"activityData {activityInfo.f_id} not found");
+                    throw ExceptionHelper.Throw($"activityData {activityInfo.f_id} not found");
                 
                 // 初始化ID
                 activityData.ActivityId = activityInfo.f_id;
@@ -112,18 +108,34 @@ namespace HotUpdate.UI.Activity.Base
                 activityDataCollection.TryAdd(activityInfo.f_id, activityData);
             }
 
-            var handler = ActivityContentHandlerHelper.CreateHandler(activityData);
+            var handler = CreateHandler(activityData);
             // 初始化
             await activityUIBehaviourBase.Init(activityData.ActivityId, activityInfo, handler);
             // 更新界面
-            view.UpdateActivityDetailUI(activityUIBehaviourBase, _objectSpawner);
+            if(view.CurrentActivity is ActivityUIBehaviourBase currentActivity)
+                _objectSpawner.Release(currentActivity);
+            view.CurrentActivity = activityUIBehaviourBase;
         }
 
+        /// <summary>
+        /// 创建活动内容处理器
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        private static IActivityContentHandler CreateHandler(ActivityData data)
+        {
+            var type = data.GetType();
+            var attribute = type.GetCustomAttribute<ActivityIdAttribute>();
+            if(attribute == null)
+                return null;
+
+            return DIContainer.Create(attribute.ActivityContentHandler) as IActivityContentHandler;
+        }
+        
         protected override async Task OnDispose()
         {
             _objectSpawner.Dispose();
             _objectSpawner = null;
-
             if (view.CurrentActivity != null)
             {
                 await view.CurrentActivity.Destroy();

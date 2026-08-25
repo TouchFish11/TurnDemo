@@ -53,15 +53,11 @@ namespace HotUpdate.UI.Main
 
         protected override Task OnActive()
         {
-            // 显示主界面显示效果
-            // ...
             return Task.CompletedTask;
         }
 
         protected override Task OnInactivate()
         {
-            // 显示主界面隐藏效果
-            // ...
             return Task.CompletedTask;
         }
         

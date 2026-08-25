@@ -20,7 +20,7 @@ namespace Core.GlobalEvent
         /// </summary>
         public Func<TEvent, bool> Filter { get; set; }
         
-        public int RecursionDepth { get; private set; }
+        public int RecursionDepth { get; internal set; }
         
         /// <summary>
         /// 触发事件回调（执行前会先通过过滤条件校验）

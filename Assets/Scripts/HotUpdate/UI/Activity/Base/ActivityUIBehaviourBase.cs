@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
@@ -66,7 +65,7 @@ namespace HotUpdate.UI.Activity.Base
             objectSpawner = null;
             itemService.Dispose();
             itemService = null;
-            ((IDisposable)iconService).Dispose();
+            iconService.Dispose();
             iconService = null;
         }
 

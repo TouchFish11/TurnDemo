@@ -29,9 +29,9 @@ MonoBehaviour:
     bundleSlidingWindowMaxCount: 10
     maxDurationPerWindow: 30
   uploadModuleConfig:
-    uploadServerIp: http://ip:port/...
+    uploadServerIp: http://192.168.0.6:8080/Http_Server/
   updateModuleConfig:
-    resServerIp: http://ip:port/...
+    resServerIp: http://192.168.0.6:8080/Http_Server/
     reDownloadCompareFileMaxNum: 5
     reDownloadAbMaxNum: 5
     maxConcurrencyNum: 8

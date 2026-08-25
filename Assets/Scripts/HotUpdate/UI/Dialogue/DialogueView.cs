@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Core.UI;
 using Core.UI.ViewController;
 using TMPro;
@@ -91,11 +90,10 @@ namespace HotUpdate.UI.Dialogue
         }
         #endregion
 
-        public override Task Destroy()
+        public override void Destroy()
         {
             DialogueOptUIs.Clear();
             StoryReviewView = null;
-            return base.Destroy();
         }
     }
 }

@@ -50,7 +50,7 @@ namespace HotUpdate.UI.Activity.EmbersCanon
             _activityJoinComponent.OnClickJoin += OnTriggerJoin;
             _limitTimeAwardComponent.OnClickAward += OnTriggerLimitTimeAward;
             // 解析奖励ID数组，获取物品格子
-            var itemGrids = await itemService.CreateItemGrid(activityInfo.f_awardIds);
+            var itemGrids = await itemService.CreateItemGrids(activityInfo.f_awardIds);
             _awardPreviewComponent.SetAwards(itemGrids);
             
             if(_embersCanonSubActivityUI_01)

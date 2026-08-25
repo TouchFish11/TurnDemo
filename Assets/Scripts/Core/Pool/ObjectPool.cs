@@ -138,6 +138,17 @@ namespace Core.Pool
             --ActiveCount;
         }
         
+        object IPool.Get()
+        {
+            return Get();
+        }
+
+        void IPool.Push(object obj)
+        {
+            Push((T)obj);
+        }
+
+        
         public void Trim()
         {
             var count = _unUsedMonos.Count;

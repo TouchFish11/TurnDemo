@@ -12,6 +12,7 @@ namespace HotUpdate.Base.Service
         /// </summary>
         /// <param name="atlasNames"></param>
         /// <returns></returns>
+        /// <exception cref="Exception"><see cref="atlasNames"/>为null时抛出</exception>
         Task PreLoadAtlasAsync(params string[] atlasNames);
         
         /// <summary>
@@ -25,7 +26,7 @@ namespace HotUpdate.Base.Service
         /// 图片预加载
         /// </summary>
         /// <param name="spriteNames"></param>
-        /// <returns></returns>
+        /// <exception cref="Exception"><see cref="spriteNames"/>为null时抛出</exception>
         Task PreLoadSpriteAsync(params string[] spriteNames);
         
         /// <summary>

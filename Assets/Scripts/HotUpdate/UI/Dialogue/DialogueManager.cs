@@ -36,7 +36,7 @@ namespace HotUpdate.UI.Dialogue
         // 对话上下文
         private DialogueContext _dialogueContext;
         // 分支处理器缓存
-        private readonly BranchHandlerCollecor _branchHandlerCollecor;
+        private readonly Lazy<BranchHandlerCollecor> _branchHandlerCollecor;
 
         private DialogueController DialogueController => (DialogueController)_uiService.GetPanel(EUIPanelId.DialoguePanel);
         
@@ -56,9 +56,9 @@ namespace HotUpdate.UI.Dialogue
         /// </summary>
         public bool IsDialogueActive => _dialogueContext.IsDialogueActive;
 
-        private DialogueManager(BranchHandlerCollecor collecor)
+        private DialogueManager()
         {
-            _branchHandlerCollecor = collecor;
+            _branchHandlerCollecor = new Lazy<BranchHandlerCollecor>(() => DIContainer.Create<BranchHandlerCollecor>());
         }
         
         /// <summary>
@@ -216,7 +216,7 @@ namespace HotUpdate.UI.Dialogue
         /// <param name="branchData"></param>
         public void OnSelectOpt(BranchData branchData)
         {
-            if (_branchHandlerCollecor.TryGetHandler(branchData.BranchType, out var branchHandler))
+            if (_branchHandlerCollecor.Value.TryGetHandler(branchData.BranchType, out var branchHandler))
             {
                 branchHandler.Execute(branchData);
             }
@@ -231,7 +231,7 @@ namespace HotUpdate.UI.Dialogue
         {
             _poolManager.PushData(_dialogueContext);
             // 销毁对话UI
-            _uiService.CloseAsync(DialogueController.panelId, true);
+            _uiService.CloseAsync(DialogueController.panelId, true, true);
             // 触发全局对话事件
             _eventCenter.TriggerEvent(new DialogueEvent(_dialogueContext.NpcInfo.f_id));
             // 触发对话结束事件

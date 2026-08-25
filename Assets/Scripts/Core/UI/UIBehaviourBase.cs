@@ -28,6 +28,7 @@ namespace Core.UI
             ScanFieldAndPropertyInstance();
             ScanTransformInstance();
             
+            // 兼容旧逻辑
             DIContainer.InjectIntoInstance(this);
         }
         

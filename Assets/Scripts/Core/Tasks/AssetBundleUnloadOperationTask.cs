@@ -5,6 +5,9 @@ namespace Core.Tasks
     /// </summary>
     internal class AssetBundleUnloadOperationTask : AoTask
     {
-
+        public override void Dispose()
+        {
+            poolManager.PushData(this);
+        }
     }
 }

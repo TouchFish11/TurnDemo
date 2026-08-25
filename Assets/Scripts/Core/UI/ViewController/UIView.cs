@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Core.Tasks;
+using Core.Time;
 using UnityEngine;
 
 namespace Core.UI.ViewController
@@ -9,10 +9,18 @@ namespace Core.UI.ViewController
     {
         // 画布组
         protected CanvasGroup canvasGroup;
-        // 透明度变化率
-        protected const float alphaSpeed = 1f;
-        // 是否隐藏
-        private bool _isHide;
+        
+        /// <summary>
+        ///  淡入速度（过渡秒数）
+        /// <value>默认：0.05f</value>
+        /// </summary>
+        protected float FadeInSpeed { get; set; } = 0.05f; 
+        
+        /// <summary>
+        ///  淡出速度（过渡秒数）
+        /// <value>默认：0.15f</value>
+        /// </summary>
+        protected float FadeOutSpeed { get; set; }  = 0.15f;
         
         public GameObject ViewObj { get; private set; }
 
@@ -21,37 +29,40 @@ namespace Core.UI.ViewController
             base.Awake();
             canvasGroup = GetComponent<CanvasGroup>();
             ViewObj = gameObject;
-            _isHide = false;
+            canvasGroup.alpha = 0;
         }
 
-        protected virtual void Update()
+        /// <summary>
+        /// 淡入
+        /// </summary>
+        public async Task FadeIn()
         {
-            switch (_isHide)
+            while (true)
             {
-                // 逐渐隐藏
-                case true when canvasGroup.alpha > 0:
+                canvasGroup.alpha += TimeUtil.UnscaledDeltaTime * (1 / FadeInSpeed);
+                if (canvasGroup.alpha >= 1)
                 {
-                    canvasGroup.alpha -= UnityEngine.Time.unscaledDeltaTime * alphaSpeed;
-                    if (canvasGroup.alpha < 0)
-                    {
-                        canvasGroup.alpha = 0;
-                        _isHide = true;
-                    }
-
-                    break;
+                    canvasGroup.alpha = 1;
+                    return;
                 }
-                // 逐渐显示
-                case false when canvasGroup.alpha < 1:
+                await Task.Yield();
+            }
+        }
+
+        /// <summary>
+        /// 淡出
+        /// </summary>
+        public async Task FadeOut()
+        {
+            while (true)
+            {
+                canvasGroup.alpha -= TimeUtil.UnscaledDeltaTime * (1 / FadeOutSpeed);
+                if (canvasGroup.alpha <= 0)
                 {
-                    canvasGroup.alpha += UnityEngine.Time.unscaledDeltaTime * alphaSpeed;
-                    if (canvasGroup.alpha > 1)
-                    {
-                        canvasGroup.alpha = 1;
-                        _isHide = false;
-                    }
-
-                    break;
+                    canvasGroup.alpha = 0;
+                    return;
                 }
+                await Task.Yield();
             }
         }
         
@@ -64,17 +75,17 @@ namespace Core.UI.ViewController
             return binder;
         }
 
-        protected sealed override void OnDestroy()
-        {
-
-        }
-
         /// <summary>
         /// 控制器销毁后执行，用于自身的清理逻辑，不依赖控制器
         /// </summary>
-        public virtual Task Destroy()
+        public virtual void Destroy()
         {
-            return TaskUtility.WaitUntil(() => _isHide);
+
+        }
+        
+        protected sealed override void OnDestroy()
+        {
+
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Core.Tasks
         
         protected override void OnRequestCompleted()
         {
-            var _abr = (AssetBundleRequest)_operation;
+            var _abr = (AssetBundleRequest)operation;
             foreach (var asset in _abr.allAssets)
             {
                 _assets.Add(asset as T);
@@ -26,6 +26,11 @@ namespace Core.Tasks
         {
             _assets.Clear();
             base.OnResetData();
+        }
+        
+        public override void Dispose()
+        {
+            poolManager.PushData(this);
         }
     }
 }

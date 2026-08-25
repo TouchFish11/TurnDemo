@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
+using Core.Exceptions;
 using Core.Log;
 using UnityEngine;
 using UnityEngine.U2D;
@@ -25,6 +26,9 @@ namespace HotUpdate.Base.Service
 
         public async Task PreLoadAtlasAsync(params string[] atlasNames)
         {
+            if(atlasNames == null)
+                throw ExceptionHelper.Throw(nameof(atlasNames));
+            
             var tasks = new List<Task<SpriteAtlas>>();
             foreach (var atlasName in atlasNames)
             {
@@ -66,7 +70,7 @@ namespace HotUpdate.Base.Service
             }
             catch (Exception e)
             {
-                Logger.LogError(ELogTags.Icon, $"[{nameof(IconService)}]: '{atlasKey}' asset load fail, {e.Message}");
+                Logger.LogException(ELogTags.Icon, e);
                 return null;
             }
             finally
@@ -79,7 +83,7 @@ namespace HotUpdate.Base.Service
         public async Task PreLoadSpriteAsync(params string[] spriteNames)
         {
             if(spriteNames == null)
-                throw new ArgumentNullException(nameof(spriteNames));
+                throw ExceptionHelper.Throw(nameof(spriteNames));
             
             var tasks = new List<Task<Sprite>>();
             foreach (var spriteName in spriteNames)
@@ -122,7 +126,7 @@ namespace HotUpdate.Base.Service
             }
             catch (Exception e)
             {
-                Logger.LogError(ELogTags.Icon, $"{iconKey}' asset load fail, {e.Message}");
+                Logger.LogException(ELogTags.Icon, e);
                 return null;
             }
             finally

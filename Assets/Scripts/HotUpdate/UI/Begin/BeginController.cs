@@ -287,10 +287,11 @@ namespace HotUpdate.UI.Begin
             try
             {
                 // 销毁界面
-                await uiManager.DestroyView(panelId);
+                await _uiService.CloseAsync(panelId, true);
 
                 if (OnClickEnterGame == null)
                 {
+                    Logger.LogError(ELogTags.GameUpdate, $"Callback is null");
                     return;
                 }
                 
@@ -318,7 +319,7 @@ namespace HotUpdate.UI.Begin
             }
             catch (Exception e)
             {
-                Logger.LogError(ELogTags.GameUpdate, $"{nameof(BeginController)}.{nameof(OnButtonClick)}：{e.Message}，{e.StackTrace}");
+                Logger.LogException(ELogTags.GameUpdate, e);
             }
         }
     }

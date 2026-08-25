@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.DI;
+using Core.Exceptions;
 using Core.Log;
 using Core.Mono;
 using Core.Pool;
@@ -385,20 +386,19 @@ namespace Core.AssetBundles.Management
         /// <param name="objs">释放的对象集合</param>
         /// <param name="destroy">是否销毁不放入对象池</param>
         /// <returns>已释放的对象数量</returns>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="Exception"><see cref="objs"/>为null抛出</exception>
         public int Release<T>(IEnumerable<T> objs, bool destroy = false) where T : Object
         {
             if(objs == null)
-                throw new ArgumentNullException(nameof(objs));
+                throw ExceptionHelper.Throw("objs is null");
 
             var releseCount = 0;
-            
             // 缓存到快照中，避免释放时修改集合
             _releaseSnapshot.Clear();
             _releaseSnapshot.AddRange(objs);
             foreach (var obj in _releaseSnapshot)
             {
-                if (Release(obj, destroy))
+                if (Release((T)obj, destroy))
                 {
                     ++releseCount;
                 }

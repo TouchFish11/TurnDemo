@@ -2,7 +2,6 @@ using System;
 using Core.DI;
 using Core.UI;
 using HotUpdate.Base.Data;
-using HotUpdate.Base.Manager;
 using HotUpdate.UI.Activity.Base;
 using HotUpdate.UI.Activity.Common;
 using TMPro;
@@ -54,7 +53,7 @@ namespace HotUpdate.UI.Activity.OrbitalDeparture
             OrbitalDepartureHandler.UpdateShow();
             activityJoinComponent.OnClickJoin += OnTriggerJoin;
             // 解析奖励ID数组，获取物品格子
-            var itemGrids = await itemService.CreateItemGrid(activityInfo.f_awardIds);
+            var itemGrids = await itemService.CreateItemGrids(activityInfo.f_awardIds);
             _awardPreviewComponent.SetAwards(itemGrids);
         }
 
@@ -66,7 +65,6 @@ namespace HotUpdate.UI.Activity.OrbitalDeparture
         protected override Task OnHide()
         {
             activityJoinComponent.OnClickJoin -= OnTriggerJoin;
-            
             itemService.Clear();
             iconService.ReleaseAll();
             return Task.CompletedTask;

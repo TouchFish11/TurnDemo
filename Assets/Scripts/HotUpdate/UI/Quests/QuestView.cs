@@ -15,7 +15,7 @@ namespace HotUpdate.UI.Quests
     /// 负责任务界面的UI显示、组件引用和交互状态更新
     /// 实现ITaskView接口，为控制层提供UI操作入口
     /// </summary>
-    public class TaskView : UIView
+    public class QuestView : UIView
     {
         #region 组件引用
         /// <summary>

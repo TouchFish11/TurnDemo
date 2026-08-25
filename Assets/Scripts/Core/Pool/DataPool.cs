@@ -27,7 +27,7 @@ namespace Core.Pool
         public int ActiveCount { get; private set; }
         
         public int InactiveCount => _unUsedDatas.Count;
-
+        
         public DataPool(float activeTimeThreshold, int minSize, int maxSize)
         {
             _activeTimeThreshold = activeTimeThreshold;
@@ -71,6 +71,17 @@ namespace Core.Pool
             data.ResetData();
             _unUsedDatas.Push(data);
         }
+        
+        object IPool.Get()
+        {
+            return Get();
+        }
+
+        void IPool.Push(object obj)
+        {
+            Push((T)obj);
+        }
+
         
         public void Trim()
         {

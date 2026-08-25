@@ -1,4 +1,6 @@
 using System;
+using System.Threading.Tasks;
+using Core.Log;
 using Core.UI;
 using TMPro;
 using UnityEngine.UI;
@@ -9,7 +11,7 @@ namespace HotUpdate.UI.Quests
     /// 任务项UI组件
     /// 负责单个任务项的显示、选中状态切换、事件回调等核心逻辑
     /// </summary>
-    public class TaskItem : UIBehaviourBase
+    public class QuetstItem : UIBehaviourBase
     {
         // 任务名称文本组件
         [InjectUI] private TextMeshProUGUI txtTaskName;
@@ -17,16 +19,19 @@ namespace HotUpdate.UI.Quests
         [InjectUI] private Image imgSel;
         // 任务项切换选择器（用于控制选中状态）
         [InjectUI] private Toggle toggle;
+        
+        // 是否选中
+        private bool _selected;
 
         /// <summary>
         /// 当前任务项对应的任务ID
         /// </summary>
-        public int TaskId { get; private set; }
+        public int QuestId { get; private set; }
         
         /// <summary>
         /// 选中任务时触发的事件（携带选中任务的ID）
         /// </summary>
-        public event Action<int> OnSelectedTask;
+        public event Func<int, Task> OnSelectedTask;
 
         /// <summary>
         /// 初始化时执行（重写父类Awake）
@@ -50,7 +55,7 @@ namespace HotUpdate.UI.Quests
         public void Init(int questId, string questName, ToggleGroup group)
         {
             // 赋值当前任务项的唯一标识
-            TaskId = questId;
+            QuestId = questId;
             // 设置任务名称显示文本
             txtTaskName.text = questName;
             // 为Toggle绑定分组，确保分组内互斥选择
@@ -66,21 +71,24 @@ namespace HotUpdate.UI.Quests
         {
             // 根据选中状态显示/隐藏选中标识图片
             imgSel.gameObject.SetActive(isOn);
-            // 若当前为选中状态，触发选中任务事件并传递任务ID
-            if (isOn)
-            {
-                OnSelectedTask?.Invoke(TaskId);
-            }
+            _selected = isOn;
         }
 
         /// <summary>
         /// 主动选中当前任务项的方法
         /// 外部调用此方法可强制将当前任务项设为选中状态
         /// </summary>
-        public void Select()
+        public Task Select()
         {
-            // 设置Toggle为选中状态（会自动触发OnToggleValueChanged回调）
+            // 设置Toggle为选中状态
             toggle.isOn = true;
+            // 若当前为选中状态，触发选中任务事件并传递任务ID
+            if (_selected)
+            {
+                return OnSelectedTask?.Invoke(QuestId);
+            }
+
+            return Task.CompletedTask;
         }
     }
 }

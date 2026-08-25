@@ -2,6 +2,7 @@ using Core.AssetBundles.Management;
 using Core.DI;
 using Core.UI.ViewController;
 using Core.Video;
+using HotUpdate.Base.UI;
 using UnityEngine;
 using UnityEngine.Video;
 
@@ -14,6 +15,7 @@ namespace HotUpdate.Game.Main.Video.UI
     /// </summary>
     public class VideoController : UIController<VideoView>
     {
+        [Inject] private IUIService _uiservice;
         [Inject] private IVideoManager _videoManager;
         private RenderTexture rawImgVideo;
         
@@ -43,7 +45,7 @@ namespace HotUpdate.Game.Main.Video.UI
 
         private void OnPrePlay()
         {
-            uiManager.DestroyView(panelId);
+            _uiservice.CloseAsync(panelId, true);
         }
     }
 }

@@ -5,7 +5,6 @@ using Core.AssetBundles.Management;
 using Core.DI;
 using Core.UI.ViewController;
 using HotUpdate.Base.Data;
-using HotUpdate.Base.Manager;
 using HotUpdate.Base.Settings;
 using HotUpdate.Base.UI;
 using HotUpdate.UI.Settings.Handlers;
@@ -49,8 +48,7 @@ namespace HotUpdate.UI.Settings.UI
 
         protected override Task OnInactivate()
         {
-            // 显示主界面
-            return _uiService.ShowAsync(_uiService.GetPanel(EUIPanelId.MainPanel).PanelId);
+            return Task.CompletedTask;
         }
 
         private async Task ShowSettings()
@@ -119,7 +117,7 @@ namespace HotUpdate.UI.Settings.UI
         {
             if (btnName == nameof(view.btnClose))
             {
-                _uiService.CloseAsync(panelId, true);
+                _uiService.CloseAsync(panelId, true, true);
             }
         }
     }

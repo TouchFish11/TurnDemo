@@ -31,6 +31,18 @@ namespace Core.Pool
         int InactiveCount { get; }
         
         /// <summary>
+        /// 获取
+        /// </summary>
+        /// <returns></returns>
+        object Get();
+        
+        /// <summary>
+        /// 放入
+        /// </summary>
+        /// <param name="obj"></param>
+        void Push(object obj);
+        
+        /// <summary>
         /// 清理池子所有缓存
         /// </summary>
         void ClearAll();
@@ -50,7 +62,7 @@ namespace Core.Pool
         /// 获取
         /// </summary>
         /// <returns></returns>
-        T Get();
+        new T Get();
         
         /// <summary>
         /// 放入

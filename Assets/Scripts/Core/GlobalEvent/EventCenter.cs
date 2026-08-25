@@ -15,7 +15,7 @@ namespace Core.GlobalEvent
     /// </summary>
     public class EventCenter : IEventCenter
     {
-        private IPoolManager _poolManager;
+        private readonly IPoolManager _poolManager;
         // 存储事件类型与对应事件信息列表的映射表。Key：事件类型（TEvent），Value：该类型下所有订阅的事件信息
         private readonly Dictionary<Type, List<IEventInfo>> _typeToEventInfoMap = new();
         // 延迟触发的事件队列，用于异步/分帧处理事件
@@ -26,8 +26,6 @@ namespace Core.GlobalEvent
         private byte _currentTriggeredEventCount;
         // 事件触发最大递归深度
         private const byte _eventTriggerMaxRecursionDepth = 15;
-        // 事件列表触发快照
-        private readonly List<IEventInfo> _eventInfoSnapshots = new();
 
         /// <summary>
         /// 私有构造函数（单例模式）
@@ -35,8 +33,9 @@ namespace Core.GlobalEvent
         /// </summary>
         private EventCenter(IMonoAdapter monoAdapter, IPoolManager poolManager)
         {
-            EventSource.Init(poolManager);
             monoAdapter.AddUpdateListener(OnUpdate);
+            EventSource.Init(poolManager);
+            _poolManager = poolManager;
             _eventTriggerMaxNumPerFrame = GlobalSettings.Instance.eventModuleConfig.eventTriggerMaxNumPerFrame;
         }
 
@@ -50,30 +49,29 @@ namespace Core.GlobalEvent
             // 查找该事件类型下所有订阅的事件信息
             if (_typeToEventInfoMap.TryGetValue(typeof(TEvent), out var eventInfos))
             {
-                _eventInfoSnapshots.Clear();
-                _eventInfoSnapshots.AddRange(eventInfos);
-                
+                var eventInfoSnapshots = eventInfos.ToArray();
                 // 遍历触发所有匹配的事件回调
-                foreach (var eventInfoSnapshot in _eventInfoSnapshots)
+                foreach (var eventInfoSnapshot in eventInfoSnapshots)
                 {
                     try
                     {
                         if (eventInfoSnapshot.RecursionDepth > _eventTriggerMaxRecursionDepth)
-                            throw new InvalidOperationException($"Recursion depth {_eventTriggerMaxRecursionDepth} is exceeded");
+                            throw ExceptionHelper.ThrowEventTriggerException(typeof(TEvent));
                         
                         var eventInfo = (EventInfo<TEvent>)eventInfoSnapshot;
                         eventInfo.Invoke(evt);
+                        eventInfo.RecursionDepth--;
                     }
                     catch (Exception e)
                     {
-                        Logger.LogException(ELogTags.System, ExceptionHelper.ThrowEventTriggerException(typeof(TEvent), e));
+                        Logger.LogException(ELogTags.System, e);
                     }
                 }
                 
                 EventSource.Collect(evt);
             }
         }
-
+        
         /// <summary>
         /// 分帧触发事件（加入队列，由Update分帧处理）
         /// </summary>

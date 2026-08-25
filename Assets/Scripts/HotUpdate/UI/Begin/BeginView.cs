@@ -1,5 +1,3 @@
-using Core.DI;
-using Core.Mono;
 using Core.UI;
 using Core.UI.ViewController;
 using Core.Utility;
@@ -26,12 +24,10 @@ namespace HotUpdate.UI.Begin
         [InjectUI(1)] public RectTransform EnterArea { get; private set; }
 
         [SerializeField] private float _rotateSpeed = 300f;
-        private IMonoAdapter _monoAdapter;
         
         protected override void Awake()
         {
             base.Awake();
-            _monoAdapter = DIContainer.GetInstance<IMonoAdapter>();
             SetUpdateAreaActive(false);
             SetEnterAreaActive(false);
             SetStopButtonActive(false);
@@ -39,14 +35,6 @@ namespace HotUpdate.UI.Begin
 
         public void SetUpdateAreaActive(bool isActive)
         {
-            if (isActive)
-            {
-                _monoAdapter.AddUpdateListener(OnUpdate);
-            }
-            else
-            {
-                _monoAdapter.RemoveUpdateListener(OnUpdate);
-            }
             UpdateArea.gameObject.SetActive(isActive);
         }
 
@@ -85,12 +73,10 @@ namespace HotUpdate.UI.Begin
             txtDownloadSizeAndSpeed.text = txt;
         }
 
-        public void OnUpdate()
+        protected void Update()
         {
             if (!UpdateArea.gameObject.activeSelf)
-            {
                 return;
-            }
 
             imgLoading.transform.Rotate(new Vector3(0, 0, Time.deltaTime * _rotateSpeed));
         }
