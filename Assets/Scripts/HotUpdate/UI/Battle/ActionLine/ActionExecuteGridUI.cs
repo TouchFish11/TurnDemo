@@ -35,15 +35,6 @@ namespace HotUpdate.UI.Battle.ActionLine
             Flashing.gameObject.SetActive(false);
             imgIcon.color = new Color(imgIcon.color.r, imgIcon.color.g, imgIcon.color.b, 0);
         }
-        
-        /// <summary>
-        /// 组件启用时调用（生命周期）
-        /// 注册帧更新监听，用于处理动画逻辑
-        /// </summary>
-        protected override void OnEnable()
-        {
-            _logic?.OnEnable();
-        }
 
         public void Init(ActionExecuteGridLogic logic)
         {
@@ -68,20 +59,10 @@ namespace HotUpdate.UI.Battle.ActionLine
         {
             return _logic.CheckSelect(battleEntity);
         }
-        
-        /// <summary>
-        /// 组件禁用时调用（生命周期）
-        /// 移除帧更新监听，避免无效计算
-        /// </summary>
+
         protected override void OnDisable()
         {
-            _logic?.OnDisable();
-        }
-
-        protected override void OnDestroy()
-        {
             _logic.Dispose();
-            base.OnDestroy();
         }
     }
 }

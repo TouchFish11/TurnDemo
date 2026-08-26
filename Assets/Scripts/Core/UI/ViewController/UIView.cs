@@ -11,17 +11,17 @@ namespace Core.UI.ViewController
         protected CanvasGroup canvasGroup;
         
         /// <summary>
-        ///  淡入速度（过渡秒数）
+        ///  淡入速度（过渡秒数），0则没有过渡
         /// <value>默认：0.05f</value>
         /// </summary>
-        protected float FadeInSpeed { get; set; } = 0.05f; 
-        
+        protected virtual float FadeInSpeed => 0.05f;
+
         /// <summary>
-        ///  淡出速度（过渡秒数）
+        ///  淡出速度（过渡秒数），0则没有过渡
         /// <value>默认：0.15f</value>
         /// </summary>
-        protected float FadeOutSpeed { get; set; }  = 0.15f;
-        
+        protected virtual float FadeOutSpeed => 0.15f;
+
         public GameObject ViewObj { get; private set; }
 
         protected override void Awake()
@@ -39,6 +39,12 @@ namespace Core.UI.ViewController
         {
             while (true)
             {
+                if (FadeInSpeed == 0)
+                {
+                    canvasGroup.alpha = 1;
+                    return;
+                }
+                
                 canvasGroup.alpha += TimeUtil.UnscaledDeltaTime * (1 / FadeInSpeed);
                 if (canvasGroup.alpha >= 1)
                 {
@@ -56,6 +62,12 @@ namespace Core.UI.ViewController
         {
             while (true)
             {
+                if (FadeOutSpeed == 0)
+                {
+                    canvasGroup.alpha = 0;
+                    return;
+                }
+                
                 canvasGroup.alpha -= TimeUtil.UnscaledDeltaTime * (1 / FadeOutSpeed);
                 if (canvasGroup.alpha <= 0)
                 {

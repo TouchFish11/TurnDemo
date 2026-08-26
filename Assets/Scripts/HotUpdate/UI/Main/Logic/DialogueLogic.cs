@@ -1,10 +1,8 @@
-using System;
 using System.Threading.Tasks;
 using Core.DI;
-using Core.Log;
 using Core.UI;
-using HotUpdate.Base.Manager;
 using HotUpdate.Game.Dialogue;
+using HotUpdate.Game.Dialogue.Sources;
 
 namespace HotUpdate.UI.Main.Logic
 {
@@ -18,43 +16,24 @@ namespace HotUpdate.UI.Main.Logic
         
         protected override Task OnInit()
         {
-            // 注册对话系统回调：对话开始时隐藏主界面
+            // 注册对话系统回调
             _dialogueManager.OnDialogueStart += InActive;
-            // 注册对话系统回调：对话结束时显示主界面
+            // 注册对话系统回调
             _dialogueManager.OnDialogueEnd += Active;
+            
+            // Test: 添加对话分支
+            _dialogueManager.AddBranchSource(DIContainer.Create<DialogueConfigBranchDataSource>());
             return Task.CompletedTask;
         }
-
-        /// <summary>
-        /// 激活主界面
-        /// 设置主界面为显示状态
-        /// </summary>
+        
         private async void Active()
         {
-            try
-            {
-                await _uiManager.SetViewActive(mainController.panelId,true);
-            }
-            catch (Exception e)
-            {
-                Logger.LogError(ELogTags.Dialogue, $"{nameof(DialogueLogic)}.{nameof(Active)}：激活主界面错误，{e.Message}");
-            }
-        }
 
-        /// <summary>
-        /// 隐藏主界面
-        /// 设置主界面为隐藏状态
-        /// </summary>
+        }
+        
         private async void InActive()
         {
-            try
-            {
-                await _uiManager.SetViewActive(mainController.panelId,false);
-            }
-            catch (Exception e)
-            {
-                Logger.LogError(ELogTags.Dialogue, $"{nameof(DialogueLogic)}.{nameof(InActive)}：隐藏主界面错误，{e.Message}");
-            }
+
         }
 
         protected override void OnResetData()

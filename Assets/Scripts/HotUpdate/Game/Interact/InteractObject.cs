@@ -10,6 +10,10 @@ namespace HotUpdate.Game.Interact
         // 对象交互策略
         private IInteractStrategy _interactStrategy;
 
+        public EInteractType InteractType { get; private set; }
+        
+        public abstract string InteractTip { get; }
+
         protected sealed override void OnInit()
         {
             var interactTrigger = AddComponent<InteractTrigger>();
@@ -22,8 +26,9 @@ namespace HotUpdate.Game.Interact
             
         }
 
-        public void SetInteractStrategy(IInteractStrategy strategy)
+        public void SetInteractStrategy(EInteractType interactType, IInteractStrategy strategy)
         {
+            InteractType = interactType;
             _interactStrategy = strategy;
         }
 

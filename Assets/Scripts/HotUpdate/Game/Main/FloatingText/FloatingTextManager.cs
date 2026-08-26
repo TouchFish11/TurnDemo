@@ -4,6 +4,8 @@ using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Log;
 using Core.Mono;
+using HotUpdate.Base.Manager;
+using HotUpdate.Game.Dialogue;
 using HotUpdate.Game.Interact;
 using UnityEngine;
 using Logger = Core.Log.Logger;
@@ -16,107 +18,162 @@ namespace HotUpdate.Game.Main.FloatingText
     public class FloatingTextManager : IFloatingTextManager
     {
         [Inject] private ObjectSpawner _objectSpawner;
-
-        // 存储需要显示浮动文本的NPC列表
-        private readonly List<NpcObject> npcObjects = new();
-        // 映射NPC与对应的浮动文本对象，便于快速查找和管理
-        private readonly Dictionary<NpcObject, FloatingTextObj> npcToTextMap = new();
+        [Inject] private IPlayerManager playerManager;
+        
+        // 缓存注册的npc
+        private readonly List<NpcObject> _npcs = new();
+        // 映射索引与对应的浮动文本对象
+        private readonly Dictionary<int, FloatingTextObj> npcToTextMap = new();
         // 玩家对象（用于计算距离）
-        private Transform player;
+        private Transform _player;
         // 浮动文本最大显示距离：超过该距离则隐藏文本
         private const float MaxDisplayDistance = 10f;
-
-        public FloatingTextManager(IMonoAdapter monoAdapter)
-        {
-            monoAdapter.AddFixedUpdateListener(OnFixedUpdate);
-        }
+        // 全局显示状态
+        private bool _globalShow = true;
 
         /// <summary>
-        /// 添加需要管理浮动文本的NPC
+        /// 玩家对象（用于计算距离）
         /// </summary>
-        /// <param name="npcObject">目标NPC对象</param>
-        public void AddNpc(NpcObject npcObject)
+        public Transform Player
         {
-            npcObjects.Add(npcObject);
+            get
+            {
+                if(_player)
+                    return _player;
+                
+                if(playerManager.MainPlayer != null)
+                    _player = playerManager.MainPlayer.GameObject.transform;
+                else
+                    return null;
+                
+                return _player;
+            }
         }
 
-        public void RemoveNpc(NpcObject npcObject)
+        public FloatingTextManager(IMonoAdapter monoAdapter, IDialogueManager dialogueManager)
         {
-            npcObjects.Remove(npcObject);
+            monoAdapter.AddFixedUpdateListener(OnFixedUpdate);
+            dialogueManager.OnDialogueStart += OnOnDialogueStart;
+            dialogueManager.OnDialogueEnd += OnOnDialogueEnd;
         }
 
-        public void SetPlayer(Transform player)
+        public void RegisterAndAssign(NpcObject npcObject)
         {
-            this.player = player;
+            _npcs.Add(npcObject);
+            npcToTextMap.Add(_npcs.Count - 1, null);
         }
 
+        public bool RemoveNpc(NpcObject npcObject)
+        {
+            var index = _npcs.FindIndex(n => n == npcObject);
+            if(index == -1)
+                return false;
+            
+            var remove = npcToTextMap.Remove(index, out var obj);
+            _objectSpawner.Release(obj);
+            return remove;
+        }
+        
         /// <summary>
         /// 固定更新逻辑：检测NPC与玩家距离，控制浮动文本显示/隐藏
         /// </summary>
-        private async void OnFixedUpdate()
+        private void OnFixedUpdate()
         {
-            // 玩家未初始化时直接返回
-            if (player == null)
-            {
+            if(!_globalShow)
                 return;
-            }
+            
+            // 玩家未初始化时直接返回
+            if (!Player)
+                return;
             
             try
             {
                 // 遍历所有需要管理的NPC
-                foreach (var npcObject in npcObjects)
+                for (var i = 0; i < _npcs.Count; i++)
                 {
+                    var npcObject = _npcs[i];
                     // NPC在显示距离内：显示浮动文本
-                    if (Vector3.Distance(npcObject.transform.position, player.transform.position) <= MaxDisplayDistance)
+                    if (Vector3.Distance(npcObject.transform.position, Player.transform.position) <= MaxDisplayDistance)
                     {
                         // 未显示文本时，创建并初始化浮动文本
                         if (!npcObject.IsShowFloatingText)
                         {
                             npcObject.IsShowFloatingText = true;
-                            
-                            // 从对象池/资源加载浮动文本对象
-                            var floatingTextObj = await _objectSpawner.SpawnAsync<FloatingTextObj>(AssetKeys.UI_3D_FloatingText);
-                            // 初始化浮动文本（绑定NPC位置、玩家视角、显示名称/身份）
-                            floatingTextObj.Init(npcObject.transform, player, npcObject.NpcInfo.f_speakerName, npcObject.NpcInfo.f_identity);
-                            // 将NPC与文本对象映射存储
-                            npcToTextMap.TryAdd(npcObject, floatingTextObj);
+                            ShowText(i);
                         }
                     }
                     // NPC超出显示距离：隐藏浮动文本
                     else
                     {
                         // 已显示文本时，回收文本对象并移除映射
-                        if (npcObject.IsShowFloatingText)
+                        if (npcObject.IsShowFloatingText && npcToTextMap[i])
                         {
                             npcObject.IsShowFloatingText = false;
-                            // 将文本对象回收至对象池
-                            _objectSpawner.Release(npcToTextMap[npcObject]);
-                            // 移除NPC与文本的映射关系
-                            npcToTextMap.Remove(npcObject);
+                            npcToTextMap[i].IsShow = false;
                         }
                     }
                 }
             }
             catch (Exception e)
             {
-                Logger.LogError(ELogTags.Main, $"{nameof(FloatingTextManager)}.{nameof(OnFixedUpdate)}：{e.Message}，{e.StackTrace}");
+                Logger.LogException(ELogTags.Main, e);
             }
         }
 
-        /// <summary>
-        /// 清理缓存：清空所有NPC和浮动文本映射，回收文本对象
-        /// </summary>
+        private async void ShowText(int index)
+        {
+            try
+            {
+                var npcObject = _npcs[index];
+                var textObj = npcToTextMap[index];
+                if (textObj)
+                {
+                    textObj.IsShow = true;
+                }
+                else
+                {
+                    // 创建浮动文本对象
+                    var floatingTextObj = await _objectSpawner.SpawnAsync<FloatingTextObj>(AssetKeys.UI_3D_FloatingText);
+                    // 初始化浮动文本（绑定NPC位置、玩家视角、显示名称/身份）
+                    floatingTextObj.Init(npcObject.transform, Player, npcObject.NpcInfo.f_speakerName, npcObject.NpcInfo.f_identity);
+                    npcToTextMap[index] = floatingTextObj;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogException(ELogTags.Main, e);
+            }
+        }
+        
+        private void OnOnDialogueStart()
+        {
+            // 隐藏浮动文本显示
+            _globalShow = false;
+            for (var i = 0; i < _npcs.Count; i++)
+            {
+                var npcObject = _npcs[i];
+                var textObj = npcToTextMap[i];
+                if(!textObj || !npcObject.IsShowFloatingText && !npcToTextMap[i].IsShow)
+                    continue;
+
+                npcObject.IsShowFloatingText = false;
+                textObj.IsShow = false;
+            }
+        }
+        
+        
+        private void OnOnDialogueEnd()
+        {
+            _globalShow = true;
+        }
+        
         public void ClearCache()
         {
-            // 清空NPC列表
-            npcObjects.Clear();
             // 回收所有浮动文本对象至对象池
             _objectSpawner.Release(npcToTextMap.Values);
             _objectSpawner.Clear();
             // 清空映射字典
             npcToTextMap.Clear();
-            // 重置玩家引用
-            player = null;
         }
     }
 }

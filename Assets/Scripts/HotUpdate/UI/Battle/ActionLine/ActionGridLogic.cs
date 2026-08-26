@@ -8,6 +8,10 @@ using UnityEngine;
 
 namespace HotUpdate.UI.Battle.ActionLine
 {
+    /// <summary>
+    /// 行动格子UI逻辑类
+    /// 负责战斗场景中行动格子的视觉表现、选中状态、闪烁动画、位移动画等逻辑
+    /// </summary>
     public class ActionGridLogic : IUILogic<ActionGridUI, ActionGridLogic>, IPoolData
     {
         [Inject] private IMonoAdapter _monoAdapter;
@@ -51,13 +55,9 @@ namespace HotUpdate.UI.Battle.ActionLine
             var initY = startY + targetIndex * -(View.RectTransform.rect.height + View.space);
             View.RectTransform.anchoredPosition = new Vector2(startX, initY);
             _baseOffsetY = startY;
-        }
-        
-        public void OnEnable()
-        {
             _monoAdapter.AddUpdateListener(OnUpdate);
         }
-
+        
         /// <summary>
         /// 检查并更新选中状态
         /// </summary>
@@ -177,15 +177,10 @@ namespace HotUpdate.UI.Battle.ActionLine
             }
         }
         
-        public void OnDisable()
+        void IPoolData.ResetData()
         {
             _monoAdapter.RemoveUpdateListener(OnUpdate);
             BattleEntity = null;
-        }
-
-        void IPoolData.ResetData()
-        {
-            
         }
 
         public void Dispose()

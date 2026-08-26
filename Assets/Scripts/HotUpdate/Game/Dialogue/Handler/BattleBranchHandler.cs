@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Core.DI;
+using Core.UI;
 using HotUpdate.Base.Manager;
 using HotUpdate.Base.Scene;
 using HotUpdate.Base.UI;
@@ -17,7 +18,6 @@ namespace HotUpdate.Game.Dialogue.Handler
         [Inject] private ISceneGenerator _sceneGenerator;
         [Inject] private IUIService _uiService;
         [Inject] private IPlayerManager _playerManager;
-        [Inject] private IDialogueManager _dialogueManager;
         
         public EBranchType BranchType => EBranchType.Battle;
     
@@ -41,7 +41,7 @@ namespace HotUpdate.Game.Dialogue.Handler
                 {
                     await _sceneGenerator.InitMainScene(-1);
                     await _playerManager.CreatePlayer(1001);
-                    _dialogueManager.StartDialogue(-1);
+                    await _uiService.OpenAsync(EUIPanelId.MainPanel, E_UILayer.Mid);
                 }
             };
 

@@ -83,7 +83,7 @@ namespace HotUpdate.UI
                 default:
                     throw new ArgumentOutOfRangeException(nameof(panelId), panelId, null);
             }
-
+            
             return controller;
         }
 

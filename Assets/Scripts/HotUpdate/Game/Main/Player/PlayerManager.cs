@@ -17,7 +17,6 @@ using HotUpdate.Game.Cameras;
 using HotUpdate.Game.Dialogue;
 using HotUpdate.Game.Inputs;
 using HotUpdate.Game.Interact;
-using HotUpdate.Game.Main.FloatingText;
 using HotUpdate.Game.Main.Move;
 
 namespace HotUpdate.Game.Main.Player
@@ -28,7 +27,6 @@ namespace HotUpdate.Game.Main.Player
     /// </summary>
     public class PlayerManager : IPlayerManager
     {
-        [Inject] private IFloatingTextManager _floatingTextManager;
         [Inject] private ObjectSpawner _objectSpawner;
         [Inject] private IBinaryDataManager _binaryDataManager;
         
@@ -38,11 +36,11 @@ namespace HotUpdate.Game.Main.Player
         private readonly Dictionary<int, IPlayerObject> roleIdToEntityMap = new();
         // 环绕式第三人称相机控制器
         private OrbitCameraController _cameraController;
-        
+
         /// <summary>
-        /// 当前控制的实体
+        /// 当前控制的玩家实体对象
         /// </summary>
-        public IEntityObject CurrentEntity => roleIdToEntityMap[1];
+        public IEntityObject MainPlayer => roleIdToEntityMap.GetValueOrDefault(1);
         
         public PlayerManager(IEventCenter eventCenter)
         {
@@ -69,7 +67,6 @@ namespace HotUpdate.Game.Main.Player
             roleObj.GetComponent<MoveComponent>().SetCamera(_cameraController);
             // 将玩家对象加入字典管理
             roleIdToEntityMap.Add(id, roleObj);
-            _floatingTextManager.SetPlayer(roleObj.transform);
         }
 
         private static void AddWorldComponent(EntityObject entityObject)
@@ -131,9 +128,9 @@ namespace HotUpdate.Game.Main.Player
         /// <param name="openViewEvent"></param>
         private void OnOpenViewEvent(OpenViewEvent openViewEvent)
         {
-            CurrentEntity.GetComponent<InputComponent>().DisableInput();
-            CurrentEntity.GetComponent<NormalAnimationComponent>().Play(EAnimationType.Idle);
-            CurrentEntity.GetComponent<MoveComponent>().Disable();
+            MainPlayer.GetComponent<InputComponent>().DisableInput();
+            MainPlayer.GetComponent<NormalAnimationComponent>().Play(EAnimationType.Idle);
+            MainPlayer.GetComponent<MoveComponent>().Disable();
         }
 
         private bool OpenViewEventFilter(OpenViewEvent openViewEvent)
@@ -147,8 +144,8 @@ namespace HotUpdate.Game.Main.Player
         /// <param name="closeViewEvent"></param>
         private void OnCloseViewEvent(CloseViewEvent closeViewEvent)
         {
-            CurrentEntity.GetComponent<InputComponent>().EnableInput();
-            CurrentEntity.GetComponent<MoveComponent>().Enable();
+            MainPlayer.GetComponent<InputComponent>().EnableInput();
+            MainPlayer.GetComponent<MoveComponent>().Enable();
         }
 
         private bool CloseViewEventFilter(CloseViewEvent closeViewEvent)

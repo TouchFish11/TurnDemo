@@ -1,5 +1,3 @@
-using HotUpdate.Base.ECModule;
-
 namespace HotUpdate.Game.Interact
 {
     /// <summary>
@@ -7,6 +5,8 @@ namespace HotUpdate.Game.Interact
     /// </summary>
     public class NpcObject : InteractObject
     {
+        public override string InteractTip => NpcInfo.f_speakerName;
+        
         /// <summary>
         /// 是否显示对象头顶浮动文本
         /// </summary>

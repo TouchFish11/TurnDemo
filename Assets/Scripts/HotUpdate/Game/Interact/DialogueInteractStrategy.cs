@@ -1,4 +1,6 @@
 using Core.DI;
+using Core.GlobalEvent;
+using Core.GlobalEvent.Events;
 using HotUpdate.Game.Dialogue;
 
 namespace HotUpdate.Game.Interact
@@ -9,16 +11,24 @@ namespace HotUpdate.Game.Interact
     public class DialogueInteractStrategy : IInteractStrategy
     {
         [Inject] private IDialogueManager _dialogueManager;
+        [Inject] private IEventCenter _eventCenter;
         
-        public void Interact(IInteractable interactObject)
+        public void Interact(IInteractable interactable)
         {
-            if (interactObject is not NpcObject npcObject) 
+            if (interactable.InteractType != EInteractType.Dialogue) 
                 return;
             
             // 开始对话
             if (!_dialogueManager.IsDialogueActive)
             {
-                _dialogueManager.StartDialogue(npcObject.NpcInfo.f_dialogueId);
+                if(interactable is NpcObject npcObject)
+                    _dialogueManager.StartDialogue(npcObject.NpcInfo.f_dialogueId);
+                else
+                {
+                    var messageEvent = EventSource.Get<GlobalMessageEvent>();
+                    messageEvent.Message = "当前对象暂不支持对话";
+                    _eventCenter.TriggerEventAsync(messageEvent);
+                }
             }
             else
             {

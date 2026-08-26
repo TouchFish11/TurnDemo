@@ -32,12 +32,6 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
         private float _bloodUiYOffset;
         
         public MonsterStatusBar View { get; private set; }
-        
-        public void OnEnable()
-        {
-            // 注册帧更新事件，每帧执行OnUpdate方法
-            _monoAdapter?.AddUpdateListener(OnUpdate);
-        }
 
         /// <summary>
         /// 初始化普通怪物状态UI
@@ -83,7 +77,11 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
                 weaknessIcon.color = ((int)elementType).ToElementTypeColor();
                 View.Weakneses.Add(weaknessIcon); // 将图标加入集合，便于后续回收
             }
+        }
 
+        public void OnActive()
+        {
+            _monoAdapter.AddUpdateListener(OnUpdate);
             // 获取战斗管理器的事件总线，注册血量变化事件监听
             BattleEntity.Context.EventBus.AddListener<HpChangedEvent>(OnHpChangedEvent);
             // 注册韧性变化事件监听
@@ -91,7 +89,18 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
             // 注册韧性击破事件监听
             BattleEntity.Context.EventBus.AddListener<ToughnessBrokenEvent>(OnToughnessBrokenEvent);
         }
-
+        
+        public void OnInActive()
+        {
+            _monoAdapter.RemoveUpdateListener(OnUpdate);
+            // 获取战斗管理器的事件总线，注册血量变化事件监听
+            BattleEntity.Context.EventBus.RemoveListener<HpChangedEvent>(OnHpChangedEvent);
+            // 注册韧性变化事件监听
+            BattleEntity.Context.EventBus.RemoveListener<ToughnessChangedEvent>(OnToughnessChangedEvent);
+            // 注册韧性击破事件监听
+            BattleEntity.Context.EventBus.RemoveListener<ToughnessBrokenEvent>(OnToughnessBrokenEvent);
+        }
+        
         /// <summary>
         /// 帧更新回调
         /// 每帧执行，处理血量渐变动画和UI跟随逻辑
@@ -191,25 +200,14 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
             // ...
         }
         
-        public void OnDisable()
+        void IPoolData.ResetData()
         {
-            _monoAdapter.RemoveUpdateListener(OnUpdate);
-            // 获取战斗管理器的事件总线，注册血量变化事件监听
-            BattleEntity.Context.EventBus.RemoveListener<HpChangedEvent>(OnHpChangedEvent);
-            // 注册韧性变化事件监听
-            BattleEntity.Context.EventBus.RemoveListener<ToughnessChangedEvent>(OnToughnessChangedEvent);
-            // 注册韧性击破事件监听
-            BattleEntity.Context.EventBus.RemoveListener<ToughnessBrokenEvent>(OnToughnessBrokenEvent);
+
         }
         
         public void Dispose()
         {
             _poolManager.PushData(this);
-        }
-
-        void IPoolData.ResetData()
-        {
-            
         }
     }
 }

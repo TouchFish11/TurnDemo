@@ -25,17 +25,6 @@ namespace HotUpdate.UI.Battle.ActionLine
             Icon = icon;
             _battleEntityId = battleEntityId;
         }
-        
-        public void OnEnable()
-        {
-            
-        }
-
-        public void OnDisable()
-        {
-
-        }
-
 
         void IPoolData.ResetData()
         {

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Exceptions;
+using Core.Log;
 using Core.Scene;
 using Core.Serialize.Binary;
 using Core.UI.ViewController;
@@ -64,13 +65,20 @@ namespace HotUpdate.UI.Activity.Base
             }
         }
         
-        protected override void OnButtonClick(string btnName)
+        protected override async void OnButtonClick(string btnName)
         {
-            switch (btnName)
+            try
             {
-                case nameof(view.btnClose):
-                    _uiService.CloseAsync(panelId, true, true);
-                    break;
+                switch (btnName)
+                {
+                    case nameof(view.btnClose):
+                        await _uiService.CloseAsync(panelId, true, true);
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogException(ELogTags.Activity, e);
             }
         }
 

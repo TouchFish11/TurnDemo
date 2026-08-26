@@ -408,7 +408,7 @@ namespace Core.AssetBundles.Management
         }
 
         /// <summary>
-        /// 清理所有句柄缓存，调用后可以继续使用该生成器，这个方法不会调用Release
+        /// 清理并释放所有句柄缓存，调用后可以继续使用该生成器
         /// </summary>
         public void Clear()
         {

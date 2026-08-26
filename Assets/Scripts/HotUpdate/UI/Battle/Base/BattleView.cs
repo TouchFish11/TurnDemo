@@ -156,13 +156,22 @@ namespace HotUpdate.UI.Battle.Base
 
             ActingTipUI = ActingTipArea.gameObject.AddComponent<ActingTipUI>();
             ActionExecuteGridUI = ActionBarContent.GetComponentInChildren<ActionExecuteGridUI>(true);
-            ActionExecuteGridUI.Init(new ActionExecuteGridLogic());
         }
 
         protected override void Start()
         {
             ActingTipUI.Init(imgActingIcon, txtActingTip);
             ActingTipUI.gameObject.SetActive(false);
+        }
+
+        public void InitActionExecuteGrid(ActionExecuteGridLogic actionExecuteGridLogic)
+        {
+            ActionExecuteGridUI.Init(actionExecuteGridLogic);
+        }
+
+        public void InitActingTip()
+        {
+            
         }
 
         /// <summary>

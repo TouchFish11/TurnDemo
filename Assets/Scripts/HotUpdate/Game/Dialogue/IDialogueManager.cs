@@ -10,7 +10,7 @@ namespace HotUpdate.Game.Dialogue
     public interface IDialogueManager
     {
         /// <summary>
-        /// 是否正在显示对话
+        /// 是否有对话正在进行中
         /// </summary>
         bool IsDialogueActive { get; }
 
@@ -33,9 +33,15 @@ namespace HotUpdate.Game.Dialogue
         /// 单句对话结束事件
         /// </summary>
         event Action OnSingleDialogueEnd;
+        
+        /// <summary>
+        /// 对话分支选择回调
+        /// </summary>
+        event Action<BranchInfo> OnSelectDialogueBranch;
 
         /// <summary>
-        /// 启动对话
+        /// 启动对话，内部会创建对话界面，隐藏主界面；
+        /// 内部会自动调用<see cref="SetNextDialogue"/>，调用该方法时无需设置
         /// </summary>
         /// <param name="startDialogueId"></param>
         void StartDialogue(int startDialogueId);
@@ -43,6 +49,7 @@ namespace HotUpdate.Game.Dialogue
         /// <summary>
         /// 推进对话
         /// </summary>
+        /// <exception cref="Exception">未先调用<see cref="StartDialogue"/>时抛出</exception>
         void NextDialogue();
 
         /// <summary>
@@ -52,12 +59,12 @@ namespace HotUpdate.Game.Dialogue
         void OnSelectOpt(BranchData branchData);
 
         /// <summary>
-        /// 结束对话
+        /// 结束对话，会隐藏对话界面显示主界面
         /// </summary>
         void EndDialogue();
 
         /// <summary>
-        /// 添加新分支来源，重复添加会失败
+        /// 添加新分支来源，不允许重复添加
         /// </summary>
         /// <param name="branchDataSource"></param>
         /// <returns>是否添加成功</returns>
@@ -71,11 +78,14 @@ namespace HotUpdate.Game.Dialogue
         bool RemoveBranchSource(IBranchDataSource branchDataSource);
 
         /// <summary>
-        /// 显示指定ID的对话内容
+        /// 显示当前设置的ID的对话内容，在调用前先执行<see cref="SetNextDialogue"/>设置对话
         /// </summary>
-        /// <param name="startDialogueId">要显示的对话ID</param>
-        void ShowCurrentDialogue(int startDialogueId);
+        void ShowCurrentDialogue();
 
-        event Action<BranchInfo> OnSelectDialogueBranch;
+        /// <summary>
+        /// 设置下一条对话
+        /// </summary>
+        /// <param name="nextDialogueId"></param>
+        void SetNextDialogue(int nextDialogueId);
     }
 }

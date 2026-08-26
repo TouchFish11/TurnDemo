@@ -5,8 +5,9 @@ using Core.AssetBundles.Management;
 using Core.DI;
 using Core.GlobalEvent;
 using Core.Log;
+using Core.Pool;
 using HotUpdate.Game.Interact;
-using HotUpdate.Game.Interact.UI;
+using HotUpdate.UI.Interact;
 
 namespace HotUpdate.UI.Main.Logic
 {
@@ -19,6 +20,7 @@ namespace HotUpdate.UI.Main.Logic
     {
         [Inject] private IEventCenter _eventCenter;
         [Inject] private ObjectSpawner _objectSpawner;
+        [Inject] private IPoolManager _poolManager;
         
         protected override Task OnInit()
         {
@@ -53,7 +55,9 @@ namespace HotUpdate.UI.Main.Logic
                     // 从UI资源包中异步加载交互UI预制体并实例化
                     var interactUI = await _objectSpawner.SpawnAsync<InteractUI>(AssetKeys.InteractUI, mainView.InteractContent);
                     // 初始化交互UI的显示数据（设置发言者/交互对象名称）
-                    interactUI.Init(((NpcObject)interactable).NpcInfo.f_speakerName);
+                    var logic = _poolManager.GetData<Interact.InteractLogic>();
+                    logic.Init(interactUI, interactable);
+                    interactUI.Init(logic);
                     list.Add(interactUI);
                 }
                 // 将创建好的交互UI列表存入主数据模型，供全局业务逻辑调用
@@ -61,7 +65,7 @@ namespace HotUpdate.UI.Main.Logic
             }
             catch (Exception e)
             {
-                Logger.LogError(ELogTags.Interact, $"{nameof(InteractLogic)}.{nameof(CreateInteract)}: {e.Message}");
+                Logger.LogException(ELogTags.Interact, e);
             }
         }
 

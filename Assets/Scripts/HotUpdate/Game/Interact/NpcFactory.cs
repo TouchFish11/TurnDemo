@@ -41,14 +41,13 @@ namespace HotUpdate.Game.Interact
             };
 
             EntityHelper.InitEntity(npcObject);
-            // 初始化NPC基础属性（参数为NPC配置ID，对应配置表）
+            // 初始化NPC基础信息（参数为NPC配置ID，对应配置表）
             var npcInfo = _binaryDataManager.GetConfig<NpcInfoContainer>(EConfigLoadType.Excel).dataDic[npcId];
-            
             // TODO：暂时写死，可通过配置获取对话的交互策略
             var strategy = DIContainer.Create<DialogueInteractStrategy>();
-            npcObject.SetInteractStrategy(strategy);
+            npcObject.SetInteractStrategy(EInteractType.Dialogue, strategy);
             npcObject.InitNpc(npcInfo);
-            _floatingTextManager.AddNpc(npcObject);
+            _floatingTextManager.RegisterAndAssign(npcObject);
             return npcObject;
         }
     }

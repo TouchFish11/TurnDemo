@@ -572,9 +572,9 @@ MonoBehaviour:
   - assetBundleName: tmp_asset
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\TMP_Asset\MSYH_SDF.asset
-      size: 8512302
+      size: 8518349
       name: MSYH_SDF.asset
-      hash: aee77a5aef90a1510be5870137dd325627096956dbfbefa607f87f4147777669
+      hash: 9bfb8cf6a380278e6ca7c13b82cec72cf2891db08960b48ea267e8c4de3512c0
       assetType: 0
   - assetBundleName: ui
     assetInfos:
@@ -764,9 +764,9 @@ MonoBehaviour:
       hash: b874c65af57f967e92ed37cf912bc5680f283c7db94ab32cb55641f6820326a2
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Inreract\InteractUI.prefab
-      size: 14211
+      size: 14241
       name: InteractUI.prefab
-      hash: bf5680bfbde04e366ea1fa43e57a9201db6b5df2b2c5763d232301fca7d39cb7
+      hash: 0fe220ad5960d44c4ccdaa68db5dc34976ea6a58b62ac0886d942f0deb56d384
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Inventory\InventoryPanel.prefab
       size: 159079

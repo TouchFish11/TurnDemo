@@ -8,7 +8,6 @@ namespace HotUpdate.UI.Battle.ActionLine
 {
     /// <summary>
     /// 行动格子UI组件
-    /// 负责战斗场景中行动格子的视觉表现、选中状态、闪烁动画、位移动画等逻辑
     /// </summary>
     public class ActionGridUI : UIBehaviourBase, ILogicView<ActionGridUI, ActionGridLogic>
     {
@@ -77,11 +76,6 @@ namespace HotUpdate.UI.Battle.ActionLine
             Flashing.gameObject.SetActive(false);
         }
 
-        protected override void OnEnable()
-        {
-            _actionGridLogic?.OnEnable();
-        }
-
         public void Init(ActionGridLogic logic)
         {
             _actionGridLogic = logic;
@@ -122,11 +116,6 @@ namespace HotUpdate.UI.Battle.ActionLine
         public void SetSlideTarget(int targetIndex)
         {
             _actionGridLogic.SetSlideTarget(targetIndex);
-        }
-
-        protected override void OnDisable()
-        {
-            _actionGridLogic?.OnDisable();
         }
 
         protected override void OnDestroy()

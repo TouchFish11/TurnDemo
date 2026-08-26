@@ -8,7 +8,7 @@ using UnityEngine;
 namespace HotUpdate.UI.Battle.FloatText
 {
     public abstract class FloatTextLogic<TFloatUI, TFloatLogic> : IUILogic<TFloatUI, TFloatLogic> , IPoolData
-        where TFloatUI : ILogicView<TFloatUI, TFloatLogic> where TFloatLogic : IUILogic<TFloatUI, TFloatLogic> 
+        where TFloatUI : FloatTextUI<TFloatUI, TFloatLogic> where TFloatLogic : FloatTextLogic<TFloatUI, TFloatLogic> 
     {
         [Inject] protected IMonoAdapter _monoAdapter;
         [Inject] protected IPoolManager _poolManager;
@@ -32,11 +32,11 @@ namespace HotUpdate.UI.Battle.FloatText
         protected float originAlpha;
         public event Action<TFloatUI> OnDurationOver;
         
-        public TFloatUI View { get; }
+        public TFloatUI View { get; protected set; }
 
         protected abstract RectTransform TextMover { get; }
-        
-        public virtual void OnEnable()
+
+        public virtual void SetTextMover()
         {
             // 重置文字移动节点的锚点位置为初始值
             TextMover.anchoredPosition = Vector3.zero;
@@ -46,7 +46,6 @@ namespace HotUpdate.UI.Battle.FloatText
 
         protected void StartUpdate()
         {
-            // 移除帧更新监听，停止逻辑执行
             _monoAdapter.AddUpdateListener(OnUpdate);
         }
         
@@ -71,16 +70,11 @@ namespace HotUpdate.UI.Battle.FloatText
             // 向上移动：每帧按移动速度向上偏移位置
             TextMover.Translate(Time.deltaTime * upMoveSpeed * Vector3.up);
         }
-
-        public void OnDisable()
-        {
-            // 移除帧更新监听，停止逻辑执行
-            _monoAdapter.RemoveUpdateListener(OnUpdate);
-        }
         
         void IPoolData.ResetData()
         {
-            
+            // 移除帧更新监听，停止逻辑执行
+            _monoAdapter.RemoveUpdateListener(OnUpdate);
         }
         
         public void Dispose()

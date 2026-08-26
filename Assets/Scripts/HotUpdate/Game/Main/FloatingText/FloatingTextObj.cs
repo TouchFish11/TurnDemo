@@ -13,28 +13,36 @@ namespace HotUpdate.Game.Main.FloatingText
         private TextMeshPro txtName;
         private TextMeshPro txtTip;
 
-        // �����NPCTransform
+        // 跟随NPC的Transform
         private Transform followNpcTarget;
-        // ͷ��ƫ����
+        // 头顶偏移量
         private readonly Vector3 offset = new(0, 2, 0);
-        // ��С����
+        // 最小缩放
         private readonly Vector3 minScale = Vector3.one * 0.2f;
-        // �������
+        // 最大缩放
         private readonly Vector3 maxScale = Vector3.one * 1.35f;
-        // �����ٶ�
+        // 缩放速度
         private const float scaleSpeed = 1.1f;
-        // �����
+        // 主摄像机
         private Camera mainCamera;
-        // �����
+        // 主玩家
         private Transform mainPlayer;
-        // �ϴξ���
+        // 上次距离
         private float lastDis;
+
+        /// <summary>
+        /// 是否显示
+        /// </summary>
+        public bool IsShow
+        {
+            get => this.gameObject.activeInHierarchy;
+            set => this.gameObject.SetActive(value);
+        }
 
         private void Awake()
         {
             txtName = transform.Find($"{nameof(txtName)}")?.GetComponent<TextMeshPro>();
             txtTip = transform.Find($"{nameof(txtTip)}")?.GetComponent<TextMeshPro>();
-            
             mainCamera = Camera.main;
         }
 
@@ -44,7 +52,7 @@ namespace HotUpdate.Game.Main.FloatingText
         }
 
         /// <summary>
-        /// ��ʼ��
+        /// 初始化
         /// </summary>
         /// <param name="player"></param>
         /// <param name="name"></param>
@@ -60,34 +68,34 @@ namespace HotUpdate.Game.Main.FloatingText
 
         private void OnUpdate()
         {
-            if (followNpcTarget == null || mainCamera == null)
-            {
+            if(!IsShow)
                 return;
-            }
+                
+            if (!followNpcTarget || !mainCamera)
+                return;
 
-            // �������
+            // 面向摄像机
             transform.forward = mainCamera.transform.forward;
-            // ����Ŀ��
+            // 跟随目标
             transform.position = followNpcTarget.position + offset;
-            // ��Ŀ��Խ�����ı�ԽС����֮Խ��
+            // 离目标越近文字越小，反之越大
             UpdateScale();
         }
 
         private void UpdateScale()
         {
-            float currentDis = Vector3.Distance(transform.position, mainPlayer.position);
+            var currentDis = Vector3.Distance(transform.position, mainPlayer.position);
             if (currentDis < lastDis)
             {
-                // ��С
+                // 变小
                 transform.localScale = Vector3.Lerp(transform.localScale, minScale, Time.deltaTime * scaleSpeed);
-                lastDis = currentDis;
             }
             else if(currentDis > lastDis)
             {
-                // �Ŵ�
+                // 变大
                 transform.localScale = Vector3.Lerp(transform.localScale, maxScale, Time.deltaTime * scaleSpeed);
-                lastDis = currentDis;
             }
+            lastDis = currentDis;
         }
         
 

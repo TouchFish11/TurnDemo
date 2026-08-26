@@ -22,6 +22,7 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
         public Transform monsterStateArea;
         // 血量渐变动画速度（控制fade遮罩的动画速率）
         public float fadeSpeed = 1f;
+        
         private MonsterStatusBarLogic _logic;
         
         /// <summary>
@@ -33,10 +34,28 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
         /// 存储当前怪物的所有弱点图标
         /// </summary>
         public List<Image> Weakneses { get; } = new();
-        
+
+        protected override void OnEnable()
+        {
+            _logic?.OnActive();
+        }
+
         public void Init(MonsterStatusBarLogic logic)
         {
             _logic = logic;
+        }
+
+        /// <summary>
+        /// 当被回收到对象池的时候调用此方法回收逻辑类
+        /// </summary>
+        public void OnCollect()
+        {
+            _logic.Dispose();
+        }
+        
+        protected override void OnDisable()
+        {
+            _logic.OnInActive();
         }
     }
 }

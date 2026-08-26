@@ -187,9 +187,10 @@ namespace HotUpdate.UI.Battle.Base
                 // 初始化伤害文本（元素颜色、伤害类型文本、最终伤害值）
                 var logic = _poolManager.GetData<DamageTextLogic>();
                 logic.OnDurationOver += dmgUI => _objectSpawner.Release(dmgUI);
-                logic.InitDamageText(((int)damageResult.ElementType).ToElementTypeColor(), 
+                logic.InitDamageText(damageTextUI, ((int)damageResult.ElementType).ToElementTypeColor(), 
                     GetDamgeTypeText(damageResult), 
                     damageResult.FinalDamage);
+                damageTextUI.Init(logic);
             }
             
             // 更新累计伤害UI
@@ -229,7 +230,8 @@ namespace HotUpdate.UI.Battle.Base
                     // 初始化护盾文本
                     var logic = _poolManager.GetData<ShieldTextLogic>();
                     logic.OnDurationOver += shieldTextUI => _objectSpawner.Release(shieldTextUI);
-                    logic.InitshieldText(sheilAmount);
+                    logic.InitshieldText(shieldTextUI, sheilAmount);
+                    shieldTextUI.Init(logic);
                 }
             }
             catch (Exception e)
@@ -269,7 +271,8 @@ namespace HotUpdate.UI.Battle.Base
                 // 初始化治疗文本
                 var logic = _poolManager.GetData<HealTextLogic>();
                 logic.OnDurationOver += healUI => _objectSpawner.Release(healUI);
-                logic.InitHealText(healAmount);
+                logic.InitHealText(healTextUI, healAmount);
+                healTextUI.Init(logic);
             }
         }
         

@@ -14,9 +14,9 @@ namespace HotUpdate.UI.Battle.ActionLine
         [Inject] private IPoolManager _poolManager;
         
         // 闪烁图片当前的透明度
-        public float currentAlpha = 1f;
+        private float currentAlpha = 1f;
         // 闪烁动画的计时变量
-        public float time;
+        private float time;
         
         public ActionExecuteGridUI View { get; private set; }
         
@@ -29,10 +29,10 @@ namespace HotUpdate.UI.Battle.ActionLine
         /// 绑定的战斗实体对象
         /// </summary>
         public IBattleEntityObject BattleEntity { get; private set; }
-        
-        public void OnEnable()
+
+        public void Init(ActionExecuteGridUI view)
         {
-            _monoAdapter.AddUpdateListener(OnUpdate);
+            View = view;
         }
         
         /// <summary>
@@ -46,6 +46,7 @@ namespace HotUpdate.UI.Battle.ActionLine
             View.imgIcon.sprite = icon;
             var alpha = icon ? 1f : 0f;
             View.imgIcon.color = new Color(View.imgIcon.color.r, View.imgIcon.color.g, View.imgIcon.color.b, alpha);
+            _monoAdapter.AddUpdateListener(OnUpdate);
         }
         
         /// <summary>
@@ -106,8 +107,8 @@ namespace HotUpdate.UI.Battle.ActionLine
         {
             FlashAnim();
         }
-        
-        public void OnDisable()
+
+        void IPoolData.ResetData()
         {
             _monoAdapter.RemoveUpdateListener(OnUpdate);
         }
@@ -115,11 +116,6 @@ namespace HotUpdate.UI.Battle.ActionLine
         public void Dispose()
         {
             _poolManager.PushData(this);
-        }
-
-        void IPoolData.ResetData()
-        {
-            
         }
     }
 }

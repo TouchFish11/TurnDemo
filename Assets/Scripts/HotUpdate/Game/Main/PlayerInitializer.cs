@@ -39,14 +39,10 @@ namespace HotUpdate.Game.Main
             await _gameDataManager.LoadConfigAsync();
             // 再加载数据，数据依赖配置
             await _gameDataManager.LoadDataAsync();
-            
             // 预先生成所需组件类型
             PreGenerateRequireComponentTypes();
-            
             // 初始化场景
             await _sceneGenerator.InitMainScene(-1);
-            // 创建玩家对象（参数为玩家配置ID，对应玩家基础配置表）
-            await _playerManager.CreatePlayer(1001);
         }
         
         /// <summary>

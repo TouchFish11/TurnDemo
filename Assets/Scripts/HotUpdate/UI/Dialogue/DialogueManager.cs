@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Text;
 using Core.DI;
+using Core.Exceptions;
 using Core.GlobalEvent;
 using Core.Log;
 using Core.Mono;
@@ -26,45 +27,39 @@ namespace HotUpdate.UI.Dialogue
     /// </summary>
     public class DialogueManager : IDialogueManager, IDisposable
     {
-        [Inject] private IPoolManager _poolManager;
         [Inject] private IUIService _uiService;
         [Inject] private IEventCenter _eventCenter;
         [Inject] private IBinaryDataManager _binaryDataManager;
         [Inject] private IMonoAdapter _monoAdapter;
         [Inject] private IMainDataProvider _mainDataManger;
         
+        private readonly IPoolManager _poolManager;
         // 对话上下文
-        private DialogueContext _dialogueContext;
+        private readonly DialogueContext _dialogueContext;
         // 分支处理器缓存
         private readonly Lazy<BranchHandlerCollecor> _branchHandlerCollecor;
 
         private DialogueController DialogueController => (DialogueController)_uiService.GetPanel(EUIPanelId.DialoguePanel);
         
-        // 对话开始事件（整段对话流程启动时触发）
         public event Action OnDialogueStart;
-        // 对话结束事件（整段对话流程结束时触发）
-        public event Action OnDialogueEnd;
-        // 单条对话开始事件（单条对话播放前触发）
-        public event Action<DialogueInfo> OnSingleDialogueStart;
-        // 单条对话结束事件（单条对话播放完成后触发）
-        public event Action OnSingleDialogueEnd;
-        // 对话分支选择回调
-        public event Action<BranchInfo> OnSelectDialogueBranch;
 
-        /// <summary>
-        /// 是否有对话正在进行中
-        /// </summary>
+        public event Action OnDialogueEnd;
+
+        public event Action<DialogueInfo> OnSingleDialogueStart;
+
+        public event Action OnSingleDialogueEnd;
+
+        public event Action<BranchInfo> OnSelectDialogueBranch;
+        
         public bool IsDialogueActive => _dialogueContext.IsDialogueActive;
 
-        private DialogueManager()
+        private DialogueManager(IPoolManager poolManager)
         {
             _branchHandlerCollecor = new Lazy<BranchHandlerCollecor>(() => DIContainer.Create<BranchHandlerCollecor>());
+            _dialogueContext = poolManager.GetData<DialogueContext>();
+            _poolManager = poolManager;
         }
         
-        /// <summary>
-        /// 启动对话流程
-        /// </summary>
-        /// <param name="startDialogueId">起始对话ID</param>
         public async void StartDialogue(int startDialogueId)
         {
             try
@@ -74,17 +69,17 @@ namespace HotUpdate.UI.Dialogue
                 {
                     return;
                 }
-
-                _dialogueContext = _poolManager.GetData<DialogueContext>();
+                
                 _dialogueContext.EnableTypewriter = (int)_mainDataManger.GameSettings[ESettingType.TypeWriter] != 0;    // 0为false，1为true，自定义规则
-                // 加载并创建对话UI，获取控制器
-                await _uiService.OpenAsync(EUIPanelId.DialoguePanel, E_UILayer.Mid);
                 // 标记对话为进行中
                 _dialogueContext.IsDialogueActive = true;
+                SetNextDialogue(startDialogueId);
                 // 触发对话开始事件
                 OnDialogueStart?.Invoke();
-                // 显示起始ID对应的对话内容
-                ShowCurrentDialogue(startDialogueId);
+                // 加载并创建对话UI，获取控制器
+                await _uiService.OpenAsync(EUIPanelId.DialoguePanel, E_UILayer.Mid, hideMain: true);
+                DialogueController.SetDialogueBoxActive(true);
+                ShowCurrentDialogue();
             }
             catch (Exception e)
             {
@@ -92,25 +87,37 @@ namespace HotUpdate.UI.Dialogue
             }
         }
 
+        public void SetNextDialogue(int nextDialogueId)
+        {
+            DialogueInfo dialogueInfo;
+            if (nextDialogueId == -1)
+            {
+                dialogueInfo = new DialogueInfo { f_id = -1 };
+            }
+            else
+            {
+                // 从配置表中获取对话信息
+                dialogueInfo = _binaryDataManager.GetConfig<DialogueInfoContainer>(EConfigLoadType.Excel).dataDic[nextDialogueId];
+            }
+            
+            // 记录当前对话信息
+            _dialogueContext.CurrentDialogueInfo = dialogueInfo;
+        }
+
         /// <summary>
-        /// 显示指定ID的对话内容
+        /// 显示当前设置的ID的对话内容
         /// </summary>
-        /// <param name="startDialogueId">要显示的对话ID</param>
-        public void ShowCurrentDialogue(int startDialogueId)
+        public void ShowCurrentDialogue()
         {
             // 对话ID为-1时，结束整个对话流程
-            if (startDialogueId == -1)
+            if (_dialogueContext.CurrentDialogueInfo.f_id == -1)
             {
                 EndDialogue();
                 return;
             }
-
-            // 从配置表中获取对话信息
-            var dialogueInfo = _binaryDataManager.GetConfig<DialogueInfoContainer>(EConfigLoadType.Excel).dataDic[startDialogueId];
-            // 记录当前对话信息
-            _dialogueContext.CurrentDialogueInfo = dialogueInfo;
+            
             // 从配置表中获取说话者（NPC）信息
-            _dialogueContext.NpcInfo = _binaryDataManager.GetConfig<NpcInfoContainer>(EConfigLoadType.Excel).dataDic[dialogueInfo.f_speakerId];
+            _dialogueContext.NpcInfo = _binaryDataManager.GetConfig<NpcInfoContainer>(EConfigLoadType.Excel).dataDic[_dialogueContext.CurrentDialogueInfo.f_speakerId];
             if (_dialogueContext.EnableTypewriter)
             {
                 // 启用打字机效果：初始化状态+启动协程
@@ -156,15 +163,11 @@ namespace HotUpdate.UI.Dialogue
         public void NextDialogue()
         {
             if (DialogueController == null)
-            {
-                throw new Exception("Dialogue Controller Not Set");
-            }
+                throw ExceptionHelper.Throw("Dialogue Controller Not Set");
             
             // 无对话进行时，直接返回
             if (!IsDialogueActive)
-            {
                 return;
-            }
 
             // 打字机未播放完成时：停止协程+直接显示完整文本
             if (!_dialogueContext.DialogueOver && _dialogueContext.TypewriterCor != null)
@@ -180,7 +183,8 @@ namespace HotUpdate.UI.Dialogue
             {
                 if (!_dialogueContext.CurrentDialogueInfo.f_hasBranch)
                 {
-                    ShowCurrentDialogue(_dialogueContext.CurrentDialogueInfo.f_nextId);
+                    SetNextDialogue(_dialogueContext.CurrentDialogueInfo.f_nextId);
+                    ShowCurrentDialogue();
                 }
             }
         }
@@ -227,15 +231,15 @@ namespace HotUpdate.UI.Dialogue
         /// <summary>
         /// 结束整个对话流程
         /// </summary>
-        public void EndDialogue()
+        public async void EndDialogue()
         {
-            _poolManager.PushData(_dialogueContext);
-            // 销毁对话UI
-            _uiService.CloseAsync(DialogueController.panelId, true, true);
+            // 销毁对话界面
+            await _uiService.CloseAsync(DialogueController.panelId, true, true);
             // 触发全局对话事件
             _eventCenter.TriggerEvent(new DialogueEvent(_dialogueContext.NpcInfo.f_id));
             // 触发对话结束事件
             OnDialogueEnd?.Invoke();
+            _poolManager.PushData(_dialogueContext);
         }
 
         public void Dispose()

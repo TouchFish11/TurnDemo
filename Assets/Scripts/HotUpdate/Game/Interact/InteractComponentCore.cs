@@ -22,14 +22,14 @@ namespace HotUpdate.Game.Interact
             // 注册对话结束事件的回调，对话结束时退出交互状态
             _dialogueManager.OnDialogueEnd += QuitInteract;
             // 获取输入组件，注册交互输入触发的回调
-            Component.EntityObject.GetComponent<InputComponent>().AddIniteractListener(OnIniteract);
+            Component.EntityObject.GetComponent<InputComponent>().AddIniteractListener(TriggerIniteract);
         }
         
         /// <summary>
         /// 添加可交互对象
         /// 将目标交互对象加入管理列表，并触发交互对象列表更新事件
         /// </summary>
-        /// <param name="interactable">待添加的可交互对象（实现IInteractable接口）</param>
+        /// <param name="interactable">待添加的可交互对象</param>
         public void AddInteract(IInteractable interactable)
         {
             interactables.Add(interactable);
@@ -57,7 +57,7 @@ namespace HotUpdate.Game.Interact
         /// 交互输入事件的回调方法
         /// 当玩家触发交互输入时，执行对应的交互逻辑
         /// </summary>
-        private void OnIniteract()
+        private void TriggerIniteract()
         {
             // 若无可交互对象，直接返回
             if (interactables.Count == 0)

@@ -15,7 +15,8 @@ namespace HotUpdate.Game.Dialogue.Handler
         public void Execute(BranchData branchData)
         {
             // 显示选中分支对应的对话
-            _dialogueManager.ShowCurrentDialogue(branchData.BranchInfo.f_dialogueId);
+            _dialogueManager.SetNextDialogue(branchData.BranchInfo.f_dialogueId);
+            _dialogueManager.ShowCurrentDialogue();
         }
     }
 }

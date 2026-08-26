@@ -3,6 +3,7 @@ using Core.Log;
 using Core.UI.ViewController;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.UI;
+using HotUpdate.UI.Battle.ActionLine;
 using HotUpdate.UI.Battle.MonsterStateUI;
 
 namespace HotUpdate.UI.Battle.Base
@@ -26,6 +27,11 @@ namespace HotUpdate.UI.Battle.Base
 
         protected override Task OnInit()
         {
+            // 初始化界面UI
+            var actionExecuteGridLogic = DIContainer.Create<ActionExecuteGridLogic>();
+            actionExecuteGridLogic.Init(view.ActionExecuteGridUI);
+            view.InitActionExecuteGrid(actionExecuteGridLogic);
+            view.InitActingTip();
             return Task.CompletedTask;
         }
 
@@ -59,7 +65,6 @@ namespace HotUpdate.UI.Battle.Base
         {
             // 注册战斗相关事件
             EventProcessor.RegisterBattleEvents(battleContext.EventBus);
-            
             Logger.LogDebug(ELogTags.Battle, $"Battle init controller finished");
         }
     }

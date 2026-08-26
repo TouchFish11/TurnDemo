@@ -99,7 +99,7 @@ namespace HotUpdate.UI.Activity.EmbersCanon
 
         protected override void OnDispose()
         {
-            _embersCanonSubActivityUI_01.Destroy();
+            _embersCanonSubActivityUI_01?.Destroy();
         }
     }
 }

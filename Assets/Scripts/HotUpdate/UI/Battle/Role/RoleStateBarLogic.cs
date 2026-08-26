@@ -39,13 +39,7 @@ namespace HotUpdate.UI.Battle.Role
         /// 当前UI绑定的角色ID
         /// </summary>
         public int RoleId { get; private set; }
-    
-        public void OnEnable()
-        {
-
-        }
-
-
+        
         /// <summary>
         /// 初始化角色状态UI
         /// </summary>
@@ -294,18 +288,7 @@ namespace HotUpdate.UI.Battle.Role
                 }
             }
         }
-
         
-        public void OnDisable()
-        {
-            // 移除Update监听
-            _monoAdapter.RemoveUpdateListener(OnUpdate);
-            battleContext.EventBus.RemoveListener<HpChangedEvent>(OnHpChanged);
-            battleContext.EventBus.RemoveListener<ShieldChangedEvent>(OnShieldChanged);
-            battleContext.EventBus.RemoveListener<EnergyChangedEvent>(OnEnergyChangedEvent);
-            battleContext.EventBus.RemoveListener<StatusAddedEvent>(OnStatusAddedEvent);
-        }
-    
         public void Dispose()
         {
             _poolManager.PushData(this);
@@ -313,7 +296,12 @@ namespace HotUpdate.UI.Battle.Role
 
         public void ResetData()
         {
-            
+            // 移除Update监听
+            _monoAdapter.RemoveUpdateListener(OnUpdate);
+            battleContext.EventBus.RemoveListener<HpChangedEvent>(OnHpChanged);
+            battleContext.EventBus.RemoveListener<ShieldChangedEvent>(OnShieldChanged);
+            battleContext.EventBus.RemoveListener<EnergyChangedEvent>(OnEnergyChangedEvent);
+            battleContext.EventBus.RemoveListener<StatusAddedEvent>(OnStatusAddedEvent);
         }
     }
 }

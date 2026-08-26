@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Core.DI;
+using Core.Exceptions;
 using Core.Log;
 using Core.Pool;
 using Core.UI;
@@ -70,15 +71,11 @@ namespace HotUpdate.UI.Main
         {
             try
             {
-                // 失活主界面
-                await _uiService.CloseAsync(panelId, false);
+                EUIPanelId id;
                 switch (btnName)
                 {
                     case "btnActivity":
-                        await _uiService.OpenAsync(EUIPanelId.ActivityPanel, E_UILayer.Bot);
-                        break;
-                    case "btnJourney":
-                        
+                        id = EUIPanelId.ActivityPanel;
                         break;
                     case "btnBag":
                         // Test
@@ -87,23 +84,24 @@ namespace HotUpdate.UI.Main
                         _itemDataProvider.AddData(10003, 3);
                         _itemDataProvider.AddData(20001, 1);
                         _itemDataProvider.AddData(20002, 1);
-                        
-                        await _uiService.OpenAsync(EUIPanelId.InventoryPanel, E_UILayer.Bot);
+                        id = EUIPanelId.InventoryPanel;
                         break;
                     // 任务按钮点击：打开任务界面
                     case "btnTask":
-                        await _uiService.OpenAsync(EUIPanelId.QuestPanel, E_UILayer.Bot);
-                        break;
-                    case "btnTeam":
-                        
-                        break;
-                    case "btnRole":
-                        
+                        id = EUIPanelId.QuestPanel;
                         break;
                     case "btnSettings":
-                        await _uiService.OpenAsync(EUIPanelId.SettingPanel, E_UILayer.Bot);
+                        id = EUIPanelId.SettingPanel;
                         break;
+                    case "btnTeam":
+                    case "btnRole":
+                    case "btnJourney":
+                    default:
+                        throw ExceptionHelper.Throw($"Panel id not found: {btnName}");
                 }
+                
+                //TimeUtil.Timescale = 0;
+                await _uiService.OpenAsync(id, E_UILayer.Bot, hideMain: true);
             }
             catch (Exception e)
             {

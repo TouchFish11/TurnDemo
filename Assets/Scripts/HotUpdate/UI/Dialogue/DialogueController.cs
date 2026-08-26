@@ -56,10 +56,10 @@ namespace HotUpdate.UI.Dialogue
         /// <summary>
         /// 对话弹窗是否处于激活状态
         /// </summary>
-        public bool IsActiveBox { get; set; }
+        private bool IsActiveBox { get; set; } = true;
 
-        public bool BlockOperation { get; } = true;
-        
+        public bool BlockOperation => true;
+
         protected override bool IsCursorVisible { get; set; } = true;
         
         /// <summary>
@@ -78,6 +78,7 @@ namespace HotUpdate.UI.Dialogue
             _dialogueManager.OnSingleDialogueStart += OnSingleDialogueStart;
             _dialogueManager.OnSingleDialogueEnd += OnSingleDialogueEnd;
             _dialogueManager.OnSelectDialogueBranch += OnSelectDialogueBranch;
+            SetDialogueBoxActive(!IsActiveBox);
             return Task.CompletedTask;
         }
         
@@ -87,7 +88,8 @@ namespace HotUpdate.UI.Dialogue
             _dialogueManager.OnSingleDialogueStart -= OnSingleDialogueStart;
             _dialogueManager.OnSingleDialogueEnd -= OnSingleDialogueEnd;
             _dialogueManager.OnSelectDialogueBranch -= OnSelectDialogueBranch;
-            view.StoryReviewView.OnSubViewClosed -= OnSubViewClosed;
+            if(view.StoryReviewView)
+                view.StoryReviewView.OnSubViewClosed -= OnSubViewClosed;
             dialogueTipCor = null;
             return Task.CompletedTask;
         }
@@ -113,15 +115,20 @@ namespace HotUpdate.UI.Dialogue
                         view.SetDialogueBoxActive(IsActiveBox);
                     }
                     break;
-                case "btnHide": // 隐藏按钮
+                case "btnHide":
                     // 切换对话框激活状态并更新显示
-                    IsActiveBox = !IsActiveBox;
-                    view.SetDialogueBoxActive(IsActiveBox);
+                    SetDialogueBoxActive(!IsActiveBox);
                     break;
                 case "btnReview": // 回顾按钮
                     await CreateOrShowReviewView();
                     break;
             }
+        }
+
+        public void SetDialogueBoxActive(bool active)
+        {
+            IsActiveBox = active;
+            view.SetDialogueBoxActive(active);
         }
         
         /// <summary>

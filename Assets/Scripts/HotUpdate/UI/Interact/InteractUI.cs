@@ -1,28 +1,26 @@
-using Core.Log;
 using Core.UI;
 using TMPro;
-using UnityEngine;
-using Logger = Core.Log.Logger;
 
-namespace HotUpdate.Game.Interact.UI
+namespace HotUpdate.UI.Interact
 {
     /// <summary>
     /// 交互UI
     /// </summary>
-    public class InteractUI : UIBehaviourBase
+    public class InteractUI : UIBehaviourBase, ILogicView<InteractUI, InteractLogic>
     {
-        [InjectUI] private TextMeshProUGUI txtInteractTip;
+        [InjectUI] public TextMeshProUGUI txtInteractTip;
 
+        private InteractLogic _logic;
+        
+        public void Init(InteractLogic logic)
+        {
+            _logic = logic;
+            txtInteractTip.text = _logic.InteractTipText;
+        }
+        
         protected override void OnButtonClick(string btnName)
         {
-            Logger.LogDebug(ELogTags.Interact, "交互按钮点击");
+            _logic.TriggerInteract();
         }
-
-        public void Init(string text)
-        {
-            txtInteractTip.text = text;
-        }
-
-        public GameObject GameObject => this.gameObject;
     }
 }

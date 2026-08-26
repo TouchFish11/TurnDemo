@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Core.AssetBundles.Management;
 using Core.UI;
 using Core.UI.ViewController;
-using HotUpdate.Game.Interact.UI;
+using HotUpdate.UI.Interact;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

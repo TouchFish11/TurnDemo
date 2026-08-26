@@ -39,6 +39,8 @@ namespace HotUpdate.Game.Scene
         public async Task InitMainScene(int sceneId)
         {
             await _sceneManager.LoadSceneAsync(AssetKeys.MainScene, LoadSceneMode.Single, null);
+            // 创建玩家对象（参数为玩家配置ID，对应玩家基础配置表）
+            await _playerManager.CreatePlayer(1001);
             // 创建村民NPC对象
             await _npcFactory.CreateNpc(1, new Vector3(0, 1, 8.39f), Quaternion.identity);
             // 创建流浪汉NPC对象

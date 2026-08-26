@@ -50,6 +50,7 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
                 return;
             }
             
+            normalMonsterStateUI.OnCollect();
             _objectSpawner.Release(normalMonsterStateUI);
             normalMonsterStateUIs.Remove(deadMonster);
         }
@@ -128,6 +129,7 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
         {
             foreach (var normalMonsterStateUI in normalMonsterStateUIs.Values)
             {
+                normalMonsterStateUI.OnCollect();
                 _objectSpawner.Release(normalMonsterStateUI);
             }
             normalMonsterStateUIs.Clear();
@@ -136,11 +138,9 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
 
         public void Dispose()
         {
-            foreach (var normalMonsterStateUI in normalMonsterStateUIs.Values)
-            {
-                _objectSpawner.Release(normalMonsterStateUI);
-            }
+            RemoveAll();
             _objectSpawner.Dispose();
+            _objectSpawner = null;
         }
     }
 }

@@ -8,7 +8,7 @@ namespace HotUpdate.Base.Manager
         /// <summary>
         /// 主玩家对象（固定UID为1001）
         /// </summary>
-        IEntityObject CurrentEntity { get; }
+        IEntityObject MainPlayer { get; }
         
         /// <summary>
         /// 清理玩家和相机
