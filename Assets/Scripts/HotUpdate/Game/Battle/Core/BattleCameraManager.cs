@@ -1,11 +1,13 @@
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
+using Core.GlobalEvent;
+using Core.GlobalEvent.Events.ViewOperation;
 using Core.Log;
 using Core.Mono;
 using Core.Serialize.Binary;
 using HotUpdate.Game.Battle.Context;
-using HotUpdate.Game.Battle.Inputs;
+using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Object;
 using UnityEngine;
 
@@ -18,8 +20,9 @@ namespace HotUpdate.Game.Battle.Core
     {
         [Inject] private IBinaryDataManager _binaryDataManager;
         [Inject] private ObjectSpawner _objectSpawner;
+        [Inject] private IEventCenter _eventCenter;
+        [Inject] private IMonoAdapter _monoAdapter;
         
-        private readonly IMonoAdapter _monoAdapter;
         // X轴旋转角度限制
         private const float minXAngle = -3f;
         private const float maxXAngle = 3f;
@@ -39,21 +42,20 @@ namespace HotUpdate.Game.Battle.Core
         private float lastDeltaX;
         // 相机起始角度
         private Quaternion _originRot;
+        
         private IBattleContext _context;
         
-        public Camera CurrentActiveCamera { get; private set; }
+        private OperationState _operationState;
         
-        public BattleCameraManager(IBattleInputHandler battleInputHandler, IMonoAdapter monoAdapter)
-        {
-            battleInputHandler.OnDrag += OnDrag;
-            battleInputHandler.OnRebound += OnRebound;
-            _monoAdapter = monoAdapter;
-        }
+        public Camera CurrentActiveCamera { get; private set; }
 
-        public void Init(IBattleContext context)
+        public void Init(IBattleContext context, OperationState operationState)
         {
+            _eventCenter.SubscribeEvent<ViewDraggingEvent>(OnDrag);
+            _eventCenter.SubscribeEvent<ViewReboundEvent>(OnRebound);
             _monoAdapter.AddUpdateListener(OnUpdate);
             _context = context;
+            _operationState = operationState;
         }
 
         public async Task<Camera> CreateCamera(Transform cameraTrans, Vector3 localPos, Quaternion localRot)
@@ -102,12 +104,44 @@ namespace HotUpdate.Game.Battle.Core
             camera.cullingMask = mask;
         }
         
+          
         /// <summary>
-        /// 滑动事件回调
+        /// 基于指定角色的位置索引计算要渲染的玩家角色的Mask
         /// </summary>
-        /// <param name="deltaX"></param>
-        private void OnDrag(float deltaX)
+        /// <param name="playerEntityPosIndex"></param>
+        public int CalcRoleRenderMask(int playerEntityPosIndex)
         {
+            // 设置Mask
+            var mask2 = ResetCameraMask();
+            // 根据当前玩家位置索引，只渲染符合的角色
+            var roleLayers = LayerGeter.GetRoleLayers();
+            for (var i = playerEntityPosIndex; i < roleLayers.Length; i++)
+            {
+                mask2 |= 1 << roleLayers[i];
+            }
+
+            return mask2;
+        }
+        
+        /// <summary>
+        /// 重置相机Mask层级
+        /// </summary>
+        private static int ResetCameraMask()
+        {
+            var mask= LayerGeter.GetPreBitLayer();
+            // TODO：暂时写所有怪物，后续优化
+            mask |= LayerGeter.GetMonsterBitLayer();
+            return mask;
+        }
+
+        private void OnDrag(ViewDraggingEvent e)
+        {
+            if (!_operationState.IsActiveInput)
+            {
+                return;
+            }
+            
+            var deltaX = e.DeltaX;
             if (Mathf.Approximately(lastDeltaX, deltaX) || isRebound)
             {
                 return;
@@ -132,7 +166,26 @@ namespace HotUpdate.Game.Battle.Core
                 CurrentActiveCamera.transform.localRotation = Quaternion.Slerp(CurrentActiveCamera.transform.localRotation, targetRot, Time.deltaTime * rotateSpeed);
             }
         }
-
+        
+        private void OnRebound(ViewReboundEvent e)
+        {
+            if (!_operationState.IsActiveInput)
+            {
+                return;
+            }
+            
+            Rebound(e.IsRebound);
+        }
+        
+        /// <summary>
+        /// 是否回弹
+        /// </summary>
+        /// <param name="isRebound"></param>
+        private void Rebound(bool isRebound)
+        {
+            this.isRebound = isRebound;
+        }
+        
         /// <summary>
         /// 更新当前相机旋转基准
         /// </summary>
@@ -153,15 +206,6 @@ namespace HotUpdate.Game.Battle.Core
         }
 
         /// <summary>
-        /// 是否回弹
-        /// </summary>
-        /// <param name="isRebound"></param>
-        private void OnRebound(bool isRebound)
-        {
-            this.isRebound = isRebound;
-        }
-
-        /// <summary>
         /// 回弹效果
         /// </summary>
         private void Rebounding()
@@ -170,7 +214,7 @@ namespace HotUpdate.Game.Battle.Core
             if (Quaternion.Angle(CurrentActiveCamera.transform.localRotation, baseRotation) < 0.1f)
             {
                 CurrentActiveCamera.transform.localRotation = baseRotation;
-                OnRebound(false);
+                Rebound(false);
                 currentXAngle = 0;
             }
         }
@@ -195,6 +239,8 @@ namespace HotUpdate.Game.Battle.Core
 
         public void Reset()
         {
+            _eventCenter.UnsubscribeEvent<ViewDraggingEvent>(OnDrag);
+            _eventCenter.UnsubscribeEvent<ViewReboundEvent>(OnRebound);
             _monoAdapter.RemoveUpdateListener(OnUpdate);
             _objectSpawner.Release(CurrentActiveCamera);
             CurrentActiveCamera = null;

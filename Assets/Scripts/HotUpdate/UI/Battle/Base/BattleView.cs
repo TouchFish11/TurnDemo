@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Core.UI;
 using Core.UI.ViewController;
@@ -7,6 +8,7 @@ using HotUpdate.UI.Battle.Role;
 using HotUpdate.UI.Battle.SkillKey;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace HotUpdate.UI.Battle.Base
@@ -14,7 +16,7 @@ namespace HotUpdate.UI.Battle.Base
     /// <summary>
     /// 战斗界面
     /// </summary>
-    public class BattleView : UIView
+    public class BattleView : UIView, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         #region UI组件
 
@@ -238,6 +240,73 @@ namespace HotUpdate.UI.Battle.Base
             }
 
             return currentCalcDamage;
+        }
+        
+        // 激活拖拽的最小偏移
+        private const float activateThreshold = 2f;
+        // 拖拽阈值（超过该距离判定为拖拽，否则为点击）
+        private const float dragThreshold = 50f;
+        // 累计偏移量
+        private float nowDeltaX;
+
+        public event Action OnClick;
+        
+        public event Action<float> OnDragging;
+
+        public event Action<bool> OnRebound;
+
+        public event Action OnLeftDrag;
+        
+        public event Action OnRightDrag;
+        
+        
+        protected override void OnPointerDown(PointerEventData eventData)
+        {
+            // 仅处理左键/主键；eventData.pressPosition 已经是按下坐标，无需手动记录
+            if (eventData.button != PointerEventData.InputButton.Left) 
+                return;
+        }
+
+        public void OnBeginDrag(PointerEventData eventData)
+        {
+            // 等价于原代码"进入拖拽状态"：重置累计偏移
+            nowDeltaX = 0;
+        }
+        
+        public void OnDrag(PointerEventData eventData)
+        {
+            if (eventData.button != PointerEventData.InputButton.Left) 
+                return;
+
+            // 核心修正：eventData.delta.x 就是本帧 X 偏移增量，替代 lastMouseX 手工计算
+            var deltaX = eventData.delta.x;
+            nowDeltaX += deltaX;
+            OnDragging?.Invoke(deltaX);
+
+            if (Mathf.Abs(nowDeltaX) > dragThreshold)
+            {
+                if (nowDeltaX > 0) 
+                    OnRightDrag?.Invoke();
+                else if (nowDeltaX < 0) 
+                    OnLeftDrag?.Invoke();
+                nowDeltaX = 0;
+            }
+        }
+
+        public void OnEndDrag(PointerEventData eventData)
+        {
+            // 只有"拖拽中松手"才会走到这里，等价于原释放分支里的 OnRebound(true)
+            if (eventData.button != PointerEventData.InputButton.Left) 
+                return;
+            OnRebound?.Invoke(true);
+        }
+
+        protected override void OnPointerClick(PointerEventData eventData)
+        {
+            // 只有"按下后未拖动就松开"才会走到这里
+            if (eventData.button != PointerEventData.InputButton.Left) 
+                return;
+            OnClick?.Invoke();
         }
     }
 }

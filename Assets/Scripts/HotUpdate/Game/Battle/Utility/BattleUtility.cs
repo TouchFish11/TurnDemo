@@ -24,7 +24,7 @@ namespace HotUpdate.Game.Battle.Utility
         public const float BASE_ACTION_VALUE = 10000f;
 
         /// <summary>
-        /// 速度修正系数（平衡不同速度区间）
+        /// 速度修正系数
         /// </summary>
         public const float SPEED_CORRECTION = 1.0f;
 
@@ -57,9 +57,6 @@ namespace HotUpdate.Game.Battle.Utility
 
                 return b1.ActionValue > b2.ActionValue ? 1 : 0;
             });
-
-            // 将首个行动实体的行动值置为基准线起始值
-            context.ActionLine = context.AllBattleEntity[0].ActionValue;
         }
 
         /// <summary>
@@ -69,16 +66,26 @@ namespace HotUpdate.Game.Battle.Utility
         public static void UpdateOrder(IBattleContext context)
         {
             var currentTurnOwner = context.CurrentTurnOwner;
-            if (currentTurnOwner == null) 
-                return;
+            // 先计算当前行动完成的对象的新行动值，再插入序列中，后续再计算整体推进行动值
+            if (currentTurnOwner != null)
+            {
+                // 基于新速度，更新当前持有回合的实体的行动值
+                var newSpeed = currentTurnOwner.GetComponent<PropertyComponent>().GetPropertyValue(E_DynamicPropertyType.CurrentSpeed);
+                currentTurnOwner.SetActionValue(CalcActionValue(newSpeed));
+                // 将当前实体插入到对应的位置
+                InsertActionAxis(currentTurnOwner);
+            }
             
-            // 将当前行动实体的行动值作为行动基准线值
-            context.ActionLine = currentTurnOwner.ActionValue;
-            // 基于新速度，更新当前持有回合的实体的行动值
-            var newSpeed = currentTurnOwner.GetComponent<PropertyComponent>().GetPropertyValue(E_DynamicPropertyType.CurrentSpeed);
-            currentTurnOwner.SetActionValue(context.ActionLine + CalcActionValue(newSpeed));
-            // 将当前实体插入到对应的位置
-            InsertActionAxis(currentTurnOwner);
+            // currentTurnOwner为null，说明首次进入，或者转波次，或者当前持有回合实体死亡，就直接找第一个行动的对象，更新
+            // 记录下一个行动实体的行动值
+            var nextAv = context.AllBattleEntity[0].ActionValue;
+            // 基于记录的行动值，更新所有实体的行动值 
+            foreach (var battleEntityObject in context.AllBattleEntity)
+            {
+                var av = battleEntityObject.ActionValue;
+                battleEntityObject.SetActionValue(av - nextAv);
+            }
+            
             // 触发事件，通知行动轴UI更新
             context.EventBus.TriggerEvent(new ActionBarSortPostEvent(context));
         }

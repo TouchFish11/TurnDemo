@@ -91,12 +91,12 @@ namespace Core.AssetBundles.Update.Core
                 if (!success)
                 {
                     // 请求失败：打印错误日志（包含错误信息、响应码），触发失败回调
-                    Logger.LogError(ELogTags.Network, $"[{nameof(ABWebRequester)}]: {FileName} download fail, error={_request?.error}，result={_request?.result}, responseCode={_request?.responseCode}");
+                    Logger.LogError(ELogTags.Network, $"{FileName} download fail, error={_request?.error}，result={_request?.result}, responseCode={_request?.responseCode}");
                 }
             }
             catch (System.Exception e)
             {
-                Logger.LogError(ELogTags.Network, $"Download error, {e.Message}");
+                Logger.LogException(ELogTags.Network, e);
                 success = false;
             }
             finally

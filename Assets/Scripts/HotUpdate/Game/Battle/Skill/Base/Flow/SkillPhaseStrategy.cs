@@ -10,7 +10,10 @@ namespace HotUpdate.Game.Battle.Skill.Base.Flow
     /// </summary>
     public abstract class SkillPhaseStrategy : ISkillPhaseStrategy
     {
-        [Inject] protected BattleCoordinator battleCoordinator;
+        [Inject] protected IBattleCoordinator battleCoordinator;
+        [Inject] protected IBattlePointProxy battlePointProxy;
+        [Inject] protected IBattleCameraManager battleCameraManager;
+        
         // 技能对象
         protected ISkill skill;
         // 技能动画数组

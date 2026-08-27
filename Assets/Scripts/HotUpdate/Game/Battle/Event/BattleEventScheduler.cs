@@ -27,7 +27,8 @@ namespace HotUpdate.Game.Battle.Event
     public class BattleEventScheduler : IBattleEventScheduler
     {
         [Inject] private IBinaryDataManager _binaryDataManager;
-        [Inject] private BattleCoordinator _battleCoordinator;
+        [Inject] private IBattleCoordinator _battleCoordinator;
+        [Inject] private IBattlePointProxy _battlePointProxy;
         [Inject] private ISkillKeyUIDataProviderFactory _skillKeyUIDataProviderFactory;
         [Inject] private IUIService _uiService;
         
@@ -67,9 +68,9 @@ namespace HotUpdate.Game.Battle.Event
         private void OnUltimateCastDispatch(UltimateCastEvent ultimateCastEvent)
         {
             // 关闭目标选择（终结技释放时不再允许手动选择目标）
-            _battleCoordinator.IsActiveTargetSelect = false;
+            _battleCoordinator.OperationState.IsActiveTargetSelect = false;
             // 禁用输入
-            _battleCoordinator.IsActiveInput = false;
+            _battleCoordinator.OperationState.IsActiveInput = false;
             var controller = (IBattleController)_uiService.GetPanel(EUIPanelId.BattlePanel);
             controller.BattleUiManager.ClearSelectMarker();
             controller.BattleUiManager.ClearOperator();
@@ -93,7 +94,7 @@ namespace HotUpdate.Game.Battle.Event
                 if (turnStartEvent.CurrentBattleEntity is PlayerObject playerObject)
                 {
                     // 先执行战斗点位置变化
-                    _battleCoordinator.UpdateMonsterPos(turnStartEvent.CurrentBattleEntity);
+                    _battlePointProxy.UpdateMonsterPos(turnStartEvent.CurrentBattleEntity);
                     // 更新相机显示
                     await _battleCoordinator.UpdateCamera(playerObject);
                 }
@@ -106,9 +107,9 @@ namespace HotUpdate.Game.Battle.Event
                         // 角色行动才激活怪物UI显示
                         controller.MonsterStateUIManager.ActiveMonsterUIs();
                         // 启用输入
-                        _battleCoordinator.IsActiveInput = true;
+                        _battleCoordinator.OperationState.IsActiveInput = true;
                         // 玩家回合：激活目标选择功能
-                        _battleCoordinator.IsActiveTargetSelect = true;
+                        _battleCoordinator.OperationState.IsActiveTargetSelect = true;
                         // 隐藏行动提示
                         controller.BattleUiManager.SetActTipActive(EActTipType.Hide);
                         // 获取技能按键UI数据提供器
@@ -119,7 +120,7 @@ namespace HotUpdate.Game.Battle.Event
                     }
                     case MonsterObject:
                         // 怪物回合：关闭目标选择功能
-                        _battleCoordinator.IsActiveTargetSelect = false;
+                        _battleCoordinator.OperationState.IsActiveTargetSelect = false;
                         // 清除选中目标的标记UI
                         controller.BattleUiManager.ClearSelectMarker();
                         // 清空操作面板

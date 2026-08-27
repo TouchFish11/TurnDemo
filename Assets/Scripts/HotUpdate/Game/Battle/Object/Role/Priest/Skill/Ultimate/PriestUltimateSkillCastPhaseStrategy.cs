@@ -43,7 +43,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill.Ultimate
             var pos = SkillContext.Caster.GameObject.transform.position + Vector3.forward * 2.5f;
             pos = new Vector3(pos.x, 1, pos.z);
             var rot = Quaternion.Euler(0, 180, 0);
-            yield return TaskUtility.WaitForTask(battleCoordinator.SetCameraTrans(null, pos, rot, mask));
+            yield return TaskUtility.WaitForTask(battleCameraManager.CreateCamera(null, pos, rot, mask));
         }
         
         private IEnumerator UpdateCamera_02()
@@ -59,7 +59,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill.Ultimate
             }
             
             var pos = new Vector3(SkillContext.MainTarget.GameObject.transform.position.x, 1, -2.5f);
-            yield return TaskUtility.WaitForTask(battleCoordinator.SetCameraTrans(null, pos, Quaternion.identity, mask));
+            yield return TaskUtility.WaitForTask(battleCameraManager.CreateCamera(null, pos, Quaternion.identity, mask));
         }
 
         private IEnumerator CreateVFX()

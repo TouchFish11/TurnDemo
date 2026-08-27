@@ -1,4 +1,6 @@
 using Core.DI;
+using Core.GlobalEvent;
+using Core.GlobalEvent.Events.ViewOperation;
 using Core.Log;
 using Core.UI.ViewController;
 using HotUpdate.Game.Battle.Context;
@@ -15,6 +17,8 @@ namespace HotUpdate.UI.Battle.Base
     /// </summary>
     public class BattleController : UIController<BattleView>, IBattleController
     {
+        [Inject] private IEventCenter _eventCenter;
+        
         public IBattleUIInitializer UiInitializer { get; private set; }
         
         public IBattleEventProcessor EventProcessor { get; private set; }
@@ -37,6 +41,12 @@ namespace HotUpdate.UI.Battle.Base
 
         protected override Task OnActive()
         {
+            view.OnClick += OnViewClick;
+            view.OnDragging += OnViewDragging;
+            view.OnLeftDrag += OnViewLeftDrag;
+            view.OnRightDrag += OnViewRightDrag;
+            view.OnRebound += OnViewRebound;
+            
             UiInitializer = DIContainer.Create<BattleUIInitializer>(parameterValues: new object[] { view, this });
             BattleUiManager = DIContainer.Create<BattleUIManager>(parameterValues: new object[] { view, this });
             EventProcessor = DIContainer.Create<BattleEventProcessor>(parameterValues: new object[] { this, BattleUiManager, UiInitializer });
@@ -46,6 +56,12 @@ namespace HotUpdate.UI.Battle.Base
 
         protected override Task OnInactivate()
         {
+            view.OnClick -= OnViewClick;
+            view.OnDragging -= OnViewDragging;
+            view.OnLeftDrag -= OnViewLeftDrag;
+            view.OnRightDrag -= OnViewRightDrag;
+            view.OnRebound -= OnViewRebound;
+            
             UiInitializer.Dispose();
             UiInitializer = null;
             BattleUiManager.Dispose();
@@ -66,6 +82,44 @@ namespace HotUpdate.UI.Battle.Base
             // 注册战斗相关事件
             EventProcessor.RegisterBattleEvents(battleContext.EventBus);
             Logger.LogDebug(ELogTags.Battle, $"Battle init controller finished");
+        }
+
+
+        private void OnViewClick()
+        {
+            var viewClickEvent = EventSource.Get<ViewClickEvent>();
+            viewClickEvent.UIView = view.GetType();
+            _eventCenter.TriggerEvent(viewClickEvent);
+        }
+        
+        private void OnViewDragging(float deltaX)
+        {
+            var viewDraggingEvent = EventSource.Get<ViewDraggingEvent>();
+            viewDraggingEvent.UIView = view.GetType();
+            viewDraggingEvent.DeltaX = deltaX;
+            _eventCenter.TriggerEvent(viewDraggingEvent);
+        }
+
+        private void OnViewLeftDrag()
+        {
+            var viewLeftDragEvent = EventSource.Get<ViewLeftDragEvent>();
+            viewLeftDragEvent.UIView = view.GetType();
+            _eventCenter.TriggerEvent(viewLeftDragEvent);
+        }
+        
+        private void OnViewRightDrag()
+        {
+            var viewRightDragEvent = EventSource.Get<ViewRightDragEvent>();
+            viewRightDragEvent.UIView = view.GetType();
+            _eventCenter.TriggerEvent(viewRightDragEvent);
+        }
+
+        private void OnViewRebound(bool isRebound)
+        {
+            var viewReboundEvent = EventSource.Get<ViewReboundEvent>();
+            viewReboundEvent.UIView = view.GetType();
+            viewReboundEvent.IsRebound = isRebound;
+            _eventCenter.TriggerEvent(viewReboundEvent);
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Core.DI;
 using Core.Log;
 using Core.Mono;
@@ -7,6 +8,7 @@ using Core.UI;
 using HotUpdate.Base.UI;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;
+using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Turn;
 using HotUpdate.Game.Battle.UI;
 
@@ -18,8 +20,8 @@ namespace HotUpdate.Game.Battle.StateMeachine
     public class PreparationState : BattleState
     {
         [Inject] private IBattleManager _battleManager;
-        [Inject] private IBattleCoordinator _battleCoordinator;
         [Inject] private IMonoAdapter _monoAdapter;
+        [Inject] private IBattlePointProxy _battlePointProxy;
         
         public PreparationState(IBattleStateMachine battleStateMachine, IBattleContext context) : base(battleStateMachine, context)
         {
@@ -37,8 +39,8 @@ namespace HotUpdate.Game.Battle.StateMeachine
                 // TODO：暂时写死，可根据配置优化
                 // 创建并缓存战斗角色
                 await _battleManager.BattleService.CreatePlayerRoles(1,2,3);
-                // 初始化战斗协调器
-                _battleCoordinator.Init(Context);
+                // 初始化角色战斗点
+                _battlePointProxy.SetPointInfos(new List<IBattleEntityObject>(Context.GetAlivePlayerEntitys()));
                 // 初始化角色UI
                 await battleController.UiInitializer.InitPlayerUIs(Context.GetAlivePlayerEntitys());
                 // 更新战技点UI
@@ -64,7 +66,7 @@ namespace HotUpdate.Game.Battle.StateMeachine
         protected override void OnDispose()
         {
             _battleManager = null;
-            _battleCoordinator = null;
+            _battlePointProxy = null;
             _monoAdapter = null;
         }
     }

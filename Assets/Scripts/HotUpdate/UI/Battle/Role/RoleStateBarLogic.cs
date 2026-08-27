@@ -194,12 +194,14 @@ namespace HotUpdate.UI.Battle.Role
         private async void OnConflict_Add(IStatus status)
         {
             // 判断是否已存在相同ID的状态
-            var hasStatus = View.StatusGrids.Any(s => s.GetStatusId() == status.StatusProperty.StatusInfo.f_id);
+            var hasStatus = View.StatusGrids.Any(s => s.StatusId == status.StatusProperty.StatusInfo.f_id);
             if (!hasStatus)
             {
-                // 创建新的状态图标
                 var statusGridUI = await _objectSpawner.SpawnAsync<StatusGridUI>(AssetKeys.StatusGridUI, View.svBuffBox.content);
-                statusGridUI.Init(status, _monoAdapter);
+                // 创建新的状态图标
+                var logic = _poolManager.GetData<StatusGridLogic>();
+                logic.Init(statusGridUI, status);
+                statusGridUI.Init(logic);
                 View.StatusGrids.Add(statusGridUI);
             }
         }
@@ -212,7 +214,9 @@ namespace HotUpdate.UI.Battle.Role
         {
             // 直接创建新的状态图标（独占类型总是创建新的）
             var statusGridUI = await _objectSpawner.SpawnAsync<StatusGridUI>(AssetKeys.StatusGridUI, View.svBuffBox.content);
-            statusGridUI.Init(newStatus, _monoAdapter);
+            var logic = _poolManager.GetData<StatusGridLogic>();
+            logic.Init(statusGridUI, newStatus);
+            statusGridUI.Init(logic);
             View.StatusGrids.Add(statusGridUI);
         }
 
@@ -223,7 +227,7 @@ namespace HotUpdate.UI.Battle.Role
         private async void OnConflict_Cover(IStatus newStatus)
         {
             // 查找已存在的相同ID状态
-            var index = View.StatusGrids.FindIndex(s => s.GetStatusId() == newStatus.StatusProperty.StatusInfo.f_id);
+            var index = View.StatusGrids.FindIndex(s => s.StatusId == newStatus.StatusProperty.StatusInfo.f_id);
             if (index != -1)
             {
                 var statusGrid = View.StatusGrids[index];
@@ -234,7 +238,9 @@ namespace HotUpdate.UI.Battle.Role
             
             // 创建新的状态图标
             var statusGridUI = await _objectSpawner.SpawnAsync<StatusGridUI>(AssetKeys.StatusGridUI, View.svBuffBox.content);
-            statusGridUI.Init(newStatus, _monoAdapter);
+            var logic = _poolManager.GetData<StatusGridLogic>();
+            logic.Init(statusGridUI, newStatus);
+            statusGridUI.Init(logic);
             View.StatusGrids.Add(statusGridUI);
         }
 

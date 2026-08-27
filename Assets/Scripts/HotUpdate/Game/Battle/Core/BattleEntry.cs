@@ -6,7 +6,6 @@ using HotUpdate.Game.Battle.Command;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Event;
-using HotUpdate.Game.Battle.Inputs;
 using HotUpdate.Game.Battle.Object.Monster;
 using HotUpdate.Game.Battle.Object.Role;
 using HotUpdate.Game.Battle.Operation;
@@ -84,7 +83,6 @@ namespace HotUpdate.Game.Battle.Core
         {
             DIContainer.BindSingleton<ITargetSelectManager, TargetSelectManager>();
             DIContainer.BindSingleton<IDamageCalcManager, DamageCalcManager>();
-            DIContainer.BindSingleton<IBattleInputHandler, BattleInputHandler>();
             DIContainer.BindSingleton<IBattleEventScheduler, BattleEventScheduler>();
             DIContainer.BindSingleton<IBattleCameraManager, BattleCameraManager>();
             DIContainer.BindSingleton<IBattleManager, BattleManager>();

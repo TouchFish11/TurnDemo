@@ -118,10 +118,9 @@ namespace HotUpdate.UI.Battle.ActionLine
             _actionGridLogic.SetSlideTarget(targetIndex);
         }
 
-        protected override void OnDestroy()
+        protected override void OnDisable()
         {
             _actionGridLogic.Dispose();
-            base.OnDestroy();
         }
     }
 }

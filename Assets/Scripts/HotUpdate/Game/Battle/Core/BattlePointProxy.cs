@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Core.Log;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Role;
@@ -36,32 +35,25 @@ namespace HotUpdate.Game.Battle.Core
                 return _battlePoint ??= UnityEngine.Object.FindFirstObjectByType<BattlePoint>() ?? throw new NullReferenceException("Battle Point not found in scene");
             }
         }
-        
-        /// <summary>
-        /// 初始化战斗点对象
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="roles"></param>
-        public void InitProxy(IBattleContext context, List<IBattleEntityObject> roles)
+
+        public void Init(IBattleContext context)
+        {
+            this.context = context;
+        }
+
+        public void SetPointInfos(List<IBattleEntityObject> roles)
         {
             var index = 0;
             foreach (var roleTrans in BattlePoint.RoleTrans)
             {
-                if (index >= roles.Count)
-                {
-                    break;
-                }
-                
                 var pointInfo = new PointInfo(roleTrans, roles[index], monstetCenterXs[index]);
                 pointInfos.Add(pointInfo);
                 index++;
             }
-            this.context = context;
-            global::Core.Log.Logger.LogDebug(ELogTags.Battle, $"Init finished");
         }
 
         /// <summary>
-        /// 更新怪物在场景上的位置和之间的相对位置
+        /// 根据释放技能的玩家角色，更新怪物在场景上的位置到预定的位置，让相机视角正常
         /// </summary>
         /// <param name="playerRole">释放技能的玩家角色对象</param>
         public void UpdateMonsterPos(IBattleEntityObject playerRole)

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.IO;
 using System.Threading.Tasks;
 using Core.AssetBundles.Update.Core;
@@ -8,7 +7,6 @@ using Core.Global;
 using Core.Log;
 using Core.Mono;
 using Core.Utility;
-using UnityEngine;
 using Logger = Core.Log.Logger;
 
 namespace Core.AssetBundles.Update.State
@@ -20,8 +18,6 @@ namespace Core.AssetBundles.Update.State
     public class DownloadCatalogState : UpdateState
     {
         [Inject] private IMonoAdapter _monoAdapter;
-        private ABWebRequester _abWebRequester;
-        private Coroutine _coroutine;
 
         protected override async void OnEnter()
         {
@@ -57,11 +53,6 @@ namespace Core.AssetBundles.Update.State
         /// <returns>是否下载成功</returns>
         public async Task DownloadCatalogFile()
         {
-            // 创建清单文件下载请求器（无需Hash校验，清单文件本身由服务器保证正确性）
-            _abWebRequester = poolManager.GetData<ABWebRequester>().Init(GlobalSettings.Instance.updateModuleConfig.resServerIp, FileUtility.CatalogDefaultName, false, string.Empty, string.Empty, 0);
-
-            _coroutine = _monoAdapter.StartCoroutine(CheckCancel_Cor());
-            
             // 按配置的最大重试次数执行下载
             var maxRetry = GlobalSettings.Instance.updateModuleConfig.reDownloadCompareFileMaxNum;
             for (var i = 0; i < maxRetry; i++)
@@ -70,18 +61,12 @@ namespace Core.AssetBundles.Update.State
                 // 下载成功，终止重试
                 if (isSuccess)
                 {
-                    // 停止取消协程
-                    _monoAdapter.StopCoroutine(_coroutine);
-                    // 回收到对象池
-                    poolManager.PushData(_abWebRequester);
-                    _abWebRequester = null;
                     return;
                 }
 
                 await Task.Yield();
             }
-
-            _monoAdapter.StopCoroutine(_coroutine);
+            
             // 重试次数耗尽仍失败
             throw new DownloadFailureException($"服务器清单文件下载失败，最大重试次数：{maxRetry}");
         }
@@ -89,23 +74,15 @@ namespace Core.AssetBundles.Update.State
         private Task<bool> DownloadCatalogFileInternal()
         {
             var source = new TaskCompletionSource<bool>();
+            // 创建清单文件下载请求器（无需Hash校验，清单文件本身由服务器保证正确性）
+            var abWebRequester = poolManager.GetData<ABWebRequester>().Init(GlobalSettings.Instance.updateModuleConfig.resServerIp, FileUtility.CatalogDefaultName, false, string.Empty, string.Empty, 0);
             // 异步下载到临时清单文件路径
-            _abWebRequester.DownLoadAsync(PathUtility.GetAbLoadPath(FileUtility.TempCatalogDefaultName), source.SetResult, GlobalSettings.Instance.updateModuleConfig.connectTimeout);
-            return source.Task;
-        }
-
-        /// <summary>
-        /// 取消协程
-        /// </summary>
-        /// <returns></returns>
-        private IEnumerator CheckCancel_Cor()
-        {
-            while (!assetBundleUpdater.GetContext().IsPauseDownload)
+            abWebRequester.DownLoadAsync(PathUtility.GetAbLoadPath(FileUtility.TempCatalogDefaultName), over =>
             {
-                yield return null;
-            }
-            // 主动停止请求
-            _abWebRequester.Abort();
+                source.SetResult(over);
+                poolManager.PushData(abWebRequester);
+            }, GlobalSettings.Instance.updateModuleConfig.connectTimeout);
+            return source.Task;
         }
 
         /// <summary>

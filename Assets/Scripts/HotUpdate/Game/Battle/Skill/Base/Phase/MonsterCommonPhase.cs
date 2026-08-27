@@ -21,7 +21,7 @@ namespace HotUpdate.Game.Battle.Skill.Base.Phase
         public override IEnumerator Execute()
         {
             // 关闭目标选择状态，避免技能释放过程中重复选目标
-            battleCoordinator.IsActiveTargetSelect = false;
+            battleCoordinator.OperationState.IsActiveTargetSelect = false;
             // 获取战斗UI控制器，重置怪物相关UI（清空之前的选中/操作状态）
             var controller = (IBattleController)uiService.GetPanel(EUIPanelId.BattlePanel);
             controller.MonsterStateUIManager.InActiveMonsterUIs();

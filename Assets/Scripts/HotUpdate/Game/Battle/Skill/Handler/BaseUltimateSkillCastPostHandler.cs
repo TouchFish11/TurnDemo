@@ -27,7 +27,8 @@ namespace HotUpdate.Game.Battle.Skill.Handler
         [Inject] private IUIService _uiService;
         [Inject] private ISkillKeyUIDataProviderFactory _skillKeyUIDataProviderFactory;
         [Inject] private ITargetSelectStrategyFactory _targetSelectStrategyFactory;
-        [Inject] private BattleCoordinator _battleCoordinator;
+        [Inject] private IBattleCoordinator _battleCoordinator;
+        [Inject] private IBattlePointProxy _battlePointProxy;
         [Inject] private IBattleCommandsController _battleCommandsController;
 
         protected override IEnumerator OnHandle()
@@ -56,16 +57,16 @@ namespace HotUpdate.Game.Battle.Skill.Handler
                 battleController.BattleUiManager.RemoveFirstWaitingActUI();
                 battleController.BattleUiManager.SetCurrentCommanderDisplayUI(currentEntity);
                 // 更新怪物位置
-                _battleCoordinator.UpdateMonsterPos(currentEntity);
+                _battlePointProxy.UpdateMonsterPos(currentEntity);
                 // 切换战斗相机至当前玩家实体视角
                 yield return TaskUtility.WaitForTask(_battleCoordinator.UpdateCamera((PlayerObject)currentEntity));
             
                 // 获取玩家基础目标选择策略
                 var strategy = _targetSelectStrategyFactory.GetTargetSelectStrategy<PlayerBaseTargetSelectStrategy>();
                 // 激活目标选择
-                _battleCoordinator.IsActiveTargetSelect = true;
+                _battleCoordinator.OperationState.IsActiveTargetSelect = true;
                 // 激活相机输入
-                _battleCoordinator.IsActiveInput = true;
+                _battleCoordinator.OperationState.IsActiveInput = true;
                 // 执行目标选择逻辑
                 _battleCoordinator.SetSelectSkillInfo(currentEntitySkillInfo);
                 _battleCoordinator.SelectTargets(currentEntity, strategy);

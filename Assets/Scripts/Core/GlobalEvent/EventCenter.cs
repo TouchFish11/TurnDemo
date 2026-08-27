@@ -53,17 +53,18 @@ namespace Core.GlobalEvent
                 // 遍历触发所有匹配的事件回调
                 foreach (var eventInfoSnapshot in eventInfoSnapshots)
                 {
+                    var eventInfo = (EventInfo<TEvent>)eventInfoSnapshot;
                     try
                     {
                         if (eventInfoSnapshot.RecursionDepth > _eventTriggerMaxRecursionDepth)
                             throw ExceptionHelper.ThrowEventTriggerException(typeof(TEvent));
                         
-                        var eventInfo = (EventInfo<TEvent>)eventInfoSnapshot;
                         eventInfo.Invoke(evt);
                         eventInfo.RecursionDepth--;
                     }
                     catch (Exception e)
                     {
+                        eventInfo.RecursionDepth--;
                         Logger.LogException(ELogTags.System, e);
                     }
                 }

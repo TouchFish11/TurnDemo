@@ -37,7 +37,13 @@ namespace HotUpdate.Game.Battle.Core
         
         void UpdateBaseRotation();
         
-        void Init(IBattleContext context);
+        void Init(IBattleContext context, OperationState operationState);
         void Reset();
+
+        /// <summary>
+        /// 基于指定角色的位置索引计算要渲染的玩家角色的Mask
+        /// </summary>
+        /// <param name="playerEntityPosIndex"></param>
+        int CalcRoleRenderMask(int playerEntityPosIndex);
     }
 }

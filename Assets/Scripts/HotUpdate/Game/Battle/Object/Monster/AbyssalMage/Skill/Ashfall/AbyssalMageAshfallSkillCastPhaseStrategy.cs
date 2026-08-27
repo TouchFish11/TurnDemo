@@ -29,14 +29,14 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill.Ashfall
             var mask = LayerGeter.GetPreBitLayer() | LayerGeter.GetRoleBitLayer() | LayerGeter.GetMonsterBitLayer();
             
             // 更新怪物中心点位置
-            var centerPos = battleCoordinator.GetMonsterCenterPos();
+            var centerPos = battlePointProxy.BattlePoint.MonsterCenter.position;
             centerPos = new Vector3(3, centerPos.y, centerPos.z);
-            battleCoordinator.SetMonsterCenterPos(centerPos);
+            battlePointProxy.BattlePoint.MonsterCenter.position = centerPos;
             
             // 切换相机视角
             var pos = new Vector3(0, 5, -11.5f);
             var rot = Quaternion.Euler(25, 0, 0);
-            yield return TaskUtility.WaitForTask(battleCoordinator.SetCameraTrans(null, pos, rot, mask));
+            yield return TaskUtility.WaitForTask(battleCameraManager.CreateCamera(null, pos, rot, mask));
         }
         
         private IEnumerator CreateVFX_02()

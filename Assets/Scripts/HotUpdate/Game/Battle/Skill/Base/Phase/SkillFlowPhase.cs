@@ -9,7 +9,7 @@ namespace HotUpdate.Game.Battle.Skill.Base.Phase
     /// </summary>
     public abstract class SkillFlowPhase : ISkillFlowPhase
     {
-        [Inject] protected BattleCoordinator battleCoordinator;
+        [Inject] protected IBattleCoordinator battleCoordinator;
         protected readonly ISkill skill;
         
         protected SkillContext SkillContext => skill.SkillContext;

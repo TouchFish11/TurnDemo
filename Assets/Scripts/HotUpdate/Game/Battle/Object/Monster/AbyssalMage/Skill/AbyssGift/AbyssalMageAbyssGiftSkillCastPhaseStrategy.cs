@@ -31,7 +31,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Skill.AbyssGift
             var pos = monsterPos + SkillContext.Caster.GameObject.transform.forward * 4;
             var rotation = Quaternion.LookRotation(monsterPos - pos);
             // 创建相机
-            yield return TaskUtility.WaitForTask(battleCoordinator.SetCameraTrans(null, pos, rotation, mask));
+            yield return TaskUtility.WaitForTask(battleCameraManager.CreateCamera(null, pos, rotation, mask));
         }
         
         private IEnumerator CreateVFX_01()

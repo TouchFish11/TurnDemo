@@ -15,7 +15,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Skill.Ultimate
             yield return BattleAnimationComponent.WaitForPlay(LastAnimationName);
             yield return new WaitUntil(() => !SkillContext.VFXInfo.IsAlive);
             // 重置角色位置到战斗初始点位
-            caster.GameObject.transform.position = battleCoordinator.GetRoleTransByIndex(caster.EntityPosIndex);
+            caster.GameObject.transform.position = battlePointProxy.GetRoleTransByIndex(caster.EntityPosIndex).position;
             // 等待0.1秒
             yield return SkillHelper.Delay(100);
         }

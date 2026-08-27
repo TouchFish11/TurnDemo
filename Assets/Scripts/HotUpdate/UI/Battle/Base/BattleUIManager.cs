@@ -22,6 +22,7 @@ using HotUpdate.Game.Battle.UI;
 using HotUpdate.Game.Battle.Utility;
 using HotUpdate.UI.Battle.ActionLine;
 using HotUpdate.UI.Battle.FloatText;
+using HotUpdate.UI.Battle.SkillKey;
 using HotUpdate.UI.Battle.Status;
 using UnityEngine;
 using BattlePointUI = HotUpdate.UI.Battle.BattlePoint.BattlePointUI;
@@ -294,9 +295,11 @@ namespace HotUpdate.UI.Battle.Base
                         _view.BuffTextArea, statusEffectTextUI.gameObject, 
                         newStatus.Owner.SubGameObject.transform.position + Vector3.up * 0.5f, Vector2.zero))
                 {
-                    // 初始化状态文本（显示状态名称）
-                    statusEffectTextUI.InitText(null, newStatus.StatusProperty.StatusInfo.f_name, _monoAdapter);
-                    statusEffectTextUI.OnDurationOver += statusEffectTextUI => _objectSpawner.Release(statusEffectTextUI); 
+                    
+                    var logic = _poolManager.GetData<StatusEffectTextLogic>();
+                    logic.OnDurationOver += statusEffectTextUI => _objectSpawner.Release(statusEffectTextUI);
+                    logic.InitText(statusEffectTextUI, null, newStatus.StatusProperty.StatusInfo.f_name);
+                    statusEffectTextUI.Init(logic);
                 }
             }
             catch (Exception e)
@@ -335,7 +338,7 @@ namespace HotUpdate.UI.Battle.Base
                     // 设置滑动到的目标索引
                     grid.SetSlideTarget(i);
                     // 设置行动值
-                    grid.SetActionValue(CalcRemainActionValue(context, battleEntityObject.ActionValue));
+                    grid.SetActionValue(CalcActionValue(battleEntityObject.ActionValue));
                 }
             }
         }
@@ -365,7 +368,7 @@ namespace HotUpdate.UI.Battle.Base
                     // 设置滑动到的目标索引
                     grid.SetSlideTarget(i);
                     // 设置行动值
-                    grid.SetActionValue(CalcRemainActionValue(context, battleEntityObject.ActionValue));
+                    grid.SetActionValue(CalcActionValue(battleEntityObject.ActionValue));
                 }
             }
         }
@@ -455,7 +458,7 @@ namespace HotUpdate.UI.Battle.Base
                 logic.Init(actionGridUI, icon, startX, startY, i, battleEntity);
                 actionGridUI.Init(logic);
                 // 设置行动值
-                actionGridUI.SetActionValue(CalcRemainActionValue(context, battleEntity.ActionValue));
+                actionGridUI.SetActionValue(CalcActionValue(battleEntity.ActionValue));
                 _view.ActionGridUis.Add(actionGridUI);
             }
             
@@ -483,7 +486,7 @@ namespace HotUpdate.UI.Battle.Base
                         // 设置滑动到的目标索引
                         grid.SetSlideTarget(i);
                         // 设置行动值
-                        grid.SetActionValue(CalcRemainActionValue(context, battleEntityObject.ActionValue));
+                        grid.SetActionValue(CalcActionValue(battleEntityObject.ActionValue));
                     }
                     // 新增格子
                     else
@@ -497,7 +500,7 @@ namespace HotUpdate.UI.Battle.Base
                         logic.Init(actionGridUI, icon, startX, startY, i, battleEntityObject);
                         actionGridUI.Init(logic);
                         // 设置行动值
-                        actionGridUI.SetActionValue(CalcRemainActionValue(context, battleEntityObject.ActionValue));
+                        actionGridUI.SetActionValue(CalcActionValue(battleEntityObject.ActionValue));
                         girds.Add(actionGridUI);
                     }
                 }
@@ -511,15 +514,13 @@ namespace HotUpdate.UI.Battle.Base
         /// <summary>
         /// 计算剩余行动值
         /// </summary>
-        /// <param name="context"></param>
         /// <param name="currentValue"></param>
         /// <returns></returns>
-        private static int CalcRemainActionValue(IBattleContext context, float currentValue)
+        private static int CalcActionValue(float currentValue)
         {
-            var remainActionValue = (int)(currentValue - context.ActionLine);
-            if (remainActionValue >= BattleUtility.MaxDisplayActionValue)
-                remainActionValue = BattleUtility.MaxDisplayActionValue;
-            return remainActionValue;
+            if (currentValue >= BattleUtility.MaxDisplayActionValue)
+                currentValue = BattleUtility.MaxDisplayActionValue;
+            return (int)currentValue;
         }
 
         /// <summary>
@@ -624,10 +625,10 @@ namespace HotUpdate.UI.Battle.Base
             
             foreach (var info in infos)
             {
-                // 异步加载技能按键UI预制体
                 var skillKeyUI = await _objectSpawner.SpawnAsync<SkillKeyUI>(AssetKeys.SkillKeyUI, _view.OperatorArea);
-                // 初始化技能按键UI
-                skillKeyUI.Init(info, _view.SkillKeyGroup, currentObject);
+                var logic = _poolManager.GetData<SkillKeyLogic>();
+                logic.Init(skillKeyUI, info, _view.SkillKeyGroup, currentObject);
+                skillKeyUI.Init(logic);
                 skillKeyUIs.Add(skillKeyUI);
             }
             

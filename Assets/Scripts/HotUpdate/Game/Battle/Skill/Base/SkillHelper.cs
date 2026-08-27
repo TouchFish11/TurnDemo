@@ -27,7 +27,7 @@ namespace HotUpdate.Game.Battle.Skill.Base
         /// </summary>
         /// <param name="skill"></param>
         /// <param name="battleCoordinator"></param>
-        public static void InitRoleSkillTarget(ISkill skill, BattleCoordinator battleCoordinator)
+        public static void InitRoleSkillTarget(ISkill skill, IBattleCoordinator battleCoordinator)
         {
             battleCoordinator.InitSkillTarget(skill);
         }
@@ -37,7 +37,7 @@ namespace HotUpdate.Game.Battle.Skill.Base
         /// </summary>
         /// <param name="skill"></param>
         /// <param name="battleCoordinator"></param>
-        public static void InitMonsterSkillTarget(ISkill skill, BattleCoordinator battleCoordinator)
+        public static void InitMonsterSkillTarget(ISkill skill, IBattleCoordinator battleCoordinator)
         {
             var skillContext = skill.SkillContext;
             // 根据技能配置和选择策略，筛选出技能作用的目标

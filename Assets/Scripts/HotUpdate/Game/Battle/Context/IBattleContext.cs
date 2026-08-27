@@ -29,11 +29,6 @@ namespace HotUpdate.Game.Battle.Context
         IBattleEntityObject CurrentTurnOwner { get; }
 
         /// <summary>
-        /// 行动基准线
-        /// </summary>
-        float ActionLine { get; set; }
-
-        /// <summary>
         /// 战斗指令列表，按优先级存储待执行的战斗指令
         /// </summary>
         List<ICommand> BattleCommands { get; }

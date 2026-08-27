@@ -19,7 +19,7 @@ namespace HotUpdate.UI.Battle.Base
     /// </summary>
     public class BattleEventProcessor : IBattleEventProcessor
     {
-        [Inject] private BattleCoordinator _battleCoordinator;
+        [Inject] private IBattleCoordinator _battleCoordinator;
         
         // 战斗控制器，用于获取战斗核心逻辑相关数据和操作
         private readonly BattleController _battleController;
@@ -247,9 +247,9 @@ namespace HotUpdate.UI.Battle.Base
         private void OnPlayerReleaseSkillEvent(PlayerReleaseSkillEvent playerReleaseSkillEvent)
         {
             // 关闭目标选择功能
-            _battleCoordinator.IsActiveTargetSelect = false;
+            _battleCoordinator.OperationState.IsActiveTargetSelect = false;
             // 禁用输入
-            _battleCoordinator.IsActiveInput = false;
+            _battleCoordinator.OperationState.IsActiveInput = false;
             // 清除选中目标的标记UI
             _uiManager.ClearSelectMarker();
             // 清空操作面板

@@ -65,7 +65,7 @@ namespace HotUpdate.Game.Battle.Object
 
         /// <summary>
         /// 行动值
-        /// 战斗回合制中用于判定行动顺序的核心数值（行动值满则可执行行动）
+        /// 战斗回合制中用于判定行动顺序的核心数值（行动值为0则可执行行动）
         /// </summary>
         float ActionValue { get; }
 

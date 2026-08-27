@@ -3,7 +3,6 @@ using HotUpdate.Game.Battle.Command;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Event;
-using HotUpdate.Game.Battle.Inputs;
 using HotUpdate.Game.Battle.TargetSelect;
 
 namespace HotUpdate.Game.Battle.Core
@@ -15,7 +14,6 @@ namespace HotUpdate.Game.Battle.Core
     {
         private readonly ITargetSelectManager _targetSelectManager;
         private readonly IDamageCalcManager _damageCalcManager;
-        private readonly IBattleInputHandler _battleInputHandler;
         private readonly IBattleEventScheduler _battleEventScheduler;
         private readonly IBattleCameraManager _battleCameraManager;
         private readonly IBattleManager _battleManager;
@@ -27,7 +25,6 @@ namespace HotUpdate.Game.Battle.Core
         (
             ITargetSelectManager targetSelectManager,
             IDamageCalcManager damageCalcManager,
-            IBattleInputHandler battleInputHandler,
             IBattleEventScheduler battleEventScheduler,
             IBattleCameraManager battleCameraManager,
             IBattleManager battleManager,
@@ -38,7 +35,6 @@ namespace HotUpdate.Game.Battle.Core
         {
             _targetSelectManager = targetSelectManager;
             _damageCalcManager = damageCalcManager;
-            _battleInputHandler = battleInputHandler;
             _battleEventScheduler = battleEventScheduler;
             _battleCameraManager = battleCameraManager;
             _battleManager = battleManager;
@@ -49,11 +45,13 @@ namespace HotUpdate.Game.Battle.Core
 
         public void Init(IBattleContext context)
         {
+            var operationState = new OperationState();
             _targetSelectManager.Init(context);
+            _battlePointProxy.Init(context);
             _damageCalcManager.Init(context);
-            _battleInputHandler.Init(context);
             _battleEventScheduler.Init(context);
-            _battleCameraManager.Init(context);
+            _battleCameraManager.Init(context, operationState);
+            _battleCoordinator.Init(context, operationState);
             _battleCommandsController.Init(context);
         }
         
@@ -66,7 +64,6 @@ namespace HotUpdate.Game.Battle.Core
         {
             _targetSelectManager.Reset();
             _damageCalcManager.Reset();
-            _battleInputHandler.Reset();
             _battleEventScheduler.Reset();
             _battleCameraManager.Reset();
             _battleManager.Reset();
