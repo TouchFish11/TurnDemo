@@ -66,7 +66,7 @@ namespace HotUpdate.Game.Battle.Core
                 // 强制不可见，暂时这样处理，正常流程Bug：battleLoadingController销毁时未正确释放
                 _mouseManager.ForceInVisible();
                 // 销毁战斗界面
-                await _uiService.CloseAsync(battlePanelId, true, true);
+                await _uiService.CloseAsync(battlePanelId, true);
                 // 执行战斗结束回调，在背景界面销毁前执行
                 if (OnBattleOver != null)
                 {

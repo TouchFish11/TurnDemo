@@ -26,9 +26,9 @@ namespace HotUpdate.Game.Battle.TargetSelect
 
         private TargetSelectFlow(IEventCenter eventCenter, ITargetSelectManager targetSelectManager, IBattleCameraManager battleCameraManager)
         {
-            _eventCenter.SubscribeEvent<ViewLeftDragEvent>(OnLeftDrag);   // 左拖拽：切换上一个主目标
-            _eventCenter.SubscribeEvent<ViewRightDragEvent>(OnRightDrag);     // 右拖拽：切换下一个主目标
-            _eventCenter.SubscribeEvent<ViewClickEvent>(OnClick);
+            eventCenter.SubscribeEvent<ViewLeftDragEvent>(OnLeftDrag);   // 左拖拽：切换上一个主目标
+            eventCenter.SubscribeEvent<ViewRightDragEvent>(OnRightDrag);     // 右拖拽：切换下一个主目标
+            eventCenter.SubscribeEvent<ViewClickEvent>(OnClick);
             _eventCenter = eventCenter;
             _targetSelectManager = targetSelectManager;
             _battleCameraManager = battleCameraManager;

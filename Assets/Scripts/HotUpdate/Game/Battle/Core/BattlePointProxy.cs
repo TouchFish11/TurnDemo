@@ -46,6 +46,9 @@ namespace HotUpdate.Game.Battle.Core
             var index = 0;
             foreach (var roleTrans in BattlePoint.RoleTrans)
             {
+                if(index >= roles.Count)
+                    return;
+                
                 var pointInfo = new PointInfo(roleTrans, roles[index], monstetCenterXs[index]);
                 pointInfos.Add(pointInfo);
                 index++;

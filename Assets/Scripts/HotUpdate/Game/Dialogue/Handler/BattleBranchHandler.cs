@@ -40,7 +40,6 @@ namespace HotUpdate.Game.Dialogue.Handler
                 OnBattleOver = async _ =>
                 {
                     await _sceneGenerator.InitMainScene(-1);
-                    await _playerManager.CreatePlayer(1001);
                     await _uiService.OpenAsync(EUIPanelId.MainPanel, E_UILayer.Mid);
                 }
             };

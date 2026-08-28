@@ -7,7 +7,7 @@ namespace HotUpdate.Game.Battle.Property
     /// 怪物属性组件
     /// </summary>
     [ComponentId]
-    public class MonsterPropertyComponent : PropertyComponent
+    public class MonsterStatComponent : StatComponent
     {
         
         protected override void OnBattleInit()

@@ -1,9 +1,11 @@
 using System.Collections;
+using System.Collections.Generic;
 using HotUpdate.Base.ECModule;
 using HotUpdate.Game.Battle.Command;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Event.General;
+using HotUpdate.Game.Battle.Object.Conditions;
 using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.ResponsibilityChain;
 using HotUpdate.Game.Battle.Skill.Conditions;
@@ -30,7 +32,12 @@ namespace HotUpdate.Game.Battle.Object
         protected IDeathHandler deathHandler;
         // 伤害处理链
         protected Handler<DamageResult> damageChain;
-
+        
+        /// <summary>
+        /// 死亡条件缓存
+        /// </summary>
+        protected List<IDeathCondition> DeathConditions { get; } = new();
+        
         public bool Acting { get; set; }
 
         /// <summary>
@@ -72,10 +79,27 @@ namespace HotUpdate.Game.Battle.Object
         public IBattleEntityObject BattleEntity => this;
 
         /// <summary>
-        /// 是否死亡（当前血量≤0判定为死亡）
+        /// 是否死亡
         /// </summary>
-        public bool IsDead => GetComponent<PropertyComponent>().GetPropertyValue(E_DynamicPropertyType.CurrentHp) <= 0;
-        
+        public bool IsDead
+        {
+            get
+            {
+                var isDead = true;
+                // 所有死亡条件都满足时才能死亡
+                foreach (var condition in DeathConditions)
+                {
+                    if (!condition.CanDie(this))
+                    {
+                        isDead = false;
+                        break;
+                    }
+                }
+
+                return isDead;
+            }
+        }
+
         protected override void OnInit()
         {
             // 获取第二个子物体作为子游戏物体（默认第一个是自身，第二个为可视化表现层），用于绑定Animator等战斗相关组件
@@ -109,6 +133,11 @@ namespace HotUpdate.Game.Battle.Object
             OnExecuteAction();
         }
 
+        public void AddDeathCondition()
+        {
+            
+        }
+
         /// <summary>
         /// 在行动时的执行逻辑
         /// </summary>
@@ -116,7 +145,7 @@ namespace HotUpdate.Game.Battle.Object
         
         public void TakeHeal(int healAmount)
         {
-            var propertyComponent = GetComponent<PropertyComponent>();
+            var propertyComponent = GetComponent<StatComponent>();
             var currentHp = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentHp);
             propertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentHp, currentHp + healAmount);
             // 触发应用治疗事件
@@ -129,7 +158,7 @@ namespace HotUpdate.Game.Battle.Object
         /// <param name="shieldAmount">护盾量</param>
         public void TakeSheild(int shieldAmount)
         {
-            var propertyComponent = GetComponent<PropertyComponent>();
+            var propertyComponent = GetComponent<StatComponent>();
             var currentShield = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentShield);
             propertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentShield, currentShield + shieldAmount);
             // 触发应用护盾件

@@ -42,7 +42,7 @@ namespace HotUpdate.Game.Battle.Utility
             // 初始化所有角色的行动值
             foreach (var battleEntityObject in context.GetAliveEntitys())
             {
-                var speed = battleEntityObject.GetComponent<PropertyComponent>().GetPropertyValue(E_DynamicPropertyType.CurrentSpeed);
+                var speed = battleEntityObject.GetComponent<StatComponent>().GetPropertyValue(E_DynamicPropertyType.CurrentSpeed);
                 // 根据速度计算行动值
                 battleEntityObject.SetActionValue(CalcActionValue(speed));
             }
@@ -70,7 +70,7 @@ namespace HotUpdate.Game.Battle.Utility
             if (currentTurnOwner != null)
             {
                 // 基于新速度，更新当前持有回合的实体的行动值
-                var newSpeed = currentTurnOwner.GetComponent<PropertyComponent>().GetPropertyValue(E_DynamicPropertyType.CurrentSpeed);
+                var newSpeed = currentTurnOwner.GetComponent<StatComponent>().GetPropertyValue(E_DynamicPropertyType.CurrentSpeed);
                 currentTurnOwner.SetActionValue(CalcActionValue(newSpeed));
                 // 将当前实体插入到对应的位置
                 InsertActionAxis(currentTurnOwner);

@@ -42,7 +42,7 @@ namespace HotUpdate.Game.Battle.Damage.Strategys
             //finalDamage = CalcResistanceZone(finalDamage);
             //return finalDamage;
 
-            var critValue = attacker.GetComponent<PropertyComponent>().GetPropertyValue(E_DynamicPropertyType.TotalCrit);
+            var critValue = attacker.GetComponent<StatComponent>().GetPropertyValue(E_DynamicPropertyType.TotalCrit);
             var critRate = critValue / 100f;
             var isCrit = Random.Range(0, 1) < critRate;
             damageResult = new DamageResult(attacker, defender, Random.Range(30, 70), (E_ElementType)skillInfo.f_elementType, (E_DamageType)skillInfo.f_damageType, isCrit, skillInfo.f_id, skillInfo.f_toughenValue);

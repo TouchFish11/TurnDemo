@@ -81,7 +81,7 @@ namespace HotUpdate.UI.Battle.Base
                 // 从图集加载角色图标
                 var icon = await _battleController.BattleUiManager.GetIconByEntity(battleEntity);
                 // 获取当前实体的玩家属性组件
-                var playerPropertyComponent = battleEntity.GetComponent<PlayerPropertyComponent>();
+                var playerPropertyComponent = battleEntity.GetComponent<PlayerStatComponent>();
                 // 获取角色核心属性数据
                 var roleProperty = playerPropertyComponent.GetProperty<RoleProperty>();
                 var logic = _poolManager.GetData<RoleStateBarLogic>();

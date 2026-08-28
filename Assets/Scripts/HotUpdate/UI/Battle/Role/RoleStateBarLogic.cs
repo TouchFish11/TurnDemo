@@ -61,7 +61,7 @@ namespace HotUpdate.UI.Battle.Role
             // 设置角色图标
             View.imgIcon.sprite = icon;
             // 获取属性组件
-            var propertyComponent = this.battleEntity.GetComponent<PropertyComponent>();
+            var propertyComponent = this.battleEntity.GetComponent<StatComponent>();
 
             // 初始化血量显示
             View.imgHp.fillAmount = View.imgFade.fillAmount = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentHp) / (float)propertyComponent.GetPropertyValue(E_DynamicPropertyType.MaxHp);
@@ -153,7 +153,7 @@ namespace HotUpdate.UI.Battle.Role
         private void UpdateShield(int currentShield)
         {
             // 已当前角色最大生命作为护盾的基准值
-            var referenceShield = battleEntity.GetComponent<PropertyComponent>()
+            var referenceShield = battleEntity.GetComponent<StatComponent>()
                 .GetPropertyValue(E_DynamicPropertyType.MaxHp);
             View.imgShield.fillAmount = currentShield / (float)referenceShield;
         }

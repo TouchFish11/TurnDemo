@@ -174,6 +174,7 @@ namespace HotUpdate.Game.Main.FloatingText
             _objectSpawner.Clear();
             // 清空映射字典
             npcToTextMap.Clear();
+            _npcs.Clear();
         }
     }
 }

@@ -149,7 +149,7 @@ namespace HotUpdate.Game.Battle.Object.Role
 
         public void RecoverUltimate(int value)
         {
-            var propertyComponent = GetComponent<PropertyComponent>();
+            var propertyComponent = GetComponent<StatComponent>();
             var current = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentEnergy);
             var newValue = current + value;
             if (newValue > RoleInfo.f_maxEnergy)

@@ -12,7 +12,7 @@ namespace HotUpdate.Game.Battle.ResponsibilityChain.DamageChain
         {
             var target = request.Target;
             // 获取属性组件，处理护盾削减
-            var propertyComponent = target.GetComponent<PropertyComponent>();
+            var propertyComponent = target.GetComponent<StatComponent>();
             // 获取当前护盾
             var currentShield = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentShield);
             // 存在护盾

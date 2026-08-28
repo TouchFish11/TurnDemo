@@ -56,7 +56,7 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
             _bloodUiYOffset = ((MonsterObject)battleEntity).MonsterInfo.f_statesUiY0ffset;
             
             // 获取怪物属性组件，初始化血量显示
-            var propertyComponent = BattleEntity.GetComponent<PropertyComponent>();
+            var propertyComponent = BattleEntity.GetComponent<StatComponent>();
             float currentHp = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentHp);
             float maxHp = propertyComponent.GetPropertyValue(E_DynamicPropertyType.MaxHp);
             View.imgHp.fillAmount = View.imgFade.fillAmount = currentHp / maxHp; // 同步血量填充值和渐变遮罩值

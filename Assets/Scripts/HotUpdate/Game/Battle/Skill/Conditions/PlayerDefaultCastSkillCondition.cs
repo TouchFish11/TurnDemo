@@ -34,8 +34,8 @@ namespace HotUpdate.Game.Battle.Skill.Conditions
                     return false;
                 case E_SkillType.UltimateSkill:
                     // 判断能量释放足够
-                    var currentEnergy = caster.GetComponent<PropertyComponent>().GetPropertyValue(E_DynamicPropertyType.CurrentEnergy);
-                    var baseEnergy = caster.GetComponent<PropertyComponent>().GetPropertyValue(E_DynamicPropertyType.BaseEnergy);
+                    var currentEnergy = caster.GetComponent<StatComponent>().GetPropertyValue(E_DynamicPropertyType.CurrentEnergy);
+                    var baseEnergy = caster.GetComponent<StatComponent>().GetPropertyValue(E_DynamicPropertyType.BaseEnergy);
                     if (currentEnergy == baseEnergy)
                     {
                         return true;

@@ -21,7 +21,7 @@ namespace HotUpdate.Game.Battle.ResponsibilityChain.DamageChain
             // 播放受击动画
             target.GetComponent<BattleAnimationComponent>().Play(EAnimationType.Hit);
             // 获取属性组件，处理血量扣减
-            var propertyComponent = target.GetComponent<PropertyComponent>();
+            var propertyComponent = target.GetComponent<StatComponent>();
             // 获取当前血量
             var currentHp = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentHp);
             // 扣减最终伤害量

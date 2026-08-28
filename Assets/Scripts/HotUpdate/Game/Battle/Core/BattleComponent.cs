@@ -1,5 +1,4 @@
 using HotUpdate.Base.ECModule;
-using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.Core
@@ -10,14 +9,10 @@ namespace HotUpdate.Game.Battle.Core
     public abstract class BattleComponent : BaseComponent, IBattleComponent
     {
         public IBattleEntityObject BattleEntity { get; private set; }
-
-        protected IBattleContext Context { get; private set; }
-
+        
         protected sealed override void OnInit()
         {
             BattleEntity = (IBattleEntityObject)EntityObject;
-            // 从战斗实体中获取战斗上下文
-            Context = BattleEntity.Context;
             OnBattleInit();
         }
 

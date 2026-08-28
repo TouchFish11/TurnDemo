@@ -88,8 +88,6 @@ namespace HotUpdate.UI.Activity.EmbersCanon
                 {
                     // TODO:待处理
                     await _sceneGenerator.InitMainScene(-1);
-                    await _playerManager.CreatePlayer(1001);
-
                     if (result.IsWin)
                     {
                         onLevelComplete?.Invoke();

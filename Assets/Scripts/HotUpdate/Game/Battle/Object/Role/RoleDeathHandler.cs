@@ -14,7 +14,7 @@ namespace HotUpdate.Game.Battle.Object.Role
         protected override IEnumerator OnHandle()
         {
             // 清空能量
-            var propertyComponent = battleEntityObject.GetComponent<PropertyComponent>();
+            var propertyComponent = battleEntityObject.GetComponent<StatComponent>();
             propertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentEnergy, 0);
             
             var animationComponent = battleEntityObject.GetComponent<BattleAnimationComponent>();
