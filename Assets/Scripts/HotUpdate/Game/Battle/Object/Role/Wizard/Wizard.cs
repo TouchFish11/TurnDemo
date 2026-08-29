@@ -7,7 +7,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard
     /// <summary>
     /// 法师对象
     /// </summary>
-    public class Wizard : PlayerObject
+    public class Wizard : RoleObject
     {
         protected override ISkillFactory GetSkillFactory()
         {

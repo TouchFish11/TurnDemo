@@ -26,25 +26,25 @@ namespace HotUpdate.Game.Battle.Object.StateMeachine
 
         public override void Enter()
         {
-            PlayerObject.StartCoroutine(UpdateState());
+            RoleObject.StartCoroutine(UpdateState());
         }
 
         private IEnumerator UpdateState()
         {
-            var statusComponent = PlayerObject.GetComponent<StatusComponent>();
+            var statusComponent = RoleObject.GetComponent<StatusComponent>();
             var hasDot = StatusUtility.ContainDot(statusComponent.GetStatuses());
             if (hasDot)
             {
                 // 隐藏所有怪物血量UI显示
                 (_uiService.GetPanel(EUIPanelId.BattlePanel) as IBattleController).MonsterStateUIManager.InActiveMonsterUIs();
                 // 调整相机角度
-                var rolePos = PlayerObject.GameObject.transform.position;
+                var rolePos = RoleObject.GameObject.transform.position;
                 rolePos = new Vector3(rolePos.x, 1, rolePos.z);
-                var pos = rolePos + PlayerObject.GameObject.transform.forward * 4;
+                var pos = rolePos + RoleObject.GameObject.transform.forward * 4;
                 var rotation = Quaternion.LookRotation(rolePos - pos);
             
                 // 获取遮罩
-                var mask = LayerGeter.GetPreBitLayer() | (1 << PlayerObject.GameObject.layer);
+                var mask = LayerGeter.GetPreBitLayer() | (1 << RoleObject.GameObject.layer);
                 // 创建相机
                 yield return TaskUtility.WaitForTask(_battleCameraManager.CreateCamera(null, pos, rotation, mask));
                 // 优化表现
@@ -61,13 +61,13 @@ namespace HotUpdate.Game.Battle.Object.StateMeachine
             }
             
             // 判断能否行动
-            if (PlayerObject.CanAct)
+            if (RoleObject.CanAct)
             {
-                PlayerObject.ChangeState(EActPhase.TurnStart);
+                RoleObject.ChangeState(EActPhase.TurnStart);
             }
             else
             {
-                PlayerObject.ChangeState(EActPhase.TurnEnd);
+                RoleObject.ChangeState(EActPhase.TurnEnd);
             }
         }
 

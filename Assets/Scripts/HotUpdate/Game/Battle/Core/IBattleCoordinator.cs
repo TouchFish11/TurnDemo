@@ -48,8 +48,8 @@ namespace HotUpdate.Game.Battle.Core
         /// 更新相机看向,看向怪物或玩家角色
         /// </summary>
         /// <param name="skillTargetType"></param>
-        /// <param name="playerObject"></param>
-        Task UpdateCamera(E_SkillTargetType skillTargetType, PlayerObject playerObject);
+        /// <param name="roleObject"></param>
+        Task UpdateCamera(E_SkillTargetType skillTargetType, RoleObject roleObject);
 
         /// <summary>
         /// 执行玩家角色终结技释放前逻辑
@@ -61,7 +61,7 @@ namespace HotUpdate.Game.Battle.Core
         /// <summary>
         /// 传入玩家角色对象，更新相机的位置和渲染
         /// </summary>
-        /// <param name="playerObject"></param>
-        Task UpdateCamera(PlayerObject playerObject);
+        /// <param name="roleObject"></param>
+        Task UpdateCamera(RoleObject roleObject);
     }
 }

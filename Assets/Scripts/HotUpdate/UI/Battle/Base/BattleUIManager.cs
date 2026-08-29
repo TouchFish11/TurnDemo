@@ -173,7 +173,7 @@ namespace HotUpdate.UI.Battle.Base
 
             dmgTextOffset = damageResult.Target switch
             {
-                PlayerObject => new Vector3(0, dmgTextOffset.y, dmgTextOffset.z),
+                RoleObject => new Vector3(0, dmgTextOffset.y, dmgTextOffset.z),
                 _ => dmgTextOffset
             };
 
@@ -204,7 +204,7 @@ namespace HotUpdate.UI.Battle.Base
         /// </summary>
         /// <param name="target">目标战斗实体</param>
         /// <param name="sheilAmount">护盾量</param>
-        public async void ShowShieldText(IBattleEntityObject target, int sheilAmount)
+        public async void ShowShieldText(IBattleEntityObject target, float sheilAmount)
         {
             try
             {
@@ -216,7 +216,7 @@ namespace HotUpdate.UI.Battle.Base
                 // 角色创建护盾文本，x不偏移，避免随机到摄像机外，无法显示
                 dmgTextOffset = target switch
                 {
-                    PlayerObject => new Vector3(0, dmgTextOffset.y, dmgTextOffset.z),
+                    RoleObject => new Vector3(0, dmgTextOffset.y, dmgTextOffset.z),
                     _ => dmgTextOffset
                 };
                 
@@ -237,7 +237,7 @@ namespace HotUpdate.UI.Battle.Base
             }
             catch (Exception e)
             {
-                Logger.LogError(ELogTags.Battle, $"{nameof(BattleUIManager)}.{nameof(ShowShieldText)}：{e.Message}");
+                Logger.LogException(ELogTags.Battle, e);
             }
         }
 
@@ -257,7 +257,7 @@ namespace HotUpdate.UI.Battle.Base
             // 角色创建治疗文本，x不偏移，避免随机到摄像机外，无法显示
             dmgTextOffset = target switch
             {
-                PlayerObject => new Vector3(0, dmgTextOffset.y, dmgTextOffset.z),
+                RoleObject => new Vector3(0, dmgTextOffset.y, dmgTextOffset.z),
                 _ => dmgTextOffset
             };
             
@@ -755,7 +755,7 @@ namespace HotUpdate.UI.Battle.Base
             var iconName = string.Empty;
             switch (battleEntity)
             {
-                case PlayerObject playerObject:
+                case RoleObject playerObject:
                     // 玩家实体：使用角色配置的图标
                     iconName = playerObject.RoleInfo.f_icon;
                     break;
@@ -790,7 +790,7 @@ namespace HotUpdate.UI.Battle.Base
             // 根据目标类型计算基础偏移
             var pos = dmgTarget switch
             {
-                MonsterObject or PlayerObject => Vector3.one * dmgTextOffset,
+                MonsterObject or RoleObject => Vector3.one * dmgTextOffset,
                 _ => default
             };
 

@@ -13,8 +13,8 @@ namespace HotUpdate.Game.Battle.Object.StateMeachine
         public override void Enter()
         {
             // 触发回合开始事件
-            PlayerObject.Context.EventBus.TriggerEvent(new TurnStartEvent(PlayerObject.Context, PlayerObject));
-            PlayerObject.ChangeState(EActPhase.Operator);
+            RoleObject.Context.EventBus.TriggerEvent(new TurnStartEvent(RoleObject.Context, RoleObject));
+            RoleObject.ChangeState(EActPhase.Operator);
         }
         
 

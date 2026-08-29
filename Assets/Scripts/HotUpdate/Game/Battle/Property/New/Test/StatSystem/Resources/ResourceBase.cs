@@ -4,12 +4,15 @@ namespace HotUpdate.Game.Battle.Property.New.Test.StatSystem.Resources
 {
     public abstract class ResourceBase : IResource
     {
+        public EResourceStatType ResourceStatType { get; }
+        
         public float CurrentValue { get; protected set; }
     
         public float MaxValue { get; protected set; }
 
-        protected ResourceBase(float max, float current)
+        protected ResourceBase(EResourceStatType resourceStatType, float max, float current)
         {
+            ResourceStatType = resourceStatType;
             MaxValue = max;
             CurrentValue = current;
         }

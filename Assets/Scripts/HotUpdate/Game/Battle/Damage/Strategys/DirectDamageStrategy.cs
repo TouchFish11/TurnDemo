@@ -1,9 +1,9 @@
-using Core.Log;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Property;
+using HotUpdate.Game.Battle.Property.New.Test.StatSystem;
 using HotUpdate.Game.Battle.Skill;
 using UnityEngine;
-using Logger = Core.Log.Logger;
+using StatsComponent = HotUpdate.Game.Battle.Property.StatsComponent;
 
 namespace HotUpdate.Game.Battle.Damage.Strategys
 {
@@ -21,11 +21,6 @@ namespace HotUpdate.Game.Battle.Damage.Strategys
 
         public void CalcDamage(IBattleEntityObject attacker, IBattleEntityObject defender, SkillInfo skillInfo, out DamageResult damageResult)
         {
-            if (attacker == null || defender == null)
-            {
-                Logger.LogError(ELogTags.Battle, "直接伤害计算参数为null");
-            }
-
             //this.attacker = attacker;
             //this.defender = defender;
             //this.skillInfo = skill.SkillInfo;
@@ -42,7 +37,7 @@ namespace HotUpdate.Game.Battle.Damage.Strategys
             //finalDamage = CalcResistanceZone(finalDamage);
             //return finalDamage;
 
-            var critValue = attacker.GetComponent<StatComponent>().GetPropertyValue(E_DynamicPropertyType.TotalCrit);
+            var critValue = attacker.GetComponent<StatsComponent>().GetFinalValue(EStatType.Crit);
             var critRate = critValue / 100f;
             var isCrit = Random.Range(0, 1) < critRate;
             damageResult = new DamageResult(attacker, defender, Random.Range(30, 70), (E_ElementType)skillInfo.f_elementType, (E_DamageType)skillInfo.f_damageType, isCrit, skillInfo.f_id, skillInfo.f_toughenValue);

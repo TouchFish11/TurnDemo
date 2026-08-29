@@ -8,11 +8,12 @@ using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Monster;
-using HotUpdate.Game.Battle.Property;
+using HotUpdate.Game.Battle.Property.New.Test.StatSystem;
 using HotUpdate.Game.Battle.Toughness;
 using HotUpdate.Game.Battle.Utility;
 using UnityEngine;
 using UnityEngine.UI;
+using StatsComponent = HotUpdate.Game.Battle.Property.StatsComponent;
 
 namespace HotUpdate.UI.Battle.MonsterStateUI
 {
@@ -56,9 +57,9 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
             _bloodUiYOffset = ((MonsterObject)battleEntity).MonsterInfo.f_statesUiY0ffset;
             
             // 获取怪物属性组件，初始化血量显示
-            var propertyComponent = BattleEntity.GetComponent<StatComponent>();
-            float currentHp = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentHp);
-            float maxHp = propertyComponent.GetPropertyValue(E_DynamicPropertyType.MaxHp);
+            var statsComponent = BattleEntity.GetComponent<StatsComponent>();
+            var currentHp = statsComponent.CurrentHp;
+            var maxHp = statsComponent.GetFinalValue(EStatType.Hp);
             View.imgHp.fillAmount = View.imgFade.fillAmount = currentHp / maxHp; // 同步血量填充值和渐变遮罩值
 
             // 获取怪物韧性组件，初始化韧性显示
@@ -83,7 +84,7 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
         {
             _monoAdapter.AddUpdateListener(OnUpdate);
             // 获取战斗管理器的事件总线，注册血量变化事件监听
-            BattleEntity.Context.EventBus.AddListener<HpChangedEvent>(OnHpChangedEvent);
+            BattleEntity.Context.EventBus.AddListener<CurrentHpChangedEvent>(OnHpChangedEvent);
             // 注册韧性变化事件监听
             BattleEntity.Context.EventBus.AddListener<ToughnessChangedEvent>(OnToughnessChangedEvent);
             // 注册韧性击破事件监听
@@ -94,7 +95,7 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
         {
             _monoAdapter.RemoveUpdateListener(OnUpdate);
             // 获取战斗管理器的事件总线，注册血量变化事件监听
-            BattleEntity.Context.EventBus.RemoveListener<HpChangedEvent>(OnHpChangedEvent);
+            BattleEntity.Context.EventBus.RemoveListener<CurrentHpChangedEvent>(OnHpChangedEvent);
             // 注册韧性变化事件监听
             BattleEntity.Context.EventBus.RemoveListener<ToughnessChangedEvent>(OnToughnessChangedEvent);
             // 注册韧性击破事件监听
@@ -148,22 +149,22 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
                 }
             }
         }
-        
+
         /// <summary>
         /// 血量变化事件回调
         /// 当监听的血量变化事件触发时，更新血量UI显示
         /// </summary>
-        /// <param name="hpChangedEvent">血量变化事件数据</param>
-        private void OnHpChangedEvent(HpChangedEvent hpChangedEvent)
+        /// <param name="currentHpChangedEvent">血量变化事件数据</param>
+        private void OnHpChangedEvent(CurrentHpChangedEvent currentHpChangedEvent)
         {
             // 过滤事件：仅处理当前绑定怪物的血量变化
-            if (hpChangedEvent.Target != BattleEntity)
+            if (currentHpChangedEvent.Target != BattleEntity)
             {
                 return;
             }
 
             // 更新当前血量填充比例（实时同步血量变化）
-            View.imgHp.fillAmount = hpChangedEvent.CurrentHp / (float)hpChangedEvent.MaxHp;
+            View.imgHp.fillAmount = currentHpChangedEvent.CurrentHp / currentHpChangedEvent.MaxHp;
         }
 
         /// <summary>

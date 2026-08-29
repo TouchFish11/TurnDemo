@@ -7,7 +7,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior
     /// <summary>
     /// 战士脚本
     /// </summary>
-    public class Warrior : PlayerObject
+    public class Warrior : RoleObject
     {
         protected override ISkillFactory GetSkillFactory()
         {

@@ -36,7 +36,7 @@ namespace HotUpdate.Game.Battle.Object
         /// <summary>
         /// 死亡条件缓存
         /// </summary>
-        protected List<IDeathCondition> DeathConditions { get; } = new();
+        protected List<IDeathCondition> DeathConditions { get; private set; }
         
         public bool Acting { get; set; }
 
@@ -48,7 +48,7 @@ namespace HotUpdate.Game.Battle.Object
         /// <summary>
         /// 行动值（速度相关），用于判定回合行动顺序
         /// </summary>
-        public float ActionValue { get; protected set; }
+        public float ActionValue { get; set; }
 
         /// <summary>
         /// 是否可执行行动
@@ -109,20 +109,20 @@ namespace HotUpdate.Game.Battle.Object
         /// <summary>
         /// 战斗初始化方法
         /// </summary>
-        /// <param name="initData"></param>
-        protected void BattleInit(BattleObjectInitData initData)
+        /// <param name="parameter"></param>
+        protected void BattleInit(BattleParameterObject parameter)
         {
             // 绑定战斗上下文
-            Context = initData.BattleContext;
+            Context = parameter.BattleContext;
             // 赋值战斗实体ID
-            BattleEntityId = initData.BattleEntityId;
-            // 初始化工厂
-            commandfactory = initData.Commandfactory;
-            castSkillConditionFactory = initData.CastSkillConditionFactory;
-            targetSelectStrategyFactory = initData.TargetSelectStrategyFactory;
-            // 初始化死亡处理器
-            initData.DeathHandler.InitEntity(this);
-            deathHandler = initData.DeathHandler;
+            BattleEntityId = parameter.BattleEntityId;
+            // 初始化其它依赖
+            commandfactory = parameter.Commandfactory;
+            castSkillConditionFactory = parameter.CastSkillConditionFactory;
+            targetSelectStrategyFactory = parameter.TargetSelectStrategyFactory;
+            deathHandler = parameter.DeathHandler;
+            DeathConditions = parameter.DeathConditions;
+            parameter.DeathHandler.InitEntity(this);
         }
 
         public void ExecuteAction()
@@ -133,10 +133,17 @@ namespace HotUpdate.Game.Battle.Object
             OnExecuteAction();
         }
 
-        public void AddDeathCondition()
+        public void AddDeathCondition(IDeathCondition condition)
         {
-            
+            DeathConditions.Add(condition);
         }
+
+        public bool RemoveDeathCondition(IDeathCondition condition)
+        {
+            return DeathConditions.Remove(condition);
+        }
+        
+        public abstract void CastSkill(int skillId);
 
         /// <summary>
         /// 在行动时的执行逻辑
@@ -145,27 +152,17 @@ namespace HotUpdate.Game.Battle.Object
         
         public void TakeHeal(int healAmount)
         {
-            var propertyComponent = GetComponent<StatComponent>();
-            var currentHp = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentHp);
-            propertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentHp, currentHp + healAmount);
+            var statComponent = GetComponent<StatsComponent>();
+            statComponent.UpdateHealth(healAmount);
             // 触发应用治疗事件
             Context.EventBus.TriggerEvent(new ApplyHealEvent(Context, this, healAmount));
         }
 
-        /// <summary>
-        /// 提供护盾
-        /// </summary>
-        /// <param name="shieldAmount">护盾量</param>
         public void TakeSheild(int shieldAmount)
         {
-            var propertyComponent = GetComponent<StatComponent>();
-            var currentShield = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentShield);
-            propertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentShield, currentShield + shieldAmount);
-            // 触发应用护盾件
-            Context.EventBus.TriggerEvent(new ApplyShieldEvent(Context, this, shieldAmount));
+            var statsComponent = GetComponent<StatsComponent>();
+            statsComponent.UpdateShield(shieldAmount);
         }
-
-        public abstract void CastSkill(int skillId);
         
         public void TakeDamage(DamageResult damageResult)
         {
@@ -175,11 +172,6 @@ namespace HotUpdate.Game.Battle.Object
         public IEnumerator Die()
         {
             yield return deathHandler.HandleDeath();
-        }
-        
-        public void SetActionValue(float actionValue)
-        {
-            ActionValue = actionValue;
         }
     }
 }

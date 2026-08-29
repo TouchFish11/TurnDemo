@@ -16,13 +16,13 @@ namespace HotUpdate.Game.Battle.Object.StateMeachine
         public override void Enter()
         {
             // 触发回合结束事件（供外部监听）
-            PlayerObject.Context.EventBus.TriggerEvent(new TurnEndEvent(PlayerObject.Context, PlayerObject));
+            RoleObject.Context.EventBus.TriggerEvent(new TurnEndEvent(RoleObject.Context, RoleObject));
         }
         
         public override void Exit()
         {
             // 重置角色行动状态
-            PlayerObject.CurrentActPhase = EActPhase.SettlementBuff;
+            RoleObject.CurrentActPhase = EActPhase.SettlementBuff;
         }
     }
 }

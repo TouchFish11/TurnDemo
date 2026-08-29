@@ -6,6 +6,11 @@ namespace HotUpdate.Game.Battle.Property.New.Test.StatSystem.Resources
     public interface IResource
     {
         /// <summary>
+        /// 特殊资源属性类型
+        /// </summary>
+        EResourceStatType ResourceStatType { get; }
+        
+        /// <summary>
         /// 当前值
         /// </summary>
         float CurrentValue { get; }
@@ -26,10 +31,5 @@ namespace HotUpdate.Game.Battle.Property.New.Test.StatSystem.Resources
         /// </summary>
         /// <param name="amount">消耗量</param>
         void Consume(float amount);
-
-        /// <summary>
-        /// 消耗全部
-        /// </summary>
-        void ConsumeAll();
     }
 }

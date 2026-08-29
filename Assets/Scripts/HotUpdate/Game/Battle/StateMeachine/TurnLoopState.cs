@@ -86,7 +86,7 @@ namespace HotUpdate.Game.Battle.StateMeachine
                     Context.CurrentTurnOwner.ExecuteAction();
                 }
                 
-                // 处理存在的死亡的实体
+                // 处理存在的死亡的实体——处理DOT导致死亡的实体
                 yield return battleService.HandleDeadEntity();
 
                 yield return null;

@@ -91,7 +91,7 @@ namespace HotUpdate.Game.Battle.Event
                     return;
                 }
 
-                if (turnStartEvent.CurrentBattleEntity is PlayerObject playerObject)
+                if (turnStartEvent.CurrentBattleEntity is RoleObject playerObject)
                 {
                     // 先执行战斗点位置变化
                     _battlePointProxy.UpdateMonsterPos(turnStartEvent.CurrentBattleEntity);
@@ -102,7 +102,7 @@ namespace HotUpdate.Game.Battle.Event
                 var controller = (IBattleController)_uiService.GetPanel(EUIPanelId.BattlePanel);
                 switch (turnStartEvent.CurrentBattleEntity)
                 {
-                    case PlayerObject:
+                    case RoleObject:
                     {
                         // 角色行动才激活怪物UI显示
                         controller.MonsterStateUIManager.ActiveMonsterUIs();
@@ -144,7 +144,7 @@ namespace HotUpdate.Game.Battle.Event
         {
             try
             {
-                if (selectSkillEvent.Caster is not PlayerObject playerObject)
+                if (selectSkillEvent.Caster is not RoleObject playerObject)
                     return;
                 
                 // 读取技能信息

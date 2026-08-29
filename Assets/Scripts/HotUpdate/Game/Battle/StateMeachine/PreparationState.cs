@@ -38,7 +38,7 @@ namespace HotUpdate.Game.Battle.StateMeachine
 
                 // TODO：暂时写死，可根据配置优化
                 // 创建并缓存战斗角色
-                await _battleManager.BattleService.CreatePlayerRoles(1,2,3);
+                await _battleManager.BattleService.CreateRoles(1,2,3);
                 // 初始化角色战斗点
                 _battlePointProxy.SetPointInfos(new List<IBattleEntityObject>(Context.GetAlivePlayerEntitys()));
                 // 初始化角色UI

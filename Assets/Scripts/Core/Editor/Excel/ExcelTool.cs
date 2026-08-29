@@ -107,7 +107,7 @@ namespace Core.Editor.Excel
             var typeRow = GetVariableTypeRow(table);
 
             // 生成数据结构类脚本，就是通过代码进行字符串拼接，然后存进文件
-            var dataClassStr = "public class " + table.TableName + "\n" + "{\n";
+            var dataClassStr = "public partial class " + table.TableName + "\n" + "{\n";
             for (var i = 0; i < table.Columns.Count; i++)
             {
                 dataClassStr += $"\tpublic {typeRow[i]} {nameRow[i]};\n";
@@ -119,7 +119,7 @@ namespace Core.Editor.Excel
                 Directory.CreateDirectory(DataclassEditorSavePath);
 
             // 保存文件
-            File.WriteAllText($"{DataclassEditorSavePath}{table.TableName}.cs", dataClassStr);
+            File.WriteAllText($"{DataclassEditorSavePath}{table.TableName}.Generate.cs", dataClassStr);
             // 刷新窗口
             AssetDatabase.Refresh();
         }
@@ -136,7 +136,7 @@ namespace Core.Editor.Excel
             var typeRow = GetVariableTypeRow(table);
 
             var dataContainerStr = "using System.Collections.Generic;\n\n";
-            dataContainerStr += $"public class {table.TableName}Container\n";
+            dataContainerStr += $"public partial class {table.TableName}Container\n";
             dataContainerStr += "{\n";
             dataContainerStr += $"\tpublic Dictionary<{typeRow[keyIndex]}, {table.TableName}> dataDic = new Dictionary<{typeRow[keyIndex]}, {table.TableName}>();\n";
             dataContainerStr += "}";
@@ -146,7 +146,7 @@ namespace Core.Editor.Excel
                 Directory.CreateDirectory(DataContainerEditorSavePath);
 
             // 保存到文件中
-            File.WriteAllText(DataContainerEditorSavePath + table.TableName + "Container.cs", dataContainerStr);
+            File.WriteAllText(DataContainerEditorSavePath + table.TableName + "Container.Generate.cs", dataContainerStr);
             // 刷新窗口
             AssetDatabase.Refresh();
         }

@@ -107,7 +107,7 @@ namespace HotUpdate.Game.Battle.Context
         {
             foreach (var battleEntityObject in AllBattleEntity)
             {
-                if (battleEntityObject is PlayerObject && !battleEntityObject.IsDead)
+                if (battleEntityObject is RoleObject && !battleEntityObject.IsDead)
                 {
                     yield return battleEntityObject;
                 }

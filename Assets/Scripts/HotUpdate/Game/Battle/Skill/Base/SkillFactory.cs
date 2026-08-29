@@ -55,8 +55,8 @@ namespace HotUpdate.Game.Battle.Skill.Base
             // 从二进制配置管理器加载技能配置信息
             var skillInfo = binaryDataManager.GetConfig<SkillInfoContainer>(EConfigLoadType.Excel).dataDic[skillId];
             // 获取释放者的属性组件
-            var propertyComponent = caster.GetComponent<StatComponent>();
-            return new SkillContext(caster, skillInfo, propertyComponent);
+            var statsComponent = caster.GetComponent<StatsComponent>();
+            return new SkillContext(caster, skillInfo, statsComponent);
         }
 
         /// <summary>

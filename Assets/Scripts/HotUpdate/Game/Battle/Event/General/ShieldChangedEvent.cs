@@ -19,13 +19,13 @@ namespace HotUpdate.Game.Battle.Event.General
         /// 当前护盾值
         /// 变更后目标实体的护盾最终数值
         /// </summary>
-        public int CurrentShield { get; }
+        public float CurrentShield { get; }
 
         /// <summary>
         /// 护盾变化量
         /// （新值 - 原始值）
         /// </summary>
-        public int DeltaShield { get; }
+        public float DeltaShield { get; }
 
         /// <summary>
         /// 护盾变更事件构造函数
@@ -34,7 +34,7 @@ namespace HotUpdate.Game.Battle.Event.General
         /// <param name="currentShield">变更后的当前护盾值</param>
         /// <param name="target">护盾发生变更的战斗实体</param>
         /// <param name="deltaShield">护盾变化量（增减数值）</param>
-        public ShieldChangedEvent(IBattleContext context, int currentShield, IBattleEntityObject target, int deltaShield) : base(context)
+        public ShieldChangedEvent(IBattleContext context, float currentShield, IBattleEntityObject target, float deltaShield) : base(context)
         {
             CurrentShield = currentShield;
             Target = target;

@@ -3,6 +3,7 @@ using Core.GlobalEvent;
 using Core.GlobalEvent.Events;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Property;
+using UnityEngine;
 
 namespace HotUpdate.Game.Battle.Skill.Conditions
 {
@@ -34,13 +35,12 @@ namespace HotUpdate.Game.Battle.Skill.Conditions
                     return false;
                 case E_SkillType.UltimateSkill:
                     // 判断能量释放足够
-                    var currentEnergy = caster.GetComponent<StatComponent>().GetPropertyValue(E_DynamicPropertyType.CurrentEnergy);
-                    var baseEnergy = caster.GetComponent<StatComponent>().GetPropertyValue(E_DynamicPropertyType.BaseEnergy);
-                    if (currentEnergy == baseEnergy)
+                    var currentEnergy = caster.GetComponent<RoleStatComponent>().UltimateResource.CurrentValue;
+                    var baseEnergy = caster.GetComponent<RoleStatComponent>().UltimateResource.MaxValue;
+                    if (Mathf.Approximately(currentEnergy, baseEnergy))
                     {
                         return true;
                     }
-
                     // 全局提示
                     globalMessageEvent.Message = "能量不足无法释放";
                     _eventCenter.TriggerEvent(globalMessageEvent);

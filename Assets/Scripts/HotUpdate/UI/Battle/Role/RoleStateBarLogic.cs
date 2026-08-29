@@ -9,13 +9,14 @@ using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Object;
-using HotUpdate.Game.Battle.Object.Role;
 using HotUpdate.Game.Battle.Property;
+using HotUpdate.Game.Battle.Property.New.Test.StatSystem;
 using HotUpdate.Game.Battle.Skill.Component;
 using HotUpdate.Game.Battle.Statuses;
 using HotUpdate.Game.Battle.Utility;
 using HotUpdate.UI.Battle.Status;
 using UnityEngine;
+using StatsComponent = HotUpdate.Game.Battle.Property.StatsComponent;
 
 namespace HotUpdate.UI.Battle.Role
 {
@@ -24,6 +25,7 @@ namespace HotUpdate.UI.Battle.Role
         [Inject] private ObjectSpawner _objectSpawner;
         [Inject] private IMonoAdapter _monoAdapter;
         [Inject] private IPoolManager _poolManager;
+        [Inject] private IBinaryDataManager _binaryDataManager;
         
         // 终极技能ID
         private int ultimateSkillId;    
@@ -39,41 +41,40 @@ namespace HotUpdate.UI.Battle.Role
         /// 当前UI绑定的角色ID
         /// </summary>
         public int RoleId { get; private set; }
-        
+
         /// <summary>
         /// 初始化角色状态UI
         /// </summary>
         /// <param name="roleStateBar"></param>
-        /// <param name="playerProperty">角色属性</param>
+        /// <param name="roleId"></param>
         /// <param name="icon">角色图标</param>
         /// <param name="ultimateSkillId">终极技能ID</param>
         /// <param name="battleEntity">战斗实体对象</param>
-        public void Init(RoleStateBar roleStateBar, RoleProperty playerProperty, Sprite icon, int ultimateSkillId, IBattleEntityObject battleEntity)
+        public void Init(RoleStateBar roleStateBar, int roleId, Sprite icon, int ultimateSkillId, IBattleEntityObject battleEntity)
         {
             View = roleStateBar;
             this.battleEntity = battleEntity;
             // 记录终极技能ID
             this.ultimateSkillId = ultimateSkillId;
-            // 记录角色ID
-            RoleId = playerProperty.BattleId;
             // 获取角色配置信息
-            var roleInfo = DIContainer.GetInstance<IBinaryDataManager>().GetConfig<RoleInfoContainer>(EConfigLoadType.Excel).dataDic[playerProperty.BattleId];
+            var roleInfo = _binaryDataManager.GetConfig<RoleInfoContainer>(EConfigLoadType.Excel).dataDic[roleId];
+            // 记录角色ID
+            RoleId = roleId;
             // 设置角色图标
             View.imgIcon.sprite = icon;
             // 获取属性组件
-            var propertyComponent = this.battleEntity.GetComponent<StatComponent>();
-
+            var roleStatComponent = this.battleEntity.GetComponent<RoleStatComponent>();
             // 初始化血量显示
-            View.imgHp.fillAmount = View.imgFade.fillAmount = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentHp) / (float)propertyComponent.GetPropertyValue(E_DynamicPropertyType.MaxHp);
-            View.txtBlood.text = $"{propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentHp)}/{(float)propertyComponent.GetPropertyValue(E_DynamicPropertyType.MaxHp)}";
+            View.imgHp.fillAmount = View.imgFade.fillAmount = roleStatComponent.CurrentHp / roleStatComponent.GetFinalValue(EStatType.Hp);
+            View.txtBlood.text = $"{roleStatComponent.CurrentHp}/{roleStatComponent.GetFinalValue(EStatType.Hp)}";
 
             // 初始化能量显示
             View.imgEnergy.color = roleInfo.f_elementType.ToElementTypeColor();  // 根据元素类型设置颜色
-            var currentEnergy = propertyComponent.GetPropertyValue(E_DynamicPropertyType.CurrentEnergy);
-            var baseEnergy = propertyComponent.GetPropertyValue(E_DynamicPropertyType.BaseEnergy);
-            View.imgEnergy.fillAmount = currentEnergy / (float)baseEnergy;
+            var currentEnergy = roleStatComponent.UltimateResource.CurrentValue;
+            var baseEnergy = roleStatComponent.UltimateResource.MaxValue;
+            View.imgEnergy.fillAmount = currentEnergy / baseEnergy;
             // 根据能量是否已满设置透明度
-            View.imgEnergy.color = new Color(View.imgEnergy.color.r, View.imgEnergy.color.g, View.imgEnergy.color.b, currentEnergy == baseEnergy ? 1 : View.nonFullAhpha);
+            View.imgEnergy.color = new Color(View.imgEnergy.color.r, View.imgEnergy.color.g, View.imgEnergy.color.b, Mathf.Approximately(currentEnergy, baseEnergy) ? 1 : View.nonFullAhpha);
             // 更新状态图标列表
             UpdateStatus();
             // 初始化护盾显示
@@ -81,50 +82,43 @@ namespace HotUpdate.UI.Battle.Role
             UpdateShield(currentShield);
             // 注册Update监听，用于每帧更新渐变效果
             _monoAdapter.AddUpdateListener(OnUpdate);
+            
             // 获取战斗上下文并注册事件监听
             battleContext = battleEntity.Context;
-            battleContext.EventBus.AddListener<HpChangedEvent>(OnHpChanged);
+            
+            battleContext.EventBus.AddListener<CurrentHpChangedEvent>(OnCurrentHpChanged);
             battleContext.EventBus.AddListener<ShieldChangedEvent>(OnShieldChanged);
-            battleContext.EventBus.AddListener<EnergyChangedEvent>(OnEnergyChangedEvent);
+            battleContext.EventBus.AddListener<ResourceChangedEvent>(OnResourceChangedEvent);
             battleContext.EventBus.AddListener<StatusAddedEvent>(OnStatusAddedEvent);
         }
 
         /// <summary>
         /// 血量变化事件回调
         /// </summary>
-        /// <param name="onHpChangedEvent">血量变化事件</param>
-        private void OnHpChanged(HpChangedEvent onHpChangedEvent)
+        /// <param name="currentHpChangedEvent">血量变化事件</param>
+        private void OnCurrentHpChanged(CurrentHpChangedEvent currentHpChangedEvent)
         {
-            // 检查事件目标是否为当前角色
-            if (onHpChangedEvent.Target is not PlayerObject || onHpChangedEvent.Target.BattleEntityId != RoleId)
-            {
-                return;
-            }
-            
             // 更新血量显示
-            View.imgHp.fillAmount = onHpChangedEvent.CurrentHp / (float)onHpChangedEvent.MaxHp;
-            View.txtBlood.text = $"{onHpChangedEvent.CurrentHp}/{onHpChangedEvent.MaxHp}";
+            View.imgHp.fillAmount = currentHpChangedEvent.CurrentHp / currentHpChangedEvent.MaxHp;
+            View.txtBlood.text = $"{currentHpChangedEvent.CurrentHp}/{currentHpChangedEvent.MaxHp}";
         }
 
         /// <summary>
         /// 能量变化事件回调
         /// </summary>
-        /// <param name="energyChangedEvent">能量变化事件</param>
-        private void OnEnergyChangedEvent(EnergyChangedEvent energyChangedEvent)
+        /// <param name="resourceChangedEvent">能量变化事件</param>
+        private void OnResourceChangedEvent(ResourceChangedEvent resourceChangedEvent)
         {
             // 检查事件目标是否为当前战斗实体
-            if (energyChangedEvent.Target != battleEntity)
-            {
+            if (resourceChangedEvent.Target != battleEntity)
                 return;
-            }
             
             // 更新能量显示
-            View.imgEnergy.fillAmount = energyChangedEvent.CurrentEnergy / (float)energyChangedEvent.MaxEnergy;
+            View.imgEnergy.fillAmount = resourceChangedEvent.CurrentValue / resourceChangedEvent.MaxValue;
             // 根据能量是否已满设置透明度
-            View.imgEnergy.color = new Color(View.imgEnergy.color.r, View.imgEnergy.color.g, View.imgEnergy.color.b, energyChangedEvent.CurrentEnergy == energyChangedEvent.MaxEnergy ? 1 : View.nonFullAhpha);
-            
+            View.imgEnergy.color = new Color(View.imgEnergy.color.r, View.imgEnergy.color.g, View.imgEnergy.color.b, Mathf.Approximately(resourceChangedEvent.CurrentValue, resourceChangedEvent.MaxValue) ? 1 : View.nonFullAhpha);
             // 能量满时重置终极技能触发标志
-            if (energyChangedEvent.CurrentEnergy == energyChangedEvent.MaxEnergy)
+            if (Mathf.Approximately(resourceChangedEvent.CurrentValue, resourceChangedEvent.MaxValue))
             {
                 battleEntity.GetComponent<PlayerSkillComponent>().IsTrigger = false;
             }
@@ -133,29 +127,26 @@ namespace HotUpdate.UI.Battle.Role
         /// <summary>
         /// 护盾变化事件回调
         /// </summary>
-        /// <param name="onShieldChangedEvent">护盾变化事件</param>
-        private void OnShieldChanged(ShieldChangedEvent onShieldChangedEvent)
+        /// <param name="shieldChangedEvent">护盾变化事件</param>
+        private void OnShieldChanged(ShieldChangedEvent shieldChangedEvent)
         {
             // 检查事件目标是否为当前战斗实体
-            if (onShieldChangedEvent.Target != battleEntity)
-            {
+            if (shieldChangedEvent.Target != battleEntity)
                 return;
-            }
 
             // 更新护盾显示
-            UpdateShield(onShieldChangedEvent.CurrentShield);
+            UpdateShield(shieldChangedEvent.CurrentShield);
         }
 
         /// <summary>
         /// 更新护盾显示
         /// </summary>
         /// <param name="currentShield">当前护盾值</param>
-        private void UpdateShield(int currentShield)
+        private void UpdateShield(float currentShield)
         {
-            // 已当前角色最大生命作为护盾的基准值
-            var referenceShield = battleEntity.GetComponent<StatComponent>()
-                .GetPropertyValue(E_DynamicPropertyType.MaxHp);
-            View.imgShield.fillAmount = currentShield / (float)referenceShield;
+            // 以当前角色最大生命作为护盾的基准值
+            var referenceShield = battleEntity.GetComponent<StatsComponent>().GetFinalValue(EStatType.Hp);
+            View.imgShield.fillAmount = currentShield / referenceShield;
         }
 
         /// <summary>
@@ -304,9 +295,9 @@ namespace HotUpdate.UI.Battle.Role
         {
             // 移除Update监听
             _monoAdapter.RemoveUpdateListener(OnUpdate);
-            battleContext.EventBus.RemoveListener<HpChangedEvent>(OnHpChanged);
+            battleContext.EventBus.RemoveListener<CurrentHpChangedEvent>(OnCurrentHpChanged);
             battleContext.EventBus.RemoveListener<ShieldChangedEvent>(OnShieldChanged);
-            battleContext.EventBus.RemoveListener<EnergyChangedEvent>(OnEnergyChangedEvent);
+            battleContext.EventBus.RemoveListener<ResourceChangedEvent>(OnResourceChangedEvent);
             battleContext.EventBus.RemoveListener<StatusAddedEvent>(OnStatusAddedEvent);
         }
     }

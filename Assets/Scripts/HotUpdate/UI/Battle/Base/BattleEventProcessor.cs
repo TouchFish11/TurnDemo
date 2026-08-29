@@ -56,13 +56,9 @@ namespace HotUpdate.UI.Battle.Base
             eventBus.AddListener<SelectTargetEvent>(OnTargetSelectionChanged);      // 目标选择事件
             eventBus.AddListener<PostCastEvent>(OnPostCastDispatch);    // 监听技能释放后通用逻辑事件
             eventBus.AddListener<UpdateWaitUiEvent>(OnUpdateWaitContentDispatch);  // 监听更新等待队列事件
-            
             eventBus.AddListener<ApplyDamageEvent>(ApplyTakeDamage);            // 应用伤害事件
-            eventBus.AddListener<ApplyShieldEvent>(ApplyShieldChanged);            // 提供护盾事件
             eventBus.AddListener<ApplyHealEvent>(ApplyHealChanged);            // 提供治疗事件
             eventBus.AddListener<ShieldChangedEvent>(OnShieldChanged);       // 护盾值变化事件
-            //eventBus.AddListener<HpChangedEvent>(OnHpChangedEvent);       // 血量变化事件
-            
             eventBus.AddListener<ClearCumulativeDamageEvent>(OnClearCumulativeDamageEvent);     // 清空累计伤害显示事件
             eventBus.AddListener<PlayerReleaseSkillEvent>(OnPlayerReleaseSkillEvent); // 玩家释放技能事件
             eventBus.AddListener<ActionBarSortPostEvent>(OnActionBarSortPostEvent); // 行动条排序完成事件
@@ -83,13 +79,9 @@ namespace HotUpdate.UI.Battle.Base
             _eventBus.RemoveListener<SelectTargetEvent>(OnTargetSelectionChanged);      // 目标选择事件
             _eventBus.RemoveListener<PostCastEvent>(OnPostCastDispatch);    // 监听技能释放后通用逻辑事件
             _eventBus.RemoveListener<UpdateWaitUiEvent>(OnUpdateWaitContentDispatch);  // 监听更新等待队列事件
-            
             _eventBus.RemoveListener<ApplyDamageEvent>(ApplyTakeDamage);            // 应用伤害事件
-            _eventBus.RemoveListener<ApplyShieldEvent>(ApplyShieldChanged);            // 提供护盾事件
             _eventBus.RemoveListener<ApplyHealEvent>(ApplyHealChanged);            // 提供治疗事件
             _eventBus.RemoveListener<ShieldChangedEvent>(OnShieldChanged);       // 护盾值变化事件
-            //_eventBus.RemoveListener<HpChangedEvent>(OnHpChangedEvent);       // 血量变化事件
-            
             _eventBus.RemoveListener<ClearCumulativeDamageEvent>(OnClearCumulativeDamageEvent);     // 清空累计伤害显示事件
             _eventBus.RemoveListener<PlayerReleaseSkillEvent>(OnPlayerReleaseSkillEvent); // 玩家释放技能事件
             _eventBus.RemoveListener<ActionBarSortPostEvent>(OnActionBarSortPostEvent); // 行动条排序完成事件
@@ -199,18 +191,9 @@ namespace HotUpdate.UI.Battle.Base
         {
             _uiManager.ShowDamageText(applyDamageEvent.DamageResult);
         }
-
-        /// <summary>
-        /// 提供护盾事件处理方法
-        /// </summary>
-        /// <param name="applyShieldEvent"></param>
-        private void ApplyShieldChanged(ApplyShieldEvent applyShieldEvent)
-        {
-            _uiManager.ShowShieldText(applyShieldEvent.Target, applyShieldEvent.ShieldAmount);
-        }
         
         /// <summary>
-        /// 提供治疗事件处理方法
+        /// 提供治疗事件处理方法，用于显示治疗量浮动文本
         /// </summary>
         /// <param name="applyHealEvent"></param>
         private void ApplyHealChanged(ApplyHealEvent applyHealEvent)
@@ -219,25 +202,14 @@ namespace HotUpdate.UI.Battle.Base
         }
         
         /// <summary>
-        /// 护盾量变化事件回调
+        /// 护盾量变化事件回调，用于在战斗中传递护盾值变化的相关信息
         /// </summary>
         /// <param name="onShieldChangedEvent">护盾值变化事件数据</param>
         private void OnShieldChanged(ShieldChangedEvent onShieldChangedEvent)
         {
-            if (onShieldChangedEvent.DeltaShield < 0)
-            {
-                // 护盾扣除提示显示
-                _uiManager.ShowShieldText(onShieldChangedEvent.Target, onShieldChangedEvent.DeltaShield);
-            }
+            // 护盾提示显示
+            _uiManager.ShowShieldText(onShieldChangedEvent.Target, onShieldChangedEvent.DeltaShield);
         }
-
-        // private void OnHpChangedEvent(HpChangedEvent hpChangedEvent)
-        // {
-        //     if (!hpChangedEvent.Target.IsDead && hpChangedEvent.CurrentHp <= 0)
-        //     {
-        //         _uiManager.RemoveActionGrid(hpChangedEvent.Target);
-        //     }
-        // }
         
         /// <summary>
         /// 玩家释放技能事件处理方法
@@ -265,16 +237,16 @@ namespace HotUpdate.UI.Battle.Base
         /// <param name="selectTargetEvent">目标选择变化事件数据</param>
         private void OnTargetSelectionChanged(SelectTargetEvent selectTargetEvent)
         {
-            if (selectTargetEvent.Selecter is PlayerObject)
+            if (selectTargetEvent.Selecter is RoleObject)
             {
                 // 玩家选择玩家：更新相机看向玩家，显示蓝色的标记；玩家选择怪物：更新相机看向怪物，显示红色的标记
-                var skillTargetType = selectTargetEvent.MainTarget is PlayerObject ? E_SkillTargetType.Friend : E_SkillTargetType.Enemy;
+                var skillTargetType = selectTargetEvent.MainTarget is RoleObject ? E_SkillTargetType.Friend : E_SkillTargetType.Enemy;
                 // 设置选中目标的标记UI显示
                 _uiManager.SetTargetMarkers(selectTargetEvent.SelectedTargets, skillTargetType);
             }
-            else if(selectTargetEvent.MainTarget is MonsterObject)
+            else if(selectTargetEvent.Selecter is MonsterObject)
             {
-                if (selectTargetEvent.MainTarget is PlayerObject)
+                if (selectTargetEvent.MainTarget is RoleObject)
                 {
                     // 怪物选择玩家：只需更新行动格子显示
                 }

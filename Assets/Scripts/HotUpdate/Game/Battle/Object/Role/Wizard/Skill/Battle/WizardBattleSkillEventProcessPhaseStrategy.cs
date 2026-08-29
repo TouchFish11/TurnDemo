@@ -31,7 +31,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard.Skill.Battle
                     out var result);
                 target.TakeDamage(result);
                 // 恢复终结技能量
-                ((PlayerObject)projectileData.caster).RecoverUltimate(SkillContext.SkillInfo.f_recoveryEnergy);
+                ((RoleObject)projectileData.caster).RecoverUltimate(SkillContext.SkillInfo.f_recoveryEnergy);
             }
             
             foreach (var target in projectileData.targets)

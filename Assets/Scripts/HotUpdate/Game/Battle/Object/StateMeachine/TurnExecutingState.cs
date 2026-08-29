@@ -15,18 +15,18 @@ namespace HotUpdate.Game.Battle.Object.StateMeachine
 
         public override void Enter()
         {
-            PlayerObject.StartCoroutine(OnExceuteAction());
+            RoleObject.StartCoroutine(OnExceuteAction());
         }
 
         private IEnumerator OnExceuteAction()
         {
-            while (PlayerObject.CanAct || PlayerObject.Acting)
+            while (RoleObject.CanAct || RoleObject.Acting)
             {
                 yield return null;
             }
             
             // 切换状态
-            PlayerObject.ChangeState(EActPhase.TurnEnd);
+            RoleObject.ChangeState(EActPhase.TurnEnd);
         }
 
         public override void Exit()

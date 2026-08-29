@@ -7,7 +7,7 @@ namespace HotUpdate.Game.Battle.Object.StateMeachine
     /// </summary>
     public interface ITurnState
     {
-        PlayerObject PlayerObject { get; }
+        RoleObject RoleObject { get; }
         
         void Enter();
         

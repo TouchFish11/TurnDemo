@@ -22,8 +22,8 @@ namespace HotUpdate.Game.Battle.Skill.Component
         protected override void OnBattleInit()
         {
             base.OnBattleInit();
-            var playerObject = (IPlayerObject)BattleEntity;
-            skillComponentCore.InitSkill(((PlayerObject)BattleEntity).RoleInfo.f_skillIds, playerObject.SkillFactory);
+            var playerObject = (IRoleObject)BattleEntity;
+            skillComponentCore.InitSkill(((RoleObject)BattleEntity).RoleInfo.f_skillIds, playerObject.SkillFactory);
             AddCastCondition(playerObject.DefaultCastCondition);
             AddTargetSelectStrategy(playerObject.DefaultTargetSelectStrategy);
         }

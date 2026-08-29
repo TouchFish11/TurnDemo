@@ -59,7 +59,7 @@ namespace HotUpdate.Game.Battle.Skill.Handler
                 // 更新怪物位置
                 _battlePointProxy.UpdateMonsterPos(currentEntity);
                 // 切换战斗相机至当前玩家实体视角
-                yield return TaskUtility.WaitForTask(_battleCoordinator.UpdateCamera((PlayerObject)currentEntity));
+                yield return TaskUtility.WaitForTask(_battleCoordinator.UpdateCamera((RoleObject)currentEntity));
             
                 // 获取玩家基础目标选择策略
                 var strategy = _targetSelectStrategyFactory.GetTargetSelectStrategy<PlayerBaseTargetSelectStrategy>();
@@ -94,7 +94,7 @@ namespace HotUpdate.Game.Battle.Skill.Handler
         private bool CanHandle(IBattleEntityObject currentEntity)
         {
             // 非玩家实体不执行后续逻辑（仅处理玩家释放终极技能的场景）;检查当前实体是否具备行动能力，无行动能力则终止流程
-            return currentEntity is PlayerObject && currentEntity.CanAct;
+            return currentEntity is RoleObject && currentEntity.CanAct;
         }
     }
 }

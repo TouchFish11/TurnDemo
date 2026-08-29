@@ -32,11 +32,11 @@ namespace HotUpdate.Game.Battle.Object.Monster
         /// 战斗初始化方法
         /// 初始化怪物的技能列表和战斗组件，为进入战斗做最终准备
         /// </summary>
-        public void MonsterBattleInit(MonsterBattleInitData initData)
+        public void MonsterBattleInit(BattleParameterObject parameter)
         {
-            BattleInit(initData);
+            BattleInit(parameter);
             
-            MonsterInfo = initData.MonsterInfo;
+            MonsterInfo = (MonsterInfo)parameter.BattleInfo;
             // 初始化伤害链
             damageChain = DamageChainBuilder.GetMonsterDamageChain();
             SkillFactory = GetSkillFactory();

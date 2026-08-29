@@ -76,7 +76,7 @@ namespace HotUpdate.Game.Battle.Core
             Context.EventBus.TriggerEvent(new SelectTargetEvent(Context, caster, _targetSelectManager.GetMainTarget(), _targetSelectManager.GetTargets()));
         }
         
-        public async Task UpdateCamera(E_SkillTargetType skillTargetType, PlayerObject playerObject)
+        public async Task UpdateCamera(E_SkillTargetType skillTargetType, RoleObject roleObject)
         {
             // 更新相机旋转基准
             _battleCameraManager.UpdateBaseRotation();
@@ -100,8 +100,8 @@ namespace HotUpdate.Game.Battle.Core
                     // 激活所有怪物UI显示
                     ((IBattleController)_uiService.GetPanel(EUIPanelId.BattlePanel)).MonsterStateUIManager.ActiveMonsterUIs();
                     // 更新对应的玩家相机看向怪物
-                    var roleCameraParent = _battlePointProxy.BattlePoint.RoleCamerasTrans[playerObject.EntityPosIndex];
-                    var mask2 = _battleCameraManager.CalcRoleRenderMask(playerObject.EntityPosIndex);
+                    var roleCameraParent = _battlePointProxy.BattlePoint.RoleCamerasTrans[roleObject.EntityPosIndex];
+                    var mask2 = _battleCameraManager.CalcRoleRenderMask(roleObject.EntityPosIndex);
                     await _battleCameraManager.CreateCamera(roleCameraParent, Vector3.zero, Quaternion.identity, mask2);
                     break;
                 case E_SkillTargetType.None:
@@ -115,7 +115,7 @@ namespace HotUpdate.Game.Battle.Core
         {
             // 先执行战斗点位置变化
             _battlePointProxy.UpdateMonsterPos(caster);
-            yield return TaskUtility.WaitForTask(UpdateCamera((PlayerObject)caster));
+            yield return TaskUtility.WaitForTask(UpdateCamera((RoleObject)caster));
             // 玩家回合：激活目标选择功能
             OperationState.IsActiveTargetSelect = true;
             // 启用输入
@@ -127,21 +127,21 @@ namespace HotUpdate.Game.Battle.Core
             // 激活怪物血量UI显示
             controller.MonsterStateUIManager.ActiveMonsterUIs();
             // 显示终结技立绘
-            yield return controller.BattleUiManager.ShowPaiting(((PlayerObject)caster).RoleInfo, skillInfo);
+            yield return controller.BattleUiManager.ShowPaiting(((RoleObject)caster).RoleInfo, skillInfo);
             // 获取终结技技能按键UI数据提供器
             var provider = _skillKeyUIDataProviderFactory.GetProvider<UltimateSkillKeyUIDataProvider>();
             // 根据数据更新玩家操作按键，按键触发技能选择事件
             controller.BattleUiManager.UpdateOperator(caster, provider);
         }
 
-        public async Task UpdateCamera(PlayerObject playerObject)
+        public async Task UpdateCamera(RoleObject roleObject)
         {
             // 创建相机到指定位置点
-            var roleCameraRoot = _battlePointProxy.GetRoleCameraRoot(playerObject);
+            var roleCameraRoot = _battlePointProxy.GetRoleCameraRoot(roleObject);
             // 更新相机位置
             await _battleCameraManager.CreateCamera(roleCameraRoot, Vector3.zero, Quaternion.identity);
             // 更新相机渲染
-            var mask = _battleCameraManager.CalcRoleRenderMask(playerObject.EntityPosIndex);
+            var mask = _battleCameraManager.CalcRoleRenderMask(roleObject.EntityPosIndex);
             _battleCameraManager.CurrentActiveCamera.cullingMask = mask;
         }
         

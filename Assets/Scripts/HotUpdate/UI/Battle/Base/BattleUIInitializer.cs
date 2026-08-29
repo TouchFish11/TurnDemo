@@ -3,11 +3,10 @@ using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Log;
-using Core.Mono;
 using Core.Pool;
 using Core.Serialize.Binary;
 using HotUpdate.Game.Battle.Object;
-using HotUpdate.Game.Battle.Property;
+using HotUpdate.Game.Battle.Object.Role;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Component;
 using HotUpdate.Game.Battle.UI;
@@ -23,7 +22,6 @@ namespace HotUpdate.UI.Battle.Base
     {
         [Inject] private ObjectSpawner _objectSpawner;
         [Inject] private IBinaryDataManager _binaryDataManager;
-        [Inject] private IMonoAdapter _monoAdapter;
         [Inject] private IPoolManager _poolManager;
         
         // 战斗视图接口，用于获取UI挂载节点等视图相关信息
@@ -80,12 +78,8 @@ namespace HotUpdate.UI.Battle.Base
                 
                 // 从图集加载角色图标
                 var icon = await _battleController.BattleUiManager.GetIconByEntity(battleEntity);
-                // 获取当前实体的玩家属性组件
-                var playerPropertyComponent = battleEntity.GetComponent<PlayerStatComponent>();
-                // 获取角色核心属性数据
-                var roleProperty = playerPropertyComponent.GetProperty<RoleProperty>();
                 var logic = _poolManager.GetData<RoleStateBarLogic>();
-                logic.Init(roleStateUI, roleProperty, icon, targetSkillId, battleEntity);
+                logic.Init(roleStateUI, ((RoleObject)battleEntity).RoleInfo.f_id, icon, targetSkillId, battleEntity);
                 roleStateUI.Init(logic);
                 // 将初始化后的角色状态UI缓存到数据模型中
                 _view.RoleStateUIs.Add(roleStateUI);
@@ -106,8 +100,6 @@ namespace HotUpdate.UI.Battle.Base
                 // 将初始化后的怪物UI缓存
                 await _battleController.MonsterStateUIManager.CreateNormalMonsterStateUI(battleEntity, _view.MonsterStateArea);
             }
-            
-            Logger.LogDebug(ELogTags.Battle, $"Init monster ui finished");
         }
 
         public void Dispose()
@@ -116,7 +108,6 @@ namespace HotUpdate.UI.Battle.Base
             _objectSpawner.Dispose();
             _objectSpawner = null;
             _binaryDataManager = null;
-            _monoAdapter = null;
             _view = null;
             _battleController = null;
         }

@@ -7,7 +7,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest
     /// <summary>
     /// 牧师脚本
     /// </summary>
-    public class Priest : PlayerObject
+    public class Priest : RoleObject
     {
         protected override ISkillFactory GetSkillFactory()
         {

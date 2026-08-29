@@ -14,8 +14,7 @@ namespace HotUpdate.Game.Battle.Object.Role
         protected override IEnumerator OnHandle()
         {
             // 清空能量
-            var propertyComponent = battleEntityObject.GetComponent<StatComponent>();
-            propertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentEnergy, 0);
+            battleEntityObject.GetComponent<RoleStatComponent>().ConsumeAllResource();
             
             var animationComponent = battleEntityObject.GetComponent<BattleAnimationComponent>();
              // 等待死亡动画播放结束

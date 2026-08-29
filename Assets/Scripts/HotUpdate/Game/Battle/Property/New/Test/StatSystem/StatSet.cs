@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Test;
 
 namespace HotUpdate.Game.Battle.Property.New.Test.StatSystem
 {

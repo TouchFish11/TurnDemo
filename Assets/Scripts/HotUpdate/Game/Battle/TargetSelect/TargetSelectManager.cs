@@ -109,7 +109,7 @@ namespace HotUpdate.Game.Battle.TargetSelect
             switch (caster)
             {
                 // 施法者为玩家的情况
-                case PlayerObject:
+                case RoleObject:
                 {
                     _filterEntitys = targetType switch
                     {

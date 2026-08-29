@@ -7,9 +7,11 @@ using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Monster;
 using HotUpdate.Game.Battle.Object.Role;
 using HotUpdate.Game.Battle.Property;
+using HotUpdate.Game.Battle.Property.New.Test.StatSystem;
 using HotUpdate.Game.Battle.Skill;
 using UnityEngine;
 using Logger = Core.Log.Logger;
+using StatsComponent = HotUpdate.Game.Battle.Property.StatsComponent;
 
 namespace HotUpdate.Game.Battle.Utility
 {
@@ -42,9 +44,9 @@ namespace HotUpdate.Game.Battle.Utility
             // 初始化所有角色的行动值
             foreach (var battleEntityObject in context.GetAliveEntitys())
             {
-                var speed = battleEntityObject.GetComponent<StatComponent>().GetPropertyValue(E_DynamicPropertyType.CurrentSpeed);
+                var speed = battleEntityObject.GetComponent<StatsComponent>().GetFinalValue(EStatType.Speed);
                 // 根据速度计算行动值
-                battleEntityObject.SetActionValue(CalcActionValue(speed));
+                battleEntityObject.ActionValue = CalcActionValue(speed);
             }
 
             // 基于行动值升序排列（行动值越小越先行动）
@@ -70,8 +72,8 @@ namespace HotUpdate.Game.Battle.Utility
             if (currentTurnOwner != null)
             {
                 // 基于新速度，更新当前持有回合的实体的行动值
-                var newSpeed = currentTurnOwner.GetComponent<StatComponent>().GetPropertyValue(E_DynamicPropertyType.CurrentSpeed);
-                currentTurnOwner.SetActionValue(CalcActionValue(newSpeed));
+                var newSpeed = currentTurnOwner.GetComponent<StatsComponent>().GetFinalValue(EStatType.Speed);
+                currentTurnOwner.ActionValue = CalcActionValue(newSpeed);
                 // 将当前实体插入到对应的位置
                 InsertActionAxis(currentTurnOwner);
             }
@@ -83,7 +85,7 @@ namespace HotUpdate.Game.Battle.Utility
             foreach (var battleEntityObject in context.AllBattleEntity)
             {
                 var av = battleEntityObject.ActionValue;
-                battleEntityObject.SetActionValue(av - nextAv);
+                battleEntityObject.ActionValue = av - nextAv;
             }
             
             // 触发事件，通知行动轴UI更新
@@ -222,7 +224,7 @@ namespace HotUpdate.Game.Battle.Utility
         {
             return entityObject switch
             {
-                IPlayerObject playerObject => playerObject.RoleInfo.f_controllerAssetKey,
+                IRoleObject playerObject => playerObject.RoleInfo.f_controllerAssetKey,
                 IMonsterObject monsterObject => monsterObject.MonsterInfo.f_controllerAssetKey,
                 _ => throw new ArgumentOutOfRangeException(nameof(entityObject), entityObject, null)
             };

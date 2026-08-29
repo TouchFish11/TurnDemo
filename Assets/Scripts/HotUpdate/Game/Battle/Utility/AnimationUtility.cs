@@ -49,7 +49,7 @@ namespace HotUpdate.Game.Battle.Utility
             
             var configName = entityObject switch
             {
-                IPlayerObject playerObject => playerObject.RoleInfo.f_animProfile,
+                IRoleObject playerObject => playerObject.RoleInfo.f_animProfile,
                 IMonsterObject monsterObject => monsterObject.MonsterInfo.f_animProfile,
                 _ => string.Empty
             };

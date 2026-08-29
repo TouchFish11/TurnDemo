@@ -31,7 +31,7 @@ namespace HotUpdate.Game.Battle.Core
         /// <param name="playerRole">释放技能的玩家角色对象</param>
         void UpdateMonsterPos(IBattleEntityObject playerRole);
 
-        Transform GetRoleCameraRoot(PlayerObject playerObject);
+        Transform GetRoleCameraRoot(RoleObject roleObject);
         Transform GetRoleTransByIndex(int index);
     }
 }

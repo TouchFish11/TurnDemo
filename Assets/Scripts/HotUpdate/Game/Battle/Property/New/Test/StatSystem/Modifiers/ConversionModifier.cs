@@ -1,6 +1,4 @@
 using Core.Exceptions;
-using Test;
-using UnityEngine;
 
 namespace HotUpdate.Game.Battle.Property.New.Test.StatSystem.Modifiers
 {

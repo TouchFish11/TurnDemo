@@ -32,7 +32,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.Slime.Skill.Normal
             // 拼接并打印所有目标信息（调试用）
             SkillHelper.PrintSelectTargets(SkillContext.AllTargets);
             
-            yield return TaskUtility.WaitForTask(battleCoordinator.UpdateCamera((PlayerObject)SkillContext.MainTarget));
+            yield return TaskUtility.WaitForTask(battleCoordinator.UpdateCamera((RoleObject)SkillContext.MainTarget));
             yield return new WaitForSeconds(0.1f);
         }
     }

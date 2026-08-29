@@ -46,7 +46,7 @@ namespace HotUpdate.Game.Battle.UI
         /// </summary>
         /// <param name="target">目标战斗实体</param>
         /// <param name="sheilAmount">护盾量</param>
-        void ShowShieldText(IBattleEntityObject target, int sheilAmount);
+        void ShowShieldText(IBattleEntityObject target, float sheilAmount);
 
         /// <summary>
         /// 显示治疗文本（飘字）

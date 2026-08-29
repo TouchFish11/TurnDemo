@@ -7,11 +7,11 @@ namespace HotUpdate.Game.Battle.Object.StateMeachine
     /// </summary>
     public abstract class TurnState : ITurnState
     {
-        public PlayerObject PlayerObject { get; }
+        public RoleObject RoleObject { get; }
 
         protected TurnState(IBattleEntityObject battleEntity)
         {
-            PlayerObject = battleEntity as PlayerObject;
+            RoleObject = battleEntity as RoleObject;
         }
         
         public abstract void Enter();

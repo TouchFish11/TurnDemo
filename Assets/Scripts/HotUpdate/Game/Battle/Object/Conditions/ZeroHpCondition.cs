@@ -6,7 +6,7 @@ namespace HotUpdate.Game.Battle.Object.Conditions
     {
         public bool CanDie(IBattleEntityObject battleEntity)
         {
-            return battleEntity.GetComponent<StatComponent>().GetPropertyValue(E_DynamicPropertyType.CurrentHp) <= 0;
+            return battleEntity.GetComponent<StatsComponent>().CurrentHp <= 0;
         }
     }
 }

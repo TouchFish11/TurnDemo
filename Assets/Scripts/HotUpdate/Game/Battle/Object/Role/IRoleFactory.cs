@@ -1,10 +1,12 @@
 using System.Threading.Tasks;
+using HotUpdate.Game.Battle.Context;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.Object.Role
 {
     public interface IRoleFactory
     {
-        Task<IPlayerObject> CreateRole(int roleId, Transform parent, bool stay = false);
+        Task<IRoleObject> CreateRole(int roleId, int entityIndex, IBattleContext context, Transform parent,
+            bool stay = false);
     }
 }

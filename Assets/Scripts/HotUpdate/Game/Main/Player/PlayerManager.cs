@@ -33,7 +33,7 @@ namespace HotUpdate.Game.Main.Player
         // Key：实体的索引序号（自增），Value：对应的战斗实体对象ID；用于快速管理和访问挂载到玩家的多个战斗实体
         private readonly Dictionary<int, int> indexToRoleIdMap = new();
         // 字典：玩家UID映射到对应的实体对象，用于快速查找玩家
-        private readonly Dictionary<int, IPlayerObject> roleIdToEntityMap = new();
+        private readonly Dictionary<int, IRoleObject> roleIdToEntityMap = new();
         // 环绕式第三人称相机控制器
         private OrbitCameraController _cameraController;
 
@@ -55,7 +55,7 @@ namespace HotUpdate.Game.Main.Player
             id = 1;
             var roleInfo = _binaryDataManager.GetConfig<RoleInfoContainer>(EConfigLoadType.Excel).dataDic[id];
             // 从资源包加载战士预制体，并挂载到玩家节点下
-            var roleObj = await _objectSpawner.SpawnAsync<PlayerObject>(roleKey);
+            var roleObj = await _objectSpawner.SpawnAsync<RoleObject>(roleKey);
             roleObj.SetRoleInfo(roleInfo);
             EntityHelper.InitEntity(roleObj);
             AddWorldComponent(roleObj);

@@ -29,7 +29,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Skill.Normal
                 target.TakeDamage(result);
                 // 恢复终结技能量
                 //((PlayerObject)projectileData.caster).RecoverUltimate(SkillContext.SkillInfo.f_recoveryEnergy);
-                ((PlayerObject)projectileData.caster).RecoverUltimate(1000);
+                ((RoleObject)projectileData.caster).RecoverUltimate(1000);
             }
             
             foreach (var target in projectileData.targets)

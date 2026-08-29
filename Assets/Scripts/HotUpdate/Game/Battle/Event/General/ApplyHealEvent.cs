@@ -4,7 +4,7 @@ using HotUpdate.Game.Battle.Object;
 namespace HotUpdate.Game.Battle.Event.General
 {
     /// <summary>
-    /// 应用治疗事件
+    /// 应用治疗事件，用于显示治疗量浮动文本UI
     /// </summary>
     public class ApplyHealEvent : BattleEvent
     {

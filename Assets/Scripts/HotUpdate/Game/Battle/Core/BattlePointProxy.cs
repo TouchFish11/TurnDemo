@@ -67,9 +67,9 @@ namespace HotUpdate.Game.Battle.Core
             SortMonsterTrans();
         }
 
-        public Transform GetRoleCameraRoot(PlayerObject playerObject)
+        public Transform GetRoleCameraRoot(RoleObject roleObject)
         {
-            return BattlePoint.RoleCamerasTrans[playerObject.EntityPosIndex];
+            return BattlePoint.RoleCamerasTrans[roleObject.EntityPosIndex];
         }
 
         public Transform GetRoleTransByIndex(int index)

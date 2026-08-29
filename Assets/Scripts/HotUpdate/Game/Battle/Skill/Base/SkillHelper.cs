@@ -57,7 +57,7 @@ namespace HotUpdate.Game.Battle.Skill.Base
             // 待技能组件确认释放（阻塞直到释放条件满足）
             yield return new WaitUntil(() => skillComponent.IsRelease);
             // 清空释放者当前能量（终结技消耗所有能量）
-            skillContext.PropertyComponent.SetPropertyValue(E_DynamicPropertyType.CurrentEnergy, 0);
+            ((RoleStatComponent)skillContext.StatsComponent).ConsumeAllResource();
             // 终结释放通用逻辑、禁用输入、更新UI显示
             var context = skillContext.Caster.Context;
             context.EventBus.TriggerEvent(new UltimateCastEvent(context));

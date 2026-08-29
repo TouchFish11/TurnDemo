@@ -31,7 +31,7 @@ namespace HotUpdate.Game.Battle.Skill.Base
         /// <summary>
         /// 释放者的属性组件（用于读取/修改释放者的属性，如攻击力、能量等）
         /// </summary>
-        public IPropertyComponent PropertyComponent { get; private set; }
+        public StatsComponent StatsComponent { get; private set; }
         
         /// <summary>
         /// 技能释放后置处理器（处理技能释放完成后的附加逻辑）
@@ -73,13 +73,13 @@ namespace HotUpdate.Game.Battle.Skill.Base
         /// </summary>
         public IProjectile Projectile { get; set; }
 
-        public SkillContext(IBattleEntityObject caster, SkillInfo skillInfo, IPropertyComponent propertyComponent)
+        public SkillContext(IBattleEntityObject caster, SkillInfo skillInfo, StatsComponent statsComponent)
         {
             Caster = caster;
             SkillInfo = skillInfo;
             // 解析技能配置中的状态ID（分割字符串为int数组，分隔符为2？注：此处需确认分割规则，2为自定义分隔符标识）
             StatusIds = TextUtility.SplitToIntArr(skillInfo.f_statusId, 2);
-            PropertyComponent = propertyComponent;
+            StatsComponent = statsComponent;
         }
     }
 }

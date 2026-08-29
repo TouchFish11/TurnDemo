@@ -11,18 +11,18 @@ namespace HotUpdate.UI.Battle.FloatText
         /// </summary>
         /// <param name="shieldTextUI"></param>
         /// <param name="shieldAmount">护盾量</param>
-        public void InitshieldText(ShieldTextUI shieldTextUI , int shieldAmount)
+        public void InitshieldText(ShieldTextUI shieldTextUI , float shieldAmount)
         {
             View = shieldTextUI;
             if (shieldAmount > 0)
             {
                 // 设置护盾数值文本内容（转为字符串）
-                View.txtShieldNum.text = shieldAmount.ToString();
+                View.txtShieldNum.text = ((int)shieldAmount).ToString();
             }
             else if(shieldAmount < 0)
             {
                 // 设置护盾数值文本内容（转为字符串）
-                View.txtShieldNum.text = $"{shieldAmount}";
+                View.txtShieldNum.text = $"{(int)shieldAmount}";
             }
             StartUpdate();
         }

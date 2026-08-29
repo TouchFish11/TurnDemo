@@ -2,6 +2,7 @@ using System.Collections;
 using HotUpdate.Base.ECModule;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage;
+using HotUpdate.Game.Battle.Object.Conditions;
 using HotUpdate.Game.Battle.Skill.Conditions;
 using HotUpdate.Game.Battle.Skill.Factory;
 using HotUpdate.Game.Battle.TargetSelect;
@@ -67,14 +68,7 @@ namespace HotUpdate.Game.Battle.Object
         /// 行动值
         /// 战斗回合制中用于判定行动顺序的核心数值（行动值为0则可执行行动）
         /// </summary>
-        float ActionValue { get; }
-
-        /// <summary>
-        /// 设置行动值
-        /// 直接修改当前实体的行动值（如加速/减速效果、回合重置）
-        /// </summary>
-        /// <param name="actionValue">目标行动值</param>
-        void SetActionValue(float actionValue);
+        float ActionValue { get; set; }
         
         /// <summary>
         /// 执行行动
@@ -117,5 +111,18 @@ namespace HotUpdate.Game.Battle.Object
         /// </summary>
         /// <param name="sheildAmount">护盾量</param>
         void TakeSheild(int sheildAmount);
+
+        /// <summary>
+        /// 添加死亡条件
+        /// </summary>
+        /// <param name="condition"></param>
+        void AddDeathCondition(IDeathCondition condition);
+        
+        /// <summary>
+        /// 移除死亡条件
+        /// </summary>
+        /// <param name="condition"></param>
+        /// <returns></returns>
+        bool RemoveDeathCondition(IDeathCondition condition);
     }
 }

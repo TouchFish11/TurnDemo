@@ -3,6 +3,9 @@ using HotUpdate.Base.ECModule;
 
 namespace HotUpdate.Base.Utility
 {
+    /// <summary>
+    /// 实体辅助器
+    /// </summary>
     public class EntityHelper
     {
         private static long s_idCounter;
@@ -15,7 +18,7 @@ namespace HotUpdate.Base.Utility
         }
         
         /// <summary>
-        /// 初始化实体
+        /// 初始化实体，会调用实体的<see cref="IEntityObject.InitBase"/>方法
         /// </summary>
         /// <param name="entityObject"></param>
         /// <typeparam name="T"></typeparam>
