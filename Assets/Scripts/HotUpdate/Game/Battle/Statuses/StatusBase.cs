@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
 using Core.DI;
+using Core.Exceptions;
 using Core.Pool;
-using Core.Serialize.Binary;
 using Core.Time;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.StatSystem;
+using HotUpdate.Game.Battle.StatSystem.Modifiers;
 using HotUpdate.Game.VFX;
 
 namespace HotUpdate.Game.Battle.Statuses
@@ -12,20 +15,27 @@ namespace HotUpdate.Game.Battle.Statuses
     /// <summary>
     /// 状态基类：所有战斗状态（如buff/debuff）的父类，实现状态的基础生命周期和属性管理
     /// </summary>
-    public abstract class StatusBase : IStatus, IPoolData
+    public abstract class StatusBase : IStatus
     {
-        [Inject] protected IBinaryDataManager _binaryDataManager;
+        // 回收时不置空，否则复用会出问题
         [Inject] protected IPoolManager poolManager;
+        [Inject] protected StatModifierFactory modifierFactory;
         [Inject] protected IVFXManager vfxManager;
         [Inject] protected ITimerManager timerManager;
         
         // 状态是否有效（有效则生效，无效则触发移除逻辑）
         private bool _isValid;
-        // 状态加成数据（如属性加成、数值变化等）
-        protected StatusBonusData bonusData;
-        // 战斗上下文
+        
+        /// <summary>
+        /// 战斗上下文
+        /// </summary>
         protected IBattleContext Context { get; private set; }
 
+        /// <summary>
+        /// 状态配置信息
+        /// </summary>
+        public StatusInfo StatusInfo { get; private set; }
+        
         /// <summary>
         /// 状态核心属性（包含状态ID、剩余回合、当前层数等）
         /// </summary>
@@ -40,11 +50,16 @@ namespace HotUpdate.Game.Battle.Statuses
         /// 状态拥有者（如被施加buff的角色）
         /// </summary>
         public IBattleEntityObject Owner { get; private set; }
+        
+        /// <summary>
+        /// 状态施加者的属性组件
+        /// </summary>
+        protected StatsComponent SourcerStatsComponent => Sourcer.GetComponent<StatsComponent>();
 
         /// <summary>
-        /// 只读获取状态加成数据
+        /// 状态拥有者的属性组件
         /// </summary>
-        public StatusBonusData BonusData => bonusData;
+        protected StatsComponent OwnerStatsComponent => Owner.GetComponent<StatsComponent>();
 
         /// <summary>
         /// 状态有效性标识：赋值时自动触发添加/移除逻辑
@@ -71,12 +86,10 @@ namespace HotUpdate.Game.Battle.Statuses
         /// </summary>
         /// <param name="sorucer">施加者</param>
         /// <param name="owner">拥有者</param>
-        /// <param name="statusId">状态配置ID</param>
-        public void InitStatus(IBattleEntityObject sorucer, IBattleEntityObject owner, int statusId)
+        /// <param name="statusInfo">状态信息</param>
+        public void InitStatus(IBattleEntityObject sorucer, IBattleEntityObject owner, StatusInfo statusInfo)
         {
-            var statusInfo = _binaryDataManager.GetConfig<StatusInfoContainer>(EConfigLoadType.Excel).dataDic[statusId];
-            StatusProperty = DIContainer.Create<StatusProperty>(parameterValues: statusInfo); // 初始化状态属性
-            bonusData = new StatusBonusData(); // 初始化加成数据
+            StatusProperty = new StatusProperty(statusInfo); // 初始化状态属性
             Sourcer = sorucer; // 赋值施加者
             Owner = owner; // 赋值拥有者
             Context = owner.Context;
@@ -89,7 +102,7 @@ namespace HotUpdate.Game.Battle.Statuses
         public void ChangePine(int deltaPine)
         {
             // 更新当前层数
-            StatusProperty.SetCurrentPine(StatusProperty.CurrentPine + deltaPine);
+            StatusProperty.CurrentPine += deltaPine;
             // 触发层数变化回调
             OnPineChanged();
         }
@@ -98,11 +111,10 @@ namespace HotUpdate.Game.Battle.Statuses
         /// 回合开始时的状态处理（外部调用入口）
         /// </summary>
         /// <param name="owner">状态拥有者</param>
-        /// <param name="context">战斗上下文（包含战斗环境、规则等信息）</param>
+        /// <param name="context">战斗上下文</param>
         public virtual void TurnStart(IBattleEntityObject owner, IBattleContext context)
         {
             OnTurnStart(owner, context); // 执行子类自定义的回合开始逻辑
-
             // 判定剩余回合/层数是否满足生效条件，不满足则失效
             if (StatusProperty.RemainingRound <= 0 || StatusProperty.CurrentPine <= 0)
             {
@@ -118,6 +130,11 @@ namespace HotUpdate.Game.Battle.Statuses
         public virtual void TurnEnd(IBattleEntityObject owner, IBattleContext context)
         {
             OnTurnEnd(owner, context); // 执行子类自定义的回合结束逻辑
+            // 判定剩余回合/层数是否满足生效条件，不满足则失效
+            if (StatusProperty.RemainingRound <= 0 || StatusProperty.CurrentPine <= 0)
+            {
+                IsValid = false;
+            }
         }
         
         /// <summary>
@@ -125,12 +142,12 @@ namespace HotUpdate.Game.Battle.Statuses
         /// </summary>
         /// <param name="deltaSub">减少量，默认每回合减少一</param>
         /// <exception cref="ArgumentOutOfRangeException">deltaSub小于0时抛出</exception>
-        public void SubRemainRound(int deltaSub = 1)
+        protected void SubRemainRound(int deltaSub = 1)
         {
             if(deltaSub < 0)
-                throw new ArgumentOutOfRangeException($"{nameof(deltaSub)} < 0");
+                throw ExceptionHelper.Throw<ArgumentOutOfRangeException>($"{nameof(deltaSub)} < 0");
             
-            StatusProperty.SetRemainingRound(StatusProperty.RemainingRound - deltaSub);
+            StatusProperty.RemainingRound -= deltaSub;
         }
 
         /// <summary>
@@ -152,14 +169,11 @@ namespace HotUpdate.Game.Battle.Statuses
 
         /// <summary>
         /// 回合开始时的自定义逻辑（抽象方法，子类必须实现）
-        /// 不同状态在回合开始时有不同行为（如持续掉血、回蓝等）
+        /// 不同状态在回合开始时有不同行为
         /// </summary>
         /// <param name="owner">状态拥有者</param>
         /// <param name="context">战斗上下文</param>
-        protected virtual void OnTurnStart(IBattleEntityObject owner, IBattleContext context)
-        {
-            SubRemainRound();
-        }
+        protected virtual void OnTurnStart(IBattleEntityObject owner, IBattleContext context) { }
 
         /// <summary>
         /// 回合结束时的自定义逻辑（子类可选重写）
@@ -169,12 +183,13 @@ namespace HotUpdate.Game.Battle.Statuses
         protected virtual void OnTurnEnd(IBattleEntityObject owner, IBattleContext context) { }
 
         /// <summary>
-        /// 重置状态数据（对象池回收时调用）
-        /// 清空所有引用和状态标识，避免内存泄漏
+        /// 重置状态数据
         /// </summary>
         public void ResetData()
         {
+            Context = null;
             _isValid = false;
+            StatusInfo = null;
             StatusProperty = null;
             Sourcer = null;
             Owner = null;

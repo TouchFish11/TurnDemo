@@ -1,5 +1,5 @@
 using HotUpdate.Game.Battle.Object;
-using HotUpdate.Game.Battle.Property;
+using HotUpdate.Game.Battle.StatSystem;
 
 namespace HotUpdate.Game.Battle.Damage
 {
@@ -13,7 +13,7 @@ namespace HotUpdate.Game.Battle.Damage
         
         public IBattleEntityObject target  { get; set; }
         
-        public E_ElementType ElementType { get; set; }
+        public EElementType ElementType { get; set; }
         
         // 测试
         public int Damage { get; set; }

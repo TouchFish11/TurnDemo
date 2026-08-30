@@ -1,10 +1,10 @@
 using Core.DI;
 using Core.Serialize.Binary;
 using HotUpdate.Game.Battle.Object;
-using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.Skill.Base.Flow;
 using HotUpdate.Game.Battle.Skill.Factory;
 using HotUpdate.Game.Battle.Skill.Handler;
+using HotUpdate.Game.Battle.StatSystem;
 using HotUpdate.Game.Battle.TargetSelect;
 
 namespace HotUpdate.Game.Battle.Skill.Base

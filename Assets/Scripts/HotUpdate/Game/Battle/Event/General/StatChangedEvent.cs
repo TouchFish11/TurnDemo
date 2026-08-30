@@ -1,5 +1,5 @@
 using HotUpdate.Game.Battle.Context;
-using HotUpdate.Game.Battle.Property.New.Test.StatSystem;
+using HotUpdate.Game.Battle.StatSystem;
 
 namespace HotUpdate.Game.Battle.Event.General
 {
@@ -8,9 +8,9 @@ namespace HotUpdate.Game.Battle.Event.General
     /// </summary>
     public class StatChangedEvent : BattleEvent
     {
-        public Stat Stat { get; }
+        public IReadOnlyStat Stat { get; }
         
-        public StatChangedEvent(IBattleContext context, Stat stat) : base(context)
+        public StatChangedEvent(IBattleContext context, IReadOnlyStat stat) : base(context)
         {
             Stat = stat;
         }

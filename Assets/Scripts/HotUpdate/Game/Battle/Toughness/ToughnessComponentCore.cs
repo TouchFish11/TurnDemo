@@ -5,7 +5,7 @@ using HotUpdate.Base.ECModule;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Monster;
-using HotUpdate.Game.Battle.Property;
+using HotUpdate.Game.Battle.StatSystem;
 using HotUpdate.Game.Battle.Toughness.CalcStrategy;
 using HotUpdate.Game.Battle.Toughness.ReduceStrategy;
 using UnityEngine;
@@ -30,10 +30,10 @@ namespace HotUpdate.Game.Battle.Toughness
             
             // 转换整型弱点属性为枚举类型
             var elementTypes = TextUtility.SplitToIntArr(monsterInfo.f_weaknesses, 2);
-            var weakPropertys = new List<E_ElementType>(elementTypes.Length);
+            var weakPropertys = new List<EElementType>(elementTypes.Length);
             foreach (var type in elementTypes)
             {
-                weakPropertys.Add((E_ElementType)type);
+                weakPropertys.Add((EElementType)type);
             }
 
             // 初始化韧性状态对象
@@ -163,7 +163,7 @@ namespace HotUpdate.Game.Battle.Toughness
         /// <param name="propertyType">触发扣除的属性类型</param>
         /// <param name="resilienceValue"></param>
         /// <param name="skillId"></param>
-        public void ReduceToughness(IBattleEntityObject reducer, E_ElementType propertyType, int resilienceValue, int skillId)
+        public void ReduceToughness(IBattleEntityObject reducer, EElementType propertyType, int resilienceValue, int skillId)
         {
             // 前置判断：是否允许扣除韧性（已破韧/策略不允许则直接返回）
             if (!CanReduceToughness(reducer, propertyType, resilienceValue))
@@ -224,7 +224,7 @@ namespace HotUpdate.Game.Battle.Toughness
         /// <param name="propertyType">元素属性类型</param>
         /// <param name="value">基础扣除值</param>
         /// <returns>true=可扣除，false=不可扣除</returns>
-        private bool CanReduceToughness(IBattleEntityObject reducer, E_ElementType propertyType, int value)
+        private bool CanReduceToughness(IBattleEntityObject reducer, EElementType propertyType, int value)
         {
             // 已处于破韧状态，直接禁止扣除
             if (_toughness.IsBroken)
@@ -253,7 +253,7 @@ namespace HotUpdate.Game.Battle.Toughness
         /// <param name="propertyType">元素属性类型</param>
         /// <param name="value">基础扣除值</param>
         /// <returns>最终要扣除的韧性值</returns>
-        private int CalcToughness(IBattleEntityObject reducer, E_ElementType propertyType, int value)
+        private int CalcToughness(IBattleEntityObject reducer, EElementType propertyType, int value)
         {
             var totalValue = value;
             // 遍历所有计算策略，累加每个策略的计算结果
@@ -298,6 +298,6 @@ namespace HotUpdate.Game.Battle.Toughness
         /// 弱点属性列表（只读属性）
         /// 说明：对外暴露弱点属性，供伤害计算、UI显示等逻辑使用
         /// </summary>
-        public List<E_ElementType> WeakPropertys => _toughness.WeakPropertys;
+        public List<EElementType> WeakPropertys => _toughness.WeakPropertys;
     }
 }

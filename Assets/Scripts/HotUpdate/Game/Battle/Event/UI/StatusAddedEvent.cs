@@ -4,8 +4,7 @@ using HotUpdate.Game.Battle.Statuses;
 namespace HotUpdate.Game.Battle.Event.UI
 {
     /// <summary>
-    /// ״̬�������¼�
-    /// ������ʾ����״̬��Buff���ı�
+    /// 状态添加事件
     /// </summary>
     public class StatusAddedEvent : BattleEvent
     {

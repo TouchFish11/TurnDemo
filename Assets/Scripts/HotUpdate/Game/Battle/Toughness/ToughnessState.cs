@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using HotUpdate.Game.Battle.Property;
+using HotUpdate.Game.Battle.StatSystem;
 
 namespace HotUpdate.Game.Battle.Toughness
 {
@@ -12,7 +12,7 @@ namespace HotUpdate.Game.Battle.Toughness
         /// <summary>
         /// 弱点属性列表
         /// </summary>
-        public List<E_ElementType> WeakPropertys { get; private set; }
+        public List<EElementType> WeakPropertys { get; private set; }
 
         /// <summary>
         /// 当前韧性值
@@ -34,7 +34,7 @@ namespace HotUpdate.Game.Battle.Toughness
         /// </summary>
         /// <param name="weakPropertys">弱点属性列表</param>
         /// <param name="initialValue">初始韧性值</param>
-        public ToughnessState(List<E_ElementType> weakPropertys, int initialValue)
+        public ToughnessState(List<EElementType> weakPropertys, int initialValue)
         {
             WeakPropertys = weakPropertys;
             CurrentToughnessValue = MaxToughnessVaue = initialValue;

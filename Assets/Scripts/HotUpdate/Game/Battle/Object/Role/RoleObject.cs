@@ -4,12 +4,12 @@ using Core.DI;
 using Core.Utility;
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Object.StateMeachine;
-using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.ResponsibilityChain.DamageChain;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Component;
 using HotUpdate.Game.Battle.Skill.Conditions;
 using HotUpdate.Game.Battle.Skill.Factory;
+using HotUpdate.Game.Battle.StatSystem;
 using HotUpdate.Game.Battle.TargetSelect;
 using HotUpdate.Game.Battle.TargetSelect.Strategys;
 

@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Core.DI;
+using Core.Exceptions;
 using Core.HotUpdate;
+using Core.Serialize.Binary;
 using HotUpdate.Game.Battle.Object;
 
 namespace HotUpdate.Game.Battle.Statuses
@@ -13,36 +15,58 @@ namespace HotUpdate.Game.Battle.Statuses
     /// </summary>
     public class StatusFactory : IStatusFactory
     {
+        [Inject] private IBinaryDataManager _binaryDataManager;
+        
         /// <summary>
         /// 状态ID到状态类类型的映射字典
         /// Key：状态唯一标识ID（由StatusTypeIdAttribute标记）
         /// Value：对应状态ID的具体状态类Type
         /// </summary>
         private readonly Dictionary<int, Type> idToTypeMap = new();
+        
+        // 状态缓存栈
+        private readonly Stack<IStatus> _stack = new();
 
         private StatusFactory(IHotUpdateManager hotUpdateManager)
         {
             ScanAllStatu(idToTypeMap, hotUpdateManager);
         }
-        
+
         /// <summary>
         /// 根据状态ID创建对应的状态实例
-        /// 内部会初始化
         /// </summary>
-        /// <param name="owner"></param>
+        /// <param name="sorucer">提供者</param>
+        /// <param name="owner">拥有者</param>
         /// <param name="statusId">状态唯一标识ID</param>
-        /// <param name="sorucer"></param>
-        /// <returns>实现IStatus接口的状态实例；若未找到对应ID的状态类，返回null</returns>
-        public IStatus GetStatus(IBattleEntityObject sorucer, IBattleEntityObject owner,int statusId)
+        /// <returns></returns>
+        /// <exception cref="KeyNotFoundException">未找到<see cref="statusId"/>的状态类时抛出</exception>
+        public IStatus GetStatus(IBattleEntityObject sorucer, IBattleEntityObject owner, int statusId)
         {
+            var statusInfo = _binaryDataManager.GetConfig<StatusInfoContainer>(EConfigLoadType.Excel).dataDic[statusId];
+            if (_stack.TryPop(out var result))
+            {
+                result.InitStatus(sorucer, owner, statusInfo);
+                return result;
+            }
+            
             // 从映射字典中查找状态ID对应的状态类Type
             if (!idToTypeMap.TryGetValue(statusId, out var statusType)) 
-                return null;
+                throw ExceptionHelper.Throw<KeyNotFoundException>($"Status id '{statusId}' not found");
             
-            var status = (IStatus)DIContainer.Create(statusType);
             // 通过反射创建状态类实例，并转换为IStatus接口返回
-            status.InitStatus(sorucer, owner, statusId);
+            var status = (IStatus)DIContainer.Create(statusType);
+            status.InitStatus(sorucer, owner, statusInfo);
             return status;
+        }
+
+        /// <summary>
+        /// 释放对象，调用其<see cref="StatusBase.ResetData"/>方法
+        /// </summary>
+        /// <param name="status"></param>
+        public void Release(IStatus status)
+        {
+            ((StatusBase)status).ResetData();
+            _stack.Push(status);
         }
 
         /// <summary>

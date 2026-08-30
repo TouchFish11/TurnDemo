@@ -1,8 +1,8 @@
 using Core.DI;
 using Core.Serialize.Binary;
 using HotUpdate.Game.Battle.Object;
-using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.Skill;
+using HotUpdate.Game.Battle.StatSystem;
 
 namespace HotUpdate.Game.Battle.Damage.Strategys
 {
@@ -21,7 +21,7 @@ namespace HotUpdate.Game.Battle.Damage.Strategys
         public void CalcBreakDamage(IBattleEntityObject attacker, IBattleEntityObject defender, int skillId, int resilienceValue, out DamageResult damageResult)
         {
             var skillInfo = _binaryDataManager.GetConfig<SkillInfoContainer>(EConfigLoadType.Excel).dataDic[skillId];
-            damageResult = new DamageResult(attacker, defender, 25, (E_ElementType)skillInfo.f_elementType, E_DamageType.Break, false, skillId, resilienceValue);
+            damageResult = new DamageResult(attacker, defender, 25, (EElementType)skillInfo.f_elementType, E_DamageType.Break, false, skillId, resilienceValue);
         }
     }
 }

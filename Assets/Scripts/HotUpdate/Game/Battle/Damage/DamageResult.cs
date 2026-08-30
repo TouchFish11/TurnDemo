@@ -1,6 +1,6 @@
 using HotUpdate.Game.Battle.Object;
-using HotUpdate.Game.Battle.Property;
 using HotUpdate.Game.Battle.Skill;
+using HotUpdate.Game.Battle.StatSystem;
 
 namespace HotUpdate.Game.Battle.Damage
 {
@@ -29,7 +29,7 @@ namespace HotUpdate.Game.Battle.Damage
         /// <summary>
         /// 伤害元素类型
         /// </summary>
-        public E_ElementType ElementType { get; }
+        public EElementType ElementType { get; }
 
         /// <summary>
         /// 伤害类型
@@ -66,7 +66,7 @@ namespace HotUpdate.Game.Battle.Damage
         /// <param name="skillId"></param>
         /// <param name="resilienceValue"></param>
         public DamageResult(IBattleEntityObject source, IBattleEntityObject target, 
-            int finalDamage, E_ElementType elementType, E_DamageType damageType, 
+            int finalDamage, EElementType elementType, E_DamageType damageType, 
             bool isCrit, int skillId, int resilienceValue)
         {
             Source = source;

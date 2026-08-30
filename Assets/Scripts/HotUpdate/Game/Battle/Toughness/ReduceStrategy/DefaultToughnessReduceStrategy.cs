@@ -1,5 +1,5 @@
 using HotUpdate.Game.Battle.Object;
-using HotUpdate.Game.Battle.Property;
+using HotUpdate.Game.Battle.StatSystem;
 
 namespace HotUpdate.Game.Battle.Toughness.ReduceStrategy
 {
@@ -16,7 +16,7 @@ namespace HotUpdate.Game.Battle.Toughness.ReduceStrategy
         /// 判断是否可以削减韧性
         /// 仅根据弱点属性进行基础判定
         /// </summary>
-        public bool CanReduceToughness(IBattleEntityObject reducer, IBattleEntityObject target, E_ElementType propertyType, int value)
+        public bool CanReduceToughness(IBattleEntityObject reducer, IBattleEntityObject target, EElementType propertyType, int value)
         {
             // 只有攻击属性命中目标弱点时才能削减韧性
             if (target.GetComponent<ToughnessComponent>().WeakPropertys.Contains(propertyType))

@@ -298,7 +298,7 @@ namespace HotUpdate.UI.Battle.Base
                     
                     var logic = _poolManager.GetData<StatusEffectTextLogic>();
                     logic.OnDurationOver += statusEffectTextUI => _objectSpawner.Release(statusEffectTextUI);
-                    logic.InitText(statusEffectTextUI, null, newStatus.StatusProperty.StatusInfo.f_name);
+                    logic.InitText(statusEffectTextUI, null, newStatus.StatusInfo.f_name);
                     statusEffectTextUI.Init(logic);
                 }
             }

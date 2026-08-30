@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using HotUpdate.Base.ECModule;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Object;
-using HotUpdate.Game.Battle.Property;
+using HotUpdate.Game.Battle.StatSystem;
 
 namespace HotUpdate.Game.Battle.Toughness
 {
@@ -71,7 +71,7 @@ namespace HotUpdate.Game.Battle.Toughness
         /// <param name="propertyType">触发扣除的属性类型</param>
         /// <param name="resilienceValue"></param>
         /// <param name="skillId"></param>
-        public void ReduceToughness(IBattleEntityObject reducer, E_ElementType propertyType, int resilienceValue, int skillId)
+        public void ReduceToughness(IBattleEntityObject reducer, EElementType propertyType, int resilienceValue, int skillId)
         {
             _toughnessComponentCore.ReduceToughness(reducer, propertyType, resilienceValue, skillId);
         }
@@ -118,6 +118,6 @@ namespace HotUpdate.Game.Battle.Toughness
         /// 弱点属性列表（只读属性）
         /// 说明：对外暴露弱点属性，供伤害计算、UI显示等逻辑使用
         /// </summary>
-        public List<E_ElementType> WeakPropertys => _toughnessComponentCore.WeakPropertys;
+        public List<EElementType> WeakPropertys => _toughnessComponentCore.WeakPropertys;
     }
 }

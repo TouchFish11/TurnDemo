@@ -6,12 +6,11 @@ using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Monster;
 using HotUpdate.Game.Battle.Object.Role;
-using HotUpdate.Game.Battle.Property;
-using HotUpdate.Game.Battle.Property.New.Test.StatSystem;
 using HotUpdate.Game.Battle.Skill;
+using HotUpdate.Game.Battle.StatSystem;
 using UnityEngine;
 using Logger = Core.Log.Logger;
-using StatsComponent = HotUpdate.Game.Battle.Property.StatsComponent;
+using StatsComponent = HotUpdate.Game.Battle.StatSystem.StatsComponent;
 
 namespace HotUpdate.Game.Battle.Utility
 {
@@ -208,14 +207,14 @@ namespace HotUpdate.Game.Battle.Utility
         /// <returns>颜色</returns>
         public static Color ToElementTypeColor(this int i)
         {
-            var elementType = (E_ElementType)i;
+            var elementType = (EElementType)i;
             return elementType switch
             {
-                E_ElementType.Fire => Color.red,
-                E_ElementType.Ice => Color.blue,
-                E_ElementType.Physical => Color.white,
-                E_ElementType.Quantum => new Color(128, 0, 128),
-                E_ElementType.Wind => Color.green,
+                EElementType.Fire => Color.red,
+                EElementType.Ice => Color.blue,
+                EElementType.Physical => Color.white,
+                EElementType.Quantum => new Color(128, 0, 128),
+                EElementType.Wind => Color.green,
                 _ => Color.white
             };
         }

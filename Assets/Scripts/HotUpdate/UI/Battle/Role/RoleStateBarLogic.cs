@@ -9,14 +9,13 @@ using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Object;
-using HotUpdate.Game.Battle.Property;
-using HotUpdate.Game.Battle.Property.New.Test.StatSystem;
 using HotUpdate.Game.Battle.Skill.Component;
+using HotUpdate.Game.Battle.StatSystem;
 using HotUpdate.Game.Battle.Statuses;
 using HotUpdate.Game.Battle.Utility;
 using HotUpdate.UI.Battle.Status;
 using UnityEngine;
-using StatsComponent = HotUpdate.Game.Battle.Property.StatsComponent;
+using StatsComponent = HotUpdate.Game.Battle.StatSystem.StatsComponent;
 
 namespace HotUpdate.UI.Battle.Role
 {
@@ -164,7 +163,7 @@ namespace HotUpdate.UI.Battle.Role
             var status = statusAddedEvent.NewStatus;
 
             // 根据状态冲突类型处理
-            switch ((EConflictType)status.StatusProperty.StatusInfo.f_conflictType)
+            switch ((EConflictType)status.StatusInfo.f_conflictType)
             {
                 case EConflictType.Add:      // 叠加类型
                     OnConflict_Add(status);
@@ -185,7 +184,7 @@ namespace HotUpdate.UI.Battle.Role
         private async void OnConflict_Add(IStatus status)
         {
             // 判断是否已存在相同ID的状态
-            var hasStatus = View.StatusGrids.Any(s => s.StatusId == status.StatusProperty.StatusInfo.f_id);
+            var hasStatus = View.StatusGrids.Any(s => s.StatusId == status.StatusInfo.f_id);
             if (!hasStatus)
             {
                 var statusGridUI = await _objectSpawner.SpawnAsync<StatusGridUI>(AssetKeys.StatusGridUI, View.svBuffBox.content);
@@ -218,7 +217,7 @@ namespace HotUpdate.UI.Battle.Role
         private async void OnConflict_Cover(IStatus newStatus)
         {
             // 查找已存在的相同ID状态
-            var index = View.StatusGrids.FindIndex(s => s.StatusId == newStatus.StatusProperty.StatusInfo.f_id);
+            var index = View.StatusGrids.FindIndex(s => s.StatusId == newStatus.StatusInfo.f_id);
             if (index != -1)
             {
                 var statusGrid = View.StatusGrids[index];

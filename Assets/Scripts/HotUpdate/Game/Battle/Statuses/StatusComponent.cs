@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using Core.Exceptions;
 using HotUpdate.Base.ECModule;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.UI;
@@ -8,20 +8,13 @@ namespace HotUpdate.Game.Battle.Statuses
 {
     /// <summary>
     /// 状态组件 - 管理实体的所有状态效果（Buff/Debuff）
-    /// 负责状态的添加、移除、回合结算和数值加成计算
+    /// 负责状态的添加、移除、回合结算
     /// </summary>
     [ComponentId]
     public class StatusComponent : BattleComponent
     {
         // 当前生效的状态列表
         private List<IStatus> _statuses = new();
-        // 状态总加成数据（攻击/防御/生命等）
-        private StatusTotalBonusData statusTotalBonus;
-
-        protected override void OnBattleInit()
-        {
-            statusTotalBonus = new StatusTotalBonusData();
-        }
 
         public IEnumerable<IStatus> GetStatuses()
         {
@@ -32,7 +25,7 @@ namespace HotUpdate.Game.Battle.Statuses
         }
 
         /// <summary>
-        /// 更新状态
+        /// 更新Buff状态
         /// </summary>
         public void UpdateStatus()
         {
@@ -47,8 +40,6 @@ namespace HotUpdate.Game.Battle.Statuses
             
             // 移除已失效的状态
             _statuses.RemoveAll(s => !s.IsValid);
-            // 更新状态加成数据
-            UpdateStatusBonus();
             // 通知UI状态发生变更
             BattleEntity.Context.EventBus.TriggerEvent(new TurnStartStatusChangedEvent(BattleEntity.Context, BattleEntity));
         }
@@ -63,7 +54,7 @@ namespace HotUpdate.Game.Battle.Statuses
         {
             foreach (var cacheStatus in _statuses)
             {
-                if (cacheStatus.StatusProperty.StatusInfo.f_id != statusId) 
+                if (cacheStatus.StatusInfo.f_id != statusId) 
                     continue;
                 
                 status = cacheStatus;
@@ -81,7 +72,7 @@ namespace HotUpdate.Game.Battle.Statuses
         public void AddStatus(IStatus status)
         {
             // 根据冲突类型处理状态添加
-            switch ((EConflictType)status.StatusProperty.StatusInfo.f_conflictType)
+            switch ((EConflictType)status.StatusInfo.f_conflictType)
             {
                 case EConflictType.Add:     // 叠加类型
                     AddOnConflict(status);
@@ -93,24 +84,11 @@ namespace HotUpdate.Game.Battle.Statuses
                     CoverOnConflict(status);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(status));
+                    throw ExceptionHelper.Throw($"Unknown conflict type({status})");
             }
 
-            // 更新状态加成
-            UpdateStatusBonus();
             // 触发状态添加事件
             BattleEntity.Context.EventBus.TriggerEvent(new StatusAddedEvent(BattleEntity.Context, status));
-        }
-
-        /// <summary>
-        /// 更新状态加成数据
-        /// </summary>
-        private void UpdateStatusBonus()
-        {
-            // 更新所有状态的攻击、防御、生命加成
-            statusTotalBonus.UpdateTotalAtkBonus(_statuses);
-            statusTotalBonus.UpdateTotalDefBonus(_statuses);
-            statusTotalBonus.UpdateTotalHpBonus(_statuses);
         }
 
         /// <summary>
@@ -120,7 +98,7 @@ namespace HotUpdate.Game.Battle.Statuses
         private void AddOnConflict(IStatus newStatus)
         {
             // 查找是否已存在相同ID的状态
-            if (TryGetStatus(newStatus.StatusProperty.StatusInfo.f_id, out var status))
+            if (TryGetStatus(newStatus.StatusInfo.f_id, out var status))
             {
                 // 存在则叠加层数
                 status.ChangePine(1);
@@ -150,7 +128,7 @@ namespace HotUpdate.Game.Battle.Statuses
         private void CoverOnConflict(IStatus newStatus)
         {
             // 查找是否已存在相同ID的状态
-            if (!TryGetStatus(newStatus.StatusProperty.StatusInfo.f_id, out var status)) 
+            if (!TryGetStatus(newStatus.StatusInfo.f_id, out var status)) 
                 return;
             
             // 存在则移除旧状态，添加新状态
@@ -164,7 +142,6 @@ namespace HotUpdate.Game.Battle.Statuses
         {
             _statuses.Clear();
             _statuses = null;
-            statusTotalBonus = default;
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using Core.DI;
 
 namespace Core.Exceptions
 {
@@ -21,6 +22,18 @@ namespace Core.Exceptions
         public static Exception Throw(string msg, Exception inner = null)
         {
             return new Exception(msg, inner);
+        }
+
+        /// <summary>
+        /// 封装未定义异常的通用抛出逻辑
+        /// </summary>
+        /// <param name="msg">额外的携带消息</param>
+        /// <param name="inner">内部异常，若有</param>
+        /// <typeparam name="T"><see cref="Exception"/></typeparam>
+        /// <returns></returns>
+        public static T Throw<T>(string msg, Exception inner = null) where T : Exception
+        {
+            return DIContainer.Create<T>(msg, inner);
         }
         
         public static AssetBundleLoadException ThrowAssetBundleLoadException(string bundleName, Exception innerException = null)

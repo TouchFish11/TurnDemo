@@ -13,7 +13,7 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Status
     {
         protected override void OnTurnStart(IBattleEntityObject owner, IBattleContext context)
         {
-            base.OnTurnStart(owner, context);
+            SubRemainRound();
             owner.TakeHeal(50);
             CreateVFX();
         }

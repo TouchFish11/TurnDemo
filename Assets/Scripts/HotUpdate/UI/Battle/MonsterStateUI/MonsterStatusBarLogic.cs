@@ -8,12 +8,12 @@ using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Monster;
-using HotUpdate.Game.Battle.Property.New.Test.StatSystem;
+using HotUpdate.Game.Battle.StatSystem;
 using HotUpdate.Game.Battle.Toughness;
 using HotUpdate.Game.Battle.Utility;
 using UnityEngine;
 using UnityEngine.UI;
-using StatsComponent = HotUpdate.Game.Battle.Property.StatsComponent;
+using StatsComponent = HotUpdate.Game.Battle.StatSystem.StatsComponent;
 
 namespace HotUpdate.UI.Battle.MonsterStateUI
 {

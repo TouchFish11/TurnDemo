@@ -2,7 +2,7 @@ using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Event.General;
 using HotUpdate.Game.Battle.Event.UI;
-using HotUpdate.Game.Battle.Property;
+using HotUpdate.Game.Battle.StatSystem;
 using HotUpdate.Game.Battle.Statuses;
 using HotUpdate.Game.VFX;
 using UnityEngine;
@@ -17,7 +17,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.Slime.Status
     {
         protected override void OnTurnStart(IBattleEntityObject owner, IBattleContext context)
         {
-            StatusProperty.SetRemainingRound(StatusProperty.RemainingRound - 1);
+            SubRemainRound();
             ApplyDamage();
         }
 
@@ -26,7 +26,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.Slime.Status
             var damageCalcData = new DotDamageCalcData
             {
                 Damage = 20,
-                ElementType = E_ElementType.Ice,
+                ElementType = EElementType.Ice,
                 source = Sourcer,
                 target = Owner
             };

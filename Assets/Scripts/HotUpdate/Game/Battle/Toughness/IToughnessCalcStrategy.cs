@@ -1,5 +1,5 @@
 using HotUpdate.Game.Battle.Object;
-using HotUpdate.Game.Battle.Property;
+using HotUpdate.Game.Battle.StatSystem;
 
 namespace HotUpdate.Game.Battle.Toughness
 {
@@ -20,6 +20,6 @@ namespace HotUpdate.Game.Battle.Toughness
         /// <param name="propertyType">元素属性类型</param>
         /// <param name="value">基础削减值</param>
         /// <returns>最终削减值</returns>
-        int CalcReduceToughness(IBattleEntityObject reducer, IBattleEntityObject target, E_ElementType propertyType, int value);
+        int CalcReduceToughness(IBattleEntityObject reducer, IBattleEntityObject target, EElementType propertyType, int value);
     }
 }

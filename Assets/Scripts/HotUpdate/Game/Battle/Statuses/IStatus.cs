@@ -33,10 +33,9 @@ namespace HotUpdate.Game.Battle.Statuses
         StatusProperty StatusProperty { get; }
 
         /// <summary>
-        /// 状态加成数据
-        /// 存储该状态带来的具体数值变化（如攻击力加成、防御力减免、回血数值等）
+        /// 状态配置信息
         /// </summary>
-        StatusBonusData BonusData { get; }
+        StatusInfo StatusInfo { get; }
 
         /// <summary>
         /// 回合开始时的生效逻辑
@@ -60,8 +59,8 @@ namespace HotUpdate.Game.Battle.Statuses
         /// </summary>
         /// <param name="sorucer">状态来源者</param>
         /// <param name="owner">状态拥有者</param>
-        /// <param name="statusId">状态配置ID（用于从配置表加载状态属性、加成数据等）</param>
-        void InitStatus(IBattleEntityObject sorucer, IBattleEntityObject owner, int statusId);
+        /// <param name="statusInfo"></param>
+        void InitStatus(IBattleEntityObject sorucer, IBattleEntityObject owner, StatusInfo statusInfo);
 
         /// <summary>
         /// 修改状态层数

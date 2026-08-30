@@ -1,7 +1,7 @@
 using System.Collections;
 using HotUpdate.Base.Animation;
 using HotUpdate.Game.Animation.Component;
-using HotUpdate.Game.Battle.Property;
+using HotUpdate.Game.Battle.StatSystem;
 using AnimationUtility = HotUpdate.Game.Battle.Utility.AnimationUtility;
 
 namespace HotUpdate.Game.Battle.Object.Role

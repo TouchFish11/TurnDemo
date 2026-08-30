@@ -37,12 +37,12 @@ namespace HotUpdate.UI.Battle.Status
 
         public int GetStatusId()
         {
-            return status.StatusProperty.StatusInfo.f_id;
+            return status.StatusInfo.f_id;
         }
         
         private void ChangedBuffOrDeBuff()
         {
-            if ((EStatusType)status.StatusProperty.StatusInfo.f_statusType == EStatusType.Positive)
+            if ((EStatusType)status.StatusInfo.f_statusType == EStatusType.Positive)
             {
                 View.imgBuffOrDeBuff.color = Color.blue;
             }

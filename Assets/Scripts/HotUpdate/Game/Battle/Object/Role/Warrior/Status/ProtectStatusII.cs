@@ -1,3 +1,6 @@
+using HotUpdate.Game.Battle.Context;
+using HotUpdate.Game.Battle.StatSystem;
+using HotUpdate.Game.Battle.StatSystem.Modifiers;
 using HotUpdate.Game.Battle.Statuses;
 
 namespace HotUpdate.Game.Battle.Object.Role.Warrior.Status
@@ -8,6 +11,13 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Status
     [StatusTypeId(111)]
     public class ProtectStatusII : StatusBase
     {
+        protected long modifierId;
+        
+        protected override void OnTurnStart(IBattleEntityObject owner, IBattleContext context)
+        {
+            ChangePine(-1);
+        }
+
         protected override void OnAdd()
         {
             Owner.TakeSheild(250);
@@ -15,12 +25,23 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Status
         
         protected override void OnPineChanged()
         {
-            bonusData.DefBuildBonus += 40;
+            if (OwnerStatsComponent.TryGetModifier(EStatType.Def, modifierId, out var modifier))
+            {
+                ((StatModifier)modifier).SetValue(40 * StatusProperty.CurrentPine);
+            }
+            else
+            {
+                var statModifier = modifierFactory.Create(EModifierType.Flat, 40 * StatusProperty.CurrentPine, out modifierId);
+                OwnerStatsComponent.AddFinalStat(EStatType.Def, statModifier);
+            }
         }
 
         protected override void OnRemove()
         {
-            bonusData.DefBuildBonus -= 40;
+            if (OwnerStatsComponent.RemoveFinalStat(EStatType.Def, modifierId, out var statModifier))
+            {
+                modifierFactory.Release(statModifier);
+            }
         }
     }
 }

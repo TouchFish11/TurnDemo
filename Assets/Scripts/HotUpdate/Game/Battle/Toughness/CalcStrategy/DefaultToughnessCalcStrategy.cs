@@ -1,5 +1,5 @@
 using HotUpdate.Game.Battle.Object;
-using HotUpdate.Game.Battle.Property;
+using HotUpdate.Game.Battle.StatSystem;
 
 namespace HotUpdate.Game.Battle.Toughness.CalcStrategy
 {
@@ -11,7 +11,7 @@ namespace HotUpdate.Game.Battle.Toughness.CalcStrategy
     {
         public int Priority { get; private set; }
 
-        public int CalcReduceToughness(IBattleEntityObject reducer, IBattleEntityObject target, E_ElementType propertyType, int value)
+        public int CalcReduceToughness(IBattleEntityObject reducer, IBattleEntityObject target, EElementType propertyType, int value)
         {
             return value;
         }
