@@ -17,8 +17,8 @@ namespace HotUpdate.Game.Battle.Object.Monster.Slime.Status
     {
         protected override void OnTurnStart(IBattleEntityObject owner, IBattleContext context)
         {
-            SubRemainRound();
             ApplyDamage();
+            StatusProperty.RemainingRound -= 1;
         }
 
         private async void ApplyDamage()

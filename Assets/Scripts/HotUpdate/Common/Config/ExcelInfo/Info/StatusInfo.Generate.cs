@@ -10,4 +10,5 @@ public partial class StatusInfo
 	public int f_durationRound;
 	public int f_conflictType;
 	public int f_layerVariationType;
+	public int f_statusState;
 }

@@ -10,7 +10,7 @@ namespace HotUpdate.Game.Battle.Statuses
     public interface IStatus
     {
         /// <summary>
-        /// 状态是否有效
+        /// 状态有效性标识：赋值时自动触发添加/移除逻辑
         /// </summary>
         bool IsValid { get; set; }
 
@@ -38,6 +38,11 @@ namespace HotUpdate.Game.Battle.Statuses
         StatusInfo StatusInfo { get; }
 
         /// <summary>
+        /// 状态是否已经生效并参与结算
+        /// </summary>
+        EStatusState StatusState { get; }
+
+        /// <summary>
         /// 回合开始时的生效逻辑
         /// 在状态拥有者的回合开始时执行
         /// </summary>
@@ -59,7 +64,7 @@ namespace HotUpdate.Game.Battle.Statuses
         /// </summary>
         /// <param name="sorucer">状态来源者</param>
         /// <param name="owner">状态拥有者</param>
-        /// <param name="statusInfo"></param>
+        /// <param name="statusInfo">状态信息</param>
         void InitStatus(IBattleEntityObject sorucer, IBattleEntityObject owner, StatusInfo statusInfo);
 
         /// <summary>
@@ -68,5 +73,10 @@ namespace HotUpdate.Game.Battle.Statuses
         /// </summary>
         /// <param name="deltaPine">层数变化值（正数增加层数，负数减少层数）</param>
         void ChangePine(int deltaPine);
+
+        /// <summary>
+        /// 启用状态生效并参与结算
+        /// </summary>
+        void EnableActive();
     }
 }

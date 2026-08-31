@@ -21,8 +21,6 @@ namespace HotUpdate.Game.Battle.Command
         [Inject] private IUIService _uiService;
         [Inject] private IBattleCameraManager _battleCameraManager;
         
-        // 韧性恢复速度
-        private const float recoverySpeed = 55f;
         // 韧性组件
         public ToughnessComponent ToughnessComponent { get; private set; }
         // 技能指令
@@ -46,8 +44,6 @@ namespace HotUpdate.Game.Battle.Command
                 yield break;
             }
             
-            // 韧性恢复
-            yield return RestoreToughness();
             // 技能执行
             yield return _skillCommand.Execute(context);
         }
@@ -76,52 +72,14 @@ namespace HotUpdate.Game.Battle.Command
                 // 创建相机
                 yield return TaskUtility.WaitForTask(_battleCameraManager.CreateCamera(null, pos, rotation, mask));
                 // 调用组件方法
-                Sender.GetComponent<StatusComponent>().UpdateStatus();
+                Sender.GetComponent<StatusComponent>().SettlementTurnEnd();
                 // 等待Dot显示完成
                 yield return new WaitForSeconds(1.5f);
             }
             else
             {
                 // 调用组件方法
-                Sender.GetComponent<StatusComponent>().UpdateStatus();
-            }
-        }
-        
-        /// <summary>
-        /// 韧性恢复协程
-        /// </summary>
-        /// <returns>协程迭代器</returns>
-        private IEnumerator RestoreToughness()
-        {
-            // 获取当前怪物的韧性组件
-            var toughnessComponent = Sender.GetComponent<ToughnessComponent>();
-            // 若韧性未被击破，切换为操作状态
-            if (!toughnessComponent.IsToughnessBroken())
-            {
-                yield break;
-            }
-            
-            // 隐藏其他怪物血量UI显示
-            (_uiService.GetPanel(EUIPanelId.BattlePanel) as IBattleController).MonsterStateUIManager.ActiveMonsterUI(Sender);
-            // 计算相机世界坐标的位置和看向
-            var monsterPos = Sender.GameObject.transform.position;
-            monsterPos = new Vector3(monsterPos.x, 1, monsterPos.z);
-            var pos = monsterPos + Sender.GameObject.transform.forward * 4;
-            var rotation = Quaternion.LookRotation(monsterPos - pos);
-            
-            // 获取遮罩
-            var preMask = LayerGeter.GetPreBitLayer();
-            var mask = preMask | (1 << Sender.GameObject.layer);
-            // 创建相机
-            yield return TaskUtility.WaitForTask(_battleCameraManager.CreateCamera(null, pos, rotation, mask));
-            
-            float currentValue = 0;
-            // 等待韧性值恢复至最大值
-            while (toughnessComponent.CurrentToughnessValue < toughnessComponent.MaxToughnessVaue)
-            {
-                currentValue += Time.deltaTime * recoverySpeed;
-                toughnessComponent.SetToughnessValue((int)currentValue, toughnessComponent.MaxToughnessVaue);
-                yield return null;
+                Sender.GetComponent<StatusComponent>().SettlementTurnEnd();
             }
         }
 

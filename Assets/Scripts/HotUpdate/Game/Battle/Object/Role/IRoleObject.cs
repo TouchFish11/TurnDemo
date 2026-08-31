@@ -11,11 +11,6 @@ namespace HotUpdate.Game.Battle.Object.Role
         RoleInfo RoleInfo { get; }
         
         /// <summary>
-        /// 当前角色所处的行动阶段
-        /// </summary>
-        EActPhase CurrentActPhase { get; set; }
-        
-        /// <summary>
         /// 角色战斗初始化
         /// </summary>
         /// <param name="parameter"></param>

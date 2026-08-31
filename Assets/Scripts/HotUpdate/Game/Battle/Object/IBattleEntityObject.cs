@@ -3,6 +3,7 @@ using HotUpdate.Base.ECModule;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Object.Conditions;
+using HotUpdate.Game.Battle.Object.Role;
 using HotUpdate.Game.Battle.Skill.Conditions;
 using HotUpdate.Game.Battle.Skill.Factory;
 using HotUpdate.Game.Battle.TargetSelect;
@@ -69,7 +70,12 @@ namespace HotUpdate.Game.Battle.Object
         /// 战斗回合制中用于判定行动顺序的核心数值（行动值为0则可执行行动）
         /// </summary>
         float ActionValue { get; set; }
-        
+
+        /// <summary>
+        /// 当前角色所处的行动阶段
+        /// </summary>
+        EActPhase CurrentActPhase { get; set; }
+
         /// <summary>
         /// 执行行动
         /// 触发实体的核心行动逻辑（如普攻、释放技能、移动）
@@ -124,5 +130,11 @@ namespace HotUpdate.Game.Battle.Object
         /// <param name="condition"></param>
         /// <returns></returns>
         bool RemoveDeathCondition(IDeathCondition condition);
+
+        /// <summary>
+        /// 切换行动状态
+        /// </summary>
+        /// <param name="eActPhase"></param>
+        void ChangeState(EActPhase eActPhase);
     }
 }

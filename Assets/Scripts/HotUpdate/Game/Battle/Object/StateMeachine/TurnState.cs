@@ -1,5 +1,3 @@
-using HotUpdate.Game.Battle.Object.Role;
-
 namespace HotUpdate.Game.Battle.Object.StateMeachine
 {
     /// <summary>
@@ -7,11 +5,11 @@ namespace HotUpdate.Game.Battle.Object.StateMeachine
     /// </summary>
     public abstract class TurnState : ITurnState
     {
-        public RoleObject RoleObject { get; }
+        public IBattleEntityObject BattleObject { get; }
 
         protected TurnState(IBattleEntityObject battleEntity)
         {
-            RoleObject = battleEntity as RoleObject;
+            BattleObject = battleEntity;
         }
         
         public abstract void Enter();

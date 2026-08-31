@@ -9,7 +9,7 @@ namespace HotUpdate.Game.Battle.Event.Turn
     public class TurnEndEvent : BattleEvent
     {
         /// <summary>
-        /// �ս����ж���ʵ��
+        /// 当前持有回合的对象
         /// </summary>
         public IBattleEntityObject CurrentBattleEntity { get; }
 

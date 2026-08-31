@@ -87,7 +87,7 @@ namespace HotUpdate.Game.Battle.Event
             {
                 if (turnStartEvent.CurrentBattleEntity == null)
                 {
-                    Logger.LogError(ELogTags.Battle, $"{nameof(BattleEventScheduler)}: CurrentBattleEntity is null");
+                    Logger.LogError(ELogTags.Battle, $"CurrentBattleEntity is null");
                     return;
                 }
 
@@ -132,7 +132,7 @@ namespace HotUpdate.Game.Battle.Event
             }
             catch (Exception e)
             {
-                Logger.LogError(ELogTags.Battle, $"[{nameof(BattleEventScheduler)}]: Round start event logic scheduling error,{e.Message}");
+                Logger.LogError(ELogTags.Battle, $"Round start event logic scheduling error,{e.Message}");
             }
         }
 

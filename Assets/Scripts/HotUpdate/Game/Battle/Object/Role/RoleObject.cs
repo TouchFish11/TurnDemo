@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Core.DI;
 using Core.Utility;
@@ -20,14 +19,7 @@ namespace HotUpdate.Game.Battle.Object.Role
     /// </summary>
     public abstract class RoleObject : BattleObject, IRoleObject
     {
-        // 角色回合阶段状态缓存
-        private readonly Dictionary<EActPhase, ITurnState> _turnStates = new();
-        // 当前所处状态
-        private ITurnState _currentState;
-        
         public RoleInfo RoleInfo { get; private set; }
-        
-        public EActPhase CurrentActPhase { get; set; }
 
         public override ISkillFactory SkillFactory { get; protected set; }
         
@@ -38,21 +30,9 @@ namespace HotUpdate.Game.Battle.Object.Role
         public void RoleBattleInit(BattleParameterObject parameter)
         {
             BattleInit(parameter);
-
             SetRoleInfo((RoleInfo)parameter.BattleInfo);
-            CurrentActPhase = EActPhase.SettlementBuff;
-            AddState(EActPhase.SettlementBuff);
-            AddState(EActPhase.TurnStart);
-            AddState(EActPhase.Operator);
-            AddState(EActPhase.TurnEnd);
-
             // 初始化伤害链
             damageChain = DamageChainBuilder.GetRoleDamageChain();
-            
-            SkillFactory = GetSkillFactory();
-            DefaultCastCondition = GetSkillCondition();
-            DefaultTargetSelectStrategy = GetTargetSelectStrategy();
-            
             // 添加组件
             AddComponents(TextUtility.Split(RoleInfo.f_comNames, 2));
         }
@@ -62,69 +42,31 @@ namespace HotUpdate.Game.Battle.Object.Role
             RoleInfo = roleInfo;
         }
 
-        protected abstract ISkillFactory GetSkillFactory();
-        
-        protected virtual ICastSkillCondition GetSkillCondition()
+        protected override ICastSkillCondition GetSkillCondition()
         {
             return castSkillConditionFactory.GetCastSkillCondition<PlayerDefaultCastSkillCondition>();
         }
 
-        protected virtual ITargetSelectStrategy GetTargetSelectStrategy()
+        protected override ITargetSelectStrategy GetTargetSelectStrategy()
         {
             return targetSelectStrategyFactory.GetTargetSelectStrategy<PlayerBaseTargetSelectStrategy>();
         }
-        
-        /// <summary>
-        /// 切换行动状态
-        /// </summary>
-        /// <param name="eActPhase"></param>
-        public void ChangeState(EActPhase eActPhase)
+
+        protected override List<ITurnStartNode> GetStartNodes()
         {
-            _currentState?.Exit();
-            _currentState = _turnStates[eActPhase];
-            _currentState.Enter();
-        }
-        
-        /// <summary>
-        /// 添加状态方法
-        /// </summary>
-        /// <param name="phase"></param>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private void AddState(EActPhase phase)
-        {
-            switch (phase)
+            return new List<ITurnStartNode>
             {
-                case EActPhase.SettlementBuff:
-                    _turnStates.TryAdd(EActPhase.SettlementBuff, DIContainer.Create<SettlementBuffState>(parameterValues: this));
-                    break;
-                case EActPhase.TurnStart:
-                    _turnStates.TryAdd(EActPhase.TurnStart, DIContainer.Create<TurnStartState>(parameterValues: this));
-                    break;
-                case EActPhase.Operator:
-                    _turnStates.TryAdd(EActPhase.Operator, DIContainer.Create<TurnExecutingState>(parameterValues: this));
-                    break;
-                case EActPhase.TurnEnd:
-                    _turnStates.TryAdd(EActPhase.TurnEnd, DIContainer.Create<TurnEndState>(parameterValues: this));
-                    break;
-                case EActPhase.None:
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(phase), phase, null);
-            }
+                DIContainer.Create<StatusSettlementNode>(),
+                DIContainer.Create<DotSettlementNode>(),
+            };
         }
 
-        protected override void OnExecuteAction()
-        {
-            ChangeState(EActPhase.SettlementBuff);
-        }
-        
         public override void CastSkill(int skillId)
         {
             var skillComponent = GetComponent<PlayerSkillComponent>();
             // 能否释放
             if (!skillComponent.CanCast(skillId))
-            {
                 return;
-            }
             
             // 获取技能数据
             var skill = skillComponent.GetSkill(skillId);

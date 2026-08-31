@@ -13,14 +13,14 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Status
     {
         protected long modifierId;
         
-        protected override void OnTurnStart(IBattleEntityObject owner, IBattleContext context)
-        {
-            ChangePine(-1);
-        }
-
         protected override void OnAdd()
         {
             Owner.TakeSheild(250);
+        }
+        
+        protected override void OnTurnEnd(IBattleEntityObject owner, IBattleContext context)
+        {
+            StatusProperty.RemainingRound -= 1;
         }
         
         protected override void OnPineChanged()

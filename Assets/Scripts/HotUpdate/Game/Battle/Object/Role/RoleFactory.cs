@@ -35,6 +35,8 @@ namespace HotUpdate.Game.Battle.Object.Role
             };
             
             var roleInfo = _binaryDataManager.GetConfig<RoleInfoContainer>(EConfigLoadType.Excel).dataDic[roleId];
+            var deathHandler = DIContainer.Create<RoleDeathHandler>();
+            deathHandler.InitEntity(roleObject);
             // 注入上下文，供角色内部组件使用
             roleObject.RoleBattleInit(new BattleParameterObject
             {
@@ -45,7 +47,8 @@ namespace HotUpdate.Game.Battle.Object.Role
                 Commandfactory = _commandFactory,
                 CastSkillConditionFactory = _castSkillConditionFactory,
                 TargetSelectStrategyFactory = _targetSelectStrategyFactory,
-                DeathHandler = DIContainer.Create<RoleDeathHandler>(),
+                DeathHandler = deathHandler,
+                TurnActionDriver = DIContainer.Create<PlayerInputDriver>(roleObject),
             });
             
             // 记录角色所在的场景位置索引

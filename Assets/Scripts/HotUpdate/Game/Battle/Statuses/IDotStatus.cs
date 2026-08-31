@@ -5,6 +5,6 @@ namespace HotUpdate.Game.Battle.Statuses
     /// </summary>
     public interface IDotStatus : IStatus
     {
-        
+
     }
 }

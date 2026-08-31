@@ -58,5 +58,10 @@ namespace HotUpdate.Game.Battle.Object
         /// 对象死亡条件列表
         /// </summary>
         public List<IDeathCondition> DeathConditions { get; set; }
+        
+        /// <summary>
+        /// 实体回合操作驱动对象
+        /// </summary>
+        public ITurnActionDriver TurnActionDriver { get; set; }
     }
 }

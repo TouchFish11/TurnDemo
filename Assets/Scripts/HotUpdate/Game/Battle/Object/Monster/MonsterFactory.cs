@@ -37,6 +37,8 @@ namespace HotUpdate.Game.Battle.Object.Monster
             var monsterInfo = _binaryDataManager.GetConfig<MonsterInfoContainer>(EConfigLoadType.Excel).dataDic[monsterId];
             // 设置名称
             monsterObject.GameObject.name = $"{monsterObject.GameObject.name}_{entityIndex}";
+            var deathHandler = DIContainer.Create<MonsterDeathHandler>();
+            deathHandler.InitEntity(monsterObject);
             // 注入上下文，供角色内部组件使用
             monsterObject.MonsterBattleInit(new BattleParameterObject
             {
@@ -47,7 +49,8 @@ namespace HotUpdate.Game.Battle.Object.Monster
                 Commandfactory = _commandFactory,
                 CastSkillConditionFactory = _castSkillConditionFactory,
                 TargetSelectStrategyFactory = _targetSelectStrategyFactory,
-                DeathHandler = DIContainer.Create<MonsterDeathHandler>(),
+                DeathHandler = deathHandler,
+                TurnActionDriver = DIContainer.Create<MonsterAIDriver>(monsterObject)
             });
             
             // 记录怪物所在的位置索引

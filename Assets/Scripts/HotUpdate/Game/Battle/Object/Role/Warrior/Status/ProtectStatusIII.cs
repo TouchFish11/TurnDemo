@@ -17,10 +17,10 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Status
         {
             Owner.TakeSheild(350);
         }
-        
-        protected override void OnTurnStart(IBattleEntityObject owner, IBattleContext context)
+
+        protected override void OnTurnEnd(IBattleEntityObject owner, IBattleContext context)
         {
-            ChangePine(-1);
+            StatusProperty.RemainingRound -= 1;
         }
 
         protected override void OnPineChanged()

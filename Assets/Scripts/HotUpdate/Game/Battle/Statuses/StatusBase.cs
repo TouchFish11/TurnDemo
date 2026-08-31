@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using Core.DI;
-using Core.Exceptions;
 using Core.Pool;
 using Core.Time;
 using HotUpdate.Game.Battle.Context;
@@ -26,44 +23,16 @@ namespace HotUpdate.Game.Battle.Statuses
         // 状态是否有效（有效则生效，无效则触发移除逻辑）
         private bool _isValid;
         
-        /// <summary>
-        /// 战斗上下文
-        /// </summary>
-        protected IBattleContext Context { get; private set; }
-
-        /// <summary>
-        /// 状态配置信息
-        /// </summary>
         public StatusInfo StatusInfo { get; private set; }
         
-        /// <summary>
-        /// 状态核心属性（包含状态ID、剩余回合、当前层数等）
-        /// </summary>
         public StatusProperty StatusProperty { get; protected set; }
-
-        /// <summary>
-        /// 状态施加者（如释放技能的角色）
-        /// </summary>
+        
         public IBattleEntityObject Sourcer { get; private set; }
-
-        /// <summary>
-        /// 状态拥有者（如被施加buff的角色）
-        /// </summary>
+        
         public IBattleEntityObject Owner { get; private set; }
         
-        /// <summary>
-        /// 状态施加者的属性组件
-        /// </summary>
-        protected StatsComponent SourcerStatsComponent => Sourcer.GetComponent<StatsComponent>();
-
-        /// <summary>
-        /// 状态拥有者的属性组件
-        /// </summary>
-        protected StatsComponent OwnerStatsComponent => Owner.GetComponent<StatsComponent>();
-
-        /// <summary>
-        /// 状态有效性标识：赋值时自动触发添加/移除逻辑
-        /// </summary>
+        public EStatusState StatusState { get; private set; }
+        
         public bool IsValid
         {
             get => _isValid;
@@ -82,17 +51,27 @@ namespace HotUpdate.Game.Battle.Statuses
         }
 
         /// <summary>
-        /// 初始化状态核心信息
+        /// 战斗上下文
         /// </summary>
-        /// <param name="sorucer">施加者</param>
-        /// <param name="owner">拥有者</param>
-        /// <param name="statusInfo">状态信息</param>
+        protected IBattleContext Context { get; private set; }
+        
+        /// <summary>
+        /// 状态施加者的属性组件
+        /// </summary>
+        protected StatsComponent SourcerStatsComponent => Sourcer.GetComponent<StatsComponent>();
+
+        /// <summary>
+        /// 状态拥有者的属性组件
+        /// </summary>
+        protected StatsComponent OwnerStatsComponent => Owner.GetComponent<StatsComponent>();
+        
         public void InitStatus(IBattleEntityObject sorucer, IBattleEntityObject owner, StatusInfo statusInfo)
         {
             StatusProperty = new StatusProperty(statusInfo); // 初始化状态属性
             Sourcer = sorucer; // 赋值施加者
             Owner = owner; // 赋值拥有者
             Context = owner.Context;
+            StatusState = (EStatusState)statusInfo.f_statusType;
         }
 
         /// <summary>
@@ -107,6 +86,11 @@ namespace HotUpdate.Game.Battle.Statuses
             OnPineChanged();
         }
 
+        public void EnableActive()
+        {
+            StatusState = EStatusState.Active;
+        }
+
         /// <summary>
         /// 回合开始时的状态处理（外部调用入口）
         /// </summary>
@@ -115,11 +99,6 @@ namespace HotUpdate.Game.Battle.Statuses
         public virtual void TurnStart(IBattleEntityObject owner, IBattleContext context)
         {
             OnTurnStart(owner, context); // 执行子类自定义的回合开始逻辑
-            // 判定剩余回合/层数是否满足生效条件，不满足则失效
-            if (StatusProperty.RemainingRound <= 0 || StatusProperty.CurrentPine <= 0)
-            {
-                IsValid = false;
-            }
         }
 
         /// <summary>
@@ -135,19 +114,6 @@ namespace HotUpdate.Game.Battle.Statuses
             {
                 IsValid = false;
             }
-        }
-        
-        /// <summary>
-        /// 减少剩余回合数
-        /// </summary>
-        /// <param name="deltaSub">减少量，默认每回合减少一</param>
-        /// <exception cref="ArgumentOutOfRangeException">deltaSub小于0时抛出</exception>
-        protected void SubRemainRound(int deltaSub = 1)
-        {
-            if(deltaSub < 0)
-                throw ExceptionHelper.Throw<ArgumentOutOfRangeException>($"{nameof(deltaSub)} < 0");
-            
-            StatusProperty.RemainingRound -= deltaSub;
         }
 
         /// <summary>
@@ -187,6 +153,7 @@ namespace HotUpdate.Game.Battle.Statuses
         /// </summary>
         public void ResetData()
         {
+            StatusState = EStatusState.None;
             Context = null;
             _isValid = false;
             StatusInfo = null;

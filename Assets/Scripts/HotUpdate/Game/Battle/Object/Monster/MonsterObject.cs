@@ -1,5 +1,8 @@
+using System.Collections.Generic;
+using Core.DI;
 using Core.Utility;
 using HotUpdate.Game.Battle.Event.Turn;
+using HotUpdate.Game.Battle.Object.StateMeachine;
 using HotUpdate.Game.Battle.ResponsibilityChain.DamageChain;
 using HotUpdate.Game.Battle.Skill.Component;
 using HotUpdate.Game.Battle.Skill.Conditions;
@@ -16,10 +19,6 @@ namespace HotUpdate.Game.Battle.Object.Monster
     /// </summary>
     public abstract class MonsterObject : BattleObject, IMonsterObject
     {
-        /// <summary>
-        /// 怪物配置信息（从配置表加载）
-        /// 包含怪物ID、技能ID列表、组件名称列表等基础配置
-        /// </summary>
         public MonsterInfo MonsterInfo { get; private set; }
 
         public override ISkillFactory SkillFactory { get; protected set; }
@@ -35,41 +34,38 @@ namespace HotUpdate.Game.Battle.Object.Monster
         public void MonsterBattleInit(BattleParameterObject parameter)
         {
             BattleInit(parameter);
-            
-            MonsterInfo = (MonsterInfo)parameter.BattleInfo;
+            SetMonsterInfo((MonsterInfo)parameter.BattleInfo);
             // 初始化伤害链
             damageChain = DamageChainBuilder.GetMonsterDamageChain();
-            SkillFactory = GetSkillFactory();
-            DefaultTargetSelectStrategy = GetTargetSelectStrategy();
-            DefaultCastCondition = GetSkillCondition();
             // 根据配置的组件名称列表，为怪物添加对应的战斗组件（如韧性组件、动画组件等）
             AddComponents(TextUtility.Split(MonsterInfo.f_comNames, 2));
         }
-
-        protected abstract ISkillFactory GetSkillFactory();
         
-        protected virtual ICastSkillCondition GetSkillCondition()
+        public void SetMonsterInfo(MonsterInfo monsterInfo)
+        {
+            MonsterInfo = monsterInfo;
+        }
+        
+        protected override ICastSkillCondition GetSkillCondition()
         {
             return castSkillConditionFactory.GetCastSkillCondition<MonsterDefaultCastSkillCondition>();
         }
 
-        protected virtual ITargetSelectStrategy GetTargetSelectStrategy()
+        protected override ITargetSelectStrategy GetTargetSelectStrategy()
         {
             return targetSelectStrategyFactory.GetTargetSelectStrategy<MonsterBaseTargetSelectStrategy>();
         }
-
-        protected override void OnExecuteAction()
+        
+        protected override List<ITurnStartNode> GetStartNodes()
         {
-            // TODO：可以封装随机选择的策略类，用于玩家/怪物AI
-            var skillId = SelectSkill();
-            // 释放选中的技能
-            CastSkill(skillId);
+            return new List<ITurnStartNode>
+            {
+                DIContainer.Create<StatusSettlementNode>(),
+                DIContainer.Create<DotSettlementNode>(),
+                DIContainer.Create<ToughnessRecoveryNode>(),
+            };
         }
-
-        /// <summary>
-        /// 选择技能
-        /// </summary>
-        /// <returns></returns>
+        
         public abstract int SelectSkill();
 
         public override void CastSkill(int skillId)

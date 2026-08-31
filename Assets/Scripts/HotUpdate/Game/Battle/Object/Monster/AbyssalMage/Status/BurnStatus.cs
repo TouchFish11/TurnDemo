@@ -17,7 +17,7 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Status
     {
         protected override void OnTurnStart(IBattleEntityObject owner, IBattleContext context)
         {
-            SubRemainRound();
+            StatusProperty.RemainingRound -= 1;
             ApplyDamage();
         }
         

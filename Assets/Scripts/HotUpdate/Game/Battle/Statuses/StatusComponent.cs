@@ -23,18 +23,48 @@ namespace HotUpdate.Game.Battle.Statuses
                 yield return statuse;
             }
         }
+        
+        /// <summary>
+        /// 回合开始时buff的结算
+        /// </summary>
+        public void SettlementTurnStart()
+        {
+            foreach (var status in _statuses)
+            {
+                status.TurnStart(BattleEntity, BattleEntity.Context);
+            }
+            
+            // 移除已失效的状态
+            _statuses.RemoveAll(s => !s.IsValid);
+            // 通知UI状态发生变更
+            BattleEntity.Context.EventBus.TriggerEvent(new TurnStartStatusChangedEvent(BattleEntity.Context, BattleEntity));
+        }
 
         /// <summary>
-        /// 更新Buff状态
+        /// 更新所有没有参与结算的buff状态为激活（参与结算）状态
         /// </summary>
         public void UpdateStatus()
         {
-            // 处理所有有效状态的回合开始逻辑
             foreach (var status in _statuses)
             {
-                if (status.IsValid)
+                if (status.StatusState != EStatusState.Active)
                 {
-                    status.TurnStart(BattleEntity, BattleEntity.Context);
+                    status.EnableActive();
+                }
+            }
+        }
+        
+        /// <summary>
+        /// 回合结束时buff的结算
+        /// </summary>
+        public void SettlementTurnEnd()
+        {
+            // 处理所有已经激活的状态
+            foreach (var status in _statuses)
+            {
+                if (status.StatusState == EStatusState.Active)
+                {
+                    status.TurnEnd(BattleEntity, BattleEntity.Context);
                 }
             }
             
@@ -101,7 +131,7 @@ namespace HotUpdate.Game.Battle.Statuses
             if (TryGetStatus(newStatus.StatusInfo.f_id, out var status))
             {
                 // 存在则叠加层数
-                status.ChangePine(1);
+                status.ChangePine(newStatus.StatusInfo.f_startPine);
             }
             else
             {

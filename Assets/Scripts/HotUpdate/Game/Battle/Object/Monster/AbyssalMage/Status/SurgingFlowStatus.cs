@@ -12,10 +12,10 @@ namespace HotUpdate.Game.Battle.Object.Monster.AbyssalMage.Status
     public class SurgingFlowStatus : StatusBase
     {
         protected long modifierId;
-        
-        protected override void OnTurnStart(IBattleEntityObject owner, IBattleContext context)
+
+        protected override void OnTurnEnd(IBattleEntityObject owner, IBattleContext context)
         {
-            ChangePine(-1);
+            StatusProperty.RemainingRound -= 1;
         }
         
         protected override void OnAdd()

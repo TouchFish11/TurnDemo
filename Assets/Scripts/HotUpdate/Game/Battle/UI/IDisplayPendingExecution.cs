@@ -7,6 +7,9 @@ namespace HotUpdate.Game.Battle.UI
     /// </summary>
     public interface IDisplayPendingExecution
     {
+        /// <summary>
+        /// 显示UI的实体
+        /// </summary>
         IBattleEntityObject BattleEntity { get; }
     }
 }
