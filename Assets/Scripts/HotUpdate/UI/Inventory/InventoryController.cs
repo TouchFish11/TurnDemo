@@ -35,6 +35,8 @@ namespace HotUpdate.UI.Inventory
         private readonly Dictionary<Type, IInventoryState> _inventoryStates = new();
         // 当前背包界面所处的状态
         private IInventoryState _currentInventoryState;
+        // 当前选中的物品
+        private Item _currentItem;
         // 物品排序委托
         public Comparison<Item> sortComparison = InventorySorter.Default(1);
 
@@ -158,7 +160,8 @@ namespace HotUpdate.UI.Inventory
                 // 显示第一个物品的详细信息
                 if (items.Count > 0)
                 {
-                    await UpdateDetail(items[0]);
+                    SetSelectShow(items[0]);
+                    await UpdateDetail(_currentItem);
                 }
             }
             catch (Exception e)
@@ -171,6 +174,7 @@ namespace HotUpdate.UI.Inventory
         {
             try
             {
+                SetSelectShow(item);
                 // 是否点击了格子，移除new标识
                 _inventoryManager.UpdateGridNewState(item);
                 // 删除模式才执行
@@ -188,6 +192,20 @@ namespace HotUpdate.UI.Inventory
             {
                 Logger.LogError(ELogTags.Item, $"item update fail, {e.Message}");
             }
+        }
+
+        /// <summary>
+        /// 设置格子选中显示
+        /// </summary>
+        /// <param name="currentItem"></param>
+        private void SetSelectShow(Item currentItem)
+        {
+            if (_currentItem != null)
+            {
+                GridGenerator.GetGrid(_currentItem).SetSelectFlag(false);
+            }
+            GridGenerator.GetGrid(currentItem).SetSelectFlag(true);
+            _currentItem = currentItem;
         }
         
         /// <summary>
@@ -219,7 +237,7 @@ namespace HotUpdate.UI.Inventory
             catch (Exception e)
             {
                 _objectSpawner.Release((InventoryDetailPanel)inventoryDetailPanel);
-                Logger.LogError(ELogTags.Item, $"{nameof(InventoryController)}: Create detail panel fail, {e.Message}");
+                Logger.LogException(ELogTags.Item, e);
             }
         }
 
@@ -321,7 +339,6 @@ namespace HotUpdate.UI.Inventory
                     await ExitDeleteState();
                     // 关闭背包界面
                     await _uiService.CloseAsync(panelId, true, true);
-                    Logger.LogDebug(ELogTags.Item, $"{view.name} closed");
                 }
                 else if (btnName == nameof(view.btnRequestDelete))
                 {
@@ -334,7 +351,7 @@ namespace HotUpdate.UI.Inventory
             }
             catch (Exception e)
             {
-                Logger.LogException(ELogTags.Item, new Exception("button click logic execute error", e));
+                Logger.LogException(ELogTags.Item, e);
             }
         }
         

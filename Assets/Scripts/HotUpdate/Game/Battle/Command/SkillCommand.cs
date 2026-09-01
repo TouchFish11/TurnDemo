@@ -1,6 +1,7 @@
 using System.Collections;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Event.Skill;
+using HotUpdate.Game.Battle.Object.Role;
 using HotUpdate.Game.Battle.Skill.Base;
 
 namespace HotUpdate.Game.Battle.Command
@@ -32,7 +33,10 @@ namespace HotUpdate.Game.Battle.Command
         public override IEnumerator Execute(IBattleContext context)
         {
             yield return Skill.Cast(context);
-            Sender.Context.EventBus.TriggerEvent(new PostCastEvent(Sender.Context));
+            
+            // 角色释放技能才需要触发事件，怪物不需要
+            if(Sender is IRoleObject)
+                Sender.Context.EventBus.TriggerEvent(new PostCastEvent(Sender.Context));
         }
 
         public override IEnumerator ExcutePostProcess(IBattleContext context)

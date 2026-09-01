@@ -24,8 +24,6 @@ namespace HotUpdate.UI.Activity.EmbersCanon
         private AwardPreviewComponent _awardPreviewComponent;
         private LimitTimeAwardComponent _limitTimeAwardComponent;
         
-        private EmbersCanonSubActivityUI_01 _embersCanonSubActivityUI_01;
-        
         public EmbersCanonHandler EmbersCanonHandler => activityContentHandler as EmbersCanonHandler;
         
         protected override void Awake()
@@ -52,9 +50,6 @@ namespace HotUpdate.UI.Activity.EmbersCanon
             // 解析奖励ID数组，获取物品格子
             var itemGrids = await itemService.CreateItemGrids(activityInfo.f_awardIds);
             _awardPreviewComponent.SetAwards(itemGrids);
-            
-            if(_embersCanonSubActivityUI_01)
-                await _embersCanonSubActivityUI_01.Activate();
         }
 
         private async void OnTriggerJoin()
@@ -62,14 +57,16 @@ namespace HotUpdate.UI.Activity.EmbersCanon
             try
             {
                 // 创建关卡界面到活动界面下
-                _embersCanonSubActivityUI_01 = await objectSpawner.SpawnAsync<EmbersCanonSubActivityUI_01>(AssetKeys.EmbersCanonSubActivityUI_01, activityView);
+                var subView = await objectSpawner.SpawnAsync<EmbersCanonSubActivityUI_01>(AssetKeys.EmbersCanonSubActivityUI_01, activityView);
                 // 初始化关卡子界面
-                await _embersCanonSubActivityUI_01.Init(activityInfo, EmbersCanonHandler);
-                _embersCanonSubActivityUI_01.OnClose += OnSubViewClose;
+                subView.Init(activityInfo, EmbersCanonHandler);
+                subView.OnClose += OnSubViewClose;
+                // 压栈 + 显示
+                await PushSubView(subView);
             }
             catch (Exception e)
             {
-                Logger.LogError(ELogTags.Activity, $"{nameof(EmbersCanonActivityUI)}: Join activity error,{e.Message}");
+                Logger.LogException(ELogTags.Activity, e);
             }
         }
 
@@ -78,28 +75,28 @@ namespace HotUpdate.UI.Activity.EmbersCanon
             Logger.LogDebug(ELogTags.Activity, $"限时奖励按钮点击");
         }
 
-        private void OnSubViewClose()
+        private async void OnSubViewClose()
         {
-            _embersCanonSubActivityUI_01?.Deactivate();
-            objectSpawner.Release(_embersCanonSubActivityUI_01);
-            _embersCanonSubActivityUI_01 = null;
+            try
+            {
+                // 弹栈 + 销毁
+                var subView = await PopSubView();
+                if(subView != null)
+                    objectSpawner.Release((EmbersCanonSubActivityUI_01)subView, true);
+            }
+            catch (Exception e)
+            {
+                Logger.LogException(ELogTags.Activity, e);
+            }
         }
         
         protected override Task OnHide()
         {
             _activityJoinComponent.OnClickJoin -= OnTriggerJoin;
             _limitTimeAwardComponent.OnClickAward -= OnTriggerLimitTimeAward;
-            
             itemService.Clear();
             iconService.ReleaseAll();
-            
-            _embersCanonSubActivityUI_01?.Deactivate();
             return Task.CompletedTask;
-        }
-
-        protected override void OnDispose()
-        {
-            _embersCanonSubActivityUI_01?.Destroy();
         }
     }
 }

@@ -49,17 +49,6 @@ namespace HotUpdate.Game.Battle.Object
         bool IsDead { get; }
 
         /// <summary>
-        /// 是否可执行行动
-        /// 用于判断实体当前是否具备行动能力（如未被眩晕、冻结、死亡）
-        /// </summary>
-        bool CanAct { get; set; }
-        
-        /// <summary>
-        /// 是否正在行动
-        /// </summary>
-        bool Acting { get; set; }
-
-        /// <summary>
         /// 战斗上下文
         /// 指向当前所属的战斗场景上下文，用于获取战斗全局数据（如战斗管理器、其他实体）
         /// </summary>
@@ -72,9 +61,19 @@ namespace HotUpdate.Game.Battle.Object
         float ActionValue { get; set; }
 
         /// <summary>
-        /// 当前角色所处的行动阶段
+        /// 是否能行动（本回合还有行动预算且行动资格未被剥夺（如未被眩晕、冻结、死亡））
         /// </summary>
-        EActPhase CurrentActPhase { get; set; }
+        bool CanAct { get; }
+
+        /// <summary>
+        /// 是否正在演出技能
+        /// </summary>
+        bool Acting { get; }
+
+        /// <summary>
+        /// 本回合是否已结束（不能行动且不在演出）
+        /// </summary>
+        bool TurnFinished { get; }
 
         /// <summary>
         /// 执行行动
@@ -136,5 +135,15 @@ namespace HotUpdate.Game.Battle.Object
         /// </summary>
         /// <param name="eActPhase"></param>
         void ChangeState(EActPhase eActPhase);
+        
+        /// <summary>
+        /// 技能演出结束（由技能后置处理器调用）
+        /// </summary>
+        void EndActing();
+
+        /// <summary>
+        /// 剥夺行动资格（眩晕/死亡等）
+        /// </summary>
+        void DisableAction();
     }
 }

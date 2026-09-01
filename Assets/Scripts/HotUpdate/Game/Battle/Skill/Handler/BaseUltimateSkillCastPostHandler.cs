@@ -87,14 +87,14 @@ namespace HotUpdate.Game.Battle.Skill.Handler
                 }
             }
 
-            Logger.LogError(ELogTags.Battle, $"{nameof(BaseUltimateSkillCastPostHandler)}.{nameof(GetNormalSkillInfo)}：未找到普攻技能信息");
+            Logger.LogError(ELogTags.Battle, $"未找到普攻技能信息");
             return null;
         }
 
-        private bool CanHandle(IBattleEntityObject currentEntity)
+        private bool CanHandle(IBattleEntityObject entityActionState)
         {
             // 非玩家实体不执行后续逻辑（仅处理玩家释放终极技能的场景）;检查当前实体是否具备行动能力，无行动能力则终止流程
-            return currentEntity is RoleObject && currentEntity.CanAct;
+            return entityActionState is RoleObject && entityActionState.CanAct;
         }
     }
 }

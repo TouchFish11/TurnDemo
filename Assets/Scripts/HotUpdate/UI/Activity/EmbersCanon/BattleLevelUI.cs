@@ -27,7 +27,6 @@ namespace HotUpdate.UI.Activity.EmbersCanon
         
         private BattleConfigEntry _configEntry;
         private EmbersCanonLevelEntryData levelDataEntryData;
-        private int _activeControllerId;
         
         /// <summary>
         /// 初始化UI

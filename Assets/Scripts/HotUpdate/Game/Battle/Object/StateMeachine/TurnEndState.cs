@@ -1,5 +1,5 @@
+using System.Threading.Tasks;
 using HotUpdate.Game.Battle.Event.Turn;
-using HotUpdate.Game.Battle.Object.Role;
 using HotUpdate.Game.Battle.Statuses;
 
 namespace HotUpdate.Game.Battle.Object.StateMeachine
@@ -14,18 +14,18 @@ namespace HotUpdate.Game.Battle.Object.StateMeachine
             
         }
 
-        public override void Enter()
+        public override Task Enter()
         {
             // 结算buff
             BattleObject.GetComponent<StatusComponent>().SettlementTurnEnd();
             // 触发回合结束事件（供外部监听）
             BattleObject.Context.EventBus.TriggerEvent(new TurnEndEvent(BattleObject.Context, BattleObject));
+            return Task.CompletedTask;
         }
         
-        public override void Exit()
+        public override Task Exit()
         {
-            // 重置角色行动状态
-            BattleObject.CurrentActPhase = EActPhase.TurnStart;
+            return Task.CompletedTask;
         }
     }
 }

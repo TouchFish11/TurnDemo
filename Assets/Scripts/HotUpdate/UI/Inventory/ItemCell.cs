@@ -22,6 +22,7 @@ namespace HotUpdate.UI.Inventory
         [InjectUI] private Button btnCell;
         [InjectUI] private Image imgHighlight;
         [InjectUI] private Image imgDeleteFlag;
+        [InjectUI] private Image imgSelect;
         
         // 物品对象
         private Item _item;
@@ -41,6 +42,7 @@ namespace HotUpdate.UI.Inventory
             imgHighlight.gameObject.SetActive(false);
             imgDeleteFlag.gameObject.SetActive(false);
             New.gameObject.SetActive(false);
+            imgSelect.gameObject.SetActive(false);
         }
 
         /// <summary>
@@ -70,6 +72,16 @@ namespace HotUpdate.UI.Inventory
             New.gameObject.SetActive(_item.isNew);
             // 是否是待删除物品
             imgDeleteFlag.gameObject.SetActive(_item.isDeleted);
+        }
+
+        /// <summary>
+        /// 显示选中UI
+        /// </summary>
+        /// <param name="isShow"></param>
+        public void SetSelectFlag(bool isShow)
+        {
+            // 显示选中UI
+            imgSelect.gameObject.SetActive(isShow);
         }
 
         /// <summary>

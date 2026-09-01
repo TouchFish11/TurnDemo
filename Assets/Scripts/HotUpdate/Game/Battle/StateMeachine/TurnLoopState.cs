@@ -21,6 +21,7 @@ namespace HotUpdate.Game.Battle.StateMeachine
         [Inject] private IMonsterFactory _monsterFactory;
         [Inject] private IBattleCommandsController _commandsController;
 
+        // 是否结束战斗
         private bool _isOver;
         
         public TurnLoopState(IBattleStateMachine battleStateMachine, IBattleContext context) : base(battleStateMachine, context)
@@ -80,6 +81,11 @@ namespace HotUpdate.Game.Battle.StateMeachine
                 if (Context.CurrentTurnOwner == null || !Context.CurrentTurnOwner.CanAct && !Context.CurrentTurnOwner.Acting)
                 {
                     BattleUtility.UpdateOrder(Context);
+                    if (Context.RemainRound <= 0)
+                    {
+                        _isOver = true;
+                        break;
+                    }
                     // 更新当前行动实体
                     Context.SetCurrentTurnOwner(Context.AllBattleEntity[0]);
                     // 启用当前实体行动

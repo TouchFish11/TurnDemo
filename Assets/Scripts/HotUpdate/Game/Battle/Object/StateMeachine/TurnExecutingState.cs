@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using HotUpdate.Game.Battle.Object.Role;
 
 namespace HotUpdate.Game.Battle.Object.StateMeachine
@@ -14,16 +15,16 @@ namespace HotUpdate.Game.Battle.Object.StateMeachine
             _driver = driver;
         }
 
-        public override async void Enter()
+        public override async Task Enter()
         {
             await _driver.WaitForOperation();
             // 切换状态
             BattleObject.ChangeState(EActPhase.TurnEnd);
         }
 
-        public override void Exit()
+        public override Task Exit()
         {
-            
+            return Task.CompletedTask;
         }
     }
 }

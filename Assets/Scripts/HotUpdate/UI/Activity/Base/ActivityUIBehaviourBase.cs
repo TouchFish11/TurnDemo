@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
@@ -18,6 +20,7 @@ namespace HotUpdate.UI.Activity.Base
         [Inject] protected ItemService itemService;
         [Inject] protected IIconService iconService;
         
+        private readonly Stack<IActivitySubView> _subViews = new();
         // 活动信息
         protected ActivityInfo activityInfo;
         // 活动界面父对象
@@ -47,19 +50,32 @@ namespace HotUpdate.UI.Activity.Base
             await Show();
         }
 
-        public Task Show()
+        public async Task Show()
         {
-            return OnShow();
+            await OnShow();
+            // 恢复子界面：栈底 → 栈顶，回到离开时的界面
+            foreach (var scViewreen in _subViews.Reverse())
+            {
+                await scViewreen.Show();
+            }
         }
 
-        public Task Hide()
+        public async Task Hide()
         {
-            return OnHide();
+            foreach (var scViewreen in _subViews)
+            {
+                await scViewreen.Hide();
+            }
+            await OnHide();
         }
 
         public async Task Destroy()
         {
             await Hide();
+            while (_subViews.TryPop(out var subView))
+            {
+                await subView.Destroy();
+            }
             OnDispose();
             objectSpawner.Dispose();
             objectSpawner = null;
@@ -67,6 +83,28 @@ namespace HotUpdate.UI.Activity.Base
             itemService = null;
             iconService.Dispose();
             iconService = null;
+        }
+        
+        /// <summary>
+        /// 打开一个子界面（压栈并显示）
+        /// </summary>
+        protected async Task PushSubView(IActivitySubView subView)
+        {
+            _subViews.Push(subView);
+            await subView.Show();
+        }
+        
+        /// <summary>
+        /// 关闭栈顶子界面（弹栈并销毁）
+        /// </summary>
+        protected async Task<IActivitySubView> PopSubView()
+        {
+            if (_subViews.Count <= 0) 
+                return null;
+            
+            var subView = _subViews.Pop();
+            await subView.Destroy();
+            return subView;
         }
 
         /// <summary>
@@ -87,7 +125,13 @@ namespace HotUpdate.UI.Activity.Base
         /// </summary>
         protected abstract Task OnHide();
 
-        protected abstract void OnDispose();
+        /// <summary>
+        /// 当界面被销毁时执行
+        /// </summary>
+        protected virtual void OnDispose()
+        {
+            
+        }
         
         /// <summary>
         /// 剩余时间转字符串

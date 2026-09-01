@@ -28,11 +28,14 @@ namespace HotUpdate.Game.Battle.StatSystem
         /// </summary>
         public float CurrentShiled => StatsComponentCore.StatSet.CurrentShield;
         
-        protected override void OnBattleInit()
+        protected sealed override void OnBattleInit()
         {
             StatsComponentCore = (StatsComponentCore)ComponentCore;
+            OnPreInitStats();
             StatsComponentCore.InitStats();
         }
+        
+        protected abstract void OnPreInitStats();
 
         /// <summary>
         /// 更新当前生命值

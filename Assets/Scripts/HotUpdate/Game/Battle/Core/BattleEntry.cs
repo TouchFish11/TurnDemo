@@ -42,7 +42,7 @@ namespace HotUpdate.Game.Battle.Core
             s_battleContext = DIContainer.Create<BattleContext>();
             var battleEventBus = DIContainer.Create<BattleEventBus>();
             var battleStateMachine = DIContainer.Create<BattleStateMachine>(parameterValues: s_battleContext);
-            s_battleContext.Init(battleEventBus, battleStateMachine);
+            s_battleContext.Init(battleEventBus, battleStateMachine, 10);
             
             // 同步初始化
             s_battleManagerInitializer.Init(s_battleContext);

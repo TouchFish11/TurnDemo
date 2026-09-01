@@ -17,31 +17,24 @@ namespace HotUpdate.Game.Battle.Context
     public class BattleContext : IBattleContext
     {
         public List<IBattleEntityObject> AllBattleEntity { get; } = new();
-        
         public List<IBattleEntityObject> SceneMonsterObjects { get; }  = new();
-        
         public List<IBattleEntityObject> SceneRoleObjects { get; }  = new();
-
         public List<ICommand> BattleCommands { get; } = new();
-        
         public BattleEventBus EventBus { get; private set; }
-        
         public IBattleStateMachine BattleMachine { get; private set; }
-        
         public ICommand CurrentCommand { get; set; }
-        
         public IBattleEntityObject CurrentTurnOwner { get; private set; }
-        
-        public float ActionLine { get; set; }
-        
         public int CurentBattlePointCount { get; private set; } = 3;
-        
         public int MaxBattlePointCount { get; private set; } = 5;
+        public int RemainRound { get; private set; }
+        public float CurrentRoundRemainAv { get; private set; }
 
-        public void Init(BattleEventBus eventBus, BattleStateMachine battleStateMachine)
+        public void Init(BattleEventBus eventBus, BattleStateMachine battleStateMachine, int initRound)
         {
             EventBus = eventBus;
             BattleMachine = battleStateMachine;
+            RemainRound = initRound;
+            CurrentRoundRemainAv = 150;
         }
 
         /// <summary>
@@ -65,6 +58,23 @@ namespace HotUpdate.Game.Battle.Context
         {
             MaxBattlePointCount = Mathf.Max(0, MaxBattlePointCount - cost);
             EventBus.TriggerEvent(new OnBattlePointCountChangedEvent(this, CurentBattlePointCount, MaxBattlePointCount));
+        }
+
+        public void UpdateCurrentRoundRemainAv(float currentAv)
+        {
+            if (RemainRound <= 0)
+                return;
+            
+            if (CurrentRoundRemainAv > currentAv)
+            {
+                CurrentRoundRemainAv -= currentAv;
+                return;
+            }
+                
+            var remainConsumeAv = currentAv - CurrentRoundRemainAv;
+            RemainRound -= 1;
+            CurrentRoundRemainAv = 100;
+            CurrentRoundRemainAv -= remainConsumeAv;
         }
 
         public void CleanData()

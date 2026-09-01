@@ -68,6 +68,7 @@ namespace HotUpdate.Game.Battle.Statuses
         public void InitStatus(IBattleEntityObject sorucer, IBattleEntityObject owner, StatusInfo statusInfo)
         {
             StatusProperty = new StatusProperty(statusInfo); // 初始化状态属性
+            StatusInfo = statusInfo;
             Sourcer = sorucer; // 赋值施加者
             Owner = owner; // 赋值拥有者
             Context = owner.Context;

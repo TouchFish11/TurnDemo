@@ -9,13 +9,9 @@ namespace HotUpdate.Game.Battle.Skill.Component
     [ComponentId]
     public class MonsterSkillComponent : SkillComponent
     {
-        protected override void OnBattleInit()
+        protected override string InitSkillIds()
         {
-            base.OnBattleInit();
-            var monsterObject = (IMonsterObject)BattleEntity;
-            skillComponentCore.InitSkill(((IMonsterObject)BattleEntity).MonsterInfo.f_skillIds, monsterObject.SkillFactory);
-            AddCastCondition(monsterObject.DefaultCastCondition);
-            AddTargetSelectStrategy(monsterObject.DefaultTargetSelectStrategy);
+            return ((IMonsterObject)BattleEntity).MonsterInfo.f_skillIds;
         }
     }
 }

@@ -9,7 +9,6 @@ using HotUpdate.Game.Battle.Skill.Conditions;
 using HotUpdate.Game.Battle.Skill.Factory;
 using HotUpdate.Game.Battle.TargetSelect;
 using HotUpdate.Game.Battle.TargetSelect.Strategys;
-using HotUpdate.Game.Battle.Toughness;
 
 namespace HotUpdate.Game.Battle.Object.Monster
 {
@@ -70,24 +69,20 @@ namespace HotUpdate.Game.Battle.Object.Monster
 
         public override void CastSkill(int skillId)
         {
-            var skillComponent = GetComponent<ISkillComponent>();
+            var skillComponent = GetComponent<MonsterSkillComponent>();
             // 能否释放
             if (!skillComponent.CanCast(skillId))
-            {
                 return;
-            }
             
-            // 默认只能行动一次
-            CanAct = false;
+            // 先消耗，默认只能行动一次
+            ConsumeAction();
             // 获取技能数据
             var skill = skillComponent.GetSkill(skillId);
-            var toughnessComponent = GetComponent<ToughnessComponent>();
-            // 获取怪物行动指令
-            var actCommand = commandfactory.GetMonsterActCommand(toughnessComponent, skill);
-            // 发送指令
-            Context.EventBus.TriggerEvent(new InsertCommandEvent(Context, actCommand));
-            // 正在行动
-            Acting = true;
+            var skillCommand = commandfactory.GetSkillCommand(skill);
+            // 插入指令（同步读 CanAct，已更新）
+            Context.EventBus.TriggerEvent(new InsertCommandEvent(Context, skillCommand));
+            // 怪物技能固定消耗行动预算
+            BeginActing();
         }
     }
 }

@@ -22,7 +22,12 @@ namespace HotUpdate.Game.Battle.Skill.Component
         protected override void OnBattleInit()
         {
             skillComponentCore = (SkillComponentCore)ComponentCore;
+            AddCastCondition(BattleEntity.DefaultCastCondition);
+            AddTargetSelectStrategy(BattleEntity.DefaultTargetSelectStrategy);
+            skillComponentCore.InitSkill(InitSkillIds(), BattleEntity.SkillFactory);
         }
+
+        protected abstract string InitSkillIds();
 
         /// <summary>
         /// 校验指定技能是否可以释放

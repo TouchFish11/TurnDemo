@@ -5,6 +5,7 @@ using Core.AssetBundles.Management;
 using Core.DI;
 using Core.UI;
 using HotUpdate.Base.Service;
+using HotUpdate.UI.Activity.Base;
 using UnityEngine.UI;
 
 namespace HotUpdate.UI.Activity.EmbersCanon
@@ -12,7 +13,7 @@ namespace HotUpdate.UI.Activity.EmbersCanon
     /// <summary>
     /// 余烬圣典子界面UI01
     /// </summary>
-    public class EmbersCanonSubActivityUI_01 : UIBehaviourBase
+    public class EmbersCanonSubActivityUI_01 : UIBehaviourBase, IActivitySubView
     {
         [Inject] private ObjectSpawner _objectSpawner;
         [Inject] private IIconService _iconService;
@@ -25,18 +26,18 @@ namespace HotUpdate.UI.Activity.EmbersCanon
 
         public event Action OnClose;
         
-        public async Task Init(ActivityInfo activityInfo, EmbersCanonHandler embersCanonHandler)
+        public void Init(ActivityInfo activityInfo, EmbersCanonHandler embersCanonHandler)
         {
             _activityInfo = activityInfo;
             _embersCanonHandler = embersCanonHandler;
+        }
+
+        public async Task Show()
+        {
+            // 内容构建交给 Show
             await UpdateInfo();
         }
         
-        public Task Activate()
-        {
-            return UpdateInfo();
-        }
-
         private async Task UpdateInfo()
         {
             // 初始化关卡
@@ -52,13 +53,33 @@ namespace HotUpdate.UI.Activity.EmbersCanon
                 // 初始化关卡UI
                 battleLevelUI.Init(battleConfigEntry.levelName, icon, levelEntryData.isComplete);
                 battleLevelUI.OnEnterBattle += async () => 
-                await _embersCanonHandler.EnterActivityBattle(battleConfigEntry, embersCanonData.ActivityId, () =>
-                {
-                    levelEntryData.isComplete = true;
-                });
+                    await _embersCanonHandler.EnterActivityBattle(battleConfigEntry, embersCanonData.ActivityId, () =>
+                    {
+                        levelEntryData.isComplete = true;
+                    });
                 // 缓存UI
                 _battleLevelUis.Add(battleLevelUI);
             }
+        }
+
+        public Task Hide()
+        {
+            _objectSpawner.Release(_battleLevelUis);
+            _battleLevelUis.Clear();
+            _iconService.ReleaseAll();
+            return Task.CompletedTask;
+        }
+
+        public Task Destroy()
+        {
+            _objectSpawner.Dispose();
+            _objectSpawner = null;
+            _iconService.Dispose();
+            _iconService = null;
+            OnClose = null;
+            _embersCanonHandler = null;
+            _activityInfo = null;
+            return Task.CompletedTask;
         }
         
         protected override void OnButtonClick(string btnName)
@@ -69,24 +90,6 @@ namespace HotUpdate.UI.Activity.EmbersCanon
                     OnClose?.Invoke();
                     break;
             }
-        }
-
-        public void Deactivate()
-        {
-            _objectSpawner.Release(_battleLevelUis);
-            _battleLevelUis.Clear();
-            _iconService.ReleaseAll();
-        }
-
-        public void Destroy()
-        {
-            _objectSpawner.Dispose();
-            _objectSpawner = null;
-            _iconService.Dispose();
-            _iconService = null;
-            OnClose = null;
-            _embersCanonHandler = null;
-            _activityInfo = null;
         }
     }
 }

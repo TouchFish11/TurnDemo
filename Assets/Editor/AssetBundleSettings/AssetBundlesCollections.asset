@@ -228,7 +228,7 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\MonsterInfo.bytes
       size: 1208
       name: MonsterInfo.bytes
-      hash: ef0b98d0c9038bfc5203c4fc7967fd4f13f319cc1705b93383654f4b5c6e8c5e
+      hash: f858b13edca53c5d22eee74396b4a87f3e5fac1d1c1fe429628473b95b1e8218
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\NpcInfo.bytes
       size: 150
@@ -238,7 +238,7 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\RoleInfo.bytes
       size: 1029
       name: RoleInfo.bytes
-      hash: 222291a2e90fc4688cff99ee8fe3d4255fed484ffdec5ff3072dfb42e8cd5c1e
+      hash: 72aa6ebead23ca7128ba0e847607b6bccd8089d01ba629345706ffc323259bd8
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\SkillInfo.bytes
       size: 2456
@@ -246,9 +246,9 @@ MonoBehaviour:
       hash: 08d2a6adad3cd12d843faa16743e4c3e24442d16437211aa0e27c32789f6867e
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\StatusInfo.bytes
-      size: 1051
+      size: 1103
       name: StatusInfo.bytes
-      hash: 172427755316807d0e6895e6d87a153eb2830b956f61eca0d88fc4d6d72fb483
+      hash: a6a9733c3a497860f54a7e5db2c5532fd158644f6df5c5ff96dd5dc08f4cddcb
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\TaskConditionInfo.bytes
       size: 64
@@ -572,9 +572,9 @@ MonoBehaviour:
   - assetBundleName: tmp_asset
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\TMP_Asset\MSYH_SDF.asset
-      size: 8518349
+      size: 8520979
       name: MSYH_SDF.asset
-      hash: 9bfb8cf6a380278e6ca7c13b82cec72cf2891db08960b48ea267e8c4de3512c0
+      hash: 58fbc6c7bbc3c1239f5c7e92a1d40b166a4788eef114a18578dd594df5edf202
       assetType: 0
   - assetBundleName: ui
     assetInfos:
@@ -774,9 +774,9 @@ MonoBehaviour:
       hash: 9e02553abdbd0028c8c8f7cf671f3c2a02e5e31c28c85ade66efa07749189fbb
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Inventory\ItemCell.prefab
-      size: 31320
+      size: 33556
       name: ItemCell.prefab
-      hash: 14bc12d8ea85f6937f5a7b7a7f2bd9d147dcaf79f19c5ddcd8c480696bcdcc6c
+      hash: dff6b362493478d8ba4aca3dfc17e5bc18f0f03a2a00eb91c7b0fca3af1f763b
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Inventory\ItemDetailPanelBase.prefab
       size: 3225

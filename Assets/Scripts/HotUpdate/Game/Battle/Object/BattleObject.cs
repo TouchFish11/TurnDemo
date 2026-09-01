@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Core.DI;
 using Core.Exceptions;
+using Core.Log;
 using HotUpdate.Base.ECModule;
 using HotUpdate.Game.Battle.Command;
 using HotUpdate.Game.Battle.Context;
@@ -18,6 +19,7 @@ using HotUpdate.Game.Battle.StatSystem;
 using HotUpdate.Game.Battle.TargetSelect;
 using HotUpdate.Game.Battle.UI;
 using UnityEngine;
+using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.Battle.Object
 {
@@ -25,69 +27,36 @@ namespace HotUpdate.Game.Battle.Object
     /// 战斗对象基类
     /// 所有参与战斗的实体（角色、怪物、NPC等）的抽象基类，实现了战斗实体核心接口，定义战斗行为规范
     /// </summary>
-    public abstract class BattleObject : EntityObject, IBattleEntityObject, IDamagable, IDisplayPendingExecution
+    public abstract class BattleObject : EntityObject, IBattleEntityObject, IDisplayPendingExecution
     {
-        // 技能释放条件工厂
-        protected ICastSkillConditionFactory castSkillConditionFactory;
-        // 目标选择策略工厂
-        protected ITargetSelectStrategyFactory targetSelectStrategyFactory;
-        // 命令工厂
-        protected Commandfactory commandfactory;
-        // 死亡处理器
-        protected IDeathHandler deathHandler;
-        // 伤害处理链
-        protected Handler<DamageResult> damageChain;
-        // 角色回合阶段状态缓存
-        private readonly Dictionary<EActPhase, ITurnState> _turnStates = new();
-        // 当前实体所处的行动状态
-        private ITurnState _currentState;
-        // 死亡条件缓存
-        protected List<IDeathCondition> _deathConditions;
-        // 回合操作驱动对象
-        private ITurnActionDriver _turnActionDriver;
+        private bool _hasAction; // 行动预算：本回合是否还有行动次数
+        private bool _actable; // 行动资格：是否被眩晕/死亡剥夺
+        private bool _acting; // 是否正在演出技能
+
+        protected ICastSkillConditionFactory castSkillConditionFactory; // 技能释放条件工厂
+        protected ITargetSelectStrategyFactory targetSelectStrategyFactory; // 目标选择策略工厂
+        protected Commandfactory commandfactory; // 命令工厂
+        protected IDeathHandler deathHandler; // 死亡处理器
+        protected Handler<DamageResult> damageChain; // 伤害处理
+
+        private readonly Dictionary<EActPhase, ITurnState> _turnStates = new(); // 角色回合阶段状态缓存
+        private ITurnState _currentState; // 当前实体所处的行动状态
+        protected List<IDeathCondition> _deathConditions; // 死亡条件缓存
+        private ITurnActionDriver _turnActionDriver; // 回合操作驱动对象
         
-        public EActPhase CurrentActPhase { get; set; }
-        
-        public bool Acting { get; set; }
-        
+        public bool CanAct => _hasAction && _actable;
+        public bool Acting => _acting;
+        public bool TurnFinished => !CanAct && !_acting;
         public IBattleContext Context { get; protected set; }
-        
         public float ActionValue { get; set; }
-        
-        public bool CanAct { get; set; }
-        
         public int BattleEntityId { get; private set; }
-        
         public GameObject SubGameObject { get; private set; }
-        
         public int EntityPosIndex { get; set; }
-
         public abstract ISkillFactory SkillFactory { get; protected set; }
-        
-        public abstract ICastSkillCondition DefaultCastCondition { get; protected set;}
-        
-        public abstract ITargetSelectStrategy DefaultTargetSelectStrategy { get; protected set;}
-        
+        public abstract ICastSkillCondition DefaultCastCondition { get; protected set; }
+        public abstract ITargetSelectStrategy DefaultTargetSelectStrategy { get; protected set; }
         public IBattleEntityObject BattleEntity => this;
-        
-        public bool IsDead
-        {
-            get
-            {
-                var isDead = true;
-                // 所有死亡条件都满足时才能死亡
-                foreach (var condition in _deathConditions)
-                {
-                    if (!condition.CanDie(this))
-                    {
-                        isDead = false;
-                        break;
-                    }
-                }
-
-                return isDead;
-            }
-        }
+        public bool IsDead => _deathConditions.FindIndex(c => !c.CanDie(this)) == -1;
 
         protected override void OnInit()
         {
@@ -101,8 +70,6 @@ namespace HotUpdate.Game.Battle.Object
         /// <param name="parameter"></param>
         protected void BattleInit(BattleParameterObject parameter)
         {
-            // 初始化依赖
-            CurrentActPhase = EActPhase.TurnStart;
             Context = parameter.BattleContext;
             BattleEntityId = parameter.BattleEntityId;
             _deathConditions = parameter.DeathConditions;
@@ -118,7 +85,7 @@ namespace HotUpdate.Game.Battle.Object
             AddState(EActPhase.Executing);
             AddState(EActPhase.TurnEnd);
         }
-        
+
         /// <summary>
         /// 获取技能工厂
         /// </summary>
@@ -130,19 +97,19 @@ namespace HotUpdate.Game.Battle.Object
         /// </summary>
         /// <returns></returns>
         protected abstract ICastSkillCondition GetSkillCondition();
-        
+
         /// <summary>
         /// 获取目标选择策略
         /// </summary>
         /// <returns></returns>
         protected abstract ITargetSelectStrategy GetTargetSelectStrategy();
-        
+
         /// <summary>
         /// 回合开始步骤逻辑节点列表
         /// </summary>
         /// <returns></returns>
         protected abstract List<ITurnStartNode> GetStartNodes();
-        
+
         /// <summary>
         /// 添加状态方法
         /// </summary>
@@ -156,7 +123,8 @@ namespace HotUpdate.Game.Battle.Object
                     _turnStates.TryAdd(EActPhase.TurnStart, DIContainer.Create<TurnStartState>(this, GetStartNodes()));
                     break;
                 case EActPhase.Executing:
-                    _turnStates.TryAdd(EActPhase.Executing, DIContainer.Create<TurnExecutingState>(this, _turnActionDriver));
+                    _turnStates.TryAdd(EActPhase.Executing,
+                        DIContainer.Create<TurnExecutingState>(this, _turnActionDriver));
                     break;
                 case EActPhase.TurnEnd:
                     _turnStates.TryAdd(EActPhase.TurnEnd, DIContainer.Create<TurnEndState>(this));
@@ -166,22 +134,62 @@ namespace HotUpdate.Game.Battle.Object
                     throw ExceptionHelper.Throw<ArgumentOutOfRangeException>($"{nameof(EActPhase)}:{phase}");
             }
         }
-        
-        public void ChangeState(EActPhase eActPhase)
+
+        public async void ChangeState(EActPhase eActPhase)
         {
-            _currentState?.Exit();
-            _currentState = _turnStates[eActPhase];
-            _currentState.Enter();
+            try
+            {
+                if (_currentState != null)
+                    await _currentState.Exit();
+                _currentState = _turnStates[eActPhase];
+                await _currentState.Enter();
+            }
+            catch (Exception e)
+            {
+                Logger.LogException(ELogTags.Battle, e);
+            }
+        }
+        
+        /// <summary>
+        /// 消耗行动预算：必须在 InsertCommandEvent 之前调用
+        /// （事件会同步走到 BuildPendingDisplayList 读 CanAct）
+        /// </summary>
+        protected void ConsumeAction()
+        {
+            _hasAction = false;
+        }
+        
+        // 标记演出中：命令插入之后调用
+        protected void BeginActing()
+        {
+            _acting = true;
+        }
+        
+        public void EndActing()
+        {
+            _acting = false;
+        }
+
+        public void DisableAction()
+        {
+            _actable = false;
         }
 
         public void ExecuteAction()
         {
-            // 重置行动标志
-            CanAct = true;
-            Acting = false;
+            GrantTurn();
             ChangeState(EActPhase.TurnStart);
+            return;
+            
+            // 授予回合
+            void GrantTurn()
+            {
+                _hasAction = true;
+                _actable = true;
+                _acting = false;
+            }
         }
-        
+
         public void AddDeathCondition(IDeathCondition condition)
         {
             _deathConditions.Add(condition);
@@ -191,9 +199,9 @@ namespace HotUpdate.Game.Battle.Object
         {
             return _deathConditions.Remove(condition);
         }
-        
+
         public abstract void CastSkill(int skillId);
-        
+
         public void TakeHeal(int healAmount)
         {
             var statComponent = GetComponent<StatsComponent>();
@@ -207,7 +215,7 @@ namespace HotUpdate.Game.Battle.Object
             var statsComponent = GetComponent<StatsComponent>();
             statsComponent.UpdateShield(shieldAmount);
         }
-        
+
         public void TakeDamage(DamageResult damageResult)
         {
             damageChain.HandleRequest(damageResult);

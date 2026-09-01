@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 namespace HotUpdate.Game.Battle.Object.StateMeachine
 {
     /// <summary>
@@ -12,8 +14,8 @@ namespace HotUpdate.Game.Battle.Object.StateMeachine
             BattleObject = battleEntity;
         }
         
-        public abstract void Enter();
+        public abstract Task Enter();
         
-        public abstract void Exit();
+        public abstract Task Exit();
     }
 }

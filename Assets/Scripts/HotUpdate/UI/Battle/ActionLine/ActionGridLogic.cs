@@ -166,7 +166,7 @@ namespace HotUpdate.UI.Battle.ActionLine
             }
             
             // 闪烁特效透明度计算（PingPong实现0-1之间的往复变化）
-            time += Time.deltaTime * View.falshSpeed;
+            time += TimeUtil.DeltaTime * View.falshSpeed;
             currentAlpha = 1 - Mathf.PingPong(time, 1f);
 
             // 应用透明度到所有闪烁图片

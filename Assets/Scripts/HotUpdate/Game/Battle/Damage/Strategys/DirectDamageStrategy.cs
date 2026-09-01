@@ -39,7 +39,7 @@ namespace HotUpdate.Game.Battle.Damage.Strategys
             var critValue = attacker.GetComponent<StatsComponent>().GetFinalValue(EStatType.Crit);
             var critRate = critValue / 100f;
             var isCrit = Random.Range(0, 1) < critRate;
-            damageResult = new DamageResult(attacker, defender, Random.Range(30, 70), (EElementType)skillInfo.f_elementType, (E_DamageType)skillInfo.f_damageType, isCrit, skillInfo.f_id, skillInfo.f_toughenValue);
+            damageResult = new DamageResult(attacker, defender, Random.Range(10, 20), (EElementType)skillInfo.f_elementType, (E_DamageType)skillInfo.f_damageType, isCrit, skillInfo.f_id, skillInfo.f_toughenValue);
         }
 
         ///// <summary>

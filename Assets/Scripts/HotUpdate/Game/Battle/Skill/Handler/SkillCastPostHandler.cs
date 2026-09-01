@@ -17,7 +17,7 @@ namespace HotUpdate.Game.Battle.Skill.Handler
         {
             SkillContext = skillContext;
             BattleContext = skillContext.Caster.Context;
-            skillContext.Caster.Acting = false;
+            skillContext.Caster.EndActing();
             yield return OnHandle();
         }
 

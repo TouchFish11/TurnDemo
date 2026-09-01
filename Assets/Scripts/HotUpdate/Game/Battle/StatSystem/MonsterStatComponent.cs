@@ -10,13 +10,11 @@ namespace HotUpdate.Game.Battle.StatSystem
     [ComponentId]
     public class MonsterStatComponent : StatsComponent
     {
-        
-        protected override void OnBattleInit()
+        protected override void OnPreInitStats()
         {
             var monsterInfo = ((MonsterObject)BattleEntity).MonsterInfo;
             StatsComponentCore.StatSet = new MonsterStatSet();
             StatsComponentCore.StatSetProvider = new MonsterStatConfigProvider(monsterInfo);
-            base.OnBattleInit();
         }
 
         protected override void OnBattleDestroy()

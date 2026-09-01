@@ -1,6 +1,5 @@
 using Core.DI;
 using HotUpdate.Base.Data;
-using HotUpdate.Base.Manager;
 using HotUpdate.UI.Activity.Base;
 
 namespace HotUpdate.UI.Activity.OrbitalDeparture

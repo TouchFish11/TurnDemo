@@ -69,10 +69,5 @@ namespace HotUpdate.UI.Activity.OrbitalDeparture
             iconService.ReleaseAll();
             return Task.CompletedTask;
         }
-
-        protected override void OnDispose()
-        {
-            
-        }
     }
 }

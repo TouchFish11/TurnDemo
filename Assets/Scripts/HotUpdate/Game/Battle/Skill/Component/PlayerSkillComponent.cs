@@ -18,16 +18,12 @@ namespace HotUpdate.Game.Battle.Skill.Component
         /// 终结技是否释放，按下技能按键后确认释放
         /// </summary>
         public bool IsRelease { get; set; }
-
-        protected override void OnBattleInit()
+        
+        protected override string InitSkillIds()
         {
-            base.OnBattleInit();
-            var playerObject = (IRoleObject)BattleEntity;
-            skillComponentCore.InitSkill(((RoleObject)BattleEntity).RoleInfo.f_skillIds, playerObject.SkillFactory);
-            AddCastCondition(playerObject.DefaultCastCondition);
-            AddTargetSelectStrategy(playerObject.DefaultTargetSelectStrategy);
+            return ((IRoleObject)BattleEntity).RoleInfo.f_skillIds;
         }
-
+        
         /// <summary>
         /// 释放终结技
         /// 点击终结技技能按键后，调用该方法改变标识，触发终结技释放

@@ -470,7 +470,6 @@ namespace HotUpdate.UI.Battle.Base
             try
             {
                 var displayEntities = new List<IBattleEntityObject>(context.AllBattleEntity);
-                
                 // 特殊格子高度 + 间隙
                 var startY = _view.ActionExecuteGridUI.RectTransform.anchoredPosition.y - _view.ActionExecuteGridUI.RectTransform.rect.height - 10;
                 var startX = _view.ActionExecuteGridUI.RectTransform.anchoredPosition.x;
@@ -507,7 +506,7 @@ namespace HotUpdate.UI.Battle.Base
             }
             catch (Exception e)
             {
-                Logger.LogError(ELogTags.Battle, $"{typeof(BattleUIManager)}: Update action axis ui error,{e.Message}");
+                Logger.LogException(ELogTags.Battle, e);
             }
         }
 

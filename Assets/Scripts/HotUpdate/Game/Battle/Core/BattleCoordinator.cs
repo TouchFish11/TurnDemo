@@ -47,7 +47,6 @@ namespace HotUpdate.Game.Battle.Core
         public void Init(IBattleContext battleContext, OperationState operationState)
         {
             _targetSelectFlow.Init(battleContext, operationState);
-            
             Context = battleContext;
             OperationState = operationState;
         }

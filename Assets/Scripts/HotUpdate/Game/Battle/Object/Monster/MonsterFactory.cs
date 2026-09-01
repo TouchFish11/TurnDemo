@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
@@ -6,6 +7,7 @@ using HotUpdate.Base.Utility;
 using HotUpdate.Game.Battle.Command;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Layer;
+using HotUpdate.Game.Battle.Object.Conditions;
 using HotUpdate.Game.Battle.Skill.Conditions;
 using HotUpdate.Game.Battle.StatSystem;
 using HotUpdate.Game.Battle.TargetSelect;
@@ -34,6 +36,9 @@ namespace HotUpdate.Game.Battle.Object.Monster
                 _ => null
             };
             
+            // 初始化实体
+            EntityHelper.InitEntity(monsterObject);
+            
             var monsterInfo = _binaryDataManager.GetConfig<MonsterInfoContainer>(EConfigLoadType.Excel).dataDic[monsterId];
             // 设置名称
             monsterObject.GameObject.name = $"{monsterObject.GameObject.name}_{entityIndex}";
@@ -50,6 +55,7 @@ namespace HotUpdate.Game.Battle.Object.Monster
                 CastSkillConditionFactory = _castSkillConditionFactory,
                 TargetSelectStrategyFactory = _targetSelectStrategyFactory,
                 DeathHandler = deathHandler,
+                DeathConditions = new List<IDeathCondition> { DIContainer.Create<ZeroHpCondition>() },
                 TurnActionDriver = DIContainer.Create<MonsterAIDriver>(monsterObject)
             });
             
@@ -57,8 +63,6 @@ namespace HotUpdate.Game.Battle.Object.Monster
             monsterObject.EntityPosIndex = entityIndex;
             // 设置怪物层级
             LayerUtility.SetLayerRecursively(monsterObject.GameObject, LayerGeter.GetMonsterLayerByIndex(entityIndex));
-            // 初始化实体
-            EntityHelper.InitEntity(monsterObject);
             return monsterObject;
         }
 

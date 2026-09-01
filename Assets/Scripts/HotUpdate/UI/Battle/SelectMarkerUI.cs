@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Core.DI;
 using Core.Mono;
 using Core.UI;
-using Core.Utility;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Skill;

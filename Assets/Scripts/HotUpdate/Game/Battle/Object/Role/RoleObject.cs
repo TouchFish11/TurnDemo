@@ -70,23 +70,23 @@ namespace HotUpdate.Game.Battle.Object.Role
             
             // 获取技能数据
             var skill = skillComponent.GetSkill(skillId);
+            var isUltimate = skill.SkillContext.SkillInfo.f_SkillType == (byte)E_SkillType.UltimateSkill;
             // 若是终结技，则重置标识
-            if (skill.SkillContext.SkillInfo.f_SkillType == (byte)E_SkillType.UltimateSkill)
+            if (isUltimate)
             {
                 skillComponent.IsTrigger = true;
                 skillComponent.IsRelease = false;
             }
-            else
-            {
-                // 非终结技默认只能行动一次
-                CanAct = false;
-            }
+            
+            // 先消耗（终结技不消耗）
+            if (!isUltimate)
+                ConsumeAction();
             
             var skillCommand = commandfactory.GetSkillCommand(skill);
-            // 发送指令
+            // 插入指令（同步触发 UI 更新，此时 CanAct 已更新）
             Context.EventBus.TriggerEvent(new InsertCommandEvent(Context, skillCommand));
-            // 正在行动
-            Acting = true;
+            // 后标记演出中
+            BeginActing();
         }
 
         public void RecoverUltimate(float value)

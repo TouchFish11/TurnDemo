@@ -64,11 +64,22 @@ namespace HotUpdate.Game.Battle.Context
         List<IBattleEntityObject> SceneRoleObjects { get; }
 
         /// <summary>
+        /// 剩余轮次
+        /// </summary>
+        int RemainRound { get; }
+        
+        /// <summary>
+        /// 当前轮次剩余行动值
+        /// </summary>
+        float CurrentRoundRemainAv { get; }
+
+        /// <summary>
         /// 初始化战斗上下文
         /// </summary>
         /// <param name="eventBus"></param>
         /// <param name="battleStateMachine"></param>
-        void Init(BattleEventBus eventBus, BattleStateMachine battleStateMachine);
+        /// <param name="initRound">初始轮次</param>
+        void Init(BattleEventBus eventBus, BattleStateMachine battleStateMachine, int initRound);
         
         /// <summary>
         /// 获取所有存活的玩家角色实体集合
@@ -110,5 +121,11 @@ namespace HotUpdate.Game.Battle.Context
         /// 清理战斗数据
         /// </summary>
         void CleanData();
+
+        /// <summary>
+        /// 更新当前轮次的剩余行动值
+        /// </summary>
+        /// <param name="currentAv"></param>
+        void UpdateCurrentRoundRemainAv(float currentAv);
     }
 }

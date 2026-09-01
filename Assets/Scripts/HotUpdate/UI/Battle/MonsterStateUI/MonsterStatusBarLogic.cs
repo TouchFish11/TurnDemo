@@ -159,9 +159,7 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
         {
             // 过滤事件：仅处理当前绑定怪物的血量变化
             if (currentHpChangedEvent.Target != BattleEntity)
-            {
                 return;
-            }
 
             // 更新当前血量填充比例（实时同步血量变化）
             View.imgHp.fillAmount = currentHpChangedEvent.CurrentHp / currentHpChangedEvent.MaxHp;
@@ -176,9 +174,7 @@ namespace HotUpdate.UI.Battle.MonsterStateUI
         {
             // 过滤事件：仅处理当前绑定怪物的韧性变化
             if (toughnessChangedEvent.Target != BattleEntity)
-            {
                 return;
-            }
 
             // 更新当前韧性填充比例（实时同步韧性变化）
             View.imgToughness.fillAmount = toughnessChangedEvent.CurrentToughness / (float)toughnessChangedEvent.MaxToughness;

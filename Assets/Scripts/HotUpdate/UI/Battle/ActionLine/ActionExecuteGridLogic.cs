@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace HotUpdate.UI.Battle.ActionLine
 {
-    public class ActionExecuteGridLogic : IUILogic<ActionExecuteGridUI, ActionExecuteGridLogic>, IPoolData
+    public class ActionExecuteGridLogic : IUILogic<ActionExecuteGridUI, ActionExecuteGridLogic>
     {
         [Inject] private IMonoAdapter _monoAdapter;
         [Inject] private IPoolManager _poolManager;
@@ -33,6 +33,7 @@ namespace HotUpdate.UI.Battle.ActionLine
         public void Init(ActionExecuteGridUI view)
         {
             View = view;
+            _monoAdapter.AddUpdateListener(OnUpdate);
         }
         
         /// <summary>
@@ -46,7 +47,6 @@ namespace HotUpdate.UI.Battle.ActionLine
             View.imgIcon.sprite = icon;
             var alpha = icon ? 1f : 0f;
             View.imgIcon.color = new Color(View.imgIcon.color.r, View.imgIcon.color.g, View.imgIcon.color.b, alpha);
-            _monoAdapter.AddUpdateListener(OnUpdate);
         }
         
         /// <summary>
@@ -108,14 +108,9 @@ namespace HotUpdate.UI.Battle.ActionLine
             FlashAnim();
         }
 
-        void IPoolData.ResetData()
-        {
-            _monoAdapter.RemoveUpdateListener(OnUpdate);
-        }
-        
         public void Dispose()
         {
-            _poolManager.PushData(this);
+            
         }
     }
 }

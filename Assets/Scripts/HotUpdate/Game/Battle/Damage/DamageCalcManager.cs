@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Core.DI;
+using Core.Exceptions;
 using Core.Log;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage.Strategys;
@@ -54,8 +55,7 @@ namespace HotUpdate.Game.Battle.Damage
             }
             else
             {
-                damageResult = default;
-                Logger.LogError(ELogTags.Battle, $"{nameof(DamageCalcManager)}.{nameof(CalcBrokenDamage)}：未注册伤害策略，{damageType}");
+                throw ExceptionHelper.Throw<KeyNotFoundException>($"No registered strategy for type {damageType}");
             }
         }
 

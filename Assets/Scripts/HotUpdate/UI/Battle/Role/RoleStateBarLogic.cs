@@ -97,6 +97,9 @@ namespace HotUpdate.UI.Battle.Role
         /// <param name="currentHpChangedEvent">血量变化事件</param>
         private void OnCurrentHpChanged(CurrentHpChangedEvent currentHpChangedEvent)
         {
+            if(currentHpChangedEvent.Target != battleEntity)
+                return;
+            
             // 更新血量显示
             View.imgHp.fillAmount = currentHpChangedEvent.CurrentHp / currentHpChangedEvent.MaxHp;
             View.txtBlood.text = $"{currentHpChangedEvent.CurrentHp}/{currentHpChangedEvent.MaxHp}";

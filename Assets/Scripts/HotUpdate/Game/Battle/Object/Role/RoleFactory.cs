@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
@@ -6,6 +7,7 @@ using HotUpdate.Base.Utility;
 using HotUpdate.Game.Battle.Command;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Layer;
+using HotUpdate.Game.Battle.Object.Conditions;
 using HotUpdate.Game.Battle.Skill.Conditions;
 using HotUpdate.Game.Battle.StatSystem;
 using HotUpdate.Game.Battle.TargetSelect;
@@ -34,6 +36,9 @@ namespace HotUpdate.Game.Battle.Object.Role
                 _ => null
             };
             
+            // 初始化实体
+            EntityHelper.InitEntity(roleObject);
+            
             var roleInfo = _binaryDataManager.GetConfig<RoleInfoContainer>(EConfigLoadType.Excel).dataDic[roleId];
             var deathHandler = DIContainer.Create<RoleDeathHandler>();
             deathHandler.InitEntity(roleObject);
@@ -48,6 +53,7 @@ namespace HotUpdate.Game.Battle.Object.Role
                 CastSkillConditionFactory = _castSkillConditionFactory,
                 TargetSelectStrategyFactory = _targetSelectStrategyFactory,
                 DeathHandler = deathHandler,
+                DeathConditions = new List<IDeathCondition> { DIContainer.Create<ZeroHpCondition>() },
                 TurnActionDriver = DIContainer.Create<PlayerInputDriver>(roleObject),
             });
             
@@ -55,8 +61,6 @@ namespace HotUpdate.Game.Battle.Object.Role
             roleObject.EntityPosIndex = entityIndex;
             // 设置角色层级
             LayerUtility.SetLayerRecursively(roleObject.GameObject, LayerGeter.GetRoleLayerByIndex(entityIndex));
-            // 初始化实体
-            EntityHelper.InitEntity(roleObject);
             return roleObject;
         }
     }

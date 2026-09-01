@@ -52,8 +52,18 @@ namespace HotUpdate.UI.Activity.Base
 
         protected override async Task OnActive()
         {
-            // 默认选中第一个UI
-            await view.GetFirstActivityUI().SelectActivity();
+            if (view.CurrentActivity != null)
+            {
+                // 恢复上次打开的活动（会触发 OnShow → 恢复子界面栈）
+                await view.CurrentActivity.Show();
+                // 同步左侧 Toggle 视觉，但不触发选择事件
+                view.SyncCurrentToggle();
+            }
+            else
+            {
+                // 首次打开：默认选中第一个
+                await view.GetFirstActivityUI().SetSelected();
+            }
         }
 
         protected override async Task OnInactivate()
@@ -89,13 +99,15 @@ namespace HotUpdate.UI.Activity.Base
         /// <exception cref="NullReferenceException"></exception>
         public async Task UpdateDetailActivity(int selectId)
         {
-            // 重复触发不重复执行
-            if (view.CurrentActivity != null && selectId == view.CurrentActivity.ActivityId)
-                return;
-            
             // 先隐藏当前显示活动界面
-            if(view.CurrentActivity != null)
+            if (view.CurrentActivity != null)
+            {
+                // 重复触发不重复执行
+                if(view.CurrentActivity.ActivityId == selectId)
+                    return;
+                
                 await view.CurrentActivity.Hide();
+            }
             
             // 获取活动配置
             var activityInfo = _binaryDataManager.GetConfig<ActivityInfoContainer>(EConfigLoadType.Excel).dataDic[selectId];

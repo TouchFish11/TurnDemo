@@ -41,5 +41,16 @@ namespace HotUpdate.UI.Activity.Base
         {
             return ActvityUis.Count > 0 ? ActvityUis[0] : null;
         }
+        
+        public void SyncCurrentToggle()
+        {
+            if (CurrentActivity == null) 
+                return;
+            
+            foreach (var ui in ActvityUis)
+            {
+                ui.SetSelectedWithoutNotify(ui.ActivityId == CurrentActivity.ActivityId);
+            }
+        }
     }
 }

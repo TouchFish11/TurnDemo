@@ -17,7 +17,7 @@ namespace HotUpdate.Game.Battle.Object
         
         public async Task WaitForOperation()
         {
-            while (_roleObject.CanAct || _roleObject.Acting)
+            while (!_roleObject.TurnFinished)
             {
                 await Task.Yield();
             }

@@ -67,9 +67,9 @@ namespace HotUpdate.Game.Battle.StatSystem
         /// 设置基础值
         /// </summary>
         /// <param name="seed">配置数据</param>
-        public void SetBaseValue(float seed)
+        public void SetSeedValue(float seed)
         {
-            _baseValue = seed;
+            _seedValue = seed;
         }
         
         public void SetBaseFormula(IStatFormula baseFormula)

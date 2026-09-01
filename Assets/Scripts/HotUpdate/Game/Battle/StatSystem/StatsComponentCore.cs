@@ -30,7 +30,7 @@ namespace HotUpdate.Game.Battle.StatSystem
             {
                 var statType = (EStatType)value;
                 var stat = new Stat(statType, _statFactory.DefaultBaseValueFormula, _statFactory.DefaultLinearFormula);
-                stat.SetBaseValue(StatSetProvider.GetConfigValue(statType));
+                stat.SetSeedValue(StatSetProvider.GetConfigValue(statType));
                 StatSet.Stats.Add(statType, stat);
             }
 
