@@ -27,7 +27,7 @@ namespace HotUpdate.Game.Battle.Object.Monster
                 AssetKeys.VFX_MonsterDead,
                 new ProjectileTrans(battleEntityObject.GameObject.transform, false),
                 new ProjectileData(battleEntityObject, null, null, null),
-                vFXInfo));
+                vFXInfo), projectile => projectile.StartTrigger());
 
             var animationComponent =  battleEntityObject.GetComponent<BattleAnimationComponent>();
             // 播放怪物死亡动画，并等待动画播放完成

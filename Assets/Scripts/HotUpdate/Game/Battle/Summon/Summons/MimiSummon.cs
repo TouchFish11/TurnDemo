@@ -29,7 +29,7 @@ namespace HotUpdate.Game.Battle.Summon.Summons
             throw new System.NotImplementedException();
         }
 
-        protected override List<ITurnStartNode> GetStartNodes()
+        protected override ITurnStartNode GetTurnStartNode()
         {
             throw new System.NotImplementedException();
         }

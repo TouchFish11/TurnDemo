@@ -825,16 +825,6 @@ namespace HotUpdate.UI.Battle.Base
 
             return dmgTypeText;
         }
-
-        /// <summary>
-        /// 获取治疗文本的前缀
-        /// 固定返回"+"，用于区分治疗与伤害
-        /// </summary>
-        /// <returns>治疗文本前缀（"+"）</returns>
-        public static string GetHealText()
-        {
-            return "+";
-        }
         #endregion
 
         public void Dispose()

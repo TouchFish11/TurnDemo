@@ -58,6 +58,8 @@ namespace HotUpdate.Game.Battle.StateMeachine
                     {
                         if (battleService.HasRemainWave())
                         {
+                            // 转波次：只清空当前指令并重置行动标志，不执行后置处理器（OnHandle）
+                            _commandsController.ClearCurrentCommand();
                             // 切换到下一波
                             yield return battleService.MoveWave();
                         }

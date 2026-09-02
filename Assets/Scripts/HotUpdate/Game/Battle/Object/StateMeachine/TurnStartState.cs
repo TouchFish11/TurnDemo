@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Object.Role;
@@ -10,19 +9,16 @@ namespace HotUpdate.Game.Battle.Object.StateMeachine
     /// </summary>
     public class TurnStartState : TurnState
     {
-        private readonly IReadOnlyList<ITurnStartNode> _startNodes;
+        private readonly ITurnStartNode _startNode;
         
-        public TurnStartState(IBattleEntityObject battleEntity, IReadOnlyList<ITurnStartNode> startNodes) : base(battleEntity)
+        public TurnStartState(IBattleEntityObject battleEntity, ITurnStartNode turnStartNode) : base(battleEntity)
         {
-            _startNodes = startNodes;
+            _startNode =  turnStartNode;
         }
 
         public override async Task Enter()
         {
-            foreach (var node in _startNodes)
-            {
-                await node.Execute(BattleObject);
-            }
+            await _startNode.Execute(BattleObject);
 
             // 判断能否行动
             if (BattleObject.CanAct)

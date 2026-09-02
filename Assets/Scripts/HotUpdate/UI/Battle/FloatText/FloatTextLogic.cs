@@ -63,6 +63,7 @@ namespace HotUpdate.UI.Battle.FloatText
                 // 重置计时
                 currentTime = 0;
                 OnDurationOver?.Invoke(View);
+                OnDurationOver = null;
             }
 
             // 缩放过渡：从初始缩放值平滑过渡到最终缩放值

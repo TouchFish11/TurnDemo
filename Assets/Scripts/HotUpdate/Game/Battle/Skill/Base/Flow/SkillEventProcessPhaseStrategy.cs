@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Threading.Tasks;
 using Core.DI;
+using Core.Log;
 using Core.Pool;
 using Core.Time;
 using HotUpdate.Game.Battle.Damage;
@@ -26,11 +28,6 @@ namespace HotUpdate.Game.Battle.Skill.Base.Flow
         [Inject] protected IPoolManager poolManager;
 
         /// <summary>
-        /// 是否正在处理技能事件
-        /// </summary>
-        public bool IsProcessing { get; protected set; } = true;
-
-        /// <summary>
         /// 不使用该逻辑来等待处理完成
         /// </summary>
         /// <returns></returns>
@@ -45,8 +42,14 @@ namespace HotUpdate.Game.Battle.Skill.Base.Flow
         /// <param name="result"></param>
         public async void ProcessEvent(HitResult result)
         {
-            await OnTrigger(result);
-            IsProcessing = false;
+            try
+            {
+                await OnTrigger(result);
+            }
+            catch (Exception e)
+            {
+                Logger.LogException(ELogTags.Battle, e);
+            }
         }
 
         /// <summary>
@@ -55,10 +58,5 @@ namespace HotUpdate.Game.Battle.Skill.Base.Flow
         /// <param name="result"></param>
         /// <returns></returns>
         protected abstract Task OnTrigger(HitResult result);
-        
-        public void Reset()
-        {
-            IsProcessing = true;
-        }
     }
 }

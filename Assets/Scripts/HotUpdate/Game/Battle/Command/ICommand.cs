@@ -18,7 +18,7 @@ namespace HotUpdate.Game.Battle.Command
         /// <summary>
         /// 指令优先级，越小越先执行
         /// </summary>
-        int Priority { get; }
+        ECommandPriority Priority { get; }
 
         /// <summary>
         /// 指令是否有效

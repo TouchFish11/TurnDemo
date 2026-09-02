@@ -34,8 +34,8 @@ namespace HotUpdate.Game.VFX
         void RemoveVFX(VFXInfo vFXInfo);
 
         /// <summary>
-        /// 清理特效
+        /// 遍历所有活跃VFX，逐一回收至对象池
         /// </summary>
-        void ClearVFXCache();
+        void ClearActiveVFX();
     }
 }

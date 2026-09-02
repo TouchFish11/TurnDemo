@@ -18,8 +18,8 @@ namespace HotUpdate.Game.Battle.Skill.Base.Phase
 
         public override IEnumerator Execute()
         {
-            _skillEventProcessPhaseStrategy.Reset();
             SkillContext.Projectile.OnTrigger += _skillEventProcessPhaseStrategy.ProcessEvent;
+            SkillContext.Projectile.StartTrigger();
             yield return new WaitWhile(() => SkillContext.VFXInfo.IsAlive);
             SkillContext.Projectile.OnTrigger -= _skillEventProcessPhaseStrategy.ProcessEvent;
         }

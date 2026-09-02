@@ -124,12 +124,10 @@ namespace HotUpdate.UI.Battle.SkillKey
             // 触发状态下（非终结技技能）：执行技能触发逻辑
             if (triggerPhase == ETriggerPhase.Trigger && _SkillType != E_SkillType.UltimateSkill)
             {
-                // 重置为选中状态（避免重复触发）
-                triggerPhase = ETriggerPhase.Selected;
                 // 触发玩家技能执行事件（通知战斗系统释放技能）
                 battleContext.EventBus.TriggerEvent(new RoleTriggerSkillEvent(battleContext, skillId, battleEntity));
             }
-            else
+            else if (_SkillType == E_SkillType.UltimateSkill)
             {
                 // 终结技技能逻辑：释放终结技（临时直接调用，后续需优化）
                 battleEntity.GetComponent<PlayerSkillComponent>().ReleaseUltimate();
@@ -159,7 +157,7 @@ namespace HotUpdate.UI.Battle.SkillKey
         /// </summary>
         public void DefaultSelect()
         {
-            View.togSkillKeyUI.isOn = true;
+            View.togSkillKeyUI.SetIsOnWithoutNotify(true);
         }
         
         public void ResetData()
@@ -171,6 +169,5 @@ namespace HotUpdate.UI.Battle.SkillKey
         {
             _poolManager.PushData(this);
         }
-
     }
 }

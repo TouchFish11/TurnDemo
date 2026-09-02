@@ -73,6 +73,7 @@ namespace HotUpdate.UI.Activity.EmbersCanon
             {
                 // 测试数据
                 new(waveId: 1, victoryConditionType: EWaveVictoryConditionType.EliminateAllEnemies, monsterIds: configEntry.monsterIds),
+                new(waveId: 2, victoryConditionType: EWaveVictoryConditionType.EliminateAllEnemies, monsterIds: configEntry.monsterIds),
             };
 
             var battleStartupParams= new BattleStartupParams
@@ -124,6 +125,7 @@ namespace HotUpdate.UI.Activity.EmbersCanon
                 new(AssetKeys.ActionGridUI),
                 new(AssetKeys.WaitingActUI),
                 new(AssetKeys.SkillKeyUI),
+                new(AssetKeys.MonsterStateUI),
             };
             
             await _objectSpawner.PreLoadAsync(preLoadDatas);

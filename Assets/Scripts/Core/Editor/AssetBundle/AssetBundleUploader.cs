@@ -49,7 +49,7 @@ namespace Core.Editor.AssetBundle.Core
             }
 
             // 读取本地目录
-            var localCatalog = jsonManager.FromJson<AssetCatalog>(await File.ReadAllTextAsync(localCatalogPath));
+            var localCatalog = jsonManager.FromJson<AssetCatalog>(await File.ReadAllTextAsync(localCatalogPath), settings:NewtonsoftJsonUtility.CatalogSerializerSettings);
 
             // 尝试下载服务器清单
             AssetCatalog serverCatalog = null;
@@ -92,7 +92,7 @@ namespace Core.Editor.AssetBundle.Core
                 }
                 else
                 {
-                    if (!serverCatalog.ABPackageCollection.TryGetValue(fileName, out var serverInfo) || serverInfo.Hash != localAbInfo.Hash)
+                    if (!serverCatalog.ABPackageCollection.TryGetValue(bundleName, out var serverInfo) || serverInfo.Hash != localAbInfo.Hash)
                     {
                         filesToUpload.Add(filePath);
                         Log($"需上传：{fileName} (哈希不同或新增)");
@@ -138,7 +138,7 @@ namespace Core.Editor.AssetBundle.Core
                     using var stream = res.GetResponseStream();
                     using var reader = new StreamReader(stream, Encoding.UTF8);
                     var json = reader.ReadToEnd();
-                    return jsonManager.FromJson<AssetCatalog>(json);
+                    return jsonManager.FromJson<AssetCatalog>(json, settings:NewtonsoftJsonUtility.CatalogSerializerSettings);
                 }
                 catch(Exception e)
                 {

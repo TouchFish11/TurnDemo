@@ -488,9 +488,9 @@ MonoBehaviour:
   - assetBundleName: scene
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\Scene\BeginScene.unity
-      size: 27297
+      size: 27376
       name: BeginScene.unity
-      hash: 7bfb819cf4ef4dfb2ec31268657fe548b9c0e8cb47e5a5b88673b4e1f122f5b2
+      hash: 9975b31f182fe67d6f8f93d480787a83f7233cf9254ac67f88a85daf38c06150
       assetType: 1
     - assetPath: Assets\Editor\ArtRes\Scene\LevelScene.unity
       size: 117066
@@ -572,9 +572,9 @@ MonoBehaviour:
   - assetBundleName: tmp_asset
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\TMP_Asset\MSYH_SDF.asset
-      size: 8520979
+      size: 8522050
       name: MSYH_SDF.asset
-      hash: 58fbc6c7bbc3c1239f5c7e92a1d40b166a4788eef114a18578dd594df5edf202
+      hash: a5d2b6d7a72301e8b4aa2a4c747665c9889ccc10dd61bd728494009204054ffb
       assetType: 0
   - assetBundleName: ui
     assetInfos:

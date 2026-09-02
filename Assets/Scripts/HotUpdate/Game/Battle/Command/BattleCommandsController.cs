@@ -101,6 +101,15 @@ namespace HotUpdate.Game.Battle.Command
             // 执行完成后清空当前命令
             _context.CurrentCommand = null;
         }
+        
+        /// <summary>
+        /// 转波次/中止时清理当前指令：只重置施法者行动标志 + 置空指令，不执行后置处理器
+        /// </summary>
+        public void ClearCurrentCommand()
+        {
+            _context.CurrentCommand?.Sender.EndActing();
+            _context.CurrentCommand = null;
+        }
 
         /// <summary>
         /// 获取指令列表的首个指令

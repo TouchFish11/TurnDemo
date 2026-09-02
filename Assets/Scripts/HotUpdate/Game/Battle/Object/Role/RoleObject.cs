@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Core.DI;
 using Core.Utility;
 using HotUpdate.Game.Battle.Event.Turn;
@@ -42,6 +41,11 @@ namespace HotUpdate.Game.Battle.Object.Role
             RoleInfo = roleInfo;
         }
 
+        protected override ITurnStartNode GetTurnStartNode()
+        {
+            return DIContainer.Create<RoleTurnStartNode>();
+        }
+
         protected override ICastSkillCondition GetSkillCondition()
         {
             return castSkillConditionFactory.GetCastSkillCondition<PlayerDefaultCastSkillCondition>();
@@ -50,15 +54,6 @@ namespace HotUpdate.Game.Battle.Object.Role
         protected override ITargetSelectStrategy GetTargetSelectStrategy()
         {
             return targetSelectStrategyFactory.GetTargetSelectStrategy<PlayerBaseTargetSelectStrategy>();
-        }
-
-        protected override List<ITurnStartNode> GetStartNodes()
-        {
-            return new List<ITurnStartNode>
-            {
-                DIContainer.Create<StatusSettlementNode>(),
-                DIContainer.Create<DotSettlementNode>(),
-            };
         }
 
         public override void CastSkill(int skillId)

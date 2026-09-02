@@ -11,8 +11,13 @@ namespace HotUpdate.Game.VFX
         /// </summary>
         /// <param name="projectileData">抛射物配置数据</param>
         /// <param name="vFXInfo">特效配置信息</param>
-        IEnumerator InitToStart(ProjectileData projectileData, VFXInfo vFXInfo);
+        void Init(ProjectileData projectileData, VFXInfo vFXInfo);
 
+        /// <summary>
+        /// 开始执行弹射物
+        /// </summary>
+        void StartTrigger();
+        
         /// <summary>
         /// 触发时执行事件，外部用于应用效果，伤害计算、角色回能、命中特效；根据技能的逻辑触发次数，可能会多次调用
         /// </summary>

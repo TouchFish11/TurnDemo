@@ -105,12 +105,6 @@ namespace HotUpdate.Game.Battle.Object
         protected abstract ITargetSelectStrategy GetTargetSelectStrategy();
 
         /// <summary>
-        /// 回合开始步骤逻辑节点列表
-        /// </summary>
-        /// <returns></returns>
-        protected abstract List<ITurnStartNode> GetStartNodes();
-
-        /// <summary>
         /// 添加状态方法
         /// </summary>
         /// <param name="phase"></param>
@@ -120,7 +114,7 @@ namespace HotUpdate.Game.Battle.Object
             switch (phase)
             {
                 case EActPhase.TurnStart:
-                    _turnStates.TryAdd(EActPhase.TurnStart, DIContainer.Create<TurnStartState>(this, GetStartNodes()));
+                    _turnStates.TryAdd(EActPhase.TurnStart, DIContainer.Create<TurnStartState>(this, GetTurnStartNode()));
                     break;
                 case EActPhase.Executing:
                     _turnStates.TryAdd(EActPhase.Executing,
@@ -134,6 +128,8 @@ namespace HotUpdate.Game.Battle.Object
                     throw ExceptionHelper.Throw<ArgumentOutOfRangeException>($"{nameof(EActPhase)}:{phase}");
             }
         }
+        
+        protected abstract ITurnStartNode GetTurnStartNode();
 
         public async void ChangeState(EActPhase eActPhase)
         {

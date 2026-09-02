@@ -28,6 +28,7 @@ namespace HotUpdate.Game.Battle.Context
         public int MaxBattlePointCount { get; private set; } = 5;
         public int RemainRound { get; private set; }
         public float CurrentRoundRemainAv { get; private set; }
+        public bool IsActionLocked { get; set; }
 
         public void Init(BattleEventBus eventBus, BattleStateMachine battleStateMachine, int initRound)
         {

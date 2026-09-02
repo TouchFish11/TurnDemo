@@ -29,6 +29,8 @@ namespace HotUpdate.Game.Battle.Statuses
         /// </summary>
         public void SettlementTurnStart()
         {
+            UpdateStatus();
+            
             foreach (var status in _statuses)
             {
                 status.TurnStart(BattleEntity, BattleEntity.Context);
@@ -43,7 +45,7 @@ namespace HotUpdate.Game.Battle.Statuses
         /// <summary>
         /// 更新所有没有参与结算的buff状态为激活（参与结算）状态
         /// </summary>
-        public void UpdateStatus()
+        private void UpdateStatus()
         {
             foreach (var status in _statuses)
             {

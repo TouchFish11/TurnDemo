@@ -43,12 +43,12 @@ namespace HotUpdate.UI.Battle.SkillKey
         }
         
         /// <summary>
-        /// 技能按键点击事件处理
+        /// 技能按键点击事件处理，<see cref="OnToggleValueChanged"/>比如这个回调先进入
         /// </summary>
         /// <param name="baseEventData">事件数据（UI事件基础数据）</param>
         private void OnClick(BaseEventData baseEventData)
         {
-            _logic?.OnClick();
+            _logic.OnClick();
         }
         
         /// <summary>

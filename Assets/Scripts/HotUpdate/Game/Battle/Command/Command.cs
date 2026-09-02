@@ -10,11 +10,11 @@ namespace HotUpdate.Game.Battle.Command
     /// </summary>
     public abstract class Command : ICommand, IDisplayPendingExecution
     {
-        public IBattleEntityObject Sender { get; protected set; }
+        public abstract IBattleEntityObject Sender { get; protected set; }
         
         public IBattleEntityObject BattleEntity => Sender;
 
-        public abstract int Priority { get; protected set; }
+        public abstract ECommandPriority Priority { get; protected set; }
 
         /// <summary>
         /// 指令是否有效

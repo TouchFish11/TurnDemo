@@ -8,11 +8,14 @@ using Core.Tasks;
 using HotUpdate.Base.UI;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Event.UI;
+using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Monster;
 using HotUpdate.Game.Battle.Object.Role;
+using HotUpdate.Game.Battle.Statuses;
 using HotUpdate.Game.Battle.UI;
 using HotUpdate.Game.Battle.Utility;
+using HotUpdate.Game.VFX;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
@@ -29,6 +32,7 @@ namespace HotUpdate.Game.Battle.Core
         [Inject] private IBattleCameraManager _battleCameraManager;
         [Inject] private IUIService _uiService;
         [Inject] private IMonoAdapter _monoAdapter;
+        [Inject] private IVFXManager _vfxManager;
         
         private IBattleManager _battleManager;
         private IBattleContext _context;
@@ -118,6 +122,9 @@ namespace HotUpdate.Game.Battle.Core
         /// <returns></returns>
         public IEnumerator UpdateWave()
         {
+            // 清理上一波次残留的特效
+            _vfxManager.ClearActiveVFX();
+            
             // 隐藏行动轴UI，角色UI不用处理
             // ...
             
@@ -217,6 +224,30 @@ namespace HotUpdate.Game.Battle.Core
         public IEnumerator MoveWave()
         {
             yield return _battleManager.BattleService.UpdateWave();
+        }
+
+        /// <summary>
+        /// 播放DOT结算演出
+        /// </summary>
+        /// <param name="entityObject"></param>
+        public async Task PlaySettlementDot(IBattleEntityObject entityObject)
+        {
+            var statusComponent = entityObject.GetComponent<StatusComponent>();
+            var hasDot = StatusUtility.ContainDot(statusComponent.GetStatuses());
+            if (hasDot)
+            {
+                // 隐藏所有怪物血量UI显示
+                ((IBattleController)_uiService.GetPanel(EUIPanelId.BattlePanel)).MonsterStateUIManager.InActiveMonsterUIs();
+                // 调整相机角度
+                var entityPos = entityObject.GameObject.transform.position;
+                entityPos = new Vector3(entityPos.x, 1, entityPos.z);
+                var pos = entityPos + entityObject.GameObject.transform.forward * 4;
+                var rotation = Quaternion.LookRotation(entityPos - pos);
+                var mask = LayerGeter.GetPreBitLayer() | (1 << entityObject.GameObject.layer);
+                await _battleCameraManager.CreateCamera(null, pos, rotation, mask);
+                // 等待Dot显示完成
+                await Task.Delay(1400);
+            }
         }
     }
 }

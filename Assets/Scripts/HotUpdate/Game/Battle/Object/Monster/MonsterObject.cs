@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Core.DI;
 using Core.Utility;
 using HotUpdate.Game.Battle.Event.Turn;
@@ -44,7 +43,12 @@ namespace HotUpdate.Game.Battle.Object.Monster
         {
             MonsterInfo = monsterInfo;
         }
-        
+
+        protected override ITurnStartNode GetTurnStartNode()
+        {
+            return DIContainer.Create<MonsterTurnStartNode>();
+        }
+
         protected override ICastSkillCondition GetSkillCondition()
         {
             return castSkillConditionFactory.GetCastSkillCondition<MonsterDefaultCastSkillCondition>();
@@ -55,18 +59,8 @@ namespace HotUpdate.Game.Battle.Object.Monster
             return targetSelectStrategyFactory.GetTargetSelectStrategy<MonsterBaseTargetSelectStrategy>();
         }
         
-        protected override List<ITurnStartNode> GetStartNodes()
-        {
-            return new List<ITurnStartNode>
-            {
-                DIContainer.Create<StatusSettlementNode>(),
-                DIContainer.Create<DotSettlementNode>(),
-                DIContainer.Create<ToughnessRecoveryNode>(),
-            };
-        }
-        
         public abstract int SelectSkill();
-
+        
         public override void CastSkill(int skillId)
         {
             var skillComponent = GetComponent<MonsterSkillComponent>();
@@ -79,8 +73,9 @@ namespace HotUpdate.Game.Battle.Object.Monster
             // 获取技能数据
             var skill = skillComponent.GetSkill(skillId);
             var skillCommand = commandfactory.GetSkillCommand(skill);
+            var toughnessRecoveryCommand = commandfactory.GetMonsterActionCommand(skillCommand);
             // 插入指令（同步读 CanAct，已更新）
-            Context.EventBus.TriggerEvent(new InsertCommandEvent(Context, skillCommand));
+            Context.EventBus.TriggerEvent(new InsertCommandEvent(Context, toughnessRecoveryCommand));
             // 怪物技能固定消耗行动预算
             BeginActing();
         }

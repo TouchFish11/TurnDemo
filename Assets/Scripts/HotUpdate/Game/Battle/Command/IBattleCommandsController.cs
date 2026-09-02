@@ -44,5 +44,10 @@ namespace HotUpdate.Game.Battle.Command
         void FilterInvalidCommand();
 
         IEnumerator ExcutePostProcess();
+
+        /// <summary>
+        /// 转波次/中止时清理当前指令：只重置施法者行动标志 + 置空指令，不执行后置处理器
+        /// </summary>
+        void ClearCurrentCommand();
     }
 }

@@ -9,6 +9,7 @@ using HotUpdate.Base.UI;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Turn;
 using HotUpdate.Game.Inputs;
+using HotUpdate.Game.VFX;
 using UnityEngine.SceneManagement;
 using Logger = Core.Log.Logger;
 
@@ -23,6 +24,7 @@ namespace HotUpdate.Game.Battle.Core
         [Inject] private IMouseManager _mouseManager;
         [Inject] private IPoolManager _poolManager;
         [Inject] private IUIService _uiService;
+        [Inject] private IVFXManager _vfxManager;
         
         public WaveCreator WaveCreator { get; private set; }
         
@@ -70,6 +72,7 @@ namespace HotUpdate.Game.Battle.Core
                 // 执行战斗结束回调，在背景界面销毁前执行
                 if (OnBattleOver != null)
                 {
+                    _vfxManager.ClearActiveVFX();   // 先清 VFX，把活跃 VFX 干净释放，再清池
                     BattleEntry.EndBattle();
                     _poolManager.ClearAll();
                     await OnBattleOver(new BattleResult { IsWin = false });
