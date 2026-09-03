@@ -120,38 +120,37 @@ namespace HotUpdate.Game.Battle.Core
         /// 首次入场，转波次都需要这样的逻辑
         /// </summary>
         /// <returns></returns>
-        public IEnumerator UpdateWave()
+        public async Task UpdateWave()
+        {
+            await UpdateWaveWithoutPerformance();
+            var controller = (IBattleController)_uiService.GetPanel(EUIPanelId.BattlePanel);
+            // TODO：可拓展ShowBattleStart方法，显示当前是第几回合的文本
+            controller.BattleUiManager.ShowBattleStart();
+            // 创建入场特效
+            // ...
+            await Task.Delay(1000);
+            controller.BattleUiManager.SetActionBarActive(true);
+        }
+
+        public async Task UpdateWaveWithoutPerformance()
         {
             // 清理上一波次残留的特效
             _vfxManager.ClearActiveVFX();
-            
-            // 隐藏行动轴UI，角色UI不用处理
-            // ...
-            
-            // 调整相机视角
-            yield return TaskUtility.WaitForTask(_battleCameraManager.CreateCamera(null, new Vector3(0, 1, -3.5f), Quaternion.identity));
-            
-            // 显示波次提示
-            // TODO：可拓展ShowBattleStart方法，显示当前是第几回合的文本
             var controller = (IBattleController)_uiService.GetPanel(EUIPanelId.BattlePanel);
-            controller.BattleUiManager.ShowBattleStart();
-            
-            // 创建入场特效
-            // ...
-
+            controller.BattleUiManager.SetActionBarActive(false);
+            // 调整相机视角，设置相机mask
+            var mask = LayerGeter.GetPreBitLayer() | LayerGeter.GetMonsterBitLayer();
+            await _battleCameraManager.CreateCamera(null, new Vector3(0, 1, -3.5f), Quaternion.identity, mask);
             // 创建怪物
-            yield return TaskUtility.WaitForTask(_battleManager.WaveCreator.CreateWave());
-            
+            await _battleManager.WaveCreator.CreateWave();
             // 初始化行动顺序并更新行动轴内容
             BattleUtility.InitOrder(_context);
-            controller.BattleUiManager.InitActionbarContent(_context);
-            
+            await controller.BattleUiManager.InitActionbarContent(_context);
+            BattleUtility.UpdateOrder(_context);
             // 初始化怪物UI
-            yield return TaskUtility.WaitForTask(controller.UiInitializer.InitMonsterUIs(_context.GetAliveMonsterEntitys()));
+            await controller.UiInitializer.InitMonsterUIs(_context.GetAliveMonsterEntitys());
             // 隐藏怪物UI
             controller.MonsterStateUIManager.InActiveMonsterUIs();
-
-            yield return new WaitForSeconds(1f);
         }
         
         /// <summary>
@@ -223,7 +222,7 @@ namespace HotUpdate.Game.Battle.Core
         /// </summary>
         public IEnumerator MoveWave()
         {
-            yield return _battleManager.BattleService.UpdateWave();
+            yield return TaskUtility.WaitForTask(_battleManager.BattleService.UpdateWave());
         }
 
         /// <summary>

@@ -28,5 +28,10 @@ namespace HotUpdate.Game.Battle.StatSystem.Modifiers
         /// <param name="context"></param>
         /// <returns></returns>
         float GetValue(StatEvaluationContext context);
+
+        /// <summary>
+        /// 重置修改器，移除可能持有的状态引用
+        /// </summary>
+        void Reset();
     }
 }

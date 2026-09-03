@@ -31,6 +31,11 @@ namespace HotUpdate.Game.Battle.StatSystem.Modifiers
             InvokeOnChanged();
         }
 
+        protected override void OnReset()
+        {
+            source = null;
+        }
+
         protected override float OnGetValue(StatEvaluationContext context)
         {
             var speed = source.Stats[EStatType.Speed].FinalValue;

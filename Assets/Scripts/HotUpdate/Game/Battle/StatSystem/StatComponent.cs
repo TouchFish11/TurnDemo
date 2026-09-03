@@ -81,9 +81,11 @@ namespace HotUpdate.Game.Battle.StatSystem
         /// <returns></returns>
         public bool RemoveBaseStat(EStatType statType, long modifierId, out IStatModifier modifier)
         {
-            var remove = StatsComponentCore.RemoveBaseStatModifier(statType, modifierId, out modifier);
-            BattleEntity.Context.EventBus.TriggerEvent(new StatChangedEvent(BattleEntity.Context, GetStatInternal(statType)));
-            return remove;
+            if (StatsComponentCore.RemoveBaseStatModifier(statType, modifierId, out modifier))
+            {
+                BattleEntity.Context.EventBus.TriggerEvent(new StatChangedEvent(BattleEntity.Context, GetStatInternal(statType)));
+            }
+            return false;
         }
         
         /// <summary>
@@ -110,9 +112,12 @@ namespace HotUpdate.Game.Battle.StatSystem
         /// <returns></returns>
         public bool RemoveFinalStat(EStatType statType, long modifierId, out IStatModifier modifier)
         {
-            var remove = StatsComponentCore.RemoveFinalStatModifier(statType, modifierId, out modifier);
-            BattleEntity.Context.EventBus.TriggerEvent(new StatChangedEvent(BattleEntity.Context, GetStatInternal(statType)));
-            return remove;
+            if (StatsComponentCore.RemoveFinalStatModifier(statType, modifierId, out modifier))
+            {
+                BattleEntity.Context.EventBus.TriggerEvent(new StatChangedEvent(BattleEntity.Context, GetStatInternal(statType)));
+                return true;
+            }
+            return false;
         }
 
         public bool TryGetModifier(EStatType statType, long modifierId, out IStatModifier modifier)
@@ -173,6 +178,14 @@ namespace HotUpdate.Game.Battle.StatSystem
         public float GetFinalValue(EStatType type) 
         {
             return StatsComponentCore.GetFinalValue(type);
+        }
+
+        /// <summary>
+        /// 清理属性
+        /// </summary>
+        public void ClearStats()
+        {
+            StatsComponentCore.ClearStats();
         }
     }
 }

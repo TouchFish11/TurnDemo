@@ -77,10 +77,7 @@ namespace HotUpdate.UI.Battle.FloatText
             // 移除帧更新监听，停止逻辑执行
             _monoAdapter.RemoveUpdateListener(OnUpdate);
         }
-        
-        public void Dispose()
-        {
-            _poolManager.PushData(this);
-        }
+
+        public abstract void Dispose();
     }
 }

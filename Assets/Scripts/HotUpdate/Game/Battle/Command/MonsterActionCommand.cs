@@ -7,7 +7,6 @@ using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Monster;
-using HotUpdate.Game.Battle.Statuses;
 using HotUpdate.Game.Battle.Toughness;
 using HotUpdate.Game.Battle.UI;
 using UnityEngine;
@@ -34,24 +33,14 @@ namespace HotUpdate.Game.Battle.Command
         public void Init(IMonsterObject monsterObject, SkillCommand skillCommand)
         {
             Sender = monsterObject;
-            Priority = ECommandPriority.MonsterSkillWithToughnessRecovery;
+            Priority = ECommandPriority.MonsterActionWithToughnessRecovery;
             _skillCommand = skillCommand;
         }
         
         public override IEnumerator Execute(IBattleContext context)
         {
-            yield return SettlementStatus();
             yield return RecoverToughness();
-        }
-
-        /// <summary>
-        /// 结算buff
-        /// </summary>
-        /// <returns></returns>
-        private IEnumerator SettlementStatus()
-        {
-            Sender.GetComponent<StatusComponent>().SettlementTurnStart();
-            yield return TaskUtility.WaitForTask(_battleManager.BattleService.PlaySettlementDot(Sender));
+            yield return _skillCommand.Execute(context);
         }
         
         /// <summary>
@@ -65,33 +54,30 @@ namespace HotUpdate.Game.Battle.Command
             // 若韧性未被击破，则不处理
             if (!toughnessComponent.IsToughnessBroken())
             {
-                // 技能执行
-                yield return _skillCommand.Execute(Sender.Context);
+                yield break;
             }
-            else
+
+            // 隐藏其他怪物血量UI显示
+            ((IBattleController)_uiService.GetPanel(EUIPanelId.BattlePanel)).MonsterStateUIManager.ActiveMonsterUI(Sender);
+            // 计算相机世界坐标的位置和看向
+            var monsterPos = Sender.GameObject.transform.position;
+            monsterPos = new Vector3(monsterPos.x, 1, monsterPos.z);
+            var pos = monsterPos + Sender.GameObject.transform.forward * 4;
+            var rotation = Quaternion.LookRotation(monsterPos - pos);
+            
+            // 获取遮罩
+            var preMask = LayerGeter.GetPreBitLayer();
+            var mask = preMask | (1 << Sender.GameObject.layer);
+            // 创建相机
+            yield return TaskUtility.WaitForTask(_battleCameraManager.CreateCamera(null, pos, rotation, mask));
+            
+            float currentValue = 0;
+            // 等待韧性值恢复至最大值
+            while (toughnessComponent.CurrentToughnessValue < toughnessComponent.MaxToughnessVaue)
             {
-                // 隐藏其他怪物血量UI显示
-                ((IBattleController)_uiService.GetPanel(EUIPanelId.BattlePanel)).MonsterStateUIManager.ActiveMonsterUI(Sender);
-                // 计算相机世界坐标的位置和看向
-                var monsterPos = Sender.GameObject.transform.position;
-                monsterPos = new Vector3(monsterPos.x, 1, monsterPos.z);
-                var pos = monsterPos + Sender.GameObject.transform.forward * 4;
-                var rotation = Quaternion.LookRotation(monsterPos - pos);
-            
-                // 获取遮罩
-                var preMask = LayerGeter.GetPreBitLayer();
-                var mask = preMask | (1 << Sender.GameObject.layer);
-                // 创建相机
-                yield return TaskUtility.WaitForTask(_battleCameraManager.CreateCamera(null, pos, rotation, mask));
-            
-                float currentValue = 0;
-                // 等待韧性值恢复至最大值
-                while (toughnessComponent.CurrentToughnessValue < toughnessComponent.MaxToughnessVaue)
-                {
-                    currentValue += Time.deltaTime * recoverySpeed;
-                    toughnessComponent.SetToughnessValue((int)currentValue, toughnessComponent.MaxToughnessVaue);
-                    yield return null;
-                }
+                currentValue += Time.deltaTime * recoverySpeed;
+                toughnessComponent.SetToughnessValue((int)currentValue, toughnessComponent.MaxToughnessVaue);
+                yield return null;
             }
         }
 

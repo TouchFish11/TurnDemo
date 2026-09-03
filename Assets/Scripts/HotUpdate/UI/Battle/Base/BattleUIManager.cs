@@ -442,6 +442,10 @@ namespace HotUpdate.UI.Battle.Base
 
         public async Task InitActionbarContent(IBattleContext context)
         {
+            _objectSpawner.Release(_view.ActionGridUis);
+            _view.ActionGridUis.Clear();
+            _view.ActionExecuteGridUI.UpdateGrid(null, null);
+            
             // 特殊格子高度 + 间隙
             var startY = _view.ActionExecuteGridUI.RectTransform.anchoredPosition.y - _view.ActionExecuteGridUI.RectTransform.rect.height - 10;
             var startX = _view.ActionExecuteGridUI.RectTransform.anchoredPosition.x;
@@ -463,6 +467,11 @@ namespace HotUpdate.UI.Battle.Base
             }
             
             Logger.LogDebug(ELogTags.Battle, $"Init actionbar finished");
+        }
+
+        public void SetActionBarActive(bool isActive)
+        {
+            _view.SetActionBarActive(isActive);
         }
         
         public async void InsertActionGridToTarget(IBattleContext context)

@@ -68,7 +68,7 @@ namespace HotUpdate.Game.Battle.Object.Monster
 
         public void CollectDeadMonster(MonsterObject monsterObject)
         {
-            _objectSpawner.Release(monsterObject);
+            _objectSpawner.Release(monsterObject, true);
         }
     }
 }

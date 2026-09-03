@@ -1,4 +1,3 @@
-using System;
 using Core.Exceptions;
 
 namespace HotUpdate.Game.Battle.StatSystem.Modifiers
@@ -30,7 +29,14 @@ namespace HotUpdate.Game.Battle.StatSystem.Modifiers
                 StatEvaluationContext.Dependencies.Pop();
             }
         }
-        
+
+        public sealed override void Reset()
+        {
+            OnReset();
+        }
+
+        protected abstract void OnReset();
+
         /// <summary>
         /// 自定义转换逻辑
         /// </summary>

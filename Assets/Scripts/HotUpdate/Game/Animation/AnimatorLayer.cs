@@ -55,6 +55,7 @@ namespace HotUpdate.Game.Animation
                     animationIgnore.Reset();
                 }
 
+                state.FinishedNotified = false;   // 重新播放时重置结束通知
                 CurrentState = state;
             }
         }

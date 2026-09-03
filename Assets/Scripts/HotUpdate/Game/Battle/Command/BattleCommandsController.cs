@@ -96,10 +96,14 @@ namespace HotUpdate.Game.Battle.Command
 
         public IEnumerator ExcutePostProcess()
         {
-            // 命令执行完后逻辑
-            yield return _context.CurrentCommand.ExcutePostProcess(_context);
-            // 执行完成后清空当前命令
+            // 先置空：把"命令已执行完"的边界提前到后处理之前。
+            // 这样后处理里插入的新命令（如怪物行动）会直接成为 CurrentCommand，
+            // 而不是先进队列再被取走，避免在等待列表里一闪而过。
+            var current = _context.CurrentCommand;
             _context.CurrentCommand = null;
+
+            if (current != null)
+                yield return current.ExcutePostProcess(_context);
         }
         
         /// <summary>

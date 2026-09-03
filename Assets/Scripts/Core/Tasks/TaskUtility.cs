@@ -60,6 +60,31 @@ namespace Core.Tasks
         
         /// <summary>
         /// 等待任务完成
+        /// Task转换为协程；task的IsFaulted为true时，表示任务执行失败
+        /// </summary>
+        /// <param name="task">要转换的任务</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">task为null时抛出</exception>
+        public static IEnumerator ToCoroutine(this Task task)
+        {
+            if (task == null)
+            {
+                throw ExceptionHelper.Throw($"Argument is null({nameof(task)})");
+            }
+            
+            while (!task.IsCompleted)
+            {
+                yield return null;
+            }
+
+            if (task.IsFaulted)
+            {
+                Logger.LogException(ELogTags.Task, task.Exception);
+            }
+        }
+        
+        /// <summary>
+        /// 等待任务完成
         /// Task转换为协程；task的IsFaulted为true时，表示任务执行失败；否则执行callback
         /// </summary>
         /// <param name="task"></param>
@@ -75,7 +100,7 @@ namespace Core.Tasks
 
             if (task.IsFaulted)
             {
-                Logger.LogError(ELogTags.Task, $"{nameof(TaskUtility)}.{nameof(WaitForTask)}: {task.Exception}，StackTrance：{task.Exception?.StackTrace}");
+                Logger.LogError(ELogTags.Task, $"{nameof(TaskUtility)}.{nameof(ToCoroutine)}: {task.Exception}，StackTrance：{task.Exception?.StackTrace}");
             }
             else
             {

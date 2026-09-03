@@ -12,7 +12,13 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard.Status
     public class FearStatus : StatusBase
     {        
         protected long modifierId;
-        
+
+        protected override void OnAdd()
+        {
+            var statModifier = modifierFactory.Create(EModifierType.Flat, -20 * StatusProperty.CurrentPine, out modifierId);
+            OwnerStatsComponent.AddFinalStat(EStatType.Atk, statModifier);
+        }
+
         protected override void OnTurnEnd(IBattleEntityObject owner, IBattleContext context)
         {
             StatusProperty.RemainingRound -= 1;
@@ -23,11 +29,6 @@ namespace HotUpdate.Game.Battle.Object.Role.Wizard.Status
             if (OwnerStatsComponent.TryGetModifier(EStatType.Atk, modifierId, out var modifier))
             {
                 ((StatModifier)modifier).SetValue(-20 * StatusProperty.CurrentPine);
-            }
-            else
-            {
-                var statModifier = modifierFactory.Create(EModifierType.Flat, -20 * StatusProperty.CurrentPine, out modifierId);
-                OwnerStatsComponent.AddFinalStat(EStatType.Atk, statModifier);
             }
         }
 

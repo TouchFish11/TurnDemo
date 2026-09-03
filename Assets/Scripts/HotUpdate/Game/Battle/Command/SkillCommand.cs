@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Event.Skill;
+using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Role;
 using HotUpdate.Game.Battle.Skill;
@@ -61,6 +62,13 @@ namespace HotUpdate.Game.Battle.Command
         {
             var skillContext = Skill.SkillContext;
             yield return skillContext.SkillCastPostHandler.Handle(skillContext);
+            // 额外回合：重新授予行动并重开选择（不是插技能）
+            if (Sender.TryConsumeExtraTurn())
+            {
+                Sender.GrantAction();
+                context.EventBus.TriggerEvent(new OperationReopenEvent(context, Sender));
+            }
+            // 无额外回合：TurnFinished==true，驱动循环分支②结束回合
         }
     }
 }

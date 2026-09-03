@@ -22,7 +22,7 @@ MonoBehaviour:
       animationType: 1
       loop: 1
       isDefault: 1
-      transitionInTime: 0.05
+      transitionInTime: 0.15
       normalizedTimeOffset: 0
       ignores: []
       isSwitchDefault: 0
@@ -33,7 +33,7 @@ MonoBehaviour:
       animationType: 2
       loop: 1
       isDefault: 0
-      transitionInTime: 0
+      transitionInTime: 0.15
       normalizedTimeOffset: 0
       ignores: []
       isSwitchDefault: 0
@@ -44,7 +44,7 @@ MonoBehaviour:
       animationType: 3
       loop: 0
       isDefault: 0
-      transitionInTime: 0
+      transitionInTime: 0.2
       normalizedTimeOffset: 0
       ignores:
       - ignoreType: 1

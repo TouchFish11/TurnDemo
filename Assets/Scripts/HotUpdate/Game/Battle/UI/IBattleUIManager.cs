@@ -195,5 +195,7 @@ namespace HotUpdate.Game.Battle.UI
         /// <param name="context"></param>
         /// <returns></returns>
         Task InitActionbarContent(IBattleContext context);
+
+        void SetActionBarActive(bool isActive);
     }
 }

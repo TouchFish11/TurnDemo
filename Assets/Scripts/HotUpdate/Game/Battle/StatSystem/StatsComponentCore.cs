@@ -12,7 +12,6 @@ namespace HotUpdate.Game.Battle.StatSystem
     public class StatsComponentCore : ComponentCore<StatsComponent>
     {
         [Inject] private StatFactory _statFactory;
-        [Inject] private StatModifierFactory _statModifierFactory;
         
         /// <summary>
         /// 属性配置提供器
@@ -79,8 +78,7 @@ namespace HotUpdate.Game.Battle.StatSystem
         /// <returns></returns>
         public bool RemoveBaseStatModifier(EStatType statType, long modifierId, out IStatModifier modifier)
         {
-            var stat = StatSet.Stats[statType];
-            var remove = stat.RemoveBaseModifier(modifierId, out modifier);
+            var remove = StatSet.Stats[statType].RemoveBaseModifier(modifierId, out modifier);
             return remove;
         }
         
@@ -151,10 +149,14 @@ namespace HotUpdate.Game.Battle.StatSystem
             return StatSet.Stats[type].FinalValue;
         }
 
-        protected override void OnDispose()
+        /// <summary>
+        /// 清理属性
+        /// </summary>
+        public void ClearStats()
         {
-            _statFactory = null;
+            StatSet.Stats.Clear();
             StatSet = null;
+            _statFactory = null;
             StatSetProvider = null;
         }
     }

@@ -41,7 +41,12 @@ namespace HotUpdate.Game.Battle.StatSystem.Modifiers
         {
             return _value;
         }
-        
+
+        public virtual void Reset()
+        {
+            
+        }
+
         /// <summary>
         /// 执行内容变化事件
         /// </summary>

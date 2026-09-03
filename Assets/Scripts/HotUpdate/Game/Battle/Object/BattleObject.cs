@@ -1,17 +1,12 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using Core.DI;
-using Core.Exceptions;
-using Core.Log;
 using HotUpdate.Base.ECModule;
 using HotUpdate.Game.Battle.Command;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Event.General;
+using HotUpdate.Game.Battle.Event.Turn;
 using HotUpdate.Game.Battle.Object.Conditions;
-using HotUpdate.Game.Battle.Object.Role;
-using HotUpdate.Game.Battle.Object.StateMeachine;
 using HotUpdate.Game.Battle.ResponsibilityChain;
 using HotUpdate.Game.Battle.Skill.Conditions;
 using HotUpdate.Game.Battle.Skill.Factory;
@@ -19,7 +14,6 @@ using HotUpdate.Game.Battle.StatSystem;
 using HotUpdate.Game.Battle.TargetSelect;
 using HotUpdate.Game.Battle.UI;
 using UnityEngine;
-using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.Battle.Object
 {
@@ -29,24 +23,22 @@ namespace HotUpdate.Game.Battle.Object
     /// </summary>
     public abstract class BattleObject : EntityObject, IBattleEntityObject, IDisplayPendingExecution
     {
-        private bool _hasAction; // 行动预算：本回合是否还有行动次数
-        private bool _actable; // 行动资格：是否被眩晕/死亡剥夺
-        private bool _acting; // 是否正在演出技能
+        private bool _hasAction;            // 行动预算：本回合是否还有行动次数
+        private bool _actable;              // 行动资格：是否被眩晕/死亡剥夺
+        private bool _acting;               // 是否正在演出技能
+        private bool _pendingExtraTurn;     // 是否有额外回合
 
         protected ICastSkillConditionFactory castSkillConditionFactory; // 技能释放条件工厂
         protected ITargetSelectStrategyFactory targetSelectStrategyFactory; // 目标选择策略工厂
         protected Commandfactory commandfactory; // 命令工厂
         protected IDeathHandler deathHandler; // 死亡处理器
         protected Handler<DamageResult> damageChain; // 伤害处理
-
-        private readonly Dictionary<EActPhase, ITurnState> _turnStates = new(); // 角色回合阶段状态缓存
-        private ITurnState _currentState; // 当前实体所处的行动状态
         protected List<IDeathCondition> _deathConditions; // 死亡条件缓存
-        private ITurnActionDriver _turnActionDriver; // 回合操作驱动对象
         
         public bool CanAct => _hasAction && _actable;
         public bool Acting => _acting;
         public bool TurnFinished => !CanAct && !_acting;
+        public ITurnActionDriver TurnActionDriver { get; private set; }
         public IBattleContext Context { get; protected set; }
         public float ActionValue { get; set; }
         public int BattleEntityId { get; private set; }
@@ -77,13 +69,10 @@ namespace HotUpdate.Game.Battle.Object
             castSkillConditionFactory = parameter.CastSkillConditionFactory;
             targetSelectStrategyFactory = parameter.TargetSelectStrategyFactory;
             deathHandler = parameter.DeathHandler;
-            _turnActionDriver = parameter.TurnActionDriver;
+            TurnActionDriver = parameter.TurnActionDriver;
             SkillFactory = GetSkillFactory();
             DefaultTargetSelectStrategy = GetTargetSelectStrategy();
             DefaultCastCondition = GetSkillCondition();
-            AddState(EActPhase.TurnStart);
-            AddState(EActPhase.Executing);
-            AddState(EActPhase.TurnEnd);
         }
 
         /// <summary>
@@ -103,48 +92,6 @@ namespace HotUpdate.Game.Battle.Object
         /// </summary>
         /// <returns></returns>
         protected abstract ITargetSelectStrategy GetTargetSelectStrategy();
-
-        /// <summary>
-        /// 添加状态方法
-        /// </summary>
-        /// <param name="phase"></param>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        protected void AddState(EActPhase phase)
-        {
-            switch (phase)
-            {
-                case EActPhase.TurnStart:
-                    _turnStates.TryAdd(EActPhase.TurnStart, DIContainer.Create<TurnStartState>(this, GetTurnStartNode()));
-                    break;
-                case EActPhase.Executing:
-                    _turnStates.TryAdd(EActPhase.Executing,
-                        DIContainer.Create<TurnExecutingState>(this, _turnActionDriver));
-                    break;
-                case EActPhase.TurnEnd:
-                    _turnStates.TryAdd(EActPhase.TurnEnd, DIContainer.Create<TurnEndState>(this));
-                    break;
-                case EActPhase.None:
-                default:
-                    throw ExceptionHelper.Throw<ArgumentOutOfRangeException>($"{nameof(EActPhase)}:{phase}");
-            }
-        }
-        
-        protected abstract ITurnStartNode GetTurnStartNode();
-
-        public async void ChangeState(EActPhase eActPhase)
-        {
-            try
-            {
-                if (_currentState != null)
-                    await _currentState.Exit();
-                _currentState = _turnStates[eActPhase];
-                await _currentState.Enter();
-            }
-            catch (Exception e)
-            {
-                Logger.LogException(ELogTags.Battle, e);
-            }
-        }
         
         /// <summary>
         /// 消耗行动预算：必须在 InsertCommandEvent 之前调用
@@ -174,7 +121,9 @@ namespace HotUpdate.Game.Battle.Object
         public void ExecuteAction()
         {
             GrantTurn();
-            ChangeState(EActPhase.TurnStart);
+
+            var turnStartCommand = commandfactory.GetTurnStartCommand(this);
+            Context.EventBus.TriggerEvent(new InsertCommandEvent(Context, turnStartCommand));
             return;
             
             // 授予回合
@@ -184,6 +133,33 @@ namespace HotUpdate.Game.Battle.Object
                 _actable = true;
                 _acting = false;
             }
+        }
+        
+        /// <summary>
+        /// 额外回合用：重新授予行动预算（不重新结算）
+        /// </summary>
+        public void GrantAction()
+        {
+            _hasAction = true;
+        }
+        
+        /// <summary>
+        /// 额外回合判定：技能释放期间置位（如击杀触发），后处理时消费
+        /// </summary>
+        public void MarkExtraTurn()
+        {
+            _pendingExtraTurn = true;
+        }
+        
+        /// <summary>
+        /// 尝试消耗额外回合
+        /// </summary>
+        /// <returns></returns>
+        public bool TryConsumeExtraTurn()
+        {
+            var v = _pendingExtraTurn; 
+            _pendingExtraTurn = false; 
+            return v;
         }
 
         public void AddDeathCondition(IDeathCondition condition)

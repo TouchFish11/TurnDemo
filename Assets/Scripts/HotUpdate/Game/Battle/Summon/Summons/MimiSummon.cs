@@ -1,7 +1,5 @@
-using System.Collections.Generic;
 using System.ComponentModel;
 using HotUpdate.Game.Battle.Object;
-using HotUpdate.Game.Battle.Object.StateMeachine;
 using HotUpdate.Game.Battle.Skill.Conditions;
 using HotUpdate.Game.Battle.Skill.Factory;
 using HotUpdate.Game.Battle.TargetSelect;
@@ -28,12 +26,7 @@ namespace HotUpdate.Game.Battle.Summon.Summons
         {
             throw new System.NotImplementedException();
         }
-
-        protected override ITurnStartNode GetTurnStartNode()
-        {
-            throw new System.NotImplementedException();
-        }
-
+        
         public void Init(IBattleEntityObject owner)
         {
             Owner = owner;
@@ -43,7 +36,7 @@ namespace HotUpdate.Game.Battle.Summon.Summons
 
         public bool GetBattleComponent<TComponent>(out TComponent component) where TComponent : IComponent
         {
-            var isTrue = TryGetComponent<TComponent>(out TComponent c);
+            var isTrue = TryGetComponent<TComponent>(out var c);
             component = c;
             return isTrue;
         }

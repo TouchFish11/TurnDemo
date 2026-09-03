@@ -11,15 +11,18 @@ namespace HotUpdate.UI.Battle.ActionLine
     /// </summary>
     public class ActionGridUI : UIBehaviourBase, ILogicView<ActionGridUI, ActionGridLogic>
     {
+        [InjectUI] public Button btnClick;
         // 选中状态的背景图片
         [InjectUI] public Image imgSelect;
         // 行动格子的图标图片
         [InjectUI] public Image imgIcon;
         // 行动值显示文本
         [InjectUI] public TextMeshProUGUI txtActionValue;
+        [InjectUI] public RectTransform ClickSelect;
+        
         /// 闪烁特效的根节点
         [InjectUI(1)] public RectTransform Flashing { get; set; }
-        
+
         // 选中框水平移动的范围
         [SerializeField] public float moveRange = 3f;
         // 选中框移动的速度
@@ -74,6 +77,7 @@ namespace HotUpdate.UI.Battle.ActionLine
             imgSelect.gameObject.SetActive(false);
             Images = Flashing.GetComponentsInChildren<Image>();
             Flashing.gameObject.SetActive(false);
+            ClickSelect.gameObject.SetActive(false);
         }
 
         public void Init(ActionGridLogic logic)
@@ -118,9 +122,26 @@ namespace HotUpdate.UI.Battle.ActionLine
             _actionGridLogic.SetSlideTarget(targetIndex);
         }
 
+        /// <summary>
+        /// 点击的选中，其它的隐藏，互斥
+        /// </summary>
+        /// <param name="isSelect"></param>
+        public void SetClickSelect(bool isSelect)
+        {
+            ClickSelect.gameObject.SetActive(isSelect);
+        }
+
+        protected override void OnButtonClick(string btnName)
+        {
+            if (btnName == nameof(btnClick))
+            {
+                SetClickSelect(true);
+            }
+        }
+
         protected override void OnDisable()
         {
-            _actionGridLogic.Dispose();
+            _actionGridLogic?.Dispose();
         }
     }
 }

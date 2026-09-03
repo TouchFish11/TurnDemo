@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Threading.Tasks;
 using Core.DI;
 using Core.Mono;
 using Core.Tasks;
@@ -17,6 +18,7 @@ namespace HotUpdate.Game.Battle.StateMeachine
     /// </summary>
     public class EnterAnimationState : BattleState
     {
+        [Inject] private IBattleManager _battleManager;
         [Inject] private IMonoAdapter _monoAdapter;
         [Inject] private IBattleCameraManager _battleCameraManager;
         
@@ -25,12 +27,7 @@ namespace HotUpdate.Game.Battle.StateMeachine
             
         }
 
-        public override void Enter()
-        {
-            _monoAdapter.StartCoroutine(PlayEnterAnimation());
-        }
-        
-        private IEnumerator PlayEnterAnimation()
+        public override async void Enter()
         {
             var controller = (IBattleController)uiService.GetPanel(EUIPanelId.BattlePanel);
             // 显示战斗开始协程
@@ -39,12 +36,9 @@ namespace HotUpdate.Game.Battle.StateMeachine
             // TODO：创建入场特效
             // ...
             
-            // 设置相机mask
-            var mask = LayerGeter.GetPreBitLayer() | LayerGeter.GetMonsterBitLayer();
-            // 调整相机视角，Task转协程
-            yield return TaskUtility.WaitForTask(_battleCameraManager.CreateCamera(null, new Vector3(0, 1, -3.5f), Quaternion.identity, mask));
-            // 延迟2秒
-            yield return new WaitForSeconds(1f);
+            // 延迟1秒
+            await Task.Delay(1000);
+            controller.BattleUiManager.SetActionBarActive(true);
             BattleStateMachine.ChangeState(EBattlePhase.TurnLoop);
         }
 

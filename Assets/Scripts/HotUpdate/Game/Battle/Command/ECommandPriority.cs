@@ -1,24 +1,29 @@
 namespace HotUpdate.Game.Battle.Command
 {
     /// <summary>
-    /// 指令类型优先级
+    /// 命令类型优先级
     /// </summary>
     public enum ECommandPriority
     {
         /// <summary>
-        /// 韧性恢复
+        /// 回合开始命令使用
         /// </summary>
-        MonsterSkillWithToughnessRecovery = 1,
+        TurnStart,
         
         /// <summary>
-        /// 场外技
+        /// 怪物韧性恢复行动
         /// </summary>
-        OtcSkill,
+        MonsterActionWithToughnessRecovery = 1,
         
         /// <summary>
         /// 怪物特殊技能
         /// </summary>
         MonsterSpecialSkill,
+        
+        /// <summary>
+        /// 场外技
+        /// </summary>
+        OtcSkill,
         
         /// <summary>
         /// 追加攻击

@@ -206,7 +206,8 @@ namespace HotUpdate.Game.Animation.Component
             _currentLayersSnapshot.AddRange(_layers);
             foreach (var currentLayer in _currentLayersSnapshot)
             {
-                if(currentLayer.CurrentState == null)
+                var currentState = currentLayer.CurrentState;
+                if(currentState  == null || currentState.FinishedNotified)
                     continue;
                 
                 var config = currentLayer.CurrentState.Config;
@@ -216,6 +217,7 @@ namespace HotUpdate.Game.Animation.Component
                 if (config.loop || stateInfo.fullPathHash != config.animationHash || !(stateInfo.normalizedTime >= 1f)) 
                     continue;
                 
+                currentState.FinishedNotified = true;   // 只触发一次
                 // 再判断是否切换到当前层的默认动画状态
                 if(config.isSwitchDefault)
                 {

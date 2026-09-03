@@ -1,7 +1,11 @@
+using System;
+using System.Threading.Tasks;
+using Core.Log;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Statuses;
 using HotUpdate.Game.VFX;
 using UnityEngine;
+using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.Battle.Object.Role.Priest.Status
 {
@@ -11,14 +15,22 @@ namespace HotUpdate.Game.Battle.Object.Role.Priest.Status
     [StatusTypeId(301)]
     public class RejuvenationStatus : StatusBase
     {
-        protected override void OnTurnStart(IBattleEntityObject owner, IBattleContext context)
+        protected override async void OnTurnStart(IBattleEntityObject owner, IBattleContext context)
         {
-            StatusProperty.RemainingRound -= 1;
-            owner.TakeHeal(20);
-            CreateVFX();
+            try
+            {
+                StatusProperty.RemainingRound -= 1;
+                StatusProperty.CurrentPine -= 1;
+                owner.TakeHeal(20);
+                await CreateVFX();
+            }
+            catch (Exception e)
+            {
+                Logger.LogException(ELogTags.Battle, e);
+            }
         }
 
-        private async void CreateVFX()
+        private async Task CreateVFX()
         {
             // 产生特效
             var vfxInfo = poolManager.GetData<VFXInfo>();

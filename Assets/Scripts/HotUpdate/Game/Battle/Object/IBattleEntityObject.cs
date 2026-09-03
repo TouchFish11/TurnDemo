@@ -3,7 +3,6 @@ using HotUpdate.Base.ECModule;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Damage;
 using HotUpdate.Game.Battle.Object.Conditions;
-using HotUpdate.Game.Battle.Object.Role;
 using HotUpdate.Game.Battle.Skill.Conditions;
 using HotUpdate.Game.Battle.Skill.Factory;
 using HotUpdate.Game.Battle.TargetSelect;
@@ -74,6 +73,11 @@ namespace HotUpdate.Game.Battle.Object
         /// 本回合是否已结束（不能行动且不在演出）
         /// </summary>
         bool TurnFinished { get; }
+        
+        /// <summary>
+        /// 回合操作驱动对象
+        /// </summary>
+        ITurnActionDriver TurnActionDriver { get; }
 
         /// <summary>
         /// 执行行动
@@ -129,12 +133,6 @@ namespace HotUpdate.Game.Battle.Object
         /// <param name="condition"></param>
         /// <returns></returns>
         bool RemoveDeathCondition(IDeathCondition condition);
-
-        /// <summary>
-        /// 切换行动状态
-        /// </summary>
-        /// <param name="eActPhase"></param>
-        void ChangeState(EActPhase eActPhase);
         
         /// <summary>
         /// 技能演出结束（由技能后置处理器调用）
@@ -145,5 +143,21 @@ namespace HotUpdate.Game.Battle.Object
         /// 剥夺行动资格（眩晕/死亡等）
         /// </summary>
         void DisableAction();
+
+        /// <summary>
+        /// 额外回合用：重新授予行动预算（不重新结算）
+        /// </summary>
+        void GrantAction();
+
+        /// <summary>
+        /// 额外回合判定：技能释放期间置位（如击杀触发），后处理时消费
+        /// </summary>
+        void MarkExtraTurn();
+
+        /// <summary>
+        /// 尝试消耗额外回合
+        /// </summary>
+        /// <returns></returns>
+        bool TryConsumeExtraTurn();
     }
 }

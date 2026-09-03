@@ -117,6 +117,7 @@ namespace HotUpdate.UI.Inventory
         {
             _onClick = null;
             _item = null;
+            SetSelectFlag(false);
         }
         
         protected override void OnPointerEnter(PointerEventData eventData)

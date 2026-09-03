@@ -87,34 +87,44 @@ namespace HotUpdate.Game.Battle.StatSystem
 
         public void AddBaseModifier(IStatModifier modifier)
         {
-            _baseValueDirty = true;
-            _finalValueDirty = true;
-            modifier.OnChanged += OnBaseModifierChanged;
-            _baseValuemodifiers.Add(modifier.ModifierId, modifier);
+            if (_baseValuemodifiers.TryAdd(modifier.ModifierId, modifier))
+            {
+                _baseValueDirty = true;
+                _finalValueDirty = true;
+                modifier.OnChanged += OnBaseModifierChanged;
+            }
         }
         
         public bool RemoveBaseModifier(long modifierId, out IStatModifier modifier)
         {
-            _baseValueDirty = true;
-            _finalValueDirty = true;
-            var remove = _baseValuemodifiers.Remove(modifierId, out modifier);
-            modifier.OnChanged -= OnBaseModifierChanged;
-            return remove;
+            if (_baseValuemodifiers.Remove(modifierId, out modifier))
+            {
+                _baseValueDirty = true;
+                _finalValueDirty = true;
+                modifier.OnChanged -= OnBaseModifierChanged;
+                return true;
+            }
+            return false;
         }
         
         public void AddModifier(IStatModifier modifier)
         {
-            _finalValueDirty = true;
-            modifier.OnChanged += OnModifierChanged;
-            _finalValuemodifiers.Add(modifier.ModifierId, modifier);
+            if (_finalValuemodifiers.TryAdd(modifier.ModifierId, modifier))
+            {
+                _finalValueDirty = true;
+                modifier.OnChanged += OnModifierChanged;
+            }
         }
 
         public bool RemoveModifier(long modifierId, out IStatModifier modifier)
         {
-            _finalValueDirty = true;
-            var remove = _finalValuemodifiers.Remove(modifierId, out modifier);
-            modifier.OnChanged -= OnModifierChanged;
-            return remove;
+            if (_finalValuemodifiers.Remove(modifierId, out modifier))
+            {
+                _finalValueDirty = true;
+                modifier.OnChanged -= OnModifierChanged;
+                return true;
+            }
+            return false;
         }
 
         public bool TryGetModifier(long id, out IStatModifier modifier)

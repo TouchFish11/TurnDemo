@@ -16,6 +16,8 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Status
         protected override void OnAdd()
         {
             Owner.TakeSheild(350);
+            var statModifier = modifierFactory.Create(EModifierType.Flat, 50 * StatusProperty.CurrentPine, out modifierId);
+            OwnerStatsComponent.AddFinalStat(EStatType.Def, statModifier);
         }
 
         protected override void OnTurnEnd(IBattleEntityObject owner, IBattleContext context)
@@ -28,11 +30,6 @@ namespace HotUpdate.Game.Battle.Object.Role.Warrior.Status
             if (OwnerStatsComponent.TryGetModifier(EStatType.Def, modifierId, out var modifier))
             {
                 ((StatModifier)modifier).SetValue(50 * StatusProperty.CurrentPine);
-            }
-            else
-            {
-                var statModifier = modifierFactory.Create(EModifierType.Flat, 50 * StatusProperty.CurrentPine, out modifierId);
-                OwnerStatsComponent.AddFinalStat(EStatType.Def, statModifier);
             }
         }
 

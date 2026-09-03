@@ -56,6 +56,7 @@ namespace HotUpdate.Game.Battle.StatSystem.Modifiers
             if(statModifier == null)
                 throw ExceptionHelper.Throw<ArgumentNullException>(nameof(statModifier));
             
+            statModifier.Reset();
             if (_modifiers.TryGetValue(statModifier.ModifierType, out var statModifiers))
             {
                 statModifiers.Push(statModifier);

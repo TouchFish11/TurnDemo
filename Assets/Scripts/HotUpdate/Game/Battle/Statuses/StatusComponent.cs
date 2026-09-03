@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using Core.Exceptions;
 using HotUpdate.Base.ECModule;
 using HotUpdate.Game.Battle.Core;
 using HotUpdate.Game.Battle.Event.UI;
+using HotUpdate.Game.Battle.StatSystem;
 
 namespace HotUpdate.Game.Battle.Statuses
 {
@@ -97,10 +99,12 @@ namespace HotUpdate.Game.Battle.Statuses
             return false;
         }
         
+        /// 
         /// <summary>
         /// 添加状态
         /// </summary>
         /// <param name="status">要添加的状态</param>
+        /// <exception cref="ArgumentOutOfRangeException"><see cref="EConflictType"/>未被处理时抛出</exception>
         public void AddStatus(IStatus status)
         {
             // 根据冲突类型处理状态添加
@@ -116,7 +120,7 @@ namespace HotUpdate.Game.Battle.Statuses
                     CoverOnConflict(status);
                     break;
                 default:
-                    throw ExceptionHelper.Throw($"Unknown conflict type({status})");
+                    throw ExceptionHelper.Throw<ArgumentOutOfRangeException>($"Unknown conflict type({status})");
             }
 
             // 触发状态添加事件
@@ -172,8 +176,14 @@ namespace HotUpdate.Game.Battle.Statuses
         
         protected override void OnBattleDestroy()
         {
+            foreach (var statuse in _statuses)
+            {
+                statuse.IsValid = false;
+            }
             _statuses.Clear();
             _statuses = null;
+            // 执行属性系统的清理
+            BattleEntity.GetComponent<StatsComponent>().ClearStats();
         }
     }
 }

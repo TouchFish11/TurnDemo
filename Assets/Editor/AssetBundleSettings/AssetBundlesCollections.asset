@@ -105,12 +105,12 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\Animator\Role\PriestController.controller
       size: 15519
       name: PriestController.controller
-      hash: 0c6a58115ebdc941ab7f226521a4070deb7db23255355ea9d9e410a413169bd6
+      hash: c53c9ff6d3d6df3f7d9807516456ef3bf21bb71cc238c74f928cd218e48b8c68
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Animator\Role\WarriorController.controller
-      size: 15579
+      size: 15560
       name: WarriorController.controller
-      hash: 1a4f0ca5148f5f12d63b0ec21c8d833ef1befb10aa24b6562f044f6afa15a843
+      hash: 1835bf7a21b2f6feef4305bcd9e1a9a9e80dee38bb892e23d2af6b72b47ed7c1
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Animator\Role\WizardController.controller
       size: 14058
@@ -326,9 +326,9 @@ MonoBehaviour:
       hash: 4ad50f00afd94ccd46dcec6aff02b93accb3223b11c5497e34972fb36d9141e2
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\Animation\Role\WarriorAnimationConfigCollection.json
-      size: 13334
+      size: 13335
       name: WarriorAnimationConfigCollection.json
-      hash: eb5cc436dd2193aec951d60503d6bca79d46ce23bfba8db2e207bd333d10ec55
+      hash: cbf909ed9cc2d82e62f69775fe91a57abf8f1116d6d44dc4963315bc4e99fefd
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\Animation\Role\WizardAnimationConfigCollection.json
       size: 11736
@@ -488,9 +488,9 @@ MonoBehaviour:
   - assetBundleName: scene
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\Scene\BeginScene.unity
-      size: 27376
+      size: 24362
       name: BeginScene.unity
-      hash: 9975b31f182fe67d6f8f93d480787a83f7233cf9254ac67f88a85daf38c06150
+      hash: b139c9f7a08584893acedea68e71f0d54a4f9a38bf168cd84f1097bb3f8e6037
       assetType: 1
     - assetPath: Assets\Editor\ArtRes\Scene\LevelScene.unity
       size: 117066

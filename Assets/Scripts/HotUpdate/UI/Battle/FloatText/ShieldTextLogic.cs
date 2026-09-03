@@ -26,5 +26,10 @@ namespace HotUpdate.UI.Battle.FloatText
             }
             StartUpdate();
         }
+        
+        public override void Dispose()
+        {
+            _poolManager.PushData(this);
+        }
     }
 }

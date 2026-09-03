@@ -62,7 +62,7 @@ namespace HotUpdate.UI.Battle.ActionLine
 
         protected override void OnDisable()
         {
-            _logic.Dispose();
+            _logic?.Dispose();
         }
     }
 }

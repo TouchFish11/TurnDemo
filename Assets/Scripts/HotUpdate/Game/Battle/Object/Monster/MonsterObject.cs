@@ -1,7 +1,5 @@
-using Core.DI;
 using Core.Utility;
 using HotUpdate.Game.Battle.Event.Turn;
-using HotUpdate.Game.Battle.Object.StateMeachine;
 using HotUpdate.Game.Battle.ResponsibilityChain.DamageChain;
 using HotUpdate.Game.Battle.Skill.Component;
 using HotUpdate.Game.Battle.Skill.Conditions;
@@ -42,11 +40,6 @@ namespace HotUpdate.Game.Battle.Object.Monster
         public void SetMonsterInfo(MonsterInfo monsterInfo)
         {
             MonsterInfo = monsterInfo;
-        }
-
-        protected override ITurnStartNode GetTurnStartNode()
-        {
-            return DIContainer.Create<MonsterTurnStartNode>();
         }
 
         protected override ICastSkillCondition GetSkillCondition()

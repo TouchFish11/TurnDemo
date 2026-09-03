@@ -138,6 +138,7 @@ namespace HotUpdate.UI.Inventory
         {
             try
             {
+                _currentItem = null;
                 // 先通知当前状态执行逻辑
                 _currentInventoryState?.OnBeforeRefreshItem();
                 // 根据当前数据创建，先 await，避免惯性滚动触发创建

@@ -2,15 +2,18 @@ using System;
 using System.Collections.Generic;
 using Core.DI;
 using Core.Log;
-using Core.Mono;
 using Core.Tasks;
 using Core.UI;
 using HotUpdate.Base.UI;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Core;
+using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Turn;
 using HotUpdate.Game.Battle.UI;
+using HotUpdate.Game.Battle.Utility;
+using UnityEngine;
+using Logger = Core.Log.Logger;
 
 namespace HotUpdate.Game.Battle.StateMeachine
 {
@@ -20,8 +23,8 @@ namespace HotUpdate.Game.Battle.StateMeachine
     public class PreparationState : BattleState
     {
         [Inject] private IBattleManager _battleManager;
-        [Inject] private IMonoAdapter _monoAdapter;
         [Inject] private IBattlePointProxy _battlePointProxy;
+        [Inject] private IBattleCameraManager _battleCameraManager;
         
         public PreparationState(IBattleStateMachine battleStateMachine, IBattleContext context) : base(battleStateMachine, context)
         {
@@ -46,10 +49,9 @@ namespace HotUpdate.Game.Battle.StateMeachine
                 // 更新战技点UI
                 await battleController.BattleUiManager.UpdateBattlePointCount(Context.CurentBattlePointCount, Context.MaxBattlePointCount);
                 // 更新波次
-                await TaskUtility.WaitForCoroutine(_battleManager.BattleService.UpdateWave(), _monoAdapter);
+                await _battleManager.BattleService.UpdateWaveWithoutPerformance();
                 // 隐藏加载界面
                 await uiService.CloseAsync(uiService.GetPanel(EUIPanelId.BattleLoadingkPanel).PanelId, true);
-
                 BattleStateMachine.ChangeState(EBattlePhase.EnterAnimation);
             }
             catch (Exception e)
@@ -67,7 +69,6 @@ namespace HotUpdate.Game.Battle.StateMeachine
         {
             _battleManager = null;
             _battlePointProxy = null;
-            _monoAdapter = null;
         }
     }
 }

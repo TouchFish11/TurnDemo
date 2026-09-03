@@ -38,13 +38,14 @@ namespace HotUpdate.Game.Battle.Statuses
             get => _isValid;
             set
             {
-                _isValid = value;
-                if (value)
+                if (value && !_isValid)
                 {
+                    _isValid = true;
                     OnAdd(); // 状态生效时执行添加逻辑
                 }
-                else
+                else if(!value && _isValid)
                 {
+                    _isValid = false;
                     OnRemove(); // 状态失效时执行移除逻辑
                 }
             }
@@ -100,6 +101,11 @@ namespace HotUpdate.Game.Battle.Statuses
         public virtual void TurnStart(IBattleEntityObject owner, IBattleContext context)
         {
             OnTurnStart(owner, context); // 执行子类自定义的回合开始逻辑
+            // 判定剩余回合/层数是否满足生效条件，不满足则失效
+            if (StatusProperty.RemainingRound <= 0 || StatusProperty.CurrentPine <= 0)
+            {
+                IsValid = false;
+            }
         }
 
         /// <summary>

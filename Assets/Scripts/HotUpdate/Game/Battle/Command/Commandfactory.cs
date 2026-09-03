@@ -1,5 +1,6 @@
 using Core.DI;
 using Core.Pool;
+using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Object.Monster;
 using HotUpdate.Game.Battle.Skill.Base;
 
@@ -29,6 +30,13 @@ namespace HotUpdate.Game.Battle.Command
             var monsterActionCommand = poolManager.GetData<MonsterActionCommand>();
             monsterActionCommand.Init((IMonsterObject)skillCommand.Sender, skillCommand);
             return monsterActionCommand;
+        }
+
+        public TurnStartCommand GetTurnStartCommand(IBattleEntityObject battleEntity)
+        {
+            var turnStartCommand = poolManager.GetData<TurnStartCommand>();
+            turnStartCommand.Init(battleEntity);
+            return turnStartCommand;
         }
         
         //...

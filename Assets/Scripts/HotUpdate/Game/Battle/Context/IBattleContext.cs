@@ -74,6 +74,11 @@ namespace HotUpdate.Game.Battle.Context
         float CurrentRoundRemainAv { get; }
 
         /// <summary>
+        /// 战斗是否结束
+        /// </summary>
+        bool IsOver { get; set; }
+
+        /// <summary>
         /// 初始化战斗上下文
         /// </summary>
         /// <param name="eventBus"></param>

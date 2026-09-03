@@ -33,7 +33,6 @@ namespace HotUpdate.Game.Battle.Core
         {
             // 战斗特有清理
             OnBattleDestroy();
-            BattleEntity = null;
             // 通用清理
             base.OnBaseDestroy();
         }

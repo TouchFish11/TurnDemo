@@ -1,7 +1,5 @@
-using Core.DI;
 using Core.Utility;
 using HotUpdate.Game.Battle.Event.Turn;
-using HotUpdate.Game.Battle.Object.StateMeachine;
 using HotUpdate.Game.Battle.ResponsibilityChain.DamageChain;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.Skill.Component;
@@ -39,11 +37,6 @@ namespace HotUpdate.Game.Battle.Object.Role
         public void SetRoleInfo(RoleInfo roleInfo)
         {
             RoleInfo = roleInfo;
-        }
-
-        protected override ITurnStartNode GetTurnStartNode()
-        {
-            return DIContainer.Create<RoleTurnStartNode>();
         }
 
         protected override ICastSkillCondition GetSkillCondition()
