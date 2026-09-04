@@ -10,7 +10,7 @@ namespace Core.UI
     /// UIBehaviour基类
     /// 对原生UIBehaviour的封装
     /// </summary>
-    public abstract class UIBehaviourBase : UIBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler, IPointerMoveHandler, IPointerDownHandler, IPointerUpHandler
+    public abstract class UIBehaviourBase : UIBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerMoveHandler
     {
         // UI组件绑定器
         protected UIComponentBinder binder;
@@ -67,33 +67,12 @@ namespace Core.UI
         
         protected virtual void OnPointerExit(PointerEventData eventData){ }
 
-        void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
-        {
-            OnPointerClick(eventData);
-        }
-        
-        protected virtual void OnPointerClick(PointerEventData eventData){ }
-
         void IPointerMoveHandler.OnPointerMove(PointerEventData eventData)
         {
             OnPointerMove(eventData);
         }
         
         protected virtual void OnPointerMove(PointerEventData eventData){ }
-
-        void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
-        {
-            OnPointerDown(eventData);
-        }
-        
-        protected virtual void OnPointerDown(PointerEventData eventData){ }
-
-        void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
-        {
-            OnPointerUp(eventData);
-        }
-        
-        protected virtual void OnPointerUp(PointerEventData eventData){ }
         
         protected override void OnDestroy()
         {

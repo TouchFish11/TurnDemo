@@ -16,28 +16,39 @@ namespace HotUpdate.UI.Battle.Base
     /// <summary>
     /// 战斗界面
     /// </summary>
-    public class BattleView : UIView, IBeginDragHandler, IDragHandler, IEndDragHandler
+    public class BattleView : UIView, IBeginDragHandler, IDragHandler, IEndDragHandler, 
+        IPointerDownHandler, IPointerClickHandler, IPointerUpHandler
     {
         #region UI组件
 
         [InjectUI] private ScrollRect svActionbar;
         [InjectUI] private ScrollRect svPoint;
         [InjectUI] private ScrollRect svWaitQueueArea;
+        [InjectUI] private ScrollRect svStauts;
 
         [InjectUI] private TextMeshProUGUI txtCount;
         [InjectUI] private TextMeshProUGUI txtDmg;
         [InjectUI] private TextMeshProUGUI txtActingTip;
         [InjectUI] private TextMeshProUGUI txtUltimateTip;
         [InjectUI] private TextMeshProUGUI txtTitle;
+        [InjectUI] private TextMeshProUGUI txtAv;
+        [InjectUI] private TextMeshProUGUI txtName;
 
         [InjectUI] private Image imgActingIcon;
         [InjectUI] private Image imgIcon;
+
+        [InjectUI] public Button btnClose;
         
         /// <summary>
         /// 操作区域根节点
         /// </summary>
         [InjectUI(1)] public RectTransform OperatorArea { get; private set; }
 
+        /// <summary>
+        /// 行动轴状态显示区域
+        /// </summary>
+        [InjectUI(1)] public RectTransform ActionStatusArea { get; private set; }
+        
         /// <summary>
         /// 我方状态根节点
         /// </summary>
@@ -119,6 +130,16 @@ namespace HotUpdate.UI.Battle.Base
         /// 选择标记UI列表
         /// </summary>
         public List<SelectMarkerUI> SelectMarkerUIs { get; } = new();
+
+        /// <summary>
+        /// 行动状态UI容器列表
+        /// </summary>
+        public List<ActionStatusUI> ActionStatusUis { get; } = new();
+        
+        /// <summary>
+        /// 状态描述提示UI列表
+        /// </summary>
+        public List<StatusTipUI> StatusTipUis { get; } = new();
         
         // 当前累计伤害
         private long currentCalcDamage;
@@ -149,6 +170,11 @@ namespace HotUpdate.UI.Battle.Base
         public RectTransform WaitQueueContent => svWaitQueueArea.content;
 
         /// <summary>
+        /// Buff对象的根对象
+        /// </summary>
+        public RectTransform StautsContent => svStauts.content;
+
+        /// <summary>
         /// 技能按键组
         /// </summary>
         public ToggleGroup SkillKeyGroup => binder.GetControl<ToggleGroup>(nameof(OperatorArea));
@@ -170,6 +196,7 @@ namespace HotUpdate.UI.Battle.Base
             BattleStateTipArea.gameObject.SetActive(false);
             TotalDmgArea.gameObject.SetActive(false);
             PaintingDisplayArea.gameObject.SetActive(false);
+            ActionStatusArea.gameObject.SetActive(false);
 
             ActingTipUI = ActingTipArea.gameObject.AddComponent<ActingTipUI>();
             ActionExecuteGridUI = ActionBarContent.GetComponentInChildren<ActionExecuteGridUI>(true);
@@ -262,12 +289,31 @@ namespace HotUpdate.UI.Battle.Base
 
             return currentCalcDamage;
         }
-        
-        protected override void OnPointerDown(PointerEventData eventData)
+
+        public void SetActionStatusInfo(float av, string name)
+        {
+            txtAv.text = $"行动值{(int)av}";
+            txtName.text = name;
+        }
+
+        public void OnPointerDown(PointerEventData eventData)
         {
             // 仅处理左键/主键；eventData.pressPosition 已经是按下坐标，无需手动记录
             if (eventData.button != PointerEventData.InputButton.Left) 
                 return;
+        }
+        
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            // 只有"按下后未拖动就松开"才会走到这里
+            if (eventData.button != PointerEventData.InputButton.Left) 
+                return;
+            OnClick?.Invoke();
+        }
+        
+        public void OnPointerUp(PointerEventData eventData)
+        {
+            
         }
 
         public void OnBeginDrag(PointerEventData eventData)
@@ -302,14 +348,6 @@ namespace HotUpdate.UI.Battle.Base
             if (eventData.button != PointerEventData.InputButton.Left) 
                 return;
             OnRebound?.Invoke(true);
-        }
-
-        protected override void OnPointerClick(PointerEventData eventData)
-        {
-            // 只有"按下后未拖动就松开"才会走到这里
-            if (eventData.button != PointerEventData.InputButton.Left) 
-                return;
-            OnClick?.Invoke();
         }
     }
 }

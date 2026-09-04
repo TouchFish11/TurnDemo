@@ -9,9 +9,15 @@ namespace HotUpdate.Game.Battle.Statuses
         /// 增益效果
         /// </summary>
         Positive = 1,
+        
         /// <summary>
         /// 减益效果
         /// </summary>
         Negative,
+        
+        /// <summary>
+        /// 其它效果
+        /// </summary>
+        Other,
     }
 }

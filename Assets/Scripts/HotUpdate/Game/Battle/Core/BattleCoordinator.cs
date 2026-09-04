@@ -9,6 +9,7 @@ using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Layer;
 using HotUpdate.Game.Battle.Object;
+using HotUpdate.Game.Battle.Object.Monster;
 using HotUpdate.Game.Battle.Object.Role;
 using HotUpdate.Game.Battle.Operation;
 using HotUpdate.Game.Battle.Operation.Provider;
@@ -71,6 +72,11 @@ namespace HotUpdate.Game.Battle.Core
             _targetSelectManager.SelectAllTargets(OperationState.CurrentSkillInfo.f_skillRangeType);
             OperationState.LastTarget = _targetSelectManager.GetMainTarget();
             OperationState.LastTargets = _targetSelectManager.GetTargets();
+            // 怪物攻击：按攻击目标（角色）更新怪物整体位置，和该角色行动开始时一致
+            if (caster is IMonsterObject && OperationState.LastTarget is IRoleObject targetRole)
+            {
+                _battlePointProxy.UpdateMonsterPos(targetRole);
+            }
             // 触发目标选择变更事件，通知UI更新选中状态
             Context.EventBus.TriggerEvent(new SelectTargetEvent(Context, caster, _targetSelectManager.GetMainTarget(), _targetSelectManager.GetTargets()));
         }

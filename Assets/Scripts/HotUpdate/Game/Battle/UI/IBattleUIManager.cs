@@ -196,6 +196,19 @@ namespace HotUpdate.Game.Battle.UI
         /// <returns></returns>
         Task InitActionbarContent(IBattleContext context);
 
+        /// <summary>
+        /// 设置行动轴是否显示
+        /// </summary>
+        /// <param name="isActive"></param>
         void SetActionBarActive(bool isActive);
+
+        /// <summary>
+        /// 设置行动轴轴状态信息
+        /// </summary>
+        /// <param name="battleEntity"></param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        void SetActionStatusInfo(IBattleEntityObject battleEntity);
+
+        void ClearActionStatus();
     }
 }

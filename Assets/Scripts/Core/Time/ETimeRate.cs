@@ -7,7 +7,7 @@ namespace Core.Time
     public enum ETimeRate
     {
         /// <summary>
-        /// 恢复到上次的设置的缩放
+        /// 恢复到上次的设置的缩放，不能恢复到暂停
         /// </summary>
         Recovery = -1,
         

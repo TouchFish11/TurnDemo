@@ -3,6 +3,7 @@ using Core.Mono;
 using Core.Pool;
 using Core.Time;
 using Core.UI;
+using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Object;
 using UnityEngine;
 
@@ -46,6 +47,11 @@ namespace HotUpdate.UI.Battle.ActionLine
         /// </summary>
         public bool IsSelect { get; private set; }
         
+        /// <summary>
+        /// 当前格子是否处于点击状态
+        /// </summary>
+        public bool IsClick { get; private set; }
+        
         public void Init(ActionGridUI view, Sprite icon, float startX, float startY, int targetIndex, IBattleEntityObject battleEntity)
         {
             View = view;
@@ -70,6 +76,20 @@ namespace HotUpdate.UI.Battle.ActionLine
             SetFlashing();
             // 设置选中框状态
             SetSelecting();
+        }
+
+        public void SetClickSelect(bool isClick)
+        {
+            IsClick = isClick;
+            if (IsClick)
+            {
+                TriggerClick();
+            }
+        }
+
+        private void TriggerClick()
+        {
+            BattleEntity.Context.EventBus.TriggerEvent(new ActionGridClickEvent(BattleEntity.Context, BattleEntity));
         }
         
         /// <summary>

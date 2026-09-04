@@ -66,7 +66,8 @@ namespace HotUpdate.UI.Battle.Base
             eventBus.AddListener<StatusAddedEvent>(OnStatusAddedEvent);       // 状态添加事件
             eventBus.AddListener<BattleOverEvent>(OnBattleOverEvent);         // 战斗结束事件
             eventBus.AddListener<EntityDeadEvent>(OnEntityDeadEvent);       // 实体死亡事件
-
+            eventBus.AddListener<ActionGridClickEvent>(OnActionGridClickEvent);       // 行动格子点击事件
+            
             _eventBus = eventBus;
         }
 
@@ -89,6 +90,7 @@ namespace HotUpdate.UI.Battle.Base
             _eventBus.RemoveListener<StatusAddedEvent>(OnStatusAddedEvent);       // 状态添加事件
             _eventBus.RemoveListener<BattleOverEvent>(OnBattleOverEvent);         // 战斗结束事件
             _eventBus.RemoveListener<EntityDeadEvent>(OnEntityDeadEvent);       // 实体死亡事件
+            _eventBus.RemoveListener<ActionGridClickEvent>(OnActionGridClickEvent);       // 行动格子点击事件
         }
 
         /// <summary>
@@ -151,6 +153,11 @@ namespace HotUpdate.UI.Battle.Base
             }
             
             _uiManager.SlidingActionGrids(entityDeadEvent.Context);
+        }
+
+        private void OnActionGridClickEvent(ActionGridClickEvent actionGridClickEvent)
+        {
+            _uiManager.SetActionStatusInfo(actionGridClickEvent.BattleEntity);
         }
 
         /// <summary>

@@ -108,14 +108,19 @@ MonoBehaviour:
       hash: c53c9ff6d3d6df3f7d9807516456ef3bf21bb71cc238c74f928cd218e48b8c68
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Animator\Role\WarriorController.controller
-      size: 15560
+      size: 15688
       name: WarriorController.controller
-      hash: 1835bf7a21b2f6feef4305bcd9e1a9a9e80dee38bb892e23d2af6b72b47ed7c1
+      hash: 8f1934f88680692a95184ac482e94edd0d489d90c68ea0eb18481d1a0dbe2ab4
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Animator\Role\WizardController.controller
       size: 14058
       name: WizardController.controller
       hash: a0a0a8935ca3bf048a5168207b688578fdf6eed214a837e921e48d4dd5fdaf8f
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\Animator\Test\Warrior.controller
+      size: 11335
+      name: Warrior.controller
+      hash: d359975ca1bca8be1f91d88075e6277c23a5c036fcf4a46922a1ad3712d94325
       assetType: 0
   - assetBundleName: camera
     assetInfos:
@@ -488,9 +493,9 @@ MonoBehaviour:
   - assetBundleName: scene
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\Scene\BeginScene.unity
-      size: 24362
+      size: 118454
       name: BeginScene.unity
-      hash: b139c9f7a08584893acedea68e71f0d54a4f9a38bf168cd84f1097bb3f8e6037
+      hash: 69634286410d9e958d7dcab59cc5899e18a7c00baa3ab11cd2c5b5216cfa95b5
       assetType: 1
     - assetPath: Assets\Editor\ArtRes\Scene\LevelScene.unity
       size: 117066
@@ -572,9 +577,9 @@ MonoBehaviour:
   - assetBundleName: tmp_asset
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\TMP_Asset\MSYH_SDF.asset
-      size: 8522050
+      size: 8555837
       name: MSYH_SDF.asset
-      hash: a5d2b6d7a72301e8b4aa2a4c747665c9889ccc10dd61bd728494009204054ffb
+      hash: 08b7404fb17d19786a59e21fada19a725da7904690595113d439fd6c2386bdfe
       assetType: 0
   - assetBundleName: ui
     assetInfos:
@@ -659,9 +664,9 @@ MonoBehaviour:
       hash: d4adef4129a947cfdbb8cbe8f5a422d38e98828e39bf4ea336ec910a116fbd9f
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Battle\BattleView.prefab
-      size: 107600
+      size: 158556
       name: BattleView.prefab
-      hash: 2ca2700c37618de19e52dcb3c961928ce7b6c4f9e543de2a5ece3f3e09dbcbac
+      hash: 88799564da5ada104d1e08d719037b32c936c6707ba42521105905a34b036737
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Battle\SelectMarkerUI.prefab
       size: 17123
@@ -669,9 +674,19 @@ MonoBehaviour:
       hash: 40fb01220ac4ae1212a5c0764d740e2ceb7770909b38b934f90a39754e7f2c07
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Battle\ActionLine\ActionGridUI.prefab
-      size: 24522
+      size: 38180
       name: ActionGridUI.prefab
-      hash: 6b6e42a2a225e1d89b8d622215ffdf08eab83b279763a65691084a0b89229eb2
+      hash: e5cbecf4ed4750000b89c74641198d12a17d16dabcfaeda497e6ab88439ccb1c
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\UI\Battle\ActionLine\ActionStatusUI.prefab
+      size: 14002
+      name: ActionStatusUI.prefab
+      hash: 58befe53a48fc10043b96db169b636d155ae5b5f80ebceb388780b178ce30682
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\UI\Battle\ActionLine\StatusTipUI.prefab
+      size: 21553
+      name: StatusTipUI.prefab
+      hash: e90c565a81c8e7cd105b5b785211896bfb980a38c1ccef23b23f9e3abd71375a
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Battle\ActionLine\WaitingActUI.prefab
       size: 4839

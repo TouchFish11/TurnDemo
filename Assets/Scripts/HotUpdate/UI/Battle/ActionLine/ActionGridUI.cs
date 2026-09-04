@@ -18,10 +18,10 @@ namespace HotUpdate.UI.Battle.ActionLine
         [InjectUI] public Image imgIcon;
         // 行动值显示文本
         [InjectUI] public TextMeshProUGUI txtActionValue;
-        [InjectUI] public RectTransform ClickSelect;
         
         /// 闪烁特效的根节点
-        [InjectUI(1)] public RectTransform Flashing { get; set; }
+        [InjectUI(1)] public RectTransform Flashing { get; private set; }
+        [InjectUI(1)] public RectTransform ClickSelect { get; private set; }
 
         // 选中框水平移动的范围
         [SerializeField] public float moveRange = 3f;
@@ -60,7 +60,7 @@ namespace HotUpdate.UI.Battle.ActionLine
         /// 当前格子是否处于选中状态
         /// </summary>
         public bool IsSelect => _actionGridLogic.IsSelect;
-
+        
         /// <summary>
         /// 绑定的战斗实体对象
         /// </summary>
@@ -128,6 +128,7 @@ namespace HotUpdate.UI.Battle.ActionLine
         /// <param name="isSelect"></param>
         public void SetClickSelect(bool isSelect)
         {
+            _actionGridLogic.SetClickSelect(isSelect);
             ClickSelect.gameObject.SetActive(isSelect);
         }
 

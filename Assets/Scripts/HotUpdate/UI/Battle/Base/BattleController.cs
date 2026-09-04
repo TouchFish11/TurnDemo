@@ -2,6 +2,7 @@ using Core.DI;
 using Core.GlobalEvent;
 using Core.GlobalEvent.Events.ViewOperation;
 using Core.Log;
+using Core.Time;
 using Core.UI.ViewController;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.UI;
@@ -18,6 +19,7 @@ namespace HotUpdate.UI.Battle.Base
     public class BattleController : UIController<BattleView>, IBattleController
     {
         [Inject] private IEventCenter _eventCenter;
+        [Inject] private ITimerManager _timerManager;
         
         public IBattleUIInitializer UiInitializer { get; private set; }
         
@@ -84,6 +86,20 @@ namespace HotUpdate.UI.Battle.Base
             Logger.LogDebug(ELogTags.Battle, $"Battle init controller finished");
         }
 
+        protected override void OnButtonClick(string btnName)
+        {
+            if (btnName == nameof(view.btnClose))
+            {
+                view.ActionStatusArea.gameObject.SetActive(false);
+                foreach (var actionGridUi in view.ActionGridUis)
+                {
+                    actionGridUi.SetClickSelect(false);
+                }
+                
+                BattleUiManager.ClearActionStatus();
+                _timerManager.SetTimeRate(ETimeRate.Recovery);
+            }
+        }
 
         private void OnViewClick()
         {

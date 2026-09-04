@@ -21,6 +21,7 @@ public static class AssetKeys
     public const string PriestController = "PriestController";
     public const string WarriorController = "WarriorController";
     public const string WizardController = "WizardController";
+    public const string Warrior = "Warrior";
     public const string BattleCamera = "BattleCamera";
     public const string MainCamera = "MainCamera";
     public const string CubemapStars = "CubemapStars";
@@ -69,6 +70,7 @@ public static class AssetKeys
     public const string HotUpdate_Entry = "HotUpdate.Entry.dll";
     public const string HotUpdate_Game = "HotUpdate.Game.dll";
     public const string HotUpdate_UI = "HotUpdate.UI.dll";
+    public const string HotUpdateAssemblySettings = "HotUpdateAssemblySettings";
     public const string CoreModule = "CoreModule.dll";
     public const string mscorlib = "mscorlib.dll";
     public const string System_Core = "System.Core.dll";
@@ -415,8 +417,10 @@ public static class AssetKeys
     public const string SelectMarkerUI = "SelectMarkerUI";
     public const string ActionGridUI = "ActionGridUI";
     public const string WaitingActUI = "WaitingActUI";
+    public const string ActionStatusUI = "ActionStatusUI";
     public const string StatusEffectTextUI = "StatusEffectTextUI";
     public const string StatusGridUI = "StatusGridUI";
+    public const string StatusTipUI = "StatusTipUI";
     public const string DamageTextUI = "DamageTextUI";
     public const string HealTextUI = "HealTextUI";
     public const string ShieldTextUI = "ShieldTextUI";

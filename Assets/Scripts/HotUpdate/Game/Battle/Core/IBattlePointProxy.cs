@@ -33,5 +33,10 @@ namespace HotUpdate.Game.Battle.Core
 
         Transform GetRoleCameraRoot(RoleObject roleObject);
         Transform GetRoleTransByIndex(int index);
+
+        /// <summary>
+        /// 把怪物整体居中（怪物攻击、转波次特写等"看向怪物"的镜头用）
+        /// </summary>
+        void CenterMonsters();
     }
 }

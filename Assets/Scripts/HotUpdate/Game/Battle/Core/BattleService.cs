@@ -143,6 +143,8 @@ namespace HotUpdate.Game.Battle.Core
             await _battleCameraManager.CreateCamera(null, new Vector3(0, 1, -3.5f), Quaternion.identity, mask);
             // 创建怪物
             await _battleManager.WaveCreator.CreateWave();
+            // 转波次特写前，把怪物整体居中
+            _battlePointProxy.CenterMonsters();
             // 初始化行动顺序并更新行动轴内容
             BattleUtility.InitOrder(_context);
             await controller.BattleUiManager.InitActionbarContent(_context);

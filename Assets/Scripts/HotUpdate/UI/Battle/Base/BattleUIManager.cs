@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
+using Core.Exceptions;
 using Core.Log;
 using Core.Mono;
 using Core.Pool;
+using Core.Time;
 using Core.UI;
 using HotUpdate.Base.Service;
 using HotUpdate.Game.Battle.Context;
@@ -46,12 +48,15 @@ namespace HotUpdate.UI.Battle.Base
         [Inject] private IconService _iconService;
         [Inject] private IBattleManager _battleManager;
         [Inject] private IPoolManager _poolManager;
+        [Inject] private ITimerManager _timerManager;
         
         #region 私有字段
         // 战斗界面视图层引用
         private BattleView _view;
         // 战斗控制器引用
-        private BattleController  _controller;
+        private BattleController _controller;
+        // 当前点击的行动格子的映射的战斗对象
+        private IBattleEntityObject _CuurentClickArcionGridMapObj;
 
         /// <summary>
         /// 文本X轴偏移范围（随机）
@@ -324,6 +329,103 @@ namespace HotUpdate.UI.Battle.Base
         #endregion
 
         #region 行动队列/ActionBar相关
+
+        /// <summary>
+        /// 设置行动轴轴状态信息
+        /// </summary>
+        /// <param name="battleEntity"></param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public async void SetActionStatusInfo(IBattleEntityObject battleEntity)
+        {
+            if(_CuurentClickArcionGridMapObj == battleEntity)
+                return;
+
+            // 清空缓存
+            ClearActionStatus();
+            _CuurentClickArcionGridMapObj = battleEntity;
+            
+            // 处理UI互斥
+            _view.ActionExecuteGridUI.SetClickSelect(_view.ActionExecuteGridUI.BattleEntity == battleEntity);
+            foreach (var actionGridUI in _view.ActionGridUis.FindAll(ui => ui.BattleEntity != battleEntity))
+            {
+                actionGridUI.SetClickSelect(false);
+            }
+
+            var name = battleEntity switch
+            {
+                IRoleObject roleObject => roleObject.RoleInfo.f_name,
+                IMonsterObject monsterObject => monsterObject.MonsterInfo.f_name,
+                _ => throw ExceptionHelper.Throw<ArgumentOutOfRangeException>($"{battleEntity.GetType()}")
+            };
+
+            _view.SetActionStatusInfo(battleEntity.ActionValue, name);
+            
+            // 时停
+            _timerManager.SetTimeRate(ETimeRate.Zero);
+
+            ActionStatusUI actionStatusUI_buff = null;
+            ActionStatusUI actionStatusUI_debuff = null;
+            ActionStatusUI actionStatusUI_other = null;
+
+            var buffNum = 0;
+            var debuffNum = 0;
+            var otherNum = 0;
+            
+            foreach (var statuse in battleEntity.GetComponent<StatusComponent>().GetStatuses())
+            {
+                var statusInfo = statuse.StatusInfo;
+                var statusProperty = statuse.StatusProperty;
+                StatusTipUI statusTipUI;
+                switch ((EStatusType)statusInfo.f_statusType)
+                {
+                    case EStatusType.Positive:
+                    {
+                        ++buffNum;
+                        if (!actionStatusUI_buff)
+                            actionStatusUI_buff = await _objectSpawner.SpawnAsync<ActionStatusUI>(AssetKeys.ActionStatusUI, _view.StautsContent);
+                        statusTipUI = await _objectSpawner.SpawnAsync<StatusTipUI>(AssetKeys.StatusTipUI, actionStatusUI_buff.StatusContent);
+                        break;
+                    }
+                    case EStatusType.Negative:
+                        ++debuffNum;
+                        if (!actionStatusUI_debuff)
+                            actionStatusUI_debuff = await _objectSpawner.SpawnAsync<ActionStatusUI>(AssetKeys.ActionStatusUI, _view.StautsContent);
+                        statusTipUI = await _objectSpawner.SpawnAsync<StatusTipUI>(AssetKeys.StatusTipUI, actionStatusUI_debuff.StatusContent);
+                        break;
+                    case EStatusType.Other:
+                        ++otherNum;
+                        if(!actionStatusUI_other)
+                            actionStatusUI_other = await _objectSpawner.SpawnAsync<ActionStatusUI>(AssetKeys.ActionStatusUI, _view.StautsContent);
+                        statusTipUI = await _objectSpawner.SpawnAsync<StatusTipUI>(AssetKeys.StatusTipUI, actionStatusUI_other.StatusContent);
+                        break;
+                    default:
+                        throw ExceptionHelper.Throw<ArgumentOutOfRangeException>($"{battleEntity.GetType()}:{statuse}");
+                }
+
+                statusTipUI.Init(null, statusInfo.f_name, statusProperty.RemainingRound, statusInfo.f_description);
+                _view.StatusTipUis.Add(statusTipUI);
+            }
+            
+            if(actionStatusUI_buff)
+                actionStatusUI_buff.InitText(EStatusType.Positive, buffNum);
+            if (actionStatusUI_debuff)
+                actionStatusUI_debuff.InitText(EStatusType.Negative, debuffNum);
+            if (actionStatusUI_other)
+                actionStatusUI_other.InitText(EStatusType.Other, otherNum);
+            
+            _view.ActionStatusUis.Add(actionStatusUI_buff);
+            _view.ActionStatusUis.Add(actionStatusUI_debuff);
+            _view.ActionStatusUis.Add(actionStatusUI_other);
+            
+            _view.ActionStatusArea.gameObject.SetActive(true);
+        }
+
+        public void ClearActionStatus()
+        {
+            _CuurentClickArcionGridMapObj = null;
+            _objectSpawner.Release(_view.ActionStatusUis);
+            _objectSpawner.Release(_view.StatusTipUis);
+        }
         
         public void SlidingActionGrids(IBattleContext context)
         {
@@ -373,10 +475,6 @@ namespace HotUpdate.UI.Battle.Base
             }
         }
         
-        /// <summary>
-        /// 设置当前执行指令的对象的Icon
-        /// </summary>
-        /// <param name="battleEntity"></param>
         public async void SetCurrentCommanderDisplayUI(IBattleEntityObject battleEntity)
         {
             try
@@ -397,11 +495,7 @@ namespace HotUpdate.UI.Battle.Base
                 Logger.LogError(ELogTags.Battle, $"[{nameof(BattleUIManager)}]: {e.Message}");
             }
         }
-
-        /// <summary>
-        /// 更新等待行动队列UI内容
-        /// 为每个等待行动的战斗实体创建对应的UI并初始化
-        /// </summary>
+        
         public async void UpdateWaitingContent(IBattleContext context, List<IDisplayPendingExecution> displayPendingExecutions)
         {
             try
@@ -426,10 +520,7 @@ namespace HotUpdate.UI.Battle.Base
                 Logger.LogDebug(ELogTags.Battle, $"{e.Message}");
             }
         }
-
-        /// <summary>
-        /// 移除等待列表中的第一个UI
-        /// </summary>
+        
         public void RemoveFirstWaitingActUI()
         {
             if (_view.WaitingActUIs.Count > 0)
@@ -530,12 +621,7 @@ namespace HotUpdate.UI.Battle.Base
                 currentValue = BattleUtility.MaxDisplayActionValue;
             return (int)currentValue;
         }
-
-        /// <summary>
-        /// 设置行动格子高亮状态
-        /// 根据选中的目标列表，高亮对应的行动格子
-        /// </summary>
-        /// <param name="selectedTargets">选中的目标实体列表</param>
+        
         public void SetActionGridHighlights(List<IBattleEntityObject> selectedTargets)
         {
             // 获取模型层的行动格子UI列表
@@ -838,6 +924,7 @@ namespace HotUpdate.UI.Battle.Base
 
         public void Dispose()
         {
+            ClearActionStatus();
             _objectSpawner.Release(_view.ActionGridUis);
             _objectSpawner.Dispose();
             _iconService.Dispose();

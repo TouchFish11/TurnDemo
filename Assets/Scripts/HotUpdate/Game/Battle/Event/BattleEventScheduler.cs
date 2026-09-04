@@ -33,7 +33,7 @@ namespace HotUpdate.Game.Battle.Event
         [Inject] private IUIService _uiService;
         
         private IBattleContext _context;
-
+        
         private BattleEventScheduler()
         {
 

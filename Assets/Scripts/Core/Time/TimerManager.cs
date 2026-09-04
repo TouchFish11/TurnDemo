@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Core.Mono;
 using Core.Pool;
-using Core.Utility;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -219,7 +218,7 @@ namespace Core.Time
             // 零速时，直接设置TimeScale为0
             else
             {
-                TimeUtil.Timescale = (int)timeRate;
+                TimeUtil.Timescale = (int)ETimeRate.Zero;
             }
         }
     }

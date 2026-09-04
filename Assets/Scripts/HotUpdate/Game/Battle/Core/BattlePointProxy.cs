@@ -24,7 +24,9 @@ namespace HotUpdate.Game.Battle.Core
         private IBattleContext context;
         // 上次场上存活怪物数量
         private int _lastLiveMonesterCount;
-
+        // 怪物视角/转波次特写的居中 X（和原来在怪物技能里写死的 3 保持一致）
+        private const float MonsterViewCenterX = 3f;
+        
         /// <summary>
         /// 场景上的战斗点
         /// </summary>
@@ -75,6 +77,13 @@ namespace HotUpdate.Game.Battle.Core
         public Transform GetRoleTransByIndex(int index)
         {
             return BattlePoint.RoleTrans[index];
+        }
+        
+        public void CenterMonsters()
+        {
+            var pos = BattlePoint.MonsterCenter.position;
+            pos.x = MonsterViewCenterX;
+            BattlePoint.MonsterCenter.position = pos;
         }
 
         /// <summary>

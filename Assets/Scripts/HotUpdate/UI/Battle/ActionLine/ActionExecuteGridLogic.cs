@@ -3,6 +3,7 @@ using Core.Mono;
 using Core.Pool;
 using Core.Time;
 using Core.UI;
+using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Object;
 using UnityEngine;
 
@@ -24,6 +25,11 @@ namespace HotUpdate.UI.Battle.ActionLine
         /// 当前格子是否处于选中状态
         /// </summary>
         public bool IsSelect { get; private set; }
+        
+        /// <summary>
+        /// 当前格子是否处于点击状态
+        /// </summary>
+        public bool IsClick { get; private set; }
         
         /// <summary>
         /// 绑定的战斗实体对象
@@ -60,6 +66,20 @@ namespace HotUpdate.UI.Battle.ActionLine
             // 设置闪烁特效状态
             SetFlashing();
             return IsSelect;
+        }
+        
+        public void SetClickSelect(bool isClick)
+        {
+            IsClick = isClick;
+            if (IsClick)
+            {
+                TriggerClick();
+            }
+        }
+        
+        private void TriggerClick()
+        {
+            BattleEntity.Context.EventBus.TriggerEvent(new ActionGridClickEvent(BattleEntity.Context, BattleEntity));
         }
         
         /// <summary>
