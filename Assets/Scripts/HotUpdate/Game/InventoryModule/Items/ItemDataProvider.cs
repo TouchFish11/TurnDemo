@@ -188,7 +188,7 @@ namespace HotUpdate.Game.InventoryModule.Items
         /// </summary>
         public async Task LoadDataAsync()
         {
-            _itemDataCollection = await _jsonManager.FromJsonAsync<ItemDataCollection>(PathUtility.GetUserDataLocalSavePath(FileUtility.PlayerItemDataFileName), settings: NewtonsoftJsonUtility.DefaultSerializerSettings);
+            _itemDataCollection = await _jsonManager.FromJsonAsync<ItemDataCollection>(PathUtility.GetUserDataLocalSavePath(FileSources.PlayerItemDataFileName), settings: NewtonsoftJsonUtility.DefaultSerializerSettings);
             // 初始化ID生成器
             _idGenerator = DIContainer.Create<ItemPersistentIdGenerator>(parameterValues: _itemDataCollection.nextPersistentId);
             // 重建字典缓存
@@ -212,8 +212,8 @@ namespace HotUpdate.Game.InventoryModule.Items
         public async Task SaveDataAsync()
         {
             _itemDataCollection.nextPersistentId = _idGenerator.CurrentMaxId + 1;
-            await _jsonManager.SaveToJsonAsync(_itemDataCollection, PathUtility.GetUserDataLocalSavePath(FileUtility.PlayerItemDataFileName), settings: NewtonsoftJsonUtility.DefaultSerializerSettings);
-            Logger.LogDebug(ELogTags.Main, $"背包数据保存成功，{FileUtility.PlayerItemDataFileName}");
+            await _jsonManager.SaveToJsonAsync(_itemDataCollection, PathUtility.GetUserDataLocalSavePath(FileSources.PlayerItemDataFileName), settings: NewtonsoftJsonUtility.DefaultSerializerSettings);
+            Logger.LogDebug(ELogTags.Main, $"背包数据保存成功，{FileSources.PlayerItemDataFileName}");
         }
         
         public void LoadData()
@@ -229,8 +229,8 @@ namespace HotUpdate.Game.InventoryModule.Items
             if (_itemDataCollection != null)
             {
                 _itemDataCollection.nextPersistentId = _idGenerator.CurrentMaxId + 1;
-                _jsonManager.SaveToJson(_itemDataCollection, PathUtility.GetUserDataLocalSavePath(FileUtility.PlayerItemDataFileName), settings: NewtonsoftJsonUtility.DefaultSerializerSettings);
-                Logger.LogDebug(ELogTags.Main, $"背包数据保存成功，{FileUtility.PlayerItemDataFileName}");
+                _jsonManager.SaveToJson(_itemDataCollection, PathUtility.GetUserDataLocalSavePath(FileSources.PlayerItemDataFileName), settings: NewtonsoftJsonUtility.DefaultSerializerSettings);
+                Logger.LogDebug(ELogTags.Main, $"背包数据保存成功，{FileSources.PlayerItemDataFileName}");
             }
         }
 

@@ -20,7 +20,7 @@ namespace Core.AssetBundles.Update.Core
         /// </summary>
         public void WriteCacheFile(AbPackageCacheCollection cachePackageCollection)
         {
-            var cacheFilePath = PathUtility.GetAbLoadPath(FileUtility.CacheDefaultName);
+            var cacheFilePath = PathUtility.GetAbLoadPath(FileSources.CacheDefaultName);
             _jsonManager.SaveToJson(cachePackageCollection, cacheFilePath);
         }
         
@@ -30,7 +30,7 @@ namespace Core.AssetBundles.Update.Core
         /// <returns></returns>
         public async Task WriteCacheFileAsync(AbPackageCacheCollection cachePackageCollection)
         {
-            var cacheFilePath = PathUtility.GetAbLoadPath(FileUtility.CacheDefaultName);
+            var cacheFilePath = PathUtility.GetAbLoadPath(FileSources.CacheDefaultName);
             await _jsonManager.SaveToJsonAsync(cachePackageCollection, cacheFilePath);
         }
         

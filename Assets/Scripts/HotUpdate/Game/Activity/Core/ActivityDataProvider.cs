@@ -30,9 +30,9 @@ namespace HotUpdate.Game.Activity.Core
         public async Task LoadDataAsync()
         {
             // 加载活动数据
-            ActivityDataCollection = await _jsonManager.FromJsonAsync<ActivityDataCollection>(PathUtility.GetUserDataLocalSavePath(FileUtility.LocalActivityDataFileName), settings: NewtonsoftJsonUtility.DefaultSerializerSettings);
+            ActivityDataCollection = await _jsonManager.FromJsonAsync<ActivityDataCollection>(PathUtility.GetUserDataLocalSavePath(FileSources.LocalActivityDataFileName), settings: NewtonsoftJsonUtility.DefaultSerializerSettings);
             
-            Logger.LogDebug(ELogTags.Activity, $"{FileUtility.LocalActivityDataFileName} 加载成功");
+            Logger.LogDebug(ELogTags.Activity, $"{FileSources.LocalActivityDataFileName} 加载成功");
         }
 
         public void LoadData()
@@ -45,8 +45,8 @@ namespace HotUpdate.Game.Activity.Core
             if (ActivityDataCollection != null)
             {
                 // 活动数据
-                _jsonManager.SaveToJson(ActivityDataCollection, PathUtility.GetUserDataLocalSavePath(FileUtility.LocalActivityDataFileName), settings: NewtonsoftJsonUtility.DefaultSerializerSettings);
-                Logger.LogDebug(ELogTags.Activity, $"活动数据 {FileUtility.LocalActivityDataFileName} 保存成功"); 
+                _jsonManager.SaveToJson(ActivityDataCollection, PathUtility.GetUserDataLocalSavePath(FileSources.LocalActivityDataFileName), settings: NewtonsoftJsonUtility.DefaultSerializerSettings);
+                Logger.LogDebug(ELogTags.Activity, $"活动数据 {FileSources.LocalActivityDataFileName} 保存成功"); 
             }
         }
 
@@ -56,9 +56,9 @@ namespace HotUpdate.Game.Activity.Core
             {
                 // 保存活动数据
                 await _jsonManager.SaveToJsonAsync(ActivityDataCollection,
-                    PathUtility.GetUserDataLocalSavePath(FileUtility.LocalActivityDataFileName),
+                    PathUtility.GetUserDataLocalSavePath(FileSources.LocalActivityDataFileName),
                     settings: NewtonsoftJsonUtility.DefaultSerializerSettings);
-                Logger.LogDebug(ELogTags.Activity, $"活动数据 {FileUtility.LocalActivityDataFileName} 保存成功");
+                Logger.LogDebug(ELogTags.Activity, $"活动数据 {FileSources.LocalActivityDataFileName} 保存成功");
             }
         }
     }

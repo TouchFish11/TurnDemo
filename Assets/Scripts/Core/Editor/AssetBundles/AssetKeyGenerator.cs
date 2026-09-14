@@ -4,7 +4,7 @@ using System.Text;
 using Core.AssetBundles.Management;
 using UnityEditor;
 
-namespace Core.Editor.AssetBundle.Core
+namespace Core.Editor.AssetBundles
 {
     /// <summary>
     /// 资源key生成器，避免硬编码字符串

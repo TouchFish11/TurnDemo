@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3814e11c3ce9ae5409fd44b3ad2011a6, type: 3}
+  m_Name: AssetBundleSettings
+  m_EditorClassIdentifier: 
+  assetsInputPath: Assets/Editor/ArtRes/
+  filterDirectories:
+  - Texture
+  filterSuffixes:
+  - .meta
+  hotUpdateAssemblyTargetPath: Assets/Editor/ArtRes/HotUpdate/
+  hybridCLRAssemblySourcesPath: HybridCLRData/HotUpdateDlls/StandaloneWindows64/
+  hotUpdateAssemblies:
+  - HotUpdate.Common
+  - HotUpdate.Base
+  - HotUpdate.Game
+  - HotUpdate.UI
+  - HotUpdate.Update
+  abSettingsSavePath: Assets/Editor/AssetBundleSettings/
+  streamingAssetsCopyPath: Assets/StreamingAssets/AssetBundles/
+  serverDataPath: 
+  generatedScriptDir: Scripts/HotUpdate/Common/Generated
+  serverIP: http://192.168.0.6:8080/Http_Server/
+  userName: 
+  password: 

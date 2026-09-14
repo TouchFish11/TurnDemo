@@ -4,7 +4,7 @@ using System.Text;
 using Core.AssetBundles.Management;
 using UnityEditor;
 
-namespace Core.Editor.AssetBundle.Core
+namespace Core.Editor.AssetBundles
 {
     /// <summary>
     /// AB包名常量生成器

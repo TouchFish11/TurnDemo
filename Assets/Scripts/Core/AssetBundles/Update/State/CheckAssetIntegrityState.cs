@@ -54,8 +54,8 @@ namespace Core.AssetBundles.Update.State
                 await CheckAssetsIntegrity((cureent, total) => assetBundleUpdater.GetContext().UpdateCheckProgress(cureent, total));
 
                 // 替换正式清单文件
-                var tempListPath = PathUtility.GetAbLoadPath(FileUtility.TempCatalogDefaultName);
-                var formalListPath = PathUtility.GetAbLoadPath(FileUtility.CatalogDefaultName);
+                var tempListPath = PathUtility.GetAbLoadPath(FileSources.TempCatalogDefaultName);
+                var formalListPath = PathUtility.GetAbLoadPath(FileSources.CatalogDefaultName);
                 File.Copy(tempListPath, formalListPath, true);
 
                 // 删除临时清单文件

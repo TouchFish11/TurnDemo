@@ -7,14 +7,13 @@ using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Serialize.Json;
 using Core.Utility;
-using Editor.AssetBundle;
 using UnityEditor;
 using UnityEditor.U2D;
 using UnityEngine;
 using UnityEngine.U2D;
 using Object = UnityEngine.Object;
 
-namespace Core.Editor.AssetBundle.Core
+namespace Core.Editor.AssetBundles
 {
     /// <summary>
     /// 负责 AB 包的构建、清理、拷贝到 ServerData/StreamingAssets
@@ -85,11 +84,11 @@ namespace Core.Editor.AssetBundle.Core
                     if (file.Extension == ".meta") file.Delete();
                     continue;
                 }
-                var newPath = Path.ChangeExtension(file.FullName, FileUtility.AbSuffix);
+                var newPath = Path.ChangeExtension(file.FullName, FileSources.AbSuffix);
                 if (File.Exists(newPath)) File.Delete(newPath);
                 File.Move(file.FullName, newPath);
             }
-            Log($"Rename Extension To：{FileUtility.AbSuffix}");
+            Log($"Rename Extension To：{FileSources.AbSuffix}");
             AssetDatabase.Refresh();
             Log("--- Build End ---\n");
 
@@ -158,7 +157,7 @@ namespace Core.Editor.AssetBundle.Core
             if (releaseCollection)
             {
                 var toDeletes = new List<string>();
-                foreach (var file in Directory.GetFiles(serverDataPath, $"*{FileUtility.AbSuffix}"))
+                foreach (var file in Directory.GetFiles(serverDataPath, $"*{FileSources.AbSuffix}"))
                 {
                     var fileName = Path.GetFileName(file);
                     var bundleName = Path.GetFileNameWithoutExtension(fileName);
@@ -288,13 +287,13 @@ namespace Core.Editor.AssetBundle.Core
 
             // 在 Unity 编辑器中，当你选择一个 .assetBundle 文件时，
             // Unity 的 Selection 系统会自动把同名的 .manifest 文件也视为选中状态（虽然界面上可能只高亮了一个文件）
-            int total = selectedAssets.Count(asset => AssetDatabase.GetAssetPath(asset).Contains(FileUtility.AbSuffix));
+            int total = selectedAssets.Count(asset => AssetDatabase.GetAssetPath(asset).Contains(FileSources.AbSuffix));
             for (int i = 0; i < selectedAssets.Length; i++)
             {
                 Progress($"Processing：{selectedAssets[i].name}", (float)i / total);
                 string assetPath = AssetDatabase.GetAssetPath(selectedAssets[i]);
                 string fileName = Path.GetFileName(assetPath);
-                if (!fileName.Contains(FileUtility.AbSuffix)) continue;
+                if (!fileName.Contains(FileSources.AbSuffix)) continue;
 
                 AssetDatabase.CopyAsset(assetPath, Path.Combine(streamingAssetsPath, fileName));
                 string bundleName = Path.GetFileNameWithoutExtension(fileName);

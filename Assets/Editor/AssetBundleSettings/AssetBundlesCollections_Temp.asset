@@ -348,46 +348,41 @@ MonoBehaviour:
   - assetBundleName: hotupdate
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Base.dll.bytes
-      size: 54784
+      size: 53248
       name: HotUpdate.Base.dll.bytes
-      hash: 37e76c677fc55878b028df31d397eca629a7746939b6ceac64b8f2764b46618c
+      hash: 3d0d39b40807c126bc3e78ba1fefd5c34f3a8ebcf317492a64b46910638c2e17
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Common.dll.bytes
-      size: 41472
+      size: 52224
       name: HotUpdate.Common.dll.bytes
-      hash: cb1a63dc96fd546c2363f0bfbb36fc6ca4ee98364e3bc3142c77c543e0479ae3
-      assetType: 0
-    - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Entry.dll.bytes
-      size: 13312
-      name: HotUpdate.Entry.dll.bytes
-      hash: d872d2fb6cf88a035f5220c417af77cea8c0813aefba0bed2b05d3c54de0ee50
+      hash: 670df588f5ca27e312eb0a69dc59f056d09a61d8607453d224606add5591abc2
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Game.dll.bytes
-      size: 433664
+      size: 460800
       name: HotUpdate.Game.dll.bytes
-      hash: bbf1f006ec2ed83d11630504320e16a77c675bfff6cbe829a2ad316179fcbb9f
+      hash: 0a0c40c5a48a424e212f9f0a9d45ab001c86217b08a21807cebdcbe4883a102c
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.UI.dll.bytes
-      size: 238080
+      size: 267264
       name: HotUpdate.UI.dll.bytes
-      hash: 0b848df4702395fd2da8de57a522e60f2eb37513405a90848bbf4970d98da2f8
+      hash: 040159732901211c7570abbda068a404423949994742e26f059b9bd818693ae3
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdateAssemblySettings.json
-      size: 504
+      size: 351
       name: HotUpdateAssemblySettings.json
-      hash: 98cd013ac5a798e3c4836455d20fb8775cf1166a98e18a7fd43ca282f481efd4
+      hash: 729339c60de68e4c3748f81ed9e5fb1766fc94eb6740aeb97924125840235efe
       assetType: 0
   - assetBundleName: hotupdateaot
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\HotUpdateAOT\CoreModule.dll.bytes
-      size: 328704
+      size: 399360
       name: CoreModule.dll.bytes
-      hash: 115ce0e397e07f31438e115b231c88c2bfed1237ec0b83d2e1915e0a37bf3bdf
+      hash: d59b722985206424ec469b6fa376aa035b0798dbcedaba96b19339b8d226fc30
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdateAOT\mscorlib.dll.bytes
-      size: 2387456
+      size: 2392064
       name: mscorlib.dll.bytes
-      hash: 5b1652e2fe2570f359262d23daeb82f0352b0fa8166fdefc47b82b2229012b7e
+      hash: b12a3a2fcb450d542dd2ae63f4824e7804394597831b9459530eda4ed6430612
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdateAOT\System.Core.dll.bytes
       size: 471552
@@ -410,9 +405,9 @@ MonoBehaviour:
       hash: f1a8c4ab13cdfe47b3954ecc21b2d35454e3092ce9bb835defd9c9bae8d6f76d
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdateAOT\UnityEngine.CoreModule.dll.bytes
-      size: 666624
+      size: 670720
       name: UnityEngine.CoreModule.dll.bytes
-      hash: 8edcb0b4b149052cf7f1b53ab0a6591f0e79740552dbbe608878f0ec2cf36cfc
+      hash: 7e16f78104c0bcd76a6517a2feb8709c43080a320bc13f6a0838fe319a74b6ca
       assetType: 0
   - assetBundleName: material
     assetInfos:
@@ -493,9 +488,9 @@ MonoBehaviour:
   - assetBundleName: scene
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\Scene\BeginScene.unity
-      size: 118454
+      size: 118480
       name: BeginScene.unity
-      hash: 69634286410d9e958d7dcab59cc5899e18a7c00baa3ab11cd2c5b5216cfa95b5
+      hash: 0fc4eba0e6dded0f8191c451e86e5da237f110fee2109d76f996b8bb4f829f1a
       assetType: 1
     - assetPath: Assets\Editor\ArtRes\Scene\LevelScene.unity
       size: 117066
@@ -577,9 +572,9 @@ MonoBehaviour:
   - assetBundleName: tmp_asset
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\TMP_Asset\MSYH_SDF.asset
-      size: 8555837
+      size: 7553
       name: MSYH_SDF.asset
-      hash: 08b7404fb17d19786a59e21fada19a725da7904690595113d439fd6c2386bdfe
+      hash: 57a27797ae562a715d1bf52947b7cf9b1364fa1c318ded59c460e390f0fbcbbb
       assetType: 0
   - assetBundleName: ui
     assetInfos:

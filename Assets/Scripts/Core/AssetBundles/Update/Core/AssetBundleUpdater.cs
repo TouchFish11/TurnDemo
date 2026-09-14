@@ -92,7 +92,7 @@ namespace Core.AssetBundles.Update.Core
         private static void InitLocalPath()
         {
             // 获取缓存默认文件的完整路径
-            var cacheFilePath = PathUtility.GetAbLoadPath(FileUtility.CacheDefaultName);
+            var cacheFilePath = PathUtility.GetAbLoadPath(FileSources.CacheDefaultName);
             // 若缓存标记文件不存在，则创建空文件（用于后续校验本地缓存目录是否有效）
             if (!File.Exists(cacheFilePath))
             {

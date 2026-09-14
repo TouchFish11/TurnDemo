@@ -20,10 +20,10 @@ namespace Core.AssetBundles.Update.State
                 await Task.Delay(1000);
             
                 // 删除缓存文件
-                if (File.Exists(PathUtility.GetAbLoadPath(FileUtility.CacheDefaultName)))
+                if (File.Exists(PathUtility.GetAbLoadPath(FileSources.CacheDefaultName)))
                 {
-                    File.Delete(PathUtility.GetAbLoadPath(FileUtility.CacheDefaultName));
-                    Logger.LogDebug(ELogTags.GameUpdate, $"Cache files have been deleted({FileUtility.CacheDefaultName})");
+                    File.Delete(PathUtility.GetAbLoadPath(FileSources.CacheDefaultName));
+                    Logger.LogDebug(ELogTags.GameUpdate, $"Cache files have been deleted({FileSources.CacheDefaultName})");
                 }
             
                 // 触发更新完成回调

@@ -49,7 +49,7 @@ namespace Core.Log
         private LogManager(IUWRManager uWRManager, IMonoAdapter monoAdapter)
         {
             monoAdapter.AddApplicationExitNotify(this);
-            s_logSavePath = PathUtility.GetLogLocalSavePath(FileUtility.LocalLogFileName);
+            s_logSavePath = PathUtility.GetLogLocalSavePath(FileSources.LocalLogFileName);
             s_writeLogMaxIntervalTime = GlobalSettings.Instance.logModuleConfig.writeLogMaxIntervalTime;
             InitLogFile();
             StartLogWrite();

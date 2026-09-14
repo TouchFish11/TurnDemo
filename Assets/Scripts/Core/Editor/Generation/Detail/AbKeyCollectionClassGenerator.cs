@@ -35,7 +35,6 @@ namespace Core.Editor.Generation.Detail
         
         public AbKeyCollectionClassGenerator(IEnumerable<string> abNames)
         {
-            this.abNames = 
             this.abNames = new List<string>(abNames);
         }
         

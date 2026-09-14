@@ -49,7 +49,7 @@ namespace Core.AssetBundles.Management
         public async Task Init()
         {
             // 读取本地清单文件
-            Catalog = await _jsonManager.FromJsonAsync<AssetCatalog>(PathUtility.GetAbLoadPath(FileUtility.CatalogDefaultName), settings: NewtonsoftJsonUtility.CatalogSerializerSettings);
+            Catalog = await _jsonManager.FromJsonAsync<AssetCatalog>(PathUtility.GetAbLoadPath(FileSources.CatalogDefaultName), settings: NewtonsoftJsonUtility.CatalogSerializerSettings);
             // 构建全部AB包信息
             foreach (var abPackageInfo in Catalog.ABPackageCollection.Values)
             {

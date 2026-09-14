@@ -13,28 +13,34 @@
     <type fullname="Core.AssetBundles.Update.Core.UpdateResult/EUpdateError" preserve="all" />
     <type fullname="Core.AssetBundles.Update.Core.UpdateService" preserve="all" />
     <type fullname="Core.Collection.Collection`2" preserve="all" />
+    <type fullname="Core.DI.BindingBuilder`1" preserve="all" />
     <type fullname="Core.DI.DIContainer" preserve="all" />
     <type fullname="Core.DI.InjectAttribute" preserve="all" />
     <type fullname="Core.EditorRes.EditorResManager" preserve="all" />
     <type fullname="Core.EditorRes.IEditorResManager" preserve="all" />
+    <type fullname="Core.Exceptions.ExceptionHelper" preserve="all" />
     <type fullname="Core.GlobalEvent.Event" preserve="all" />
     <type fullname="Core.GlobalEvent.EventCenter" preserve="all" />
-    <type fullname="Core.GlobalEvent.EventFactory" preserve="all" />
+    <type fullname="Core.GlobalEvent.EventSource" preserve="all" />
     <type fullname="Core.GlobalEvent.Events.CloseViewEvent" preserve="all" />
     <type fullname="Core.GlobalEvent.Events.GlobalMessageEvent" preserve="all" />
     <type fullname="Core.GlobalEvent.Events.MouseVisibleChangedEvent" preserve="all" />
     <type fullname="Core.GlobalEvent.Events.OpenViewEvent" preserve="all" />
-    <type fullname="Core.GlobalEvent.IEvent" preserve="all" />
+    <type fullname="Core.GlobalEvent.Events.ViewOperation.ViewClickEvent" preserve="all" />
+    <type fullname="Core.GlobalEvent.Events.ViewOperation.ViewDraggingEvent" preserve="all" />
+    <type fullname="Core.GlobalEvent.Events.ViewOperation.ViewLeftDragEvent" preserve="all" />
+    <type fullname="Core.GlobalEvent.Events.ViewOperation.ViewOperationEvent" preserve="all" />
+    <type fullname="Core.GlobalEvent.Events.ViewOperation.ViewReboundEvent" preserve="all" />
+    <type fullname="Core.GlobalEvent.Events.ViewOperation.ViewRightDragEvent" preserve="all" />
     <type fullname="Core.GlobalEvent.IEventCenter" preserve="all" />
-    <type fullname="Core.GlobalEvent.IEventFactory" preserve="all" />
     <type fullname="Core.HotUpdate.HotUpdateAssemblySettings" preserve="all" />
     <type fullname="Core.HotUpdate.HotUpdateManager" preserve="all" />
     <type fullname="Core.HotUpdate.HotUpdateMockManager" preserve="all" />
     <type fullname="Core.HotUpdate.IHotUpdateManager" preserve="all" />
-    <type fullname="Core.Inputs.ActionAsset.IInputSystem" preserve="all" />
-    <type fullname="Core.Inputs.ActionAsset.InputSystem" preserve="all" />
-    <type fullname="Core.Inputs.ActionAsset.MainActionMapDataContainer" preserve="all" />
     <type fullname="Core.Inputs.CoreListen.InputDataContainer" preserve="all" />
+    <type fullname="Core.Inputs.IInputSystem" preserve="all" />
+    <type fullname="Core.Inputs.InputSystem" preserve="all" />
+    <type fullname="Core.Inputs.MainActionMapDataContainer" preserve="all" />
     <type fullname="Core.Log.ELogTags" preserve="all" />
     <type fullname="Core.Log.Logger" preserve="all" />
     <type fullname="Core.Mono.EngineUtility" preserve="all" />
@@ -74,8 +80,9 @@
     <type fullname="Core.Time.TimeUtil" preserve="all" />
     <type fullname="Core.Time.TimerManager" preserve="all" />
     <type fullname="Core.UI.E_UILayer" preserve="all" />
+    <type fullname="Core.UI.ILogicView`2" preserve="all" />
+    <type fullname="Core.UI.IUILogic`2" preserve="all" />
     <type fullname="Core.UI.IUIManager" preserve="all" />
-    <type fullname="Core.UI.IUiBehaviour" preserve="all" />
     <type fullname="Core.UI.InjectUIAttribute" preserve="all" />
     <type fullname="Core.UI.ReactiveProperty`1" preserve="all" />
     <type fullname="Core.UI.UIBehaviourBase" preserve="all" />
@@ -85,7 +92,7 @@
     <type fullname="Core.UI.ViewController.IuiController" preserve="all" />
     <type fullname="Core.UI.ViewController.UIController`1" preserve="all" />
     <type fullname="Core.UI.ViewController.UIView" preserve="all" />
-    <type fullname="Core.Utility.FileUtility" preserve="all" />
+    <type fullname="Core.Utility.FileSources" preserve="all" />
     <type fullname="Core.Utility.PathUtility" preserve="all" />
     <type fullname="Core.Utility.TextUtility" preserve="all" />
     <type fullname="Core.Video.IVideoManager" preserve="all" />
@@ -110,6 +117,7 @@
   </assembly>
   <assembly fullname="Unity.TextMeshPro">
     <type fullname="TMPro.TMP_Dropdown" preserve="all" />
+    <type fullname="TMPro.TMP_InputField" preserve="all" />
     <type fullname="TMPro.TMP_Text" preserve="all" />
     <type fullname="TMPro.TextMeshPro" preserve="all" />
     <type fullname="TMPro.TextMeshProUGUI" preserve="all" />
@@ -120,6 +128,7 @@
   <assembly fullname="UnityEngine.AnimationModule">
     <type fullname="UnityEngine.Animator" preserve="all" />
     <type fullname="UnityEngine.AnimatorStateInfo" preserve="all" />
+    <type fullname="UnityEngine.AvatarIKGoal" preserve="all" />
     <type fullname="UnityEngine.AvatarTarget" preserve="all" />
     <type fullname="UnityEngine.MatchTargetWeightMask" preserve="all" />
     <type fullname="UnityEngine.RuntimeAnimatorController" preserve="all" />
@@ -127,6 +136,8 @@
   </assembly>
   <assembly fullname="UnityEngine.CoreModule">
     <type fullname="UnityEngine.Application" preserve="all" />
+    <type fullname="UnityEngine.AsyncOperation" preserve="all" />
+    <type fullname="UnityEngine.Behaviour" preserve="all" />
     <type fullname="UnityEngine.Camera" preserve="all" />
     <type fullname="UnityEngine.Color" preserve="all" />
     <type fullname="UnityEngine.Component" preserve="all" />
@@ -135,6 +146,7 @@
     <type fullname="UnityEngine.Cursor" preserve="all" />
     <type fullname="UnityEngine.CursorLockMode" preserve="all" />
     <type fullname="UnityEngine.CustomYieldInstruction" preserve="all" />
+    <type fullname="UnityEngine.Debug" preserve="all" />
     <type fullname="UnityEngine.DisallowMultipleComponent" preserve="all" />
     <type fullname="UnityEngine.Events.UnityAction" preserve="all" />
     <type fullname="UnityEngine.Events.UnityAction`1" preserve="all" />
@@ -153,6 +165,7 @@
     <type fullname="UnityEngine.RenderTexture" preserve="all" />
     <type fullname="UnityEngine.RequireComponent" preserve="all" />
     <type fullname="UnityEngine.SceneManagement.LoadSceneMode" preserve="all" />
+    <type fullname="UnityEngine.Scripting.PreserveAttribute" preserve="all" />
     <type fullname="UnityEngine.Serialization.FormerlySerializedAsAttribute" preserve="all" />
     <type fullname="UnityEngine.SerializeField" preserve="all" />
     <type fullname="UnityEngine.SerializeReference" preserve="all" />
@@ -186,8 +199,18 @@
     <type fullname="UnityEngine.EventSystems.BaseEventData" preserve="all" />
     <type fullname="UnityEngine.EventSystems.EventSystem" preserve="all" />
     <type fullname="UnityEngine.EventSystems.EventTriggerType" preserve="all" />
+    <type fullname="UnityEngine.EventSystems.IBeginDragHandler" preserve="all" />
+    <type fullname="UnityEngine.EventSystems.IDragHandler" preserve="all" />
+    <type fullname="UnityEngine.EventSystems.IEndDragHandler" preserve="all" />
+    <type fullname="UnityEngine.EventSystems.IEventSystemHandler" preserve="all" />
+    <type fullname="UnityEngine.EventSystems.IPointerClickHandler" preserve="all" />
+    <type fullname="UnityEngine.EventSystems.IPointerDownHandler" preserve="all" />
+    <type fullname="UnityEngine.EventSystems.IPointerUpHandler" preserve="all" />
+    <type fullname="UnityEngine.EventSystems.PointerEventData" preserve="all" />
+    <type fullname="UnityEngine.EventSystems.PointerEventData/InputButton" preserve="all" />
     <type fullname="UnityEngine.EventSystems.UIBehaviour" preserve="all" />
     <type fullname="UnityEngine.UI.Button" preserve="all" />
+    <type fullname="UnityEngine.UI.Dropdown" preserve="all" />
     <type fullname="UnityEngine.UI.Graphic" preserve="all" />
     <type fullname="UnityEngine.UI.Image" preserve="all" />
     <type fullname="UnityEngine.UI.RawImage" preserve="all" />
@@ -197,6 +220,9 @@
     <type fullname="UnityEngine.UI.Text" preserve="all" />
     <type fullname="UnityEngine.UI.Toggle" preserve="all" />
     <type fullname="UnityEngine.UI.ToggleGroup" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.UIModule">
+    <type fullname="UnityEngine.Canvas" preserve="all" />
   </assembly>
   <assembly fullname="UnityEngine.VideoModule">
     <type fullname="UnityEngine.Video.VideoClip" preserve="all" />
@@ -233,6 +259,7 @@
     <type fullname="System.Collections.Generic.List`1" preserve="all" />
     <type fullname="System.Collections.Generic.List`1/Enumerator" preserve="all" />
     <type fullname="System.Collections.Generic.Stack`1" preserve="all" />
+    <type fullname="System.Collections.Generic.Stack`1/Enumerator" preserve="all" />
     <type fullname="System.Collections.IEnumerable" preserve="all" />
     <type fullname="System.Collections.IEnumerator" preserve="all" />
     <type fullname="System.Comparison`1" preserve="all" />
@@ -242,6 +269,7 @@
     <type fullname="System.Console" preserve="all" />
     <type fullname="System.Converter`2" preserve="all" />
     <type fullname="System.Delegate" preserve="all" />
+    <type fullname="System.Diagnostics.Debug" preserve="all" />
     <type fullname="System.Diagnostics.DebuggableAttribute" preserve="all" />
     <type fullname="System.Diagnostics.DebuggableAttribute/DebuggingModes" preserve="all" />
     <type fullname="System.Diagnostics.DebuggerBrowsableAttribute" preserve="all" />
@@ -256,13 +284,16 @@
     <type fullname="System.IDisposable" preserve="all" />
     <type fullname="System.Int32" preserve="all" />
     <type fullname="System.Int64" preserve="all" />
+    <type fullname="System.Lazy`1" preserve="all" />
     <type fullname="System.Linq.Enumerable" preserve="all" />
     <type fullname="System.Linq.IGrouping`2" preserve="all" />
     <type fullname="System.NotImplementedException" preserve="all" />
     <type fullname="System.NotSupportedException" preserve="all" />
     <type fullname="System.NullReferenceException" preserve="all" />
+    <type fullname="System.Nullable`1" preserve="all" />
     <type fullname="System.Object" preserve="all" />
     <type fullname="System.ObsoleteAttribute" preserve="all" />
+    <type fullname="System.OperationCanceledException" preserve="all" />
     <type fullname="System.ParamArrayAttribute" preserve="all" />
     <type fullname="System.Predicate`1" preserve="all" />
     <type fullname="System.Reflection.Assembly" preserve="all" />
@@ -296,6 +327,7 @@
     <type fullname="System.Threading.Tasks.Task`1" preserve="all" />
     <type fullname="System.Type" preserve="all" />
     <type fullname="System.ValueTuple`2" preserve="all" />
+    <type fullname="System.ValueTuple`3" preserve="all" />
     <type fullname="System.ValueType" preserve="all" />
   </assembly>
 </linker>

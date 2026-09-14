@@ -44,7 +44,7 @@ namespace Core.EditorRes
             if (_fileInfoList.Count == 0)
             {
                 // 递归获取所有文件
-                _fileInfoList = FileUtility.GetTotalFiles(directoryInfo, new List<FileInfo>(), new[] { ".meta" });
+                _fileInfoList = FileSources.GetTotalFiles(directoryInfo, new List<FileInfo>(), new[] { ".meta" });
             }
 
             // 根据类型自动添加后缀

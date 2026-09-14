@@ -30,15 +30,15 @@ namespace HotUpdate.Game.Quests.Data
             if (QuestCollection != null)
             {
                 // 保存任务数据
-                _jsonManager.SaveToJson(QuestCollection, PathUtility.GetUserDataLocalSavePath(FileUtility.LocalTaskDataFileName));
-                Logger.LogDebug(ELogTags.Quest, $"任务数据保存成功，{FileUtility.LocalTaskDataFileName}");
+                _jsonManager.SaveToJson(QuestCollection, PathUtility.GetUserDataLocalSavePath(FileSources.LocalTaskDataFileName));
+                Logger.LogDebug(ELogTags.Quest, $"任务数据保存成功，{FileSources.LocalTaskDataFileName}");
             }
         }
         
         public async Task LoadDataAsync()
         {
             // 读取任务数据
-            QuestCollection = await _jsonManager.FromJsonAsync<QuestCollection>(PathUtility.GetUserDataLocalSavePath(FileUtility.LocalTaskDataFileName));
+            QuestCollection = await _jsonManager.FromJsonAsync<QuestCollection>(PathUtility.GetUserDataLocalSavePath(FileSources.LocalTaskDataFileName));
             Logger.LogDebug(ELogTags.Quest, $"QuestData loading successful");
         }
 
@@ -47,8 +47,8 @@ namespace HotUpdate.Game.Quests.Data
             if (QuestCollection != null)
             {
                 // 保存任务数据
-                await _jsonManager.SaveToJsonAsync(QuestCollection, PathUtility.GetUserDataLocalSavePath(FileUtility.LocalTaskDataFileName));
-                Logger.LogDebug(ELogTags.Quest, $"任务数据保存成功，{FileUtility.LocalTaskDataFileName}");
+                await _jsonManager.SaveToJsonAsync(QuestCollection, PathUtility.GetUserDataLocalSavePath(FileSources.LocalTaskDataFileName));
+                Logger.LogDebug(ELogTags.Quest, $"任务数据保存成功，{FileSources.LocalTaskDataFileName}");
             }
         }
     }

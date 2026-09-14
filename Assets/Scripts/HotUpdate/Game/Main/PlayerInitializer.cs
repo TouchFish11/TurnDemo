@@ -30,7 +30,7 @@ namespace HotUpdate.Game.Main
         public async Task InitPlayerAsync()
         {
             // 初始化输入系统
-            using(var handle = await GameAsset.LoadAssetAsync<TextAsset>(FileUtility.InputActionLocalFileName))
+            using(var handle = await GameAsset.LoadAssetAsync<TextAsset>(FileSources.InputActionLocalFileName))
             {
                 _inputSystem.InitInputSystem(handle.Asset.text);
             }

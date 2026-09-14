@@ -5,7 +5,7 @@ using Core.Singleton;
 using UnityEditor;
 using UnityEngine;
 
-namespace Editor.AssetBundle
+namespace Core.Editor.AssetBundles
 {
     /// <summary>
     /// AssetBundle集合管理类（单例SO）
@@ -22,6 +22,7 @@ namespace Editor.AssetBundle
         public sealed class AssetBundleInfo
         {
             // AB包的名称，不带后缀（唯一标识）
+            [Tooltip("AB 包名称（不带后缀，唯一标识）")]
             public string assetBundleName;
             // 该AB包下包含的所有资源信息列表
             public List<AssetInfo> assetInfos = new();

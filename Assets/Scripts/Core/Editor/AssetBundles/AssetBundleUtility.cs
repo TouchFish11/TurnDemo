@@ -2,7 +2,7 @@ using System.IO;
 using Core.Utility;
 using UnityEditor;
 
-namespace Core.Editor.AssetBundle.Core
+namespace Core.Editor.AssetBundles
 {
     /// <summary>
     /// AB包工具类

@@ -42,7 +42,7 @@ namespace Core.AssetBundles.Update.State
         /// <returns>是否获取成功</returns>
         public async Task GetLocalCompareFileInfo()
         {
-            var persistentListPath = PathUtility.GetAbLoadPath(FileUtility.CatalogDefaultName);
+            var persistentListPath = PathUtility.GetAbLoadPath(FileSources.CatalogDefaultName);
             // 优先读取持久化路径下的清单文件（已更新过的本地清单）
             if (File.Exists(persistentListPath))
             {
@@ -52,7 +52,7 @@ namespace Core.AssetBundles.Update.State
             }
             
             // 读取StreamingAssets路径下的默认清单文件（首次启动/无持久化清单时）
-            if (File.Exists(Application.streamingAssetsPath + "/" + FileUtility.CatalogDefaultName))
+            if (File.Exists(Application.streamingAssetsPath + "/" + FileSources.CatalogDefaultName))
             {
                 // 根据平台拼接路径协议（Android平台StreamingAssets无需file协议）
                 var path =
@@ -61,7 +61,7 @@ namespace Core.AssetBundles.Update.State
 #else
                     "file:///" + Application.streamingAssetsPath + "/";
 #endif
-                await GetLocalCatalog($"{path}{FileUtility.CatalogDefaultName}");
+                await GetLocalCatalog($"{path}{FileSources.CatalogDefaultName}");
                 return;
             }
 

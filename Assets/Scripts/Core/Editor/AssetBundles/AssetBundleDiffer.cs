@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Editor.AssetBundle;
 using UnityEditor;
 
-namespace Core.Editor.AssetBundle.Core
+namespace Core.Editor.AssetBundles
 {
     /// <summary>
     /// 对比新旧 AssetBundlesCollections，计算差异

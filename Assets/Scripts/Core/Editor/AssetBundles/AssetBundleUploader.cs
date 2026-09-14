@@ -10,7 +10,7 @@ using Core.DI;
 using Core.Serialize.Json;
 using Core.Utility;
 
-namespace Core.Editor.AssetBundle.Core
+namespace Core.Editor.AssetBundles
 {
     /// <summary>
     /// 负责上传 AB 包到服务器，支持增量上传
@@ -49,7 +49,7 @@ namespace Core.Editor.AssetBundle.Core
             }
 
             // 读取本地目录
-            var localCatalog = jsonManager.FromJson<AssetCatalog>(await File.ReadAllTextAsync(localCatalogPath), settings:NewtonsoftJsonUtility.CatalogSerializerSettings);
+            var localCatalog = jsonManager.FromJson<AssetCatalog>(await File.ReadAllTextAsync(localCatalogPath));
 
             // 尝试下载服务器清单
             AssetCatalog serverCatalog = null;
@@ -138,7 +138,7 @@ namespace Core.Editor.AssetBundle.Core
                     using var stream = res.GetResponseStream();
                     using var reader = new StreamReader(stream, Encoding.UTF8);
                     var json = reader.ReadToEnd();
-                    return jsonManager.FromJson<AssetCatalog>(json, settings:NewtonsoftJsonUtility.CatalogSerializerSettings);
+                    return jsonManager.FromJson<AssetCatalog>(json);
                 }
                 catch(Exception e)
                 {
@@ -159,7 +159,7 @@ namespace Core.Editor.AssetBundle.Core
             var files = new List<FileInfo>();
             foreach (var file in dir.GetFiles())
             {
-                if (file.Extension == FileUtility.AbSuffix || file.Extension == ".json")
+                if (file.Extension == FileSources.AbSuffix || file.Extension == ".json")
                     files.Add(file);
             }
 

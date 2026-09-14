@@ -78,7 +78,7 @@ namespace HotUpdate.Entry
         {
             using var handle = await GameAsset.LoadAssetAsync<TextAsset>(AssetKeys.GameSettingsConfig);
             var gameSettingsConfig = _jsonManager.FromJson<GameSettingsConfig>(handle.Asset.text, settings:NewtonsoftJsonUtility.DefaultSerializerSettings);
-            var settings = await _jsonManager.FromJsonAsync<GameSettings>(PathUtility.GetUserDataLocalSavePath(FileUtility.GameSettingFileName), settings:NewtonsoftJsonUtility.DefaultSerializerSettings);
+            var settings = await _jsonManager.FromJsonAsync<GameSettings>(PathUtility.GetUserDataLocalSavePath(FileSources.GameSettingFileName), settings:NewtonsoftJsonUtility.DefaultSerializerSettings);
             
             // TODO：逻辑可优化
             SettingsService.SetFrameRate(gameSettingsConfig.framerates[(int)settings[ESettingType.TargetFrameRateIndex]]);

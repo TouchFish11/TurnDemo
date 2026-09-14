@@ -75,9 +75,9 @@ namespace Core.AssetBundles.Update.State
         {
             var source = new TaskCompletionSource<bool>();
             // 创建清单文件下载请求器（无需Hash校验，清单文件本身由服务器保证正确性）
-            var abWebRequester = poolManager.GetData<ABWebRequester>().Init(GlobalSettings.Instance.updateModuleConfig.resServerIp, FileUtility.CatalogDefaultName, false, string.Empty, string.Empty, 0);
+            var abWebRequester = poolManager.GetData<ABWebRequester>().Init(GlobalSettings.Instance.updateModuleConfig.resServerIp, FileSources.CatalogDefaultName, false, string.Empty, string.Empty, 0);
             // 异步下载到临时清单文件路径
-            abWebRequester.DownLoadAsync(PathUtility.GetAbLoadPath(FileUtility.TempCatalogDefaultName), over =>
+            abWebRequester.DownLoadAsync(PathUtility.GetAbLoadPath(FileSources.TempCatalogDefaultName), over =>
             {
                 source.SetResult(over);
                 poolManager.PushData(abWebRequester);
@@ -92,7 +92,7 @@ namespace Core.AssetBundles.Update.State
         /// <returns>是否解析成功</returns>
         public async Task AnalyzeRemoteCatalog()
         {
-            var tempCatalogPath = PathUtility.GetAbLoadPath(FileUtility.TempCatalogDefaultName);
+            var tempCatalogPath = PathUtility.GetAbLoadPath(FileSources.TempCatalogDefaultName);
             // 检查临时清单文件是否存在
             if (!File.Exists(tempCatalogPath))
             {

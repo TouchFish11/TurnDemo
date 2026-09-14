@@ -5,11 +5,10 @@ using Core.AssetBundles.Collection;
 using Core.AssetBundles.Management;
 using Core.Serialize.Json;
 using Core.Utility;
-using Editor.AssetBundle;
 using UnityEditor;
 using UnityEngine;
 
-namespace Core.Editor.AssetBundle.Core
+namespace Core.Editor.AssetBundles
 {
     /// <summary>
     /// 依赖分析与清单文件生成
@@ -111,7 +110,7 @@ namespace Core.Editor.AssetBundle.Core
 
                 foreach (var fileInfo in fileInfos)
                 {
-                    if (fileInfo.Extension != FileUtility.AbSuffix || fileInfo.Name.Contains(target.ToString()))
+                    if (fileInfo.Extension != FileSources.AbSuffix || fileInfo.Name.Contains(target.ToString()))
                         continue;
 
                     Progress($"Handing :{fileInfo.Name} dependencies...", (float)index++ / (fileInfos.Count - 2));

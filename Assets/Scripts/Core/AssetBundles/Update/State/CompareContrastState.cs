@@ -84,7 +84,7 @@ namespace Core.AssetBundles.Update.State
             }
 
             // 异步读取缓存文件（记录已下载/待下载的AB包信息）
-            var cacheFilePath = PathUtility.GetAbLoadPath(FileUtility.CacheDefaultName);
+            var cacheFilePath = PathUtility.GetAbLoadPath(FileSources.CacheDefaultName);
             var cacheContent = await File.ReadAllTextAsync(cacheFilePath);
             if (!string.IsNullOrEmpty(cacheContent))
             {

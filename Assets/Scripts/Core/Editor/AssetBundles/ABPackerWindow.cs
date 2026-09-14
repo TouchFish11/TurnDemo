@@ -2,9 +2,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using Core.AssetBundles.Management;
 using Core.DI;
-using Core.Editor.AssetBundle.Core;
 using Core.Global;
 using Core.HotUpdate;
 using Core.Serialize.Json;
@@ -12,7 +10,7 @@ using UnityEditor;
 using UnityEditor.Compilation;
 using UnityEngine;
 
-namespace Editor.AssetBundle
+namespace Core.Editor.AssetBundles
 {
     public class ABPackerWindow : EditorWindow
     {
@@ -30,29 +28,23 @@ namespace Editor.AssetBundle
         private string buildLog = "";
 
         // --- 配置参数 ---
+        private AssetBundleSettings settings;   // 跨项目配置（从 SO 读）
         private BuildTarget targetPlatform = BuildTarget.StandaloneWindows64;
         private BuildAssetBundleOptions buildOptions = BuildAssetBundleOptions.ChunkBasedCompression;
         private string outputPath;
-        private const string AB_COPY_PATH = "Assets/StreamingAssets/AssetBundles/";
+        private string serverDataPath;          // 由 settings 计算
         private string mainBundlePath = "";
-        private string serverIP = "http://...";
+        private string serverIP = "";
         private bool uploadUseUser;
-        private string userName = "userName";
-        private string password = "password";
+        private string userName = "";
+        private string password = "";
         private bool showPassWord;
         private bool uploadBytesIsAutoSetting = true;
         private bool uploadBytesIsCustomSetting;
         private uint maxBytesCapacity = 4096;
 
-        private const string hotUpdateAssemblyTargetPath = @"D:\UnityProject\TurnDemo\Assets\Editor\ArtRes\HotUpdate\";
-        private const string hybridCLRAssemblySourcesPath = @"D:\UnityProject\TurnDemo\HybridCLRData\HotUpdateDlls\StandaloneWindows64\";
-        private const string AssetsInputPath = "Assets/Editor/ArtRes/";
-        private readonly string[] filterDirectories = { "Texture" };
-        private readonly string[] filterSuffixes = { ".meta" };
-        private const string abSettingsSavePath = "Assets/Editor/AssetBundleSettings/";
         private const string assetCollectionName_Temp = "AssetBundlesCollections_Temp.asset";
         private const string assetCollectionName_Release = "AssetBundlesCollections.asset";
-        private readonly string serverDataPath = $"{Application.dataPath}/ServerData/";
 
         // --- 数据容器 ---
         private AssetBundlesCollections assetsCollection_Temp;
@@ -62,12 +54,7 @@ namespace Editor.AssetBundle
         private Dictionary<string, List<AssetBundlesCollections.AssetInfo>> waitRemoveAssetInfos = new();
         private readonly HashSet<string> forceUploadBundles = new();
 
-        // --- 序列化字段 ---
-        private SerializedObject serializedObject;
-        private SerializedProperty hotUpdateAssembliesProp;
-        [SerializeField] private string[] hotUpdateAssemblies;
-        //private SerializedProperty baseHotUpdateAssembliesProp;
-        // [SerializeField] private string[] baseHotUpdateAssemblies;
+        // --- 序列化字段（已移除：hotUpdateAssemblies 等配置迁移到 AssetBundleSettings SO）---
 
         [MenuItem("GameTool/AssetBundle/AssetBundle Packer")]
         public static void ShowWindow()
@@ -77,25 +64,35 @@ namespace Editor.AssetBundle
 
         private void OnEnable()
         {
-            serializedObject = new SerializedObject(this);
-            hotUpdateAssembliesProp = serializedObject.FindProperty(nameof(hotUpdateAssemblies));
-            //baseHotUpdateAssembliesProp = serializedObject.FindProperty(nameof(baseHotUpdateAssemblies));
+            settings = AssetBundleSettings.LoadOrCreate();
 
             outputPath = Path.Combine(Application.dataPath, "AssetBundles", EditorUserBuildSettings.activeBuildTarget.ToString());
+            serverDataPath = string.IsNullOrEmpty(settings.serverDataPath)
+                ? Path.Combine(Application.dataPath, "ServerData")
+                : settings.serverDataPath;
 
-            hotUpdateAssemblies = new[]
-            {
-                "HotUpdate.Common", "HotUpdate.Base","HotUpdate.Game","HotUpdate.UI","HotUpdate.Entry",
-            };
+            serverIP = settings.serverIP;
+            userName = settings.userName;
+            password = settings.password;
 
             minSize = new Vector2(1389, 725);
 
             // 初始化各模块
-            collector = new AssetBundleCollector(AssetsInputPath, filterSuffixes, filterDirectories, AppendToLog, DisplayProgress);
+            collector = new AssetBundleCollector(settings.assetsInputPath, settings.filterSuffixes, settings.filterDirectories, AppendToLog, DisplayProgress);
             differ = new AssetBundleDiffer(AppendToLog, DisplayProgress);
             dependencyResolver = new AssetBundleDependencyResolver(AppendToLog, DisplayProgress);
             builder = new AssetBundleBuilder(AppendToLog, DisplayProgress);
             uploader = new AssetBundleUploader(AppendToLog);
+        }
+
+        private void OnDisable()
+        {
+            if (settings == null) return;
+            settings.serverIP = serverIP;
+            settings.userName = userName;
+            settings.password = password;
+            EditorUtility.SetDirty(settings);
+            AssetDatabase.SaveAssets();
         }
 
         private void OnGUI()
@@ -118,6 +115,7 @@ namespace Editor.AssetBundle
         #region Left Area Drawing
         private void DrawLeftArea()
         {
+            DrawOneClickPackView();
             DrawResKeyView();
             DrawHotUpdateView();
             DrawAssetsCollectView();
@@ -131,6 +129,113 @@ namespace Editor.AssetBundle
             DrawCopySettingsView();
             DrawServerSettingsView();
         }
+
+        /// <summary>
+        /// 一键打包入口按钮
+        /// </summary>
+        private void DrawOneClickPackView()
+        {
+            EditorGUILayout.Space();
+            GUILayout.Label("One-Click Pack", EditorStyles.boldLabel);
+            if (GUILayout.Button("一键打包", GUILayout.Height(32)))
+                RunOneClickPack();
+        }
+
+        /// <summary>
+        /// 一键打包：按顺序串联原打包流程（不改动原有按钮逻辑）
+        /// 拷贝热更DLL → 生成热更设置 → 收集 → 差异 → 标签 → 覆盖 → 构建 → 拷贝ServerData
+        /// </summary>
+        private void RunOneClickPack()
+        {
+            if (!EditorUtility.DisplayDialog("一键打包", "将按顺序执行打包流程，是否继续？", "开始", "取消"))
+                return;
+
+            const int totalSteps = 9;
+            var step = 0;
+
+            try
+            {
+                // 1. 拷贝热更程序集
+                DisplayProgress($"[{++step}/{totalSteps}] 拷贝热更程序集", (float)(step - 1) / totalSteps);
+                MoveHotUpdateAssembly();
+
+                // 2. 生成热更程序集设置
+                DisplayProgress($"[{++step}/{totalSteps}] 生成热更程序集设置", (float)(step - 1) / totalSteps);
+                GenerateDllDependencyFile(GetHotfixSettingsSavePath(), settings.hotUpdateAssemblies);
+
+                // 3. 收集资源
+                DisplayProgress($"[{++step}/{totalSteps}] 收集资源", (float)(step - 1) / totalSteps);
+                assetsCollection_Temp = collector.CollectLatestInfos(settings.abSettingsSavePath, assetCollectionName_Temp);
+                if (!assetsCollection_Temp)
+                {
+                    AppendToLog("一键打包失败：收集资源失败。");
+                    return;
+                }
+
+                // 4. 对比差异
+                DisplayProgress($"[{++step}/{totalSteps}] 对比差异", (float)(step - 1) / totalSteps);
+                abNameToDifferenceInfos.Clear();
+                waitRemoveAbNames.Clear();
+                waitRemoveAssetInfos.Clear();
+                forceUploadBundles.Clear();
+                assetsCollection_Release = AssetDatabase.LoadAssetAtPath<AssetBundlesCollections>($"{settings.abSettingsSavePath}{assetCollectionName_Release}");
+                var result = differ.Compare(assetsCollection_Temp, assetsCollection_Release);
+                abNameToDifferenceInfos = result.BundlesToRebuild;
+                waitRemoveAbNames = result.BundlesToRemove;
+                waitRemoveAssetInfos = result.AssetsToRemovePerBundle;
+                var lastManifest = Path.Combine(outputPath, AssetBundleUtility.GetPlatformBundleName(targetPlatform));
+                if (File.Exists(lastManifest))
+                    dependencyResolver.ExpandWithDependencies(abNameToDifferenceInfos, waitRemoveAbNames, assetsCollection_Release, lastManifest, forceUploadBundles);
+
+                // 5. 设置标签
+                DisplayProgress($"[{++step}/{totalSteps}] 设置标签", (float)(step - 1) / totalSteps);
+                collector.SetLabels(abNameToDifferenceInfos, assetsCollection_Release, waitRemoveAbNames);
+
+                // 6. 覆盖集合（Temp → Release）
+                DisplayProgress($"[{++step}/{totalSteps}] 覆盖集合", (float)(step - 1) / totalSteps);
+                if (!AssetDatabase.CopyAsset($"{settings.abSettingsSavePath}{assetCollectionName_Temp}", $"{settings.abSettingsSavePath}{assetCollectionName_Release}"))
+                {
+                    AppendToLog("一键打包失败：覆盖集合失败。");
+                    return;
+                }
+                assetsCollection_Release = AssetDatabase.LoadAssetAtPath<AssetBundlesCollections>($"{settings.abSettingsSavePath}{assetCollectionName_Release}");
+                EditorUtility.SetDirty(assetsCollection_Release);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+                AppendToLog("Override Success!");
+
+                // 7. 构建 AssetBundles
+                DisplayProgress($"[{++step}/{totalSteps}] 构建 AssetBundles", (float)(step - 1) / totalSteps);
+                if (!builder.Build(outputPath, targetPlatform, buildOptions, settings.assetsInputPath, assetsCollection_Release))
+                {
+                    AppendToLog("一键打包失败：构建 AssetBundles 失败。");
+                    return;
+                }
+
+                // 8. 依赖分析（打印依赖关系，纯日志，不影响打包）
+                DisplayProgress($"[{++step}/{totalSteps}] 依赖分析", (float)(step - 1) / totalSteps);
+                mainBundlePath = Path.Combine(outputPath, AssetBundleUtility.GetPlatformBundleName(targetPlatform));
+                dependencyResolver.AnalyzeDependencies(mainBundlePath, targetPlatform);
+
+                // 9. 拷贝到 ServerData
+                DisplayProgress($"[{++step}/{totalSteps}] 拷贝到 ServerData", (float)(step - 1) / totalSteps);
+                builder.CopyToServerData(outputPath, serverDataPath, assetsCollection_Release, targetPlatform);
+
+                AppendToLog("一键打包完成。");
+            }
+            catch (System.Exception e)
+            {
+                AppendToLog($"一键打包异常：{e.Message}\n{e.StackTrace}");
+                EditorUtility.DisplayDialog("一键打包失败", e.Message, "确定");
+            }
+            finally
+            {
+                EditorUtility.ClearProgressBar();
+            }
+        }
+
+        private string GetHotfixSettingsSavePath()
+            => Path.Combine(Application.dataPath, "Editor", "ArtRes", "HotUpdate", $"{nameof(HotUpdateAssemblySettings)}.json");
 
         private void DrawResKeyView()
         {
@@ -150,13 +255,10 @@ namespace Editor.AssetBundle
         {
             EditorGUILayout.Space();
             GUILayout.Label("Assembly HotUpdate", EditorStyles.boldLabel);
-            EditorGUILayout.TextField("HybridCLR Dlls Path", hybridCLRAssemblySourcesPath);
-            serializedObject.Update();
-            EditorGUILayout.PropertyField(hotUpdateAssembliesProp, true);
+            EditorGUILayout.TextField("HybridCLR Dlls Path", settings.hybridCLRAssemblySourcesPath);
+            EditorGUILayout.LabelField("HotUpdate Assemblies", string.Join(", ", settings.hotUpdateAssemblies));
             if (GUILayout.Button("Copy HotUpdate Assembly"))
                 MoveHotUpdateAssembly();
-            //EditorGUILayout.PropertyField(baseHotUpdateAssembliesProp, true);
-            serializedObject.ApplyModifiedProperties();
 
             GUILayout.BeginHorizontal();
             EditorGUI.BeginDisabledGroup(true);
@@ -165,7 +267,7 @@ namespace Editor.AssetBundle
             EditorGUI.EndDisabledGroup();
             if (GUILayout.Button("Generate Hotfix Asm Settings", GUILayout.Width(200)))
             {
-                GenerateDllDependencyFile(savePath, hotUpdateAssemblies);
+                GenerateDllDependencyFile(savePath, settings.hotUpdateAssemblies);
                 AppendToLog($"HotUpdateAssemblySettings Generate At：{savePath}\n");
             }
             GUILayout.EndHorizontal();
@@ -179,12 +281,12 @@ namespace Editor.AssetBundle
             assetsCollection_Temp = EditorGUILayout.ObjectField("Latest Asset Collection", assetsCollection_Temp, typeof(AssetBundlesCollections), false) as AssetBundlesCollections;
             if (GUILayout.Button("Load Collection", GUILayout.Width(120)))
             {
-                assetsCollection_Temp = AssetDatabase.LoadAssetAtPath<AssetBundlesCollections>($"{abSettingsSavePath}{assetCollectionName_Temp}");
+                assetsCollection_Temp = AssetDatabase.LoadAssetAtPath<AssetBundlesCollections>($"{settings.abSettingsSavePath}{assetCollectionName_Temp}");
                 if (!assetsCollection_Temp) AppendToLog($"'{assetCollectionName_Temp}' file do not exist, please 'Collect'\n");
             }
             if (GUILayout.Button("Collect", GUILayout.Width(120)))
             {
-                assetsCollection_Temp = collector.CollectLatestInfos(abSettingsSavePath, assetCollectionName_Temp);
+                assetsCollection_Temp = collector.CollectLatestInfos(settings.abSettingsSavePath, assetCollectionName_Temp);
             }
             GUILayout.EndHorizontal();
         }
@@ -200,7 +302,7 @@ namespace Editor.AssetBundle
                 waitRemoveAssetInfos.Clear();
                 forceUploadBundles.Clear();
 
-                assetsCollection_Release = AssetDatabase.LoadAssetAtPath<AssetBundlesCollections>($"{abSettingsSavePath}{assetCollectionName_Release}");
+                assetsCollection_Release = AssetDatabase.LoadAssetAtPath<AssetBundlesCollections>($"{settings.abSettingsSavePath}{assetCollectionName_Release}");
                 var result = differ.Compare(assetsCollection_Temp, assetsCollection_Release);
 
                 abNameToDifferenceInfos = result.BundlesToRebuild;
@@ -239,9 +341,9 @@ namespace Editor.AssetBundle
             {
                 if (EditorUtility.DisplayDialog("Override Collection", "你确定要覆盖当前的资源集合吗？", "确定"))
                 {
-                    if (AssetDatabase.CopyAsset($"{abSettingsSavePath}{assetCollectionName_Temp}", $"{abSettingsSavePath}{assetCollectionName_Release}"))
+                    if (AssetDatabase.CopyAsset($"{settings.abSettingsSavePath}{assetCollectionName_Temp}", $"{settings.abSettingsSavePath}{assetCollectionName_Release}"))
                     {
-                        assetsCollection_Release = AssetDatabase.LoadAssetAtPath<AssetBundlesCollections>($"{abSettingsSavePath}{assetCollectionName_Release}");
+                        assetsCollection_Release = AssetDatabase.LoadAssetAtPath<AssetBundlesCollections>($"{settings.abSettingsSavePath}{assetCollectionName_Release}");
                         EditorUtility.SetDirty(assetsCollection_Release);
                         AssetDatabase.SaveAssets();
                         AssetDatabase.Refresh();
@@ -291,7 +393,7 @@ namespace Editor.AssetBundle
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Build AssetBundles"))
             {
-                builder.Build(outputPath, targetPlatform, buildOptions, AssetsInputPath, assetsCollection_Release);
+                builder.Build(outputPath, targetPlatform, buildOptions, settings.assetsInputPath, assetsCollection_Release);
             }
             if (GUILayout.Button("Clean Output"))
             {
@@ -333,10 +435,10 @@ namespace Editor.AssetBundle
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.TextField("StreamingAssets Path", AB_COPY_PATH);
+            EditorGUILayout.TextField("StreamingAssets Path", settings.streamingAssetsCopyPath);
             EditorGUI.EndDisabledGroup();
             if (GUILayout.Button("Move AssetBundle To StreamingAssets", GUILayout.Width(300)))
-                builder.MoveToStreamingAssets(AB_COPY_PATH, outputPath, Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets));
+                builder.MoveToStreamingAssets(settings.streamingAssetsCopyPath, outputPath, Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets));
             GUILayout.EndHorizontal();
         }
 
@@ -422,25 +524,25 @@ namespace Editor.AssetBundle
 
         private void MoveHotUpdateAssembly()
         {
-            if (!Directory.Exists(hybridCLRAssemblySourcesPath))
+            if (!Directory.Exists(settings.hybridCLRAssemblySourcesPath))
             {
-                AppendToLog($"路径：{hybridCLRAssemblySourcesPath}不存在，请先生成热更程序集");
+                AppendToLog($"路径：{settings.hybridCLRAssemblySourcesPath}不存在，请先生成热更程序集");
                 return;
             }
-            var srcDir = new DirectoryInfo(hybridCLRAssemblySourcesPath);
-            var targetDir = new DirectoryInfo(hotUpdateAssemblyTargetPath);
+            var srcDir = new DirectoryInfo(settings.hybridCLRAssemblySourcesPath);
+            var targetDir = new DirectoryInfo(settings.hotUpdateAssemblyTargetPath);
             foreach (var file in targetDir.GetFiles()) file.Delete();
             AppendToLog("--- Copy HotUpdate Dlls ---");
             foreach (var file in srcDir.GetFiles())
             {
                 if (file.Extension == ".dll" && file.Name.Contains("HotUpdate"))
                 {
-                    foreach (var asm in hotUpdateAssemblies)
+                    foreach (var asm in settings.hotUpdateAssemblies)
                     {
                         if (file.Name.Contains(asm))
                         {
-                            File.Copy(file.FullName, Path.Combine(hotUpdateAssemblyTargetPath, file.Name + ".bytes"), true);
-                            AppendToLog($"Copy Over：{hotUpdateAssemblyTargetPath}{file.Name}.bytes");
+                            File.Copy(file.FullName, Path.Combine(settings.hotUpdateAssemblyTargetPath, file.Name + ".bytes"), true);
+                            AppendToLog($"Copy Over：{settings.hotUpdateAssemblyTargetPath}{file.Name}.bytes");
                             break;
                         }
                     }
@@ -496,17 +598,18 @@ namespace Editor.AssetBundle
         /// </summary>
         public static void RefreshAssetKeys()
         {
+            var settings = AssetBundleSettings.LoadOrCreate();
             var collector = new AssetBundleCollector(
-                AssetsInputPath, 
-                new[] { ".meta" }, 
-                null, 
-                null, 
+                settings.assetsInputPath,
+                settings.filterSuffixes,
+                null,
+                null,
                 null
             );
-    
+
             // 使用一个不会影响发布配置的临时文件名
             const string tempFileName = "AssetBundlesCollections_Temp_Keys.asset";
-            var savePath = "Assets/Editor/AssetBundleSettings/";
+            var savePath = settings.abSettingsSavePath;
     
             var tempCollection = collector.CollectLatestInfos(savePath, tempFileName);
             if (!tempCollection)
@@ -526,12 +629,12 @@ namespace Editor.AssetBundle
                 }
             }
 
-            var assetKeyScriptPath = Path.Combine(Application.dataPath, "Scripts", "HotUpdate", "Common", "Generated", "AssetKeys.cs");
+            var assetKeyScriptPath = Path.Combine(Application.dataPath, settings.generatedScriptDir, "AssetKeys.cs");
             AssetKeyGenerator.GenerateFromKeys(keys, assetKeyScriptPath);
-    
+
             // 生成 AB 包键常量
             var bundleNames = tempCollection.assetBundleInfos.Select(ab => ab.assetBundleName).ToList();
-            var bundleKeyScriptPath = Path.Combine(Application.dataPath, "Scripts", "HotUpdate", "Common", "Generated", "AssetBundleKeys.cs");
+            var bundleKeyScriptPath = Path.Combine(Application.dataPath, settings.generatedScriptDir, "AssetBundleKeys.cs");
             AssetBundleKeyGenerator.GenerateFromNames(bundleNames, bundleKeyScriptPath);
     
             // 清理临时文件（可选）

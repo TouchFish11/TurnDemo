@@ -104,7 +104,7 @@ namespace Core.Editor.Generation.Detail
             foreach (var info in directoryInfos)
             {
                 // 递归获取当前子目录下所有非过滤后缀的文件列表
-                var totalFiles = FileUtility.GetTotalFiles(info, new List<FileInfo>(), _filterSuffixes);
+                var totalFiles = FileSources.GetTotalFiles(info, new List<FileInfo>(), _filterSuffixes);
                 // 将当前目录的文件信息添加到全局文件列表中
                 this.fileInfos.AddRange(totalFiles);
             }

@@ -7,7 +7,7 @@ namespace Core.Utility
     /// <summary>
     /// 文件工具类
     /// </summary>
-    public static class FileUtility
+    public static class FileSources
     {
         /// <summary>
         /// AB包自定义后缀

@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using Core.AssetBundles.Management;
 using Core.Utility;
-using Editor.AssetBundle;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.U2D;
 
-namespace Core.Editor.AssetBundle.Core
+namespace Core.Editor.AssetBundles
 {
     /// <summary>
     /// 负责资源收集、标签设置与清除
@@ -64,7 +63,7 @@ namespace Core.Editor.AssetBundle.Core
             {
                 if (filterDirectories != null && Array.Exists(filterDirectories, d => d == dir.Name))
                     continue;
-                var files = FileUtility.GetTotalFiles(dir, new List<FileInfo>(), filterSuffixes);
+                var files = FileSources.GetTotalFiles(dir, new List<FileInfo>(), filterSuffixes);
                 fileInfoDic.Add(dir.Name, files);
             }
 
@@ -228,7 +227,7 @@ namespace Core.Editor.AssetBundle.Core
 
             foreach (var dir in directoryInfo.GetDirectories())
             {
-                var files = FileUtility.GetTotalFiles(dir, new List<FileInfo>(), filterSuffixes);
+                var files = FileSources.GetTotalFiles(dir, new List<FileInfo>(), filterSuffixes);
                 fileInfoDic.Add(dir.Name, files);
             }
 
