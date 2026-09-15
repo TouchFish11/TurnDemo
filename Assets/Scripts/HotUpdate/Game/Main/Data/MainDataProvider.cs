@@ -52,12 +52,8 @@ namespace HotUpdate.Game.Main.Data
                 await loader.LoadConfigAsync<StatusInfoContainer, StatusInfo>();
                 await loader.LoadConfigAsync<DialogueInfoContainer, DialogueInfo>();
                 await loader.LoadConfigAsync<BranchInfoContainer, BranchInfo>();
-                await loader.LoadConfigAsync<TaskInfoContainer, TaskInfo>();
-                await loader.LoadConfigAsync<TaskConditionInfoContainer, TaskConditionInfo>();
                 await loader.LoadConfigAsync<NpcInfoContainer, NpcInfo>();
-            
                 await loader.LoadConfigAsync<ActivityInfoContainer,ActivityInfo>();
-                await loader.LoadConfigAsync<ItemInfoContainer,ItemInfo>();
             });
             
             // 加载二进制配置

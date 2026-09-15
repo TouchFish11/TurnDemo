@@ -18,5 +18,6 @@ namespace HotUpdate.Base.UI
         GlobalPanel,
         SettingPanel,
         InventoryPanel,
+        ItemTipView,
     }
 }

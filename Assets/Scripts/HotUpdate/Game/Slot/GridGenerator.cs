@@ -195,7 +195,7 @@ namespace HotUpdate.Game.Slot
                     // 有效：将实际对象替换占位
                     _nowShowGridDic[index] = gridCell;
                     // 注册交互事件
-                    gridCell.SetClick(_clickCallback);
+                    gridCell.OnSelected += _clickCallback;
                 }
                 else
                 {
@@ -251,7 +251,7 @@ namespace HotUpdate.Game.Slot
                 // 有效：将实际对象替换占位
                 _nowShowGridDic[i] = poolObj;
                 // 注册交互事件
-                poolObj.SetClick(_clickCallback);
+                poolObj.OnSelected += _clickCallback;
                 // 每帧创建数
                 if ((i - minIndex + 1) % CreateGridPerFrame == 0)
                     yield return null;

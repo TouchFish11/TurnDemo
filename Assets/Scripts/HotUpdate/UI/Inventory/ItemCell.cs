@@ -12,7 +12,7 @@ using UnityEngine.UI;
 namespace HotUpdate.UI.Inventory
 {
     /// <summary>
-    /// 物品格子
+    /// 背包物品格子
     /// </summary>
     public class ItemCell : UIBehaviourBase, IGridBase<Item>
     {
@@ -34,7 +34,8 @@ namespace HotUpdate.UI.Inventory
         /// <summary>
         /// 物品点击事件
         /// </summary>
-        private Action<Item> _onClick;
+
+        public event Action<Item> OnSelected;
 
         protected override void OnEnable()
         {
@@ -60,11 +61,6 @@ namespace HotUpdate.UI.Inventory
             // 更新显示状态
             UpdateState();
         }
-        
-        public void SetClick(Action<Item> OnClick)
-        {
-            _onClick = OnClick;
-        }
 
         private void UpdateState()
         {
@@ -84,12 +80,13 @@ namespace HotUpdate.UI.Inventory
             imgSelect.gameObject.SetActive(isShow);
         }
 
+
         /// <summary>
         /// 选中当前物品格子
         /// </summary>
         public void TriggerClick()
         {
-            _onClick?.Invoke(_item);
+            OnSelected?.Invoke(_item);
             // 隐藏New标志
             New.gameObject.SetActive(false);
             // 切换删除标志显示/隐藏
@@ -115,7 +112,7 @@ namespace HotUpdate.UI.Inventory
 
         protected override void OnDisable()
         {
-            _onClick = null;
+            OnSelected = null;
             _item = null;
             SetSelectFlag(false);
         }

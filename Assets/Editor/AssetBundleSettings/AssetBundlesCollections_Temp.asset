@@ -291,9 +291,9 @@ MonoBehaviour:
       hash: d9ae9713015839f308c478c2427eeb0774a0a4b559e230d13473badbd83771a8
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\QuestConfig.json
-      size: 3874
+      size: 14171
       name: QuestConfig.json
-      hash: 731878a2178251342ec98a1670fc804c7df374bc1ca5177c72d7dd8a1bf4939c
+      hash: f4cb33df59ff4c2e1313394eeb8acdf50b8a49c11a1725644412dd3a12c4cad4
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\SwordConfig.json
       size: 429
@@ -341,36 +341,41 @@ MonoBehaviour:
       hash: af894c523cdb343c0e38cf2277b2701005933245e8b76e0ab30df72a5b7620d9
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\Item\ItemConfigs.json
-      size: 2325
+      size: 5410
       name: ItemConfigs.json
-      hash: 0a9f7c08f5e472ee0ded1fc41e1d5e02b1ab7c75d884ab270270947829c73125
+      hash: 8ae4bf1079919bfbcf5a17a2d8c66ccaef205429990aa2f3fe9688e082d0bdc6
       assetType: 0
   - assetBundleName: hotupdate
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Base.dll.bytes
       size: 53248
       name: HotUpdate.Base.dll.bytes
-      hash: 3d0d39b40807c126bc3e78ba1fefd5c34f3a8ebcf317492a64b46910638c2e17
+      hash: 0cf7ec3885b00b71fb12ae72a334834933dc0d9b5a476d077e7429b70952e17a
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Common.dll.bytes
-      size: 52224
+      size: 51200
       name: HotUpdate.Common.dll.bytes
-      hash: 670df588f5ca27e312eb0a69dc59f056d09a61d8607453d224606add5591abc2
+      hash: a9871d2e12aacd90010ee6ad72744720c7a9ccc7e827602f7535635294e8076b
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Entry.dll.bytes
+      size: 14336
+      name: HotUpdate.Entry.dll.bytes
+      hash: 9211dd816d20f1ffd8da0ae086036ebd3056ccd26152fc5dd6075282cb78daa0
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Game.dll.bytes
-      size: 460800
+      size: 460288
       name: HotUpdate.Game.dll.bytes
-      hash: 0a0c40c5a48a424e212f9f0a9d45ab001c86217b08a21807cebdcbe4883a102c
+      hash: e63cd04be8b24ea9e7460d83030a55002907079e9853e850d98576ae2c95e5c1
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.UI.dll.bytes
-      size: 267264
+      size: 271360
       name: HotUpdate.UI.dll.bytes
-      hash: 040159732901211c7570abbda068a404423949994742e26f059b9bd818693ae3
+      hash: 2dfdd2fd8cb990cda1b61ee5ed10630a5d9017d834675a4698536e63e302c5cc
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdateAssemblySettings.json
-      size: 351
+      size: 504
       name: HotUpdateAssemblySettings.json
-      hash: 729339c60de68e4c3748f81ed9e5fb1766fc94eb6740aeb97924125840235efe
+      hash: 98cd013ac5a798e3c4836455d20fb8775cf1166a98e18a7fd43ca282f481efd4
       assetType: 0
   - assetBundleName: hotupdateaot
     assetInfos:
@@ -488,9 +493,9 @@ MonoBehaviour:
   - assetBundleName: scene
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\Scene\BeginScene.unity
-      size: 118480
+      size: 122115
       name: BeginScene.unity
-      hash: 0fc4eba0e6dded0f8191c451e86e5da237f110fee2109d76f996b8bb4f829f1a
+      hash: 47aa82f1b03badce4fd30ea2f69d1ac31aa5be5a40a30aa5835bea353eda08cf
       assetType: 1
     - assetPath: Assets\Editor\ArtRes\Scene\LevelScene.unity
       size: 117066
@@ -549,9 +554,9 @@ MonoBehaviour:
       name: Atlas_SelTarget.spriteatlasv2
       hash: 297d158df3fdce551fa64bf53b7253ec05064491b3665e3e5b01e275a683220a
       assetType: 3
-    - assetPath: Assets\Editor\ArtRes\SpriteAtlas\Build Trigger_1.png
+    - assetPath: Assets\Editor\ArtRes\SpriteAtlas\SpriteAtlas Build Trigger_2.png
       size: 1423792
-      name: Build Trigger_1.png
+      name: SpriteAtlas Build Trigger_2.png
       hash: d7e46a0402ec4b742a86da28b3dd6a8b895ee4b0c047f93b587396fcc7396fa0
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\SpriteAtlas\Icon\Atlas_Icon_BattleEntity.spriteatlasv2
@@ -572,9 +577,9 @@ MonoBehaviour:
   - assetBundleName: tmp_asset
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\TMP_Asset\MSYH_SDF.asset
-      size: 7553
+      size: 8476009
       name: MSYH_SDF.asset
-      hash: 57a27797ae562a715d1bf52947b7cf9b1364fa1c318ded59c460e390f0fbcbbb
+      hash: 337700fe616a0c37c5afb1d30ac9b69ed3644320da11b590f2302bf3a4b7dfcb
       assetType: 0
   - assetBundleName: ui
     assetInfos:
@@ -872,6 +877,21 @@ MonoBehaviour:
       size: 35087
       name: DeleteItemConfirmContent.prefab
       hash: 09bd4963c495309e8bb59e0b6f755bd6cade5c3e64e44a9b7113b965f4a742a0
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\UI\Tip\ItemTipView.prefab
+      size: 57796
+      name: ItemTipView.prefab
+      hash: d93674ea7ecc3676b3efffde74c8be0c80c71fbcb8598ce7ec0c0b4fac6e84b0
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\UI\Tip\PathBox.prefab
+      size: 5699
+      name: PathBox.prefab
+      hash: 64118be512661bb8fc2d42cd399878225e63c68cb7319b23fe31664700b39486
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\UI\Tip\PathObj.prefab
+      size: 12608
+      name: PathObj.prefab
+      hash: ed1af8323b3404746396c4c41806e84879498c98eb31cac20d2560b6b06958ca
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Tip\TipView.prefab
       size: 12511

@@ -80,6 +80,9 @@ namespace HotUpdate.UI
                 case EUIPanelId.InventoryPanel:
                     controller = await _uiManager.CreateViewAsync<InventoryPanel, InventoryController>(AssetKeys.InventoryPanel, layer);
                     break;
+                case EUIPanelId.ItemTipView:
+                    controller = await _uiManager.CreateViewAsync<ItemTipView, ItemTipController>(AssetKeys.ItemTipView, layer);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(panelId), panelId, null);
             }
@@ -133,6 +136,8 @@ namespace HotUpdate.UI
                     return _uiManager.GetController<SettingsController>();
                 case EUIPanelId.InventoryPanel:
                     return _uiManager.GetController<InventoryController>();
+                case EUIPanelId.ItemTipView:
+                    return _uiManager.GetController<ItemTipController>();
                 default:
                     throw new ArgumentOutOfRangeException(nameof(panelId), panelId, null);
             }

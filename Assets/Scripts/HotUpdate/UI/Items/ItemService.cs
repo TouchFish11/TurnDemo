@@ -4,9 +4,10 @@ using System.Threading.Tasks;
 using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Log;
-using Core.Serialize.Binary;
 using Core.Utility;
+using HotUpdate.Base.Data;
 using HotUpdate.Base.Service;
+using HotUpdate.Common.Config.Inventory.Config;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
@@ -17,7 +18,7 @@ namespace HotUpdate.UI.Items
     /// </summary>
     public class ItemService : IDisposable
     {
-        [Inject] private IBinaryDataManager _binaryDataManager;
+        [Inject] private IItemDataProvider _itemDataProvider;
         [Inject] private ObjectSpawner _objectSpawner;
         [Inject] private IIconService _iconService;
         
@@ -40,7 +41,7 @@ namespace HotUpdate.UI.Items
             
             await _iconService.PreLoadSpriteAsync(spriteNames);
         }
-        
+
         /// <summary>
         /// 获取物品格子UI
         /// 内部已初始化UI，异常时回调返回空数组
@@ -48,7 +49,8 @@ namespace HotUpdate.UI.Items
         /// <param name="awardIds"></param>
         /// <param name="parent"></param>
         /// <param name="worldSpace"></param>
-        public async Task<ItemGrid[]> CreateItemGrids(string awardIds, Transform parent = null, bool worldSpace = false)
+        /// <param name="onClck"></param>
+        public async Task<ItemGrid[]> CreateItemGrids(string awardIds, Transform parent = null, bool worldSpace = false, Action<ItemConfig> onClck = null)
         {
             try
             {
@@ -58,13 +60,14 @@ namespace HotUpdate.UI.Items
                 foreach (var pair in itemInfos)
                 {
                     // 读取配置
-                    var itemInfo = _binaryDataManager.GetConfig<ItemInfoContainer>(EConfigLoadType.Excel).dataDic[pair.Key];
+                    var itemConfig = _itemDataProvider.ConfigMap[pair.Key];
                     // 加载图标
-                    var sprite = await _iconService.LoadIconAsync(itemInfo.f_icon);
+                    var sprite = await _iconService.LoadIconAsync(itemConfig.icon);
                     // 获取UI
                     var itemGrid = await _objectSpawner.SpawnAsync<ItemGrid>(AssetKeys.ItemGrid, parent, worldSpace: worldSpace);
+                    itemGrid.OnSelected += onClck;
                     // 初始化
-                    itemGrid.Init(sprite, pair.Value, itemInfo.f_quality);
+                    itemGrid.Init(sprite, pair.Value, itemConfig);
                     _items.Push(itemGrid);
                 }
                 return _items.ToArray();
@@ -76,6 +79,9 @@ namespace HotUpdate.UI.Items
             }
         }
         
+        /// <summary>
+        /// 回收所有已经使用的格子
+        /// </summary>
         public void Clear()
         {
             foreach (var itemGrid in _items)
@@ -92,7 +98,7 @@ namespace HotUpdate.UI.Items
             _objectSpawner.Dispose();
             _objectSpawner = null;
             _iconService = null;
-            _binaryDataManager = null;
+            _itemDataProvider = null;
         }
     }
 }

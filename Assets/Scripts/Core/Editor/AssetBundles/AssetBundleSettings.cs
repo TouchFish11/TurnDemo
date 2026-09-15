@@ -32,7 +32,7 @@ namespace Core.Editor.AssetBundles
         [Tooltip("参与热更的程序集名列表（用于拷贝 DLL 和生成依赖文件）")]
         public string[] hotUpdateAssemblies =
         {
-            "HotUpdate.Common", "HotUpdate.Base", "HotUpdate.Game", "HotUpdate.UI", "HotUpdate.Update",
+            "HotUpdate.Common", "HotUpdate.Base", "HotUpdate.Game", "HotUpdate.UI", "HotUpdate.Entry",
         };
 
         [Header("输出 / 保存")]

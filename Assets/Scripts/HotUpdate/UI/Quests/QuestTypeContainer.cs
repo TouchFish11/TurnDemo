@@ -75,30 +75,12 @@ namespace HotUpdate.UI.Quests
         /// </summary>
         public Task SelectFirstQuest()
         {
-            if (_questItems.Count > 0)
-            {
-                return _questItems[0].Select();
-            }
-
-            return Task.CompletedTask;
+            return _questItems.Count > 0 ? _questItems[0].TriggerSelect() : Task.CompletedTask;
         }
 
         public bool TryGetQuest(int id, out QuetstItem questItem)
         {
             return _idToItemMap.TryGetValue(id, out questItem);
-        }
-        
-        /// <summary>
-        /// 选中该ID的任务对象
-        /// </summary>
-        /// <param name="id"></param>
-        public bool SelectQuest(int id)
-        {
-            if (!_idToItemMap.TryGetValue(id, out var taskItem)) 
-                return false;
-            
-            taskItem.Select();
-            return true;
         }
 
         /// <summary>

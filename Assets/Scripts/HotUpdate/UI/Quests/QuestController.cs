@@ -5,6 +5,7 @@ using Core.DI;
 using Core.Exceptions;
 using Core.Log;
 using Core.Serialize.Json;
+using Core.UI;
 using Core.UI.ViewController;
 using HotUpdate.Base.Collection;
 using HotUpdate.Base.Data;
@@ -13,6 +14,7 @@ using HotUpdate.Base.UI;
 using HotUpdate.Common.Config.Quest;
 using HotUpdate.Common.Config.Quest.Config;
 using HotUpdate.UI.Items;
+using HotUpdate.UI.Tip;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
@@ -33,8 +35,7 @@ namespace HotUpdate.UI.Quests
         
         // 任务数据集合，存储当前所有任务的状态数据
         private IQuestCollection _questCollection;
-        // 当前选中的任务ID
-        private int _currentQuestId = -1;
+
         
         /// <summary>
         /// 任务配置缓存
@@ -94,7 +95,6 @@ namespace HotUpdate.UI.Quests
 
         protected override Task OnInactivate()
         {
-            _currentQuestId = -1;
             return Task.CompletedTask;
         }
 
@@ -108,7 +108,7 @@ namespace HotUpdate.UI.Quests
             {
                 if (taskTypeContainer.TryGetQuest(id, out var questItem))
                 {
-                    return questItem.Select();
+                    return questItem.TriggerSelect();
                 }
             }
 
@@ -237,7 +237,7 @@ namespace HotUpdate.UI.Quests
                 }
             }
             
-            taskItem.Init(questItem.id, questNodeName, view.TaskItemGroup);
+            taskItem.Init(questItem.id, questItem.questType, questNodeName, view.TaskItemGroup);
             // 将任务项添加到所属的任务类型容器中管理
             container.AddQuestItem(taskItem);
         }
@@ -246,27 +246,23 @@ namespace HotUpdate.UI.Quests
         /// 更新任务详情展示
         /// 当任务项被选中时，触发该方法更新详情面板的任务信息
         /// </summary>
-        /// <param name="id">选中的任务ID</param>
-        private async Task UpdateQuestDetail(int id)
+        /// <param name="info"></param>
+        private async Task UpdateQuestDetail((int id, EQuestType type) info)
         {
             try
             {
-                if(_currentQuestId == id)
-                    return;
-
-                _currentQuestId = id;
                 // 从配置中获取任务配置信息
-                var selectConfig = QuestConfig.questItems.Find(item => item.id == id);
+                var selectConfig = QuestConfig.questItems.Find(item => item.id == info.id && item.questType == info.type);
                 // 相等不用处理
                 if (CurrentQuestItemInfo != null && selectConfig == CurrentQuestItemInfo) 
                     return;
 
                 // 更新当前任务信息为选中的任务信息
                 CurrentQuestItemInfo = selectConfig;
-                _objectSpawner.Release(view.RewardItems);
+                _itemService.Clear();
 
                 var questCollection = questDataProvider.QuestCollection;
-                if (!questCollection.TryGetValue(id, out var questData))
+                if (!questCollection.TryGetValue(info.id, out var questData))
                     throw ExceptionHelper.Throw($"questData is null");
 
                 QuestNodeConfig nodeConfig = null;
@@ -278,9 +274,14 @@ namespace HotUpdate.UI.Quests
                 }
             
                 // 解析奖励ID数组，获取物品格子
-                await _itemService.CreateItemGrids(nodeConfig.rewardItemIds, view.RewardBox);
+                await _itemService.CreateItemGrids(nodeConfig.rewardItemIds, view.RewardBox, onClck: async config =>
+                {
+                    var itemTipController = (ItemTipController)await _uiservice.OpenAsync(EUIPanelId.ItemTipView, E_UILayer.Mid);
+                    itemTipController.Init(config);
+                });
+                
                 // 同步任务追踪状态：从任务数据集合中获取当前任务的追踪标记
-                IsFollowingTask = questCollection.TryGetValue(id, out var data) && data.IsTracking;
+                IsFollowingTask = questCollection.TryGetValue(info.id, out var data) && data.IsTracking;
                 // 更新按钮显示
                 view.UpdateFollowTask(IsFollowingTask);
                 // 更新文本显示

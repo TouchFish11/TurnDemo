@@ -3,7 +3,6 @@ using Core.UI;
 using Core.UI.ViewController;
 using HotUpdate.Common.Config.Quest;
 using HotUpdate.Common.Config.Quest.Config;
-using HotUpdate.UI.Items;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -76,11 +75,6 @@ namespace HotUpdate.UI.Quests
         private readonly List<EQuestType> _questTypeIndexs = new();
         
         /// <summary>
-        /// 当前选中任务的奖励物品格子列表
-        /// </summary>
-        public List<ItemGrid> RewardItems { get; } = new();
-        
-        /// <summary>
         /// 任务列表滚动视图的内容容器（用于挂载任务项预制体）
         /// </summary>
         public Transform TaskContent => svTask.content;
@@ -101,7 +95,7 @@ namespace HotUpdate.UI.Quests
         public bool HasTask => _questTypeIndexs.Count > 0 && _taskTypeToContainerMap.Count > 0;
         
         #region 公共方法
-
+        
         /// <summary>
         /// 更新任务详情面板显示
         /// </summary>

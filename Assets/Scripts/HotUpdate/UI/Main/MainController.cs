@@ -79,11 +79,17 @@ namespace HotUpdate.UI.Main
                         break;
                     case "btnBag":
                         // Test
-                        _itemDataProvider.AddData(10001, 1);
-                        _itemDataProvider.AddData(10002, 2);
-                        _itemDataProvider.AddData(10003, 3);
+                        _itemDataProvider.AddData(10001, 10);
+                        _itemDataProvider.AddData(10002, 20);
+                        _itemDataProvider.AddData(10003, 30);
+                        _itemDataProvider.AddData(10004, 30);
+                        _itemDataProvider.AddData(10005, 30);
+                        _itemDataProvider.AddData(10006, 30);
+                        _itemDataProvider.AddData(10007, 30);
                         _itemDataProvider.AddData(20001, 1);
                         _itemDataProvider.AddData(20002, 1);
+                        _itemDataProvider.AddData(20003, 1);
+                        _itemDataProvider.AddData(20004, 1);
                         id = EUIPanelId.InventoryPanel;
                         break;
                     // 任务按钮点击：打开任务界面
@@ -101,7 +107,7 @@ namespace HotUpdate.UI.Main
                 }
                 
                 //TimeUtil.Timescale = 0;
-                await _uiService.OpenAsync(id, E_UILayer.Bot, hideMain: true);
+                await _uiService.OpenAsync(id, E_UILayer.Mid, hideMain: true);
             }
             catch (Exception e)
             {

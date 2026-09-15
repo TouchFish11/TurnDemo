@@ -24,7 +24,7 @@ MonoBehaviour:
   - HotUpdate.Base
   - HotUpdate.Game
   - HotUpdate.UI
-  - HotUpdate.Update
+  - HotUpdate.Entry
   abSettingsSavePath: Assets/Editor/AssetBundleSettings/
   streamingAssetsCopyPath: Assets/StreamingAssets/AssetBundles/
   serverDataPath: 

@@ -85,6 +85,16 @@ Assets/
 
 ---
 
+## 截图
+
+> 部分截图展示（截图持续补充中，图片存放于 [`doc/Images`](doc/Images/)）：
+
+| 主界面 | 对话系统 | 活动系统 |
+| --- | --- | --- |
+| ![主界面](doc/Images/MainScene.png) | ![对话系统](doc/Images/Dialogue.png) | ![活动系统](doc/Images/Activity.png) |
+
+---
+
 ## 关于我
 
 - 2026 届本科毕业，专注 Unity 游戏客户端开发，意向初级/应届岗位，可立即到岗

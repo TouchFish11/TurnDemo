@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using Core.Log;
 using Core.UI;
+using HotUpdate.Common.Config.Quest;
 using TMPro;
 using UnityEngine.UI;
 
@@ -29,9 +29,14 @@ namespace HotUpdate.UI.Quests
         public int QuestId { get; private set; }
         
         /// <summary>
+        /// 任务类型
+        /// </summary>
+        public EQuestType QuestType { get; private set; }
+        
+        /// <summary>
         /// 选中任务时触发的事件（携带选中任务的ID）
         /// </summary>
-        public event Func<int, Task> OnSelectedTask;
+        public event Func<(int id, EQuestType type), Task> OnSelectedTask;
 
         /// <summary>
         /// 初始化时执行（重写父类Awake）
@@ -50,12 +55,14 @@ namespace HotUpdate.UI.Quests
         /// 任务项数据初始化
         /// </summary>
         /// <param name="questId"></param>
+        /// <param name="type"></param>
         /// <param name="questName"></param>
         /// <param name="group">Toggle分组（用于保证同组内仅能选中一个任务项）</param>
-        public void Init(int questId, string questName, ToggleGroup group)
+        public void Init(int questId, EQuestType type, string questName, ToggleGroup group)
         {
             // 赋值当前任务项的唯一标识
             QuestId = questId;
+            QuestType = type;
             // 设置任务名称显示文本
             txtTaskName.text = questName;
             // 为Toggle绑定分组，确保分组内互斥选择
@@ -67,28 +74,40 @@ namespace HotUpdate.UI.Quests
         /// </summary>
         /// <param name="togName">触发状态变更的Toggle名称</param>
         /// <param name="isOn">当前Toggle是否被选中（true=选中，false=未选中）</param>
-        protected override void OnToggleValueChanged(string togName, bool isOn)
+        protected override async void OnToggleValueChanged(string togName, bool isOn)
         {
-            // 根据选中状态显示/隐藏选中标识图片
-            imgSel.gameObject.SetActive(isOn);
             _selected = isOn;
+            if (_selected)
+            {
+                await Select();
+            }
+            else
+            {
+                // 根据选中状态显示/隐藏选中标识图片
+                imgSel.gameObject.SetActive(_selected);
+            }
         }
 
+        /// <summary>
+        /// 主动触发选中
+        /// </summary>
+        public Task TriggerSelect()
+        {
+            _selected = true;
+            toggle.SetIsOnWithoutNotify(true);
+            return Select();
+        }
+        
         /// <summary>
         /// 主动选中当前任务项的方法
         /// 外部调用此方法可强制将当前任务项设为选中状态
         /// </summary>
-        public Task Select()
+        private Task Select()
         {
-            // 设置Toggle为选中状态
-            toggle.isOn = true;
+            // 根据选中状态显示/隐藏选中标识图片
+            imgSel.gameObject.SetActive(_selected);
             // 若当前为选中状态，触发选中任务事件并传递任务ID
-            if (_selected)
-            {
-                return OnSelectedTask?.Invoke(QuestId);
-            }
-
-            return Task.CompletedTask;
+            return _selected ? OnSelectedTask?.Invoke((QuestId, QuestType)) : Task.CompletedTask;
         }
     }
 }
