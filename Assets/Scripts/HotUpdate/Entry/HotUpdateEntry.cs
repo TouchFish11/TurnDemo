@@ -9,9 +9,9 @@ using Core.Utility;
 using HotUpdate.Base.Module;
 using HotUpdate.Base.Settings;
 using HotUpdate.Base.UI;
-using HotUpdate.Common.Config.Settings;
 using HotUpdate.Game.Main;
 using HotUpdate.UI.Begin;
+using HotUpdate.UI.Settings.Handlers;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
@@ -79,9 +79,10 @@ namespace HotUpdate.Entry
             using var handle = await GameAsset.LoadAssetAsync<TextAsset>(AssetKeys.GameSettingsConfig);
             var gameSettingsConfig = _jsonManager.FromJson<GameSettingsConfig>(handle.Asset.text, settings:NewtonsoftJsonUtility.DefaultSerializerSettings);
             var settings = await _jsonManager.FromJsonAsync<GameSettings>(PathUtility.GetUserDataLocalSavePath(FileSources.GameSettingFileName), settings:NewtonsoftJsonUtility.DefaultSerializerSettings);
-            
-            // TODO：逻辑可优化
-            SettingsService.SetFrameRate(gameSettingsConfig.framerates[(int)settings[ESettingType.TargetFrameRateIndex]]);
+            settings.Initialize(gameSettingsConfig);
+
+            // 应用所有已保存的设置（全屏/画质/垂直同步/帧率等），统一走 handler，不再单独只设帧率
+            DIContainer.Resolve<SettingHandlerRegistry>().ApplyAll(settings, gameSettingsConfig);
             Application.runInBackground = true;
             
             // ...

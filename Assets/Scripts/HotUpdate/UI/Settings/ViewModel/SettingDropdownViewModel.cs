@@ -2,46 +2,39 @@ using System;
 using System.Collections.Generic;
 using Core.UI;
 using HotUpdate.Base.Settings;
-using HotUpdate.Common.Config.Settings;
 
 namespace HotUpdate.UI.Settings.ViewModel
 {
     /// <summary>
-    /// 下拉列表设置ViewModel
+    /// 下拉列表设置ViewModel。
+    /// 选项列表由外部传入：大多数来自 SettingDefinition.Options 的静态配置，
+    /// 少数（如「分辨率」）由运行期动态生成，所以构造多收一个 options 参数而非直接读 definition.Options。
     /// </summary>
     public class SettingDropdownViewModel : IDisposable
     {
         /// <summary>
-        /// 选中索引
+        /// 当前选中项的索引
         /// </summary>
         public ReactiveProperty<int> OptionIndex { get; protected set; }
-        
+
         /// <summary>
-        /// 选项列表
+        /// 选项显示文本列表（只存 Text 用于 UI 显示，语义值 Value 由 handler 使用）
         /// </summary>
         public List<string> Options { get; protected set; }
-        
-        protected SettingDropdownViewModel(GameSettings settings, GameSettingsConfig settingsConfig, ESettingType settingType)
+
+        protected SettingDropdownViewModel(GameSettings settings, SettingDefinition definition, List<SettingOption> options)
         {
-            switch (settingType)
+            Options = new List<string>();
+            if (options != null)
             {
-                case ESettingType.VolumeOpen:
-                    Options = settingsConfig.volumeOpts.ConvertAll(i => i.ToString());
-                    break;
-                case ESettingType.SFXOpen:
-                    Options = settingsConfig.sfxOpts.ConvertAll(i => i.ToString());
-                    break;
-                case ESettingType.TypeWriter:
-                    Options = settingsConfig.typeWriterOpts.ConvertAll(i => i.ToString());
-                    break;
-                case ESettingType.TargetFrameRateIndex:
-                    Options = settingsConfig.framerates.ConvertAll(i => i.ToString());
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(settingType), settingType, null);
+                foreach (var opt in options)
+                {
+                    Options.Add(opt.Text);
+                }
             }
 
-            OptionIndex = new ReactiveProperty<int>((int)settings[settingType]);
+            // 初始索引从 GameSettings 读取（用户上次保存的选择）
+            OptionIndex = new ReactiveProperty<int>(settings.GetInt(definition.Type));
         }
 
         public void Dispose()

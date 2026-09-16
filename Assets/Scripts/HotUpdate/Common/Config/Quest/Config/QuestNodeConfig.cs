@@ -19,6 +19,7 @@ namespace HotUpdate.Common.Config.Quest.Config
         // 任务栏提示文本
         public string questTip;
         // 任务节点描述
+        [TextArea(10, 20)]
         public string description;
         // 当前节点的最大进度，达到最大进度则视为完成，对应可以抽象为任务进度配置类，对应数据使用的任务进度类
         public int maxProgress;

@@ -87,6 +87,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.Comparer<int>
 	// System.Collections.Generic.Comparer<object>
 	// System.Collections.Generic.Dictionary.Enumerator<System.Nullable<long>,int>
+	// System.Collections.Generic.Dictionary.Enumerator<byte,float>
 	// System.Collections.Generic.Dictionary.Enumerator<byte,int>
 	// System.Collections.Generic.Dictionary.Enumerator<byte,object>
 	// System.Collections.Generic.Dictionary.Enumerator<int,int>
@@ -97,6 +98,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.Dictionary.Enumerator<object,int>
 	// System.Collections.Generic.Dictionary.Enumerator<object,object>
 	// System.Collections.Generic.Dictionary.KeyCollection.Enumerator<System.Nullable<long>,int>
+	// System.Collections.Generic.Dictionary.KeyCollection.Enumerator<byte,float>
 	// System.Collections.Generic.Dictionary.KeyCollection.Enumerator<byte,int>
 	// System.Collections.Generic.Dictionary.KeyCollection.Enumerator<byte,object>
 	// System.Collections.Generic.Dictionary.KeyCollection.Enumerator<int,int>
@@ -107,6 +109,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.Dictionary.KeyCollection.Enumerator<object,int>
 	// System.Collections.Generic.Dictionary.KeyCollection.Enumerator<object,object>
 	// System.Collections.Generic.Dictionary.KeyCollection<System.Nullable<long>,int>
+	// System.Collections.Generic.Dictionary.KeyCollection<byte,float>
 	// System.Collections.Generic.Dictionary.KeyCollection<byte,int>
 	// System.Collections.Generic.Dictionary.KeyCollection<byte,object>
 	// System.Collections.Generic.Dictionary.KeyCollection<int,int>
@@ -117,6 +120,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.Dictionary.KeyCollection<object,int>
 	// System.Collections.Generic.Dictionary.KeyCollection<object,object>
 	// System.Collections.Generic.Dictionary.ValueCollection.Enumerator<System.Nullable<long>,int>
+	// System.Collections.Generic.Dictionary.ValueCollection.Enumerator<byte,float>
 	// System.Collections.Generic.Dictionary.ValueCollection.Enumerator<byte,int>
 	// System.Collections.Generic.Dictionary.ValueCollection.Enumerator<byte,object>
 	// System.Collections.Generic.Dictionary.ValueCollection.Enumerator<int,int>
@@ -127,6 +131,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.Dictionary.ValueCollection.Enumerator<object,int>
 	// System.Collections.Generic.Dictionary.ValueCollection.Enumerator<object,object>
 	// System.Collections.Generic.Dictionary.ValueCollection<System.Nullable<long>,int>
+	// System.Collections.Generic.Dictionary.ValueCollection<byte,float>
 	// System.Collections.Generic.Dictionary.ValueCollection<byte,int>
 	// System.Collections.Generic.Dictionary.ValueCollection<byte,object>
 	// System.Collections.Generic.Dictionary.ValueCollection<int,int>
@@ -137,6 +142,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.Dictionary.ValueCollection<object,int>
 	// System.Collections.Generic.Dictionary.ValueCollection<object,object>
 	// System.Collections.Generic.Dictionary<System.Nullable<long>,int>
+	// System.Collections.Generic.Dictionary<byte,float>
 	// System.Collections.Generic.Dictionary<byte,int>
 	// System.Collections.Generic.Dictionary<byte,object>
 	// System.Collections.Generic.Dictionary<int,int>
@@ -163,6 +169,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.ICollection<HotUpdate.Game.Battle.Turn.WaveData>
 	// System.Collections.Generic.ICollection<HotUpdate.Game.Point.PointInfo>
 	// System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.Nullable<long>,int>>
+	// System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<byte,float>>
 	// System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<byte,int>>
 	// System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<byte,object>>
 	// System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<int,int>>
@@ -192,6 +199,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.IEnumerable<HotUpdate.Game.Battle.Turn.WaveData>
 	// System.Collections.Generic.IEnumerable<HotUpdate.Game.Point.PointInfo>
 	// System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.Nullable<long>,int>>
+	// System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<byte,float>>
 	// System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<byte,int>>
 	// System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<byte,object>>
 	// System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<int,int>>
@@ -211,6 +219,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.IEnumerator<HotUpdate.Game.Battle.Turn.WaveData>
 	// System.Collections.Generic.IEnumerator<HotUpdate.Game.Point.PointInfo>
 	// System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<System.Nullable<long>,int>>
+	// System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<byte,float>>
 	// System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<byte,int>>
 	// System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<byte,object>>
 	// System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<int,int>>
@@ -242,6 +251,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Collections.Generic.IReadOnlyDictionary<int,object>
 	// System.Collections.Generic.IReadOnlyDictionary<object,object>
 	// System.Collections.Generic.KeyValuePair<System.Nullable<long>,int>
+	// System.Collections.Generic.KeyValuePair<byte,float>
 	// System.Collections.Generic.KeyValuePair<byte,int>
 	// System.Collections.Generic.KeyValuePair<byte,object>
 	// System.Collections.Generic.KeyValuePair<int,int>
@@ -315,11 +325,11 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Comparison<int>
 	// System.Comparison<object>
 	// System.Converter<Core.AssetBundles.Management.AssetHandle,object>
-	// System.Converter<int,object>
 	// System.Converter<object,object>
 	// System.Func<Core.AssetBundles.Management.AssetHandle<object>>
 	// System.Func<HotUpdate.Game.Battle.Core.BattleResult,object>
 	// System.Func<System.Threading.Tasks.VoidTaskResult>
+	// System.Func<System.ValueTuple<int,byte>,object>
 	// System.Func<System.ValueTuple<object,object>>
 	// System.Func<byte>
 	// System.Func<int,object>
@@ -386,6 +396,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Threading.Tasks.TaskFactory<System.ValueTuple<object,object>>
 	// System.Threading.Tasks.TaskFactory<object>
 	// System.ValueTuple<float,float>
+	// System.ValueTuple<int,byte>
 	// System.ValueTuple<int,int,System.Nullable<long>>
 	// System.ValueTuple<int,int>
 	// System.ValueTuple<object,object>
@@ -432,7 +443,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// object System.Collections.Generic.CollectionExtensions.GetValueOrDefault<int,object>(System.Collections.Generic.IReadOnlyDictionary<int,object>,int,object)
 		// object System.Collections.Generic.CollectionExtensions.GetValueOrDefault<object,object>(System.Collections.Generic.IReadOnlyDictionary<object,object>,object)
 		// object System.Collections.Generic.CollectionExtensions.GetValueOrDefault<object,object>(System.Collections.Generic.IReadOnlyDictionary<object,object>,object,object)
-		// System.Collections.Generic.List<object> System.Collections.Generic.List<int>.ConvertAll<object>(System.Converter<int,object>)
 		// System.Collections.Generic.List<object> System.Collections.Generic.List<object>.ConvertAll<object>(System.Converter<object,object>)
 		// bool System.Linq.Enumerable.Any<object>(System.Collections.Generic.IEnumerable<object>,System.Func<object,bool>)
 		// int System.Linq.Enumerable.Count<object>(System.Collections.Generic.IEnumerable<object>)

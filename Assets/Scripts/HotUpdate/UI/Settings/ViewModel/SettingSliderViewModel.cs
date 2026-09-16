@@ -14,11 +14,11 @@ namespace HotUpdate.UI.Settings.ViewModel
         /// </summary>
         public ReactiveProperty<float> Progress { get; protected set; }
 
-        protected SettingSliderViewModel(GameSettings gameSettings, ESettingType settingType)
+        protected SettingSliderViewModel(GameSettings gameSettings, SettingDefinition definition)
         {
-            Progress = new ReactiveProperty<float>((float)gameSettings[settingType] * SettingsUtil.SLIDER_MULTIPLIER);
+            Progress = new ReactiveProperty<float>(gameSettings.GetFloat(definition.Type));
         }
-        
+
         public void Dispose()
         {
             Progress.Dispose();

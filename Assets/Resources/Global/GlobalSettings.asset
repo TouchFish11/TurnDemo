@@ -22,7 +22,7 @@ MonoBehaviour:
     isOpenLayout: 1
     activeTimeThreshold: 60
     poolMinSize: 10
-    poolMaxSize: 50
+    poolMaxSize: 100
   resourcesModuleConfig:
     abLoadPath: 1
     criticalActiveThreshold: 8

@@ -450,6 +450,7 @@ public static class AssetKeys
     public const string QuestItem = "QuestItem";
     public const string QuestTypeContainer = "QuestTypeContainer";
     public const string QuestView = "QuestView";
+    public const string SettingButtonEntry = "SettingButtonEntry";
     public const string SettingDrowdownEntry = "SettingDrowdownEntry";
     public const string SettingOpt = "SettingOpt";
     public const string SettingSliderEntry = "SettingSliderEntry";

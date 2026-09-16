@@ -97,6 +97,11 @@ MonoBehaviour:
       name: TurtleShellController.controller
       hash: 4659d6cf311f9cc4a96b91671471c4b4b15cc73db92e9ad39b4438f05c4b608f
       assetType: 0
+    - assetPath: Assets\Editor\ArtRes\Animator\Npc\NpcController.controller
+      size: 2025
+      name: NpcController.controller
+      hash: 584bc7d88f9746254b8951c4b6ae1cd32f0d27d971a19acf5307cc892db76ecc
+      assetType: 0
     - assetPath: Assets\Editor\ArtRes\Animator\Role\GunmanController.controller
       size: 15542
       name: GunmanController.controller
@@ -236,9 +241,9 @@ MonoBehaviour:
       hash: f858b13edca53c5d22eee74396b4a87f3e5fac1d1c1fe429628473b95b1e8218
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\NpcInfo.bytes
-      size: 150
+      size: 228
       name: NpcInfo.bytes
-      hash: 8f34a7ebdca8de87c411dcdf9a48af8fddab624ede33e79a86259df51dab53ee
+      hash: fa66be97601eaaf25d7890597697cf554ddc0ff3aaba1aa2232feba5346eea2b
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\GameConfig\Excel\RoleInfo.bytes
       size: 1029
@@ -281,9 +286,9 @@ MonoBehaviour:
       hash: d8006aa8e8fc0bb0ac3447be74d1e2fde293c4101fd373ca04f13805f2ad4b55
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\GameSettingsConfig.json
-      size: 999
+      size: 22122
       name: GameSettingsConfig.json
-      hash: f394d32a5b451d2fe373e9d4234c985e2fb9d25dc6c61aae759637f35492aef5
+      hash: d607f65136ca140b13307551352d5f21c068163e745628fb65e7454ba2a74500
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\HelmetConfig.json
       size: 253
@@ -291,9 +296,9 @@ MonoBehaviour:
       hash: d9ae9713015839f308c478c2427eeb0774a0a4b559e230d13473badbd83771a8
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\QuestConfig.json
-      size: 14171
+      size: 17516
       name: QuestConfig.json
-      hash: f4cb33df59ff4c2e1313394eeb8acdf50b8a49c11a1725644412dd3a12c4cad4
+      hash: 91d48010a0fcab16954f3e858e224810ba15b318c470203fd3b16cc172c33f44
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\SwordConfig.json
       size: 429
@@ -325,6 +330,11 @@ MonoBehaviour:
       name: TurtleShellAnimationCommonConfig.json
       hash: f18c2be4820827cc76abef2bcaa36f12925958431c742d8a9a6aae2ad08d30c7
       assetType: 0
+    - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\Animation\Npc\NpcAnimationConfig.json
+      size: 1039
+      name: NpcAnimationConfig.json
+      hash: 4908054604aee838eb56e07c6c1a42f25fb8408fb0303d0be3b287d0fdebbfa5
+      assetType: 0
     - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\Animation\Role\PriestAnimationConfigCollection.json
       size: 13358
       name: PriestAnimationConfigCollection.json
@@ -348,29 +358,29 @@ MonoBehaviour:
   - assetBundleName: hotupdate
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Base.dll.bytes
-      size: 53248
+      size: 53760
       name: HotUpdate.Base.dll.bytes
-      hash: 0cf7ec3885b00b71fb12ae72a334834933dc0d9b5a476d077e7429b70952e17a
+      hash: 2786ed113939f7389ffb89895069bc0e47c7f4a4ebf4e804f3505753226f86d2
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Common.dll.bytes
       size: 51200
       name: HotUpdate.Common.dll.bytes
-      hash: a9871d2e12aacd90010ee6ad72744720c7a9ccc7e827602f7535635294e8076b
+      hash: 6131ce74f7a94ebba27b0dc477a6d89b07356e5c1e6122ec024851f63ae4a9b7
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Entry.dll.bytes
       size: 14336
       name: HotUpdate.Entry.dll.bytes
-      hash: 9211dd816d20f1ffd8da0ae086036ebd3056ccd26152fc5dd6075282cb78daa0
+      hash: b02ff4ec6b38fa7019053446f01686e2f7cd8a66cfbe7d61914958661c358621
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Game.dll.bytes
       size: 460288
       name: HotUpdate.Game.dll.bytes
-      hash: e63cd04be8b24ea9e7460d83030a55002907079e9853e850d98576ae2c95e5c1
+      hash: f8d350daa9f854212a8649d58e194d20354cf647accfaf37b54a3f2a0b97b15e
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.UI.dll.bytes
-      size: 271360
+      size: 280576
       name: HotUpdate.UI.dll.bytes
-      hash: 2dfdd2fd8cb990cda1b61ee5ed10630a5d9017d834675a4698536e63e302c5cc
+      hash: 22b611243f631503acfda2f068c3a4416ab9390b4621ab7bc197088a482bd303
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdateAssemblySettings.json
       size: 504
@@ -385,9 +395,9 @@ MonoBehaviour:
       hash: d59b722985206424ec469b6fa376aa035b0798dbcedaba96b19339b8d226fc30
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdateAOT\mscorlib.dll.bytes
-      size: 2392064
+      size: 2390528
       name: mscorlib.dll.bytes
-      hash: b12a3a2fcb450d542dd2ae63f4824e7804394597831b9459530eda4ed6430612
+      hash: 8ce2ab09aa1b57930229f7f6648e97fe6608e0a71c12b58b5ef506357f413d33
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdateAOT\System.Core.dll.bytes
       size: 471552
@@ -410,9 +420,9 @@ MonoBehaviour:
       hash: f1a8c4ab13cdfe47b3954ecc21b2d35454e3092ce9bb835defd9c9bae8d6f76d
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdateAOT\UnityEngine.CoreModule.dll.bytes
-      size: 670720
+      size: 694272
       name: UnityEngine.CoreModule.dll.bytes
-      hash: 7e16f78104c0bcd76a6517a2feb8709c43080a320bc13f6a0838fe319a74b6ca
+      hash: 1843e61e2bb40b59402b5c68fe17b601b3dd45affc196ab4d8d230cd655f094f
       assetType: 0
   - assetBundleName: material
     assetInfos:
@@ -436,9 +446,9 @@ MonoBehaviour:
       hash: 7b9921066df45474efee9b0766024e44b0893104a73667565a4133b2e6350f66
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Prefab\Main\Prefab_Npc.prefab
-      size: 4004
+      size: 80996
       name: Prefab_Npc.prefab
-      hash: 4721972f7c7b253e0bfaaf4627f8c8cb687faac50dcd1560a178b79de1bb0b8a
+      hash: de046bd1296e4886102f5d400a4620ba6a42f47a154b44e6459a392390dbd68d
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\Prefab\Monster\Prefab_AbyssalMage.prefab
       size: 28304
@@ -493,9 +503,9 @@ MonoBehaviour:
   - assetBundleName: scene
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\Scene\BeginScene.unity
-      size: 122115
+      size: 100895
       name: BeginScene.unity
-      hash: 47aa82f1b03badce4fd30ea2f69d1ac31aa5be5a40a30aa5835bea353eda08cf
+      hash: 991f021887ca9a26c225f0fff7bedcb16d250e9ed67db14068f56a59564c193b
       assetType: 1
     - assetPath: Assets\Editor\ArtRes\Scene\LevelScene.unity
       size: 117066
@@ -513,9 +523,9 @@ MonoBehaviour:
       hash: 62a80ee7bda04379da7ac3d1078d21179c97f951554c9f87f228de13e266deb3
       assetType: 1
     - assetPath: Assets\Editor\ArtRes\Scene\Test\OtherTest.unity
-      size: 9401
+      size: 8134
       name: OtherTest.unity
-      hash: c5583588f2760d79544b3241cf89bbb70f3744cd6d947669e14ae0736c5d5fad
+      hash: 2cb608042cb09af7df7957eff10fc44552ef72fec51be7e1fd844865bd05fe99
       assetType: 1
     - assetPath: Assets\Editor\ArtRes\Scene\Test\QuestTest.unity
       size: 8123
@@ -577,9 +587,9 @@ MonoBehaviour:
   - assetBundleName: tmp_asset
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\TMP_Asset\MSYH_SDF.asset
-      size: 8476009
+      size: 7553
       name: MSYH_SDF.asset
-      hash: 337700fe616a0c37c5afb1d30ac9b69ed3644320da11b590f2302bf3a4b7dfcb
+      hash: 57a27797ae562a715d1bf52947b7cf9b1364fa1c318ded59c460e390f0fbcbbb
       assetType: 0
   - assetBundleName: ui
     assetInfos:
@@ -844,9 +854,14 @@ MonoBehaviour:
       hash: 646511650c2425e44cca5bb4aa23beb6cfdc425978efd023f44b1da993be5475
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Quest\QuestView.prefab
-      size: 57010
+      size: 72259
       name: QuestView.prefab
-      hash: 4c696ade0eb795569e0fa0d9b84c5b9aa18f364f04aaeb7e06b1e02081f3689a
+      hash: c50a1b6f06a2c31c715fc1f1937ca01deaa7f07d633e6142122e067f7fa64e7c
+      assetType: 0
+    - assetPath: Assets\Editor\ArtRes\UI\Setting\SettingButtonEntry.prefab
+      size: 15283
+      name: SettingButtonEntry.prefab
+      hash: ce7a10c947a9c357132dc35bdba66e80d9c656518747032526d259affcc4d149
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Setting\SettingDrowdownEntry.prefab
       size: 36827
@@ -854,14 +869,14 @@ MonoBehaviour:
       hash: 043637ff5f470b30f5d1348db3eac2ba2be7509a94399f4bfaed4210b994ae59
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Setting\SettingOpt.prefab
-      size: 11461
+      size: 12546
       name: SettingOpt.prefab
-      hash: cf3ef6769f77aa80cb1174a9bd22e3990e834c66f8542ce6860fa13ed8d4244b
+      hash: 5904181dbe172fef6b4a79b9d370f2df862798185f509df0b89767ef8a6b18e7
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Setting\SettingSliderEntry.prefab
-      size: 23184
+      size: 23187
       name: SettingSliderEntry.prefab
-      hash: 4d3cc32fab149b3bdd770ddc3cabd36217a5ff735ef7fb289774af568a8f0e6c
+      hash: c481d28096394a50a5a1ca188c6f1be5c1f52b01320236305407d548408baac7
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Setting\SettingsView.prefab
       size: 40014

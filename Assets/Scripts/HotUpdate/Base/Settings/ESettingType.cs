@@ -1,44 +1,48 @@
 namespace HotUpdate.Base.Settings
 {
     /// <summary>
-    /// 设置类型，新增设置只需新增枚举
+    /// 设置类型，新增设置需在此加枚举值并在配置 SO 里加一条 SettingDefinition
     /// </summary>
     public enum ESettingType : byte
     {
-        /// <summary>
-        /// 音量值
-        /// </summary>
-        [SettingObject(true)]
+        // ===== 已有 =====
         VolumeValue,
-        
-        /// <summary>
-        /// 音效值
-        /// </summary>
-        [SettingObject(true)]
         SFXValue,
-        
-        /// <summary>
-        /// 音量开关
-        /// </summary>
-        [SettingObject(false)]
         VolumeOpen,
-        
-        /// <summary>
-        /// 音效开关
-        /// </summary>
-        [SettingObject(false)]
         SFXOpen,
-        
-        /// <summary>
-        /// 对话打字机效果
-        /// </summary>
-        [SettingObject(false)]
         TypeWriter,
-        
-        /// <summary>
-        /// 帧率索引
-        /// </summary>
-        [SettingObject(false)]
         TargetFrameRateIndex,
+
+        // ===== 画面 =====
+        FullscreenMode,
+        Resolution,
+        VSync,
+        QualityLevel,
+        ShadowQuality,
+        ShadowDistance,
+        AntiAliasing,
+        TextureQuality,
+        AnisotropicFiltering,
+        FOV,
+        Brightness,
+
+        // ===== 音频 =====
+        MasterVolume,
+        VoiceVolume,
+        AmbientVolume,
+        UIVolume,
+        AudioOutputMode,
+        MuteInBackground,
+
+        // ===== 玩法 =====
+        BattleSpeed,
+        AutoBattle,
+        CameraSensitivity,
+
+        // ===== 其他 =====
+        Language,
+        ShowFPS,
+        Reset,
+        ClearCache,
     }
 }

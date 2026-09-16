@@ -1,6 +1,5 @@
 using HotUpdate.Base.Collection;
 using HotUpdate.Base.Settings;
-using HotUpdate.Common.Config.Settings;
 
 namespace HotUpdate.Base.Data
 {

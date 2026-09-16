@@ -1,6 +1,5 @@
 using Core.DI;
 using HotUpdate.Base.Data;
-using HotUpdate.Base.Manager;
 using HotUpdate.Base.Settings;
 
 namespace HotUpdate.UI.Settings.Handlers
@@ -11,8 +10,8 @@ namespace HotUpdate.UI.Settings.Handlers
 
         public override void Execute(int optionIndex)
         {
-            // 设置帧率
-            SettingsService.SetFrameRate(mainDataProvider.GameSettingsConfig.framerates[optionIndex]);
+            var definition = mainDataProvider.GameSettingsConfig.Settings.Find(d => d.Type == ESettingType.TargetFrameRateIndex);
+            SettingsService.SetFrameRate(definition.Options[optionIndex].Value);
         }
     }
 }

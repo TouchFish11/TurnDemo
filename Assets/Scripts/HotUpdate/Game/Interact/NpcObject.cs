@@ -1,3 +1,5 @@
+using HotUpdate.Game.Animation.Component;
+
 namespace HotUpdate.Game.Interact
 {
     /// <summary>
@@ -6,6 +8,8 @@ namespace HotUpdate.Game.Interact
     public class NpcObject : InteractObject
     {
         public override string InteractTip => NpcInfo.f_speakerName;
+
+        private AnimatorComponent _animatorComponent;
         
         /// <summary>
         /// 是否显示对象头顶浮动文本
@@ -24,6 +28,7 @@ namespace HotUpdate.Game.Interact
         public void InitNpc(NpcInfo npcInfo)
         {
             NpcInfo = npcInfo;
+            _animatorComponent = this.AddComponent<AnimatorComponent>();
         }
     }
 }

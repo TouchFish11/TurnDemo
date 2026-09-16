@@ -11,7 +11,6 @@ using HotUpdate.Base.Attributes;
 using HotUpdate.Base.Collection;
 using HotUpdate.Base.Data;
 using HotUpdate.Base.Settings;
-using HotUpdate.Common.Config.Settings;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 
@@ -76,12 +75,13 @@ namespace HotUpdate.Game.Main.Data
                 MusicData = MusicData,
             };
             
-            // 读取游戏设置数据
-            GameSettings = await _jsonManager.FromJsonAsync<GameSettings>($"{PathUtility.GetUserDataLocalSavePath(FileSources.GameSettingFileName)}", settings:NewtonsoftJsonUtility.DefaultSerializerSettings);
-            
-            // 读取游戏设置数据配置
+            // 读取游戏设置配置（定义）
             using var handle = await GameAsset.LoadAssetAsync<TextAsset>(AssetKeys.GameSettingsConfig);
             GameSettingsConfig = _jsonManager.FromJson<GameSettingsConfig>(handle.Asset.text);
+
+            // 读取游戏设置数据，并用定义补默认值
+            GameSettings = await _jsonManager.FromJsonAsync<GameSettings>($"{PathUtility.GetUserDataLocalSavePath(FileSources.GameSettingFileName)}", settings:NewtonsoftJsonUtility.DefaultSerializerSettings);
+            GameSettings.Initialize(GameSettingsConfig);
         }
 
         public void LoadData()

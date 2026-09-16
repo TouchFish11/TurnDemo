@@ -6,7 +6,6 @@ using Core.Mono;
 using Core.Serialize.Json;
 using HotUpdate.Base.Animation;
 using HotUpdate.Base.ECModule;
-using HotUpdate.Game.Battle.Object;
 using HotUpdate.Game.Battle.Utility;
 using UnityEngine;
 
@@ -37,7 +36,7 @@ namespace HotUpdate.Game.Animation.Component
         /// </summary>
         public void InitConfigs()
         {
-            var assetKey = BattleUtility.GetAnimatorControllerAssetKeyByType((IBattleEntityObject)Component.EntityObject);
+            var assetKey = BattleUtility.GetAnimatorControllerAssetKeyByType(Component.EntityObject);
             using var handle = GameAsset.LoadAsset<RuntimeAnimatorController>(assetKey);
             Component.Animator.runtimeAnimatorController = handle.Asset;
                 
@@ -46,7 +45,11 @@ namespace HotUpdate.Game.Animation.Component
             var collection = _jsonManager.FromJson<AnimationConfigCollection>(collectionJson, settings: NewtonsoftJsonUtility.DefaultSerializerSettings);
 
             var allConfigs = new List<AnimationConfig>();
-            allConfigs.AddRange(collection.commonCollection.animationConfigs);
+            if (collection.commonCollection != null)
+            {
+                allConfigs.AddRange(collection.commonCollection.animationConfigs);
+            }
+
             allConfigs.AddRange(collection.animationConfigs);
             
             // 层级到动画状态配置映射

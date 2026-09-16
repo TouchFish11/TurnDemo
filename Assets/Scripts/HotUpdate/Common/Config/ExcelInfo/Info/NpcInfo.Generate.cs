@@ -6,4 +6,6 @@ public partial class NpcInfo
 	public string f_voiceClip;
 	public string f_identity;
 	public int f_dialogueId;
+	public string f_controllerAssetKey;
+	public string f_animProfile;
 }

@@ -13,19 +13,350 @@ MonoBehaviour:
   m_Name: GameSettingsConfigSO
   m_EditorClassIdentifier: 
   SettingsConfig:
-    volumeItemName: "\u97F3\u4E50\u97F3\u91CF"
-    sfxItemName: "\u97F3\u6548\u97F3\u91CF"
-    volumeOpenItemName: "\u97F3\u4E50\u5F00\u5173"
-    sfxOpenItemName: "\u97F3\u6548\u5F00\u5173"
-    typeWriterItemName: "\u5BF9\u8BDD\u6587\u672C\u6253\u5B57\u673A\u6548\u679C"
-    frameRateItemName: "\u5E27\u7387"
-    volumeOpts:
-    - "\u5173"
-    - "\u5F00"
-    sfxOpts:
-    - "\u5173"
-    - "\u5F00"
-    typeWriterOpts:
-    - "\u7981\u7528"
-    - "\u542F\u7528"
-    framerates: 1e0000002d0000003c000000
+    Settings:
+    - Type: 6
+      Name: "\u5168\u5C4F\u6A21\u5F0F"
+      Widget: 1
+      Category: 0
+      DefaultValue: 0
+      DefaultIndex: 2
+      Min: 0
+      Max: 0
+      DisplayMultiplier: 0
+      Options:
+      - Text: "\u72EC\u5360\u5168\u5C4F"
+        Value: 0
+      - Text: "\u65E0\u8FB9\u6846\u5168\u5C4F"
+        Value: 1
+      - Text: "\u7A97\u53E3\u5316"
+        Value: 3
+    - Type: 7
+      Name: "\u5206\u8FA8\u7387"
+      Widget: 1
+      Category: 0
+      DefaultValue: 0
+      DefaultIndex: 0
+      Min: 0
+      Max: 0
+      DisplayMultiplier: 0
+      Options: []
+    - Type: 8
+      Name: "\u5782\u76F4\u540C\u6B65"
+      Widget: 1
+      Category: 0
+      DefaultValue: 0
+      DefaultIndex: 0
+      Min: 0
+      Max: 0
+      DisplayMultiplier: 0
+      Options:
+      - Text: "\u5173"
+        Value: 0
+      - Text: "\u5F00"
+        Value: 1
+      - Text: "\u534A"
+        Value: 2
+    - Type: 5
+      Name: "\u5E27\u7387"
+      Widget: 1
+      Category: 0
+      DefaultValue: 0
+      DefaultIndex: 0
+      Min: 0
+      Max: 0
+      DisplayMultiplier: 0
+      Options:
+      - Text: 30
+        Value: 30
+      - Text: 45
+        Value: 45
+      - Text: 60
+        Value: 60
+      - Text: 90
+        Value: 90
+      - Text: 120
+        Value: 120
+      - Text: "\u65E0\u9650\u5236"
+        Value: -1
+    - Type: 9
+      Name: "\u5168\u5C40\u753B\u8D28"
+      Widget: 1
+      Category: 0
+      DefaultValue: 0
+      DefaultIndex: 0
+      Min: 0
+      Max: 0
+      DisplayMultiplier: 0
+      Options:
+      - Text: "\u4F4E"
+        Value: 0
+      - Text: "\u4E2D"
+        Value: 1
+      - Text: "\u9AD8"
+        Value: 2
+      - Text: "\u6781\u9AD8"
+        Value: 3
+    - Type: 10
+      Name: "\u9634\u5F71\u8D28\u91CF"
+      Widget: 1
+      Category: 0
+      DefaultValue: 0
+      DefaultIndex: 0
+      Min: 0
+      Max: 0
+      DisplayMultiplier: 0
+      Options:
+      - Text: "\u5173"
+        Value: 0
+      - Text: "\u786C"
+        Value: 1
+      - Text: "\u8F6F"
+        Value: 2
+    - Type: 11
+      Name: "\u9634\u5F71\u8DDD\u79BB"
+      Widget: 0
+      Category: 0
+      DefaultValue: 150
+      DefaultIndex: 0
+      Min: 0
+      Max: 300
+      DisplayMultiplier: 1
+      Options:
+      - Text: "\u5173"
+        Value: 0
+      - Text: "\u786C"
+        Value: 1
+      - Text: "\u8F6F"
+        Value: 2
+    - Type: 12
+      Name: "\u6297\u952F\u9F7F"
+      Widget: 1
+      Category: 0
+      DefaultValue: 0
+      DefaultIndex: 0
+      Min: 0
+      Max: 0
+      DisplayMultiplier: 0
+      Options:
+      - Text: "\u5173"
+        Value: 0
+      - Text: 2x
+        Value: 1
+      - Text: 4x
+        Value: 2
+      - Text: 8x
+        Value: 3
+    - Type: 13
+      Name: "\u7EB9\u7406\u8D28\u91CF"
+      Widget: 1
+      Category: 0
+      DefaultValue: 0
+      DefaultIndex: 0
+      Min: 0
+      Max: 0
+      DisplayMultiplier: 0
+      Options:
+      - Text: "\u5B8C\u6574"
+        Value: 0
+      - Text: "\u9AD8"
+        Value: 1
+      - Text: "\u4E2D"
+        Value: 2
+      - Text: "\u4F4E"
+        Value: 3
+    - Type: 14
+      Name: "\u5404\u5411\u5F02\u6027\u8FC7\u6EE4"
+      Widget: 1
+      Category: 0
+      DefaultValue: 0
+      DefaultIndex: 0
+      Min: 0
+      Max: 0
+      DisplayMultiplier: 0
+      Options:
+      - Text: "\u5173"
+        Value: 0
+      - Text: "\u5F00"
+        Value: 1
+    - Type: 15
+      Name: "\u89C6\u91CE\u8303\u56F4"
+      Widget: 0
+      Category: 0
+      DefaultValue: 60
+      DefaultIndex: 0
+      Min: 60
+      Max: 90
+      DisplayMultiplier: 1
+      Options: []
+    - Type: 16
+      Name: "\u4EAE\u5EA6"
+      Widget: 0
+      Category: 0
+      DefaultValue: 1
+      DefaultIndex: 0
+      Min: 0
+      Max: 1
+      DisplayMultiplier: 10
+      Options: []
+    - Type: 0
+      Name: "\u97F3\u4E50\u97F3\u91CF"
+      Widget: 0
+      Category: 1
+      DefaultValue: 0.8
+      DefaultIndex: 0
+      Min: 0
+      Max: 1
+      DisplayMultiplier: 10
+      Options: []
+    - Type: 1
+      Name: "\u97F3\u6548\u97F3\u91CF"
+      Widget: 0
+      Category: 1
+      DefaultValue: 0.8
+      DefaultIndex: 0
+      Min: 0
+      Max: 1
+      DisplayMultiplier: 10
+      Options: []
+    - Type: 2
+      Name: "\u97F3\u4E50\u5F00\u5173"
+      Widget: 1
+      Category: 1
+      DefaultValue: 0
+      DefaultIndex: 1
+      Min: 0
+      Max: 0
+      DisplayMultiplier: 0
+      Options:
+      - Text: "\u5173"
+        Value: 0
+      - Text: "\u5F00"
+        Value: 1
+    - Type: 3
+      Name: "\u97F3\u6548\u5F00\u5173"
+      Widget: 1
+      Category: 1
+      DefaultValue: 0
+      DefaultIndex: 1
+      Min: 0
+      Max: 0
+      DisplayMultiplier: 0
+      Options:
+      - Text: "\u5173"
+        Value: 0
+      - Text: "\u5F00"
+        Value: 1
+    - Type: 21
+      Name: "\u8F93\u51FA\u6A21\u5F0F"
+      Widget: 1
+      Category: 1
+      DefaultValue: 0
+      DefaultIndex: 0
+      Min: 0
+      Max: 0
+      DisplayMultiplier: 0
+      Options:
+      - Text: "\u7ACB\u4F53\u58F0"
+        Value: 0
+      - Text: "\u5355\u58F0\u9053"
+        Value: 1
+    - Type: 22
+      Name: "\u540E\u53F0\u9759\u97F3"
+      Widget: 1
+      Category: 1
+      DefaultValue: 0
+      DefaultIndex: 0
+      Min: 0
+      Max: 0
+      DisplayMultiplier: 0
+      Options:
+      - Text: "\u5173"
+        Value: 0
+      - Text: "\u5F00"
+        Value: 1
+    - Type: 4
+      Name: "\u6253\u5B57\u673A\u6548\u679C"
+      Widget: 1
+      Category: 2
+      DefaultValue: 0
+      DefaultIndex: 1
+      Min: 0
+      Max: 0
+      DisplayMultiplier: 0
+      Options:
+      - Text: "\u5173"
+        Value: 0
+      - Text: "\u5F00"
+        Value: 1
+    - Type: 24
+      Name: "\u81EA\u52A8\u6218\u6597\u5F00\u5173"
+      Widget: 1
+      Category: 2
+      DefaultValue: 0
+      DefaultIndex: 0
+      Min: 0
+      Max: 0
+      DisplayMultiplier: 0
+      Options:
+      - Text: "\u5173"
+        Value: 0
+      - Text: "\u5F00"
+        Value: 1
+    - Type: 25
+      Name: "\u955C\u5934\u7075\u654F\u5EA6"
+      Widget: 0
+      Category: 2
+      DefaultValue: 1
+      DefaultIndex: 0
+      Min: 0.1
+      Max: 5
+      DisplayMultiplier: 1
+      Options: []
+    - Type: 26
+      Name: "\u8BED\u8A00"
+      Widget: 1
+      Category: 3
+      DefaultValue: 0
+      DefaultIndex: 0
+      Min: 0
+      Max: 0
+      DisplayMultiplier: 0
+      Options:
+      - Text: "\u4E2D\u6587"
+        Value: 0
+      - Text: English
+        Value: 1
+    - Type: 27
+      Name: "\u663E\u793AFPS"
+      Widget: 1
+      Category: 3
+      DefaultValue: 0
+      DefaultIndex: 0
+      Min: 0
+      Max: 0
+      DisplayMultiplier: 0
+      Options:
+      - Text: "\u5173"
+        Value: 0
+      - Text: "\u5F00"
+        Value: 1
+    - Type: 28
+      Name: "\u91CD\u7F6E\u6240\u6709\u8BBE\u7F6E"
+      Widget: 2
+      Category: 3
+      DefaultValue: 0
+      DefaultIndex: 0
+      Min: 0
+      Max: 0
+      DisplayMultiplier: 0
+      Options: []
+    - Type: 29
+      Name: "\u6E05\u7406\u7F13\u5B58"
+      Widget: 2
+      Category: 3
+      DefaultValue: 0
+      DefaultIndex: 0
+      Min: 0
+      Max: 0
+      DisplayMultiplier: 0
+      Options: []

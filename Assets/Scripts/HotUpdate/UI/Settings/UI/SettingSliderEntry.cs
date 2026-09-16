@@ -1,4 +1,5 @@
 using Core.UI;
+using HotUpdate.Base.Settings;
 using HotUpdate.UI.Settings.ViewModel;
 using TMPro;
 using UnityEngine.UI;
@@ -15,17 +16,21 @@ namespace HotUpdate.UI.Settings.UI
         [InjectUI] public Slider sliderRange;
 
         private SettingSliderViewModel _settingSliderViewModel;
-        
-        public void Init(string entryName, SettingSliderViewModel settingSliderViewModel)
+        private float _displayMultiplier;
+
+        public void Init(SettingDefinition definition, SettingSliderViewModel settingSliderViewModel)
         {
-            txtName.text = entryName;
+            txtName.text = definition.Name;
+            _displayMultiplier = definition.DisplayMultiplier <= 0f ? 1f : definition.DisplayMultiplier;
+            sliderRange.minValue = definition.Min * _displayMultiplier;
+            sliderRange.maxValue = definition.Max * _displayMultiplier;
+            
             // 订阅响应事件
             settingSliderViewModel.Progress.Subscribe(value =>
             {
-                sliderRange.SetValueWithoutNotify(value);
-                txtVolume.text = $"{value}";
+                sliderRange.SetValueWithoutNotify(value * _displayMultiplier);
+                txtVolume.text = ((int)(value * _displayMultiplier)).ToString();
             });
-            
             _settingSliderViewModel = settingSliderViewModel;
         }
 
@@ -33,12 +38,15 @@ namespace HotUpdate.UI.Settings.UI
         {
             if (sliderName == nameof(sliderRange))
             {
-                // 赋值滑动条的值
-                _settingSliderViewModel.Progress.Value = value;
+                if(_settingSliderViewModel == null)
+                    return;
+                
+                // 显示值换算回原始值存储
+                _settingSliderViewModel.Progress.Value = value / _displayMultiplier;
             }
         }
 
-        protected override void OnDestroy()
+        protected override void OnDisable()
         {
             _settingSliderViewModel.Dispose();
             _settingSliderViewModel = null;

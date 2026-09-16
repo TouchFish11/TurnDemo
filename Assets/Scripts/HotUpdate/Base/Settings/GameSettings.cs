@@ -1,54 +1,69 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using Core.DI;
 using Newtonsoft.Json;
 
 namespace HotUpdate.Base.Settings
 {
     /// <summary>
-    /// 游戏设置
+    /// 游戏设置（运行时值），按控件类型分强类型字典存储
     /// </summary>
     [Serializable]
     [JsonObject(MemberSerialization.OptIn)]
     public class GameSettings
     {
-        [JsonProperty] private Dictionary<ESettingType, ISettingItem> settings = new();
-        
+        [JsonProperty] private Dictionary<ESettingType, float> _floats = new();
+        [JsonProperty] private Dictionary<ESettingType, int> _ints = new();
+
         public event Action<GameSettings> OnDataChanged;
 
-        public float this[ESettingType type]
+        public float GetFloat(ESettingType type) => _floats[type];
+        public int GetInt(ESettingType type) => _ints[type];
+
+        public void SetFloat(ESettingType type, float value)
         {
-            get => settings[type].Value;
-            set
+            _floats[type] = value;
+            OnDataChanged?.Invoke(this);
+        }
+
+        public void SetInt(ESettingType type, int value)
+        {
+            _ints[type] = value;
+            OnDataChanged?.Invoke(this);
+        }
+
+        /// <summary>
+        /// 用定义初始化：字典缺失的键填默认值（兼容新增设置/旧存档）
+        /// </summary>
+        public void Initialize(GameSettingsConfig config)
+        {
+            foreach (var def in config.Settings)
             {
-                settings[type].Value = value;
-                OnDataChanged?.Invoke(this);
+                switch (def.Widget)
+                {
+                    case ESettingWidget.Slider:
+                        if (!_floats.ContainsKey(def.Type))
+                        {
+                            _floats[def.Type] = def.DefaultValue;
+                        }
+                        break;
+                    case ESettingWidget.Dropdown:
+                        if (!_ints.ContainsKey(def.Type))
+                        {
+                            _ints[def.Type] = def.DefaultIndex;
+                        }
+                        break;
+                }
             }
         }
 
-        public Dictionary<ESettingType, ISettingItem>.ValueCollection Values => settings.Values;
-        public Dictionary<ESettingType, ISettingItem>.KeyCollection Keys => settings.Keys;
-
-        public GameSettings()
+        /// <summary>
+        /// 重置所有设置为默认值
+        /// </summary>
+        public void Reset(GameSettingsConfig config)
         {
-            foreach (var obj in Enum.GetValues(typeof(ESettingType)))
-            {
-                var type = (ESettingType)obj;
-                var attribute = type.GetType().GetField(type.ToString()).GetCustomAttribute<SettingObjectAttribute>();
-                if(attribute == null)
-                    continue;
-
-                var settingItem = DIContainer.Create<SettingItem>(parameterValues: new object[] { type, attribute.IsRange });
-                settings.Add(type, settingItem);
-            }
-            
-            // settings.Add(ESettingType.VolumeValue, new SettingItem(ESettingType.VolumeValue, true));
-            // settings.Add(ESettingType.SFXValue, new SettingItem<float>(ESettingType.SFXValue, true));
-            // settings.Add(ESettingType.VolumeOpen, new SettingItem<int>(ESettingType.VolumeOpen, false));
-            // settings.Add(ESettingType.SFXOpen, new SettingItem<int>(ESettingType.SFXOpen, false));
-            // settings.Add(ESettingType.TypeWriter, new SettingItem<int>(ESettingType.TypeWriter, false));
-            // settings.Add(ESettingType.TargetFrameRateIndex, new SettingItem<int>(ESettingType.TargetFrameRateIndex, false));
+            _floats.Clear();
+            _ints.Clear();
+            Initialize(config);
         }
     }
 }

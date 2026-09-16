@@ -1,4 +1,5 @@
 using Core.UI;
+using HotUpdate.Base.Settings;
 using HotUpdate.UI.Settings.ViewModel;
 using TMPro;
 
@@ -14,11 +15,11 @@ namespace HotUpdate.UI.Settings.UI
         
         private SettingDropdownViewModel _settingDropdownViewModel;
 
-        public void Init(string entryName, SettingDropdownViewModel settingDropdownViewModel)
+        public void Init(SettingDefinition definition, SettingDropdownViewModel settingDropdownViewModel)
         {
-            txtName.text = entryName;
+            txtName.text = definition.Name;
             dpSettings.AddOptions(settingDropdownViewModel.Options);
-            
+
             // 数据导致UI更新
             settingDropdownViewModel.OptionIndex.Subscribe(optionIndex => dpSettings.SetValueWithoutNotify(optionIndex));
             _settingDropdownViewModel = settingDropdownViewModel;
@@ -32,8 +33,9 @@ namespace HotUpdate.UI.Settings.UI
             }
         }
 
-        protected override void OnDestroy()
+        protected override void OnDisable()
         {
+            dpSettings.ClearOptions();
             _settingDropdownViewModel.Dispose();
             _settingDropdownViewModel = null;
         }

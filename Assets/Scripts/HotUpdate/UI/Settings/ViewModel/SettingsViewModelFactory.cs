@@ -1,38 +1,27 @@
-using System;
 using Core.DI;
 using HotUpdate.Base.Settings;
-using HotUpdate.Common.Config.Settings;
+using HotUpdate.UI.Settings.Handlers;
 
 namespace HotUpdate.UI.Settings.ViewModel
 {
     /// <summary>
-    /// 设置UI的ViewModel工厂
+    /// 设置 UI 的 ViewModel 工厂，根据定义创建对应的 ViewModel
     /// </summary>
     public class SettingsViewModelFactory
     {
-        /// <summary>
-        /// 创建滑动条ViewModel
-        /// </summary>
-        /// <param name="type"></param>
-        /// <param name="settings"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static SettingSliderViewModel CreateSliderViewModel(ESettingType type, GameSettings settings)
+        public static SettingSliderViewModel CreateSliderViewModel(GameSettings settings, SettingDefinition definition)
         {
-            return DIContainer.Create<SettingSliderViewModel>(parameterValues: new object[] { settings, type });
+            return DIContainer.Create<SettingSliderViewModel>(parameterValues: new object[] { settings, definition });
         }
-        
-        /// <summary>
-        /// 创建下拉菜单ViewModel
-        /// </summary>
-        /// <param name="type"></param>
-        /// <param name="settings"></param>
-        /// <param name="settingsConfig"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static SettingDropdownViewModel CreateDropdownViewModel(ESettingType type, GameSettings settings, GameSettingsConfig settingsConfig)
+
+        public static SettingDropdownViewModel CreateDropdownViewModel(GameSettings settings, SettingDefinition definition)
         {
-            return DIContainer.Create<SettingDropdownViewModel>(parameterValues: new object[] { settings, settingsConfig, type });
+            // 分辨率选项依赖当前显示器，运行期从 Screen.resolutions 动态生成；其余用 SO 里静态配置的选项
+            var options = definition.Options;
+            if (definition.Type == ESettingType.Resolution)
+                options = ResolutionHandler.GetOptions();
+
+            return DIContainer.Create<SettingDropdownViewModel>(parameterValues: new object[] { settings, definition, options });
         }
     }
 }

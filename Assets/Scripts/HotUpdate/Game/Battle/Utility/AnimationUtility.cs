@@ -7,6 +7,7 @@ using HotUpdate.Base.Utility;
 using HotUpdate.Game.Animation.Component;
 using HotUpdate.Game.Battle.Object.Monster;
 using HotUpdate.Game.Battle.Object.Role;
+using HotUpdate.Game.Interact;
 using UnityEngine;
 
 namespace HotUpdate.Game.Battle.Utility
@@ -51,6 +52,7 @@ namespace HotUpdate.Game.Battle.Utility
             {
                 IRoleObject playerObject => playerObject.RoleInfo.f_animProfile,
                 IMonsterObject monsterObject => monsterObject.MonsterInfo.f_animProfile,
+                NpcObject npcObject => npcObject.NpcInfo.f_animProfile,
                 _ => string.Empty
             };
 

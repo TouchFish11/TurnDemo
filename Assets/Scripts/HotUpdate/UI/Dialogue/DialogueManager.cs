@@ -70,7 +70,7 @@ namespace HotUpdate.UI.Dialogue
                     return;
                 }
                 
-                _dialogueContext.EnableTypewriter = (int)_mainDataManger.GameSettings[ESettingType.TypeWriter] != 0;    // 0为false，1为true，自定义规则
+                _dialogueContext.EnableTypewriter = _mainDataManger.GameSettings.GetInt(ESettingType.TypeWriter) != 0;    // 0为false，1为true，自定义规则
                 // 标记对话为进行中
                 _dialogueContext.IsDialogueActive = true;
                 SetNextDialogue(startDialogueId);

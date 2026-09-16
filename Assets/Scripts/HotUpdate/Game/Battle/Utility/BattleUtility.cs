@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Core.Log;
+using HotUpdate.Base.ECModule;
 using HotUpdate.Game.Battle.Context;
 using HotUpdate.Game.Battle.Event.UI;
 using HotUpdate.Game.Battle.Object;
@@ -8,6 +9,7 @@ using HotUpdate.Game.Battle.Object.Monster;
 using HotUpdate.Game.Battle.Object.Role;
 using HotUpdate.Game.Battle.Skill;
 using HotUpdate.Game.Battle.StatSystem;
+using HotUpdate.Game.Interact;
 using UnityEngine;
 using Logger = Core.Log.Logger;
 using StatsComponent = HotUpdate.Game.Battle.StatSystem.StatsComponent;
@@ -219,12 +221,13 @@ namespace HotUpdate.Game.Battle.Utility
             };
         }
 
-        public static string GetAnimatorControllerAssetKeyByType(IBattleEntityObject entityObject)
+        public static string GetAnimatorControllerAssetKeyByType(IEntityObject entityObject)
         {
             return entityObject switch
             {
                 IRoleObject playerObject => playerObject.RoleInfo.f_controllerAssetKey,
                 IMonsterObject monsterObject => monsterObject.MonsterInfo.f_controllerAssetKey,
+                NpcObject npcObject => npcObject.NpcInfo.f_controllerAssetKey,
                 _ => throw new ArgumentOutOfRangeException(nameof(entityObject), entityObject, null)
             };
         }

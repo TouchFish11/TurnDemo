@@ -42,9 +42,9 @@ namespace HotUpdate.Game.Scene
             // 创建玩家对象（参数为玩家配置ID，对应玩家基础配置表）
             await _playerManager.CreatePlayer(1001);
             // 创建村民NPC对象
-            await _npcFactory.CreateNpc(1, new Vector3(0, 1, 8.39f), Quaternion.identity);
+            await _npcFactory.CreateNpc(1, new Vector3(0, 0, 8.39f), Quaternion.AngleAxis(180, Vector3.up));
             // 创建流浪汉NPC对象
-            await _npcFactory.CreateNpc(2, new Vector3(6.94f, 1, 8.39f), Quaternion.identity);
+            await _npcFactory.CreateNpc(2, new Vector3(6.94f, 0, 8.39f), Quaternion.AngleAxis(180, Vector3.up));
         }
         
         /// <summary>
