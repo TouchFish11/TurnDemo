@@ -36,8 +36,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 129.642}
+  m_AnchoredPosition: {x: 0, y: 786}
+  m_SizeDelta: {x: -920, y: 129.64197}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &973364638357852181
 CanvasRenderer:
@@ -284,7 +284,7 @@ GameObject:
   m_Component:
   - component: {fileID: 382260523495218620}
   - component: {fileID: 5235251181272156804}
-  - component: {fileID: 3610506156790070627}
+  - component: {fileID: 7950847670869469690}
   m_Layer: 5
   m_Name: GlobalMessageView
   m_TagString: Untagged
@@ -307,10 +307,10 @@ RectTransform:
   - {fileID: 505492070172989629}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 299}
-  m_SizeDelta: {x: 1000, y: 150}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &5235251181272156804
 CanvasGroup:
@@ -324,7 +324,7 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
---- !u!114 &3610506156790070627
+--- !u!114 &7950847670869469690
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

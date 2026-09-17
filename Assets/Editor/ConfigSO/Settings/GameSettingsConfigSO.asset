@@ -19,7 +19,7 @@ MonoBehaviour:
       Widget: 1
       Category: 0
       DefaultValue: 0
-      DefaultIndex: 2
+      DefaultIndex: 0
       Min: 0
       Max: 0
       DisplayMultiplier: 0

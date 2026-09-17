@@ -5,6 +5,7 @@ using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Pool;
 using Core.PreLoad;
+using Core.Serialize.Binary;
 using Core.Serialize.Json;
 using HotUpdate.Base.Data;
 using HotUpdate.Base.Manager;
@@ -30,6 +31,7 @@ namespace HotUpdate.UI.Activity.EmbersCanon
         [Inject] private ObjectSpawner _objectSpawner;
         [Inject] private IIconService _iconService;
         [Inject] private IPoolManager _poolManager;
+        [Inject] private IBinaryDataManager _binaryDataManager;
         
         /// <summary>
         /// 初始化关卡
@@ -73,7 +75,7 @@ namespace HotUpdate.UI.Activity.EmbersCanon
             {
                 // 测试数据
                 new(waveId: 1, victoryConditionType: EWaveVictoryConditionType.EliminateAllEnemies, monsterIds: configEntry.monsterIds),
-                new(waveId: 2, victoryConditionType: EWaveVictoryConditionType.EliminateAllEnemies, monsterIds: configEntry.monsterIds),
+                //new(waveId: 2, victoryConditionType: EWaveVictoryConditionType.EliminateAllEnemies, monsterIds: configEntry.monsterIds),
             };
 
             var battleStartupParams= new BattleStartupParams
@@ -92,8 +94,15 @@ namespace HotUpdate.UI.Activity.EmbersCanon
                     if (result.IsWin)
                     {
                         onLevelComplete?.Invoke();
-                        if(activityDataProvider.TryGetData(activityId, out var activityData))
-                            activityData.CurrentPro += 1;
+                        if (activityDataProvider.TryGetData(activityId, out var activityData))
+                        {
+                            var activityInfo = _binaryDataManager.GetConfig<ActivityInfoContainer>(EConfigLoadType.Excel).dataDic[activityId];
+                            if (activityInfo.f_maxPro > activityData.CurrentPro)
+                            {
+                                activityData.CurrentPro += 1;
+                                activityData.IsComplete = activityInfo.f_maxPro == activityData.CurrentPro;
+                            }
+                        }
                     }
                     
                     await _uiService.ShowAsync(_uiService.GetPanel(EUIPanelId.ActivityPanel).PanelId);

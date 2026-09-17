@@ -132,24 +132,24 @@ MonoBehaviour:
     - rid: 1694531385438502937
       type: {class: DialogueConditionConfig, ns: HotUpdate.Common.Config.Quest.Config, asm: HotUpdate.Common}
       data:
-        targetNpcId: 0
+        targetNpcId: 1
     - rid: 1694531385438502938
       type: {class: DialogueConditionConfig, ns: HotUpdate.Common.Config.Quest.Config, asm: HotUpdate.Common}
       data:
-        targetNpcId: 0
+        targetNpcId: 2
     - rid: 1694531385438502939
       type: {class: DialogueConditionConfig, ns: HotUpdate.Common.Config.Quest.Config, asm: HotUpdate.Common}
       data:
-        targetNpcId: 0
+        targetNpcId: 1
     - rid: 1694531385438502940
       type: {class: DialogueConditionConfig, ns: HotUpdate.Common.Config.Quest.Config, asm: HotUpdate.Common}
       data:
-        targetNpcId: 0
+        targetNpcId: 2
     - rid: 1694531385438502941
       type: {class: DialogueConditionConfig, ns: HotUpdate.Common.Config.Quest.Config, asm: HotUpdate.Common}
       data:
-        targetNpcId: 0
+        targetNpcId: 2
     - rid: 1694531385438502942
       type: {class: DialogueConditionConfig, ns: HotUpdate.Common.Config.Quest.Config, asm: HotUpdate.Common}
       data:
-        targetNpcId: 0
+        targetNpcId: 2

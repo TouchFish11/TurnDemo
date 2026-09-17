@@ -1,13 +1,10 @@
 using System;
 using System.Threading.Tasks;
-using Core.AssetBundles.Management;
 using Core.DI;
 using Core.Log;
-using Core.Serialize.Json;
 using Core.UI;
-using Core.Utility;
+using HotUpdate.Base.Data;
 using HotUpdate.Base.Module;
-using HotUpdate.Base.Settings;
 using HotUpdate.Base.UI;
 using HotUpdate.Game.Main;
 using HotUpdate.UI.Begin;
@@ -25,7 +22,6 @@ namespace HotUpdate.Entry
         private IUIService _uiService;
         private IUIManager _uiManager;
         private PlayerInitializer _playerInitializer;
-        private IJsonManager _jsonManager;
         private ModuleService _moduleService;
         
         private void Awake()
@@ -37,7 +33,6 @@ namespace HotUpdate.Entry
             _uiService = DIContainer.Resolve<IUIService>();
             _uiManager = DIContainer.Resolve<IUIManager>();
             _playerInitializer = DIContainer.Resolve<PlayerInitializer>();
-            _jsonManager = DIContainer.Resolve<IJsonManager>();    
         }
 
         private async void OnEnable()
@@ -76,16 +71,11 @@ namespace HotUpdate.Entry
         /// </summary>
         private async Task InitSettings()
         {
-            using var handle = await GameAsset.LoadAssetAsync<TextAsset>(AssetKeys.GameSettingsConfig);
-            var gameSettingsConfig = _jsonManager.FromJson<GameSettingsConfig>(handle.Asset.text, settings:NewtonsoftJsonUtility.DefaultSerializerSettings);
-            var settings = await _jsonManager.FromJsonAsync<GameSettings>(PathUtility.GetUserDataLocalSavePath(FileSources.GameSettingFileName), settings:NewtonsoftJsonUtility.DefaultSerializerSettings);
-            settings.Initialize(gameSettingsConfig);
-
-            // 应用所有已保存的设置（全屏/画质/垂直同步/帧率等），统一走 handler，不再单独只设帧率
-            DIContainer.Resolve<SettingHandlerRegistry>().ApplyAll(settings, gameSettingsConfig);
+            // 先加载设置（轻量，走 MainDataProvider），再统一应用所有已保存的设置（全屏/画质/垂直同步/帧率等）
+            var mainDataProvider = DIContainer.Resolve<IMainDataProvider>();
+            await mainDataProvider.LoadSettingsAsync();
+            DIContainer.Resolve<SettingHandlerRegistry>().ApplyAll(mainDataProvider.GameSettings, mainDataProvider.GameSettingsConfig);
             Application.runInBackground = true;
-            
-            // ...
         }
         
         /// <summary>

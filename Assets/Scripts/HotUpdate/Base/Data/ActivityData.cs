@@ -13,8 +13,6 @@ namespace HotUpdate.Base.Data
     [JsonObject(MemberSerialization.OptIn)]
     public abstract class ActivityData
     {
-        [Inject] protected IBinaryDataManager binaryDataManager;
-        
         [JsonProperty] protected int activityId;
         [JsonProperty] protected bool isComplete;
         [JsonProperty] protected int currentPro;
@@ -27,33 +25,23 @@ namespace HotUpdate.Base.Data
             get => activityId;
             set => activityId = value;
         }
-        
+
         /// <summary>
         /// 是否完成
         /// </summary>
-        public bool IsComplete => isComplete;
+        public bool IsComplete
+        {
+            get => isComplete;
+            set => isComplete = value;
+        }
 
         /// <summary>
-        /// 当前进度，每次需+=1即可
-        /// 内部会自动根据进度判断是否完成
+        /// 当前进度，每次需+=1即可，需判断是否完成
         /// </summary>
         public int CurrentPro
         {
             get => currentPro;
-            set
-            {
-                currentPro = value;
-                CheckOver();
-            }
-        }
-
-        /// <summary>
-        /// 检查是否完成
-        /// </summary>
-        private void CheckOver()
-        {
-            var activityInfo = binaryDataManager.GetConfig<ActivityInfoContainer>(EConfigLoadType.Excel).dataDic[activityId];
-            isComplete = activityInfo.f_maxPro == currentPro;
+            set => currentPro = value;
         }
 
         public event Action<ActivityData> OnDataChanged;

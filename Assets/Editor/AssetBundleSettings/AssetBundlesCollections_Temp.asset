@@ -288,7 +288,7 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\GameSettingsConfig.json
       size: 22122
       name: GameSettingsConfig.json
-      hash: d607f65136ca140b13307551352d5f21c068163e745628fb65e7454ba2a74500
+      hash: 6798ec2e15edee4bab2c33a105212d2188d128f86c117da44c8dcd64789c5842
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\HelmetConfig.json
       size: 253
@@ -298,7 +298,7 @@ MonoBehaviour:
     - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\QuestConfig.json
       size: 17516
       name: QuestConfig.json
-      hash: 91d48010a0fcab16954f3e858e224810ba15b318c470203fd3b16cc172c33f44
+      hash: c8cefe6025e5b6e69b373a58f2b277679ad5f60e30bfa54e60f75bb8b4f4f781
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\GameConfig\SOConfig\SwordConfig.json
       size: 429
@@ -358,9 +358,9 @@ MonoBehaviour:
   - assetBundleName: hotupdate
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Base.dll.bytes
-      size: 53760
+      size: 53248
       name: HotUpdate.Base.dll.bytes
-      hash: 2786ed113939f7389ffb89895069bc0e47c7f4a4ebf4e804f3505753226f86d2
+      hash: 449a1172be69669bf33fd1b6e492c208d17a341abb936f044b1212fda03c7235
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Common.dll.bytes
       size: 51200
@@ -368,19 +368,19 @@ MonoBehaviour:
       hash: 6131ce74f7a94ebba27b0dc477a6d89b07356e5c1e6122ec024851f63ae4a9b7
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Entry.dll.bytes
-      size: 14336
+      size: 13312
       name: HotUpdate.Entry.dll.bytes
-      hash: b02ff4ec6b38fa7019053446f01686e2f7cd8a66cfbe7d61914958661c358621
+      hash: 2e5683d5d6880658efc87ad6c6cffc060b8f1ad27723a0dcfae836adf7e40d65
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.Game.dll.bytes
-      size: 460288
+      size: 460800
       name: HotUpdate.Game.dll.bytes
-      hash: f8d350daa9f854212a8649d58e194d20354cf647accfaf37b54a3f2a0b97b15e
+      hash: d73703b1b9717b648079e5abbe540c8e458944fe0829b793b0736a4b7a43bbbb
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdate.UI.dll.bytes
-      size: 280576
+      size: 281088
       name: HotUpdate.UI.dll.bytes
-      hash: 22b611243f631503acfda2f068c3a4416ab9390b4621ab7bc197088a482bd303
+      hash: 675008a1d55cdf77b7ca7c8006de0e80260f963e1dc4cba817b1df0f80a4f203
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\HotUpdate\HotUpdateAssemblySettings.json
       size: 504
@@ -587,9 +587,9 @@ MonoBehaviour:
   - assetBundleName: tmp_asset
     assetInfos:
     - assetPath: Assets\Editor\ArtRes\TMP_Asset\MSYH_SDF.asset
-      size: 7553
+      size: 8408744
       name: MSYH_SDF.asset
-      hash: 57a27797ae562a715d1bf52947b7cf9b1364fa1c318ded59c460e390f0fbcbbb
+      hash: a6b5506312552b3f0d8cc4484cdb417496dc82f9a0091ddd7d32fdfcbc2e4fe1
       assetType: 0
   - assetBundleName: ui
     assetInfos:
@@ -779,9 +779,9 @@ MonoBehaviour:
       hash: 6146efe4e14df5e5fdb7253a2219cc90ddd131d2a39d637d7e64ff5267b90fbd
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Global\GlobalMessageView.prefab
-      size: 9868
+      size: 9860
       name: GlobalMessageView.prefab
-      hash: 8b4a47c170cb7bb492f8b194be4f7de871853abcf8d7e6a9db0f2269bfdecf48
+      hash: 0c0bfd1d3379e49040df0440cd07406bc50041dab34c261b4bcaa4a4b8f7fc00
       assetType: 0
     - assetPath: Assets\Editor\ArtRes\UI\Global\MessageUI.prefab
       size: 7286

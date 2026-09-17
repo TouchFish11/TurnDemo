@@ -74,7 +74,13 @@ namespace HotUpdate.Game.Main.Data
                 InputDataContainer = null,
                 MusicData = MusicData,
             };
-            
+        }
+
+        /// <summary>
+        /// 只加载游戏设置（轻量，启动早期调用），与 LoadDataAsync 的重配置加载分离
+        /// </summary>
+        public async Task LoadSettingsAsync()
+        {
             // 读取游戏设置配置（定义）
             using var handle = await GameAsset.LoadAssetAsync<TextAsset>(AssetKeys.GameSettingsConfig);
             GameSettingsConfig = _jsonManager.FromJson<GameSettingsConfig>(handle.Asset.text);

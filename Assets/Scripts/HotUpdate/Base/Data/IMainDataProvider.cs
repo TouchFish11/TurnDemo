@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using HotUpdate.Base.Collection;
 using HotUpdate.Base.Settings;
 
@@ -19,5 +20,10 @@ namespace HotUpdate.Base.Data
         /// 游戏设置配置
         /// </summary>
         GameSettingsConfig GameSettingsConfig { get; }
+
+        /// <summary>
+        /// 只加载游戏设置（轻量，启动早期调用），与 LoadDataAsync 的重配置加载分离
+        /// </summary>
+        Task LoadSettingsAsync();
     }
 }

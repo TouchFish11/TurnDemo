@@ -1,4 +1,5 @@
 using Core.DI;
+using Core.Serialize.Binary;
 using HotUpdate.Base.Data;
 using HotUpdate.UI.Activity.Base;
 
@@ -7,6 +8,7 @@ namespace HotUpdate.UI.Activity.OrbitalDeparture
     public class OrbitalDepartureHandler : ActivityContentHandler<OrbitalDepartureActivityUI>
     {
         [Inject] private IActivityDataProvider activityDataProvider;
+        [Inject] private IBinaryDataManager _binaryDataManager;
         
         public void ReceiveReward()
         {
@@ -15,7 +17,12 @@ namespace HotUpdate.UI.Activity.OrbitalDeparture
             
             if (!activityData.IsComplete)
             {
-                activityData.CurrentPro += 1;
+                var activityInfo = _binaryDataManager.GetConfig<ActivityInfoContainer>(EConfigLoadType.Excel).dataDic[activity.ActivityId];
+                if (activityInfo.f_maxPro > activityData.CurrentPro)
+                {
+                    activityData.CurrentPro += 1;
+                    activityData.IsComplete = activityInfo.f_maxPro == activityData.CurrentPro;
+                }
                 activity.activityJoinComponent.SetTitle(out var txtJoin);
                 txtJoin.text = $"已领取";
             }

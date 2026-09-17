@@ -75,7 +75,7 @@ namespace HotUpdate.Game.Battle.Core
                     _vfxManager.ClearActiveVFX();   // 先清 VFX，把活跃 VFX 干净释放，再清池
                     BattleEntry.EndBattle();
                     _poolManager.ClearAll();
-                    await OnBattleOver(new BattleResult { IsWin = false });
+                    await OnBattleOver(new BattleResult { IsWin = true });
                     OnBattleOver = null;
                     // 销毁黑背景界面
                     await _uiService.CloseAsync(controller.PanelId, true);
